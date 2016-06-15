@@ -1,0 +1,165 @@
+<div class="row">
+
+    <div class="col-md-12">
+
+        <h1>Localization | transl8 | i18n</h1>
+
+        <p>iDAI.componentes provides a localization system which comprises two components. First it
+            let applications using the library translate
+            various items through the transl8 service from the arachne ecosystem. Second organized content
+            can be delivered in a language dependent manner, guided by a language selection rule.</p>
+
+
+        <h2>Transl8</h2>
+
+        TODO describe transl8 external service, service, filter, language selction rule
+
+        <h3>Error messages</h3>
+
+        <p>
+            Users of iDAI.components can localize messages through transl8. By injecting
+            <code>message</code> to one of your controllers, and calling
+            <code>message.addMessageForCode(transl8_key, level, showContactInfo)</code>
+            from within it a localized message
+            (for language selection rules see paragraph above) gets added to
+            the messages array of the root scope. These messages can be shown in your application
+            by using the <code>&lt;idai-message&gt;&lt;/idai-message&gt;</code> directive from your html.
+        </p>
+
+        <p>
+            <strong>Notice</strong>: Use of HTML tags is allowed in error messages.
+        </p>
+
+        <p>
+            In case there is no translation for a given key, a standard error message is shown.
+        </p>
+
+        <p>
+            The parameter <code>level</code> is optional and will influence the css class of the alert box.
+            Possible values are <code>success</code>, <code>info</code>, <code>warning</code> and <code>danger</code>.
+            The default value is <code>warning</code>.
+        </p>
+
+        <p>
+            The parameter <code>showContactInfo</code> is optional and will influence if there is an extra line
+            containing some standard contact info text below the error message. By default the text will be
+            existent. It is suppressed by setting the param value to false or when the message level is success.
+        </p>
+
+        <h4>Examples</h4>
+        <p>
+            <button class="btn btn-default" ng-click="addMsg('default');">Show localized error message for transl8 key
+                "default" on default level 'warning'
+            </button>
+        </p>
+        <p>
+            <button class="btn btn-default" ng-click="addMsg('default','warning',false);">Show localized error message
+                for transl8 key "default" on default level 'warning' without contact info
+            </button>
+        </p>
+        <p>
+            <button class="btn btn-default" ng-click="addMsg('backend_missing','danger');">Show localized error message
+                for transl8 key "backend_missing" on level 'danger'
+            </button>
+        </p>
+        <p>
+            <button class="btn btn-default" ng-click="addMsg('everything_fine','success');">Show localized message for
+                transl8 key "everything_fine" on level 'success'
+            </button>
+        </p>
+        <p>
+            <button class="btn btn-default" ng-click="addMsg('search_400','warning');">Show localized message for
+                transl8 key "search_400" (contains HTML) on level 'warning'
+            </button>
+        </p>
+        <p>
+            <idai-message></idai-message>
+        </p>
+
+        <h3>Artifacts</h3>
+        <ul>
+            <li>The language selection rule for transl8 items: docs/feature_menu_item_localization.md</li>
+        </ul>
+    </div>
+
+
+</div>
+<div class="row">
+
+
+    <div class="col-md-12">
+        <h2>Localizable content</h2>
+
+        <p>
+            iDAI.components provides a means to organize content in a way that allows its localized
+            delivery to end-users. In idai.components itself it is used to determine the language of
+            the link titles of the footer and navbar, though it is intended that other applications
+            make use of the content localization system to provide services to deliver localized content.
+        </p>
+        <p>
+            The language selection gets performed
+            for the requesting user individually on the basis of its selected browser language. To work properly,
+            there is an underlying organization principle which has to be used accordingly.
+            The available languages and organization of the items has to be done by the developer beforehand, using
+            a defined data structure, so that the system can figure out which content can be delivered in
+            which languages.
+        </p>
+
+    </div>
+    <div class="col-md-6">
+
+        <h3>Content localization: Data structure</h3>
+
+        <p>The links from the footer and navigation bar section are directly generated from the contents
+            of info/content.json (by convention). It serves us as an example to demonstrate
+            the usage of the data structure.
+		<pre>
+{
+	"children": [
+	{
+		"id": "navbar",
+		"children":[{
+			"id": "about",
+			"title": {
+				"de": "Über Arachne",
+				"en": "About Arachne"
+			}
+		},
+	      ...
+		</pre>
+
+
+    </div>
+
+
+    <div class="col-md-6">
+
+        <p>A few things to note:</p>
+        <ol>
+            <li>The file containing this data structure must be named content.json.</li>
+            <li>There must be exactly one root node.</li>
+            <li>The identifiers must be unique.</li>
+            <li>Each node can have and array of nodes as children.</li>
+            <li>Each node can have the id and title fields, which make are the precondition for localization.</li>
+            <li>The structure itself and the program code is of recursive nature,
+                so nodes can theoretically be nested infinitely.
+            </li>
+        </ol>
+
+        <h3>Artifacts</h3>
+
+        <p>Here are the main artifacts comprising the content localization system:</p>
+
+        <ol>
+            <li>The language selection rule code: idai-components/src/js/language_selection.js</li>
+            <li>The data structure handling code: idai-components/src/js/localized_content.js</li>
+            <li>The browsers language determination: idai-components/src/js/language.js</li>
+            <li>Usage example/spec for language rule in arachne: arachnefrontend/docs/feature_localization_con10t.md
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+
+</div>
+</div>

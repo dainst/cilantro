@@ -1,0 +1,23 @@
+<table class="authorlist editable-table">
+
+	<div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning'>{{warning}}</div>
+
+	<tbody>
+		<tr ng-repeat="author in item.value track by $index">
+			<td><input ng-model='author.firstname'></input></td>
+			<td><input ng-model='author.lastname'></input></td>
+			<td>
+				<span class='btn btn-default btn-xs' ng-click='item.delRow($index)' data-tooltip='delete author'><span class='glyphicon glyphicon-minus-sign'></span></span>
+			</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan='2'>
+				<span class='btn btn-default btn-xs' ng-click='item.addRow()' data-tooltip='add author'><span class='glyphicon glyphicon-plus-sign'></span></span>
+			</td>
+			<td>&nbsp;</td>
+		</tr>
+	</tfoot>
+</table>
+<!-- <pre>{{item}}</pre> -->

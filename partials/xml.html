@@ -1,0 +1,53 @@
+<div>
+
+<div class="row">	
+
+	<div class="col-md-6">
+	
+		<h2>Journal Metadata</h2>
+		<table class='journal-table data-table'>
+
+			<tbody>
+				<tr ng-repeat="(field, value) in journal track by $index">
+					<td>{{field}}</td>
+					<td ng-model="journal[field]">
+						<span editable item="value" />
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+	
+	<div class="col-md-6">
+	
+		<h2>Import into OJS</h2>	
+		<p>Status:</p>
+		<ul>
+			<li>Journal metadata: <span ng-show="journalCheck()">OK</span></li>
+			<li>Articles confirmed: {{articlesConfirmed.length}} of {{articlesConfirmed.length  + articles.length}}</li>
+		</ul>
+	</div>
+	
+</div>
+
+
+
+<div class="row" ng-show="isReady()">	
+
+	<div class="col-md-8">
+		<span class="btn-group">
+			<button class='btn btn-default' ng-click='renderXml()'>Preview transport XML<span class="glyphicon glyphicon-view"></span></button>
+			<!--<button class='btn btn-default' ng-click='cutPdf()'>----CUT----<span class="glyphicon glyphicon-view"></span></button> -->
+		</span>
+	</div>
+	<div class="col-md-4 text-right">
+		<span class="btn-group">
+			<button class='btn btn-primary' ng-click='uploadToOjs()'>Upload<span class="glyphicon glyphicon-chevron-right"></span></button>
+		</span>
+	</div>
+</div>
+
+
+
+</div>

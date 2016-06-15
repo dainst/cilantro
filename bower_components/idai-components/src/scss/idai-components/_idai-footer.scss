@@ -1,0 +1,34 @@
+html {
+
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+
+  margin-bottom: 200px; /* footer height */
+}
+
+idai-footer {
+
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px 30px 10px 30px;
+  background-color: #e2e2e2;
+}
+
+idai-footer .logoImage {
+
+  height: 60px;
+  margin: 0 10px;
+}
+
+@media screen and (max-width: 440px) {
+
+  idai-footer .logoImage {
+
+    height: 35px;
+  }
+
+}

@@ -1,0 +1,70 @@
+<idai-header
+        image="/img/exampleteaser.jpg"
+        description="Palmyra, Baal-Heiligtum, Bankettsaal"
+        link="http://arachne.dainst.org">
+</idai-header>
+
+<div class="teaserpage teaserbgr container">
+    <main>
+        <h1>&lt;idai-header&gt;</h1>
+        <strong>idai-components</strong> provides the directive <code>&lt;idai-header&gt;</code> to extend your project
+        pages with a responsive and interactive header background.
+
+        <h2>Usage</h2>
+        The <code>&lt;idai-header&gt;</code> takes three arguments:
+        <ul>
+            <li>
+                <code>image</code> - image to be shown as header background. The header image you can see on this page
+                has a dimension of 1680 x 676 pixel and a file size of 120 KB.
+            </li>
+            <li>
+                <code>description</code> (optional) - a short description of the image.
+            </li>
+            <li>
+                <code>link</code> (optional) - you can provide a url to connect the header with a web ressource.
+            </li>
+        </ul>
+        Wrap your page content in a div-Container with the classes <code>teaserpage</code> and <code>container</code> or use
+        the predefined class <code>con10t-page</code> to have your page rendered correctly.
+
+        <h3>Example page</h3>
+
+<pre>
+&lt;idai-header
+    image="/img/exampleteaser.jpg"
+    description="Palmyra, Baal-Heiligtum, Bankettsaal"
+    link="http://arachne.dainst.org"&gt;
+&lt;/idai-header&gt;
+
+&lt;div class="teaserpage teaserbgr container"&gt;
+    &ltmain&gt;
+        &lth1>Project Title&lt;/h1&gt;
+        Page content. Here, div-container with bootstrap's classes can be used to structure your content.
+    &lt/main&gt;
+&lt/div&gt;
+</pre>
+
+        The following example page uses <code>con10t</code> classes. Be sure to add the class <code>teaserpage</code> to your con10t-page:
+<pre>
+&lt;idai-header
+    image="/img/exampleteaser.jpg"
+    description="Palmyra, Baal-Heiligtum, Bankettsaal"
+    link="http://arachne.dainst.org"&gt;
+&lt;/idai-header&gt;
+
+&lt;div class="con10t-page teaserpage container"&gt;
+    &lt;div class="con10t-row"&gt;
+        &lt;div class="con10t-title"&gt;
+            &lt;img src="path/to/your/project-logo" class="img-responsive"&gt;
+        &lt;/div&gt;
+        &lt;div class="con10t-sidebar"&gt;
+            Sidebar content
+        &lt;/div&gt;
+        &lt;div class="con10t-content"&gt;
+            Main content
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+    </main>
+</div>

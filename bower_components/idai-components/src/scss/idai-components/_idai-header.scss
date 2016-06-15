@@ -1,0 +1,69 @@
+/**
+ * @author: Jan G. Wieners
+ */
+
+#headerlink {
+  text-decoration: none;
+}
+
+#teaser {
+  height: 50vh;
+  margin: 0 -15px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 1s ease-in-out 0s;
+}
+
+#teaser #background {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition-duration: 1s;
+}
+
+#teaser #description {
+  color: #fff;
+  opacity: 0.2;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  transition: opacity 0.5s ease-in-out 0s;
+}
+
+/* zoom and darken background image */
+#teaser:hover #background {
+  -moz-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+
+  filter: brightness(65%);
+  -webkit-filter: brightness(65%);
+}
+
+/* show background description */
+#teaser:hover #description {
+  opacity: 1;
+}
+
+.teaserpage {
+  position: relative;
+  margin-top: -150px;
+}
+
+.teaserbgr {
+  padding: 25px;
+
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.teaserpage main {
+  background-color: #fff;
+  padding: 25px;
+}
+
+.teaserpage main h1 {
+  margin: 0;
+  padding: 10px 25px 25px;
+  text-align: center;
+}

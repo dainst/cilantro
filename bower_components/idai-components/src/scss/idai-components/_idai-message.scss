@@ -1,0 +1,29 @@
+/* custom transitions */
+.alert {
+  padding: 0;
+}
+
+.alert .alert-message {
+  padding: 15px;
+}
+
+.alert.ng-enter,
+.alert.ng-move,
+.alert.ng-leave {
+  transition: all 0.1s linear;
+  overflow: hidden;
+}
+
+.alert.ng-leave.ng-leave-active,
+.alert.ng-move,
+.alert.ng-enter {
+  max-height: 0;
+  opacity: 0;
+}
+
+.alert.ng-leave,
+.alert.ng-move.ng-move-active,
+.alert.ng-enter.ng-enter-active {
+  max-height: 100px;
+  opacity: 1;
+}

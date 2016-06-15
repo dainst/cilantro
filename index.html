@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="pimport">
+<head>
+	
+	<base id="baseLink" href="/pimport/">
+
+	<meta charset="utf-8">
+	<title>iDai.journals - Mass Importer</title>
+	<link href="favicon.ico" rel="Shortcut Icon">
+
+	<link rel="stylesheet" href="bower_components/idai-components/dist/css/idai-components.css">
+	<link rel="stylesheet" href="style/style.css">
+
+</head>
+	
+	<body ng-controller="main" data-ng-init="init()">
+	
+		<div id='loader' class='loader' ng-hide="isInitialized"></div>
+
+       	<idai-navbar 
+       		hide-register-button="true" 
+       		hide-contact-button="true"
+       		hide-login-button="true"
+       		hide-search-form="true"
+       		project-id="journals"
+			login-function=""
+			logout-function=""
+			user-object='{"username": false}'>
+		</idai-navbar>
+		
+
+		
+		<div id='main-container' class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<ol class="breadcrumb"><li class="active">{{tabs[currentTab].title}}</li></ol>
+				</div>
+			</div>
+			
+			<ng-include src="tabs[currentTab].template + cacheKiller"></ng-include>
+			
+			<div class="row">	
+				<div class="col-md-12"></div>
+			</div>
+			
+			<!-- <pre>{{server}}</pre> -->
+			<div class="row">	
+				<div class="col-md-12">
+					<div class="alert alert-danger"  ng-show="server.success === false" style="white-space: pre-wrap;">{{server.message}}</div>
+					<div class="alert alert-warning" ng-repeat="warning in server.warnings track by $index" style="white-space: pre-wrap;">{{warning}}</div>
+					<div class="alert alert-success" ng-show="server.success" style="white-space: pre-wrap;">{{server.message}}</div>
+					<div class="alert alert-info" 	 ng-repeat="warning in server.debug track by $index" style="white-space: pre-wrap;">({{warning}})</div>
+					<div ng-show="server.xml" class="xml-view">{{server.xml}}</div>
+				</div>
+			</div>
+			
+		</div>
+
+		<idai-footer institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
+		
+		<!-- load settings -->
+		
+		<script src="settings.php?js=1"></script>
+		
+		<!-- load angular, bootstrap, idai-components -->
+		
+		<script src="bower_components/angular/angular.min.js"></script>
+		<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+		<script src="bower_components/idai-components/dist/idai-components-tpls.js"></script>
+		<script src="bower_components/idai-components/dist/idai-components-no-tpls.js"></script>
+		
+		<!-- load pimport app -->
+		
+		<script src="js/controllers/main.js"></script>
+		<script src="js/controllers/pdf.js"></script>
+		<script src="js/directives/editable.js"></script>
+		<script src="js/services/editables.js"></script>
+		<script src="js/services/pimportws.js"></script>
+		<script src="js/services/journalmaster.js"></script>
+		<script src="js/services/settings.js"></script>
+		<script src="js/app.js"></script>
+		
+		<!-- load journal specific services -->
+		
+		<script src="journals/chiron/chiron.js"></script>
+		<script src="journals/testdata/testdata.js"></script>		
+	
+		<!-- load require.js for non-angular modules -->
+		
+		<script src="inc/require.js"></script>
+	
+	</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "name": "idai-components",
+  "desciption": "reusable angular components for the applications of the iDAI.world",
+  "main": [
+    "dist/js/idai-components.js"
+  ],
+  "homepage": "https://github.com/codarchlab/idai-components",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/codarchlab/idai-components"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {
+    "angular": "~1.5.5",
+    "angular-bootstrap": "~1.3.2",
+    "angular-route": "~1.5.5",
+    "angular-animate": "~1.5.5",
+    "bootstrap-sass": "~3.3.5"
+  },
+  "version": "1.4.7",
+  "_release": "1.4.7",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.4.7",
+    "commit": "1975e4e1531931086ad32b28fb31dee3a0982773"
+  },
+  "_source": "git://github.com/dainst/idai-components.git",
+  "_target": "^1.4.7",
+  "_originalSource": "dainst/idai-components",
+  "_direct": true
+}

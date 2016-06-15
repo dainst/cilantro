@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sampleApp">
+<head>
+	
+	<base id="baseLink" href="/">
+
+	<meta charset="utf-8">
+	<title>idai.components</title>
+	<link rel="shortcut icon" href="img/arachnelogo.png">
+
+	<link rel="stylesheet" href="dist/css/idai-components.css">
+
+</head>
+	
+	<body ng-controller="MainController">
+
+       	<idai-navbar 
+       		project-id="components"
+			login-function="openLoginModal()"
+			logout-function="logout()"
+			user-object=""></idai-navbar>
+		
+		<div class="container-fluid">
+			<div style="min-height:200px; margin-top: 50px; margin-bottom:100px;" ng-view></div>
+		</div>
+
+		<idai-footer institutions="{'dai': 'http://www.dainst.de/', 'unikoeln': 'http://archaeologie.uni-koeln.de', 'codarchlab': 'http://archaeologie.uni-koeln.de/node/23'}"
+					 mailto="idai.objects@dainst.org"></idai-footer>
+			
+		<script src="bower_components/angular/angular.min.js"></script>
+		<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+		<script src="bower_components/angular-route/angular-route.min.js"></script>
+		<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+
+		<script src="dist/idai-components-tpls.js"></script>
+		<script src="dist/idai-components-no-tpls.js"></script>
+		<script src="js/controllers.js"></script>
+		<script src="js/app.js"></script>
+	
+	</body>
+</html>

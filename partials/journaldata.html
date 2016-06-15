@@ -1,0 +1,20 @@
+<div class="row">	
+
+	<div class="col-md-12">
+	
+		<table id='journal-table'>
+			<thead>
+				<tr><td>field</td><td>value</td></tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="(field, value) in journal track by $index">
+					<td>{{field}}</td>
+					<td ng-model="journal[field]">
+						<span editable item="value" />
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+</div>

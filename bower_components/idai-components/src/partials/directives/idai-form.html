@@ -1,0 +1,12 @@
+<form name="form" class="form-horizontal">
+	<ng-transclude></ng-transclude>
+	<div class="form-group">
+	    <div class="col-sm-offset-3 col-sm-9">
+	    	<button ng-click="submit()" class="btn btn-primary" ng-class="{ disabled: form.$invalid }">
+	    		{{ 'form_save' | transl8 }}
+	    	</button>	    	
+	    	<button ng-click="reset()" class="btn btn-link">{{ 'form_reset' | transl8 }}</button>
+	    </div>
+	</div>
+
+</form>
