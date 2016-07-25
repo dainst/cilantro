@@ -2,6 +2,32 @@
 
 <div ng-controller="pdf">
 
+<div ng-show="master.isReady" class="row toprow">
+	<div class="col-md-8">
+	<form action="" class="form-inline" onsubmit="return false">
+	    <div class="form-group">
+			<span class="input-group">
+				<span class="input-group-btn">
+					<button class='btn btn-default' ng-click='master.changeOffset()' data-tooltip='The Offset is the difference between the printed page number and the absolute page number in the PDF file.'>Change offset to </button>
+				</span>
+				<input class="form-control" ng-model="master.offset" style="width:3em">
+			</span>
+		</div>
+		<div class="form-group">
+			<span class="btn-group">
+				<button class='btn btn-default' ng-click='master.addArticle()'>Add Article<span class="glyphicon glyphicon-plus-sign"></span></button>
+			</span>
+		</div>
+	</form>
+	</div>
+	<div class="col-md-4 text-right">
+		<span class="btn-group">
+			<button class='btn btn-primary' ng-click='master.proceed()'>Proceed<span class="glyphicon glyphicon-chevron-right"></span></button>
+		</span>
+	</div>
+</div>
+
+
 <div class="row">
 	<div class="col-md-6">
 		<div class="alert alert-info" ng-show="master.checkState()">Step {{master.state}}: {{master.states[master.state]}}</div>
@@ -64,28 +90,5 @@
 	</div>
 </div>
 
-<div ng-show="master.isReady" class="row">
-	<div class="col-md-8">
-	<form action="" class="form-inline" onsubmit="return false">
-	    <div class="form-group">
-			<span class="input-group">
-				<span class="input-group-btn">
-					<button class='btn btn-default' ng-click='master.changeOffset()' data-tooltip='The Offset is the difference between the printed page number and the absolute page number in the PDF file.'>Change offset to </button>
-				</span>
-				<input class="form-control" ng-model="master.offset" style="width:3em">
-			</span>
-		</div>
-		<div class="form-group">
-			<span class="btn-group">
-				<button class='btn btn-default' ng-click='master.addArticle()'>Add Article<span class="glyphicon glyphicon-plus-sign"></span></button>
-			</span>
-		</div>
-	</form>
-	</div>
-	<div class="col-md-4 text-right">
-		<span class="btn-group">
-			<button class='btn btn-primary' ng-click='master.proceed()'>Proceed<span class="glyphicon glyphicon-chevron-right"></span></button>
-		</span>
-	</div>
-</div>
+
 </div>

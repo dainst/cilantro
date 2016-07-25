@@ -23,6 +23,9 @@ $allowedIps		= array();
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
+// debug?
+$debugmode = true;
+
 
 /**
  * go
@@ -76,10 +79,14 @@ try {
 
 } catch (Exception $a) {
 	ob_clean();
+	
+	$debug = (isset($ojsis) and isset($ojsis->debug) and $debugmode) ? $ojsis->debug : '';
+	
 	header('Content-Type: application/json');
 	echo json_encode(array(
 		'success'	=> false,
 		'message'	=> $a->getMessage(),
+		'debug'		=> $debug
 	));
 	die();
 }

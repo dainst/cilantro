@@ -1,34 +1,28 @@
 <div>
-<div class="row" style="margin-bottom: 3em">	
+
+<div class="row toprow">
 	<div class="col-md-6">
-		<div class="row">
-			<div class="col-sm-2">Import Protocol {{journalType}}</div>
-			<div class="col-sm-10">
+		<div class="panel panel-default">
+			<div class="panel-heading">Import Protocol {{journalType}}</div>
+			<div class="pabel-body">
 				<select class="form-control" ng-model="journals.chosen">
 					<option ng-repeat="(id, title) in journals.types" value='{{id}}'>{{title}}</option>
 				</select>
 			</div>
 		</div>
-	</div>	
-	
-	<div class="col-md-6">
-		<div class="row">
-			<div class="col-sm-2">Path to PDF</div>
-			<div class="col-sm-10">
+
+		<div class="panel panel-default">
+			<div class="panel-heading">Path to PDF</div>
+			<div class="pabel-body">
 				<input class="form-control" type='text' name='import-pdf-path' id='import-pdf-path' ng-model='journal.importFilePath'>
 			</div>
 		</div>
 	</div>
-	
-</div>
 
-
-
-<div class="row">	
-	<div class="col-md-8">
+	<div class="col-md-2">
 		<div ng-show="sec.response" class="alert alert-danger">{{sec.response}}</div>
 	</div>
-	<div class="col-md-4 text-right">
+	<div class="col-md-6 text-right">
 		<form action="" class="form-inline" onsubmit="return false">
     		<div class="form-group">
 				<span class="input-group">
@@ -42,6 +36,9 @@
 		</form>
 	</div>
 </div>
+
+
+
 
 
 </div>

@@ -53,22 +53,28 @@ angular
 		chiron.message('pdf has ' + total + ' pages');
 		chiron.message("searching for >>INHALTSVERZEICHNIS<< or >>Inhalt<<");
 		
+		var contentPageHeadline = ['INHALTSVERZEICHNIS', 'Inhalt', 'Inhaltsverzeichnis'];
+		
+		
 		// search in the first 10 pages
 		for (i = 1; i <= 10; i++){
 			pdf.getPage(i).then(function(page) {
 				var n = page.pageNumber;
 				page.getTextContent().then(function(textContent) {
-					for(var k = 0; k < textContent.items.length; k++) {
+					for(var k = 0; k < Math.max(3, textContent.items.length); k++) {
 						var block = textContent.items[k];
-						//console.log(block);
-						if (block.str.trim() == 'INHALTSVERZEICHNIS' || block.str.trim() == 'Inhalt') {
+						
+						console.log(k, block.str.trim(), contentPageHeadline.indexOf(block.str.trim()));
+						
+						if (contentPageHeadline.indexOf(block.str.trim()) >= 0) {
 							chiron.message("found >>" + block.str.trim() + "<< on page " + n);
 							chiron.state = 1;
 							chiron.foundToc++;
 							chiron.offset = Math.max(n, chiron.offset);
-							chiron.analyzeToc(page); 
+							chiron.analyzeToc(page);
+							return chiron.refresh();
 						}
-						return chiron.refresh();
+						
 						
 					}
 					// empty pages after Toc
@@ -269,7 +275,6 @@ angular
 	}
 	
 	chiron.proceed = function() {
-		/* TODO : the actual PDF stuff! */
 		var pdfPath = '/path/to/parted/pdf';
 		$log.log('proceeding');
 		angular.forEach(chiron.articles, function(article, k) {

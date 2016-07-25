@@ -32,6 +32,7 @@ table td {
 	border: 1px solid silver;
 	text-align: center;
 	vertical-align: top;
+
 }
 
 
@@ -136,6 +137,11 @@ tfoot > tr > td {
 }
 
 
+table.journal-table td,
+table.article-table td {
+	padding: 0px !important
+}
+
 table.authorlist {
 	margin: 0px
 }
@@ -228,6 +234,10 @@ table .alert {
 	margin: 0px;
 }
 
+.select-table > tbody > tr > td {
+	cursor: pointer
+}
+
 .xml-view {
 	width:100%; 
 	height: 100%; 
@@ -274,4 +284,9 @@ table .alert {
 	left: 0px;
 	background-color: white;
 	z-index: 5000;
+}
+
+/* misc  */
+.toprow {
+	margin-bottom: 1em
 }

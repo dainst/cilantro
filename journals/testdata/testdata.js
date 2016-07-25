@@ -22,7 +22,7 @@ angular
 		bob.journal.year.value.value = Math.round(Math.random() * 10000);
 		
 		bob.forwardArticle({
-			'title':			editables.base('Erster Testeintrag'),
+			'title':			editables.base('Crete'),
 			'abstract':			editables.text('', false),
 			'author':			editables.authorlist(['Peter Parker', 'Bruce Wayne']),
 			'pages':			editables.page(1, 'Seite eins!'),
@@ -32,14 +32,14 @@ angular
 		});
 		
 		bob.forwardArticle({
-			'title':			editables.base('Zweiter Testeintrag'),
-			'abstract':			editables.text('', false),
+			'title':			editables.base('A lady centaur.'),
+			'abstract':			editables.text('Testeintrag', false),
 			'author':			editables.authorlist(['Selina Kyle', 'Dr. X']),
 			'pages':			editables.page(10, '10'),
 			'date_published':	editables.base('03-03-1999'),
 			'filepath':			'http://195.37.232.186/test/test2.pdf',
 			'thumbnail':		''
-		});
+		}, true);
 		
 		bob.nextTab();
 		
