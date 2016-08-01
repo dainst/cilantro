@@ -268,6 +268,9 @@ table .alert {
 	top: 50px;
 }
 
+.navbar-default {
+    background-color: rgba(85, 114, 161, 1)  !important;
+}
 /* loader */
 
 .loader {
