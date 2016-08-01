@@ -287,7 +287,7 @@ angular
 				'date_published':	chiron.dateForAll,
 				'filepath':			pdfPath,
 				'thumbnail':		article.thumbnail
-			});
+			}, (k == 0));
 		});
 		
 		$log.log('done');
