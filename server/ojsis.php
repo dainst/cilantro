@@ -25,7 +25,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 		
 		$this->debug[] = $uploadId;
-		$this->debug[] = print_r($this->settings,1);
 		
 	}
 

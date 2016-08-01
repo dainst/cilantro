@@ -10,8 +10,8 @@ $author_list = $this->_assembleAuthorlist($article);
 <?php echo '<collection xmlns="http://www.loc.gov/MARC21/slim">', "\n" ?>
 	<record>
 	
-		<leader></leader>
-		<controlfield tag="800"></controlfield>
+		<controlfield tag="008">160120s2015    gw            000   ger d</controlfield>
+		<leader>     nab a22      a 4500</leader>
 
 		<datafield tag="100" ind1="1" ind2=" ">
 	    	<subfield code="a"><?php echo htmlspecialchars($data->article->author->value[0]->firstname); ?>, <?php echo htmlspecialchars($data->article->author->value[0]->lastname); ?></subfield>
@@ -30,7 +30,7 @@ $author_list = $this->_assembleAuthorlist($article);
 		</datafield>
 		
 		<datafield tag="300" ind1=" " ind2=" ">
-			<subfield code="a">p. <?php echo htmlspecialchars($article->pages->value->realpage); ?>-<?php echo htmlspecialchars($article->pages->value->endpage); ?> :</subfield>
+			<subfield code="a">p. <?php echo htmlspecialchars($article->pages->value->realpage); ?>-<?php echo htmlspecialchars($article->pages->value->endpage); ?></subfield>
 		</datafield>
 		
 		<datafield tag="504" ind1=" " ind2=" ">
@@ -49,7 +49,7 @@ $author_list = $this->_assembleAuthorlist($article);
 			<subfield code="a">ANA</subfield>
 			<subfield code="b">(manuell: ID des Bandes)</subfield>
 			<subfield code="l">DAI01</subfield>
-			<subfield code="n">Chiron. Mitteilungen der Kommission für Alte Geschichte und Epigraphik des Deutschen Archäologischen Instituts, <?php echo htmlspecialchars($journal->volume->value->value); ?>.<?php echo htmlspecialchars($journal->year->value->value); ?></subfield>
+			<subfield code="n">Chiron. Mitteilungen der Kommission für Alte Geschichte und Epigraphik des Deutschen Archäologischen Instituts, <?php echo htmlspecialchars($journal->year->value->value); ?> (<?php echo htmlspecialchars($journal->volume->value->value); ?>)</subfield>
 			<subfield code="m"><?php echo htmlspecialchars($article->title->value->value); ?></subfield>
 		</datafield>
 	

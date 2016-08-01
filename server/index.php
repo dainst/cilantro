@@ -24,7 +24,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
 // debug?
-$debugmode = true;
+$debugmode = false;
 
 
 /**
