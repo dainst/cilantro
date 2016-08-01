@@ -130,7 +130,7 @@ angular
 		$scope.articles = [];
 		$scope.articlesConfirmed = [];
 		
-		$scope.currentArticle = 0;
+		$scope.currentArticle = -1;
 		
 		function Article(title) {
 			return {
