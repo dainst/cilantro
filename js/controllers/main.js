@@ -92,8 +92,6 @@ angular
 			
 			$log.log('starting');
 
-			//pimportws.get('getDainstMetadata', {'uploadId':'7495759f66e6276c0936c6a83f888be1'}, function(R){$log.log(R);})
-
 			
 		}
 		

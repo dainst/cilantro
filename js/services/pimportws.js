@@ -7,7 +7,7 @@ angular
 	pimportws.sec = {};//  password
 
 	pimportws.get = function(task, data, callback) {
-		$log.log('import');
+		$log.log('get', task);
 		var send = data;
 		angular.extend(send, pimportws.sec);
 		

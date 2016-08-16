@@ -4,12 +4,23 @@ $settings = array(
 	'tmp_path'		=> 	'/var/www/pimport/tmp',
 	'log_path'		=> 	'/var/www/pimport/reports',
 	'rep_path'		=> 	'/var/www/chiron/data',
+	'ojs_url'		=> 	'http://DOMAIN/ojs/',
+		
 	'password'		=> 	'alpha',
+		
 	'mysql_db'		=>	'ojs',
 	'mysql_prefix'	=>	'',
 	'mysql_password'=>	'',
 	'mysql_user'	=>	'mysqluser',
-	'ojs_url'		=> 	'http://DOMAIN/ojs/'
+	
+	'psql_db'		=>	'ojspg',
+	'psql_prefix'	=>	'',
+	'psql_password'	=>	'',
+	'psql_user'		=>	'',
+	'psql_port'		=>	'5432',
+	'psql_host'		=>	'localhost',
+		
+	'use_psql'		=>	true
 );
 	
 if (isset($_GET['js']) and ($_GET['js'] == 1)) {

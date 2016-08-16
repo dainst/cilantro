@@ -11,13 +11,13 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	public $settings = array();
 	
-	function __construct($data) {
+	function __construct($data, $skippw = false) {
 		set_error_handler(array($this, 'errorHandler'));
 		
 		include_once('../settings.php');
 		$this->settings = $settings;
 		
-		if (!$this->checkPw($data)) {
+		if (!$this->checkPw($data) and !$skippw) {
 			throw new Exception("Wrong Password");
 		}
 		
@@ -173,7 +173,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	
 	/**
-	 * it a little bit unconvient, but this is the only solution I found to connect get the ids of uploaded stuff to publish them in
+	 * its a little bit unconvient, but this is the only solution I found to connect get the ids of uploaded stuff to publish them in
 	 * zenon and stuff.
 	 * 
 	 * 
@@ -181,40 +181,33 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 */
 	function getDainstMetadata($data) {
 		
-		$mysqli = new mysqli('localhost', $this->settings['mysql_user'], $this->settings['mysql_password'], $this->settings['mysql_db']);
-		if ($mysqli->connect_errno) {
-			throw new Exception("Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
-		}
+		require_once('ojs_database.class.php');
+		$db = new ojs_database($this->settings);
 		
 		$sql = 
 		"SELECT
 			a_s.article_id as id,
 			a_s.setting_value as abstract
 		FROM 
-			{$this->settings['mysql_db']}.{$this->settings['mysql_prefix']}article_settings as a_s
+			{$this->settings['mysql_prefix']}article_settings as a_s
 		WHERE 
-			a_s.setting_name = 'abstract'
-		    and
-			a_s.setting_value like '%dainst_metadata:{$this->return['uploadId']}%'
-		GROUP BY
-			a_s.article_id";
+			a_s.setting_name = 'abstract'" .
+		    (isset($this->return['uploadId']) ? " and a_s.setting_value like '%dainst_metadata:{$this->return['uploadId']}%'" : " and a_s.setting_value like '%dainst_metadata:%'");
 		
 		$this->debug[] = $sql;
 			
-		if ($result = $mysqli->query($sql)) {
-			$this->return['dainstMetadata'] = array();
-			while($row = $result->fetch_assoc()){
-				$this->return['dainstMetadata'][$row['id']] = $this->_harvestDainstMetadata($row['abstract']);
-			}
-			$this->debug[] = print_r($this->return['dainstMetadata'], 1);
-		} else {
-			throw new Exception('found nothing in sql' . $sql);
+		foreach ($db->query($sql) as $row) {
+			$this->return['dainstMetadata'][$row['id']] = $this->_harvestDainstMetadata($row['abstract']);
 		}
+
+	}
+	
+	function testDatabaseConnection($data) {
 		
 	}
 	
 	private function _harvestDainstMetadata($abstract) {		
-		$regex = "#dainst_metadata:{$this->return['uploadId']}:([^\':]*):([^\']*)#";		
+		$regex = isset($this->return['uploadId']) ? "#dainst_metadata:{$this->return['uploadId']}:([^\':]*):([^\']*)#" : "#dainst_metadata:[^:]*:([^\':]*):([^\']*)#";		
 		preg_match_all($regex, $abstract, $matches);		
 		$return = array();		
 		foreach($matches[1] as $i=>$key) {
