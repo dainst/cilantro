@@ -119,7 +119,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$xmlFile = $this->makeXML($data, true);
 			
 			// pump into ojs
-			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->journal->ojs_journal_code} {$data->settings['ojs_user']}";
+			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->journal->ojs_journal_code} {$this->settings['ojs_user']}";
 			
 			// this is my last result
 			$this->debug[] = $execline;	
