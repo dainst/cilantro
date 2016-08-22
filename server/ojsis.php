@@ -141,7 +141,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			// create report about ids to zenon
 			$this->getDainstMetadata($data);
 			$this->createZenonReport($data);
-			
+
 		} catch (Exception $e) {
 			// write debug log
 			$this->debug[] = $this->data;

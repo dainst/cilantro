@@ -40,14 +40,14 @@ class ojs_database {
 	
 
 	private function _queryPsql($sql) {
-		$result = pg_query($this->connection, "SELECT 1");
+		$result = pg_query($this->connection, $sql);
 		
 		$return = array();
 		if (!$result) {
-			throw new Exception("An error occurred.");
+			throw new Exception("An error occurred doing pg query.");
 			exit;
 		}
-		while ($row = pg_fetch_row($result)) {
+		while ($row = pg_fetch_assoc($result)) {
 			$return[] = $row;
 		}
 		return $return;
