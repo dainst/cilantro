@@ -124,8 +124,17 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			// this is my last result
 			$this->debug[] = $execline;	
 			$this->return['message'] = shell_exec($execline);
-			$successmsg = "The import was successful";
-			if (substr($this->return['message'], 0, strlen($successmsg)) != $successmsg) {
+			
+			// was successfull?
+			$successmsgs = array("The import was successful", "Der Import war erfolgreich");
+			$success = false;
+			foreach ($successmsg as $successmsg) {
+				if (substr($this->return['message'], 0, strlen($successmsg)) == $successmsg) {
+					$success = true;
+				}
+			}
+			
+			if (!$success) {
 				throw new Exception($this->return['message']);
 			}
 			
