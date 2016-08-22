@@ -128,7 +128,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			// was successfull?
 			$successmsgs = array("The import was successful", "Der Import war erfolgreich");
 			$success = false;
-			foreach ($successmsg as $successmsg) {
+			foreach ($successmsgs as $successmsg) {
 				if (substr($this->return['message'], 0, strlen($successmsg)) == $successmsg) {
 					$success = true;
 				}
