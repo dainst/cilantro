@@ -79,7 +79,7 @@ try {
 
 } catch (Exception $a) {
 	ob_clean();
-	
+
 	$debug = (isset($ojsis) and isset($ojsis->debug) and $debugmode) ? $ojsis->debug : '';
 	
 	header('Content-Type: application/json');

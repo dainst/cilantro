@@ -2,8 +2,8 @@
 class testdata extends journal {
 	function createFrontPage($article, $journal) {
 
-		error_reporting(E_ALL);
-		ini_set('display_errors', 1);
+		//error_reporting(E_ALL);
+		//ini_set('display_errors', 1);
 
 		$this->metadata['journal_title'] =	strtoupper('Test Magazine');
 		$this->metadata['journal_sub'] =	'Mitteilungen der Kommission für alte Geschichte und Epigraphik des Deutschen Archäologischen Instituts';

@@ -12,7 +12,10 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	public $settings = array();
 	
 	function __construct($data, $skippw = false) {
+		//ini_set ("display_errors", "0");
+		//error_reporting(false);
 		set_error_handler(array($this, 'errorHandler'));
+		
 		
 		include_once('../settings.php');
 		$this->settings = $settings;
@@ -79,9 +82,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 		$this->return['message'] = "XML successfully generated";
 		$this->return['xml'] = $xml;
-		
-		$this->return['f'] = print_r($journal,1);
-		
+				
 		$this->sendReport($data->article->title->value->value . '.xml', $xml);
 	}
 	
@@ -118,7 +119,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$xmlFile = $this->makeXML($data, true);
 			
 			// pump into ojs
-			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->journal->ojs_journal_code} {$data->journal->ojs_user}";
+			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->journal->ojs_journal_code} {$data->settings['ojs_user']}";
 			
 			// this is my last result
 			$this->debug[] = $execline;	
@@ -152,8 +153,9 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$end   = (int) $article->pages->value->endpage  + (int) $article->pages->context->offset;
 			$end   = $end ? $end : $start;
 			$name  = "{$data->journal->importFilePath}.$nr.pdf"; 
-			$front = $this->_journal->createFrontPage($article, $data->journal);
 			
+			$front = $this->_journal->createFrontPage($article, $data->journal);
+
 			$shell = "pdftk A={$this->settings['rep_path']}/{$data->journal->importFilePath}  B=$front cat B1 A$start-$end output {$this->settings['tmp_path']}/$name 2>&1";
 			
 			$this->debug[] = $shell;

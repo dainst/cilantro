@@ -38,7 +38,6 @@ angular
 		/* necessary for OJS */
 		chiron.journal.identification = 'vol_year';
 		chiron.journal.ojs_journal_code = 'chiron';
-		chiron.journal.ojs_user = 'admin';
 		chiron.journal.journal_code = 'chiron';
 		
 		chiron.dateForAll = editables.text('A date', true);

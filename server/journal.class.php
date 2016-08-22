@@ -33,6 +33,7 @@ class journal {
 		require_once('inc/TCPDF/tcpdf.php');
 		require_once('daipdf.class.php');
 		
+		
 		$pdf = new daiPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		
 		$pdf->daiInit($this->metadata);

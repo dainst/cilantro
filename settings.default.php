@@ -20,7 +20,9 @@ $settings = array(
 	'psql_port'		=>	'5432',
 	'psql_host'		=>	'localhost',
 		
-	'use_psql'		=>	true
+	'use_psql'		=>	true,
+
+	'ojs_user'		=>  'admin'
 );
 	
 if (isset($_GET['js']) and ($_GET['js'] == 1)) {

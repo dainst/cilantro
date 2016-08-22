@@ -16,7 +16,6 @@ angular
 		bob.journal.identification = 'vol_year';
 		bob.journal.ojs_journal_code = 'test';
 		bob.journal.journal_code = 'testdata';
-		bob.journal.ojs_user = 'admin';
 		
 		bob.journal.volume.value.value = Math.round(Math.random() * 10000);
 		bob.journal.year.value.value = Math.round(Math.random() * 10000);
