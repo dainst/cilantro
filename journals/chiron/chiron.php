@@ -1,6 +1,6 @@
 <?php
 class chiron extends journal {
-	function createFrontPage($article, $journal) {
+	function createFrontPage($article, $issue) {
 
 		error_reporting(E_ALL);
 		ini_set('display_errors', 1);
@@ -19,8 +19,8 @@ redaktion.chiron@dainst.de<p>
 <p>Online-Ausgabe: <a href='https://journals.dainst.org/chiron'>https://journals.dainst.org/chiron</a></p>";
 				
 		$this->metadata['article_author']	= $this->assembleAuthorlist($article);
-		$this->metadata['article_title' ] = $article->title->value->value;
-		$this->metadata['issue_tag']		= "VOLUME {$journal->volume->value->value} • {$journal->year->value->value}";
+		$this->metadata['article_title' ] 	= $article->title->value->value;
+		$this->metadata['issue_tag']		= "VOLUME {$issue->volume->value->value} • {$issue->year->value->value}";
 		
 		$pdf = $this->createPDF();
 		

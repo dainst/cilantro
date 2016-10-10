@@ -21,14 +21,9 @@ class daiPDF extends TCPDF {
 			case 'S': 	$this->SetFont('dejavusansextralight', 'B', 20, '', true); break;
 		}
 
-		//$this->Cell('','',$text,0,0,'C',false,'',0,0,'T','M');
-		//$this->Write(0, $text, '', 0, 'L', true, 0, false, false, 0);
-
 		$html = '<p style="text-align:justify">' . $html . '</p>';
 		$this->writeHTML($html, true, 0, true, true);
 
-
-		//$this->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
 	}
 
 
@@ -47,12 +42,23 @@ class daiPDF extends TCPDF {
 		$this->metadata = $metadata;
 
 		// set document information
-		//$this->SetCreator(PDF_CREATOR);
+		$this->SetCreator("DAI OJS Uploader");
 		$this->SetAuthor($this->metadata['article_author']);
 		$this->SetTitle($this->metadata['article_title']);
 		//$this->SetSubject('TCPDF Tutorial');
 		//$this->SetKeywords('TCPDF, PDF, example, test, guide');
-
+		
+		// set additional DAI specific metadata
+		$xmp  = '<dai xmlns:dai="xml.dainst.org">';
+		$xmp .= "\n\t";
+		$xmp .= (isset($this->metadata['pub_id'])) ?  '<dai:pubid>' . $this->metadata['pub_id'] . '</dai:pubid>' : '';
+		$xmp .= "\n\t";
+		$xmp .= (isset($this->metadata['zenon_id'])) ?  '<dai:zenonid>' . $this->metadata['zenon_id'] . '</dai:zenonid>' : '';
+		$xmp .= "\n";
+		$xmp .= '</dai>';		
+		$this->setExtraXMP($xmp);
+		
+		// set monosprace font
 		$this->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 		// set margins

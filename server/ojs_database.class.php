@@ -23,6 +23,11 @@ class ojs_database {
 			}
 			$this->connection = $mysqli;
 		} else {
+			
+			if (!function_exists("pg_pconnect")) {
+				throw new Exception("PSQL Extension not installed");
+			}
+			
 			$connstring = "host={$this->settings['psql_host']} port={$this->settings['psql_port']} dbname={$this->settings['psql_db']} user={$this->settings['psql_user']} password={$this->settings['psql_password']}";
 			$psql = pg_pconnect($connstring);
 			if (!$psql) {

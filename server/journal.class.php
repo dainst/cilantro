@@ -19,11 +19,16 @@ class journal {
 		'journal_title'		=> '',
 		'issue_tag'			=> '',
 		'journal_url'		=> '',
-		'journal_info'		=> ''
+		'journal_info'		=> '',
+		'pub_id'			=> 'unknown',
+		'zenon_id'			=> 'unknown'
 	);
 	
-	function __construct($settings) {
-		include_once('../settings.php');
+	private $_base_path = "../";
+	
+	function __construct($settings, $base_path = "../") {
+		$this->_base_path = $base_path;
+		include_once($this->_base_path  . 'settings.php');
 		$this->settings = $settings;
 	}
 	

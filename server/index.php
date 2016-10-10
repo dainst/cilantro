@@ -19,7 +19,7 @@
 // settings
 $allowedIps		= array();
 
-// surpress errors (some warning may emerge vom meekro)
+// errors
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
@@ -85,8 +85,9 @@ try {
 	header('Content-Type: application/json');
 	echo json_encode(array(
 		'success'	=> false,
-		'message'	=> $a->getMessage(),
-		'debug'		=> $debug
+		'message'	=> $a->getMessage(), 
+		'debug'		=> $debug,
+		
 	));
 	die();
 }

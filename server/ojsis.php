@@ -11,13 +11,17 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	public $settings = array();
 	
-	function __construct($data, $skippw = false) {
+	private $_base_path = "../";
+	
+	function __construct($data, $skippw = false, $base_path = '../') {
 		//ini_set ("display_errors", "0");
 		//error_reporting(false);
+		
+		$this->_base_path = $base_path;
+		
 		set_error_handler(array($this, 'errorHandler'));
-		
-		
-		include_once('../settings.php');
+				
+		include_once($this->_base_path . 'settings.php');
 		$this->settings = $settings;
 		
 		if (!$this->checkPw($data) and !$skippw) {
@@ -94,9 +98,16 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	function getJournal($data) {
 		$journal = $data->journal->journal_code;
 		require_once("journal.class.php");
-		require_once("../journals/{$journal}/{$journal}.php");
-		$this->_journal = new $journal($this->settings);
+		require_once($this->_base_path . "journals/{$journal}/{$journal}.php");
+		$this->_journal = new $journal($this->settings, $this->_base_path);
 		return $data;
+	}
+	
+	/**
+	 * get journal object. this is only necessary in for other environemnts than the server script (eg the testing suite)
+	 */
+	function getJournalObject() {
+		return $this->_journal;
 	}
 	
 	/**

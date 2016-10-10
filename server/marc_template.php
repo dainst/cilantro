@@ -9,8 +9,7 @@ $author_list = $this->_assembleAuthorlist($article);
 <?php echo '<?xml version="1.0" encoding="UTF-8"?>', "\n"; ?>
 <?php echo '<collection xmlns="http://www.loc.gov/MARC21/slim">', "\n" ?>
 	<record>
-	<x><?php print_r($journal)?></x>
-	<x><?php print_r($article->pages)?></x>
+
 		<controlfield tag="008">160120s2015    gw            000   ger d</controlfield>
 		<leader>     nab a22      a 4500</leader>
 
