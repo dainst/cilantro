@@ -34,6 +34,10 @@ class daiPDF extends TCPDF {
 		$this->daiPrint($this->metadata['journal_title'], '2B');
 		$this->daiPrint($this->metadata['journal_sub'], '2');
 		$this->daiPrint($this->metadata['issue_tag']);
+		
+		// debug
+		$this->daiPrint('<br><br>', '1');
+		$this->daiPrint('pubid: ' .  $this->metadata['pub_id']);
 
 	}
 

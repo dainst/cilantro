@@ -32,6 +32,12 @@ class journal {
 		$this->settings = $settings;
 	}
 	
+	function setDefaultMetadata($article, $issue) {
+		$this->metadata['article_author']	= $this->assembleAuthorlist($article);
+		$this->metadata['article_title' ] 	= $article->title->value->value;
+		$this->metadata['issue_tag']		= "VOLUME {$issue->volume->value->value} • {$issue->year->value->value}";
+		$this->metadata['pub_id']			= $article->pubid;
+	}
 	
 	function createPDF() {
 		

@@ -27,6 +27,7 @@ var_dump($articles[0]->pages);
 	                	if (isset($article->zenonId) and ($article->zenonId != '(((new)))')) {
 	                		echo "<a class='zenonlink' href='http://zenon.dainst.org/Record/{$article->zenonId}' data-meta='dainst_metadata:{$this->return['uploadId']}:zenonId:{$article->zenonId}'>Zenon</a>";
 	              	  	} 
+	              	  	
 	              	  	// echo "<br data-meta='dainst_metadata:{$this->return['uploadId']}:find:me' style='display:none'>";
 	              	  	?>]]>
 	                </abstract>

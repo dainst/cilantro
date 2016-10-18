@@ -1,50 +1,230 @@
 <?php
 class ojsis { // you're my wonderwall bla bla whimmer
 	
-	public $return = array(
-		'warnings'	=> array()
-	);
+	// return value
+	public $return = array();
 	
-	public $debug = array();
+	// do we debug log? (change in server script)
+	public $debug = true;
+	// debug log
+	public $debuglog = array();
+	// settings
+	public $settings = array();
+	// the data
+	public $data = null;
 	
 	private $_journal = null;
+	private $_base_path = "../";	
+	private $_db = null;
 	
-	public $settings = array();
+	public $log = null;
 	
-	private $_base_path = "../";
+	private $_locked = false;
 	
-	function __construct($data, $skippw = false, $base_path = '../') {
-		//ini_set ("display_errors", "0");
-		//error_reporting(false);
+	/* system functions */
+	
+	/**
+	 * 
+	 * @param <array> $data
+	 * @param <object> $logger object wich implements warning() and debug() and log()
+	 * @param <array> $additional_settings (base_path, skiplock, skippw) <- necessary to use this from testing contexts
+	 * @throws Exception
+	 */
+	function __construct($data, $logger, $additional_settings = array()) {
 		
-		$this->_base_path = $base_path;
+		$this->log = $logger;
+		
+		$this->log->log('starting ojsis');
+		
+		$this->_base_path = isset($additional_settings['base_path']) ? $additional_settings['base_path'] : '../';
 		
 		set_error_handler(array($this, 'errorHandler'));
 				
 		include_once($this->_base_path . 'settings.php');
 		$this->settings = $settings;
 		
-		if (!$this->checkPw($data) and !$skippw) {
+		$this->data = $data;
+		
+		if (!$this->checkPw() and !isset($additional_settings['skippw'])) {
 			throw new Exception("Wrong Password");
 		}
 		
-		$uploadId = $this->getUploadId($data);
+		$this->getUploadId();
 		
-		
-		$this->debug[] = $uploadId;
+		if(!isset($additional_settings['skiplock'])) {
+			$this->checkLock();
+		}
+
 		
 	}
 
 	
-	function finish() { // not __destruct, because it shall not be called in case of exception
-		array_map('unlink', glob($this->settings['tmp_path'] . '/*'));
+	/**
+	 *  __destruct is counted und get only called in case of really fnishing the script, we call finish in most cases manually
+	 *  so we need both, in case of error finish as well
+	 */
+	private $_isdead = false;
+	
+	function finish() {
+		$this->log->log('finishing ojsis');
+		file_put_contents("{$this->settings['tmp_path']}/yo.lo", "hihihi");
+		$this->ojsUnlock();
+		$this->writeLog();
+		$this->_isdead = true;
 	}
 	
+	function __destruct() {
+		if (!$this->_isdead) {
+			$this->finish();
+		}
+	}
+	
+	/**
+	 * 
+	 * @param unknown $fehlercode
+	 * @param unknown $fehlertext
+	 * @param unknown $fehlerdatei
+	 * @param unknown $fehlerzeile
+	 */
 	function errorHandler($fehlercode, $fehlertext, $fehlerdatei, $fehlerzeile) {
-		$this->return['warnings'][] = "Error $fehlercode in $fehlerdatei row $fehlerzeile: $fehlertext";
+		$this->log->warning("Error $fehlercode in $fehlerdatei row $fehlerzeile: $fehlertext");
 	}
 	
-	function makeXML($data, $save = false) {
+	
+	/* import functions */
+	
+	/**
+	 * do it
+	 *
+	 * @param unknown $data
+	 * @throws Exception
+	 */
+	function toOJS() {
+		$data = $this->data;
+	
+		try {
+			
+			$this->log->log('starting import');
+			
+			$this->log->log("temporaly lock down OJS for writing");
+			$this->ojsLockdown();
+			
+			$this->log->log("get last used ID in OJS");
+			$lastId = $this->getLastId();
+			
+			$this->log->log("get journal specific instructions");
+			$data = $this->getJournal();
+				
+			$this->log->log("cut the pdf file into pieces");
+			$data = $this->cutPdf($lastId);
+				
+			$this->log->log("make transport XML");
+			$xmlFile = $this->makeXML(true);
+				
+			$this->log->log("pump into ojs");
+			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->journal->ojs_journal_code} {$this->settings['ojs_user']}";
+				
+			$this->log->log("this is my last result");
+			$this->debuglog[] = $execline;
+			$this->return['message'] = shell_exec($execline);
+				
+			$this->log->log("check if it  was successfull?");
+			$successmsgs = array("The import was successful", "Der Import war erfolgreich");
+			$success = false;
+			foreach ($successmsgs as $successmsg) {
+				if (substr($this->return['message'], 0, strlen($successmsg)) == $successmsg) {
+					$success = true;
+				}
+			}
+				
+			if (!$success) {
+				throw new Exception($this->return['message']);
+			}
+			
+			$this->log->log("read in what we have done");
+			$this->getDainstMetadata();
+			$this->checkUpload($lastId);
+				
+			$this->log->log("create report about ids to zenon");
+			$this->createZenonReport();
+				
+			$this->log->log("tidy up");
+			$this->clearTmp();
+			$this->unlockSession();
+				
+		} catch (Exception $e) {
+			$this->ojsUnlock();
+			$this->log->debug($this->data);
+			
+			$this->writeLog();
+			throw $e;
+		}
+	
+	}
+	
+	
+	/**
+	 * get journal specific stuff
+	 * @param unknown $data
+	 * @return <journal>
+	 */
+	function getJournal() {
+		$data = $this->data;
+		$journal = $data->journal->journal_code;
+		require_once("journal.class.php");
+		$file = $this->_base_path . "journals/{$journal}/{$journal}.php";
+		require_once($this->_base_path . "journals/{$journal}/{$journal}.php");
+		$this->_journal = new $journal($this->settings, $this->_base_path);
+		return $this->_journal;
+	}
+	
+	/**
+	 *
+	 * @param unknown $data
+	 * @data last used id;
+	 * @throws Exception
+	 * @return <array>
+	 */
+	function cutPdf($last) {
+		$data = $this->data;
+	
+		foreach ($data->articles as $nr => $article) {
+				
+			$start = (int) $article->pages->value->realpage + (int) $article->pages->context->offset;
+			$end   = (int) $article->pages->value->endpage  + (int) $article->pages->context->offset;
+			$end   = $end ? $end : $start;
+			$name  = "{$data->journal->importFilePath}.$nr.pdf";
+				
+			$article->pubid = $last + 1 + $nr;
+				
+			$front = $this->_journal->createFrontPage($article, $data->journal);
+	
+			$shell = "pdftk A={$this->settings['rep_path']}/{$data->journal->importFilePath}  B=$front cat B1 A$start-$end output {$this->settings['tmp_path']}/$name 2>&1";
+				
+			$this->log->debug($shell);
+				
+			$cut = shell_exec($shell);
+				
+			if($cut != '') {
+				throw new Exception($cut);
+			}
+				
+			$data->articles[$nr]->filepath = "{$this->settings['tmp_path']}/$name";
+				
+		}
+	
+		return $data;
+	}
+	
+	
+	/**
+	 * 
+	 * @param string $save
+	 * @throws Exception
+	 * @return string
+	 */
+	function makeXML($save = false) {
+		$data = $this->data;
 		$journal = $data->journal;
 		$articles = $data->articles;
 				
@@ -56,13 +236,13 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		try {
 			$test = new SimpleXMLElement($xml); // should throw an error on error..
 		} catch(Exception $e) {
-			$this->debug[] = $xml;
+			$this->debuglog[] = $xml;
 			throw $e;
 		}
 		
 		
 		if ($save) {
-			$filename = 'importXml.' . $this->getUploadId($data) . '.xml';
+			$filename = 'importXml.' . $this->getUploadId() . '.xml';
 			file_put_contents($this->settings['tmp_path'] . '/' . $filename, $xml);
 			$this->return['filename'] = $filename;
 			return $filename;
@@ -73,7 +253,96 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 	}
 	
-	function sendToZenon($data) {
+	/**
+	 * checkUpload
+	 * 
+	 * 
+	 * @param unknown $desired_from - last given ojs id when upload began
+	 */
+	function checkUpload($last_index) {
+
+		$ids = array_keys($this->return['dainstMetadata']);
+		sort($ids);
+		$desired_from 	= $last_index + 1;
+		$desired_to 	= count($this->data->articles) - 1 + $desired_from;
+		$reality_from 	= $ids[0];
+		$reality_to 	= $ids[count($ids) - 1];
+		
+		if ($desired_from != $reality_from or $desired_to != $reality_to) {
+			$this->log->warning("Something went wrong! Articles where imported but gut the wrong IDs.  Desired: $desired_from - $desired_to. Reality: $reality_from - $reality_to");
+		}
+		
+		$this->log->debug("IDs. Desired: $desired_from - $desired_to. Reality: $reality_from - $reality_to");
+
+		//throw new Exception("IDs. Desired: $desired_from - $desired_to. Reality: $reality_from - $reality_to");
+	}
+	
+	
+	/**
+	 * its a little bit unconvient, but this is the only solution I found to connect get the ids of uploaded stuff to publish them in
+	 * zenon and stuff.
+	 *
+	 */
+	function getDainstMetadata() {
+	
+		$db = $this->getDB();
+	
+		$sql =
+		"SELECT
+			a_s.article_id as id,
+			a_s.setting_value as abstract
+		FROM
+			{$this->settings['mysql_prefix']}article_settings as a_s
+		WHERE
+			a_s.setting_name = 'abstract'" .
+			(isset($this->return['uploadId']) ? " and a_s.setting_value like '%dainst_metadata:{$this->return['uploadId']}%'" : " and a_s.setting_value like '%dainst_metadata:%'");
+
+		$this->log->debug($sql);
+			
+		foreach ($db->query($sql) as $row) {
+			$this->return['dainstMetadata'][$row['id']] = $this->_harvestDainstMetadata($row['abstract']);
+		}
+		
+		return $this->return['dainstMetadata'];
+	}
+	
+	
+	/**
+	 *
+	 * creates a report with zeninIds
+	 *
+	 */
+	function createZenonReport() {
+		$data = $this->data;
+		ob_start();
+		include('report_template.php');
+		$xml = ob_get_contents();
+		ob_end_clean();
+	
+		$test = new SimpleXMLElement($xml); // should throw an error on error..
+	
+		$this->return['xml'] = $xml;
+		$this->sendReport('urls.xml', $xml);
+	}
+	
+	/**
+	 * send report to sabine
+	 *
+	 * to keep it easy we just save it and send them manually later
+	 *
+	 */
+	function sendReport($filename, $content) {
+		file_put_contents($this->settings['log_path'] . '/' . $this->return['uploadId'] . '.' . $filename, $this->return['xml']);
+	}
+	
+	
+	/* send to zenon */
+	
+	/**
+	 *
+	 */
+	function sendToZenon() {
+		$data = $this->data;
 		$journal = $data->journal;
 		$article = $data->article;
 	
@@ -81,216 +350,261 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		include('marc_template.php');
 		$xml = ob_get_contents();
 		ob_end_clean();
-		
+	
 		$test = new SimpleXMLElement($xml); // should throw an error on error..
-		
+	
 		$this->return['message'] = "XML successfully generated";
 		$this->return['xml'] = $xml;
-				
+	
 		$this->sendReport($data->article->title->value->value . '.xml', $xml);
 	}
 	
-	/**
-	 * get journal specific stuff
-	 * @param unknown $data
-	 * @return unknown
-	 */
-	function getJournal($data) {
-		$journal = $data->journal->journal_code;
-		require_once("journal.class.php");
-		require_once($this->_base_path . "journals/{$journal}/{$journal}.php");
-		$this->_journal = new $journal($this->settings, $this->_base_path);
-		return $data;
-	}
+	/* check start */
 	
 	/**
-	 * get journal object. this is only necessary in for other environemnts than the server script (eg the testing suite)
+	 * check if the file exists (get called in the beginning of uploading process)
+	 *
+	 * @param unknown $data
+	 * @throws Exception
+	 */
+	function checkStart() {
+		$data = $this->data;
+		
+		// @ TODO omit if not needed for journal!
+		if (!file_exists($this->settings['rep_path'] . '/' . $data->file))  {
+			throw new Exception("File " . $this->settings['rep_path'] . '/' . $data->file . ' does not exist!');
+		}
+	}
+	
+	
+	/* helper functions */
+	
+	/**
+	 * get journal object. this is only necessary in for other environments than the server script (eg the testing suite)
 	 */
 	function getJournalObject() {
 		return $this->_journal;
 	}
 	
+	
+	
 	/**
-	 * do it
+	 * clear all tmp data
+	 */
+	function clearTmp() {
+		array_map('unlink', glob($this->settings['tmp_path'] . '/*'));
+	}
+	
+
+	/**
+	 * writes log.file in case of error or debug mode
+	 */
+	function writeLog() {
+		file_put_contents("{$this->settings['log_path']}/{$this->return['uploadId']}.log", $this->log->dump());
+	}
+	
+	/* password related functions */
+		
+	/**
+	 *
+	 * @return boolean
+	 */
+	function checkPw() {
+		$data = $this->data;
+		return (isset($data->password) and ($data->password == $this->settings['password']));
+	}
+		
+	/*  lock related functions */
+	
+	/**
 	 * 
-	 * @param unknown $data
+	 * checks if lock file with this IP is present
+	 * 
 	 * @throws Exception
 	 */
-	function toOJS($data) {
+	function checkLock() {
+				
+		$ip = !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+		$time = time();
+		$lockfile = $this->settings['log_path'] . '/lock';
+		$uploadId = $this->getUploadId();
 		
-		try {
-			
-			// get journal specific fu
-			$data = $this->getJournal($data);
-			
-			// cut my life (the pdf file) into pieces
-			$data = $this->cutPdf($data);
-			
-			// make transport XML
-			$xmlFile = $this->makeXML($data, true);
-			
-			// pump into ojs
-			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->journal->ojs_journal_code} {$this->settings['ojs_user']}";
-			
-			// this is my last result
-			$this->debug[] = $execline;	
-			$this->return['message'] = shell_exec($execline);
-			
-			// was successfull?
-			$successmsgs = array("The import was successful", "Der Import war erfolgreich");
-			$success = false;
-			foreach ($successmsgs as $successmsg) {
-				if (substr($this->return['message'], 0, strlen($successmsg)) == $successmsg) {
-					$success = true;
-				}
-			}
-			
-			if (!$success) {
-				throw new Exception($this->return['message']);
-			}
-			
-			// create report about ids to zenon
-			$this->getDainstMetadata($data);
-			$this->createZenonReport($data);
-			
-		} catch (Exception $e) {
-			// write debug log
-			$this->debug[] = $this->data;
-			file_put_contents("{$this->settings['log_path']}/{$this->return['uploadId']}.log", implode("\n", $this->debug));
-			throw $e;
+		$lockcode = $time . '###' . $ip . '###' . $uploadId;
+		$this->log->debug("lockcode: " . $lockcode);
+
+		if (isset($this->data->unlock) && $this->data->unlock) {
+			$this->unlockSession();
 		}
 		
-		
-
-		
-	}
-	
-	function cutPdf($data) {
-
-		foreach ($data->articles as $nr => $article) {
-			
-			$start = (int) $article->pages->value->realpage + (int) $article->pages->context->offset;
-			$end   = (int) $article->pages->value->endpage  + (int) $article->pages->context->offset;
-			$end   = $end ? $end : $start;
-			$name  = "{$data->journal->importFilePath}.$nr.pdf"; 
-			
-			$front = $this->_journal->createFrontPage($article, $data->journal);
-
-			$shell = "pdftk A={$this->settings['rep_path']}/{$data->journal->importFilePath}  B=$front cat B1 A$start-$end output {$this->settings['tmp_path']}/$name 2>&1";
-			
-			$this->debug[] = $shell;
-			
-			$cut = shell_exec($shell);
-			
-			if($cut != '') {
-				throw new Exception($cut);
+		if (file_exists($lockfile)) {
+			list($locked_time, $locked_ip, $locked_uid) = explode('###', file_get_contents($lockfile));
+			if ($locked_ip != $ip) {
+				throw new Exception("Importer is locked by another user");
 			}
-			
-			$data->articles[$nr]->filepath = "{$this->settings['tmp_path']}/$name";
-			
+			if ($locked_uid != $uploadId) {
+				$this->log->debug("More than one session going on ($locked_uid != $uploadId)");
+				throw new Exception("Session locked");
+			}
 		}
-		
-		return $data;
+		file_put_contents($lockfile, $lockcode);
+
 	}
-	
 	
 	/**
-	 * its a little bit unconvient, but this is the only solution I found to connect get the ids of uploaded stuff to publish them in
-	 * zenon and stuff.
 	 * 
-	 * 
-	 * @param unknown $data
 	 */
-	function getDainstMetadata($data) {
+	function unlockSession() {
+		$this->log->log('unlocking session');
+		$lockfile = $this->settings['log_path'] . '/lock';
+		unlink($lockfile);
+	}
+	
+	/* ojs functions */
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	function ojsLockdown() {
 		
-		require_once('ojs_database.class.php');
-		$db = new ojs_database($this->settings);
+		$this->_locked = true;
 		
-		$sql = 
-		"SELECT
-			a_s.article_id as id,
-			a_s.setting_value as abstract
-		FROM 
-			{$this->settings['mysql_prefix']}article_settings as a_s
-		WHERE 
-			a_s.setting_name = 'abstract'" .
-		    (isset($this->return['uploadId']) ? " and a_s.setting_value like '%dainst_metadata:{$this->return['uploadId']}%'" : " and a_s.setting_value like '%dainst_metadata:%'");
 		
-		$this->debug[] = $sql;
+		$ojs_path = $this->settings['ojs_path'];
 			
-		foreach ($db->query($sql) as $row) {
-			$this->return['dainstMetadata'][$row['id']] = $this->_harvestDainstMetadata($row['abstract']);
+		//  prevent no login
+		if (file_exists($ojs_path . '/.htaccess')) {
+			rename($ojs_path . '/.htaccess', $ojs_path . '/restore.htaccess');
 		}
+		$htaccess = "
+			# temporaly prevent users from login
+			RewriteEngine On
+			RewriteCond %{REQUEST_METHOD} POST
+					
+			# allow the server to POST to itself
+			RewriteCond %{REMOTE_ADDR} !127.0.0.1
+					
+			# send all other post requests to 403 forbidden
+			RewriteRule ^ / [L,R=307]";
+			
+		file_put_contents($ojs_path . '/.htaccess',   $htaccess);
+		
+		// kill ojs sessions
+		$db = $this->getDB();
+		$db->query("DELETE FROM sessions");
+
 
 	}
 	
-	function testDatabaseConnection($data) {
+	function ojsUnlock() {
 		
+		$this->log->log('unlock ' . $this->_locked);
+		
+		if (!$this->_locked) {
+			return;
+		}
+		
+		$ojs_path = $this->settings['ojs_path'];
+		unlink($ojs_path . '/.htaccess');
+		
+		if (file_exists($ojs_path . '/restore.htaccess')) {
+			copy($ojs_path . '/restore.htaccess', $ojs_path . '/.htaccess');
+		}
+
+	}
+
+	
+	
+	/* uploadID related functions */
+	
+	/**
+	 *
+	 * @return <string>:
+	 */
+	function getUploadId() {
+		$data= $this->data;
+		if (!isset($this->return['uploadId']) or !$this->return['uploadId']) {
+			$this->return['uploadId'] = md5(time());
+		}
+	
+		if (isset($data->uploadId)) {
+			$this->return['uploadId'] = $data->uploadId;
+		}
+		
+		$this->log->debug("uploadId: {$data->uploadId}");
+	
+		return $this->return['uploadId'];
 	}
 	
+	
+	/* database related functions */
+	
+	/**
+	 *
+	 * @return ojs_database
+	 */
+	function getDB() {
+		if (!$this->_db) {
+			require_once('ojs_database.class.php');
+			$this->_db = new ojs_database($this->settings);
+		}
+		return $this->_db;
+	}
+	
+	/**
+	 * getLastID from DB
+	 */
+	function getLastId() {
+		$db = $this->getDB();
+		
+		$sql = "SELECT max(a.article_id) as id FROM ojs.articles as a";
+		foreach ($db->query($sql) as $row) {
+			$next = $row['id'];
+		}
+		
+		$this->log->debug('next id: ' + $next);
+		
+		return $next;
+	}
+	
+	/**
+	 * 
+	 */
+	function testDatabaseConnection() {
+		$db = $this->getDB();
+	}
+	
+
+	
+	/**
+	 * 
+	 * @param unknown $abstract
+	 * @return multitype:NULL
+	 */
 	private function _harvestDainstMetadata($abstract) {		
 		$regex = isset($this->return['uploadId']) ? "#dainst_metadata:{$this->return['uploadId']}:([^\':]*):([^\']*)#" : "#dainst_metadata:[^:]*:([^\':]*):([^\']*)#";		
 		preg_match_all($regex, $abstract, $matches);		
 		$return = array();		
+		/*var_dump($abstract);
+		var_dump($matches);
+		echo "\n\n--\n\n";*/
 		foreach($matches[1] as $i=>$key) {
 			$return[$key] = $matches[2][$i];
 		}
 		return $return;
 	}
 	
-	/**
-	 * 
-	 * creates a report with zeninIds
-	 * 
-	 * @param unknown $data
-	 */
-	function createZenonReport($data) {
-		
-		ob_start();
-		include('report_template.php');
-		$xml = ob_get_contents();
-		ob_end_clean();
-		
-		$test = new SimpleXMLElement($xml); // should throw an error on error..
-		
-		$this->return['xml'] = $xml;
-		$this->sendReport('urls.xml', $xml);
-	}
-	
-	
-	function checkPw($data) {
-		return (isset($data->password) and ($data->password == $this->settings['password']));
-	}
-	
-	function checkStart($data) {	
-		if (!file_exists($this->settings['rep_path'] . '/' . $data->file))  {
-			throw new Exception("File " . $this->settings['rep_path'] . '/' . $data->file . ' does not exist!');
-		}
-	}
-	
-	function getUploadId($data) {
-		if (!isset($this->return['uploadId']) or !$this->return['uploadId']) {
-			$this->return['uploadId'] = md5(time());		
-		}
-		
-		if (isset($data->uploadId)) {
-			$this->return['uploadId'] = $data->uploadId;
-		}
 
-		return $this->return['uploadId'];
-	}
+	
+
+	/* other */
+
 	
 	/**
-	 * send report to sabine
 	 * 
-	 * to keep it easy we just save it and send them manually later
-	 * 
-	 * @param unknown $data
+	 * @param unknown $article
+	 * @return string
 	 */
-	function sendReport($filename, $content) {
-		file_put_contents($this->settings['log_path'] . '/' . $this->return['uploadId'] . '.' . $filename, $this->return['xml']);
-	}
-	
 	private function _assembleAuthorlist($article) {
 		$author_list = [];
 		foreach ($article->author->value as $author) {

@@ -49,12 +49,15 @@ angular
 			response: ''
 		}
 		
+		$scope.uploadId = 0;
+		
 		$scope.checkPw = function() {
 			pimportws.sec = $scope.sec;
-			pimportws.get('checkStart', {'file': $scope.journal.importFilePath},  function(response) {				
+			pimportws.get('checkStart', {'file': $scope.journal.importFilePath, 'unlock': true},  function(response) {				
 				if (response.success) {
 					$scope.sec.response  = '';
 					$scope.start();
+					$scope.uploadId = response.uploadId;
 				} else {
 					$scope.sec.password = '';
 					$scope.sec.response  = response.message;
@@ -364,12 +367,11 @@ angular
 		
 		$scope.server = {}
 		$scope.done = false;
-		$scope.uploadId = 0;
 		$scope.dainstMetadata = {};
 		
 		$scope.renderXml = function() {
 			$scope.server = {};
-			pimportws.get('makeXML', {journal: $scope.journal, articles: $scope.articlesConfirmed}, function(response) {
+			pimportws.get('makeXML', {journal: $scope.journal, articles: $scope.articlesConfirmed, uploadId: $scope.uploadId}, function(response) {
 				$scope.server = response;
 			});
 		}
@@ -377,7 +379,7 @@ angular
 		$scope.uploadToOjs = function() {
 			$scope.server = {};
 			$scope.isInitialized = false;
-			pimportws.get('toOJS', {journal: $scope.journal, articles: $scope.articlesConfirmed}, function(response) {
+			pimportws.get('toOJS', {journal: $scope.journal, articles: $scope.articlesConfirmed, uploadId: $scope.uploadId}, function(response) {
 				$scope.isInitialized = true;
 				$scope.server = response;
 				if (response.success) {

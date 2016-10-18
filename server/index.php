@@ -3,14 +3,14 @@
  *
 * OJS Importer - Remote Server
 *
-* @version 10
+* @version 12
 *
 * @year 2016
 *
 * @author Philipp Franck
 *
 * @desc
-* Use this file if you want to have the epidoc conversion on another machine than your script.
+* This is a very simple PHP script to create simple remote Servers in PHP
 *
 *
 *
@@ -18,13 +18,17 @@
 
 // settings
 $allowedIps		= array();
+$debugmode 		= false;
 
-// errors
-error_reporting(E_ALL);
-ini_set('display_errors', 'on');
 
-// debug?
-$debugmode = false;
+// set up errors
+if ($debugmode) {
+	error_reporting(E_ALL);
+	ini_set('display_errors', 'on');
+}  else {
+	ini_set ("display_errors", "0");
+	error_reporting(false);
+}
 
 
 /**
@@ -32,6 +36,11 @@ $debugmode = false;
  *
 */
 try {
+	
+	
+	// get logger
+	require_once('logger.class.php');
+	$logger = new logger($debugmode);
 
 	// enabling CORS (would be a shameful webservice without)
 	if (isset($_SERVER['HTTP_ORIGIN'])) {
@@ -68,35 +77,45 @@ try {
 
 	// go
 	require_once('ojsis.php');
-	
-	$ojsis = new ojsis($data);
-	$ojsis->$task($data);
-	$ojsis->finish();
+
+	$ojsis = new ojsis($data, $logger);
+	$ojsis->debug = $debugmode;
+	$ojsis->$task();
 	
 	$return = $ojsis->return;
 	
-
+	$ojsis->finish();
 
 } catch (Exception $a) {
 	ob_clean();
+	$ojsis->finish();
 
-	$debug = (isset($ojsis) and isset($ojsis->debug) and $debugmode) ? $ojsis->debug : '';
+	$debug = (isset($ojsis) and isset($ojsis->debug) and $debugmode) ? $ojsis->debuglog : '';
+	
+	$return = array(
+		'success'	=> false,
+		'message'	=> $a->getMessage(),
+		'warnings'	=> $logger->warnings
+	);
+	if ($debugmode) {
+		$return['debug'] = $logger->log;
+	}	
 	
 	header('Content-Type: application/json');
-	echo json_encode(array(
-		'success'	=> false,
-		'message'	=> $a->getMessage(), 
-		'debug'		=> $debug,
-		
-	));
+	echo json_encode($return);
 	die();
 }
 
+$logger->log('OK');
 
 
 // return  success
 $return['task'] = $task;
 $return['success'] = true;
+$return['warnings'] = $logger->warnings;
+if ($debugmode) {
+	$return['debug'] = $logger->log;
+}
 
 header('Content-Type: application/json');
 echo json_encode($return);

@@ -277,7 +277,7 @@ angular
 		var pdfPath = '/path/to/parted/pdf';
 		$log.log('proceeding');
 		angular.forEach(chiron.articles, function(article, k) {
-			$log.log('forward article', article)
+			$log.log('forward article', article.title)
 			chiron.forwardArticle({
 				'title':			article.title,
 				'abstract':			editables.text('', false),

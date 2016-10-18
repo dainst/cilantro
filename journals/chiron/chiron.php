@@ -2,8 +2,10 @@
 class chiron extends journal {
 	function createFrontPage($article, $issue) {
 
-		error_reporting(E_ALL);
-		ini_set('display_errors', 1);
+		//error_reporting(E_ALL);
+		//ini_set('display_errors', 1);
+		
+		$this->setDefaultMetadata($article, $issue);
 
 		$this->metadata['journal_title'] =	strtoupper('Chiron');
 		$this->metadata['journal_sub'] =	'Mitteilungen der Kommission für alte Geschichte und Epigraphik des Deutschen Archäologischen Instituts';
@@ -18,9 +20,6 @@ Deutschen Archäologischen Instituts, Amalienstr. 73b, 80799 MÜNCHEN, DEUTSCHLA
 redaktion.chiron@dainst.de<p>
 <p>Online-Ausgabe: <a href='https://journals.dainst.org/chiron'>https://journals.dainst.org/chiron</a></p>";
 				
-		$this->metadata['article_author']	= $this->assembleAuthorlist($article);
-		$this->metadata['article_title' ] 	= $article->title->value->value;
-		$this->metadata['issue_tag']		= "VOLUME {$issue->volume->value->value} • {$issue->year->value->value}";
 		
 		$pdf = $this->createPDF();
 		
