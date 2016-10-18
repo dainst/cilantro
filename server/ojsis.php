@@ -141,6 +141,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				throw new Exception($this->return['message']);
 			}
 			
+			
 			$this->log->log("read in what we have done");
 			$this->getDainstMetadata();
 			$this->checkUpload($lastId);
@@ -152,6 +153,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$this->clearTmp();
 			$this->unlockSession();
 				
+
 		} catch (Exception $e) {
 			$this->ojsUnlock();
 			$this->log->debug($this->data);
@@ -186,6 +188,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @return <array>
 	 */
 	function cutPdf($last) {
+		
 		$data = $this->data;
 	
 		foreach ($data->articles as $nr => $article) {
