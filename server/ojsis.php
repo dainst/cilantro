@@ -18,9 +18,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	private $_db = null;
 	
 	public $log = null;
-	
-	private $_locked = false;
-	
+		
 	/* system functions */
 	
 	/**
@@ -469,51 +467,18 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @throws Exception
 	 */
 	function ojsLockdown() {
-		
-		$this->_locked = true;
-		
-		
-		$ojs_path = $this->settings['ojs_path'];
-			
+					
 		//  prevent no login
-		if (file_exists($ojs_path . '/.htaccess')) {
-			rename($ojs_path . '/.htaccess', $ojs_path . '/restore.htaccess');
-		}
-		$htaccess = "
-			# temporaly prevent users from login
-			RewriteEngine On
-			RewriteCond %{REQUEST_METHOD} POST
-					
-			# allow the server to POST to itself
-			RewriteCond %{REMOTE_ADDR} !127.0.0.1
-					
-			# send all other post requests to 403 forbidden
-			RewriteRule ^ / [L,R=307]";
-			
-		file_put_contents($ojs_path . '/.htaccess',   $htaccess);
+		file_put_contents($this->settings['ojs_path'] . '/lock',   '');
 		
 		// kill ojs sessions
 		$db = $this->getDB();
 		$db->query("DELETE FROM sessions");
-
-
 	}
 	
-	function ojsUnlock() {
-		
-		$this->log->log('unlock ' . $this->_locked);
-		
-		if (!$this->_locked) {
-			return;
-		}
-		
-		$ojs_path = $this->settings['ojs_path'];
-		unlink($ojs_path . '/.htaccess');
-		
-		if (file_exists($ojs_path . '/restore.htaccess')) {
-			copy($ojs_path . '/restore.htaccess', $ojs_path . '/.htaccess');
-		}
-
+	function ojsUnlock() {		
+		$this->log->log('unlock');
+		unlink($this->settings['ojs_path'] . '/lock');
 	}
 
 	
