@@ -1,4 +1,11 @@
 'use strict';
+/**
+ * 
+ * controller for journal-specific step 2 with pdf analysis
+ * 
+ * 
+ */
+
 
 angular
 

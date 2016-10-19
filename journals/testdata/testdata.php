@@ -5,6 +5,7 @@ class testdata extends journal {
 		//error_reporting(E_ALL);
 		//ini_set('display_errors', 1);
 		
+		
 		$this->setDefaultMetadata($article, $issue);
 
 		$this->metadata['journal_title'] =	strtoupper('Test Magazine');
@@ -31,6 +32,10 @@ redaktion.chiron@dainst.de<p>
 		
 		return $path;
 		
+	}
+	
+	function checkFile() {
+		return true;
 	}
 }
 ?>

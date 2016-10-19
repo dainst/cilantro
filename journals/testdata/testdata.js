@@ -11,11 +11,13 @@ angular
 	bob.title = 'Create Testdata';
 	bob.template = 'journals/testdata/testdata.html';
 	
-	bob.start = function() {
-		
+	bob.init = function()  {
 		bob.journal.identification = 'vol_year';
 		bob.journal.ojs_journal_code = 'test';
-		bob.journal.journal_code = 'testdata';
+		bob.journal.journal_code = 'testdata';		
+	}
+	
+	bob.start = function() {
 		
 		bob.journal.volume.value.value = Math.round(Math.random() * 10000);
 		bob.journal.year.value.value = Math.round(Math.random() * 10000);
@@ -41,10 +43,7 @@ angular
 		}, true);
 		
 		bob.nextTab();
-		
-		
-		bob.refresh();
-		
+				
 	}
 	
 	return (bob);

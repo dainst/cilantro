@@ -10,8 +10,7 @@
  *
  */
 class journal {
-	public $settings = array();
-	
+	public $settings = array();		// settings from settings file like paths and so
 	
 	public $metadata = array(
 		'article_author'	=> '', 
@@ -40,10 +39,9 @@ class journal {
 	}
 	
 	function createPDF() {
-		
+
 		require_once('inc/TCPDF/tcpdf.php');
 		require_once('daipdf.class.php');
-		
 		
 		$pdf = new daiPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		
@@ -59,6 +57,17 @@ class journal {
 		}
 		return implode('; ', $author_list);
 	
+	}
+
+	
+	public function checkFile($file) {
+		if (substr($file, 0, 1) != '/') { // relative path
+			$file = $this->settings['rep_path'] . '/' . $file;
+		}
+		if (!file_exists($file)) {
+			throw new Exception("File " . $file . ' does not exist!');
+		}
+		return true;
 	}
 	
 }

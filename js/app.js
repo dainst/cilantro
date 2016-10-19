@@ -11,6 +11,7 @@ angular
 	'idai.templates',
 	'controller.main',
 	'controller.pdf',
+	'controller.nopdf',
 	'directive.editable',
 	'module.editables',
 	'module.pimportws',

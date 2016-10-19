@@ -5,7 +5,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	public $return = array();
 	
 	// do we debug log? (change in server script)
-	public $debug = true;
+	public $debug = false;
 	// debug log
 	public $debuglog = array();
 	// settings
@@ -169,12 +169,17 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @return <journal>
 	 */
 	function getJournal() {
+		if ($this->_journal) {
+			return $this->_journal;
+		}
 		$data = $this->data;
 		$journal = $data->journal->journal_code;
 		require_once("journal.class.php");
 		$file = $this->_base_path . "journals/{$journal}/{$journal}.php";
 		require_once($this->_base_path . "journals/{$journal}/{$journal}.php");
 		$this->_journal = new $journal($this->settings, $this->_base_path);
+		$this->log->log("use journal " . $data->journal->journal_code);
+		
 		return $this->_journal;
 	}
 	
@@ -369,12 +374,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @throws Exception
 	 */
 	function checkStart() {
-		$data = $this->data;
-		
-		// @ TODO omit if not needed for journal!
-		if (!file_exists($this->settings['rep_path'] . '/' . $data->file))  {
-			throw new Exception("File " . $this->settings['rep_path'] . '/' . $data->file . ' does not exist!');
-		}
+		$this->getJournal();
+		$this->_journal->checkFile($this->data->file);
 	}
 	
 	
@@ -478,7 +479,9 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	function ojsUnlock() {		
 		$this->log->log('unlock');
-		unlink($this->settings['ojs_path'] . '/lock');
+		if (file_exists($this->settings['ojs_path'] . '/lock')) {
+			unlink($this->settings['ojs_path'] . '/lock');
+		}
 	}
 
 	
@@ -499,7 +502,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$this->return['uploadId'] = $data->uploadId;
 		}
 		
-		$this->log->debug("uploadId: {$data->uploadId}");
+		$this->log->debug("uploadId: {$this->return['uploadId']}");
 	
 		return $this->return['uploadId'];
 	}

@@ -52,8 +52,12 @@ angular
 		$scope.uploadId = 0;
 		
 		$scope.checkPw = function() {
+			$scope.loadJournalService();
+			master.init();
 			pimportws.sec = $scope.sec;
-			pimportws.get('checkStart', {'file': $scope.journal.importFilePath, 'unlock': true},  function(response) {				
+			$log.log($scope.journal);
+
+			pimportws.get('checkStart', {'file': $scope.journal.importFilePath, 'unlock': true, 'journal': $scope.journal},  function(response) {				
 				if (response.success) {
 					$scope.sec.response  = '';
 					$scope.start();
@@ -68,7 +72,7 @@ angular
 		
 		/* journal specific */
 		
-		var master = {};
+		var master = null;
 		
 		$scope.journals = {
 			types : {
@@ -78,24 +82,23 @@ angular
 			chosen: 'chiron'
 		};
 		
-		$scope.start = function() {
-			
-			// get journal specific service
-			$log.log('load journal service ' +  $scope.journals.chosen );
+		$scope.loadJournalService = function() {
+			// get journal specific service		
+			$log.log('load journal service ' +  $scope.journals.chosen);
 			master = journalmaster.set($scope.journals.chosen);
-			master.nextTab = $scope.nextTab;
+			master.nextTab = $scope.nextTab;				
 			master.forwardArticle = $scope.addArticle;
 			master.journal = $scope.journal;
 			
+		};
+		
+		$scope.start = function() {			
 			// right template
 			$scope.tabs[1].template = master.template;
 			
 			// load next page
-			$scope.nextTab();
-			
+			$scope.nextTab();			
 			$log.log('starting');
-
-			
 		}
 		
 

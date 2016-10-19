@@ -11,6 +11,7 @@ angular
 	/* necessary for importer */
 	chiron.title = 'Chiron';
 	chiron.template = 'journals/chiron/chiron.html'
+	chiron.settings = {};
 	
 	/* internals */
 	chiron.foundToc = 0; // how many table of contents pages
@@ -31,14 +32,17 @@ angular
          "Searching and analyzing table of content",
          "Creating thumbnails",
          "Manually Edit"
-   ];
+    ];
 	
-	chiron.start = function() {
-		
+	chiron.init = function()  {
 		/* necessary for OJS */
 		chiron.journal.identification = 'vol_year';
 		chiron.journal.ojs_journal_code = 'chiron';
-		chiron.journal.journal_code = 'chiron';
+		chiron.journal.journal_code = 'chiron';		
+	}
+	
+	
+	chiron.start = function() {
 		
 		chiron.dateForAll = editables.text('A date', true);
 		
