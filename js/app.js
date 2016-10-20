@@ -4,6 +4,7 @@ angular
 
 .module('pimport', [
 	'ui.bootstrap',
+	'ngFileUpload',
 /*	'ngRoute',*/
 /*	'ngAnimate',
 	'ngResource',*/
@@ -12,6 +13,7 @@ angular
 	'controller.main',
 	'controller.pdf',
 	'controller.nopdf',
+	'controller.upload',
 	'directive.editable',
 	'module.editables',
 	'module.pimportws',

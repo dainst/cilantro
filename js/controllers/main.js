@@ -16,8 +16,24 @@ angular
 		$scope.isInitialized = false;
 		
 		$scope.init = function() {
-			$scope.isInitialized = true;
+			pimportws.get('getRepository', {}, function(r) {
+				$log.log(r);
+				if ((r.success == false) && (r.message == "Session locked")) {
+					$scope.sessionLocked = true;
+					$scope.sec.response = r.message;
+				} else if (r.success == false) {
+					$scope.sec.response = r.message;
+				} else {
+					$scope.repositoryFiles  = r.repository;
+				}
+				
+				$scope.isInitialized = true;
+			})
 		}
+		
+		$scope.repositoryFiles  = [];
+		
+		$scope.sessionLocked = false;
 		
 		/* tabs */
 		
@@ -44,24 +60,18 @@ angular
 		
 		/* security */
 		
-		$scope.sec = {
-			password: '',
-			response: ''
-		}
+		$scope.sec = pimportws.sec;
 		
-		$scope.uploadId = 0;
 		
 		$scope.checkPw = function() {
 			$scope.loadJournalService();
 			master.init();
-			pimportws.sec = $scope.sec;
 			$log.log($scope.journal);
 
 			pimportws.get('checkStart', {'file': $scope.journal.importFilePath, 'unlock': true, 'journal': $scope.journal},  function(response) {				
 				if (response.success) {
 					$scope.sec.response  = '';
 					$scope.start();
-					$scope.uploadId = response.uploadId;
 				} else {
 					$scope.sec.password = '';
 					$scope.sec.response  = response.message;
@@ -346,7 +356,7 @@ angular
 		$scope.reportMissingToZenon = function() {
 			angular.forEach($scope.articlesConfirmed, function(article) {
 				if (article.zenonId == '(((new)))') {
-					pimportws.get('sendToZenon', {journal: $scope.journal, article: article, uploadId: $scope.uploadId}, function(response) {
+					pimportws.get('sendToZenon', {journal: $scope.journal, article: article}, function(response) {
 						$scope.reportedToZenon.push(article);
 						$log.log(response);
 					});
@@ -357,7 +367,7 @@ angular
 		$scope.sendToZenon = function() {
 			$scope.server = {};
 			$scope.articles[$scope.currentArticle].thumbnail = '';
-			pimportws.get('sendToZenon', {journal: $scope.journal, article: $scope.articles[$scope.currentArticle], uploadId: $scope.uploadId}, function(response) {
+			pimportws.get('sendToZenon', {journal: $scope.journal, article: $scope.articles[$scope.currentArticle]}, function(response) {
 				$scope.server = response;
 			});
 		}
@@ -374,7 +384,7 @@ angular
 		
 		$scope.renderXml = function() {
 			$scope.server = {};
-			pimportws.get('makeXML', {journal: $scope.journal, articles: $scope.articlesConfirmed, uploadId: $scope.uploadId}, function(response) {
+			pimportws.get('makeXML', {journal: $scope.journal, articles: $scope.articlesConfirmed}, function(response) {
 				$scope.server = response;
 			});
 		}
@@ -382,14 +392,12 @@ angular
 		$scope.uploadToOjs = function() {
 			$scope.server = {};
 			$scope.isInitialized = false;
-			pimportws.get('toOJS', {journal: $scope.journal, articles: $scope.articlesConfirmed, uploadId: $scope.uploadId}, function(response) {
+			pimportws.get('toOJS', {journal: $scope.journal, articles: $scope.articlesConfirmed}, function(response) {
 				$scope.isInitialized = true;
 				$scope.server = response;
 				if (response.success) {
 					$scope.done = true;
-					$scope.uploadId = response.uploadId;
 					$scope.dainstMetadata = response.dainstMetadata;
-					$log.log($scope.uploadId);
 					$scope.reportMissingToZenon();
 				}
 			});
@@ -415,8 +423,15 @@ angular
 			return articlesReady && journalReady && !$scope.done;
 		}
 		
+		$scope.resetSession = function() {
+			pimportws.get('resetSession', {'unlock':true}, function(r) {
+				if (r.success) {
+					location.reload();
+				}				
+			});
+		}
 		
-
+		
 		
 		
 		

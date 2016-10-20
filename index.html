@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="pimport">
 <head>
-	
-
 
 	<meta charset="utf-8">
 	<title>iDai.journals - Mass Importer</title>
@@ -28,14 +26,8 @@
 			user-object='{"username": false}'>
 		</idai-navbar>
 		
-
 		
 		<div id='main-container' class="container-fluid">
-			<!-- <div class="row">
-				<div class="col-md-12">
-					<ol class="breadcrumb"><li class="active">{{tabs[currentTab].title}}</li></ol>
-				</div>
-			</div> -->
 			
 			<ng-include src="tabs[currentTab].template + cacheKiller"></ng-include>
 			
@@ -69,11 +61,16 @@
 		<script src="bower_components/idai-components/dist/idai-components-tpls.js"></script>
 		<script src="bower_components/idai-components/dist/idai-components-no-tpls.js"></script>
 		
+		<!--  load 3party angular moduls -->
+		
+		<script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+		
 		<!-- load pimport app -->
 		
 		<script src="js/controllers/main.js"></script>
 		<script src="js/controllers/pdf.js"></script>
 		<script src="js/controllers/nopdf.js"></script>
+		<script src="js/controllers/upload.js"></script>
 		<script src="js/directives/editable.js"></script>
 		<script src="js/services/editables.js"></script>
 		<script src="js/services/pimportws.js"></script>

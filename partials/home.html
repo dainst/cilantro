@@ -4,7 +4,7 @@
 	<div class="col-md-6">
 		<div class="panel panel-default">
 			<div class="panel-heading">Import Protocol {{journalType}}</div>
-			<div class="pabel-body">
+			<div class="panel-body">
 				<select class="form-control" ng-model="journals.chosen">
 					<option ng-repeat="(id, title) in journals.types" value='{{id}}'>{{title}}</option>
 				</select>
@@ -12,32 +12,79 @@
 		</div>
 
 		<div class="panel panel-default">
-			<div class="panel-heading">Path to PDF</div>
-			<div class="pabel-body">
-				<input class="form-control" type='text' name='import-pdf-path' id='import-pdf-path' ng-model='journal.importFilePath'>
+			<div class="panel-heading">Select PDF file from upload Folder</div>
+			<div class="panel-body">
+				<select class="form-control" ng-model="journal.importFilePath">
+					<option ng-repeat="file in repositoryFiles track by $index" value='{{file}}'>{{file}}</option>
+				</select>
+			</div>
+			
+			
+		</div>
+		
+		
+		
+		<div 	class="panel panel-default" 
+				ng-controller="upload" 	           		
+				ngf-drop="uploadFiles($files)"
+	       		ng-model="files" 
+	       		ngf-model-invalid="invalidFiles"
+	            ngf-multiple="multiple" 
+	            ngf-pattern="pattern" 
+	            ngf-accept="application/pdf"
+	            ngf-drag-over-class="'dragOver'"
+	            ngf-validate="{pattern: '.pdf'}"
+	            ngf-keep="false"
+	            ngf-allow-dir="false" 
+	           	ngf-drop-available="dropAvailable"
+	            id="fileDropArea">
+			<div class="panel-heading">Or upload PDF file</div>		
+			<div class="panel-body">
+			    <button class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File into this Box.</span> 
+			    <br>
+			    
+			    <span class="progressbar">
+			        <div style="width:{{progress}}%" ng-bind="progress + '%'"></div>
+			    </span>
+			    
+			    <br><span  ng-show="uploadedFiles.length > 0">Files:</span>
+			    <ul>
+			        <li ng-repeat="f in uploadedFiles track by $index">{{f}}</li>
+			    </ul>
+				<div ng-show="errorMsg" class="alert alert-danger" ng-bind-html="errorMsg | trustHtml"></div>
+				<div ng-show="warningsMsg.length >  0" ng-repeat="warning in warningsMsg track by $index" class="alert alert-warning">{{warning}}</div>
+				<div ng-show="invalidFiles" class="alert alert-warning">Wrong File</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="col-md-2">
-		<div ng-show="sec.response" class="alert alert-danger">{{sec.response}}</div>
-	</div>
-	<div class="col-md-6 text-right">
-		<form action="" class="form-inline" onsubmit="return false">
-    		<div class="form-group">
-				<span class="input-group">
-					<input type="password" class="form-control" ng-model='sec.password' placeholder="password">
-					<span class="input-group-btn">
-						<button class='btn btn-primary' ng-click='checkPw()'>Start Import<span class="glyphicon glyphicon-chevron-right"></span></button>
-					</span>
+	<div class="col-md-6 ">
+
+	
+	
+		<div class="panel panel-default">
+			<div class="panel-heading">Start Process</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<input type="password" class="form-control" ng-model='sec.password' placeholder="password">	
+					</div>	
 					
-				</span>
+					<div class="col-md-6 text-right">
+						<button class='btn btn-danger' ng-show="sessionLocked" ng-click='resetSession()'>Reset System</button>
+						<button class='btn btn-primary' ng-click='checkPw()' ng-show="!sessionLocked">Start Import<span class="glyphicon glyphicon-chevron-right"></span></button>	
+					</div>			
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<br>
+						<div ng-show="sec.response" class="alert alert-danger">{{sec.response}}</div>
+					</div>
+				</div>			
 			</div>
-		</form>
+		</div>
 	</div>
 </div>
-
-
 
 
 

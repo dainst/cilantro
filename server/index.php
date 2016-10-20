@@ -37,7 +37,6 @@ if ($debugmode) {
 */
 try {
 	
-	
 	// get logger
 	require_once('logger.class.php');
 	$logger = new logger($debugmode);
@@ -69,18 +68,20 @@ try {
 	// also get angular's post data (there is something shitty going on between angular and php)
 	$_ANGULAR_POST = json_decode(file_get_contents("php://input"));
 	
-	if (!isset($_ANGULAR_POST->task)) {
-		throw new Exception('No task defined' . print_r($_ANGULAR_POST));
+	$task = isset($_ANGULAR_POST->task) ? $_ANGULAR_POST->task : (isset($_POST['task']) ? $_POST['task'] : '');
+	if (!isset($task)) {
+		$log->log($_ANGULAR_POST);
+		$log->log($_POST);
+		throw new Exception('No task defined');
 	}
-	$task = $_ANGULAR_POST->task;
-	$data = $_ANGULAR_POST->data;
+	$data = isset($_ANGULAR_POST->data) ? $_ANGULAR_POST->data : (object) $_POST['data'];
 
 	// go
 	require_once('ojsis.php');
 
 	$ojsis = new ojsis($data, $logger);
 	$ojsis->debug = $debugmode;
-	$ojsis->$task();
+	$ojsis->call($task);
 	
 	$return = $ojsis->return;
 	
@@ -88,7 +89,9 @@ try {
 
 } catch (Exception $a) {
 	ob_clean();
-	$ojsis->finish();
+	if (isset($ojsis)) {
+		$ojsis->finish();
+	}
 
 	$debug = (isset($ojsis) and isset($ojsis->debug) and $debugmode) ? $ojsis->debuglog : '';
 	

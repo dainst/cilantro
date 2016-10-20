@@ -271,6 +271,8 @@ table .alert {
 .navbar-default {
     background-color: rgba(85, 114, 161, 1)  !important;
 }
+
+
 /* loader */
 
 .loader {
@@ -289,7 +291,30 @@ table .alert {
 	z-index: 5000;
 }
 
+
 /* misc  */
+
 .toprow {
 	margin-bottom: 1em
+}
+
+
+/*  upload */
+
+.dragOver {
+	 box-shadow: 0px 10px 5px #888888;
+}
+
+.progressbar {
+    display: inline-block;
+    width: 100%;
+    border: none;
+    border-radius: 2px;
+    color: white
+}
+.progressbar div {
+    font-size: smaller;
+    background: rgba(85, 114, 161, 1);
+    width: 0;
+    border-radius: 2px;
 }

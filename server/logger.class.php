@@ -14,7 +14,7 @@ class logger {
 	 */
 	function debug($string) {
 		if ($this->debug) {
-			$this->log[] = $this->_timestamp()  . $string;
+			$this->_pushlog($string);
 		}
 	}
 	
@@ -31,7 +31,15 @@ class logger {
 	 * @param unknown $string
 	 */
 	function log($string) {
-		$this->log[] = $this->_timestamp()  . $string;
+		$this->_pushlog($string);
+	}
+	
+	private function _pushlog($string) {
+		if (gettype($string) !== "string") {
+			$string = print_r($string,1);
+		}
+		
+		$this->log[] = $this->_timestamp() . ' ' . $string;
 	}
 	
 	

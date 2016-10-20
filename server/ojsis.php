@@ -18,7 +18,9 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	private $_db = null;
 	
 	public $log = null;
-		
+	
+	public $noPwFunctions = array('getRepository');
+	
 	/* system functions */
 	
 	/**
@@ -33,7 +35,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$this->log = $logger;
 		
 		$this->log->log('starting ojsis');
-		
+				
 		$this->_base_path = isset($additional_settings['base_path']) ? $additional_settings['base_path'] : '../';
 		
 		set_error_handler(array($this, 'errorHandler'));
@@ -42,19 +44,39 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$this->settings = $settings;
 		
 		$this->data = $data;
-		
-		if (!$this->checkPw() and !isset($additional_settings['skippw'])) {
-			throw new Exception("Wrong Password");
-		}
-		
+				
 		$this->getUploadId();
-		
+		/*
 		if(!isset($additional_settings['skiplock'])) {
 			$this->checkLock();
 		}
-
-		
+		*/
 	}
+	
+	function call($task, $additional_settings = array()) {
+		
+		if (!in_array($task, $this->noPwFunctions)) {
+			if (!$this->checkPw() and !isset($additional_settings['skippw'])) {
+				throw new Exception("Wrong Password");
+			}
+		}
+		
+		$this->$task();
+	}
+	
+	/* check start */
+	
+	/**
+	 * check if the file exists (get called in the beginning of uploading process)
+	 *
+	 * @param unknown $data
+	 * @throws Exception
+	 */
+	function checkStart() {
+		$this->getJournal();
+		$this->_journal->checkFile($this->data->file);
+	}
+	
 
 	
 	/**
@@ -65,7 +87,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	function finish() {
 		$this->log->log('finishing ojsis');
-		file_put_contents("{$this->settings['tmp_path']}/yo.lo", "hihihi");
 		$this->ojsUnlock();
 		$this->writeLog();
 		$this->_isdead = true;
@@ -98,6 +119,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @throws Exception
 	 */
 	function toOJS() {
+				
 		$data = $this->data;
 	
 		try {
@@ -138,8 +160,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			if (!$success) {
 				throw new Exception($this->return['message']);
 			}
-			
-			
+						
 			$this->log->log("read in what we have done");
 			$this->getDainstMetadata();
 			$this->checkUpload($lastId);
@@ -149,7 +170,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				
 			$this->log->log("tidy up");
 			$this->clearTmp();
-			$this->unlockSession();
 				
 
 		} catch (Exception $e) {
@@ -191,7 +211,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @return <array>
 	 */
 	function cutPdf($last) {
-		
+				
 		$data = $this->data;
 	
 		foreach ($data->articles as $nr => $article) {
@@ -290,7 +310,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 *
 	 */
 	function getDainstMetadata() {
-	
+			
 		$db = $this->getDB();
 	
 		$sql =
@@ -348,6 +368,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 *
 	 */
 	function sendToZenon() {
+			
 		$data = $this->data;
 		$journal = $data->journal;
 		$article = $data->article;
@@ -365,18 +386,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$this->sendReport($data->article->title->value->value . '.xml', $xml);
 	}
 	
-	/* check start */
-	
-	/**
-	 * check if the file exists (get called in the beginning of uploading process)
-	 *
-	 * @param unknown $data
-	 * @throws Exception
-	 */
-	function checkStart() {
-		$this->getJournal();
-		$this->_journal->checkFile($this->data->file);
-	}
+
 	
 	
 	/* helper functions */
@@ -413,6 +423,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 */
 	function checkPw() {
 		$data = $this->data;
+		$this->log->log('pw sent ' . (isset($data->password) ? $data->password : ''));
+		$this->log->log('pw set ' . $this->settings['password']);
 		return (isset($data->password) and ($data->password == $this->settings['password']));
 	}
 		
@@ -424,7 +436,10 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * 
 	 * @throws Exception
 	 */
+	/*
 	function checkLock() {
+		
+		return true; // check lock diabled because it eats my nerves
 				
 		$ip = !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
 		$time = time();
@@ -452,15 +467,14 @@ class ojsis { // you're my wonderwall bla bla whimmer
 
 	}
 	
-	/**
-	 * 
-	 */
+
+
 	function unlockSession() {
 		$this->log->log('unlocking session');
 		$lockfile = $this->settings['log_path'] . '/lock';
 		unlink($lockfile);
 	}
-	
+	*/
 	/* ojs functions */
 	
 	/**
@@ -544,9 +558,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	function testDatabaseConnection() {
 		$db = $this->getDB();
 	}
-	
-
-	
+		
 	/**
 	 * 
 	 * @param unknown $abstract
@@ -566,8 +578,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	}
 	
 
-	
-
 	/* other */
 
 	
@@ -583,6 +593,61 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		}
 		return implode('; ', $author_list);
 
+	}
+	
+	
+	/* upload functions */
+	
+	function upload() {
+		$this->log->log($_FILES);
+		
+		if (!isset($_FILES['files']) or !count($_FILES['files'])) {
+			throw new Exception("No files!");
+		}
+		
+		$uploadedFiles = [];
+		
+		for($i = 0; $i < count($_FILES['files']['name']); $i++) {
+			$destination = $this->settings['tmp_path'] . '/' . $_FILES['files']['name'][$i];
+			$this->log->debug('goto ' . $destination);
+			
+			if (!in_array($_FILES['files']['type'][$i], array('application/acrobatreader', 'application/pdf'))) {
+				$this->log->warning($_FILES['files']['name'][$i] . ' has wrong type ' . $_FILES['files']['type'][$i]);
+				continue;
+			}
+			
+			if ($_FILES['files']['error'][$i] != 0) {
+				$this->log->warning('error  ' . $_FILES['files']['error'][$i] . ' in file ' . $_FILES['files']['name'][$i]);
+				continue;
+			}
+			
+			$x  = move_uploaded_file($_FILES['files']['tmp_name'][$i], $destination);
+			$this->log->log('ul:' . $x . ':' . $destination);
+			
+			$uploadedFiles[] = $_FILES['files']['name'][$i];
+		}
+		
+		$this->return['uploadedFiles'] = $uploadedFiles;
+		
+
+	}
+	
+	
+	/* other */
+	
+	function resetSession() {
+		$this->clearTmp();
+		//$this->unlockSession();
+	}
+	
+	function getRepository() {
+		$rep = scandir($this->settings['rep_path']);
+		
+		$this->return['repository'] = array_values(array_filter($rep, function($e) {
+			$file_parts = pathinfo($this->settings['rep_path'] . '/' . $e);
+			return (strtolower($file_parts['extension']) == 'pdf');
+		}));
+		
 	}
 	
 	
