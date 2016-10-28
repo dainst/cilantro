@@ -23,7 +23,16 @@ class logger {
 	 * @param unknown $string
 	 */
 	function warning($string) {
-		$this->warnings[] = $string;
+		$this->warnings[] = $string . (($this->debug) ? "\n" . $this->_backtrace() : '');
+	}
+	
+	private function _backtrace() {
+		$bb = debug_backtrace();
+		$re = [];
+		foreach ($bb as $b) {
+			$re[] = "{$b["function"]} in {$b["file"]} line {$b["line"]}";
+		}
+		return implode("\n", $re);
 	}
 	
 	/**

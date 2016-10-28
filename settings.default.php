@@ -5,6 +5,7 @@ $settings = array(
 	'log_path'		=> 	'/var/www/pimport/reports',
 	'rep_path'		=> 	'/var/www/chiron/data',
 	'ojs_url'		=> 	'http://DOMAIN/ojs/',
+	'urn_base'		=>  'urn:nbn:de:0048-journals-%d-%d',
 		
 	'password'		=> 	'alpha',
 		

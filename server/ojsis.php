@@ -129,14 +129,15 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$this->log->log("temporaly lock down OJS for writing");
 			$this->ojsLockdown();
 			
-			$this->log->log("get last used ID in OJS");
+			$this->log->log("get last used ID in OJS and assume URNs and URLs");
 			$lastId = $this->getLastId();
+			$this->assumeUrls($lastId);
 			
 			$this->log->log("get journal specific instructions");
 			$data = $this->getJournal();
 				
 			$this->log->log("cut the pdf file into pieces");
-			$data = $this->cutPdf($lastId);
+			$data = $this->cutPdf();
 				
 			$this->log->log("make transport XML");
 			$xmlFile = $this->makeXML(true);
@@ -170,7 +171,10 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				
 			$this->log->log("tidy up");
 			$this->clearTmp();
-				
+			
+			if ($this->debug) {
+				throw new Exception("success but debug is on!");
+			}
 
 		} catch (Exception $e) {
 			$this->ojsUnlock();
@@ -197,7 +201,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		require_once("journal.class.php");
 		$file = $this->_base_path . "journals/{$journal}/{$journal}.php";
 		require_once($this->_base_path . "journals/{$journal}/{$journal}.php");
-		$this->_journal = new $journal($this->settings, $this->_base_path);
+		$this->_journal = new $journal($this->log, $this->settings, $this->_base_path);
 		$this->log->log("use journal " . $data->journal->journal_code);
 		
 		return $this->_journal;
@@ -210,7 +214,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @throws Exception
 	 * @return <array>
 	 */
-	function cutPdf($last) {
+	function cutPdf() {
 				
 		$data = $this->data;
 	
@@ -221,10 +225,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$end   = $end ? $end : $start;
 			$name  = "{$data->journal->importFilePath}.$nr.pdf";
 				
-			$article->pubid = $last + 1 + $nr;
-				
+
 			$front = $this->_journal->createFrontPage($article, $data->journal);
-	
 			$shell = "pdftk A={$this->settings['rep_path']}/{$data->journal->importFilePath}  B=$front cat B1 A$start-$end output {$this->settings['tmp_path']}/$name 2>&1";
 				
 			$this->log->debug($shell);
@@ -551,6 +553,21 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 		return $next;
 	}
+	
+	
+	/**
+	 * assume url Urn
+	 */
+	function assumeUrls($last) {
+		foreach ($this->data->articles as $nr => $article) {
+			$article->pubid 		= $last + 1 + $nr;
+			$article->url 			= $this->settings['ojs_url'] . $this->data->journal->ojs_journal_code . '/' . $article->pubid;
+			$article->urn 			= sprintf($this->settings['urn_base'], $this->data->journal->ojs_journal_code, $article->pubid);
+		}
+	}
+	
+	
+	
 	
 	/**
 	 * 

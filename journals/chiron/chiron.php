@@ -1,43 +1,22 @@
 <?php
 class chiron extends journal {
-	function createFrontPage($article, $issue) {
+	function setMetadata($article, $issue) {
 
 		//error_reporting(E_ALL);
 		//ini_set('display_errors', 1);
 		
-		$this->setDefaultMetadata($article, $issue);
-
-		$this->metadata['journal_title'] =	strtoupper('Chiron');
-		$this->metadata['journal_sub'] = 'Mitteilungen der Kommission für alte Geschichte und Epigraphik des Deutschen Archäologischen Instituts';
-
-		$this->metadata['journal_info'] =
-"<p>Der CHIRON wird jahrgangsweise und in Leinen gebunden ausgeliefert.<br>
-Bestellungen nehmen alle Buchhandlungen entgegen.</p>
-<p>Verlag: Walter de Gruyter GmbH, Berlin/Boston<br>
-Druck und buchbinderische Verarbeitung: Hubert & Co. GmbH & Co. KG, Göttingen<br>
-Anschrift der Redaktion: Kommission für Alte Geschichte und Epigraphik des<br>
-Deutschen Archäologischen Instituts, Amalienstr. 73b, 80799 MÜNCHEN, DEUTSCHLAND<br>
-redaktion.chiron@dainst.de<p>
-<p>Online-Ausgabe: <a href='https://journals.dainst.org/chiron'>https://journals.dainst.org/chiron</a></p>";
-				
-		$pdf = $this->createPDF();
+		$this->metadata['journal_title'] 	= 'Chiron';
+		$this->metadata['journal_sub'] 		= 'Mitteilungen der Kommission für alte Geschichte und Epigraphik des Deutschen Archäologischen Instituts';
+		$this->metadata['editor'] 			= "Kommission für Alte Geschichte und Epigraphik des DAI, Amalienstr. 73b, 80799 München";
+		$this->metadata['journal_url'] 		= "https://publications.dainst.org/chiron";
+		$this->metadata['issue_tag']		= "{$issue->volume->value->value} • {$issue->year->value->value}";
+		$this->metadata['issn']				= "0069-3715";
 		
-		$pdf->daiFrontpage(); // default frontpage layout
-		
-		$path = $this->settings['tmp_path'] . '/' . md5($article->title->value->value) . '.pdf';
-		
-		$pdf->Output($path, 'F');
-		
-		return $path;
-		
+		if ($this->metadata['volume'] <= 35) {
+			$this->metadata['publisher'] 	= "Walter de Gruyter GmbH, Berlin/Boston";
+		} else {
+			$this->metadata['publisher'] 	= "Verlag C. H. Beck, München";
+		}
 	}
 }
-
-
-
-
-
-
-
-
 ?>
