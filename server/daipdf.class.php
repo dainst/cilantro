@@ -160,8 +160,7 @@ class daiPDF extends TCPDF {
 		$fonts = array(
 			"calibri",
 			"calibril",
-			"calibrib",
-				"buddel"
+			"calibrib"
 		);
 	
 		foreach ($fonts as $font) {
