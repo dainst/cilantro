@@ -62,7 +62,7 @@ class ojs_database {
 			throw new Exception("An error occurred doing pg query.");
 			exit;
 		}
-		while ((gettype($result) != 'boolean') and ($row = pg_fetch_row($result))) {
+		while ((gettype($result) != 'boolean') and ($row = pg_fetch_assoc($result))) {
 
 			$return[] = $row;
 		}
