@@ -544,7 +544,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	function getLastId() {
 		$db = $this->getDB();
 		
-		$sql = "SELECT max(a.article_id) as id FROM ojs.articles as a";
+		$sql = "SELECT max(a.article_id) as id FROM articles as a";
 		foreach ($db->query($sql) as $row) {
 			$next = $row['id'];
 		}
