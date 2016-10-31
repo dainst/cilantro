@@ -88,7 +88,7 @@ class journal {
 	
 	
 	function createPDF() {
-		if (!is_defined('K_TCPDF_THROW_EXCEPTION_ERROR')) {
+		if (!defined('K_TCPDF_THROW_EXCEPTION_ERROR')) {
 			define('K_TCPDF_THROW_EXCEPTION_ERROR', true);
 		}
 		require_once('inc/TCPDF/tcpdf.php');
