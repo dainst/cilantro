@@ -92,6 +92,7 @@ class journal {
 		require_once('inc/TCPDF/tcpdf.php');
 		require_once('daipdf.class.php');
 		define(K_TCPDF_THROW_EXCEPTION_ERROR, true);
+		define(XXXXXX, true);
 		$pdf = new daiPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 		$pdf->logger = $this->logger;
 		
