@@ -14,7 +14,6 @@ class daiPDF extends TCPDF {
 	public $logger;
 
 	public function daiInit($lang, $metadata) {
-		throw new Exception("it is " . K_TCPDF_THROW_EXCEPTION_ERROR);
 		$this->importMissingFonts();
 		
 		$this->lang = $lang;
