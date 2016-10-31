@@ -88,7 +88,9 @@ class journal {
 	
 	
 	function createPDF() {
-		define('K_TCPDF_THROW_EXCEPTION_ERROR', true);
+		if (!is_defined('K_TCPDF_THROW_EXCEPTION_ERROR')) {
+			define('K_TCPDF_THROW_EXCEPTION_ERROR', true);
+		}
 		require_once('inc/TCPDF/tcpdf.php');
 		require_once('daipdf.class.php');
 		$pdf = new daiPDF('P', 'mm', 'A4', true, 'UTF-8', false);
