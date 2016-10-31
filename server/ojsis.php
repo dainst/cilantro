@@ -547,7 +547,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$sql = "SELECT max(a.article_id) as id FROM articles as a";
 		
 		foreach ($db->query($sql) as $row) {
-			$this->log->warning(print_r($row,1));
 			$next = $row['id'];
 		}
 		
