@@ -36,6 +36,21 @@ if ($debugmode) {
  *
 */
 try {
+
+	register_shutdown_function(function()  {
+		$error = error_get_last();
+		//check if it's a core/fatal error, otherwise it's a normal shutdown
+		if ($error !== NULL && in_array($error['type'], array(E_ERROR, E_PARSE, E_CORE_ERROR, E_CORE_WARNING, E_COMPILE_ERROR, E_COMPILE_WARNING))) {
+				$return = array(
+					'success'	=> false,
+					'message'	=> "500 / Internal Server Error" . ": {$error['message']} in line {$error['line']} of {$error['file']}"
+				);
+	
+				http_response_code(200);
+				header('Content-Type: application/json');
+				echo json_encode($return);
+			}
+	});
 	
 	// get logger
 	require_once('logger.class.php');
@@ -92,8 +107,6 @@ try {
 	if (isset($ojsis)) {
 		$ojsis->finish();
 	}
-
-	$debug = (isset($ojsis) and isset($ojsis->debug) and $debugmode) ? $ojsis->debuglog : '';
 	
 	$return = array(
 		'success'	=> false,
