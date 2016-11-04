@@ -67,7 +67,7 @@ angular
 					for(var k = 0; k < Math.max(3, textContent.items.length); k++) {
 						var block = textContent.items[k];
 						
-						console.log(k, block.str.trim(), contentPageHeadline.indexOf(block.str.trim()));
+						//console.log(k, block.str.trim(), contentPageHeadline.indexOf(block.str.trim()));
 						
 						if (contentPageHeadline.indexOf(block.str.trim()) >= 0) {
 							chiron.message("found >>" + block.str.trim() + "<< on page " + n);

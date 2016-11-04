@@ -99,7 +99,7 @@ angular
 			master.nextTab = $scope.nextTab;				
 			master.forwardArticle = $scope.addArticle;
 			master.journal = $scope.journal;
-			
+			master.openFullFile = $scope.openFullFile;
 		};
 		
 		$scope.start = function() {			
@@ -374,6 +374,10 @@ angular
 		
 		$scope.getReportUrl = function() {
 			return window.settings.log_url;
+		}
+		
+		$scope.openFullFile = function(url) {
+			window.open(url);
 		}
 		
 		/* upload to ojs  */

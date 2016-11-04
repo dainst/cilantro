@@ -30,7 +30,7 @@ class logger {
 		$bb = debug_backtrace();
 		$re = [];
 		foreach ($bb as $b) {
-			$re[] = "{$b["function"]} in {$b["file"]} line {$b["line"]}";
+			@$re[] = "{$b["function"]} in {$b["file"]} line {$b["line"]}";
 		}
 		return implode("\n", $re);
 	}

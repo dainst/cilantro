@@ -19,6 +19,11 @@
 						<button class='btn btn-default' ng-click='master.addArticle()'>Add Article<span class="glyphicon glyphicon-plus-sign"></span></button>
 					</span>
 				</div>
+				<div class="form-group">
+					<span class="btn-group">
+						<button class='btn btn-default' ng-show='master.fileUrl' ng-click='master.openFullFile(master.fileUrl)'>View File<span class="glyphicon glyphicon-eye-open"></span></button>
+					</span>
+				</div>
 			</form>
 		</div>
 		<div class="col-md-4 text-right">

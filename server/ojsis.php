@@ -651,6 +651,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	}
 	
 	
+	
 	/* other */
 	
 	function resetSession() {
@@ -663,10 +664,12 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 		$this->return['repository'] = array_values(array_filter($rep, function($e) {
 			$file_parts = pathinfo($this->settings['rep_path'] . '/' . $e);
-			return (strtolower($file_parts['extension']) == 'pdf');
+			return ((isset($file_parts['extension']) && (strtolower($file_parts['extension']))) == 'pdf');
 		}));
 		
 	}
+	
+
 	
 	
 }
