@@ -5,7 +5,7 @@ angular
 	var pimportws = {};
 	
 	pimportws.sec = {
-		password: 'alpha',
+		password: '',
 		response: ''
 	}
 	

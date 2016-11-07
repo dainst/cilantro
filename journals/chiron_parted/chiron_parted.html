@@ -1,0 +1,75 @@
+<!-- chiron specific template -->
+
+<div ng-controller="folder">
+
+<div class="row toprow">
+
+	<div class="col-md-8">
+		<div class="panel panel-default">
+			<div class="panel-heading">Chiron, allready parted into articles: Found: {{master.stats.files}} / Loaded: {{master.stats.loaded}} / Analyzed: {{master.stats.analyzed}} / Thumbnails: {{master.stats.thumbnails}}</div>
+			<div class="panel-body">
+				<div class="alert" ng-class="{'alert-danger': master.status.error, 'alert-info': !master.status.error}" style="padding: 10px;">{{master.status.message}}</div>		
+			</div>
+		</div>
+	</div>
+	<div>
+		
+		<div class="col-md-4 text-right">
+			<div class="panel panel-default">
+				<div class="panel-heading">Continue</div>
+				<div class="panel-body">
+					<span class="btn-group"  ng-show="master.isReady">
+						<button class='btn btn-primary' ng-click='master.proceed()'>Proceed<span class="glyphicon glyphicon-chevron-right"></span></button>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-6">
+
+
+</div>
+
+
+
+<div class="row">	
+	<div class="col-md-12">
+
+		<table class='split-table editable-table'>
+			<thead>
+				<tr>
+					<td>File</td>
+					<td>Author</td>
+					<td>Title</td>
+					<td>Page</td>
+					<td>Preview</td>
+					<td></td>
+				</tr> 
+			</thead>
+			<tbody>
+				<tr ng-repeat="(id, article) in master.rawArticles track by $index">
+					<td>{{article.filename}}</td>
+					<td style="width:25%"><span editable item="article.author"></span></td>
+					<td><span editable item="article.title"></span></td>
+					<td style="width:10%"><span editable item="article.page"></span></td>
+					<td style="width:600px">
+						<div id="thumbnail-container-{{id}}" class="thumbnail-container" ng-class="{'enlarged': id==master.selectedThumb}" ng-click="master.selectThumb(id)">
+							<img ng-show="article.thumbnail != ''" data-ng-src="{{article.thumbnail}}" />
+						</div>
+					</td>
+					<td>
+						<span class="btn btn-default btn-xs" ng-click="master.removeArticle(id)" data-tooltip="delete article"><span class="glyphicon glyphicon-minus-sign"></span></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+</div>
+
+
+</div>

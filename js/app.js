@@ -13,6 +13,7 @@ angular
 	'controller.main',
 	'controller.pdf',
 	'controller.nopdf',
+	'controller.folder',
 	'controller.upload',
 	'directive.editable',
 	'module.editables',
@@ -20,6 +21,7 @@ angular
 	'module.journalmaster',
 	'module.settings',
 	
+	'module.chiron_parted',
 	'module.chiron',
 	'module.testdata'
 ])

@@ -37,6 +37,9 @@ class journal {
 		
 	);
 	
+	public $doCut 		= true;
+	public $doImport 	= true;
+	
 	public $lang = array();
 	
 	private $_base_path = "../";

@@ -57,7 +57,6 @@ angular
 			$scope.currentTab += 1;
 		}
 		
-		
 		/* security */
 		
 		$scope.sec = pimportws.sec;
@@ -86,10 +85,11 @@ angular
 		
 		$scope.journals = {
 			types : {
-				"chiron": "Chiron, whole Volume",
+				"chiron_parted": "Chiron, allready parted into files",
+				"chiron": "Chiron, whole Volume in one file",
 				"testdata": "Create some testdata",
 			},
-			chosen: 'chiron'
+			chosen: 'chiron_parted'
 		};
 		
 		$scope.loadJournalService = function() {
@@ -120,7 +120,7 @@ angular
 			/*"title": 				editables.base('Chiron'),*/	
 			"volume":				editables.base(''),
 			"year":					editables.base(''),
-			"importFilePath": 		"Chiron_1993.pdf",
+			"importFilePath": 		"",
 			"identification":		"vol_year",
 			"ojs_journal_code":		"ojs_journal_code",
 			"ojs_user":				"ojs_user",
@@ -153,7 +153,7 @@ angular
 				'author':			editables.authorlist(),
 				'pages':			editables.page(12),
 				'date_published':	editables.base('DD-MM-YYYY'),
-				'filepath':			'/path/to/parted/pdf',
+				'filepath':			$scope.journal.importFilePath,
 				'thumbnail':		''
 			}
 		}
@@ -409,6 +409,10 @@ angular
 		
 		$scope.makeOjsUrl = function(id) {
 			return window.settings.ojs_url + 'index.php/'+ $scope.journal.ojs_journal_code + '/article/view/' + id;
+		}
+		
+		$scope.isObject = function(elem) {
+			return (typeof elem === "object");
 		}
 		
 		

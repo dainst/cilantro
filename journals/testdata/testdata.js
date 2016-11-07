@@ -28,7 +28,7 @@ angular
 			'author':			editables.authorlist(['Peter Parker', 'Bruce Wayne']),
 			'pages':			editables.page(1, 'Seite eins!'),
 			'date_published':	editables.base('03-03-1999'),
-			'filepath':			'http://195.37.232.186/test/test.pdf',
+			'filepath':			'test.pdf',
 			'thumbnail':		''
 		});
 		
@@ -36,9 +36,9 @@ angular
 			'title':			editables.base('A lady centaur.'),
 			'abstract':			editables.text('Testeintrag', false),
 			'author':			editables.authorlist(['Selina Kyle', 'Dr. X']),
-			'pages':			editables.page(10, '10'),
+			'pages':			editables.page(1, '1'),
 			'date_published':	editables.base('03-03-1999'),
-			'filepath':			'http://195.37.232.186/test/test2.pdf',
+			'filepath':			'test2.pdf',
 			'thumbnail':		''
 		}, true);
 		

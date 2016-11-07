@@ -15,7 +15,7 @@
 			<div class="panel-heading">Select PDF file from upload Folder</div>
 			<div class="panel-body">
 				<select class="form-control" ng-model="journal.importFilePath">
-					<option ng-repeat="file in repositoryFiles track by $index" value='{{file}}'>{{file}}</option>
+					<option ng-repeat="file in repositoryFiles track by $index" value='{{file.path}}'>{{file.caption}}</option>
 				</select>
 			</div>
 			
@@ -83,6 +83,27 @@
 				</div>			
 			</div>
 		</div>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">Journal Metadata</div>
+	
+			<table class='journal-table table'>
+	
+				<tbody>
+					<thead></thead>				
+						<tr ng-repeat="(field, value) in journal track by $index">
+							<td ng-show="{{isObject(value)}}">{{field}}</td>
+							<td ng-show="{{isObject(value)}}" ng-model="journal[field]">
+								<span editable item="value" />
+							</td>
+						</tr>
+				</tbody>
+				<tfoot></tfoot>
+			</table>
+		</div>
+		
+		
+		
 	</div>
 </div>
 

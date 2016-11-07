@@ -76,8 +76,8 @@ angular
 				obj.value.push(editables.types['author'](split[obj.formats[format][1]], split[obj.formats[format][2]]));
 				
 			});
-		}
 		
+		}
 		
 		obj.check = function() {
 			
@@ -122,14 +122,18 @@ angular
 			}
 		}
 		
-		obj.updateDesc = function() {
-			if (this.value.pagedesc == '') {
+		obj.updateDesc = function(force) {
+			if (this.value.pagedesc == '' || force  === true) {
 				this.value.showndesc = parseInt(this.value.realpage);
 				this.value.showndesc += parseInt(this.value.endpage) ? ' - ' + parseInt(this.value.endpage) : '';
 			} else {
 				this.value.showndesc = this.value.pagedesc;
 			}
-			//$log.log(this);
+		}
+		
+		obj.resetDesc = function() {
+			obj.updateDesc(true);
+			this.value.pagedesc = this.value.showndesc;
 		}
 		
 		obj.check =	function() {

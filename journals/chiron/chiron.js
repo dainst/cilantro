@@ -288,7 +288,7 @@ angular
 				'author':			article.author,
 				'pages':			article.page,
 				'date_published':	chiron.dateForAll,
-				'filepath':			pdfPath,
+				'filepath':			chiron.journal.importFilePath,
 				'thumbnail':		article.thumbnail
 			}, (k == 0));
 		});

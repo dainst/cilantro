@@ -134,21 +134,31 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$this->assumeUrls($lastId);
 			
 			$this->log->log("get journal specific instructions");
-			$data = $this->getJournal();
-				
-			$this->log->log("cut the pdf file into pieces");
-			$data = $this->cutPdf();
-				
+			$journal = $this->getJournal();
+			
+			if ($journal->doCut) {
+				$this->log->log("cut the pdf file into pieces");
+				$this->cutPdf();
+			} else {
+				$this->log->log("cut pdf file into pieces disabled");
+			}
+
+			if (!$journal->doImport) {
+				$this->log->log("ready, import disabled");
+				$this->clearTmp();
+				return;
+			}
+			
 			$this->log->log("make transport XML");
 			$xmlFile = $this->makeXML(true);
 				
 			$this->log->log("pump into ojs");
 			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->journal->ojs_journal_code} {$this->settings['ojs_user']}";
-				
+		
 			$this->log->log("this is my last result");
 			$this->debuglog[] = $execline;
 			$this->return['message'] = shell_exec($execline);
-				
+						
 			$this->log->log("check if it  was successfull?");
 			$successmsgs = array("The import was successful", "Der Import war erfolgreich");
 			$success = false;
@@ -161,14 +171,14 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			if (!$success) {
 				throw new Exception($this->return['message']);
 			}
-						
+							
 			$this->log->log("read in what we have done");
 			$this->getDainstMetadata();
 			$this->checkUpload($lastId);
 				
 			$this->log->log("create report about ids to zenon");
 			$this->createZenonReport();
-				
+	
 			$this->log->log("tidy up");
 			$this->clearTmp();
 			
@@ -215,19 +225,25 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @return <array>
 	 */
 	function cutPdf() {
-				
-		$data = $this->data;
+		$data = $this->data;		
 	
 		foreach ($data->articles as $nr => $article) {
 				
 			$start = (int) $article->pages->value->realpage + (int) $article->pages->context->offset;
 			$end   = (int) $article->pages->value->endpage  + (int) $article->pages->context->offset;
 			$end   = $end ? $end : $start;
-			$name  = "{$data->journal->importFilePath}.$nr.pdf";
-				
+			
+			$isDir = (substr($data->journal->importFilePath, -6) == 'pdfdir');
+			
+			
+			
+			$name  = $isDir ? $article->filepath : "{$article->filepath}.$nr.pdf";
+			$outp  = str_replace('/','-', $name);
 
 			$front = $this->_journal->createFrontPage($article, $data->journal);
-			$shell = "pdftk A={$this->settings['rep_path']}/{$data->journal->importFilePath}  B=$front cat B1 A$start-$end output {$this->settings['tmp_path']}/$name 2>&1";
+			
+			$this->log->log("XXX" . $front);
+			$shell = "pdftk A={$this->settings['rep_path']}/{$article->filepath}  B=$front cat B1 A$start-$end output {$this->settings['tmp_path']}/$outp 2>&1";
 				
 			$this->log->debug($shell);
 				
@@ -237,11 +253,10 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				throw new Exception($cut);
 			}
 				
-			$data->articles[$nr]->filepath = "{$this->settings['tmp_path']}/$name";
+			$data->articles[$nr]->filepath = "{$this->settings['tmp_path']}/$outp";
 				
 		}
 	
-		return $data;
 	}
 	
 	
@@ -406,7 +421,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * clear all tmp data
 	 */
 	function clearTmp() {
-		array_map('unlink', glob($this->settings['tmp_path'] . '/*'));
+		//array_map('unlink', glob($this->settings['tmp_path'] . '/*'));
 	}
 	
 
@@ -662,10 +677,57 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	function getRepository() {
 		$rep = scandir($this->settings['rep_path']);
 		
-		$this->return['repository'] = array_values(array_filter($rep, function($e) {
+		
+		
+		$list = array();
+		
+		foreach ($rep as $fil) {
+			
+			if ($fil == '.' or $fil == '..') {
+				continue;
+			}
+			$file = $this->settings['rep_path'] . '/' . $fil; 
+			$file_parts = pathinfo($file);
+			
+			$ext = (isset($file_parts['extension'])) ? strtolower($file_parts['extension']) : '';
+			
+			//$this->log->log($ext . . $file . is_dir($file));
+			
+			if ($ext == 'pdf') {
+				$list[] = array('path' => $fil, 'caption' => $fil, 'type' => 'file');
+				continue;
+			}
+			
+			if ($ext == 'pdfdir' and is_dir($file)) {
+				$list[] = array('path' => $fil, 'caption' => "[DIR] $fil", 'type' => 'dir');
+			}
+			
+		}
+		
+		$this->return['repository'] = $list;
+		
+		
+	}
+	
+	function getRepositoryFolder() {
+		
+		$dir = $this->settings['rep_path'] . '/' . $this->data->dir;
+		
+		if (!file_exists($dir)) {
+			throw new Exception("dir $dir is not in state of existence");
+		}
+		
+		if (!is_dir($dir)) {
+			throw new Exception("$dir is not a dir");
+		}
+		
+		$this->return['dir'] = array_values(array_filter(scandir($dir), function($e) {
 			$file_parts = pathinfo($this->settings['rep_path'] . '/' . $e);
 			return ((isset($file_parts['extension']) && (strtolower($file_parts['extension']))) == 'pdf');
 		}));
+		
+
+		
 		
 	}
 	
