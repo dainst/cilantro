@@ -13,7 +13,7 @@ class chiron extends journal {
 		$this->metadata['issn']				= "0069-3715";
 		
 		if ($this->metadata['volume'] <= 35) {
-			$this->metadata['publisher'] 	= "Walter de Gruyter GmbH, Berlin/Boston";
+			$this->metadata['publisher'] 	= "Walter de Gruyter GmbH, Berlin";
 		} else {
 			$this->metadata['publisher'] 	= "Verlag C. H. Beck, München";
 		}
