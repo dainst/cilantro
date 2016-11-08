@@ -6,7 +6,7 @@
 			{{$scope.currentArticle}}
 			<button uib-dropdown-toggle class="btn btn-default">Select Article ({{articles.length}} remaining)<span class="caret"></span></button>
 			<ul uib-dropdown-menu>
-    			<li ng-repeat="article in articles track by $index"><a href='#' ng-class="{'btn-primary': $index == currentArticle}"  ng-click="selectArticle($index)">{{article.title.value.value}}</a></li>
+    			<li ng-repeat="article in articles track by $index"><a href='#' ng-class="{'btn-primary': $index == currentArticle}"  ng-click="selectArticle($index)">{{article.author.value[0].lastname}} - {{article.title.value.value}}</a></li>
     		</ul>
 		</div>
 		<span class="btn-group">
