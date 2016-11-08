@@ -61,7 +61,6 @@ angular
 		
 		$scope.sec = pimportws.sec;
 		
-		
 		$scope.checkPw = function() {
 			$scope.loadJournalService();
 			master.init();
@@ -439,7 +438,10 @@ angular
 			});
 		}
 		
-		
+		$scope.getUploadId = function() {
+			return pimportws.uploadId;
+		}
+
 		
 		
 		

@@ -30,7 +30,7 @@ angular
 					$log.error(response.data.message);
 					pimportws.sec.response = response.data.message;
 				}  else {
-					$log.log("uid", pimportws.uploadId, response.data.uploadId);
+					$log.log("uid", pimportws.uploadId);
 
 					
 					if (!pimportws.uploadId) {
