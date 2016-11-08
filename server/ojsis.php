@@ -235,15 +235,13 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			
 			$isDir = (substr($data->journal->importFilePath, -6) == 'pdfdir');
 			
-			
-			
 			$name  = $isDir ? $article->filepath : "{$article->filepath}.$nr.pdf";
 			$outp  = str_replace('/','-', $name);
+			$outp  = str_replace(' ','-', $outp);
 
 			$front = $this->_journal->createFrontPage($article, $data->journal);
 			
-			$this->log->log("XXX" . $front);
-			$shell = "pdftk A={$this->settings['rep_path']}/{$article->filepath}  B=$front cat B1 A$start-$end output {$this->settings['tmp_path']}/$outp 2>&1";
+			$shell = "pdftk A=\"{$this->settings['rep_path']}/{$article->filepath}\"  B=$front cat B1 A$start-$end output {$this->settings['tmp_path']}/$outp 2>&1";
 				
 			$this->log->debug($shell);
 				
