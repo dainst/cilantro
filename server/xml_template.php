@@ -29,6 +29,7 @@ var_dump($articles[0]->pages);
 	              	  	} 
 	              	  	
 	              	  	echo "<br data-meta='dainst_metadata:{$this->return['uploadId']}:find:me' style='display:none'>"; // !important
+	              	  	
 	              	  	?>]]>
 	                </abstract>
 
