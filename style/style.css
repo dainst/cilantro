@@ -118,6 +118,11 @@ table.editable-table > tbody > tr > td:last-child {
 	padding-left: 3px
 }
 
+table.editable-table > tbody > tr > td:last-child .btn {
+	margin-top:  1px;
+	margin-bottom:  1px;
+}
+
 input.editable,
 textarea.editable,
 table.editable-table input {

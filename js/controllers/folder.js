@@ -43,6 +43,7 @@ angular
 	
 	$log.log('PATH', $scope.path);
 	
+	/* proceed */
 	
 	var getFolder = new Promise(function(resolve) {
 		pimportws.get('getRepositoryFolder', {dir: $scope.path}, function(result) {
@@ -133,7 +134,13 @@ angular
 	});
 	
 	
+	/* nice functions, may be used from frintend */
 	
+	// open file externally
+	$scope.openDocument = function(url) {
+		$log.log("OPEN " + url);
+		window.open(settings.rep_url + '/' + url);
+	}
 	
 	
 }]);
