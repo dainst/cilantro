@@ -98,7 +98,7 @@ angular
 				
 				var title = (typeof chiron.rawArticles[idx].tmp[1] !== "undefined") ? chiron.rawArticles[idx].tmp[1].str : '';
 				var author = (typeof chiron.rawArticles[idx].tmp[3] !== "undefined") ? chiron.rawArticles[idx].tmp[3].str : '';
-				var page = (typeof chiron.rawArticles[idx].tmp[2] !== "undefined") ? chiron.rawArticles[idx].tmp[1].str : '';
+				var page = (typeof chiron.rawArticles[idx].tmp[2] !== "undefined") ? chiron.rawArticles[idx].tmp[2].str : '';
 				
 				chiron.rawArticles[idx].title 	= editables.text(title);
 				chiron.rawArticles[idx].author 	= editables.authorlist(chiron.caseCorrection(author).split('-'));
