@@ -28,7 +28,7 @@ var_dump($articles[0]->pages);
 	                		echo "<a class='zenonlink' href='http://zenon.dainst.org/Record/{$article->zenonId}' data-meta='dainst_metadata:{$this->return['uploadId']}:zenonId:{$article->zenonId}'>Zenon</a>";
 	              	  	} 
 	              	  	
-	              	  	// echo "<br data-meta='dainst_metadata:{$this->return['uploadId']}:find:me' style='display:none'>";
+	              	  	echo "<br data-meta='dainst_metadata:{$this->return['uploadId']}:find:me' style='display:none'>"; // !important
 	              	  	?>]]>
 	                </abstract>
 
