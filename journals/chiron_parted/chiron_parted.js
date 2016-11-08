@@ -96,10 +96,14 @@ angular
 							"page":			editables.page(page, page, chiron),
 				 */
 				
-				chiron.rawArticles[idx].title 	= editables.text(chiron.rawArticles[idx].tmp[1].str);
-				chiron.rawArticles[idx].author 	= editables.authorlist(chiron.caseCorrection(chiron.rawArticles[idx].tmp[3].str).split('-'));
-				chiron.rawArticles[idx].page 	= editables.page(chiron.rawArticles[idx].tmp[2].str, 0, {offset: 1 - parseInt(chiron.rawArticles[idx].tmp[2].str)});						
-				chiron.rawArticles[idx].page.value.endpage = parseInt(chiron.rawArticles[idx].tmp[2].str) + pdf.pdfInfo.numPages - 1;
+				var title = (typeof chiron.rawArticles[idx].tmp[1] !== "undefined") ? chiron.rawArticles[idx].tmp[1].str : '';
+				var author = (typeof chiron.rawArticles[idx].tmp[3] !== "undefined") ? chiron.rawArticles[idx].tmp[3].str : '';
+				var page = (typeof chiron.rawArticles[idx].tmp[2] !== "undefined") ? chiron.rawArticles[idx].tmp[1].str : '';
+				
+				chiron.rawArticles[idx].title 	= editables.text(title);
+				chiron.rawArticles[idx].author 	= editables.authorlist(chiron.caseCorrection(author).split('-'));
+				chiron.rawArticles[idx].page 	= editables.page(page, 0, {offset: 1 - parseInt(page)});						
+				chiron.rawArticles[idx].page.value.endpage = parseInt(page) + pdf.pdfInfo.numPages - 1;
 				chiron.rawArticles[idx].page.resetDesc();
 				
 				chiron.rawArticles[idx].tmp = [];
