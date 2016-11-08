@@ -125,7 +125,7 @@ angular
 		obj.updateDesc = function(force) {
 			if (this.value.pagedesc == '' || force  === true) {
 				this.value.showndesc = parseInt(this.value.realpage);
-				this.value.showndesc += parseInt(this.value.endpage) ? ' - ' + parseInt(this.value.endpage) : '';
+				this.value.showndesc += parseInt(this.value.endpage) ? '–' + parseInt(this.value.endpage) : '';
 			} else {
 				this.value.showndesc = this.value.pagedesc;
 			}
