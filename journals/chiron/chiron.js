@@ -304,9 +304,9 @@ angular
 		chiron.pageNumbers.sort(function(a,b){return a.page - b.page});
 		
 		angular.forEach(chiron.pageNumbers, function(v, i) {
-			var end = (i + 1 < chiron.pageNumbers.length) ? chiron.pageNumbers[i + 1].page - 1 : chiron.totalPages - chiron.offset;
-			var pageStr = v.page + ' - ' + end;		
-			chiron.articles[v.id].page.value.endpage = end;		
+			var end = (i + 1 < chiron.pageNumbers.length) ? chiron.pageNumbers[i + 1].page - 1 : chiron.totalPages - chiron.offset;		
+			chiron.articles[v.id].page.value.endpage = end;
+			chiron.articles[v.id].page.resetDesc();
 		});
 		
 	}
