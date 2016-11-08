@@ -723,7 +723,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 		$this->return['dir'] = array_values(array_filter(scandir($dir), function($e) {
 			$file_parts = pathinfo($this->settings['rep_path'] . '/' . $e);
-			return ((isset($file_parts['extension']) && (strtolower($file_parts['extension']))) == 'pdf');
+			return ((isset($file_parts['extension']) && (strtolower($file_parts['extension'])) == 'pdf'));
 		}));
 		
 
