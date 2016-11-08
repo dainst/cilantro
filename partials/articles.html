@@ -67,7 +67,7 @@
 			
 				<span class="btn-group">
 					<button ng-if="isArticleSelected()" class='btn btn-default' ng-click='compareWithZenon()'>New Search<span class="glyphicon glyphicon-search"></span></button>
-					<button ng-if="isArticleSelected() && (zenon.selected > -1)" class='btn btn-default' ng-click='adoptFromZenon()' data-tooltip="Continue with the data from Zenon instead this one.">Take Zenon Data<span class="glyphicon glyphicon-import"></span></button>
+					<button ng-if="isArticleSelected() && (zenon.selected > -1)" class='btn btn-default' ng-click='adoptFromZenon()' data-tooltip="Continue with the data from Zenon instead of the one you got from the investigation of the table of contents">Take Zenon Data<span class="glyphicon glyphicon-import"></span></button>
 					<button ng-if="isArticleSelected() && (zenon.selected == -1)" ng-click='markAsMissingZenon()' ng-class="['btn', 'btn-default', {'active': (articles[currentArticle].zenonId == '(((new)))')}]">Mark as missing in Zenon  <span class="glyphicon glyphicon-flag"></span></button>
 				</span>
 				
