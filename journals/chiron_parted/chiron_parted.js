@@ -56,70 +56,78 @@ angular
 			]
 		};
 		
+		function getPage(pdf, pageIdx) {
+			$log.log('get page' + pageIdx)
+			pageIdx = pageIdx || 1;
+			pdf.getPage(pageIdx).then(function(page) {
+				
+				/* fetch text data */
+				page.getTextContent(pageIdx).then(function(textContent) {
+					console.log(textContent.items.length);
+					
+					if (textContent.items.length < 3) {
+						return getPage(pdf, pageIdx + 1);
+					}
+					
+					for(var k = 0; k < textContent.items.length; k++) {
+						var block = textContent.items[k];
+						
+						//console.log(block);
+						
+						//chiron.rawArticles[idx].raw += block.height + '\t|\t' + block.fontName + '\t|\t' + block.str + "\n";
+						
+						last = chiron.rawArticles[idx].tmp[chiron.rawArticles[idx].tmp.length - 1];
+											
+						if (last.fontName != block.fontName || last.height != block.height) {
+							chiron.rawArticles[idx].tmp.push({
+								fontName: block.fontName,
+								height: block.height,
+								str: ''
+							});
+						}
+						
+						chiron.rawArticles[idx].tmp[chiron.rawArticles[idx].tmp.length - 1].str += block.str;
+						
+						
+						
+						
+						if (chiron.rawArticles[idx].tmp.length > 5)  {
+							break;
+						}
+						
+					}
+					$log.log(chiron.rawArticles[idx].tmp);
 
+					
+					var title = (typeof chiron.rawArticles[idx].tmp[4] !== "undefined") ? chiron.rawArticles[idx].tmp[4].str : '';
+					var author = (typeof chiron.rawArticles[idx].tmp[3] !== "undefined") ? chiron.rawArticles[idx].tmp[3].str : '';
+					var pageNr = (typeof chiron.rawArticles[idx].tmp[2] !== "undefined") ? chiron.rawArticles[idx].tmp[2].str : '';
+					
+					$log.log(pageIdx, pageNr, page);
+					
+					chiron.rawArticles[idx].title 	= editables.text(title);
+					chiron.rawArticles[idx].author 	= editables.authorlist(chiron.caseCorrection(author).split('-'));
+					chiron.rawArticles[idx].page 	= editables.page(pageNr, pageIdx - 1, {offset: pageIdx - parseInt(pageNr)});						
+					chiron.rawArticles[idx].page.value.endpage = parseInt(pageNr) + pdf.pdfInfo.numPages - pageIdx;
+					chiron.rawArticles[idx].page.resetDesc();
+					
+					chiron.rawArticles[idx].tmp = [];
+					
+					chiron.refresh();
+					
+					chiron.stats.analyzed += 1;
+					
+					
+				}); //getTextContent
+				
+				/* thumbnail */
+				chiron.createThumbnail(page,  idx)
+				
+				
+			}); // getPage
+		}
 		
-		pdf.getPage(1).then(function(page) {			
-			
-			/* fetch text data */
-			page.getTextContent().then(function(textContent) {
-				for(var k = 0; k < Math.max(3, textContent.items.length); k++) {
-					var block = textContent.items[k];
-					
-					//console.log(block);
-					
-					//chiron.rawArticles[idx].raw += block.height + '\t|\t' + block.fontName + '\t|\t' + block.str + "\n";
-					
-					last = chiron.rawArticles[idx].tmp[chiron.rawArticles[idx].tmp.length - 1];
-										
-					if (last.fontName != block.fontName || last.height != block.height) {
-						chiron.rawArticles[idx].tmp.push({
-							fontName: block.fontName,
-							height: block.height,
-							str: ''
-						});
-					}
-					
-					chiron.rawArticles[idx].tmp[chiron.rawArticles[idx].tmp.length - 1].str += block.str;
-					
-					
-					
-					
-					if (chiron.rawArticles[idx].tmp.length > 4)  {
-						break;
-					}
-					
-				}
-				
-				/*
-				 * 			"title":		editables.text(title),
-							"author": 		editables.authorlist(author.split('-')),
-							"page":			editables.page(page, page, chiron),
-				 */
-				
-				var title = (typeof chiron.rawArticles[idx].tmp[1] !== "undefined") ? chiron.rawArticles[idx].tmp[1].str : '';
-				var author = (typeof chiron.rawArticles[idx].tmp[3] !== "undefined") ? chiron.rawArticles[idx].tmp[3].str : '';
-				var page = (typeof chiron.rawArticles[idx].tmp[2] !== "undefined") ? chiron.rawArticles[idx].tmp[2].str : '';
-				
-				chiron.rawArticles[idx].title 	= editables.text(title);
-				chiron.rawArticles[idx].author 	= editables.authorlist(chiron.caseCorrection(author).split('-'));
-				chiron.rawArticles[idx].page 	= editables.page(page, 0, {offset: 1 - parseInt(page)});						
-				chiron.rawArticles[idx].page.value.endpage = parseInt(page) + pdf.pdfInfo.numPages - 1;
-				chiron.rawArticles[idx].page.resetDesc();
-				
-				chiron.rawArticles[idx].tmp = [];
-				
-				chiron.refresh();
-				
-				chiron.stats.analyzed += 1;
-				
-				
-			}); //getTextContent
-			
-			/* thumbnail */
-			chiron.createThumbnail(page,  idx)
-			
-			
-		}); // getPage
+		getPage(pdf, 1);
 		
 		
 	}

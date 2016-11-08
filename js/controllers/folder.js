@@ -128,7 +128,7 @@ angular
 		loadFiles();
 		Promise.all(loadFilePromises).then(function() {
 			message("All Files loaded");
-			console.log($scope.files);
+			//$log.log($scope.files);
 			journalmaster.control.onGotAll();
 		})
 	});
