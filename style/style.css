@@ -323,3 +323,72 @@ table .alert {
     width: 0;
     border-radius: 2px;
 }
+
+
+/* checkboxes */
+
+input.form-check-input {
+	display: none
+}
+
+input.form-check-input + label {
+
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    cursor: pointer;
+	color: black;
+	background-color: rgb(217, 237, 247);
+	border-color: #1f3150;
+	margin-bottom:0px;
+}
+
+input.form-check-input + label:before {
+	font-family: 'Glyphicons Halflings';
+	content: "\E157";
+	margin-top: 2px;
+	color: gray;
+	padding-right: 4px;
+	padding-left: 4px
+
+}
+
+input.form-check-input:checked + label  {
+	background-color: rgb(217, 237, 247);
+	color:black
+}
+
+input.form-check-input:checked + label:before {
+	content: "\E067";
+	color:black
+}
+
+
+/* lang selector */
+
+.lang-selector input[type="radio"] {
+	display: none
+}
+
+.lang-selector input[type="text"],
+.lang-selector input[type="radio"] + label {
+    cursor: pointer;
+	font-weight: normal;
+	margin-bottom:0px;
+}
+
+.lang-selector input[type="text"] {
+	background-color: rgb(217, 237, 247);
+	border: none;
+	width: 2.1em;
+	text-align: center
+}
+
+.lang-selector input[type="radio"]:checked + label  {
+	font-weight: bold
+}
+
+
+
+.lang-selector input[type="text"] {
+}

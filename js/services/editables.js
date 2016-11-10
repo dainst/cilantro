@@ -179,6 +179,36 @@ angular
 		return obj;
 	}
 	
+	editables.checkbox = function(seed, mandatory) {
+		var obj = editables.base((seed && true), mandatory);
+		obj.type = 'checkbox';
+		obj.check =	function() {
+			return false;
+		}
+		return obj;
+	}
+	
+	
+	editables.language = function(seed, mandatory) {
+		var obj = editables.base(seed, mandatory);
+		obj.type = 'language';
+		obj.check =	function() {
+			obj.value.value = obj.value.value.toLowerCase();
+			if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value == '')) {
+				return 'This field is mandatory'
+			}
+			if (obj.value.value.length != 2)  {
+				return 'seems not to be proper language code'
+			}
+
+			return false;
+			
+		}
+		return obj;
+		
+	}
+	
+	
 	
 	return (editables);
 }])

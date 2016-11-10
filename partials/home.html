@@ -86,24 +86,32 @@
 		
 		<div class="panel panel-default">
 			<div class="panel-heading">Journal Metadata</div>
-	
-			<table class='journal-table table'>
-	
-				<tbody>
-					<thead></thead>				
-						<tr ng-repeat="(field, value) in journal track by $index">
-							<td ng-show="{{isObject(value)}}">{{field}}</td>
-							<td ng-show="{{isObject(value)}}" ng-model="journal[field]">
-								<span editable item="value" />
-							</td>
-						</tr>
-				</tbody>
-				<tfoot></tfoot>
-			</table>
+			<div class="panel-body">
+				<table class='journal-table table'>
+		
+					<tbody>
+						<thead></thead>				
+							<tr ng-repeat="(field, value) in journal track by $index">
+								<td ng-show="{{isObject(value)}}">{{field}}</td>
+								<td ng-show="{{isObject(value)}}" ng-model="journal[field]">
+									<span editable item="value" />
+								</td>
+							</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+			</div>
 		</div>
 		
 		
 		
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">TEST</div>
+			<div class="panel-body">
+				<span editable item="teest" caption="autopublish" />
+			</div>
+		</div>
 	</div>
 </div>
 

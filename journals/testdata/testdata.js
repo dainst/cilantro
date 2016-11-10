@@ -15,6 +15,7 @@ angular
 		bob.journal.identification = 'vol_year';
 		bob.journal.ojs_journal_code = 'test';
 		bob.journal.journal_code = 'testdata';		
+		bob.journal.auto_publish_issue.value.value = false;
 	}
 	
 	bob.start = function() {

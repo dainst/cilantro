@@ -1,0 +1,10 @@
+.git
+.buildpath
+.project
+.settings
+settings.php
+standDerDinge.txt
+tmp/*
+reports/*
+PIMPORT_REPO
+

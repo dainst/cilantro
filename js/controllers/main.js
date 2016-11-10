@@ -123,7 +123,9 @@ angular
 			"identification":		"vol_year",
 			"ojs_journal_code":		"ojs_journal_code",
 			"ojs_user":				"ojs_user",
-			"journal_code":			"importer journal code"
+			"journal_code":			"importer journal code",
+			"auto_publish_issue":	editables.checkbox(false),
+			"default_publish_articles":	true
 		};
 		//"authors": editables.authorlist([{"firstname": "Panse Heter", "lastname": "Urang"}, {"firstname": "Jabber", "lastname": "Wocky"}])
 
@@ -152,14 +154,18 @@ angular
 				'author':			editables.authorlist(),
 				'pages':			editables.page(12),
 				'date_published':	editables.base('DD-MM-YYYY'),
+				'language':			editables.language('de', false),
+				'auto_publish':		editables.checkbox($scope.journal.default_publish_articles === true),
 				'filepath':			$scope.journal.importFilePath,
 				'thumbnail':		''
 			}
 		}
 		
-		$scope.addArticle = function(a, select) {
-			if (angular.isUndefined(a)) {
-				var a = new Article('Article ' +  $scope.articles.length);
+		$scope.addArticle = function(b, select) {
+			var a = new Article('Article ' +  $scope.articles.length);
+			
+			if (!angular.isUndefined(b)) {
+				angular.extend(a, b);
 			}
 			$scope.articles.push(a);
 			$log.log('Add Article ');
@@ -334,6 +340,8 @@ angular
 				'author':			editables.authorlist(authors, 1),
 				'pages':			editables.page(doc.pages),
 				'date_published':	editables.base(doc.date),
+				'language':			editables.language('de', false),
+				'auto_publish':		editables.checkbox(),
 				'thumbnail':		$scope.articles[$scope.currentArticle].thumbnail,
 				'filepath':			$scope.articles[$scope.currentArticle].filepath,
 				'zenonId':			doc.id
@@ -443,6 +451,9 @@ angular
 		}
 
 		
+		
+		
+		$scope.teest  = editables.checkbox(true);
 		
 		
 	}

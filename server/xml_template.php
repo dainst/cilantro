@@ -1,26 +1,14 @@
-<?php 
-/*
-echo "<pre>";
-var_dump($data);
-echo "</pre>";
-
-//var_dump($journal);
-/*
-var_dump($articles[0]->pages);
-*/
-/*//*/
-?>
 <?php echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
 <!DOCTYPE issues PUBLIC "-//PKP//OJS Articles and Issues XML//EN" "http://pkp.sfu.ca/ojs/dtds/2.4.8/native.dtd">
 <issues>
-    <issue identification="<?php echo $journal->identification; ?>" published="true">      
+    <issue identification="<?php echo $journal->identification; ?>" published="<?php echo ($journal->auto_publish_issue->value->value) ? 'true' : 'false'?>">      
         <volume><?php echo $journal->volume->value->value; ?></volume>
         <year><?php echo $journal->year->value->value; ?></year>
         <section>            
             <title>Articles</title>
             <?php foreach ($articles as $article) { ?>
-	            <article>
-	                <title><?php echo htmlspecialchars($article->title->value->value); ?></title>
+	            <article language="<?php echo htmlspecialchars($article->language->value->value); ?>">
+	                <title locale="en_US"><?php echo htmlspecialchars($article->title->value->value); ?></title>
 	                <abstract>
 	                	<![CDATA[<?php 
 	                	echo htmlspecialchars($article->abstract->value->value);
@@ -46,7 +34,8 @@ var_dump($articles[0]->pages);
 		                </author>
 		            <?php } ?>
 	                <pages><?php echo htmlspecialchars($article->pages->value->pagedesc); ?></pages>
-	                <date_published><?php echo htmlspecialchars($article->date_published->value->value); ?></date_published>
+	                <date_published><?php htmlspecialchars($article->date_published->value->value); ?></date_published>
+	                <?php if ($article->auto_publish->value->value) { ?><open_access>true</open_access><?php } ?>
 	                <galley>
 	                    <label>PDF</label>
 	                    <file>
@@ -57,5 +46,19 @@ var_dump($articles[0]->pages);
 	    	<?php } ?>
         </section>
     </issue>
+    <?php 
+		/*
+		echo "<debug>";
+		var_dump($data);
+		echo "</debug>";
+		
+		//var_dump($journal);
+		/*
+		var_dump($articles[0]->pages);
+		*/
+		/*//*/
+	?>
+		    
+    
 </issues>
 <?php //*/ ?>

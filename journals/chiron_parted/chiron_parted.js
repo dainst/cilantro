@@ -24,7 +24,8 @@ angular
 	chiron.init = function()  {
 		chiron.journal.identification = 'vol_year';
 		chiron.journal.ojs_journal_code = 'chiron';
-		chiron.journal.journal_code = 'chiron_parted';		
+		chiron.journal.journal_code = 'chiron_parted';
+		chiron.journal.auto_publish_issue.value.value = true;
 	}
 	
 	/* reaction for all files done */
