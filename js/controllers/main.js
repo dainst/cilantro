@@ -453,9 +453,6 @@ angular
 		
 		
 		
-		$scope.teest  = editables.checkbox(true);
-		
-		
 	}
 ])
 

@@ -18,7 +18,7 @@
 
 // settings
 $allowedIps		= array();
-$debugmode 		= true;
+$debugmode 		= false;
 
 
 // set up errors
