@@ -419,7 +419,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * clear all tmp data
 	 */
 	function clearTmp() {
-		//array_map('unlink', glob($this->settings['tmp_path'] . '/*'));
+		array_map('unlink', glob($this->settings['tmp_path'] . '/*'));
 	}
 	
 
