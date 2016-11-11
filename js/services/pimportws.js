@@ -17,6 +17,10 @@ angular
 		
 		//$log.log(settings.server_url, send);		
 		
+		if (settings.devMode) {
+			pimportws.sec.password = 'alpha';
+		}
+		
 		$http({
 			method:	'POST',
 			url: settings.server_url,
