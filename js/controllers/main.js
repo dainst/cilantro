@@ -154,7 +154,7 @@ angular
 				'author':			editables.authorlist(),
 				'pages':			editables.page(12),
 				'date_published':	editables.base('DD-MM-YYYY'),
-				'language':			editables.language('de', false),
+				'language':			editables.language('de_DE', false),
 				'auto_publish':		editables.checkbox($scope.journal.default_publish_articles === true),
 				'filepath':			$scope.journal.importFilePath,
 				'thumbnail':		''
@@ -340,7 +340,7 @@ angular
 				'author':			editables.authorlist(authors, 1),
 				'pages':			editables.page(doc.pages),
 				'date_published':	editables.base(doc.date),
-				'language':			editables.language('de', false),
+				'language':			editables.language('de_DE', false),
 				'auto_publish':		editables.checkbox(),
 				'thumbnail':		$scope.articles[$scope.currentArticle].thumbnail,
 				'filepath':			$scope.articles[$scope.currentArticle].filepath,
@@ -450,6 +450,7 @@ angular
 			return pimportws.uploadId;
 		}
 
+		$scope.teest = editables.language();
 		
 		
 		

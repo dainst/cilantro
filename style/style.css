@@ -380,7 +380,7 @@ input.form-check-input:checked + label:before {
 .lang-selector input[type="text"] {
 	background-color: rgb(217, 237, 247);
 	border: none;
-	width: 2.1em;
+	width: 5.1em;
 	text-align: center
 }
 

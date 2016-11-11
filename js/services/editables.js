@@ -193,11 +193,11 @@ angular
 		var obj = editables.base(seed, mandatory);
 		obj.type = 'language';
 		obj.check =	function() {
-			obj.value.value = obj.value.value.toLowerCase();
+			//obj.value.value = obj.value.value.toLowerCase();
 			if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value == '')) {
 				return 'This field is mandatory'
 			}
-			if (obj.value.value.length != 2)  {
+			if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(this.value.value))  {
 				return 'seems not to be proper language code'
 			}
 

@@ -5,10 +5,11 @@
         <volume><?php echo $journal->volume->value->value; ?></volume>
         <year><?php echo $journal->year->value->value; ?></year>
         <section>            
-            <title>Articles</title>
+            <title locale="en_US">Articles</title>
             <?php foreach ($articles as $article) { ?>
-	            <article language="<?php echo htmlspecialchars($article->language->value->value); ?>">
-	                <title locale="en_US"><?php echo htmlspecialchars($article->title->value->value); ?></title>
+            	<?php $locale = (isset($article->language) && $article->language->value->value) ? 'language="' . substr($article->language->value->value, 0, 2) . '" locale="' . $article->language->value->value . '"' : '' ?>
+				<article <?php echo $locale ?>>
+	                <title><?php echo htmlspecialchars($article->title->value->value); ?></title>
 	                <abstract>
 	                	<![CDATA[<?php 
 	                	echo htmlspecialchars($article->abstract->value->value);
@@ -35,7 +36,7 @@
 		            <?php } ?>
 	                <pages><?php echo htmlspecialchars($article->pages->value->pagedesc); ?></pages>
 	                <date_published><?php htmlspecialchars($article->date_published->value->value); ?></date_published>
-	                <?php if ($article->auto_publish->value->value) { ?><open_access>true</open_access><?php } ?>
+	                <?php if ($article->auto_publish->value->value) { /* @ TODO auto_publish to be implemented */ } ?>
 	                <galley>
 	                    <label>PDF</label>
 	                    <file>
