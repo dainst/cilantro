@@ -26,8 +26,9 @@ angular
 			message: txt
 		}
 		master.refresh();
-		
 	}
+	
+	$scope.articles = master.rawArticles;
 	
 	var stats = master.stats = {
 		files: 0,
@@ -141,6 +142,64 @@ angular
 		$log.log("OPEN " + url);
 		window.open(settings.rep_url + '/' + url);
 	}
+	
+
+	$scope.selectedToMerge = -1;
+	
+	$scope.mergeArticle = function(articleId) {
+		var article = $scope.articles[articleId];
+		$log.log(articleId);
+		
+		if ($scope.selectedToMerge == articleId) {
+			master.status.message = '';
+			master.status.error = '';
+			$scope.selectedToMerge = -1;
+			return;
+		}
+		
+		
+		if ($scope.selectedToMerge == -1)  {
+			master.status.message  = 'Select article to attach »' + article.title.value.value + '« to';
+			master.status.error  = 'warning';
+			$scope.selectedToMerge = articleId;
+		} else {
+			var article2 = $scope.articles[$scope.selectedToMerge];
+			if (confirm('Really attach article »' + article2.title.value.value + '« to »' + article.title.value.value + "«?!")) {
+				mergeArticles(articleId, $scope.selectedToMerge);
+			} else {
+				$scope.mergeArticle(-1);
+			}
+		}
+		
+	}
+	
+	function mergeArticles(mainId, attachId)  {
+		
+		var main = $scope.articles[mainId];
+		var attach = $scope.articles[attachId];
+		
+		//$log.log('merge!', main, attach);
+		$scope.selectedToMerge -1;
+		
+		main.attached = (typeof main.attached === "undefined") ? [] : main.attached;
+		attach.attached = (typeof attach.attached === "undefined") ? [] : attach.attached;
+		
+		
+		angular.extend(main.attached, attach.attached);
+		
+		main.attached.push({
+			file: attach.url
+		});// we could add from and to, but we use the whole file anyway!
+		
+		delete $scope.articles[attachId];
+		
+		master.status.message = 'Articles Merged!';
+		master.status.error = '';
+		$scope.selectedToMerge = -1;
+		
+		
+	}
+	
 	
 	
 }]);

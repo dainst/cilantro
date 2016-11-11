@@ -208,6 +208,15 @@ angular
 		
 	}
 	
+	editables.filelist = function(seed, mandataory) {
+		var obj = {};
+		obj.type = 'filelist';
+		obj.check =	function() {return false}
+		obj.value = seed || [];
+		return obj;	
+		
+	}
+	
 	
 	
 	return (editables);

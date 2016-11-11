@@ -18,7 +18,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">Continue</div>
 				<div class="panel-body">
-					<span class="btn-group"  ng-show="master.isReady">
+					<span class="btn-group">
 						<button class='btn btn-primary' ng-click='master.proceed()'>Proceed<span class="glyphicon glyphicon-chevron-right"></span></button>
 					</span>
 				</div>
@@ -52,7 +52,15 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="(id, article) in master.rawArticles track by $index">
-					<td>{{article.filename}}</td>
+					<td style="text-align: left">
+						<b>{{article.filename}}</b>
+						<div ng-show="article.attached.length">Attached:
+							<ul>
+								<li ng-repeat="attachment in article.attached">{{attachment.file}}</li>
+							</ul>
+						</div>
+						  
+					</td>
 					<td style="width:25%"><span editable item="article.author"></span></td>
 					<td><span editable item="article.title"></span></td>
 					<td style="width:10%"><span editable item="article.page"></span></td>
@@ -65,8 +73,7 @@
 						<span class="btn btn-default btn-xs" ng-click="master.removeArticle(id)" data-tooltip="delete article"><span class="glyphicon glyphicon-minus-sign"></span></span>
 						<span class="btn btn-default btn-xs" ng-click="openDocument(article.url)" data-tooltip="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
 						
-						<span class="btn btn-default btn-xs" ng-click="attachArticle(article.url)" data-tooltip="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
-						<span ng-show="attachMode" class="btn btn-default btn-xs" ng-click="attachArticleTo(article.url)" data-tooltip="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
+						<span class="btn btn-default btn-xs" ng-class="{'btn-default': (selectedToMerge == -1), 'btn-danger': (selectedToMerge != -1)}" ng-click="mergeArticle(id)" data-tooltip="merge articles"><span class="glyphicon glyphicon-compressed"></span></span>
 					</td>
 				</tr>
 			</tbody>

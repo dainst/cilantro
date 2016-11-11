@@ -146,7 +146,8 @@ angular
 				'pages':			article.page,
 				'date_published':	chiron.journal.year,
 				'filepath':			article.url,
-				'thumbnail':		article.thumbnail
+				'thumbnail':		article.thumbnail,
+				'attached':			editables.filelist(article.attached)
 			}, (k == 0));
 		});
 		

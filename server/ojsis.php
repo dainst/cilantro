@@ -239,9 +239,28 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$outp  = str_replace('/','-', $name);
 			$outp  = str_replace(' ','-', $outp);
 
+			$files = array();
+			
 			$front = $this->_journal->createFrontPage($article, $data->journal);
 			
-			$shell = "pdftk A=\"{$this->settings['rep_path']}/{$article->filepath}\"  B=$front cat B1 A$start-$end output {$this->settings['tmp_path']}/$outp 2>&1";
+			if ($front) {  // the frontpage if available
+				$files[] = (object) array("file" => $front, 'absolute' => true);
+			}
+			
+			$files[] = (object) array(// the file itself
+				"file"	=>	"{$this->settings['rep_path']}/{$article->filepath}",
+				"from"	=>	$start,
+				"to"	=>	$end,
+				"absolute" => true
+			);
+			
+			// any "attached" files, files meant to merge		
+			if (isset($article->attached) and isset($article->attached->value)) {
+				$files = array_merge($files, $article->attached->value);
+			}
+			$mergeStr = $this->_mergePdfString($files);
+			
+			$shell = "pdftk $mergeStr output {$this->settings['tmp_path']}/$outp 2>&1";
 				
 			$this->log->debug($shell);
 				
@@ -255,6 +274,38 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				
 		}
 	
+	}
+	
+	
+	private function _mergePdfString($files) {
+		
+		$handles = "ABCDEFGHIJKLMNOPQRTUVWXYZ";
+		$handleDef = array();
+		$cutDef = array();
+		$i = 0;
+		
+		foreach ($files as $file) {
+			$handle = substr($handles, $i++, 1);
+			
+			$file->file = (isset($file->absolute) ? $file->file : "{$this->settings['rep_path']}/{$file->file}");
+			
+			if (!file_exists($file->file)) {
+				$this->log->warning("file |{$file->file}| could not be found");
+				continue;
+			}
+			
+			$handleDef[] = $handle. '="' . $file->file . '"';
+			$cutDef[] = (isset($file->from) and isset($file->to)) ? $handle . (int) $file->from . '-' . (int) $file->to : $handle;
+		}
+		
+		$handleDef = implode(" ", $handleDef);
+		$cutDef = implode(" ", $cutDef);
+		
+		
+		$this->log->debug('attached:' . print_r($files,1));
+		
+		return ($handleDef . ' cat ' . $cutDef);
+		
 	}
 	
 	
@@ -729,6 +780,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 	}
 	
+
 
 	
 	

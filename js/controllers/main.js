@@ -10,7 +10,7 @@ angular
 		/* debug */
 		
 		$scope.cacheKiller = '?nd=' + Date.now();
-		settings.devMode = true;
+		settings.devMode = false;
 					
 		/* initialize */
 		
@@ -158,7 +158,8 @@ angular
 				'language':			editables.language('de_DE', false),
 				'auto_publish':		editables.checkbox($scope.journal.default_publish_articles === true),
 				'filepath':			$scope.journal.importFilePath,
-				'thumbnail':		''
+				'thumbnail':		'',
+				'attached':			editables.filelist()
 			}
 		}
 		
@@ -345,7 +346,8 @@ angular
 				'auto_publish':		editables.checkbox(),
 				'thumbnail':		$scope.articles[$scope.currentArticle].thumbnail,
 				'filepath':			$scope.articles[$scope.currentArticle].filepath,
-				'zenonId':			doc.id
+				'zenonId':			doc.id,
+				'attached':			[]
 			}
 			
 			//$log.log(set);
