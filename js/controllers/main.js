@@ -85,7 +85,7 @@ angular
 		
 		$scope.journals = {
 			types : {
-				"chiron_parted": "Chiron, allready parted into files",
+				"chiron_parted": "Chiron, already parted into files",
 				"chiron": "Chiron, whole Volume in one file",
 				"testdata": "Create some testdata",
 			},
