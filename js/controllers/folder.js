@@ -201,5 +201,64 @@ angular
 	}
 	
 	
+	$scope.updateOrder = function(order, asc, articleId) {
+		
+		if (!order || (order == '')) {
+			return $log.log('no order given');
+		}		
+		
+		asc = ((typeof asc !== "undefined") && asc) ? 1 : -1;
+
+		function orderObject(obj, order_by, asc) {
+			var tmp = [];
+			
+			angular.forEach(obj, function(elem, id) {
+				elem._key = id;
+				tmp.push(elem);
+			});
+			
+			obj = {};
+			
+			tmp.sort(function(a, b) {
+				$log.log('ORDER BY ' + order_by + '(asc=' + asc + ')');
+				if (typeof a[order_by] === "object") {
+					return asc * a[order_by].compare(b[order_by]);
+				}
+				
+				return (asc * a[order_by].localeCompare(b[order_by]));
+			});
+
+			angular.forEach(tmp, function(elem, k) {
+				elem.order.value.value = k + 1;
+				obj[k] = elem;
+				delete elem._key;
+			});
+						
+			return obj;
+		}
+		
+		if (order == 'up') {
+			$log.log ('up');
+			$scope.articles[articleId].order.value.value -= 2;
+			order = 'order';
+			asc = 1;
+		}
+		
+		if (order == 'down') {
+			$log.log ('down');
+			$scope.articles[articleId].order.value.value += 2;		
+			order = 'order';
+			asc = 1;
+		}
+		
+		$log.log('order by ' + order + ' | ' + asc);
+		
+		$scope.articles = orderObject($scope.articles, order, asc);
+		//$scope.$$phase || $scope.$apply()
+		$log.log($scope.articles);
+	}
+	
+
+	
 	
 }]);

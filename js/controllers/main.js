@@ -10,7 +10,7 @@ angular
 		/* debug */
 		
 		$scope.cacheKiller = '?nd=' + Date.now();
-		settings.devMode = false;
+		settings.devMode = true;
 					
 		/* initialize */
 		
@@ -159,7 +159,8 @@ angular
 				'auto_publish':		editables.checkbox($scope.journal.default_publish_articles === true),
 				'filepath':			$scope.journal.importFilePath,
 				'thumbnail':		'',
-				'attached':			editables.filelist()
+				'attached':			editables.filelist(),
+				'order':			editables.number()
 			}
 		}
 		

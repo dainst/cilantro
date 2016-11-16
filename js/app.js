@@ -36,3 +36,20 @@ angular
 		transl8Uri: "http://bogusman01.dai-cloud.uni-koeln.de/transl8/translation/jsonp?application=arachne4_frontend&lang={LANG}&callback=JSON_CALLBACK"
 	}
 )
+
+.filter('orderObjectBy', function() {
+	return function(items, field, reverse) {
+		var filtered = [];
+		angular.forEach(items, function(item) {
+			filtered.push(item);
+		});
+		filtered.sort(function (a, b) {
+			return (a[field] > b[field] ? 1 : -1);
+		});
+		if(reverse) {
+			filtered.reverse();
+		}
+		
+		return filtered;
+	};
+});

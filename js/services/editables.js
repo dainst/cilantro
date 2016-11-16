@@ -12,12 +12,14 @@ angular
 	
 	editables.base = function(seed, mandatory, readonly) { 
 		return {
-			seed: 		seed,
 			type: 		'editable',
 			value: 		angular.isObject(seed) ? seed : {value: seed},
 			mandatory: 	angular.isUndefined(mandatory) ? true : mandatory,
 			readonly: 	angular.isUndefined(readonly) ? false : readonly,
-			check: 		function() {return (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value == '')) ? 'This  field is mandatory' : false;}
+			check: 		function() {return (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value == '')) ? 'This  field is mandatory' : false;},
+			set:		function(value) {this.value = value},
+			get:		function(){return this.value},
+			compare:	function(that){return 0}
 		}
 	}
 	
@@ -79,6 +81,7 @@ angular
 		
 		}
 		
+		
 		obj.check = function() {
 			
 			var error = false;
@@ -97,6 +100,15 @@ angular
 			return error;
 			
 		}
+		
+		
+		obj.compare = function(that) {
+			var a = (typeof this.value[0] !== "undefined") ? this.value[0].lastname : '';
+			var b = (typeof that.value[0] !== "undefined") ? that.value[0].lastname : '';
+			
+			return (a.localeCompare(b));
+		}
+		
 		
 		obj.setAuthors(seed, format)
 		
@@ -154,6 +166,10 @@ angular
 			return false;
 		}
 		
+		obj.compare = function(second) {
+			return (this.value.realpage > second.value.realpage) ? 1 : -1;
+		}
+		
 		return obj;
 	}
 	
@@ -161,6 +177,11 @@ angular
 	editables.text = function(seed, mandatory) {
 		var obj = editables.base(seed, mandatory);
 		obj.type = 'text';
+		
+		obj.compare = function(second) {
+			return (this.value.value.localeCompare(second.value.value));
+		}
+		
 		return obj;
 	}
 	
@@ -176,6 +197,9 @@ angular
 			} 
 			return false;
 		}
+		obj.compare = function(second) {
+			return (this.value.value > second.value.value)  ? 1 : -1;
+		}
 		return obj;
 	}
 	
@@ -184,6 +208,9 @@ angular
 		obj.type = 'checkbox';
 		obj.check =	function() {
 			return false;
+		}
+		obj.compare = function(second) {
+			return (this.value.value === second.value.value) ? 0 : 1;
 		}
 		return obj;
 	}
@@ -204,6 +231,9 @@ angular
 			return false;
 			
 		}
+		obj.compare = function(second) {
+			return (this.value.value.localeCompare(second.value.value));
+		}
 		return obj;
 		
 	}
@@ -213,6 +243,7 @@ angular
 		obj.type = 'filelist';
 		obj.check =	function() {return false}
 		obj.value = seed || [];
+		obj.compare = function(second) {return 0}
 		return obj;	
 		
 	}

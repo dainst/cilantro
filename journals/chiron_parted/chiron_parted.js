@@ -112,6 +112,8 @@ angular
 					chiron.rawArticles[idx].page.value.endpage = parseInt(pageNr) + pdf.pdfInfo.numPages - pageIdx;
 					chiron.rawArticles[idx].page.resetDesc();
 					
+					chiron.rawArticles[idx].order	= editables.number(idx  + 1);
+					
 					chiron.rawArticles[idx].tmp = [];
 					
 					chiron.refresh();
@@ -147,7 +149,8 @@ angular
 				'date_published':	chiron.journal.year,
 				'filepath':			article.url,
 				'thumbnail':		article.thumbnail,
-				'attached':			editables.filelist(article.attached)
+				'attached':			editables.filelist(article.attached),
+				'order':			article.order
 			}, (k == 0));
 		});
 		
