@@ -29,6 +29,7 @@ angular
 	}
 	
 	$scope.articles = master.rawArticles;
+	$scope.thumbnails = master.thumbnails;
 	
 	var stats = master.stats = {
 		files: 0,
@@ -143,65 +144,69 @@ angular
 		window.open(settings.rep_url + '/' + url);
 	}
 	
-
-	$scope.selectedToMerge = -1;
+	$scope.selectedToMerge = false;
 	
-	$scope.mergeArticle = function(articleId) {
-		var article = $scope.articles[articleId];
-		$log.log(articleId);
+	$scope.mergeArticle = function(article) {
 		
-		if ($scope.selectedToMerge == articleId) {
+		if ($scope.selectedToMerge._id == article._id) {
 			master.status.message = '';
 			master.status.error = '';
-			$scope.selectedToMerge = -1;
+			$scope.selectedToMerge = false;
 			return;
 		}
 		
-		
-		if ($scope.selectedToMerge == -1)  {
+		if (!$scope.selectedToMerge)  {
 			master.status.message  = 'Select article to attach »' + article.title.value.value + '« to';
 			master.status.error  = 'warning';
-			$scope.selectedToMerge = articleId;
+			$scope.selectedToMerge = article;
 		} else {
-			var article2 = $scope.articles[$scope.selectedToMerge];
-			if (confirm('Really attach article »' + article2.title.value.value + '« to »' + article.title.value.value + "«?!")) {
-				mergeArticles(articleId, $scope.selectedToMerge);
+			var article2 = article;
+			article = $scope.selectedToMerge;
+			if (confirm('Really attach article »' + article2.title.value.value + '« to »' + article.title.value.value + "« ?!")) {
+				mergeArticles(article, article2);
 			} else {
-				$scope.mergeArticle(-1);
+				$scope.mergeArticle(false);
 			}
 		}
 		
 	}
 	
-	function mergeArticles(mainId, attachId)  {
+	function mergeArticles(main, attach)  {
 		
-		var main = $scope.articles[mainId];
-		var attach = $scope.articles[attachId];
-		
-		//$log.log('merge!', main, attach);
-		$scope.selectedToMerge -1;
+		$log.log('merge!', main, attach);
+		$scope.selectedToMerge = false;
 		
 		main.attached = (typeof main.attached === "undefined") ? [] : main.attached;
 		attach.attached = (typeof attach.attached === "undefined") ? [] : attach.attached;
-		
-		
+	
 		angular.extend(main.attached, attach.attached);
 		
 		main.attached.push({
 			file: attach.url
 		});// we could add from and to, but we use the whole file anyway!
 		
-		delete $scope.articles[attachId];
+		$scope.removeArticle(attach);
 		
 		master.status.message = 'Articles Merged!';
 		master.status.error = '';
-		$scope.selectedToMerge = -1;
-		
-		
+		$scope.selectedToMerge = false;
+	}
+	
+	$scope.cleanArticles = function() {
+		$scope.articles = $scope.articles.filter(function(a) {
+			return !a._deleted;
+		})
+		$log.log($scope.articles);
 	}
 	
 	
-	$scope.updateOrder = function(order, asc, articleId) {
+	$scope.removeArticle = function(article) {
+		article._deleted = true;
+		$scope.cleanArticles();
+		$scope.updateOrder('order', false);
+	}
+	
+	$scope.updateOrder = function(order, asc, article) {
 		
 		if (!order || (order == '')) {
 			return $log.log('no order given');
@@ -209,56 +214,42 @@ angular
 		
 		asc = ((typeof asc !== "undefined") && asc) ? 1 : -1;
 
-		function orderObject(obj, order_by, asc) {
-			var tmp = [];
-			
-			angular.forEach(obj, function(elem, id) {
-				elem._key = id;
-				tmp.push(elem);
-			});
-			
-			obj = {};
-			
-			tmp.sort(function(a, b) {
-				$log.log('ORDER BY ' + order_by + '(asc=' + asc + ')');
+		function orderArticles(obj, order_by, asc) {
+
+			obj.sort(function(a, b) {
+				//$log.log('ORDER BY ' + order_by + '(asc=' + asc + ')');
 				if (typeof a[order_by] === "object") {
 					return asc * a[order_by].compare(b[order_by]);
 				}
 				
 				return (asc * a[order_by].localeCompare(b[order_by]));
 			});
-
-			angular.forEach(tmp, function(elem, k) {
-				elem.order.value.value = k + 1;
-				obj[k] = elem;
-				delete elem._key;
-			});
-						
+			
+			angular.forEach(obj, function(a, i) {
+				a.order.value.value = (i + 1)  * 10;
+			})
+	
 			return obj;
 		}
 		
 		if (order == 'up') {
 			$log.log ('up');
-			$scope.articles[articleId].order.value.value -= 2;
+			article.order.value.value -= 15;
 			order = 'order';
 			asc = 1;
 		}
 		
 		if (order == 'down') {
 			$log.log ('down');
-			$scope.articles[articleId].order.value.value += 2;		
+			article.order.value.value += 15;		
 			order = 'order';
 			asc = 1;
 		}
 		
-		$log.log('order by ' + order + ' | ' + asc);
+		//$log.log('order by ' + order + ' | ' + asc);
 		
-		$scope.articles = orderObject($scope.articles, order, asc);
-		//$scope.$$phase || $scope.$apply()
-		$log.log($scope.articles);
+		$scope.articles = orderArticles($scope.articles, order, asc);
 	}
-	
-
 	
 	
 }]);

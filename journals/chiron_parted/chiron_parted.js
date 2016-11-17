@@ -17,7 +17,8 @@ angular
 	chiron.files = [];
 	
 	/* internals */
-	chiron.rawArticles = {};
+	chiron.rawArticles = [];
+	chiron.thumbnails = [];
 	
 
 	/* init data necessary for OJS */
@@ -42,7 +43,7 @@ angular
 		
 		var pdf = chiron.files[idx].pdf;
 		
-		chiron.rawArticles[idx] = {
+		chiron.rawArticles.push({
 			title: '',
 			page: '',
 			author: '',
@@ -54,8 +55,10 @@ angular
 					height: '',
 					str: ''
 			      }
-			]
-		};
+			],
+			_id: idx,
+			_deleted: false
+		});
 		
 		function getPage(pdf, pageIdx) {
 			$log.log('get page' + pageIdx)
@@ -89,22 +92,19 @@ angular
 						
 						chiron.rawArticles[idx].tmp[chiron.rawArticles[idx].tmp.length - 1].str += block.str;
 						
-						
-						
-						
 						if (chiron.rawArticles[idx].tmp.length > 5)  {
 							break;
 						}
 						
 					}
+					
 					$log.log(chiron.rawArticles[idx].tmp);
-
 					
 					var title = (typeof chiron.rawArticles[idx].tmp[4] !== "undefined") ? chiron.rawArticles[idx].tmp[4].str : '';
 					var author = (typeof chiron.rawArticles[idx].tmp[3] !== "undefined") ? chiron.rawArticles[idx].tmp[3].str : '';
 					var pageNr = (typeof chiron.rawArticles[idx].tmp[2] !== "undefined") ? chiron.rawArticles[idx].tmp[2].str : '';
 					
-					$log.log(pageIdx, pageNr, page);
+					//$log.log(pageIdx, pageNr, page);
 					
 					chiron.rawArticles[idx].title 	= editables.text(title);
 					chiron.rawArticles[idx].author 	= editables.authorlist(chiron.caseCorrection(author).split('-'));
@@ -112,7 +112,7 @@ angular
 					chiron.rawArticles[idx].page.value.endpage = parseInt(pageNr) + pdf.pdfInfo.numPages - pageIdx;
 					chiron.rawArticles[idx].page.resetDesc();
 					
-					chiron.rawArticles[idx].order	= editables.number(idx  + 1);
+					chiron.rawArticles[idx].order	= editables.number((idx  + 1) * 10);
 					
 					chiron.rawArticles[idx].tmp = [];
 					
@@ -140,6 +140,10 @@ angular
 	chiron.proceed = function() {
 		$log.log('proceeding');
 		angular.forEach(chiron.rawArticles, function(article, k) {
+			if (article._deleted === true) {
+				return;
+			}
+			
 			$log.log('forward article', article.title)
 			chiron.forwardArticle({
 				'title':			article.title,
@@ -165,7 +169,6 @@ angular
 	chiron.createThumbnail = function(page, containerId) {
 		var container = angular.element(document.querySelector('#thumbnail-container-' + containerId));
 		img = container.find('img');
-		chiron.rawArticles[containerId].thumbnail = '';
 			
         var viewport = page.getViewport(1.5); // scale 1.5
         var canvas = document.createElement('canvas');
@@ -189,7 +192,7 @@ angular
 	        ctx.fillStyle = "#123456";
 	        ctx.fillRect(0, 0, canvas.width, canvas.height);
 	        
-			chiron.rawArticles[containerId].thumbnail = canvas.toDataURL();
+			chiron.thumbnails[containerId] = canvas.toDataURL();
 			chiron.createdThumbnails += 1;
 			//chiron.message('Created thumbnail for file ' + containerId);
 			chiron.refresh();
@@ -200,23 +203,12 @@ angular
 
 	}
 
-
-
 	chiron.selectThumb = function(i) {
 		chiron.selectedThumb = (i == chiron.selectedThumb) ? -1 : i;
 	}
 
 	chiron.selectedThumb = -1;
 	
-	chiron.removeArticle = function(i) {
-		//var container = angular.element(document.querySelector('#thumbnail-' + i)).empty();
-		delete chiron.rawArticles[i];
-		//$log.log(chiron.articles);
-	}
-	
-	
-		
-
 	chiron.caseCorrection = function(string) {
 		return string.toLowerCase().trim().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 	}

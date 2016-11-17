@@ -199,7 +199,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	/**
 	 * get journal specific stuff
-	 * @param unknown $data
 	 * @return <journal>
 	 */
 	function getJournal() {
@@ -216,6 +215,22 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 		return $this->_journal;
 	}
+	
+	
+	/**
+	 * sort articles by order value
+	 */
+	function orderArticles() {	
+		if (!isset($this->data) or !isset($this->data->articles) or !count($this->data->articles)) {
+			return;
+		}
+		uasort($this->data->articles, function($a, $b) {
+			return $a->order->value->value < $b->order->value->value  ? -1 : 1;
+		});
+		
+		$this->log->log("order articles");
+	}
+	
 	
 	/**
 	 *
@@ -318,6 +333,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	function makeXML($save = false) {
 		$data = $this->data;
 		$journal = $data->journal;
+				
+		$this->orderArticles();
 		$articles = $data->articles;
 				
 		ob_start();

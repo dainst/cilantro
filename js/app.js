@@ -40,7 +40,7 @@ angular
 .filter('orderObjectBy', function() {
 	return function(items, field, reverse) {
 		var filtered = [];
-		angular.forEach(items, function(item) {
+		angular.forEach(items, function(item, id) {
 			filtered.push(item);
 		});
 		filtered.sort(function (a, b) {

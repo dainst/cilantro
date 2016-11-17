@@ -54,7 +54,7 @@
 				</tr> 
 			</thead>
 			<tbody>
-				<tr ng-repeat="(id, article) in articles | orderObjectBy:'article.order.value.value'">
+				<tr ng-repeat="article in articles  | orderBy:'article.order.value.value'">
 					<td style="width:2%"><span editable item="article.order"></span></td>
 					<td style="text-align: left">
 						<b>{{article.filename}}</b>
@@ -68,25 +68,25 @@
 					<td><span editable item="article.title"></span></td>
 					<td style="width:8%"><span editable item="article.page"></span></td>
 					<td style="width:600px">
-						<div id="thumbnail-container-{{id}}" class="thumbnail-container" ng-class="{'enlarged': id==master.selectedThumb}" ng-click="master.selectThumb(id)">
-							<img ng-show="article.thumbnail != ''" data-ng-src="{{article.thumbnail}}" />
+						<div id="thumbnail-container-{{article._id}}" class="thumbnail-container" ng-class="{'enlarged': article._id==master.selectedThumb}" ng-click="master.selectThumb(article._id)">
+							<img ng-show="thumbnails[article._id] != ''" data-ng-src="{{thumbnails[article._id]}}" />
 						</div>
 					</td>
 					<td>
-						<span class="btn btn-default btn-xs" ng-click="updateOrder('up', true, id)" data-tooltip="move above"><span class="glyphicon glyphicon-triangle-top"></span></span>
+						<span class="btn btn-default btn-xs" ng-click="updateOrder('up', true, article)" data-tooltip="move above"><span class="glyphicon glyphicon-triangle-top"></span></span>
 					
-						<span class="btn btn-default btn-xs" ng-click="master.removeArticle(id)" data-tooltip="delete article"><span class="glyphicon glyphicon-minus-sign"></span></span>
+						<span class="btn btn-default btn-xs" ng-click="removeArticle(article)" data-tooltip="delete article"><span class="glyphicon glyphicon-minus-sign"></span></span>
 						<span class="btn btn-default btn-xs" ng-click="openDocument(article.url)" data-tooltip="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
 						
-						<span class="btn btn-default btn-xs" ng-class="{'btn-default': (selectedToMerge == -1), 'btn-danger': (selectedToMerge != -1)}" ng-click="mergeArticle(id)" data-tooltip="merge articles"><span class="glyphicon glyphicon-compressed"></span></span>
+						<span class="btn btn-default btn-xs" ng-class="{'btn-default': (!selectedToMerge), 'btn-danger': (selectedToMerge)}" ng-click="mergeArticle(article)" data-tooltip="merge articles"><span class="glyphicon glyphicon-compressed"></span></span>
 						
-						<span class="btn btn-default btn-xs" ng-click="updateOrder('down', true, id)" data-tooltip="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
+						<span class="btn btn-default btn-xs" ng-click="updateOrder('down', true, article)" data-tooltip="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
 						
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<pre>{{articles}}</pre>
+		<pre>{{}}</pre>
 	</div>
 </div>
 
