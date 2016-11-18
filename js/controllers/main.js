@@ -10,7 +10,6 @@ angular
 		/* debug */
 		
 		$scope.cacheKiller = '?nd=' + Date.now();
-		settings.devMode = true;
 					
 		/* initialize */
 		
@@ -120,7 +119,7 @@ angular
 			/*"title": 				editables.base('Chiron'),*/	
 			"volume":				editables.base(''),
 			"year":					editables.base(''),
-			"importFilePath": 		settings.devMode ? "test.pdfdir" : '' ,
+			"importFilePath": 		settings.devMode ? "checkdas.pdfdir" : '' ,
 			"identification":		"vol_year",
 			"ojs_journal_code":		"ojs_journal_code",
 			"ojs_user":				"ojs_user",

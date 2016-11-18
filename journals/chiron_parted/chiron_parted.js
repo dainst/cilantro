@@ -29,6 +29,8 @@ angular
 		chiron.journal.auto_publish_issue.value.value = true;
 	}
 	
+	//chiron.article_buttons = []
+	
 	/* reaction for all files done */
 	chiron.onGotAll = function() {
 		chiron.message('all files loaded!');
@@ -53,7 +55,8 @@ angular
 			      {
 					fontName: '',
 					height: '',
-					str: ''
+					str: '',
+					ypos: 0
 			      }
 			],
 			_id: idx,
@@ -67,7 +70,6 @@ angular
 				
 				/* fetch text data */
 				page.getTextContent(pageIdx).then(function(textContent) {
-					console.log(textContent.items.length);
 					
 					if (textContent.items.length < 3) {
 						return getPage(pdf, pageIdx + 1);
@@ -78,43 +80,68 @@ angular
 						
 						//console.log(block);
 						
-						//chiron.rawArticles[idx].raw += block.height + '\t|\t' + block.fontName + '\t|\t' + block.str + "\n";
+						var last = chiron.rawArticles[idx].tmp[chiron.rawArticles[idx].tmp.length - 1];
 						
-						last = chiron.rawArticles[idx].tmp[chiron.rawArticles[idx].tmp.length - 1];
+						if ((chiron.rawArticles[idx].tmp.length > 10) || ((Math.round(block.height) == 10 || Math.round(block.height + 0.2) == 7) && (chiron.rawArticles[idx].tmp.length > 5))) {
+							break;
+						}
+						
+						//chiron.rawArticles[idx].raw += block.height + '\t|\t' + block.fontName + '\t|\t' + block.str + "\n";
 											
-						if (last.fontName != block.fontName || last.height != block.height) {
+						if (((last.fontName != block.fontName) || (last.height != block.height)) && ((last.ypos != block.transform[5]) || (parseInt(block.transform[5]) == 634))) {
 							chiron.rawArticles[idx].tmp.push({
 								fontName: block.fontName,
 								height: block.height,
-								str: ''
+								str: '',
+								ypos: block.transform[5],
+								xpos: block.transform[4]
 							});
+							// see http://wwwimages.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/pdf_reference_1-7.pdf#page=406&zoom=auto,-307,634 and http://stackoverflow.com/questions/18354098/pdf-tm-operator
 						}
 						
-						chiron.rawArticles[idx].tmp[chiron.rawArticles[idx].tmp.length - 1].str += block.str;
+						var that = chiron.rawArticles[idx].tmp[chiron.rawArticles[idx].tmp.length - 1];
 						
-						if (chiron.rawArticles[idx].tmp.length > 5)  {
-							break;
-						}
+						that.str += ' ' + block.str.trim();
 						
 					}
 					
 					$log.log(chiron.rawArticles[idx].tmp);
 					
-					var title = (typeof chiron.rawArticles[idx].tmp[4] !== "undefined") ? chiron.rawArticles[idx].tmp[4].str : '';
-					var author = (typeof chiron.rawArticles[idx].tmp[3] !== "undefined") ? chiron.rawArticles[idx].tmp[3].str : '';
-					var pageNr = (typeof chiron.rawArticles[idx].tmp[2] !== "undefined") ? chiron.rawArticles[idx].tmp[2].str : '';
+					if (chiron.rawArticles[idx].tmp.length < 5) {
+						$log.log('not enough text content');
+					}
 					
-					//$log.log(pageIdx, pageNr, page);
+					var b = 1;
+					var author = chiron.rawArticles[idx].tmp[3].str || '';
+					var pageNr = chiron.rawArticles[idx].tmp[2].str;
+					var title = '';
 					
-					chiron.rawArticles[idx].title 	= editables.text(title);
-					chiron.rawArticles[idx].author 	= editables.authorlist(chiron.caseCorrection(author).split('-'));
+					if (!pageNr || !/^[A-Z\W]*$/g.test(author)) {
+						var b = 0;
+						author = chiron.rawArticles[idx].tmp[2].str || '';
+						pageNr = chiron.rawArticles[idx].tmp[1].str;
+						console.log('alter');
+					}
+					
+					
+					for (var y = 3 + b; y < chiron.rawArticles[idx].tmp.length - 1; y++) {
+						title += chiron.rawArticles[idx].tmp[y].str;
+					}
+					
+
+					
+					
+					$log.log(title, author, pageNr);
+					
+					chiron.rawArticles[idx].title 	= editables.text(title.trim());
+					chiron.rawArticles[idx].author 	= editables.authorlist(chiron.caseCorrection(author).split("–"));
 					chiron.rawArticles[idx].page 	= editables.page(pageNr, pageIdx - 1, {offset: pageIdx - parseInt(pageNr)});						
 					chiron.rawArticles[idx].page.value.endpage = parseInt(pageNr) + pdf.pdfInfo.numPages - pageIdx;
 					chiron.rawArticles[idx].page.resetDesc();
 					
 					chiron.rawArticles[idx].order	= editables.number((idx  + 1) * 10);
 					
-					chiron.rawArticles[idx].tmp = [];
+					//chiron.rawArticles[idx].tmp = [];
 					
 					chiron.refresh();
 					
@@ -122,6 +149,7 @@ angular
 					
 					
 				}); //getTextContent
+				
 				
 				/* thumbnail */
 				chiron.createThumbnail(page,  idx)
@@ -134,6 +162,9 @@ angular
 		
 		
 	}
+	
+	
+
 	
 	/* proceed */
 	
