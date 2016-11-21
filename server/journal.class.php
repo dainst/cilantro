@@ -60,7 +60,7 @@ class journal {
 		
 		$this->metadata['article_author']	= $this->assembleAuthorlist($article);
 		$this->metadata['article_title' ] 	= $article->title->value->value;		
-		$this->metadata['pages']			= "{$article->pages->value->realpage} - {$article->pages->value->endpage}";
+		$this->metadata['pages']			= "{$article->pages->value->realpage}–{$article->pages->value->endpage}";
 		$this->metadata['pub_id']			= $article->pubid;
 		$this->metadata['url']				= $article->url;
 		$this->metadata['urn']				= $article->urn;
