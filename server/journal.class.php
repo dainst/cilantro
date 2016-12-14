@@ -66,7 +66,7 @@ class journal {
 		$this->metadata['urn']				= $article->urn;
 		$this->metadata['volume']			= $issue->volume->value->value;
 		$this->metadata['year']				= $issue->year->value->value;
-		$this->metadata['zenon_id']			= $issue->year->value->value;
+		$this->metadata['zenon_id']			= $article->zenonId;
 
 	}
 	
@@ -78,10 +78,14 @@ class journal {
 		}
 	}
 	
-	function createFrontPage($article, $issue) {
+	function createMetdata($article, $issue) {
 		$this->setDefaultMetadata($article, $issue);
 		$this->setMetadata($article, $issue);
 		$this->checkMetadata();
+	}
+	
+	function createFrontPage($article, $issue) {
+		$this->createMetdata($article, $issue);
 		$pdf = $this->createPDF();		
 		$pdf->daiFrontpage(); // default frontpage layout
 		$path = $this->settings['tmp_path'] . '/' . md5($article->title->value->value) . '.pdf';
