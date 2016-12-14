@@ -715,7 +715,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	function assumeUrls($last) {
 		foreach ($this->data->articles as $nr => $article) {
 			$article->pubid 		= $last + 1 + $nr;
-			$article->url 			= $this->settings['ojs_url'] . $this->data->journal->ojs_journal_code . '/' . $article->pubid;
+			$article->url 			= $this->settings['ojs_url'] . '/' . $this->data->journal->ojs_journal_code . '/' . $article->pubid;
 			$article->urn 			= sprintf($this->settings['urn_base'], $this->data->journal->ojs_journal_code, $article->pubid);
 		}
 	}
