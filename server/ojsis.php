@@ -145,7 +145,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 
 			$this->log->log("write metdata to pdf");
 			$this->pdfMetadata();
-			$this->pdfXmpMetadata();
 			
 			if (!$journal->doImport) {
 				$this->log->log("ready, import disabled");
@@ -345,6 +344,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				
 			$response = shell_exec($shell);
 				
+			
 			$this->log->debug($response);
 				
 			if (strpos($response, 'Warning:') !== false) {

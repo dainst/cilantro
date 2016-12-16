@@ -18,7 +18,7 @@ class daiPDF extends TCPDF {
 		
 		$this->lang = $lang;
 		$this->metadata = $metadata;
-
+		/*
 		// set document information
 		$this->SetCreator("DAI OJS Uploader");
 		$this->SetAuthor($this->metadata['article_author']);
@@ -38,7 +38,7 @@ class daiPDF extends TCPDF {
 		$xmp .= (isset($this->metadata['url'])) ?  '<dai:url>' . $this->metadata['url'] . '</dai:url>' : '';
 		$xmp .= "\n";
 		$xmp .= '</dai>';		
-		$this->setExtraXMP($xmp);
+		$this->setExtraXMP($xmp);*/
 		
 		// set monosprace font
 		$this->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
