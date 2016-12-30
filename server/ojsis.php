@@ -475,8 +475,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		FROM
 			{$this->settings['mysql_prefix']}article_settings as a_s
 		WHERE
-			a_s.setting_name = 'abstract'" .
-			(isset($this->return['uploadId']) ? " and a_s.setting_value like '%dainst_metadata:{$this->return['uploadId']}%'" : " and a_s.setting_value like '%dainst_metadata:%'");
+			a_s.setting_name = 'abstract'
+			and a_s.setting_value like '%dainst_metadata:%'";
 
 		$this->log->debug($sql);
 			
@@ -485,6 +485,52 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		}
 		
 		return $this->return['dainstMetadata'];
+	}
+	
+	function updateDainstMetadata() {
+		foreach ($this->return['dainstMetadata'] as $articleId => $dataset) {
+			$db = $this->getDB();
+			if (isset($dataset['zenonId']) and $dataset['zenonId']) {
+				echo "<div><b>update " . $dataset['zenonId'] . "</b></div>";
+				
+				$sql = "
+				insert 
+					into {$this->settings['mysql_prefix']}article_settings (
+						article_id, 
+						setting_name, 
+						setting_value, 
+						setting_type
+					)
+					values (
+						$articleId,
+						'pub-id::other::zenon',
+						'{$dataset['zenonId']}',
+						'string'
+					)";
+				$this->log->debug($sql);
+				echo "<pre>$sql</pre>";
+				$db->query($sql);
+			}
+			
+		} 
+	}
+	
+	/**
+	 *
+	 * @param unknown $abstract
+	 * @return multitype:NULL
+	 */
+	private function _harvestDainstMetadata($abstract) {
+		$regex = "#dainst_metadata:[^:]*:([^\':]*):([^\']*)#";
+		preg_match_all($regex, $abstract, $matches);
+		$return = array();
+		/*var_dump($abstract);
+			var_dump($matches);
+		echo "\n\n--\n\n";*/
+		foreach($matches[1] as $i=>$key) {
+			$return[$key] = $matches[2][$i];
+		}
+		return $return;
 	}
 	
 	
@@ -730,23 +776,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$db = $this->getDB();
 	}
 		
-	/**
-	 * 
-	 * @param unknown $abstract
-	 * @return multitype:NULL
-	 */
-	private function _harvestDainstMetadata($abstract) {		
-		$regex = isset($this->return['uploadId']) ? "#dainst_metadata:{$this->return['uploadId']}:([^\':]*):([^\']*)#" : "#dainst_metadata:[^:]*:([^\':]*):([^\']*)#";		
-		preg_match_all($regex, $abstract, $matches);		
-		$return = array();		
-		/*var_dump($abstract);
-		var_dump($matches);
-		echo "\n\n--\n\n";*/
-		foreach($matches[1] as $i=>$key) {
-			$return[$key] = $matches[2][$i];
-		}
-		return $return;
-	}
+
 	
 
 	/* other */
