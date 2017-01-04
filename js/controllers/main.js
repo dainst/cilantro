@@ -127,8 +127,7 @@ angular
 			"auto_publish_issue":	editables.checkbox(false),
 			"default_publish_articles":	true
 		};
-		//"authors": editables.authorlist([{"firstname": "Panse Heter", "lastname": "Urang"}, {"firstname": "Jabber", "lastname": "Wocky"}])
-
+		$scope.journalMeta = ['volume', 'year']; // show on the home page
 		
 		$scope.journalCheck = function() {
 			var invalid = 0;

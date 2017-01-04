@@ -1,1 +1,0 @@
-see DAIbbokvieer/stand.md

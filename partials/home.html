@@ -91,10 +91,10 @@
 		
 					<tbody>
 						<thead></thead>				
-							<tr ng-repeat="(field, value) in journal track by $index">
-								<td ng-show="{{isObject(value)}}">{{field}}</td>
-								<td ng-show="{{isObject(value)}}" ng-model="journal[field]">
-									<span editable item="value" />
+							<tr ng-repeat="field in journalMeta track by $index">
+								<td>{{field}}</td>
+								<td>
+									<span editable item="journal[field]" />
 								</td>
 							</tr>
 					</tbody>

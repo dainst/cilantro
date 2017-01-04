@@ -7,23 +7,7 @@ $settings = array(
 	'ojs_url'		=> 	'http://DOMAIN/ojs/',
 	'urn_base'		=>  'urn:nbn:de:0048-journals-%d-%d',
 		
-	'password'		=> 	'alpha',
-		
-	'mysql_db'		=>	'ojs',
-	'mysql_prefix'	=>	'',
-	'mysql_password'=>	'',
-	'mysql_user'	=>	'mysqluser',
-	
-	'psql_db'		=>	'ojspg',
-	'psql_prefix'	=>	'',
-	'psql_password'	=>	'',
-	'psql_user'		=>	'',
-	'psql_port'		=>	'5432',
-	'psql_host'		=>	'localhost',
-		
-	'use_psql'		=>	true,
-
-	'ojs_user'		=>  'admin'
+	'password'		=> 	'alpha'
 );
 	
 if (isset($_GET['js']) and ($_GET['js'] == 1)) {
