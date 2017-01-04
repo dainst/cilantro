@@ -30,7 +30,8 @@ angular
 			'pages':			editables.page(1, 'Seite eins!'),
 			'date_published':	editables.base('03-03-1999'),
 			'filepath':			'test.pdf',
-			'thumbnail':		''
+			'thumbnail':		'',
+			'order':			editables.base(1)
 		});
 		
 		bob.forwardArticle({
@@ -40,7 +41,8 @@ angular
 			'pages':			editables.page(1, '1'),
 			'date_published':	editables.base('03-03-1999'),
 			'filepath':			'test2.pdf',
-			'thumbnail':		''
+			'thumbnail':		'',
+			'order':			editables.base(2)
 		}, true);
 		
 		bob.nextTab();

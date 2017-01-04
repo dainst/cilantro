@@ -10,18 +10,8 @@
             	<?php $locale = (isset($article->language) && $article->language->value->value) ? 'language="' . substr($article->language->value->value, 0, 2) . '" locale="' . $article->language->value->value . '"' : '' ?>
 				<article <?php echo $locale ?>>
 	                <title><?php echo htmlspecialchars($article->title->value->value); ?></title>
-	                <abstract>
-	                	<![CDATA[<?php 
-	                	echo htmlspecialchars($article->abstract->value->value);
-	                	if (isset($article->zenonId) and ($article->zenonId != '(((new)))')) {
-	                		echo "<a class='zenonlink' href='http://zenon.dainst.org/Record/{$article->zenonId}' data-meta='dainst_metadata:{$this->return['uploadId']}:zenonId:{$article->zenonId}'>Zenon</a>";
-	              	  	} 
-	              	  	
-	              	  	echo "<br data-meta='dainst_metadata:{$this->return['uploadId']}:find:me' style='display:none'>"; // !important
-	              	  	
-	              	  	?>]]>
-	                </abstract>
-
+	                <?php //<abstract></abstract> ?>
+					<?php //@ TODO $article->zenonId as other::zenon -> in OJS3 ?>
 	                <?php 
 	                	if (!isset($article->author) or (!count($article->author->value))) {
 	                		throw new Exception("Article '{$article->title->value->value}' has no author!");
@@ -48,19 +38,4 @@
         </section>
         
     </issue>
-    <?php 
-		/*
-		echo "<debug>";
-		var_dump($data);
-		echo "</debug>";
-		
-		//var_dump($journal);
-		/*
-		var_dump($articles[0]->pages);
-		*/
-		/*//*/
-	?>
-		    
-    
 </issues>
-<?php //*/ ?>

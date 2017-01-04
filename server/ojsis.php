@@ -6,8 +6,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	// do we debug log? (change in server script)
 	public $debug = false;
-	// debug log
-	public $debuglog = array();
 	// settings
 	public $settings = array();
 	// the data
@@ -46,11 +44,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$this->data = $data;
 				
 		$this->getUploadId();
-		/*
-		if(!isset($additional_settings['skiplock'])) {
-			$this->checkLock();
-		}
-		*/
+
 	}
 	
 	function call($task, $additional_settings = array()) {
@@ -73,8 +67,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @throws Exception
 	 */
 	function checkStart() {
-		$this->getJournal();
-		$this->_journal->checkFile($this->data->file);
+		$this->checkFile($this->data->file);
 	}
 	
 
@@ -87,7 +80,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	function finish() {
 		$this->log->log('finishing ojsis');
-		$this->ojsUnlock();
 		$this->writeLog();
 		$this->_isdead = true;
 	}
@@ -126,31 +118,9 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			
 			$this->log->log('starting import');
 			
-			$this->log->log("temporaly lock down OJS for writing");
-			$this->ojsLockdown();
 			
-			$this->log->log("get last used ID in OJS and assume URNs and URLs");
-			$lastId = $this->getLastId();
-			$this->assumeUrls($lastId);
-			
-			$this->log->log("get journal specific instructions");
-			$journal = $this->getJournal();
-			
-			if ($journal->doCut) {
-				$this->log->log("cut the pdf file into pieces");
-				$this->cutPdf();
-			} else {
-				$this->log->log("cut pdf file into pieces disabled");
-			}
-
-			$this->log->log("write metdata to pdf");
-			$this->pdfMetadata();
-			
-			if (!$journal->doImport) {
-				$this->log->log("ready, import disabled");
-				$this->clearTmp();
-				return;
-			}
+			$this->log->log("cut the pdf file into pieces");
+			$this->cutPdf();
 			
 			$this->log->log("make transport XML");
 			$xmlFile = $this->makeXML(true);
@@ -159,7 +129,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->journal->ojs_journal_code} {$this->settings['ojs_user']}";
 		
 			$this->log->log("this is my last result");
-			$this->debuglog[] = $execline;
+			$this->log->debug($execline);
 			$this->return['message'] = shell_exec($execline);
 						
 			$this->log->log("check if it  was successfull?");
@@ -174,13 +144,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			if (!$success) {
 				throw new Exception($this->return['message']);
 			}
-							
-			$this->log->log("read in what we have done");
-			$this->getDainstMetadata();
-			$this->checkUpload($lastId);
-				
-			$this->log->log("create report about ids to zenon");
-			$this->createZenonReport();
 	
 			$this->log->log("tidy up");
 			$this->clearTmp();
@@ -190,7 +153,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			}
 
 		} catch (Exception $e) {
-			$this->ojsUnlock();
 			$this->log->debug($this->data);
 			
 			$this->writeLog();
@@ -199,25 +161,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	}
 	
-	
-	/**
-	 * get journal specific stuff
-	 * @return <journal>
-	 */
-	function getJournal() {
-		if ($this->_journal) {
-			return $this->_journal;
-		}
-		$data = $this->data;
-		$journal = $data->journal->journal_code;
-		require_once("journal.class.php");
-		$file = $this->_base_path . "journals/{$journal}/{$journal}.php";
-		require_once($this->_base_path . "journals/{$journal}/{$journal}.php");
-		$this->_journal = new $journal($this->log, $this->settings, $this->_base_path);
-		$this->log->log("use journal " . $data->journal->journal_code);
-		
-		return $this->_journal;
-	}
 	
 	
 	/**
@@ -259,11 +202,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 
 			$files = array();
 			
-			$front = $this->_journal->createFrontPage($article, $data->journal);
-			
-			if ($front) {  // the frontpage if available
-				$files[] = (object) array("file" => $front, 'absolute' => true);
-			}
 			
 			$files[] = (object) array(// the file itself
 				"file"	=>	"{$this->settings['rep_path']}/{$article->filepath}",
@@ -319,81 +257,13 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$handleDef = implode(" ", $handleDef);
 		$cutDef = implode(" ", $cutDef);
 		
-		
 		$this->log->debug('attached:' . print_r($files,1));
 		
 		return ($handleDef . ' cat ' . $cutDef);
 		
 	}
 	
-	/**
-	 * writes data into to the info directory of the newely created pdf
-	 * @throws Exception
-	 */
-	function pdfMetadata() {
-		$data = $this->data;
-	
-		foreach ($data->articles as $nr => $article) {
-	
-			$author	= str_replace('"', '', $this->_assembleAuthorlist($article));
-			$title 	= str_replace('"', '', $article->title->value->value);
-				
-			$shell = 'exiftool ' . $this->_pdfMetadataCommand($article) . ' ' . $article->filepath . " 2>&1";
-				
-			$this->log->debug($shell);
-				
-			$response = shell_exec($shell);
-				
-			
-			$this->log->debug($response);
-				
-			if (strpos($response, 'Warning:') !== false) {
-				$this->log->warning('exiftool warning:' . $response);
-			}
-				
-			if (strpos($response, 'Error:') !== false) {
-				throw new Exception('Error while trying to write pdt metadata:' . $response);
-			}
-				
-			if (strpos($response, 'exiftool: not found') !== false) {
-				throw new Exception('Error: exiftool missing: ' . $response);
-			}
-				
-				
-		}
-	
-	}
-	
-	/**
-	 * creates a string containing dai specific metadata, wich we write in in the dc:relation field, abusing it somehow
-	 * @param unknown $article
-	 */
-	private function _pdfMetadataCommand($article) {
-		$data = $this->data;	
-		$metadata = array();
-		$metadata['url']		= str_replace('"', '', $article->url);
-		$metadata['pubId']		= str_replace('"', '', $article->urn);
-		$metadata['zenonId']	= (int) $article->zenonId;
-		$metadata['daiPubId']	= (int) $article->pubid;
-		
-		$return = array();
-		foreach ($metadata as $k => $v) {
-			$return[] = "-Relation=\"$k:$v\" "; 
-		}
-		
-		
-		$journal = $this->getJournal();
-		$journal->createMetdata($article, $data->journal);
-		$this->log->debug(print_r($journal->metadata['journal_title'],1));
-		$return[] = "-Description=\"{$journal->metadata['journal_title']}; {$journal->metadata['issue_tag']};  {$journal->metadata['pages']}\"";
-		
-		$return[] = '-Title="' . $journal->metadata['article_title'] . '"';
-		$return[] = '-Author="' . $journal->metadata['article_author'] . '"';
-		$return[] = '-Creator="DAI OJS Importer"';
-				
-		
-		return implode(' ', $return);
-	}
+
 	
 	
 	/**
@@ -417,7 +287,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		try {
 			$test = new SimpleXMLElement($xml); // should throw an error on error..
 		} catch(Exception $e) {
-			$this->debuglog[] = $xml;
+			$this->log->debug($xml);
 			throw $e;
 		}
 		
@@ -434,123 +304,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 	}
 	
-	/**
-	 * checkUpload
-	 * 
-	 * 
-	 * @param unknown $desired_from - last given ojs id when upload began
-	 */
-	function checkUpload($last_index) {
-
-		$ids = array_keys($this->return['dainstMetadata']);
-		sort($ids);
-		$desired_from 	= $last_index + 1;
-		$desired_to 	= count($this->data->articles) - 1 + $desired_from;
-		$reality_from 	= $ids[0];
-		$reality_to 	= $ids[count($ids) - 1];
-		
-		if ($desired_from != $reality_from or $desired_to != $reality_to) {
-			$this->log->warning("Something went wrong! Articles where imported but gut the wrong IDs.  Desired: $desired_from - $desired_to. Reality: $reality_from - $reality_to");
-		}
-		
-		$this->log->debug("IDs. Desired: $desired_from - $desired_to. Reality: $reality_from - $reality_to");
-
-		//throw new Exception("IDs. Desired: $desired_from - $desired_to. Reality: $reality_from - $reality_to");
-	}
-	
-	
-	/**
-	 * its a little bit unconvient, but this is the only solution I found to connect get the ids of uploaded stuff to publish them in
-	 * zenon and stuff.
-	 *
-	 */
-	function getDainstMetadata() {
-			
-		$db = $this->getDB();
-	
-		$sql =
-		"SELECT
-			a_s.article_id as id,
-			a_s.setting_value as abstract
-		FROM
-			{$this->settings['mysql_prefix']}article_settings as a_s
-		WHERE
-			a_s.setting_name = 'abstract'
-			and a_s.setting_value like '%dainst_metadata:%'";
-
-		$this->log->debug($sql);
-			
-		foreach ($db->query($sql) as $row) {
-			$this->return['dainstMetadata'][$row['id']] = $this->_harvestDainstMetadata($row['abstract']);
-		}
-		
-		return $this->return['dainstMetadata'];
-	}
-	
-	function updateDainstMetadata() {
-		foreach ($this->return['dainstMetadata'] as $articleId => $dataset) {
-			$db = $this->getDB();
-			if (isset($dataset['zenonId']) and $dataset['zenonId']) {
-				echo "<div><b>update " . $dataset['zenonId'] . "</b></div>";
-				
-				$sql = "
-				insert 
-					into {$this->settings['mysql_prefix']}article_settings (
-						article_id, 
-						setting_name, 
-						setting_value, 
-						setting_type
-					)
-					values (
-						$articleId,
-						'pub-id::other::zenon',
-						'{$dataset['zenonId']}',
-						'string'
-					)";
-				$this->log->debug($sql);
-				echo "<pre>$sql</pre>";
-				$db->query($sql);
-			}
-			
-		} 
-	}
-	
-	/**
-	 *
-	 * @param unknown $abstract
-	 * @return multitype:NULL
-	 */
-	private function _harvestDainstMetadata($abstract) {
-		$regex = "#dainst_metadata:[^:]*:([^\':]*):([^\']*)#";
-		preg_match_all($regex, $abstract, $matches);
-		$return = array();
-		/*var_dump($abstract);
-			var_dump($matches);
-		echo "\n\n--\n\n";*/
-		foreach($matches[1] as $i=>$key) {
-			$return[$key] = $matches[2][$i];
-		}
-		return $return;
-	}
-	
-	
-	/**
-	 *
-	 * creates a report with zeninIds
-	 *
-	 */
-	function createZenonReport() {
-		$data = $this->data;
-		ob_start();
-		include('report_template.php');
-		$xml = ob_get_contents();
-		ob_end_clean();
-	
-		$test = new SimpleXMLElement($xml); // should throw an error on error..
-	
-		$this->return['xml'] = $xml;
-		$this->sendReport('urls.xml', $xml);
-	}
 	
 	/**
 	 * send report to sabine
@@ -592,12 +345,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	/* helper functions */
 	
-	/**
-	 * get journal object. this is only necessary in for other environments than the server script (eg the testing suite)
-	 */
-	function getJournalObject() {
-		return $this->_journal;
-	}
+
 	
 	
 	
@@ -631,42 +379,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 	/*  lock related functions */
 	
-	/**
-	 * 
-	 * checks if lock file with this IP is present
-	 * 
-	 * @throws Exception
-	 */
-	/*
-	function checkLock() {
-		
-		return true; // check lock diabled because it eats my nerves
-				
-		$ip = !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-		$time = time();
-		$lockfile = $this->settings['log_path'] . '/lock';
-		$uploadId = $this->getUploadId();
-		
-		$lockcode = $time . '###' . $ip . '###' . $uploadId;
-		$this->log->debug("lockcode: " . $lockcode);
 
-		if (isset($this->data->unlock) && $this->data->unlock) {
-			$this->unlockSession();
-		}
-		
-		if (file_exists($lockfile)) {
-			list($locked_time, $locked_ip, $locked_uid) = explode('###', file_get_contents($lockfile));
-			if ($locked_ip != $ip) {
-				throw new Exception("Importer is locked by another user");
-			}
-			if ($locked_uid != $uploadId) {
-				$this->log->debug("More than one session going on ($locked_uid != $uploadId)");
-				throw new Exception("Session locked");
-			}
-		}
-		file_put_contents($lockfile, $lockcode);
-
-	}
 	
 
 
@@ -675,30 +388,9 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$lockfile = $this->settings['log_path'] . '/lock';
 		unlink($lockfile);
 	}
-	*/
-	/* ojs functions */
-	
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	function ojsLockdown() {
-					
-		//  prevent no login
-		file_put_contents($this->settings['ojs_path'] . '/lock',   '');
-		
-		// kill ojs sessions
-		$db = $this->getDB();
-		$db->query("DELETE FROM sessions");
-	}
-	
-	function ojsUnlock() {		
-		$this->log->log('unlock');
-		if (file_exists($this->settings['ojs_path'] . '/lock')) {
-			unlink($this->settings['ojs_path'] . '/lock');
-		}
-	}
 
+	
+	/* ojs functions */
 	
 	
 	/* uploadID related functions */
@@ -725,59 +417,12 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	/* database related functions */
 	
-	/**
-	 *
-	 * @return ojs_database
-	 */
-	function getDB() {
-		if (!$this->_db) {
-			require_once('ojs_database.class.php');
-			$this->_db = new ojs_database($this->settings);
-		}
-		return $this->_db;
-	}
 	
-	/**
-	 * getLastID from DB
-	 */
-	function getLastId() {
-		$db = $this->getDB();
-		
-		$sql = "SELECT max(a.article_id) as id FROM articles as a";
-		
-		foreach ($db->query($sql) as $row) {
-			$next = $row['id'];
-		}
-		
-		$this->log->debug('next id: ' + $next);
-		
-		return $next;
-	}
-	
-	
-	/**
-	 * assume url Urn
-	 */
-	function assumeUrls($last) {
-		foreach ($this->data->articles as $nr => $article) {
-			$article->pubid 		= $last + 1 + $nr;
-			$article->url 			= $this->settings['ojs_url'] . '/' . $this->data->journal->ojs_journal_code . '/' . $article->pubid;
-			$article->urn 			= sprintf($this->settings['urn_base'], $this->data->journal->ojs_journal_code, $article->pubid);
-		}
-	}
-	
-	
-	
-	
-	/**
-	 * 
-	 */
-	function testDatabaseConnection() {
-		$db = $this->getDB();
-	}
-		
 
 	
+	
+
+		
 
 	/* other */
 
@@ -837,15 +482,9 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	/* other */
 	
-	function resetSession() {
-		$this->clearTmp();
-		//$this->unlockSession();
-	}
 	
 	function getRepository() {
 		$rep = scandir($this->settings['rep_path']);
-		
-		
 		
 		$list = array();
 		
@@ -899,6 +538,15 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 	}
 	
+	function checkFile($file) {
+		if (substr($file, 0, 1) != '/') { // relative path
+			$file = $this->settings['rep_path'] . '/' . $file;
+		}
+		if (!file_exists($file)) {
+			throw new Exception("File " . $file . ' does not exist!');
+		}
+		return true;
+	}
 
 
 	
