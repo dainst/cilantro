@@ -27,6 +27,7 @@ angular
 		chiron.journal.ojs_journal_code = 'chiron';
 		chiron.journal.journal_code = 'chiron_parted';
 		chiron.journal.auto_publish_issue.value.value = true;
+		chiron.journal.default_create_frontpage = true;
 	}
 	
 	//chiron.article_buttons = []
@@ -185,7 +186,8 @@ angular
 				'filepath':			article.url,
 				'thumbnail':		article.thumbnail,
 				'attached':			editables.filelist(article.attached),
-				'order':			article.order
+				'order':			article.order,
+				'createFrontpage':	editables.checkbox(true)
 			}, (k == 0));
 		});
 		

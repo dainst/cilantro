@@ -9,12 +9,20 @@
             <?php foreach ($articles as $article) { ?>
             	<?php $locale = (isset($article->language) && $article->language->value->value) ? 'language="' . substr($article->language->value->value, 0, 2) . '" locale="' . $article->language->value->value . '"' : '' ?>
 				<article <?php echo $locale ?>>
+	                
 	                <title><?php echo htmlspecialchars($article->title->value->value); ?></title>
+	                
 	                <?php //<abstract></abstract> ?>
-					<?php //@ TODO $article->zenonId as other::zenon -> in OJS3 ?>
-					<?php if (isset($article->zenonId) and $article->zenonId) { ?>
-						<id type="other::zenon"><?php echo $article->zenonId ?></id>
-	                <?php } ?>
+					
+					<?php 
+						// we abuse the zenon id to send a marker, that a front matter is missing...
+						$zenonId  = (isset($article->zenonId) and $article->zenonId) ? $article->zenonId : ''; 
+						$zenonId .= (isset($article->createFrontpage->value->value) and $article->createFrontpage->value->value == 1) ? '&amp;dfm' : '';
+						if ($zenonId) {
+					?>
+						<id type="other::zenon"><?php echo $zenonId ?></id>
+					<?php } ?>
+	                
 	                <?php 
 	                	if (!isset($article->author) or (!count($article->author->value))) {
 	                		throw new Exception("Article '{$article->title->value->value}' has no author!");

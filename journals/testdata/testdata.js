@@ -16,6 +16,8 @@ angular
 		bob.journal.ojs_journal_code = 'test';
 		bob.journal.journal_code = 'testdata';		
 		bob.journal.auto_publish_issue.value.value = false;
+		bob.journal.default_create_frontpage = true;
+
 	}
 	
 	bob.start = function() {
@@ -31,7 +33,8 @@ angular
 			'date_published':	editables.base('03-03-1999'),
 			'filepath':			'test.pdf',
 			'thumbnail':		'',
-			'order':			editables.base(1)
+			'order':			editables.base(1),
+			'createFrontpage':	editables.checkbox(true)
 		});
 		
 		bob.forwardArticle({
@@ -42,7 +45,8 @@ angular
 			'date_published':	editables.base('03-03-1999'),
 			'filepath':			'test2.pdf',
 			'thumbnail':		'',
-			'order':			editables.base(2)
+			'order':			editables.base(2),
+			'createFrontpage':	editables.checkbox(true)
 		}, true);
 		
 		bob.nextTab();

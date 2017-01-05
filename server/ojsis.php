@@ -130,8 +130,11 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$this->log->log("this is my last result");
 			$this->log->debug($execline);
 			$this->return['message'] = shell_exec($execline);
-						
-			$this->log->log("check if it  was successfull?");
+
+			$this->log->log("create front matters");
+			$this->updateFrontmatters();
+			
+			$this->log->log("check if it was successfull?");
 			$successmsgs = array("The import was successful", "Der Import war erfolgreich");
 			$success = false;
 			foreach ($successmsgs as $successmsg) {
@@ -261,9 +264,22 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		return ($handleDef . ' cat ' . $cutDef);
 		
 	}
-	
 
-	
+	/**
+	 * 
+	 */
+	function updateFrontmatters() {
+		$execline = "php {$this->settings['ojs_path']}/plugins/generic/ojs-dainst-frontpage-generator-plugin/dfmcli.php add missing 0";
+		$this->log->debug($execline);
+		$message = shell_exec($execline);
+		$stop = array('Could ', 'Error:');
+		if (in_array(substr(trim($message), 0, 6), $stop)) {
+			$this->log->warning("Frontmatters were not created! \n\n $message");
+		} else {
+			$this->log->log($message);
+		}
+	}
+
 	
 	/**
 	 * 
@@ -344,10 +360,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	/* helper functions */
 	
-
-	
-	
-	
+		
 	/**
 	 * clear all tmp data
 	 */

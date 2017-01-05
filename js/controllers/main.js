@@ -125,7 +125,8 @@ angular
 			"ojs_user":				"ojs_user",
 			"journal_code":			"importer journal code",
 			"auto_publish_issue":	editables.checkbox(false),
-			"default_publish_articles":	true
+			"default_publish_articles":	true,
+			"default_create_frontpage": true
 		};
 		$scope.journalMeta = ['volume', 'year']; // show on the home page
 		
@@ -158,7 +159,8 @@ angular
 				'filepath':			$scope.journal.importFilePath,
 				'thumbnail':		'',
 				'attached':			editables.filelist(),
-				'order':			editables.number()
+				'order':			editables.number(),
+				'createFrontpage':	editables.checkbox($scope.journal.create_frontpage === true),
 			}
 		}
 		

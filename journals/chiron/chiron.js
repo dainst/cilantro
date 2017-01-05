@@ -38,7 +38,9 @@ angular
 		/* necessary for OJS */
 		chiron.journal.identification = 'vol_year';
 		chiron.journal.ojs_journal_code = 'chiron';
-		chiron.journal.journal_code = 'chiron';		
+		chiron.journal.journal_code = 'chiron';
+		chiron.journal.default_create_frontpage.value.value = true;
+		chiron.journal.default_create_frontpage = false;
 	}
 	
 	
@@ -289,7 +291,8 @@ angular
 				'pages':			article.page,
 				'date_published':	chiron.dateForAll,
 				'filepath':			chiron.journal.importFilePath,
-				'thumbnail':		article.thumbnail
+				'thumbnail':		article.thumbnail,
+				'createFrontpage':	editables.checkbox(true)
 			}, (k == 0));
 		});
 		
