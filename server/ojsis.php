@@ -118,7 +118,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			
 			$this->log->log('starting import');
 			
-			
 			$this->log->log("cut the pdf file into pieces");
 			$this->cutPdf();
 			

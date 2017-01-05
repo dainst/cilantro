@@ -12,6 +12,9 @@
 	                <title><?php echo htmlspecialchars($article->title->value->value); ?></title>
 	                <?php //<abstract></abstract> ?>
 					<?php //@ TODO $article->zenonId as other::zenon -> in OJS3 ?>
+					<?php if (isset($article->zenonId) and $article->zenonId) { ?>
+						<id type="other::zenon"><?php echo $article->zenonId ?></id>
+	                <?php } ?>
 	                <?php 
 	                	if (!isset($article->author) or (!count($article->author->value))) {
 	                		throw new Exception("Article '{$article->title->value->value}' has no author!");
@@ -32,6 +35,7 @@
 	                    <file>
 	                        <href src="<?php echo htmlspecialchars($article->filepath); ?>" mime_type="application/pdf" />
 	                    </file>
+	                   
 	                </galley>
 	            </article>
 	    	<?php } ?>
