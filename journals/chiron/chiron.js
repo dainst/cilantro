@@ -294,7 +294,8 @@ angular
 				'filepath':			chiron.journal.importFilePath,
 				'thumbnail':		article.thumbnail,
 				'createFrontpage':	editables.checkbox(true),
-				'order':			editables.number(k + 1)
+				'order':			editables.number(k + 1),
+				'zenonId':			editables.base('', false)
 			}, (k == 0));
 		});
 		

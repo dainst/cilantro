@@ -169,6 +169,7 @@ angular
 				'attached':			editables.filelist(),
 				'order':			editables.number(),
 				'createFrontpage':	editables.checkbox($scope.journal.create_frontpage === true),
+				'zenonId':			editables.base('', false)
 			}
 		}
 		
@@ -222,7 +223,6 @@ angular
 				// prepare for uploading
 				delete article.thumbnail;
 				article.pages.context = {offset: parseInt(article.pages.context.offset)}
-				//article.zenonId = "" + String(article.zenonId);
 				$scope.articlesConfirmed.push(article);				
 					
 				$scope.articles.splice($scope.currentArticle, 1);
@@ -289,7 +289,7 @@ angular
 			
 			$log.log('Compare with Zenon; search for ' + term);
 
-			$scope.articles[$scope.currentArticle].zenonId = '';
+			$scope.articles[$scope.currentArticle].zenonId.value.value = '';
 			
 			$scope.zenon.selected = -1;
 			
@@ -323,7 +323,7 @@ angular
 		$scope.selectFromZenon = function(index) {
 			$log.log('select = ' + index, $scope.zenon.results[index]);
 			$scope.zenon.selected = ($scope.zenon.selected == index) ? -1 : index;
-			$scope.articles[$scope.currentArticle].zenonId = ($scope.zenon.selected == -1) ? '' : $scope.zenon.results[index].id;
+			$scope.articles[$scope.currentArticle].zenonId.value.value = ($scope.zenon.selected == -1) ? '' : $scope.zenon.results[index].id;
 			
 		}
 		
@@ -355,7 +355,7 @@ angular
 				'auto_publish':		editables.checkbox(),
 				'thumbnail':		$scope.articles[$scope.currentArticle].thumbnail,
 				'filepath':			$scope.articles[$scope.currentArticle].filepath,
-				'zenonId':			doc.id,
+				'zenonId':			editables.base('', false),
 				'attached':			[]
 			}
 			
@@ -367,14 +367,14 @@ angular
 		};
 		
 		$scope.markAsMissingZenon = function() {
-			$scope.articles[$scope.currentArticle].zenonId = '(((new)))';
+			$scope.articles[$scope.currentArticle].zenonId.value.value = '(((new)))';
 			//$scope.sendToZenon();
 		}
 		
 		
 		$scope.reportMissingToZenon = function() {
 			angular.forEach($scope.articlesConfirmed, function(article) {
-				if (article.zenonId == '(((new)))') {
+				if (article.zenonId.value.value == '(((new)))') {
 					pimportws.get('sendToZenon', {journal: $scope.journal, article: article}, function(response) {
 						$scope.reportedToZenon.push(article);
 						$log.log(response);

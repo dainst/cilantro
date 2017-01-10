@@ -66,7 +66,7 @@ class journal {
 		$this->metadata['urn']				= $article->urn;
 		$this->metadata['volume']			= $issue->volume->value->value;
 		$this->metadata['year']				= $issue->year->value->value;
-		$this->metadata['zenon_id']			= $article->zenonId;
+		$this->metadata['zenon_id']			= $article->zenonId->value->value;
 
 	}
 	

@@ -187,7 +187,8 @@ angular
 				'thumbnail':		article.thumbnail,
 				'attached':			editables.filelist(article.attached),
 				'order':			article.order,
-				'createFrontpage':	editables.checkbox(true)
+				'createFrontpage':	editables.checkbox(true),
+				'zenonId':			editables.base('', false)
 			}, (k == 0));
 		});
 		

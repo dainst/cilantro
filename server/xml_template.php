@@ -16,7 +16,7 @@
 					
 					<?php 
 						// we abuse the zenon id to send a marker, that a front matter is missing...
-						$zenonId  = (isset($article->zenonId) and $article->zenonId) ? $article->zenonId : ''; 
+						$zenonId  = (isset($article->zenonId) and $article->zenonId->value->value) ? $article->zenonId->value->value : '';
 						$zenonId .= (isset($article->createFrontpage->value->value) and $article->createFrontpage->value->value == 1) ? '&amp;dfm' : '';
 						if ($zenonId) {
 					?>

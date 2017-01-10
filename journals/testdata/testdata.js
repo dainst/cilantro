@@ -34,7 +34,8 @@ angular
 			'filepath':			'test.pdf',
 			'thumbnail':		'',
 			'order':			editables.number(1),
-			'createFrontpage':	editables.checkbox(true)
+			'createFrontpage':	editables.checkbox(true),
+			'zenonId':			editables.base('', false)
 		});
 		
 		bob.forwardArticle({
@@ -46,7 +47,8 @@ angular
 			'filepath':			'test2.pdf',
 			'thumbnail':		'',
 			'order':			editables.number(2),
-			'createFrontpage':	editables.checkbox(true)
+			'createFrontpage':	editables.checkbox(true),
+			'zenonId':			editables.base(', false')
 		}, true);
 		
 		bob.nextTab();
