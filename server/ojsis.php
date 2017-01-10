@@ -25,25 +25,21 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * 
 	 * @param <array> $data
 	 * @param <object> $logger object wich implements warning() and debug() and log()
-	 * @param <array> $additional_settings (base_path, skiplock, skippw) <- necessary to use this from testing contexts
+	 * @param <array> $settings (base_path, skiplock, skippw) <- necessary to use this from testing contexts
 	 * @throws Exception
 	 */
-	function __construct($data, $logger, $additional_settings = array()) {
-		
-		$this->log = $logger;
-		
-		$this->log->log('starting ojsis');
-				
-		$this->_base_path = isset($additional_settings['base_path']) ? $additional_settings['base_path'] : '../';
-		
+	function __construct($data, $logger, $settings = array()) {
+
 		set_error_handler(array($this, 'errorHandler'));
-				
-		include_once($this->_base_path . 'settings.php');
+		$this->log = $logger;
+
+
 		$this->settings = $settings;
-		
 		$this->data = $data;
-				
+
+		$this->log->log('starting ojsis');
 		$this->getUploadId();
+
 
 	}
 	
@@ -427,14 +423,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	}
 	
 	
-	/* database related functions */
-	
-	
 
-	
-	
-
-		
 
 	/* other */
 
@@ -458,17 +447,29 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	function upload() {
 		$this->log->log($_FILES);
-		
+
+
+		// check for too big uploads
 		if (!isset($_FILES['files']) or !count($_FILES['files'])) {
-			throw new Exception("No files!");
+			throw new Exception("Unknown Error");
 		}
-		
+
 		$uploadedFiles = [];
-		
+
 		for($i = 0; $i < count($_FILES['files']['name']); $i++) {
-			$destination = $this->settings['tmp_path'] . '/' . $_FILES['files']['name'][$i];
+
+			$destination = $_FILES['files']['name'][$i];
+			while (file_exists($this->settings['rep_path'] . '/' . $destination)) {
+				$destination = '_' . $destination;
+			}
+
 			$this->log->debug('goto ' . $destination);
-			
+
+			if (isset($_FILES['error']) and ($_FILES['error']  != 0)) {
+				$this->log->warning('error while uploading ' . $_FILES['files']['name'][$i] . ': ' . $_FILES['error']);
+				continue;
+			}
+
 			if (!in_array($_FILES['files']['type'][$i], array('application/acrobatreader', 'application/pdf'))) {
 				$this->log->warning($_FILES['files']['name'][$i] . ' has wrong type ' . $_FILES['files']['type'][$i]);
 				continue;
@@ -478,14 +479,16 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				$this->log->warning('error  ' . $_FILES['files']['error'][$i] . ' in file ' . $_FILES['files']['name'][$i]);
 				continue;
 			}
-			
-			$x  = move_uploaded_file($_FILES['files']['tmp_name'][$i], $destination);
+
+			$x  = move_uploaded_file($_FILES['files']['tmp_name'][$i], $this->settings['rep_path'] . '/' . $destination);
 			$this->log->log('ul:' . $x . ':' . $destination);
 			
-			$uploadedFiles[] = $_FILES['files']['name'][$i];
+			$uploadedFiles[] = $destination;
 		}
 		
 		$this->return['uploadedFiles'] = $uploadedFiles;
+
+		$this->getRepository();
 		
 
 	}
@@ -561,8 +564,13 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	}
 
 
+
+
+
 	
 	
 }
+
+
 
 ?>

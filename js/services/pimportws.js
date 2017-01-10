@@ -8,7 +8,8 @@ angular
 		password: '',
 		response: ''
 	}
-	
+
+	pimportws.repository = [];
 	
 	pimportws.uploadId = false; // should be named session Id because that is what it is actuallly
 

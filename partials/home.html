@@ -15,7 +15,7 @@
 			<div class="panel-heading">Select PDF file from upload Folder</div>
 			<div class="panel-body">
 				<select class="form-control" ng-model="journal.importFilePath">
-					<option ng-repeat="file in repositoryFiles track by $index" value='{{file.path}}'>{{file.caption}}</option>
+					<option ng-repeat="file in repository track by $index" value='{{file.path}}'>{{file.caption}}</option>
 				</select> 
 			</div>
 			
@@ -48,8 +48,8 @@
 			    </span>
 			    
 			    <br><span  ng-show="uploadedFiles.length > 0">Files:</span>
-			    <ul>
-			        <li ng-repeat="f in uploadedFiles track by $index">{{f}}</li>
+				<ul>
+					<li ng-repeat="f in uploadedFiles track by $index">{{f}}</li>
 			    </ul>
 				<div ng-show="errorMsg" class="alert alert-danger" ng-bind-html="errorMsg | trustHtml"></div>
 				<div ng-show="warningsMsg.length >  0" ng-repeat="warning in warningsMsg track by $index" class="alert alert-warning">{{warning}}</div>

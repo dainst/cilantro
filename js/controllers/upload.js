@@ -51,6 +51,7 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'pimportws
 				}
 				$scope.errorMsg = '';
 				$scope.uploadedFiles = $scope.uploadedFiles.concat(response.data.uploadedFiles);
+				pimportws.updateRepository(response.data.repository, response.data.uploadedFiles[response.data.uploadedFiles.length - 1]);
 				
             // server error
             }, function (response) {

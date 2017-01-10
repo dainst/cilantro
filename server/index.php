@@ -17,17 +17,45 @@
 */
 
 // settings
-$allowedIps		= array();
-$debugmode 		= false;
+$includePath	= '..';
 
 
-// set up errors
-if ($debugmode) {
-	error_reporting(E_ALL);
-	ini_set('display_errors', 'on');
-}  else {
-	ini_set ("display_errors", "0");
-	error_reporting(false);
+
+// helping functions
+/**
+ * 	Returns a file size limit in bytes based on the PHP upload_max_filesize and post_max_size
+ *
+ * stolen from drupal / http://stackoverflow.com/questions/13076480/php-get-actual-maximum-upload-size#25370978
+ * @return int
+ */
+
+function file_upload_max_size() {
+	static $max_size = -1;
+
+	if ($max_size < 0) {
+		// Start with post_max_size.
+		$max_size = parse_size(ini_get('post_max_size'));
+
+		// If upload_max_size is less, then reduce. Except if upload_max_size is
+		// zero, which indicates no limit.
+		$upload_max = parse_size(ini_get('upload_max_filesize'));
+		if ($upload_max > 0 && $upload_max < $max_size) {
+			$max_size = $upload_max;
+		}
+	}
+	return $max_size;
+}
+
+function parse_size($size) {
+	$unit = preg_replace('/[^bkmgtpezy]/i', '', $size); // Remove the non-unit characters from the size.
+	$size = preg_replace('/[^0-9\.]/', '', $size); // Remove the non-numeric characters from the size.
+	if ($unit) {
+		// Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
+		return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
+	}
+	else {
+		return round($size);
+	}
 }
 
 
@@ -36,6 +64,25 @@ if ($debugmode) {
  *
 */
 try {
+
+	// settings
+	$allowedIps		= array();
+	$errorReporting = true;
+	$includePath = (!isset($includePath)) ? dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . '/' : $includePath;
+	if (file_exists($includePath . '/' . "settings.php")) {
+		include_once($includePath . '/' . "settings.php");
+	} else {
+		throw new Exception("No settings File!" . $includePath);
+	}
+
+	// set up error reporting
+	if ($errorReporting) {
+		error_reporting(E_ALL);
+		ini_set('display_errors', 'on');
+	}  else {
+		ini_set ("display_errors", "0");
+		error_reporting(false);
+	}
 
 	register_shutdown_function(function()  {
 		$error = error_get_last();
@@ -51,10 +98,16 @@ try {
 				echo json_encode($return);
 			}
 	});
-	
+
 	// get logger
 	require_once('logger.class.php');
 	$logger = new logger($debugmode);
+
+	// check if request is too big
+	$maxUploadSize = file_upload_max_size();
+	if ($_SERVER['CONTENT_LENGTH'] > $maxUploadSize) {
+		throw new Exception("Request exceeds maximum byte limit of $maxUploadSize with {$_SERVER['CONTENT_LENGTH']} bytes!");
+	}
 
 	// enabling CORS (would be a shameful webservice without)
 	if (isset($_SERVER['HTTP_ORIGIN'])) {
@@ -94,7 +147,7 @@ try {
 	// go
 	require_once('ojsis.php');
 
-	$ojsis = new ojsis($data, $logger);
+	$ojsis = new ojsis($data, $logger, $settings);
 	$ojsis->debug = $debugmode;
 	$ojsis->call($task);
 	

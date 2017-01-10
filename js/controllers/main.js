@@ -24,15 +24,23 @@ angular
 				} else if (r.success == false) {
 					$scope.sec.response = r.message;
 				} else {
-					$scope.repositoryFiles  = r.repository;
+					pimportws.updateRepository(r.repository);
 				}
 				
 				$scope.isInitialized = true;
 			})
 		}
-		
-		$scope.repositoryFiles  = [];
-		
+
+		$scope.repository = [];
+
+		pimportws.updateRepository = function(repository, selected) {
+			$scope.repository = pimportws.repository = repository;
+			$log.log("sel", selected);
+			if (typeof selected !== "undefined") {
+				$scope.journal.importFilePath = selected;
+			}
+		}
+
 		$scope.sessionLocked = false;
 		
 		/* tabs */
