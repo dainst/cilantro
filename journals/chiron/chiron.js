@@ -39,7 +39,7 @@ angular
 		chiron.journal.identification = 'vol_year';
 		chiron.journal.ojs_journal_code = 'chiron';
 		chiron.journal.journal_code = 'chiron';
-		chiron.journal.default_create_frontpage.value.value = true;
+		chiron.journal.auto_publish_issue.value.value = true;
 		chiron.journal.default_create_frontpage = false;
 	}
 	
@@ -70,15 +70,16 @@ angular
 						var block = textContent.items[k];
 						
 						//console.log(k, block.str.trim(), contentPageHeadline.indexOf(block.str.trim()));
-						
-						if (contentPageHeadline.indexOf(block.str.trim()) >= 0) {
-							chiron.message("found >>" + block.str.trim() + "<< on page " + n);
-							chiron.state = 1;
-							chiron.foundToc++;
-							chiron.offset = Math.max(n, chiron.offset);
-							chiron.analyzeToc(page);
-							return chiron.refresh();
-						}
+						if (typeof block !== "undefined") {
+							if (contentPageHeadline.indexOf(block.str.trim()) >= 0) {
+								chiron.message("found >>" + block.str.trim() + "<< on page " + n);
+								chiron.state = 1;
+								chiron.foundToc++;
+								chiron.offset = Math.max(n, chiron.offset);
+								chiron.analyzeToc(page);
+								return chiron.refresh();
+							}
+                        }
 						
 						
 					}
@@ -292,7 +293,8 @@ angular
 				'date_published':	chiron.dateForAll,
 				'filepath':			chiron.journal.importFilePath,
 				'thumbnail':		article.thumbnail,
-				'createFrontpage':	editables.checkbox(true)
+				'createFrontpage':	editables.checkbox(true),
+				'order':			editables.number(k + 1)
 			}, (k == 0));
 		});
 		

@@ -33,7 +33,7 @@ angular
 			'date_published':	editables.base('03-03-1999'),
 			'filepath':			'test.pdf',
 			'thumbnail':		'',
-			'order':			editables.base(1),
+			'order':			editables.number(1),
 			'createFrontpage':	editables.checkbox(true)
 		});
 		
@@ -45,7 +45,7 @@ angular
 			'date_published':	editables.base('03-03-1999'),
 			'filepath':			'test2.pdf',
 			'thumbnail':		'',
-			'order':			editables.base(2),
+			'order':			editables.number(2),
 			'createFrontpage':	editables.checkbox(true)
 		}, true);
 		
