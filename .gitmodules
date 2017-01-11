@@ -1,0 +1,3 @@
+[submodule "idai-components"]
+	path = idai-components
+	url = https://github.com/dainst/idai-components
