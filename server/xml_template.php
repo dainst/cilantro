@@ -16,7 +16,7 @@
 					
 					<?php 
 						// we abuse the zenon id to send a marker, that a front matter is missing...
-						$zenonId  = (isset($article->zenonId) and $article->zenonId->value->value) ? $article->zenonId->value->value : '';
+						$zenonId  = (isset($article->zenonId) and $article->zenonId->value->value and ($article->zenonId->value->value != '(((new)))')) ? $article->zenonId->value->value : '';
 						if ($zenonId) {
 					?>
 						<id type="other::zenon"><?php echo $zenonId ?></id>
