@@ -207,6 +207,7 @@ angular
 		pageNr = parseInt(pageNr);
 		if ((pageNr < 1) || (pageNr > pdf.pdfInfo.numPages)) {
 			chiron.message('ERROR: Page Nr ' + pageNr + ' does not exist', 'error');
+			chiron.createdThumbnails += 1;
 			return;
 		}
 		
