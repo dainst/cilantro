@@ -48,7 +48,7 @@ angular
 			'thumbnail':		'',
 			'order':			editables.number(2),
 			'createFrontpage':	editables.checkbox(true),
-			'zenonId':			editables.base(', false')
+			'zenonId':			editables.base('', false)
 		}, true);
 		
 		bob.nextTab();

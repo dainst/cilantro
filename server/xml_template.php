@@ -17,7 +17,6 @@
 					<?php 
 						// we abuse the zenon id to send a marker, that a front matter is missing...
 						$zenonId  = (isset($article->zenonId) and $article->zenonId->value->value) ? $article->zenonId->value->value : '';
-						$zenonId .= (isset($article->createFrontpage->value->value) and $article->createFrontpage->value->value == 1) ? '&amp;dfm' : '';
 						if ($zenonId) {
 					?>
 						<id type="other::zenon"><?php echo $zenonId ?></id>
@@ -35,8 +34,15 @@
 		                    <email>no@email.given</email>
 		                </author>
 		            <?php } ?>
-	                <pages><?php echo htmlspecialchars($article->pages->value->pagedesc); ?></pages>
-	                <date_published><?php htmlspecialchars($article->date_published->value->value); ?></date_published>
+
+					<?php
+						$pages = htmlspecialchars($article->pages->value->pagedesc);
+						$pages .= ($article->createFrontpage->value->value) ? '#DFM' : '';
+					?>
+	                <pages><?php echo $pages; ?></pages>
+
+
+					<date_published><?php htmlspecialchars($article->date_published->value->value); ?></date_published>
 	                <?php if ($article->auto_publish->value->value) { /* @ TODO auto_publish to be implemented */ } ?>
 	                <galley>
 	                    <label>PDF</label>
