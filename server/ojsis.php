@@ -265,11 +265,11 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * 
 	 */
 	function updateFrontmatters() {
-		$execline = "php {$this->settings['ojs_path']}/plugins/generic/ojs-dainst-frontpage-generator-plugin/dfmcli.php add missing 0";
+		$execline = "cd {$this->settings['ojs_path']} && php plugins/generic/ojs-dainst-frontpage-generator-plugin/dfmcli.php add missing 0";
 		$this->log->debug($execline);
 		$message = shell_exec($execline);
-		$stop = array('Could ', 'Error:');
-		if (in_array(substr(trim($message), 0, 6), $stop)) {
+		$stop = array('Could ', 'Error:', 'Fatal error:');
+		if (in_array(substr(trim($message), 0, 6), $stop) or (trim($message) == '')) {
 			$this->log->warning("Frontmatters were not created! \n\n $message");
 		} else {
 			$this->log->log($message);
