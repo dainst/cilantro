@@ -210,7 +210,8 @@ angular
 			chiron.createdThumbnails += 1;
 			return;
 		}
-		
+
+
 		var container = angular.element(document.querySelector('#thumbnail-container-' + containerId));
 		img = container.find('img');
 		chiron.articles[containerId].thumbnail = '';
