@@ -295,7 +295,7 @@ angular
 			
 			$http({
 				method: 'JSONP',
-				url: 'http://zenon.dainst.org:8080/solr/biblio/select',
+				url: 'https://zenon.dainst.org/data/biblio/select',
 				params: {
 					'json.wrf': 'JSON_CALLBACK',
 					q: 'title:' + term.replace(':', ''),
