@@ -1,0 +1,96 @@
+<!-- chiron specific template -->
+
+<div ng-controller="folder">
+
+
+	
+<div class="panel panel-default">			
+	<div class="panel-heading">Chiron, already parted into articles: Found: {{master.stats.files}} / Loaded: {{master.stats.loaded}} / Analyzed: {{master.stats.analyzed}} / Thumbnails: {{master.stats.thumbnails}}</div>
+	<div class="panel-body row">
+		<div class="col-md-8">
+			<div class="alert" ng-class="{'alert-danger': master.status.error, 'alert-info': !master.status.error}" style="padding: 10px;">{{master.status.message}}</div>		
+		</div>
+		<div class="col-md-2 text-right">
+			<div class="dropdown" uib-dropdown>
+				<button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Order By<span class="caret"></span></button>
+				<ul class="dropdown-menu" uib-dropdown-menu>
+					<li><a ng-click="updateOrder('filename', true)" href="#">filename</a></li>
+					<li><a ng-click="updateOrder('author', true)" href="#">author</a></li>
+					<li><a ng-click="updateOrder('title', true)" href="#">title</a></li>
+					<li><a ng-click="updateOrder('page', true)" href="#">page</a></li>
+					<li><a ng-click="updateOrder('filename', false)" href="#">filename desc</a></li>
+					<li><a ng-click="updateOrder('author', false)" href="#">author desc</a></li>
+					<li><a ng-click="updateOrder('title', false)" href="#">title desc</a></li>
+					<li><a ng-click="updateOrder('page', false)" href="#">page desc</a></li>
+					<li><a ng-click="updateOrder('order', true)" href="#">custom (#)</a></li>
+				</ul>
+			</div>
+		</div>
+	
+		<div class="col-md-2 text-right">
+			<button class='btn btn-primary' ng-click='master.proceed()'>Proceed<span class="glyphicon glyphicon-chevron-right"></span></button>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+<div class="row">	
+	<div class="col-md-12">
+
+		<table class='split-table editable-table'>
+			<thead>
+				<tr>
+					<td>#</td>
+					<td>File</td>
+					<td>Author</td>
+					<td>Title</td>
+					<td>Page</td>
+					<td>Preview</td>
+					<td></td>
+				</tr> 
+			</thead>
+			<tbody>
+				<tr ng-repeat="article in articles  | orderBy:'article.order.value.value'">
+					<td style="width:2%"><span editable item="article.order"></span></td>
+					<td style="text-align: left">
+						<b>{{article.filename}}</b>
+						<div ng-show="article.attached.length">Attached:
+							<ul>
+								<li ng-repeat="attachment in article.attached">{{attachment.file}}</li>
+							</ul>
+						</div>
+					</td>
+					<td style="width:25%"><span editable item="article.author"></span></td>
+					<td><span editable item="article.title"></span></td>
+					<td style="width:8%"><span editable item="article.page"></span></td>
+					<td style="width:600px">
+						<div id="thumbnail-container-{{article._id}}" class="thumbnail-container" ng-class="{'enlarged': article._id==master.selectedThumb}" ng-click="master.selectThumb(article._id)">
+							<img ng-show="thumbnails[article._id] != ''" data-ng-src="{{thumbnails[article._id]}}" />
+						</div>
+					</td>
+					<td>
+						<span class="btn btn-default btn-xs" ng-click="updateOrder('up', true, article)" data-tooltip="move above"><span class="glyphicon glyphicon-triangle-top"></span></span>
+					
+						<span class="btn btn-default btn-xs" ng-click="removeArticle(article)" data-tooltip="delete article"><span class="glyphicon glyphicon-minus-sign"></span></span>
+						<span class="btn btn-default btn-xs" ng-click="openDocument(article.url)" data-tooltip="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
+						
+						<span class="btn btn-xs" ng-class="{'btn-default': (!selectedToMerge), 'btn-danger': (selectedToMerge)}" ng-click="mergeArticle(article)" data-tooltip="merge articles"><span class="glyphicon glyphicon-compressed"></span></span>
+						
+						<!-- <span class="btn btn-default btn-xs" ng-repeat="button in master.article_buttons" ng-click="button.function(article)" data-tooltip="{{button.tooltip}}">{{button.caption}}<span class="glyphicon {{button.glyphicon}}"></span></span> -->
+						
+						<span class="btn btn-default btn-xs" ng-click="updateOrder('down', true, article)" data-tooltip="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
+						
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<pre>{{}}</pre>
+	</div>
+</div>
+
+
+</div>

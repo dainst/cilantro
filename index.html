@@ -7,6 +7,8 @@
 	<link href="favicon.ico" rel="Shortcut Icon">
 
 	<link rel="stylesheet" href="idai-components/dist/css/idai-components.min.css">
+	<link rel="stylesheet" href="node_modules/angular-multi-select/dist/prod/angular-multi-select.min.css">
+
 	<link rel="stylesheet" href="style/style.css">
 
 </head>
@@ -14,6 +16,16 @@
 	<body ng-controller="main" data-ng-init="init()">
 	
 		<div id='loader' class='loader' ng-hide="isInitialized"></div>
+
+		<div id="info-container">
+			<div class="">
+				<div class="alert alert-danger"  ng-show="message.content.success === false" style="white-space: pre-wrap;">{{message.content.message}}</div>
+				<div class="alert alert-warning" ng-repeat="warning in message.content.warnings track by $index" style="white-space: pre-wrap;">{{warning}}</div>
+				<div class="alert alert-success" ng-show="message.content.success" style="white-space: pre-wrap;">{{message.content.message}}</div>
+				<div class="alert alert-info" 	 ng-repeat="debug in message.content.debug track by $index" style="white-space: pre-wrap;">({{debug}})</div>
+				<div ng-show="server.xml" class="xml-view">{{server.xml}}</div>
+			</div>
+		</div>
 
        	<idai-navbar 
        		hide-register-button="true" 
@@ -28,25 +40,11 @@
 		
 		
 		<div id='main-container' class="container-fluid">
-			
-			<ng-include src="tabs[currentTab].template + cacheKiller"></ng-include>
-			
-			<div class="row">	
-				<div class="col-md-12"></div>
-			</div>
-			
-			<!-- <pre>{{server}}</pre> -->
-			<div class="row">	
-				<div class="col-md-12">
-					<div class="alert alert-danger"  ng-show="server.success === false" style="white-space: pre-wrap;">{{server.message}}</div>
-					<div class="alert alert-warning" ng-repeat="warning in server.warnings track by $index" style="white-space: pre-wrap;">{{warning}}</div>
-					<div class="alert alert-success" ng-show="server.success" style="white-space: pre-wrap;">{{server.message}}</div>
-					<div class="alert alert-info" 	 ng-repeat="warning in server.debug track by $index" style="white-space: pre-wrap;">({{warning}})</div>
-					<div ng-show="server.xml" class="xml-view">{{server.xml}}</div>
-				</div>
-			</div>
-			
+			<ng-include src="steps.list[steps.current].template + cacheKiller"></ng-include>
 		</div>
+
+
+
 
 		<idai-footer institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
 		
@@ -63,23 +61,25 @@
 		<!--  load 3party angular moduls -->
 		
 		<script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
-		
+
 		<!-- load pimport app -->
 		
 		<script src="js/controllers/main.js"></script>
+		<script src="js/controllers/overview.js"></script>
 		<script src="js/controllers/pdf.js"></script>
 		<script src="js/controllers/nopdf.js"></script>
-		<script src="js/controllers/folder.js"></script>
 		<script src="js/controllers/upload.js"></script>
 		<script src="js/directives/editable.js"></script>
+		<script src="js/directives/multiselect.js"></script>
+		<script src="js/services/folder.js"></script>
 		<script src="js/services/editables.js"></script>
 		<script src="js/services/pimportws.js"></script>
-		<script src="js/services/journalmaster.js"></script>
 		<script src="js/services/settings.js"></script>
 		<script src="js/app.js"></script>
 		
 		<!-- load journal specific services -->
 		
+		<script src="journals/generic/generic.js"></script>
 		<script src="journals/chiron_parted/chiron_parted.js"></script>
 		<script src="journals/chiron/chiron.js"></script>
 		<script src="journals/testdata/testdata.js"></script>		

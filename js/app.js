@@ -11,18 +11,20 @@ angular
 	'idai.components',
 	'idai.templates',
 	'controller.main',
+	'controller.overview',
 	'controller.pdf',
 	'controller.nopdf',
-	'controller.folder',
+	'module.folder',
 	'controller.upload',
 	'directive.editable',
+	'directive.multiselect',
 	'module.editables',
 	'module.pimportws',
-	'module.journalmaster',
 	'module.settings',
 	
 	'module.chiron_parted',
 	'module.chiron',
+	'module.generic',
 	'module.testdata'
 ])
 /*

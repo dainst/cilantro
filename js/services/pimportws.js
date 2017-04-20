@@ -1,12 +1,11 @@
 angular
 .module('module.pimportws', [])
-.factory("pimportws", ['$log', '$http', 'settings', function($log, $http, settings) {
+.factory("pimportws", ['$log', '$http', '$rootScope', 'settings', function($log, $http, $rootScope, settings) {
 
 	var pimportws = {};
 	
 	pimportws.sec = {
-		password: '',
-		response: ''
+		password: ''
 	}
 
 	pimportws.repository = [];
@@ -33,11 +32,9 @@ angular
 			function(response) {
 				if (response.data.success == false) {
 					$log.error(response.data.message);
-					pimportws.sec.response = response.data.message;
 				}  else {
 					$log.log("uid", pimportws.uploadId);
 
-					
 					if (!pimportws.uploadId) {
 						pimportws.uploadId = response.data.uploadId;
 					}
@@ -45,11 +42,15 @@ angular
 						$log.log("got new uploadID, that's so wrong", pimportws.uploadId, response.data.uploadId);
 					}
 				}
-				
+
+				$rootScope.$broadcast('message', response.data);
 				callback(response.data);
 			},
 			function(err) {
-				pimportws.sec.response = err;
+				$rootScope.$broadcast({
+					"success": false,
+					"message": err
+				}, response.data);
 				$log.error(err);
 				callback(err);
 			}

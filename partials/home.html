@@ -1,12 +1,13 @@
 <div>
 
+
 <div class="row toprow">
 	<div class="col-md-6">
 		<div class="panel panel-default">
-			<div class="panel-heading">Import Protocol {{journalType}}</div>
+			<div class="panel-heading">Import Protocol</div>
 			<div class="panel-body">
-				<select class="form-control" ng-model="journals.chosen">
-					<option ng-repeat="(id, title) in journals.types" value='{{id}}'>{{title}}</option>
+				<select class="form-control" ng-model="protocols.current">
+					<option ng-repeat="(id, title) in protocols.list" value='{{id}}'>{{title}}</option>
 				</select>
 			</div>
 		</div>
@@ -14,18 +15,16 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Select PDF file from upload Folder</div>
 			<div class="panel-body">
-				<select class="form-control" ng-model="journal.importFilePath">
-					<option ng-repeat="file in repository track by $index" value='{{file.path}}'>{{file.caption}}</option>
+				<select class="form-control" ng-model="journal.data.importFilePath">
+					<option ng-repeat="file in repository.list track by $index" value='{{file.path}}'>{{file.caption}}</option>
 				</select> 
 			</div>
-			
-			
 		</div>
 		
 		
 		
-		<div 	class="panel panel-default" 
-				ng-controller="upload" 	           		
+		<div 	ng-controller="upload"
+				class="panel panel-default"
 				ngf-drop="uploadFiles($files)"
 	       		ng-model="files" 
 	       		ngf-model-invalid="invalidFiles"
@@ -59,9 +58,6 @@
 	</div>
 
 	<div class="col-md-6 ">
-
-	
-	
 		<div class="panel panel-default">
 			<div class="panel-heading">Start Process</div>
 			<div class="panel-body">
@@ -72,15 +68,11 @@
 					
 					<div class="col-md-6 text-right">
 						<button class='btn btn-danger' ng-show="sessionLocked" ng-click='resetSession()'>Reset System</button>
-						<button class='btn btn-primary' ng-click='checkPw()' ng-show="!sessionLocked">Start Import<span class="glyphicon glyphicon-chevron-right"></span></button>	
+						<button class='btn btn-primary' ng-click='start()' ng-show="!sessionLocked">
+							Start Import<span class="glyphicon glyphicon-chevron-right"></span>
+						</button>
 					</div>			
 				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<br>
-						<div ng-show="sec.response" class="alert alert-danger">{{sec.response}}</div>
-					</div>
-				</div>			
 			</div>
 		</div>
 		
@@ -91,10 +83,10 @@
 		
 					<tbody>
 						<thead></thead>				
-							<tr ng-repeat="field in journalMeta track by $index">
+							<tr ng-repeat="field in journal.showOnHomepage track by $index">
 								<td>{{field}}</td>
 								<td>
-									<span editable item="journal[field]" />
+									<span editable item="journal.data[field]" />
 								</td>
 							</tr>
 					</tbody>

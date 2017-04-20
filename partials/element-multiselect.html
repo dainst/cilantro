@@ -1,0 +1,11 @@
+<div class="dropdown multiselect">
+	<button class="btn btn-default dropdown-toggle" ng-click="toggleList()"><span><ng-transclude /></span><span class="caret"></span></button>
+	<ul class="dropdown-menu" ng-style="{display : toggled ? 'none' : 'block'}">
+
+		<li ng-repeat="item in elements" class="form-check">
+			<label class="form-check-label"><input class="form-check-input" type="checkbox" ng-model="item.checked">{{item.title}}</label>
+		</li>
+
+
+	</ul>
+</div>

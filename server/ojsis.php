@@ -63,6 +63,9 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @throws Exception
 	 */
 	function checkStart() {
+		if (!property_exists($this->data, 'file')) {
+			throw new Exception("No File selected");
+		}
 		$this->checkFile($this->data->file);
 	}
 	
@@ -532,7 +535,11 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	}
 	
 	function getRepositoryFolder() {
-		
+
+		if (!property_exists($this->data, 'dir')) {
+			throw new Exception("no dir given!");
+		}
+
 		$dir = $this->settings['rep_path'] . '/' . $this->data->dir;
 		
 		if (!file_exists($dir)) {

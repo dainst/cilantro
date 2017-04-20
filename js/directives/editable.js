@@ -17,9 +17,7 @@ angular
       link: function(scope, elem, attrs) {  	  
     	  scope.id = 'ID#' + Math.random();
     	  scope.caption = attrs.caption;
-		  
-    	  
-    	  scope.getTemplateUrl = function() {  		  
+    	  scope.getTemplateUrl = function() {
     		  if (angular.isUndefined(scope.item) || angular.isUndefined(scope.item.type) || scope.item.readonly) {
     			  //$log.log(scope.item);
     			  return 'partials/undefined.html' + killCache;
