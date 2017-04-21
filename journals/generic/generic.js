@@ -13,9 +13,11 @@ angular
 
 
 	journalCtrl.init = function() {
-		$log.log('init protocol')
+		$log.log('init protocol');
+		// load next page
+		journalCtrl.main.steps.change('overview');
 	};
 
-	
+
 	return (journalCtrl);
 }]);

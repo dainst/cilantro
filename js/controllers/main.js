@@ -4,31 +4,25 @@ angular
 
 .module('controller.main', [])
 
-.controller('main',	['$scope', '$log', '$http', '$injector', 'editables', 'pimportws', 'settings',
-	function ($scope, $log, $http, $injector, editables, pimportws, settings) {
+.controller('main',	['$scope', '$log', '$injector', 'editables', 'pimportws', 'settings', 'messenger',
+	function ($scope, $log, $injector, editables, pimportws, settings, messenger) {
 		
 		/* debug */
 		$scope.cacheKiller = '?nd=' + Date.now();
 
-		$scope.test = [
-			{"title": "gulp", "checked": 0},
-			{"title": "gulp2", "checked": 0},
-			{"title": "gulp3", "checked": 0},
-			{"title": "gulp4", "checked": 1},
-			{"title": "gul5", "checked": 0},
-		]
 
 		/* step control */
 		$scope.steps = {
 			list: {
-				"home": 	{"template": "partials/home.html",		"title": "Start"},
-				"overview": {"template": "partials/overview.html",	"title": "Documents overview"},
-				"articles": {"template": "partials/articles.html",	"title": "Edit Articles"},
-				"publish": 	{"template": "partials/xml.html",		"title": "Publish"}
+				"home": 	{"template": "partials/view_home.html",			"title": "Start"},
+				"overview": {"template": "partials/view_overview.html",		"title": "Documents overview"},
+				"articles": {"template": "partials/view_articles.html",		"title": "Edit Articles"},
+				"publish": 	{"template": "partials/view_finish.html",		"title": "Publish"}
 			},
 			current:"home",
 			change: function(to) {
-				$log.log('Tab change to: ' + $scope.steps.list[to].title);
+				$log.log('Tab change to: ', to);
+				console.log('from m', $scope.articles);
 				//$scope.message.reset();
 				$scope.steps.current = to;
 			}
@@ -50,10 +44,8 @@ angular
 
 		/* current document source */
 		$scope.documentSource = {
-			name: "none",
-			stats: {}
+			name: "none"
 		}
-
 
 		/* initialize */
 		$scope.isInitialized = false;
@@ -62,16 +54,13 @@ angular
 			pimportws.get('getRepository', {}, function(r) {
 				if ((r.success == false) && (r.message == "Session locked")) {
 					$scope.sessionLocked = true;
-					$scope.sec.response = r.message;
-				} else if (r.success == false) {
-					$scope.sec.response = r.message;
-				} else {
+				} else if (r.success == true) {
 					$scope.repository.update(r.repository);
 				}
-
 				$scope.isInitialized = true;
 			})
 		}
+
 
 		/* document repository */
 		$scope.repository = {
@@ -79,7 +68,7 @@ angular
 			update: function (repository, selected) {
 				$scope.repository.list = pimportws.repository = repository;
 				if (typeof selected !== "undefined") {
-					$scope.journal.importFilePath = selected;
+					$scope.journal.data.importFilePath = selected;
 				}
 			}
 		}
@@ -102,7 +91,7 @@ angular
 			showOnHomepage: ['volume', 'year'],
 			check: function () {
 				var invalid = 0;
-				angular.forEach($scope.journal, function (property) {
+				angular.forEach($scope.journal.data, function (property) {
 					if (angular.isObject(property) && (property.check() !== false)) {
 						invalid += 1;
 					}
@@ -111,27 +100,44 @@ angular
 			}
 		}
 
+		/* articles */
+		$scope.articles = [];
 
-		/* message system */
-		$scope.message = {
-			content: {},
-			reset: function() {
-				$scope.message.content = {
-					text: '',
-					success: true,
-					warnings: [],
-					debug: [],
+		$scope.articleStats = {
+			data: {
+				articles: $scope.articles.length,
+				undecided: 0,
+				confirmed: 0,
+				dismissed: 0,
+				_isOk: function(k, v) {
+					if (k == 'undecided') {
+						return 0;
+					} else if (k == 'confirmed') {
+						return 1;
+					} else if (k == 'dismissed') {
+						return -1;
+					}
 				}
 			},
-			show: function(msg, isError) {
-				$scope.content.text = msg;
-				$scope.content.success = !isError;
+			update: function() {
+				$scope.articleStats.data.articles = $scope.articles.length;
+				$scope.articleStats.data.undecided = 0;
+				$scope.articleStats.data.confirmed = 0;
+				$scope.articleStats.data.dismissed = 0;
+
+				for (var i = 0; i < $scope.articles.length; i++) {
+					if (typeof $scope.articles[i]._.confirmed === "undefined") {
+						$scope.articleStats.data.undecided += 1;
+					} else if ($scope.articles[i]._.confirmed === true) {
+						$scope.articleStats.data.confirmed += 1;
+					} else if ($scope.articles[i]._.confirmed === false) {
+						$scope.articleStats.data.dismissed += 1;
+					}
+				}
 			}
+
 		}
 
-		$scope.$on('message', function($event, content) {
-			$scope.message.content = content;
-		})
 
 		/* security */
 		$scope.sec = pimportws.sec;
@@ -141,14 +147,9 @@ angular
 			//checkPW
 			pimportws.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal}, function(response) {
 				if (response.success) {
-					$scope.getProtocol($scope);
+					$scope.getProtocol();
 					$scope.getDocumentSource();
 					$scope.protocol.init();
-					// load next page
-					$scope.steps.change('overview');
-					// debug
-					$log.log('starting');
-					$log.log($scope.journal);
 				} else {
 					$scope.sec.password = '';
 				}
@@ -168,21 +169,23 @@ angular
 		}
 
 		/* prototype contructur functions */
-		$scope.Article =  function() {
+		$scope.Article =  function(data) {
+			data = data || {};
 			return {
-				'title':			editables.base(''),
-				'abstract':			editables.text('', false),
-				'author':			editables.authorlist(),
-				'pages':			editables.page(12),
-				'date_published':	editables.base('DD-MM-YYYY'),
+				'title':			editables.base(data.title),
+				'abstract':			editables.text(data.abstract, false),
+				'author':			editables.authorlist(data.author),
+				'pages':			editables.page(data.pages),
+				'date_published':	editables.base(data.date_published || 'DD-MM-YYYY'),
 				'language':			editables.language('de_DE', false),
-				'auto_publish':		editables.checkbox($scope.journal.default_publish_articles === true),
-				'filepath':			$scope.journal.importFilePath,
+				'auto_publish':		editables.checkbox($scope.journal.data.default_publish_articles === true),
+				'filepath':			$scope.journal.data.importFilePath,
 				'thumbnail':		'',
 				'attached':			editables.filelist(),
-				'order':			editables.number(),
-				'createFrontpage':	editables.checkbox($scope.journal.create_frontpage === true),
-				'zenonId':			editables.base('', false)
+				'order':			editables.number(0, false),
+				'createFrontpage':	editables.checkbox($scope.journal.data.create_frontpage === true),
+				'zenonId':			editables.base('', false),
+				'_':				{}
 			}
 		}
 

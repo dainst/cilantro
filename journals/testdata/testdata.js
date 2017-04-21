@@ -4,56 +4,47 @@ angular
 .module('module.testdata', [])
 .factory("testdata", ['$log', 'editables', function($log, editables) {
 
-	var bob = function() {
-		var self = this;
-	};
-	
-	bob.title = 'Create Testdata';
-	bob.template = 'journals/testdata/testdata.html';
-	
-	bob.init = function()  {
-		bob.journal.identification = 'vol_year';
-		bob.journal.ojs_journal_code = 'test';
-		bob.journal.journal_code = 'testdata';		
-		bob.journal.auto_publish_issue.value.value = false;
-		bob.journal.default_create_frontpage = true;
 
-	}
-	
-	bob.start = function() {
-		
-		bob.journal.volume.value.value = Math.round(Math.random() * 10000);
-		bob.journal.year.value.value = Math.round(Math.random() * 10000);
-		
-		bob.forwardArticle({
-			'title':			editables.base('Crete'),
-			'abstract':			editables.text('', false),
-			'author':			editables.authorlist(['Peter Parker', 'Bruce Wayne']),
-			'pages':			editables.page(1, 'Seite eins!'),
-			'date_published':	editables.base('03-03-1999'),
-			'filepath':			'test.pdf',
-			'thumbnail':		'',
-			'order':			editables.number(1),
-			'createFrontpage':	editables.checkbox(true),
-			'zenonId':			editables.base('', false)
-		});
-		
-		bob.forwardArticle({
-			'title':			editables.base('A lady centaur.'),
-			'abstract':			editables.text('Testeintrag', false),
-			'author':			editables.authorlist(['Selina Kyle', 'Dr. X']),
-			'pages':			editables.page(1, '1'),
-			'date_published':	editables.base('03-03-1999'),
-			'filepath':			'test2.pdf',
-			'thumbnail':		'',
-			'order':			editables.number(2),
-			'createFrontpage':	editables.checkbox(true),
-			'zenonId':			editables.base('', false)
-		}, true);
-		
-		bob.nextTab();
-				
-	}
-	
-	return (bob);
+	var journalCtrl = function() {
+		var main = {}
+	};
+
+	/* the journal's settings */
+	journalCtrl.id = 'generic';
+	journalCtrl.columns = ['title'];
+
+	journalCtrl.init = function() {
+		journalCtrl.main.articles.push(new journalCtrl.main.Article({
+			title: "A lady centaur",
+			author: {firstname:'1peter', lastname: '1parker'},
+			pages: 1
+		}));
+		journalCtrl.main.articles.push(new journalCtrl.main.Article({
+			title: "Something else",
+			author: {firstname:'2peter', lastname: '2parker'},
+			pages: 1
+		}));
+		journalCtrl.main.articles.push(new journalCtrl.main.Article({
+			title: "Geh, Schwurbel!",
+			author: {firstname:'3peter', lastname: '3parker'},
+			pages: 1
+		}));
+		journalCtrl.main.articles.push(new journalCtrl.main.Article({
+			title: "DER ARTIKEL",
+			author: {firstname:'4Piller', lastname: '4Mann'},
+			pages: 1
+		}));
+		journalCtrl.main.articles.push(new journalCtrl.main.Article({
+			title: "Alter, wie das Nervt",
+			author: {firstname:'5Piller', lastname: '5Mann'},
+			pages: 1
+		}));
+		console.log(journalCtrl.main.articles);
+		journalCtrl.main.steps.change('articles');
+	};
+
+
+	return (journalCtrl);
+
+
 }]);

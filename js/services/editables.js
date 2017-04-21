@@ -189,7 +189,7 @@ angular
 		var obj = editables.base(parseInt(seed), mandatory);
 		obj.type = 'number';
 		obj.check =	function() {
-			if (obj.value.value != parseInt(obj.value.value)) {
+			if (obj.value.value != parseInt(obj.value.value) && (this.value.value != '')) {
 				return "Only number allowed";
 			}
 			if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value == '')) {

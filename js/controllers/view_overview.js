@@ -7,11 +7,12 @@
 */
 angular
 
-.module('controller.overview', [])
+.module('controller.view_overview', [])
 
-.controller('overview', ['$scope', '$log', 'settings', 'pimportws', 'editables',
-	function($scope, $log, settings, pimportws, editables) {
+.controller('view_overview', ['$scope', '$log', 'settings', 'pimportws', 'editables', 'messenger',
+	function($scope, $log, settings, pimportws, editables, messenger) {
 
+		messenger.content.stats = $scope.documentSource.stats;
 
 		$scope.rawArticles = [];
 		$scope.thumbnails = {};
@@ -227,30 +228,24 @@ angular
 		/* tools & buttons */
 
 		$scope.continue = function() {
+			// @ TODO remove rawArticles and just use articles...
 			$log.log('proceeding');
 			angular.forEach($scope.rawArticles, function(article, k) {
 				if (article._.deleted === true) {
 					return;
 				}
+				if (typeof article._ !== "undefined") {
+					article._ = {};
+				}
 
-				$log.log('forward article', article.title)
-				$scope.addArticle({
-					'title':			article.title,
-					'abstract':			editables.text('', false),
-					'author':			article.author,
-					'pages':			article.page,
-					'date_published':	$scope.journal.year,
-					'filepath':			article.url,
-					'thumbnail':		article.thumbnail,
-					'attached':			editables.filelist(article.attached),
-					'order':			article.order,
-					'createFrontpage':	editables.checkbox(true),
-					'zenonId':			editables.base('', false)
-				}, (k == 0));
+				$scope.articles.push(article)
 			});
 
 			$log.log('done');
+			$scope.steps.change('articles');
 		}
+
+
 
 		// open file externally
 		$scope.openDocument = function(url) {
@@ -263,15 +258,13 @@ angular
 		$scope.mergeArticle = function(article) {
 
 			if ($scope.selectedToMerge._.id == article._.id) {
-				master.status.message = '';
-				master.status.error = '';
+				messenger.ok();
 				$scope.selectedToMerge = false;
 				return;
 			}
 
 			if (!$scope.selectedToMerge)  {
-				$scope.message.message  = 'Select article to attach »' + article.title.value.value + '« to';
-				$scope.message.success  = false;
+				messenger.alert('Select article to attach »' + article.title.value.value + '« to',1);
 				$scope.selectedToMerge = article;
 			} else {
 				var article2 = article;
@@ -347,8 +340,7 @@ angular
 
 			$scope.removeArticle(attach);
 
-			$scope.message.message = 'Articles Merged!';
-			$scope.message.success = true;
+			messenger.alert('Articles Merged!')
 			$scope.selectedToMerge = false;
 		}
 

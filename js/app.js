@@ -10,8 +10,17 @@ angular
 	'ngResource',*/
 	'idai.components',
 	'idai.templates',
+
+	'controller.message',
+	'module.messenger',
+
 	'controller.main',
-	'controller.overview',
+
+	'controller.view_overview',
+	'controller.view_articles',
+	'controller.view_finish',
+
+
 	'controller.pdf',
 	'controller.nopdf',
 	'module.folder',

@@ -1,15 +1,19 @@
 angular
 .module('module.folder', [])
-.factory('folder', ['$log', '$rootScope', 'settings', 'pimportws', function($log, $rootScope, settings, pimportws) {
+.factory('folder', ['$log', '$rootScope', 'settings', 'pimportws', 'messenger',
+	function($log, $rootScope, settings, pimportws, messenger) {
 
 	var folder = {};
 	folder.dir = []; // filenames
 	folder.files = []; // pdf.js documents
 	folder.stats = {
-		analyzed: 0,
 		files: 0,
-		loaded: 0,
-		thumbnails: 0
+		analyzed: 0,
+		loaded:  0,
+		thumbnails: 0,
+		_isOk: function(k, v) {
+			return v >= folder.stats.files ? 1 : -1;
+		}
 	};
 	folder.status = 'idle';
 	folder.path = 'none';
@@ -48,7 +52,7 @@ angular
 					folder.PDF.api.getDocument(url).then(resolve, fail)
 				},
 				function fail(reason) {
-					$rootScope.$broadcast('message', {message: "get Document " + url + " failed: " + reason, 'success': false});
+					messenger.alert("get Document " + url + " failed: " + reason, true);
 				}
 			).then(
 				function onGotDocument(pdf) {
@@ -58,7 +62,7 @@ angular
 						url: this.url
 					});
 
-					folder.status = 'document nr' + folder.files.length + ' loaded';
+					messenger.alert('document nr' + folder.files.length + ' loaded');
 					$rootScope.$broadcast('gotFile', (folder.files.length - 1));
 				}.bind({filename: filename, url: folder.path + '/' + filename})
 			);
@@ -76,15 +80,15 @@ angular
 
 		var getFolder = new Promise(function(resolve) {
 			console.log(folder.path);
-			folder.status  = 'loading folder contents: ' + folder.path;
+			messenger.alert('loading folder contents: ' + folder.path);
 			pimportws.get('getRepositoryFolder', {dir: folder.path}, function(result) {
 				$log.log('1. got folder:' + folder.path, result);
 				if (!result.success) {
-					$rootScope.$broadcast('message', {message:result.message, 'success': false});
+					// should message itself
 				} else {
 					folder.dir = result.dir;
 					folder.stats.files = result.dir.length;
-					folder.status  = 'folder contents loaded';
+					messenger.alert('folder contents loaded');
 					resolve();
 				}
 			})
@@ -92,18 +96,14 @@ angular
 		});
 
 		Promise.all([getFolder, requirePdfJs]).then(function() {
-			folder.status  = 'all documents loaded';
-			$rootScope.$broadcast('message', {message: 'ready for loading files'});
+			messenger.alert('ready for loading files');
 			loadFiles();
 			Promise.all(loadFilePromises).then(function() {
-				$rootScope.$broadcast('message', {message: "All Files loaded", "success": true});
-				//$log.log($scope.files);
+				messenger.alert("All Files loaded");
 				$rootScope.$broadcast('gotAll');
 			})
 		});
 	}
-
-
 
 	return folder;
 	

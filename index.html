@@ -7,7 +7,6 @@
 	<link href="favicon.ico" rel="Shortcut Icon">
 
 	<link rel="stylesheet" href="idai-components/dist/css/idai-components.min.css">
-	<link rel="stylesheet" href="node_modules/angular-multi-select/dist/prod/angular-multi-select.min.css">
 
 	<link rel="stylesheet" href="style/style.css">
 
@@ -17,15 +16,7 @@
 	
 		<div id='loader' class='loader' ng-hide="isInitialized"></div>
 
-		<div id="info-container">
-			<div class="">
-				<div class="alert alert-danger"  ng-show="message.content.success === false" style="white-space: pre-wrap;">{{message.content.message}}</div>
-				<div class="alert alert-warning" ng-repeat="warning in message.content.warnings track by $index" style="white-space: pre-wrap;">{{warning}}</div>
-				<div class="alert alert-success" ng-show="message.content.success" style="white-space: pre-wrap;">{{message.content.message}}</div>
-				<div class="alert alert-info" 	 ng-repeat="debug in message.content.debug track by $index" style="white-space: pre-wrap;">({{debug}})</div>
-				<div ng-show="server.xml" class="xml-view">{{server.xml}}</div>
-			</div>
-		</div>
+
 
        	<idai-navbar 
        		hide-register-button="true" 
@@ -37,13 +28,14 @@
 			logout-function=""
 			user-object='{"username": false}'>
 		</idai-navbar>
+
+
 		
 		
 		<div id='main-container' class="container-fluid">
+			<ng-include src="'partials/message.html'"></ng-include>
 			<ng-include src="steps.list[steps.current].template + cacheKiller"></ng-include>
 		</div>
-
-
 
 
 		<idai-footer institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
@@ -63,9 +55,12 @@
 		<script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
 		<!-- load pimport app -->
-		
+		<script src="js/controllers/message.js"></script>
+		<script src="js/services/messenger.js"></script>
 		<script src="js/controllers/main.js"></script>
-		<script src="js/controllers/overview.js"></script>
+		<script src="js/controllers/view_overview.js"></script>
+		<script src="js/controllers/view_articles.js"></script>
+		<script src="js/controllers/view_finish.js"></script>
 		<script src="js/controllers/pdf.js"></script>
 		<script src="js/controllers/nopdf.js"></script>
 		<script src="js/controllers/upload.js"></script>

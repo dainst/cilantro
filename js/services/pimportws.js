@@ -1,6 +1,7 @@
 angular
 .module('module.pimportws', [])
-.factory("pimportws", ['$log', '$http', '$rootScope', 'settings', function($log, $http, $rootScope, settings) {
+.factory("pimportws", ['$log', '$http', '$rootScope', 'settings', 'messenger',
+	function($log, $http, $rootScope, settings, messenger) {
 
 	var pimportws = {};
 	
@@ -43,15 +44,12 @@ angular
 					}
 				}
 
-				$rootScope.$broadcast('message', response.data);
+				messenger.cast(response.data);
 				callback(response.data);
 			},
 			function(err) {
-				$rootScope.$broadcast({
-					"success": false,
-					"message": err
-				}, response.data);
-				$log.error(err);
+				messenger.alert(err,1);
+				console.error(err);
 				callback(err);
 			}
 		);

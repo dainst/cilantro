@@ -6,7 +6,7 @@ angular
 	.module('directive.multiselect', ['ng'] )
 	.directive('multiselect' , ['$log', function ($log) {
 		return {
-			restrict: 'A',
+			restrict: 'E',
 			transclude: true,
 			scope: {
 				'elements': '='
