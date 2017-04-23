@@ -1,16 +1,16 @@
 // service wich works with the chiron pdfs
 
 angular
-.module('module.testdata', [])
-.factory("testdata", ['$log', 'editables', function($log, editables) {
+.module('module.protocols.testdata', [])
+.factory("testdata", ['$log', 'editables', 'protocolregistry', function($log, editables, protocolregistry) {
 
+console.log("CALLED");
+	var journalCtrl = new protocolregistry.Protocol('testdata');
 
-	var journalCtrl = function() {
-		var main = {}
-	};
+	journalCtrl.description = "Create some Testdata 3.0";
+
 
 	/* the journal's settings */
-	journalCtrl.id = 'generic';
 	journalCtrl.columns = ['title'];
 
 	journalCtrl.init = function() {
@@ -44,7 +44,10 @@ angular
 	};
 
 
+
+
 	return (journalCtrl);
 
 
-}]);
+}])
+.run(function(testdata) {testdata.register()})

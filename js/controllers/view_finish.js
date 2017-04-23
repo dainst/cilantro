@@ -5,8 +5,8 @@ angular
 
 .module('controller.view_finish', [])
 
-.controller('view_finish', ['$scope', '$log', '$http', 'settings', 'pimportws', 'editables',
-	function($scope, $log, $http, settings, pimportws, editables) {
+.controller('view_finish', ['$scope', '$log', '$http', 'settings', 'webservice', 'editables',
+	function($scope, $log, $http, settings, webservice, editables) {
 
 		$scope.init = function() {
 		}
@@ -16,7 +16,7 @@ angular
 		$scope.dainstMetadata = {};
 
 		$scope.renderXml = function() {
-			pimportws.get('makeXML', {journal: $scope.journal.data, articles: $scope.articles}, function(response) {
+			webservice.get('makeXML', {journal: $scope.journal.data, articles: $scope.articles}, function(response) {
 				$scope.xml = response.xml;
 			});
 		}
@@ -24,7 +24,7 @@ angular
 		$scope.uploadToOjs = function() {
 			$scope.server = {};
 			$scope.isInitialized = false;
-			pimportws.get('toOJS', {journal: $scope.journal.data, articles: $scope.articles}, function(response) {
+			webservice.get('toOJS', {journal: $scope.journal.data, articles: $scope.articles}, function(response) {
 				$scope.isInitialized = true;
 				console.log(response);
 				if (response.success) {

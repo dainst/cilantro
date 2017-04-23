@@ -4,12 +4,12 @@ angular
 
 .module('controller.main', [])
 
-.controller('main',	['$scope', '$log', '$injector', 'editables', 'pimportws', 'settings', 'messenger',
-	function ($scope, $log, $injector, editables, pimportws, settings, messenger) {
+.controller('main',	['$scope', '$log', '$injector', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry',
+	function ($scope, $log, $injector, editables, webservice, settings, messenger, protocolregistry) {
+
 		
 		/* debug */
 		$scope.cacheKiller = '?nd=' + Date.now();
-
 
 		/* step control */
 		$scope.steps = {
@@ -30,12 +30,7 @@ angular
 
 		/* protocols */
 		$scope.protocols = {
-			list: { // @ TODO automatic somehow
-				"chiron_parted": 	"Chiron, already parted into files",
-				"chiron": 			"Chiron, whole Volume in one file",
-				"testdata": 		"Create some testdata",
-				"generic": 			"Generic"
-			},
+			list: protocolregistry.protocols,
 			current: "generic"
 		}
 		$scope.protocol = {
@@ -51,7 +46,7 @@ angular
 		$scope.isInitialized = false;
 
 		$scope.init = function() {
-			pimportws.get('getRepository', {}, function(r) {
+			webservice.get('getRepository', {}, function(r) {
 				if ((r.success == false) && (r.message == "Session locked")) {
 					$scope.sessionLocked = true;
 				} else if (r.success == true) {
@@ -66,7 +61,7 @@ angular
 		$scope.repository = {
 			list: [],
 			update: function (repository, selected) {
-				$scope.repository.list = pimportws.repository = repository;
+				$scope.repository.list = webservice.repository = repository;
 				if (typeof selected !== "undefined") {
 					$scope.journal.data.importFilePath = selected;
 				}
@@ -140,12 +135,12 @@ angular
 
 
 		/* security */
-		$scope.sec = pimportws.sec;
+		$scope.sec = webservice.sec;
 
 		/* ctrl */
 		$scope.start = function() {
 			//checkPW
-			pimportws.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal}, function(response) {
+			webservice.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal}, function(response) {
 				if (response.success) {
 					$scope.getProtocol();
 					$scope.getDocumentSource();
@@ -159,12 +154,12 @@ angular
 		// get journal specific service
 		$scope.getProtocol = function() {
 			$log.log('load journal service ' +  $scope.protocols.current);
-			$scope.protocol = $injector.get($scope.protocols.current);
+			$scope.protocol = $scope.protocols.list[$scope.protocols.current];
 			$scope.protocol.main = $scope;
 		};
 
 		$scope.getDocumentSource = function(type) {
-			// @ TODO single files...
+			// @ TODO single files... (and remove $injector dependency)
 			$scope.documentSource = $injector.get('folder');
 		}
 

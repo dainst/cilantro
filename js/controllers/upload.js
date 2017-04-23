@@ -1,7 +1,7 @@
 //inject angular file upload directives and services.
 var app = angular.module('controller.upload', ['ngFileUpload']);
 
-app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'pimportws', '$log', function ($scope, Upload, $timeout, settings, pimportws, $log) {
+app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservice', '$log', function ($scope, Upload, $timeout, settings, webservice, $log) {
 
     $scope.errorMsg = '';
     $scope.warningsMsg = [];
@@ -24,7 +24,7 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'pimportws
                 data: {
                 	task: "upload",
                     files: files,
-                    data:  pimportws.ojsisQuery()
+                    data:  webservice.ojsisQuery()
                 }
             // server success
             }).then(function (response) {
@@ -43,15 +43,15 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'pimportws
 				} 
 				
 				$scope.result = response.data;
-				if (!pimportws.uploadId) {
-					pimportws.uploadId = response.data.uploadId;
+				if (!webservice.uploadId) {
+					webservice.uploadId = response.data.uploadId;
 				}
-				if (pimportws.uploadId != response.data.uploadId) {
-					$log.log("got new uploadID, that's so wrong", pimportws.uploadId, response.data.uploadId);
+				if (webservice.uploadId != response.data.uploadId) {
+					$log.log("got new uploadID, that's so wrong", webservice.uploadId, response.data.uploadId);
 				}
 				$scope.errorMsg = '';
 				$scope.uploadedFiles = $scope.uploadedFiles.concat(response.data.uploadedFiles);
-				pimportws.updateRepository(response.data.repository, response.data.uploadedFiles[response.data.uploadedFiles.length - 1]);
+				webservice.updateRepository(response.data.repository, response.data.uploadedFiles[response.data.uploadedFiles.length - 1]);
 				
             // server error
             }, function (response) {

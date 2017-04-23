@@ -5,8 +5,8 @@ angular
 
 .module('controller.view_articles', [])
 
-.controller('view_articles', ['$scope', '$log', '$http', 'settings', 'pimportws', 'editables', 'messenger',
-	function($scope, $log, $http, settings, pimportws, editables, messenger) {
+.controller('view_articles', ['$scope', '$log', '$http', 'settings', 'webservice', 'editables', 'messenger',
+	function($scope, $log, $http, settings, webservice, editables, messenger) {
 
 		$scope.currentArticle = -1;
 
@@ -239,7 +239,7 @@ angular
 		$scope.reportMissingToZenon = function() {
 			angular.forEach($scope.articlesConfirmed, function(article) {
 				if (article.zenonId.value.value == '(((new)))') {
-					pimportws.get('sendToZenon', {journal: $scope.journal, article: article}, function (response) {
+					webservice.get('sendToZenon', {journal: $scope.journal, article: article}, function (response) {
 						$scope.reportedToZenon.push(article);
 						$log.log(response);
 					});
@@ -250,7 +250,7 @@ angular
 		$scope.sendToZenon = function() {
 			$scope.server = {};
 			$scope.articles[$scope.currentArticle].thumbnail = '';
-			pimportws.get('sendToZenon', {journal: $scope.journal, article: $scope.articles[$scope.currentArticle]}, function(response) {
+			webservice.get('sendToZenon', {journal: $scope.journal, article: $scope.articles[$scope.currentArticle]}, function(response) {
 				$scope.server = response;
 			});
 		}

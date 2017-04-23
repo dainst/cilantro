@@ -1,23 +1,21 @@
 angular
-.module('module.generic', [])
-.factory("generic", ['$log', 'editables', function($log, editables) {
+.module("module.protocols.generic", [])
+.factory("generic", ['editables', 'protocolregistry', function(editables, protocolregistry) {
 
-	var journalCtrl = function() {
-		var main = {}
-	};
+	var journalCtrl = new protocolregistry.Protocol('generic');
+
+	journalCtrl.description = "Generic Import protocol";
+
 
 	/* the journal's settings */
-	journalCtrl.id = 'generic';
+
 	journalCtrl.columns = ['title'];
 
-
-
 	journalCtrl.init = function() {
-		$log.log('init protocol');
-		// load next page
+		console.log('init protocol');
 		journalCtrl.main.steps.change('overview');
 	};
 
-
 	return (journalCtrl);
-}]);
+}])
+.run(function(generic) {generic.register()})

@@ -11,7 +11,7 @@ angular
 
 .module('controller.pdf', [])
 
-.controller('pdf', ['$scope', '$log', 'journalmaster', 'settings', 'pimportws', function($scope, $log, journalmaster, settings, pimportws) {
+.controller('pdf', ['$scope', '$log', 'journalmaster', 'settings', 'webservice', function($scope, $log, journalmaster, settings, webservice) {
 
 	var master = $scope.master = journalmaster.control;
 	
@@ -73,7 +73,7 @@ angular
 			//master.PDF.documentPath = doc;
 				  
 			/*
-			pimportws.get('getFromRepository', {file: doc}, function(response) {
+			webservice.get('getFromRepository', {file: doc}, function(response) {
 				
 				//console.log(response);
 				

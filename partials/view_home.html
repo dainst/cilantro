@@ -7,7 +7,7 @@
 			<div class="panel-heading">Import Protocol</div>
 			<div class="panel-body">
 				<select class="form-control" ng-model="protocols.current">
-					<option ng-repeat="(id, title) in protocols.list" value='{{id}}'>{{title}}</option>
+					<option ng-repeat="p in protocols.list" value='{{p.id}}'>{{p.description}}</option>
 				</select>
 			</div>
 		</div>
@@ -20,8 +20,7 @@
 				</select> 
 			</div>
 		</div>
-		
-		
+
 		
 		<div 	ng-controller="upload"
 				class="panel panel-default"
@@ -37,6 +36,7 @@
 	            ngf-allow-dir="false" 
 	           	ngf-drop-available="dropAvailable"
 	            id="fileDropArea">
+
 			<div class="panel-heading">Or upload PDF file</div>		
 			<div class="panel-body">
 			    <button class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File into this Box.</span> 

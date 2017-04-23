@@ -238,12 +238,16 @@ angular
 		
 	}
 	
-	editables.filelist = function(seed, mandataory) {
+	editables.filelist = function(seed, mandatory) {
 		var obj = {};
 		obj.type = 'filelist';
 		obj.check =	function() {return false}
 		obj.value = seed || [];
 		obj.compare = function(second) {return 0}
+		obj.push = function(elem) {
+			// @ TODO check if elem is OK value for this
+			obj.value.push(elem);
+		}
 		return obj;	
 		
 	}

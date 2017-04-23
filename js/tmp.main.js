@@ -2,8 +2,8 @@
 /*
 $scope.repository = [];
 
-pimportws.updateRepository = function(repository, selected) {
-	$scope.repository = pimportws.repository = repository;
+webservice.updateRepository = function(repository, selected) {
+	$scope.repository = webservice.repository = repository;
 	$log.log("sel", selected);
 	if (typeof selected !== "undefined") {
 		$scope.journal.importFilePath = selected;
@@ -52,7 +52,7 @@ $scope.nextTab = function() {
 */
 /* security */
 
-$scope.sec = pimportws.sec;
+$scope.sec = webservice.sec;
 
 /**
  * Start Button Clicked
@@ -60,7 +60,7 @@ $scope.sec = pimportws.sec;
 /*
 $scope.startImport = function() {
 	//checkPW
-	pimportws.get('checkStart', {'file': $scope.journal.importFilePath, 'unlock': true, 'journal': $scope.journal}, function(response) {
+	webservice.get('checkStart', {'file': $scope.journal.importFilePath, 'unlock': true, 'journal': $scope.journal}, function(response) {
 		if (response.success) {
 			$scope.sec.response  = '';
 			$scope.loadJournalService();
@@ -112,7 +112,7 @@ $scope.loadJournalService = function() {
 
 
 $scope.resetSession = function() {
-	pimportws.get('resetSession', {'unlock':true}, function(r) {
+	webservice.get('resetSession', {'unlock':true}, function(r) {
 		if (r.success) {
 			location.reload();
 		}
@@ -120,7 +120,7 @@ $scope.resetSession = function() {
 }
 
 $scope.getUploadId = function() {
-	return pimportws.uploadId;
+	return webservice.uploadId;
 }
 
 $scope.teest = editables.language();

@@ -9,8 +9,8 @@ angular
 
 .module('controller.view_overview', [])
 
-.controller('view_overview', ['$scope', '$log', 'settings', 'pimportws', 'editables', 'messenger',
-	function($scope, $log, settings, pimportws, editables, messenger) {
+.controller('view_overview', ['$scope', '$log', 'settings', 'webservice', 'editables', 'messenger',
+	function($scope, $log, settings, webservice, editables, messenger) {
 
 		messenger.content.stats = $scope.documentSource.stats;
 
@@ -257,7 +257,7 @@ angular
 
 		$scope.mergeArticle = function(article) {
 
-			if ($scope.selectedToMerge._.id == article._.id) {
+			if ($scope.selectedToMerge && ($scope.selectedToMerge._.id == article._.id)) {
 				messenger.ok();
 				$scope.selectedToMerge = false;
 				return;
@@ -329,13 +329,11 @@ angular
 			$log.log('merge!', main, attach);
 			$scope.selectedToMerge = false;
 
-			main.attached = (typeof main.attached === "undefined") ? [] : main.attached;
-			attach.attached = (typeof attach.attached === "undefined") ? [] : attach.attached;
 
-			angular.extend(main.attached, attach.attached);
+			//angular.extend(main.attached.value.value, attach.attached.value.value);
 
 			main.attached.push({
-				file: attach.url
+				file: attach.filepath
 			});// we could add from and to, but we use the whole file anyway!
 
 			$scope.removeArticle(attach);

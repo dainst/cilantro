@@ -1,7 +1,7 @@
 angular
-.module('module.folder', [])
-.factory('folder', ['$log', '$rootScope', 'settings', 'pimportws', 'messenger',
-	function($log, $rootScope, settings, pimportws, messenger) {
+.module('module.folder', ['module.messenger', 'module.webservice'])
+.factory('folder', ['$log', '$rootScope', 'settings', 'webservice', 'messenger',
+	function($log, $rootScope, settings, webservice, messenger) {
 
 	var folder = {};
 	folder.dir = []; // filenames
@@ -81,7 +81,7 @@ angular
 		var getFolder = new Promise(function(resolve) {
 			console.log(folder.path);
 			messenger.alert('loading folder contents: ' + folder.path);
-			pimportws.get('getRepositoryFolder', {dir: folder.path}, function(result) {
+			webservice.get('getRepositoryFolder', {dir: folder.path}, function(result) {
 				$log.log('1. got folder:' + folder.path, result);
 				if (!result.success) {
 					// should message itself

@@ -3,16 +3,17 @@
 angular
 
 .module('pimport', [
+
 	'ui.bootstrap',
 	'ngFileUpload',
-/*	'ngRoute',*/
-/*	'ngAnimate',
-	'ngResource',*/
+
 	'idai.components',
 	'idai.templates',
 
-	'controller.message',
+	'module.protocolregistry',
+	'module.infobox',
 	'module.messenger',
+	'module.webservice',
 
 	'controller.main',
 
@@ -28,13 +29,13 @@ angular
 	'directive.editable',
 	'directive.multiselect',
 	'module.editables',
-	'module.pimportws',
+
 	'module.settings',
-	
-	'module.chiron_parted',
-	'module.chiron',
-	'module.generic',
-	'module.testdata'
+
+	'module.protocols.testdata',
+	'module.protocols.generic'
+
+
 ])
 /*
 .config(['$routeProvider', '$locationProvider',
