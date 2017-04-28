@@ -22,7 +22,7 @@ angular
 		}
 
 		$scope.addArticle = function(b, select) {
-			var a = new $scope.Article('Article ' +  journal.articles.length);
+			var a = new journal.Article('Article ' +  journal.articles.length);
 
 			if (!angular.isUndefined(b)) {
 				angular.extend(a, b);
@@ -156,6 +156,10 @@ angular
 				var term = journal.articles[$scope.currentArticle].title.value.value;
 			} else {
 				var term = $scope.zenon.search
+			}
+
+			if (!term || term == "") {
+				return;
 			}
 
 			console.log('Compare with Zenon; search for ' + term);

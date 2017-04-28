@@ -20,10 +20,6 @@ angular
 		 */
 		messenger.content.stats = {}
 
-		messenger.status = function(status) {
-			messenger.content.status = status;
-		}
-
 		/**
 		 * set message box content
 		 * @param content
@@ -59,6 +55,7 @@ angular
 		 * reset status (except stats) to normal
 		 */
 		messenger.ok = function() {
+			console.log('OK');
 			messenger.content.message = '';
 			messenger.content.success = true;
 			messenger.content.warnings = [];

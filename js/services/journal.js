@@ -69,9 +69,6 @@ angular
 
 	}
 
-
-
-	console.log('proceeding');
 	journal.cleanArticles = function() {
 		angular.forEach(journal.articles, function(article, k) {
 			if (article._.deleted === true) {
@@ -87,7 +84,7 @@ angular
 	/* prototype contructur functions */
 	journal.Article =  function(data) {
 		data = data || {};
-		return {
+		var articlePrototype = {
 			'title':			editables.base(data.title),
 			'abstract':			editables.text(data.abstract, false),
 			'author':			editables.authorlist(data.author),
@@ -96,15 +93,18 @@ angular
 			'language':			editables.language('de_DE', false),
 			'auto_publish':		editables.checkbox(journal.data.default_publish_articles === true),
 			'filepath':			journal.data.importFilePath,
-			'thumbnail':		'',
 			'attached':			editables.filelist(),
 			'order':			editables.number(0, false),
 			'createFrontpage':	editables.checkbox(journal.data.create_frontpage === true),
 			'zenonId':			editables.base('', false),
-			'_':				{}
 		}
+		Object.defineProperty(articlePrototype, '_', {enumerable: false, configurable: false, value: {}});
+		return articlePrototype;
 	}
 
+	window.test = new journal.Article();
+
+	console.log(new journal.Article);
 
 
 

@@ -1,7 +1,7 @@
 <div ng-controller="view_finish" data-ng-init="init()">
 
 	<div class="row toprow" >
-		<div class="col-md-8"
+		<div class="col-md-8">
 			<span class="btn-group">
 				<button ng-show="isReady()" class='btn btn-default' ng-click='renderXml()'>Preview transport XML<span class="glyphicon glyphicon-view"></span></button>
 			</span>
@@ -23,13 +23,13 @@
 				<table class='journal-table table'>
 
 					<tbody>
-						<thead></thead>
-						<tr ng-repeat="(field, value) in journal.data track by $index">
-							<td>{{field}}</td>
-							<td ng-model="journal.data[field]">
-								<span editable item="value" />
-							</td>
-						</tr>
+					<thead></thead>
+					<tr ng-repeat="(field, value) in journal.data track by $index">
+						<td>{{field}}</td>
+						<td ng-model="journal.data[field]">
+							<span editable item="value" />
+						</td>
+					</tr>
 					</tbody>
 					<tfoot></tfoot>
 				</table>

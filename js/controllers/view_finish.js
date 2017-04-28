@@ -5,10 +5,11 @@ angular
 
 .module('controller.view_finish', [])
 
-.controller('view_finish', ['$scope', '$log', '$http', 'settings', 'webservice', 'editables', 'journal',
-	function($scope, $log, $http, settings, webservice, editables, journal) {
+.controller('view_finish', ['$scope', 'settings', 'webservice', 'editables', 'journal',
+	function($scope, settings, webservice, editables, journal) {
 
 		$scope.init = function() {
+			console.log("T")
 		}
 
 		$scope.xml = false;

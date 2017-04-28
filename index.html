@@ -21,10 +21,19 @@
        		hide-contact-button="true"
        		hide-login-button="true"
        		hide-search-form="true"
-       		project-id="publications"
+			hide-language-switcher="true"
+			project-id="publications"
 			login-function=""
 			logout-function=""
 			user-object='{"username": false}'>
+
+			<ul class="nav navbar-nav">
+				<li><a ng-click="steps.change('home')">Start</a></li>
+				<li><a ng-click="steps.change('overview')">Overview</a></li>
+				<li><a ng-click="steps.change('articles')">Artikel</a></li>
+				<li><a ng-click="steps.change('publish')">Publish</a></li>
+			</ul>
+
 		</idai-navbar>
 
 		<div id='main-container' class="container-fluid">

@@ -4,8 +4,8 @@ angular
 
 .module('controller.main', [])
 
-.controller('main',	['$scope', '$log', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'journal',
-	function ($scope, $log, editables, webservice, settings, messenger, protocolregistry, documentsource, journal) {
+.controller('main',	['$scope', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'journal',
+	function ($scope, editables, webservice, settings, messenger, protocolregistry, documentsource, journal) {
 
 		
 		/* debug */
@@ -21,8 +21,13 @@ angular
 			},
 			current:"home",
 			change: function(to) {
-				$log.log('Tab change to: ', to);
-				console.log('from m', $scope.articles);
+
+				if (typeof $scope.steps.list[to] === "undefined") {
+					console.warn('view ' + to + ' does not exist');
+					return;
+				}
+
+				console.log('Tab change to: ', to);
 				//$scope.message.reset();
 				$scope.steps.current = to;
 			}
@@ -91,7 +96,7 @@ angular
 
 		// get journal specific service
 		$scope.getProtocol = function() {
-			$log.log('load journal service ' +  $scope.protocols.current);
+			console.log('load journal service ' +  $scope.protocols.current);
 			$scope.protocol = $scope.protocols.list[$scope.protocols.current];
 			$scope.protocol.main = $scope;
 		};
