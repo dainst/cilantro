@@ -10,6 +10,7 @@ angular
 	}
 
 	webservice.repository = [];
+	webservice.repositorySelected = null;
 	
 	webservice.uploadId = false; // should be named session Id because that is what it is actuallly
 
@@ -66,6 +67,15 @@ angular
 		//$log.log(send);
 		return send;
 	}
+
+	webservice.updateRepository = function(repository, selected) {
+		webservice.repository = repository;
+		$log.log("sel", selected); // @ TODO autoselect
+		if (typeof selected !== "undefined") {
+			//$scope.journal.importFilePath = selected;
+		}
+	}
+
 
 	return webservice;
 }]);

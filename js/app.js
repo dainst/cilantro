@@ -10,6 +10,7 @@ angular
 	'idai.components',
 	'idai.templates',
 
+	'module.journal',
 	'module.protocolregistry',
 	'module.infobox',
 	'module.messenger',
@@ -22,9 +23,9 @@ angular
 	'controller.view_finish',
 
 
-	'controller.pdf',
-	'controller.nopdf',
-	'module.folder',
+//	'controller.pdf',
+//	'controller.nopdf',
+	'module.documentsource',
 	'controller.upload',
 	'directive.editable',
 	'directive.multiselect',
@@ -33,7 +34,8 @@ angular
 	'module.settings',
 
 	'module.protocols.testdata',
-	'module.protocols.generic'
+	'module.protocols.generic',
+	'module.protocols.chiron_parted'
 
 
 ])

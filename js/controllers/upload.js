@@ -1,22 +1,19 @@
 //inject angular file upload directives and services.
 var app = angular.module('controller.upload', ['ngFileUpload']);
 
-app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservice', '$log', function ($scope, Upload, $timeout, settings, webservice, $log) {
+app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservice', 'messenger',
+	function ($scope, Upload, $timeout, settings, webservice, messenger) {
 
-    $scope.errorMsg = '';
-    $scope.warningsMsg = [];
-    
+
     $scope.uploadedFiles = [];
     
     $scope.dropFile = function(f)  {
-    	$log.log(f);
+    	console.log(f);
     }
 	
 	$scope.uploadFiles = function (files) {
         $scope.files = files;
-
-        $scope.errorMsg = '';
-        $scope.warningsMsg = [];
+		messenger.ok();
         
         if (files && files.length) {
             Upload.upload({
@@ -29,36 +26,29 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
             // server success
             }).then(function (response) {
             	$scope.progress = 0;
-            	$log.log(response);
-            	$scope.warningsMsg = response.data.warnings;
+            	console.log(response);
             	
             	if (typeof response.data === "string") {
-            		$scope.errorMsg = response.data;
+            		messenger.message(response.data, true);
             		return;
             	}
-            	
-				if (response.data.success == false) {
-					$scope.errorMsg = response.data.message;
+
+				messenger.cast(response.data);
+
+            	if (response.data.success == false) {
 					return;
 				} 
 				
 				$scope.result = response.data;
-				if (!webservice.uploadId) {
-					webservice.uploadId = response.data.uploadId;
-				}
-				if (webservice.uploadId != response.data.uploadId) {
-					$log.log("got new uploadID, that's so wrong", webservice.uploadId, response.data.uploadId);
-				}
-				$scope.errorMsg = '';
+
 				$scope.uploadedFiles = $scope.uploadedFiles.concat(response.data.uploadedFiles);
 				webservice.updateRepository(response.data.repository, response.data.uploadedFiles[response.data.uploadedFiles.length - 1]);
 				
             // server error
             }, function (response) {
-            	$scope.warningsMsg = [];
             	$scope.progress = 0;
                 if (response.status > 0) {
-                    $scope.errorMsg = response.data;
+					messenger.message(response.data, true);
                 }
             // progress
             }, function (evt) {

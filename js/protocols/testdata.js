@@ -4,7 +4,7 @@ angular
 .module('module.protocols.testdata', [])
 .factory("testdata", ['$log', 'editables', 'protocolregistry', function($log, editables, protocolregistry) {
 
-console.log("CALLED");
+
 	var journalCtrl = new protocolregistry.Protocol('testdata');
 
 	journalCtrl.description = "Create some Testdata 3.0";

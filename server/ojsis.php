@@ -451,7 +451,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	function upload() {
 		$this->log->log($_FILES);
 
-
 		// check for too big uploads
 		if (!isset($_FILES['files']) or !count($_FILES['files'])) {
 			throw new Exception("Unknown Error");

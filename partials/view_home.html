@@ -3,6 +3,30 @@
 
 <div class="row toprow">
 	<div class="col-md-6">
+		<h1>iDai.publications Importer</h1>
+	</div>
+
+	<div class="col-md-6">
+
+		<div class="btn-toolbar pull-right">
+			<div class="input-group">
+				<input type="password" class="form-control" ng-model='sec.password' placeholder="password" style="width:150px">
+				<span class="input-group-btn" ng-show="sessionLocked">
+				<button class='btn btn-danger'  ng-click='resetSession()'>Reset System</button>
+			</span>
+				<span class="input-group-btn" ng-show="!sessionLocked">
+				<button class='btn btn-primary' ng-click='start()'>Start Import<span class="glyphicon glyphicon-chevron-right"></span></button>
+			</span>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+
 		<div class="panel panel-default">
 			<div class="panel-heading">Import Protocol</div>
 			<div class="panel-body">
@@ -17,11 +41,10 @@
 			<div class="panel-body">
 				<select class="form-control" ng-model="journal.data.importFilePath">
 					<option ng-repeat="file in repository.list track by $index" value='{{file.path}}'>{{file.caption}}</option>
-				</select> 
+				</select>
 			</div>
 		</div>
 
-		
 		<div 	ng-controller="upload"
 				class="panel panel-default"
 				ngf-drop="uploadFiles($files)"
@@ -52,50 +75,39 @@
 			    </ul>
 				<div ng-show="errorMsg" class="alert alert-danger" ng-bind-html="errorMsg | trustHtml"></div>
 				<div ng-show="warningsMsg.length >  0" ng-repeat="warning in warningsMsg track by $index" class="alert alert-warning">{{warning}}</div>
-				<div ng-show="invalidFiles" class="alert alert-warning">Wrong File</div>
+				<div ng-show="invalidFiles" class="alert alert-warning">Wrong Filetype</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="col-md-6 ">
-		<div class="panel panel-default">
-			<div class="panel-heading">Start Process</div>
-			<div class="panel-body">
-				<div class="row">
-					<div class="col-md-6">
-						<input type="password" class="form-control" ng-model='sec.password' placeholder="password">	
-					</div>	
-					
-					<div class="col-md-6 text-right">
-						<button class='btn btn-danger' ng-show="sessionLocked" ng-click='resetSession()'>Reset System</button>
-						<button class='btn btn-primary' ng-click='start()' ng-show="!sessionLocked">
-							Start Import<span class="glyphicon glyphicon-chevron-right"></span>
-						</button>
-					</div>			
-				</div>
-			</div>
-		</div>
-		
+
 		<div class="panel panel-default">
 			<div class="panel-heading">Journal Metadata</div>
 			<div class="panel-body">
 				<table class='journal-table table'>
-		
+
 					<tbody>
-						<thead></thead>				
-							<tr ng-repeat="field in journal.showOnHomepage track by $index">
-								<td>{{field}}</td>
-								<td>
-									<span editable item="journal.data[field]" />
-								</td>
-							</tr>
+					<thead></thead>
+					<tr ng-repeat="field in journal.showOnHomepage track by $index">
+						<td>{{field}}</td>
+						<td>
+							<span editable item="journal.data[field]" />
+						</td>
+					</tr>
 					</tbody>
 					<tfoot></tfoot>
 				</table>
 			</div>
 		</div>
-		
-		
+
+	</div>
+
+
+
+
+
+
+
+
 		
 		<!-- 
 		<div class="panel panel-default">

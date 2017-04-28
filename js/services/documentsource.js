@@ -1,11 +1,12 @@
 angular
-.module('module.folder', ['module.messenger', 'module.webservice'])
-.factory('folder', ['$log', '$rootScope', 'settings', 'webservice', 'messenger',
-	function($log, $rootScope, settings, webservice, messenger) {
+.module('module.documentsource', ['module.messenger', 'module.webservice'])
+.factory('documentsource', ['$rootScope', 'settings', 'webservice', 'messenger', 'journal',
+	function($rootScope, settings, webservice, messenger, journal) {
 
 	var folder = {};
 	folder.dir = []; // filenames
 	folder.files = []; // pdf.js documents
+	folder.thumbnails = {}; // generated thumbnails 
 	folder.stats = {
 		files: 0,
 		analyzed: 0,
@@ -15,14 +16,14 @@ angular
 			return v >= folder.stats.files ? 1 : -1;
 		}
 	};
-	folder.status = 'idle';
 	folder.path = 'none';
+
 
 
 	var requirePdfJs = new Promise(function(resolve) {
 		require.config({paths: {'pdfjs': 'inc/pdf.js'}});
 		require(['pdfjs/display/api', 'pdfjs/display/global'], function(pdfjs_api, pdfjs_global) {
-			$log.log('2. required pdf.js');
+			console.log('2. required pdf.js');
 			folder.status  = 'pdf.js loaded';
 
 			folder.PDF = {
@@ -74,6 +75,8 @@ angular
 
 	}
 
+
+
 	folder.getDocuments = function(path) {
 		console.log("GO", path);
 		folder.path =  path;
@@ -82,7 +85,7 @@ angular
 			console.log(folder.path);
 			messenger.alert('loading folder contents: ' + folder.path);
 			webservice.get('getRepositoryFolder', {dir: folder.path}, function(result) {
-				$log.log('1. got folder:' + folder.path, result);
+				console.log('1. got folder:' + folder.path, result);
 				if (!result.success) {
 					// should message itself
 				} else {
@@ -103,6 +106,39 @@ angular
 				$rootScope.$broadcast('gotAll');
 			})
 		});
+	}
+
+	folder.createThumbnail = function(page, containerId) {
+		var container = angular.element(document.querySelector('#thumbnail-container-' + containerId));
+		var img = container.find('img');
+
+		var viewport = page.getViewport(1.5); // scale 1.5
+		var canvas = document.createElement('canvas');
+		var ctx = canvas.getContext('2d');
+		canvas.height = viewport.height; // 626.16 * 1.5
+		canvas.width = viewport.width; // 399.84 * 1.5
+
+		var renderContext = {
+			canvasContext: ctx,
+			viewport: viewport
+		};
+
+		container.addClass('loader');
+		img.unbind('load');
+		img.on("load", function() {
+			container.removeClass('loader');
+		});
+
+		page.render(renderContext).then(function(){
+			ctx.globalCompositeOperation = "destination-over";
+			ctx.fillStyle = "#123456";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			journal.thumbnails[containerId] = canvas.toDataURL();
+		});
+
+		$rootScope.$broadcast('refreshView');
+
 	}
 
 	return folder;

@@ -5,13 +5,13 @@ angular
 
 .module('controller.view_finish', [])
 
-.controller('view_finish', ['$scope', '$log', '$http', 'settings', 'webservice', 'editables',
-	function($scope, $log, $http, settings, webservice, editables) {
+.controller('view_finish', ['$scope', '$log', '$http', 'settings', 'webservice', 'editables', 'journal',
+	function($scope, $log, $http, settings, webservice, editables, journal) {
 
 		$scope.init = function() {
 		}
 
-		$scope.xml = {}
+		$scope.xml = false;
 		$scope.done = false;
 		$scope.dainstMetadata = {};
 
@@ -22,7 +22,6 @@ angular
 		}
 
 		$scope.uploadToOjs = function() {
-			$scope.server = {};
 			$scope.isInitialized = false;
 			webservice.get('toOJS', {journal: $scope.journal.data, articles: $scope.articles}, function(response) {
 				$scope.isInitialized = true;
@@ -35,26 +34,12 @@ angular
 			});
 		}
 
-		$scope.countUnconfirmed = function() {
-			var unconfimed = 0;
-			for (var i; i < $scope.articles.length; i++) {
-				if (!article._.confirmed) {
-					unconfimed += 1;
-				}
-			}
-			return unconfimed;
-		}
-
 		$scope.makeOjsUrl = function(id) {
 			return window.settings.ojs_url + 'index.php/'+ $scope.journal.data.ojs_journal_code + '/article/view/' + id;
 		}
-		/*
-		$scope.isObject = function(elem) {
-			return (typeof elem === "object");
-		}
-		*/
+
 		$scope.isReady = function() {
-			var articlesReady = $scope.countUnconfirmed() == 0;
+			var articlesReady = journal.articleStats.data.undecided == 0;
 			var journalReady = $scope.journal.check();
 			return articlesReady && journalReady && !$scope.done;
 		}

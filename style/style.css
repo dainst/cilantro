@@ -436,6 +436,20 @@ input.form-check-input:checked + label:before {
 	padding-right: 4px;
 }
 
+@media (max-width:1138px) {
+	#info-container {
+		right: 12%;
+		left: 12%;
+	}
+}
+
+@media (max-width:991px) {
+	#info-container {
+		right: 0;
+		left: 0;
+	}
+}
+
 
 /* multiselect */
 

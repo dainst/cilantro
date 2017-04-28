@@ -5,16 +5,15 @@ angular
 
 .module('controller.view_articles', [])
 
-.controller('view_articles', ['$scope', '$log', '$http', 'settings', 'webservice', 'editables', 'messenger',
-	function($scope, $log, $http, settings, webservice, editables, messenger) {
+.controller('view_articles', ['$scope', '$http', 'settings', 'webservice', 'editables', 'messenger', 'journal',
+	function($scope, $http, settings, webservice, editables, messenger, journal) {
 
 		$scope.currentArticle = -1;
 
 		$scope.init = function() {
 			//messenger.ok();
-			messenger.content.stats = $scope.articleStats.data;
-			$scope.articleStats.update();
-			console.log($scope.articleStats.data);
+			messenger.content.stats = journal.articleStats.data;
+			journal.articleStats.update();
 			$scope.selectArticle(0);
 		}
 
@@ -23,17 +22,17 @@ angular
 		}
 
 		$scope.addArticle = function(b, select) {
-			var a = new $scope.Article('Article ' +  $scope.articles.length);
+			var a = new $scope.Article('Article ' +  journal.articles.length);
 
 			if (!angular.isUndefined(b)) {
 				angular.extend(a, b);
 			}
-			$scope.articles.push(a);
+			journal.articles.push(a);
 			if (select) {
-				$scope.selectArticle($scope.articles.length -1);
+				$scope.selectArticle(journal.articles.length -1);
 			}
 
-			$scope.articleStats.update();
+			journal.articleStats.update();
 
 		}
 
@@ -43,13 +42,13 @@ angular
 		}
 
 		$scope.selectNextArticle = function() {
-			for (var i = $scope.currentArticle; i < $scope.articles.length; i++) {
-				if (typeof $scope.articles[i]._.confirmed === "undefined") {
+			for (var i = $scope.currentArticle; i < journal.articles.length; i++) {
+				if (typeof journal.articles[i]._.confirmed === "undefined") {
 					return $scope.selectArticle(i)
 				}
 			}
 			for (var i = 0; i < $scope.currentArticle; i++) {
-				if (typeof $scope.articles[i]._.confirmed === "undefined") {
+				if (typeof journal.articles[i]._.confirmed === "undefined") {
 					return $scope.selectArticle(i)
 				}
 			}
@@ -57,11 +56,11 @@ angular
 		}
 
 		$scope.isArticleSelected = function() {
-			return ($scope.currentArticle != -1) && ($scope.articles.length > 0)
+			return ($scope.currentArticle != -1) && (journal.articles.length > 0)
 		};
 
 		$scope.checkArticle = function() {
-			var article = $scope.articles[$scope.currentArticle];
+			var article = journal.articles[$scope.currentArticle];
 			var invalid = 0;
 			angular.forEach(article, function(property) {
 				if ((typeof property !== "undefined") && (typeof property.check === "function") && (property.check() !== false)) {
@@ -72,7 +71,7 @@ angular
 		}
 
 		$scope.confirmArticle = function() {
-			var article = $scope.articles[$scope.currentArticle];
+			var article = journal.articles[$scope.currentArticle];
 
 
 			if (article) {
@@ -81,24 +80,24 @@ angular
 				// prepare for uploading
 				/*delete article.thumbnail;
 				 article.pages.context = {offset: parseInt(article.pages.context.offset)}
-				 $scope.articlesConfirmed.push(article);
+				 journal.articlesConfirmed.push(article);
 				 */
 
-				//$scope.articles.splice($scope.currentArticle, 1);
+				//journal.articles.splice($scope.currentArticle, 1);
 			}
 			$scope.selectNextArticle();
-			$scope.articleStats.update();
+			journal.articleStats.update();
 
 		}
 
 		$scope.dismissArticle = function() {
-			$log.log('Delete Article ' + $scope.currentArticle);
+			console.log('Delete Article ' + $scope.currentArticle);
 			$scope.resetZenon();
-			//$scope.articles.splice($scope.currentArticle, 1); // @ TODO make dissmiss redoable
-			$scope.articles[$scope.currentArticle]._.confirmed = false;
+			//journal.articles.splice($scope.currentArticle, 1); // @ TODO make dissmiss redoable
+			journal.articles[$scope.currentArticle]._.confirmed = false;
 
 			$scope.selectNextArticle();
-			$scope.articleStats.update();
+			journal.articleStats.update();
 		}
 
 
@@ -147,20 +146,21 @@ angular
 
 		$scope.compareWithZenon = function(more) {
 
-			if (($scope.currentArticle == -1) || (typeof $scope.articles[$scope.currentArticle] === 'undefined')) {
+			if (($scope.currentArticle == -1) || (typeof journal.articles[$scope.currentArticle] === 'undefined')) {
 				return;
 			}
 
 			if (!more) {
 				$scope.resetZenon();
-				var term = $scope.articles[$scope.currentArticle].title.value.value;
+				console.log(journal.articles, $scope.currentArticle)
+				var term = journal.articles[$scope.currentArticle].title.value.value;
 			} else {
 				var term = $scope.zenon.search
 			}
 
-			$log.log('Compare with Zenon; search for ' + term);
+			console.log('Compare with Zenon; search for ' + term);
 
-			$scope.articles[$scope.currentArticle].zenonId.value.value = '';
+			journal.articles[$scope.currentArticle].zenonId.value.value = '';
 
 			$scope.zenon.selected = -1;
 
@@ -175,8 +175,8 @@ angular
 				}
 			})
 				.success(function(data) {
-					$log.log('success');
-					$log.log(data);
+					console.log('success');
+					console.log(data);
 					$scope.zenon.results = $scope.zenon.results.concat(data.response.docs.map($scope.zenonMapDoc));
 					$scope.zenon.found = parseInt(data.response.numFound);
 					$scope.zenon.start = parseInt(data.responseHeader.params.start) + 10;
@@ -193,9 +193,9 @@ angular
 		};
 
 		$scope.selectFromZenon = function(index) {
-			$log.log('select = ' + index, $scope.zenon.results[index]);
+			console.log('select = ' + index, $scope.zenon.results[index]);
 			$scope.zenon.selected = ($scope.zenon.selected == index) ? -1 : index;
-			$scope.articles[$scope.currentArticle].zenonId.value.value = ($scope.zenon.selected == -1) ? '' : $scope.zenon.results[index].id;
+			journal.articles[$scope.currentArticle].zenonId.value.value = ($scope.zenon.selected == -1) ? '' : $scope.zenon.results[index].id;
 
 		}
 
@@ -205,7 +205,7 @@ angular
 
 			var doc = $scope.zenon.results[index];
 
-			//$log.log(doc);
+			//console.log(doc);
 
 			var authors = [];
 
@@ -217,7 +217,7 @@ angular
 				authors = authors.concat(doc.author2);
 			}
 
-			var article = $scope.articles[$scope.currentArticle];
+			var article = journal.articles[$scope.currentArticle];
 
 			article.title.value.value = doc.title;
 			// article.abstract.value.value = abstract; // @ TODO adopt abstract from zenon?
@@ -231,17 +231,17 @@ angular
 		};
 
 		$scope.markAsMissingZenon = function() {
-			$scope.articles[$scope.currentArticle].zenonId.value.value = '(((new)))';
+			journal.articles[$scope.currentArticle].zenonId.value.value = '(((new)))';
 			//$scope.sendToZenon();
 		}
 
 
 		$scope.reportMissingToZenon = function() {
-			angular.forEach($scope.articlesConfirmed, function(article) {
+			angular.forEach(journal.articlesConfirmed, function(article) {
 				if (article.zenonId.value.value == '(((new)))') {
-					webservice.get('sendToZenon', {journal: $scope.journal, article: article}, function (response) {
+					webservice.get('sendToZenon', {journal: $scope.journal.data, article: article}, function (response) {
 						$scope.reportedToZenon.push(article);
-						$log.log(response);
+						console.log(response);
 					});
 				}
 			});
@@ -249,8 +249,8 @@ angular
 
 		$scope.sendToZenon = function() {
 			$scope.server = {};
-			$scope.articles[$scope.currentArticle].thumbnail = '';
-			webservice.get('sendToZenon', {journal: $scope.journal, article: $scope.articles[$scope.currentArticle]}, function(response) {
+			journal.articles[$scope.currentArticle].thumbnail = '';
+			webservice.get('sendToZenon', {journal: $scope.journal.data, article: journal.articles[$scope.currentArticle]}, function(response) {
 				$scope.server = response;
 			});
 		}

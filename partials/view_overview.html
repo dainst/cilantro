@@ -7,10 +7,6 @@
 
 <div class="row">
 	<div class="col-md-8">
-		Protocol: <strong>{{protocol.id}}</strong>
-	</div>
-
-	<div class="col-md-2">
 		<div class="btn-group">
 			<multiselect elements="columns">Display Columns</multiselect>
 			<span class="dropdown" uib-dropdown>
@@ -28,17 +24,13 @@
 				</ul>
 			</span>
 		</div>
+		Protocol: <strong>{{protocol.description || protocol.id}}</strong>
 	</div>
 
-	<div class="col-md-2 text-right">
+	<div class="col-md-4 text-right">
 		<button class='btn btn-primary' ng-click='continue()'>Proceed<span class="glyphicon glyphicon-chevron-right"></span></button>
 	</div>
 </div>
-
-
-
-
-
 
 
 <div class="row">	
@@ -53,13 +45,13 @@
 				</tr> 
 			</thead>
 			<tbody>
-				<tr ng-repeat="article in rawArticles  | orderBy:'article.order.value.value'">
+				<tr ng-repeat="article in journal.articles  | orderBy:'article.order.value.value'">
 					<td ng-repeat="(name, column) in columns" ng-show="column.checked">
 						<span editable item="article[name]" />
 					</td>
 					<td style="width:600px">
 						<div id="thumbnail-container-{{article._.id}}" class="thumbnail-container" ng-class="{'enlarged': article._.id==master.selectedThumb}" ng-click="master.selectThumb(article._.id)">
-							<img ng-show="thumbnails[article._.id] != ''" data-ng-src="{{thumbnails[article._.id]}}" />
+							<img ng-show="journal.thumbnails[article._.id] != ''" data-ng-src="{{journal.thumbnails[article._.id]}}" />
 						</div>
 					</td>
 					<td>
@@ -72,7 +64,7 @@
 						
 						<!-- <span class="btn btn-default btn-xs" ng-repeat="button in master.article_buttons" ng-click="button.function(article)" data-tooltip="{{button.tooltip}}">{{button.caption}}<span class="glyphicon {{button.glyphicon}}"></span></span> -->
 						
-						<span class="btn btn-default btn-xs" ng-show="$index<rawArticles.length-1" ng-click="updateOrder('down', true, article)" data-tooltip="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
+						<span class="btn btn-default btn-xs" ng-show="$index<journal.articles.length-1" ng-click="updateOrder('down', true, article)" data-tooltip="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
 						
 					</td>
 				</tr>
@@ -80,6 +72,5 @@
 		</table>
 	</div>
 </div>
-
 
 </div>

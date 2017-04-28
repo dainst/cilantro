@@ -20,14 +20,22 @@ angular
 			var p = {
 				id: id,
 				description: 'no description for ' + id,
+				columns: ['author', 'title', 'page', 'attached'],
 				main: {},
 				init: function() {
 					console.log('init protocol: ' + this.id);
+					this.main.steps.change('overview');
 				},
 				register: function() {
 					registry.protocols[this.id] = this;
 				}
 			}
+
+
+			p.run = function() {
+				console.log('running protocol')
+			}
+
 			return p
 		}
 

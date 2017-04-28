@@ -4,8 +4,8 @@ angular
 
 .module('controller.main', [])
 
-.controller('main',	['$scope', '$log', '$injector', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry',
-	function ($scope, $log, $injector, editables, webservice, settings, messenger, protocolregistry) {
+.controller('main',	['$scope', '$log', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'journal',
+	function ($scope, $log, editables, webservice, settings, messenger, protocolregistry, documentsource, journal) {
 
 		
 		/* debug */
@@ -31,7 +31,7 @@ angular
 		/* protocols */
 		$scope.protocols = {
 			list: protocolregistry.protocols,
-			current: "generic"
+			current: "chiron_parted"
 		}
 		$scope.protocol = {
 			id: "none"
@@ -41,6 +41,10 @@ angular
 		$scope.documentSource = {
 			name: "none"
 		}
+
+		/* journal */
+		$scope.journal = journal;
+
 
 		/* initialize */
 		$scope.isInitialized = false;
@@ -68,82 +72,16 @@ angular
 			}
 		}
 
-		/* journal */
-		$scope.journal = {
-			data: {
-				/*"title": 				editables.base('Chiron'),*/
-				"volume": editables.base(''),
-				"year": editables.base(''),
-				"importFilePath": settings.devMode ? "checkdas.pdfdir" : '',
-				"identification": "vol_year",
-				"ojs_journal_code": "ojs_journal_code",
-				"ojs_user": "ojs_user",
-				"journal_code": "importer journal code",
-				"auto_publish_issue": editables.checkbox(false),
-				"default_publish_articles": true,
-				"default_create_frontpage": true
-			},
-			showOnHomepage: ['volume', 'year'],
-			check: function () {
-				var invalid = 0;
-				angular.forEach($scope.journal.data, function (property) {
-					if (angular.isObject(property) && (property.check() !== false)) {
-						invalid += 1;
-					}
-				})
-				return (invalid == 0);
-			}
-		}
-
-		/* articles */
-		$scope.articles = [];
-
-		$scope.articleStats = {
-			data: {
-				articles: $scope.articles.length,
-				undecided: 0,
-				confirmed: 0,
-				dismissed: 0,
-				_isOk: function(k, v) {
-					if (k == 'undecided') {
-						return 0;
-					} else if (k == 'confirmed') {
-						return 1;
-					} else if (k == 'dismissed') {
-						return -1;
-					}
-				}
-			},
-			update: function() {
-				$scope.articleStats.data.articles = $scope.articles.length;
-				$scope.articleStats.data.undecided = 0;
-				$scope.articleStats.data.confirmed = 0;
-				$scope.articleStats.data.dismissed = 0;
-
-				for (var i = 0; i < $scope.articles.length; i++) {
-					if (typeof $scope.articles[i]._.confirmed === "undefined") {
-						$scope.articleStats.data.undecided += 1;
-					} else if ($scope.articles[i]._.confirmed === true) {
-						$scope.articleStats.data.confirmed += 1;
-					} else if ($scope.articles[i]._.confirmed === false) {
-						$scope.articleStats.data.dismissed += 1;
-					}
-				}
-			}
-
-		}
-
-
 		/* security */
 		$scope.sec = webservice.sec;
 
 		/* ctrl */
 		$scope.start = function() {
 			//checkPW
-			webservice.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal}, function(response) {
+			webservice.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal.data}, function(response) {
 				if (response.success) {
 					$scope.getProtocol();
-					$scope.getDocumentSource();
+					$scope.steps.change($scope.protocol.startView || 'overview');
 					$scope.protocol.init();
 				} else {
 					$scope.sec.password = '';
@@ -158,31 +96,8 @@ angular
 			$scope.protocol.main = $scope;
 		};
 
-		$scope.getDocumentSource = function(type) {
-			// @ TODO single files... (and remove $injector dependency)
-			$scope.documentSource = $injector.get('folder');
-		}
 
-		/* prototype contructur functions */
-		$scope.Article =  function(data) {
-			data = data || {};
-			return {
-				'title':			editables.base(data.title),
-				'abstract':			editables.text(data.abstract, false),
-				'author':			editables.authorlist(data.author),
-				'pages':			editables.page(data.pages),
-				'date_published':	editables.base(data.date_published || 'DD-MM-YYYY'),
-				'language':			editables.language('de_DE', false),
-				'auto_publish':		editables.checkbox($scope.journal.data.default_publish_articles === true),
-				'filepath':			$scope.journal.data.importFilePath,
-				'thumbnail':		'',
-				'attached':			editables.filelist(),
-				'order':			editables.number(0, false),
-				'createFrontpage':	editables.checkbox($scope.journal.data.create_frontpage === true),
-				'zenonId':			editables.base('', false),
-				'_':				{}
-			}
-		}
+
 
 		
 	}
