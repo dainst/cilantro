@@ -12,9 +12,15 @@ angular
 		$scope.cacheKiller = '?nd=' + Date.now();
 
 		/* protocols */
+		function getLastProtocol() {
+			try {
+				return localStorage.getItem('protocol');
+			} catch (e) {}
+			return ''
+		}
 		$scope.protocols = {
 			list: protocolregistry.protocols,
-			current: "chiron_parted"
+			current:  getLastProtocol()
 		}
 		$scope.protocol = {
 			id: "none",
@@ -119,8 +125,8 @@ angular
 
 		// get journal specific service
 		$scope.getProtocol = function() {
-			console.log('load journal service ' +  $scope.protocols.current);
 			$scope.protocol = $scope.protocols.list[$scope.protocols.current];
+			localStorage.setItem('protocol', $scope.protocol.id);
 		};
 
 		/* some pdf things happen outside angular and need this */
