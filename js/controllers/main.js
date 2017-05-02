@@ -11,13 +11,47 @@ angular
 		/* debug */
 		$scope.cacheKiller = '?nd=' + Date.now();
 
+		/* protocols */
+		$scope.protocols = {
+			list: protocolregistry.protocols,
+			current: "chiron_parted"
+		}
+		$scope.protocol = {
+			id: "none",
+			ready: false
+		}
+
+		/* current document source */
+		$scope.documentSource = {
+			name: "none"
+		}
+
+		/* journal */
+		$scope.journal = journal; // @ TODO remove this?
+
 		/* step control */
 		$scope.steps = {
 			list: {
-				"home": 	{"template": "partials/view_home.html",			"title": "Start"},
-				"overview": {"template": "partials/view_overview.html",		"title": "Documents overview"},
-				"articles": {"template": "partials/view_articles.html",		"title": "Edit Articles"},
-				"publish": 	{"template": "partials/view_finish.html",		"title": "Publish"}
+				"home": 	{
+					"template": "partials/view_home.html",
+					"title": "Start",
+					"condition": true
+				},
+				"overview": {
+					"template": "partials/view_overview.html",
+					"title": "Overview",
+					"condition": $scope.protocol.ready
+				},
+				"articles": {
+					"template": "partials/view_articles.html",
+					"title": "Articles",
+					"condition": $scope.protocol.ready
+				},
+				"publish": 	{
+					"template": "partials/view_finish.html",
+					"title": "Publish",
+					"condition": $scope.protocol.ready && journal.articleStats.undecided == 0 && journal.articleStats.articles > 0
+				}
 			},
 			current:"home",
 			change: function(to) {
@@ -27,28 +61,17 @@ angular
 					return;
 				}
 
+				if (to == $scope.steps.current) {
+					return;
+				}
+
 				console.log('Tab change to: ', to);
 				//$scope.message.reset();
 				$scope.steps.current = to;
 			}
 		}
 
-		/* protocols */
-		$scope.protocols = {
-			list: protocolregistry.protocols,
-			current: "chiron_parted"
-		}
-		$scope.protocol = {
-			id: "none"
-		}
 
-		/* current document source */
-		$scope.documentSource = {
-			name: "none"
-		}
-
-		/* journal */
-		$scope.journal = journal;
 
 
 		/* initialize */
@@ -101,7 +124,11 @@ angular
 			$scope.protocol.main = $scope;
 		};
 
-
+		/* some pdf things happen outside angular and need this */
+		$scope.$on('refreshView', function() {
+			console.log('REFRESH', $scope.protocol.ready);
+			$scope.$apply();
+		})
 
 
 		

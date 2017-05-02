@@ -27,11 +27,13 @@
 			logout-function=""
 			user-object='{"username": false}'>
 
+
+
 			<ul class="nav navbar-nav">
-				<li><a ng-click="steps.change('home')">Start</a></li>
-				<li><a ng-click="steps.change('overview')">Overview</a></li>
-				<li><a ng-click="steps.change('articles')">Artikel</a></li>
-				<li><a ng-click="steps.change('publish')">Publish</a></li>
+				<li ng-show="protocol.id!='none'"><p class="navbar-text">Protocol: <strong>{{protocol.description || protocol.id}}</strong></p></li>
+				<li ng-repeat="(stepId, step) in steps.list">
+					<a ng-click="steps.change(stepId)" ng-class="{'active':steps.current==stepId}" ng-show="step.condition">{{step.title}}</a>
+				</li>
 			</ul>
 
 		</idai-navbar>

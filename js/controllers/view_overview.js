@@ -139,14 +139,12 @@ angular
 			}
 
 		}
-		
 
 
+		$scope.selectedThumb = -1;
 		$scope.selectThumb = function(i) {
 			$scope.selectedThumb = (i == $scope.selectedThumb) ? -1 : i;
 		}
-
-		$scope.selectedThumb = -1;
 
 
 
@@ -220,9 +218,7 @@ angular
 			journal.articles = orderArticles(journal.articles, order, asc);
 		}
 
-		$scope.$on('refreshView', function() {
-			$scope.$apply();
-		})
+
 
 
 	}

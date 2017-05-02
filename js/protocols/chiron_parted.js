@@ -20,20 +20,18 @@ angular
 			var pdf = documentsource.files[idx].pdf;
 
 			var article = new journal.Article();
-			article._ = { // special data for raw articles
-				url: documentsource.files[idx].url,
-				filename: documentsource.files[idx].filename,
-				tmp: [
-					{
-						fontName: '',
-						height: '',
-						str: '',
-						ypos: 0
-					}
-				],
-				id: idx,
-				deleted: false
-			}
+			 // special data for raw articles
+			article._.url = documentsource.files[idx].url;
+			article._.tmp = [
+				{
+					fontName: '',
+					height: '',
+					str: '',
+					ypos: 0
+				}
+			]
+			article._.url = idx;
+			article._.deleted = idx;
 
 			journal.articles.push(article);
 
@@ -50,8 +48,6 @@ angular
 
 						for(var k = 0; k < textContent.items.length; k++) {
 							var block = textContent.items[k];
-
-							//console.log(block);
 
 							var last = journal.articles[idx]._.tmp[journal.articles[idx]._.tmp.length - 1];
 
@@ -116,9 +112,11 @@ angular
 						documentsource.stats.analyzed += 1
 					}); //getTextContent
 
+					/* refresh */
+					$rootScope.$broadcast('refreshView');
 
 					/* thumbnail */
-					documentsource.createThumbnail(page,  idx)
+					documentsource.createThumbnail(page,  article._.id)
 
 
 				}); // getPage
@@ -128,6 +126,11 @@ angular
 		});
 
 	}
+
+	$rootScope.$on('gotAll', function onGotAll() {
+		journalCtrl.ready = true;
+		$rootScope.$broadcast('refreshView');
+	});
 
 	journalCtrl.caseCorrection = function(string) {
 		return string.toLowerCase().trim().replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});

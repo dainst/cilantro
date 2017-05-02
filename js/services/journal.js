@@ -31,7 +31,7 @@ angular
 
 	/* articles */
 	journal.articles = [];
-	journal.thumbnails = []; /* they are not part of the article obj since they are very large and iterating over the
+	journal.thumbnails = {}; /* they are not part of the article obj since they are very large and iterating over the
 								articles array in the digest give performance issues otherwise! */
 
 	journal.articleStats = {
@@ -81,8 +81,23 @@ angular
 		});
 	}
 
+
+
+
 	/* prototype contructur functions */
 	journal.Article =  function(data) {
+
+		function guid() {
+			function s4() {
+				return Math.floor((1 + Math.random()) * 0x10000)
+					.toString(16)
+					.substring(1);
+			}
+			return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+				s4() + '-' + s4() + s4() + s4();
+		}
+
+
 		data = data || {};
 		var articlePrototype = {
 			'title':			editables.base(data.title),
@@ -99,15 +114,22 @@ angular
 			'zenonId':			editables.base('', false),
 		}
 		Object.defineProperty(articlePrototype, '_', {enumerable: false, configurable: false, value: {}});
-		return articlePrototype;
+
+		articlePrototype._.id = guid();
+
+		return (articlePrototype);
 	}
-
-	window.test = new journal.Article();
-
-	console.log(new journal.Article);
-
-
 
 	return (journal);
 }])
-
+function hashcode(obj) {
+	var chars = JSON.stringify(obj).replace(/\{|\"|\}|\:|,/g, '');
+	var hash = 0;
+	if (chars.length == 0) return hash;
+	for (i = 0; i < this.length; i++) {
+		char = chars.charCodeAt(i);
+		hash = ((hash<<5)-hash)+char;
+		hash = hash & hash; // Convert to 32bit integer
+	}
+	return hash;
+}

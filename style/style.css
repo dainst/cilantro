@@ -205,7 +205,7 @@ table.split-table > tbody > tr > td .thumbnail-container.enlarged {
 	border: 1px solid rgba(0, 0, 0, 0.15);
 	margin-top: 60px;
 	position: fixed;
-	right: 10px;
+	left: 10px;
 	top:0px;
 	z-index: 2;
 }
@@ -284,6 +284,16 @@ table .alert {
 
 .navbar-default {
     background-color: rgba(85, 114, 161, 1)  !important;
+}
+
+.navbar .active {
+	color: #fff;
+	background-color: rgba(116,141,181,.9);
+	cursor: default
+}
+
+.navbar .active:hover {
+
 }
 
 
@@ -412,9 +422,7 @@ input.form-check-input:checked + label:before {
 	padding: 20px;
 	max-height: 100%;
 	overflow: auto;
-}
 
-#info-container {
 	background-color: #fff;
 	border: 1px solid rgba(0,0,0,.15);
 	box-shadow: 0 6px 12px rgba(0,0,0,.176);

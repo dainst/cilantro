@@ -36,24 +36,23 @@
 		<div class="panel panel-default" ng-show="(currentArticle > -1) && (journal.articles.length > 0)">
 			<div class="panel-heading">Article</div>
 
-			
 			<table class='table article-table'>
 				<thead></thead>
 				<tbody>
 					<tr ng-if="currentArticle > -1" ng-repeat="(property, item) in journal.articles[currentArticle] track by $index">
-						<td ng-if="property != 'thumbnail'">{{property}}</td>
-						<td ng-if="property != 'thumbnail'"><span editable item="journal.articles[currentArticle][property]" /></td>
+						<td>{{property}}</td>
+						<td><span editable item="journal.articles[currentArticle][property]" /></td>
 					</tr>
 				</tbody>
 				<tfoot></tfoot>
 			</table>
 		</div>
 
-		<div class="panel panel-default" ng-show="journal.thumbnails[currentArticle]">
+		<div class="panel panel-default" ng-show="journal.thumbnails[journal.articles[currentArticle]._.id]">
 			<div class="panel-heading">First Page</div>
 			<div class="panel-body">
 				<div class="thumbnail-container">
-					<img data-ng-src='{{journal.thumbnails[currentArticle]}}'>
+					<img data-ng-src='{{journal.thumbnails[journal.articles[currentArticle]._.id]}}'>
 				</div>
 			</div>
 		</div>

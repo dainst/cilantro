@@ -24,14 +24,15 @@
 				</ul>
 			</span>
 		</div>
-		Protocol: <strong>{{protocol.description || protocol.id}}</strong>
 	</div>
 
 	<div class="col-md-4 text-right">
-		<button class='btn btn-primary' ng-click='continue()'>Proceed<span class="glyphicon glyphicon-chevron-right"></span></button>
+		<button class='btn btn-primary' ng-click='continue()' ng-show="protocol.ready">
+			Proceed<span class="glyphicon glyphicon-chevron-right"></span>
+		</button>
 	</div>
 </div>
-
+	<pre>{{Object.keys(journal.thumbnails.length)}}</pre>
 
 <div class="row">	
 	<div class="col-md-12" style="overflow-x:scroll">
@@ -39,20 +40,23 @@
 		<table class='split-table editable-table super-table'>
 			<thead>
 				<tr>
-					<td ng-repeat="column in columns" ng-show="column.checked" ng-style="column.style" data-tooltip="column.tooltip">{{column.title}}</td>
 					<td>Preview</td>
+					<td ng-repeat="column in columns" ng-show="column.checked" ng-style="column.style" data-tooltip="column.tooltip">{{column.title}}</td>
+
 					<td></td>
 				</tr> 
 			</thead>
 			<tbody>
 				<tr ng-repeat="article in journal.articles  | orderBy:'article.order.value.value'">
+					<td style="width:600px">
+						<div id="thumbnail-container-{{article._.id}}" class="thumbnail-container" ng-class="{'enlarged': article._.id==selectedThumb}" ng-click="selectThumb(article._.id)">
+							<img ng-show="journal.thumbnails[article._.id] != ''" data-ng-src="{{journal.thumbnails[article._.id]}}" />
+
+						</div>
+						<pre>{{article._.id}}</pre>
+					</td>
 					<td ng-repeat="(name, column) in columns" ng-show="column.checked">
 						<span editable item="article[name]" />
-					</td>
-					<td style="width:600px">
-						<div id="thumbnail-container-{{article._.id}}" class="thumbnail-container" ng-class="{'enlarged': article._.id==master.selectedThumb}" ng-click="master.selectThumb(article._.id)">
-							<img ng-show="journal.thumbnails[article._.id] != ''" data-ng-src="{{journal.thumbnails[article._.id]}}" />
-						</div>
 					</td>
 					<td>
 						<span class="btn btn-default btn-xs" ng-show="$index>0" ng-click="updateOrder('up', true, article)" data-tooltip="move above"><span class="glyphicon glyphicon-triangle-top"></span></span>

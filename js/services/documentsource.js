@@ -135,9 +135,10 @@ angular
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 			journal.thumbnails[containerId] = canvas.toDataURL();
+			$rootScope.$broadcast('refreshView');
 		});
 
-		$rootScope.$broadcast('refreshView');
+
 
 	}
 

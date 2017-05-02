@@ -20,7 +20,7 @@ angular
 			var p = {
 				id: id,
 				description: 'no description for ' + id,
-				columns: ['author', 'title', 'page', 'attached'],
+				columns: ['author', 'title', 'page'],
 				main: {},
 				init: function() {
 					console.log('init protocol: ' + this.id);
@@ -28,7 +28,8 @@ angular
 				},
 				register: function() {
 					registry.protocols[this.id] = this;
-				}
+				},
+				ready: true
 			}
 
 
