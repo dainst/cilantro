@@ -5,8 +5,8 @@ angular
 
 	var folder = {};
 	folder.dir = []; // filenames
-	folder.files = []; // pdf.js documents
-	folder.thumbnails = {}; // generated thumbnails 
+	folder.files = {}; // pdf.js documents / index: filenames
+	folder.thumbnails = {}; // generated thumbnails  / index: ids
 	folder.stats = {
 		files: 0,
 		analyzed: 0,
@@ -17,8 +17,6 @@ angular
 		}
 	};
 	folder.path = 'none';
-
-
 
 	var requirePdfJs = new Promise(function(resolve) {
 		require.config({paths: {'pdfjs': 'inc/pdf.js'}});
@@ -57,14 +55,13 @@ angular
 				}
 			).then(
 				function onGotDocument(pdf) {
-					folder.files.push({
+					folder.files[this.url] = {
 						pdf: pdf,
 						filename: this.filename,
 						url: this.url
-					});
-
-					messenger.alert('document nr' + folder.files.length + ' loaded');
-					$rootScope.$broadcast('gotFile', (folder.files.length - 1));
+					};
+					messenger.alert('document nr' + Object.keys(folder.files).length + ' loaded');
+					$rootScope.$broadcast('gotFile', this.url);
 				}.bind({filename: filename, url: folder.path + '/' + filename})
 			);
 
@@ -108,6 +105,23 @@ angular
 		});
 	}
 
+		/**
+		 * call this from a button or something ...
+		 * @param article
+		 */
+	folder.updateThumbnail = function(article) {
+		console.log("recreate thumbnail for", article, article.pages.getCutAt().start, article._.url);
+		console.log(article._.url, folder);
+		folder.files[article._.url].pdf.getPage(article.pages.getCutAt().start).then(function(page) {
+			folder.createThumbnail(page, article._.id)
+		});
+	}
+
+		/**
+		 * ... or this from inside a getPage promise
+		 * @param page
+		 * @param containerId
+		 */
 	folder.createThumbnail = function(page, containerId) {
 		var container = angular.element(document.querySelector('#thumbnail-container-' + containerId));
 		var img = container.find('img');

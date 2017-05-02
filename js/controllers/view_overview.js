@@ -9,10 +9,10 @@ angular
 
 .module('controller.view_overview', [])
 
-.controller('view_overview', ['$scope', 'settings', 'webservice', 'editables', 'messenger', 'journal',
-	function($scope, settings, webservice, editables, messenger, journal) {
+.controller('view_overview', ['$scope', 'settings', 'webservice', 'editables', 'messenger', 'journal', 'documentsource',
+	function($scope, settings, webservice, editables, messenger, journal, documentsource) {
 
-		messenger.content.stats = $scope.documentSource.stats;
+		messenger.content.stats = documentsource.stats;
 
 		$scope.columns = {
 			order: {
@@ -31,7 +31,7 @@ angular
 				style: {minWidth: '400px'},
 				checked: false
 			},
-			page: {
+			pages: {
 				title: 'Pages',
 				style: {minWidth: '200px'},
 				checked: false
@@ -81,7 +81,7 @@ angular
 
 		/**
 		 * initialization of overview view
-		 * needs main controller to have set properly documentSource and protocol
+		 * needs main controller to have set properly documentsource and protocol
 		 */
 		$scope.init = function() {
 
@@ -145,7 +145,9 @@ angular
 		$scope.selectThumb = function(i) {
 			$scope.selectedThumb = (i == $scope.selectedThumb) ? -1 : i;
 		}
-
+		$scope.updateThumbnail = function(article) {
+			documentsource.updateThumbnail(article);
+		}
 
 
 		function mergeArticles(main, attach)  {

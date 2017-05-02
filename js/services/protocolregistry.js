@@ -20,7 +20,7 @@ angular
 			var p = {
 				id: id,
 				description: 'no description for ' + id,
-				columns: ['author', 'title', 'page'],
+				columns: ['author', 'title', 'pages'],
 				main: {},
 				init: function() {
 					console.log('init protocol: ' + this.id);
