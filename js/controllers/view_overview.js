@@ -101,9 +101,9 @@ angular
 		}
 
 		// open file externally
-		$scope.openDocument = function(url) {
-			console.log("OPEN " + url);
-			window.open(settings.rep_url + '/' + url);
+		$scope.openDocument = function(article) {
+			console.log("OPEN " + article._.url);
+			window.open(settings.rep_url + '/' + article._.url);
 		}
 
 		$scope.selectedToMerge = false;
@@ -161,10 +161,10 @@ angular
 
 
 		$scope.removeArticle = function(article) {
-			article._.deleted = true;
-			$scope.cleanArticles();
-			$scope.updateOrder('order', false);
+			//journal.deleteArticle(article)
+			article._.confirmed = false;
 		}
+
 
 		$scope.updateOrder = function(order, asc, article) {
 

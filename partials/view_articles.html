@@ -5,7 +5,6 @@
 <div class="row toprow">
 	<div class="col-md-8">
 		<div class="btn-group" uib-dropdown>
-			{{$scope.currentArticle}}
 			<button uib-dropdown-toggle class="btn btn-default">Select Article ({{journal.articleStats.data.undecided}} remaining)<span class="caret"></span></button>
 			<ul uib-dropdown-menu>
     			<li ng-repeat="article in journal.articles track by $index">
@@ -22,9 +21,25 @@
 	</div>
 	<div class="col-md-4 text-right">
 		<span class="btn-group">
-			<button ng-if="isArticleSelected()" class='btn btn-danger'  ng-click='dismissArticle()'>Dismiss<span class="glyphicon glyphicon-remove"></span></button>
-			<button ng-if="isArticleSelected() && checkArticle()" class='btn btn-primary' ng-click='confirmArticle()'>Confirm<span class="glyphicon glyphicon-chevron-right"></span></button>
-			<button ng-if="journal.articleStats.data.undecided == 0" class='btn btn-primary' ng-click='continue()'>Continue<span class="glyphicon glyphicon-chevron-right"></span></button>
+			<button
+					ng-if="isArticleSelected()"
+					ng-click='dismissArticle()'
+					class='btn'
+					ng-class="{'btn-danger':(journal.articles[currentArticle]._.confirmed !== true)  && (journal.articles[currentArticle]._.confirmed !== false)}"
+					ng-disabled="journal.articles[currentArticle]._.confirmed === false"
+			>{{journal.articles[currentArticle]._.confirmed === false ? "Dismissed" : "Dismiss"}}<span class="glyphicon glyphicon-remove"></span></button>
+			<button
+					ng-if="isArticleSelected() && checkArticle()"
+					ng-click='confirmArticle()'
+					class='btn'
+					ng-class="{'btn-success':(journal.articles[currentArticle]._.confirmed !== true)  && (journal.articles[currentArticle]._.confirmed !== false)}"
+					ng-disabled="journal.articles[currentArticle]._.confirmed === true"
+			>{{journal.articles[currentArticle]._.confirmed === true ? "Confirmed" : "Confirm"}}<span class="glyphicon glyphicon-chevron-right"></span></button>
+			<button
+					ng-if="journal.articleStats.data.undecided == 0"
+					class='btn btn-primary'
+					ng-click='continue()'>Upload<span class="glyphicon glyphicon-chevron-right"></span>
+			</button>
 		</span>
 	</div>
 </div>
@@ -33,7 +48,9 @@
 <div class="row">	
 
 	<div class="col-lg-6">
-		<div class="panel panel-default" ng-show="(currentArticle > -1) && (journal.articles.length > 0)">
+		<div class="panel panel-default"
+			 ng-class="{'panel-success':(journal.articles[currentArticle]._.confirmed === true),'panel-danger':(journal.articles[currentArticle]._.confirmed === false)}"
+			 ng-show="(currentArticle > -1) && (journal.articles.length > 0)">
 			<div class="panel-heading">Article</div>
 
 			<table class='table article-table'>

@@ -28,7 +28,6 @@ angular
 				ypos: 0
 			}
 		]
-		article._.deleted = false;
 
 		journal.articles.push(article);
 

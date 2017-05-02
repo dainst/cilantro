@@ -47,7 +47,7 @@
 				</tr> 
 			</thead>
 			<tbody>
-				<tr ng-repeat="article in journal.articles  | orderBy:'article.order.value.value'" ng-class="{'row-confirmed': article._.confirmed === true, 'row-unconfirmed': article._.confirmed === false}">
+				<tr ng-repeat="article in journal.articles  | orderBy:'article.order.value.value'" ng-show="article._.confirmed !== false" ng-class="{'row-confirmed': article._.confirmed === true}">
 					<td style="width:600px">
 						<div class="thumbnail-refresh" ng-show="article.pages.check() == false">
 							<button class='btn btn-default' ng-click="updateThumbnail(article)">Reload thumbnail<span class="glyphicon glyphicon-refresh"></span></button>
@@ -64,7 +64,7 @@
 						<span class="btn btn-default btn-xs" ng-show="$index>0" ng-click="updateOrder('up', true, article)" data-tooltip="move above"><span class="glyphicon glyphicon-triangle-top"></span></span>
 					
 						<span class="btn btn-default btn-xs" ng-click="removeArticle(article)" data-tooltip="delete article"><span class="glyphicon glyphicon-minus-sign"></span></span>
-						<span class="btn btn-default btn-xs" ng-click="openDocument(article.url)" data-tooltip="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
+						<span class="btn btn-default btn-xs" ng-click="openDocument(article)" data-tooltip="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
 						
 						<span class="btn btn-xs" ng-class="{'btn-default': (!selectedToMerge), 'btn-danger': (selectedToMerge)}" ng-click="mergeArticle(article)" data-tooltip="merge articles"><span class="glyphicon glyphicon-compressed"></span></span>
 						
@@ -76,6 +76,7 @@
 				</tr>
 			</tbody>
 		</table>
+
 	</div>
 </div>
 

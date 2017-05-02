@@ -11,7 +11,7 @@ angular
 		$scope.currentArticle = -1;
 
 		$scope.init = function() {
-			//messenger.ok();
+			messenger.ok();
 			messenger.content.stats = journal.articleStats.data;
 			journal.articleStats.update();
 			$scope.selectArticle(0);
@@ -93,7 +93,7 @@ angular
 		$scope.dismissArticle = function() {
 			console.log('Delete Article ' + $scope.currentArticle);
 			$scope.resetZenon();
-			//journal.articles.splice($scope.currentArticle, 1); // @ TODO make dissmiss redoable
+
 			journal.articles[$scope.currentArticle]._.confirmed = false;
 
 			$scope.selectNextArticle();
@@ -152,7 +152,6 @@ angular
 
 			if (!more) {
 				$scope.resetZenon();
-				console.log(journal.articles, $scope.currentArticle)
 				var term = journal.articles[$scope.currentArticle].title.value.value;
 			} else {
 				var term = $scope.zenon.search

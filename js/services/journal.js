@@ -71,16 +71,22 @@ angular
 
 	journal.cleanArticles = function() {
 		angular.forEach(journal.articles, function(article, k) {
-			if (article._.deleted === true) {
-				delete journal.articles[k];
-				return;
-			}
 			if (typeof article._ !== "undefined") {
 				article._ = {};
 			}
 		});
 	}
 
+	journal.deleteArticle = function(article) {
+		// the price for using an array for articles...
+		for (var i = 0; i < journal.articles.length; i++) {
+			if (article === journal.articles[i]) {
+				break;
+			}
+		}
+		journal.undoDeleteArticle = journal.articles[i];
+		journal.articles.splice(i, 1);
+	}
 
 
 
