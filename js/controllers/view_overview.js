@@ -92,22 +92,13 @@ angular
 				$scope.columns[col].checked = true;
 			})
 
-			// inherit protocol's functions and properties
-			//$scope.protocol.view_overview.call($scope);
-
-
 		}
-
-
-
 
 		/* tools & buttons */
 		$scope.continue = function() {
 			journal.cleanArticles();
 			$scope.steps.change('articles');
 		}
-
-
 
 		// open file externally
 		$scope.openDocument = function(url) {

@@ -3,20 +3,24 @@ angular
 .factory('documentsource', ['$rootScope', 'settings', 'webservice', 'messenger', 'journal',
 	function($rootScope, settings, webservice, messenger, journal) {
 
-	var folder = {};
-	folder.dir = []; // filenames
-	folder.files = {}; // pdf.js documents / index: filenames
-	folder.thumbnails = {}; // generated thumbnails  / index: ids
-	folder.stats = {
-		files: 0,
-		analyzed: 0,
-		loaded:  0,
-		thumbnails: 0,
-		_isOk: function(k, v) {
-			return v >= folder.stats.files ? 1 : -1;
-		}
+	var folder = {
+		dir : [], // filenames
+		files : {}, // pdf.js documents / index: filenames
+		stats : {
+			files: 0,
+			analyzed: 0,
+			loaded:  0,
+			thumbnails: 0,
+			_isOk: function(k, v) {
+				return v >= folder.stats.files ? 1 : -1;
+			}
+		},
+		path : 'none',
+		ready: false
 	};
-	folder.path = 'none';
+
+
+
 
 	var requirePdfJs = new Promise(function(resolve) {
 		require.config({paths: {'pdfjs': 'inc/pdf.js'}});
@@ -100,6 +104,7 @@ angular
 			loadFiles();
 			Promise.all(loadFilePromises).then(function() {
 				messenger.alert("All Files loaded");
+				refreshView()
 				$rootScope.$broadcast('gotAll');
 			})
 		});
@@ -147,13 +152,24 @@ angular
 			ctx.globalCompositeOperation = "destination-over";
 			ctx.fillStyle = "#123456";
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
-
 			journal.thumbnails[containerId] = canvas.toDataURL();
-			$rootScope.$broadcast('refreshView');
+			folder.stats.thumbnails = Object.keys(journal.thumbnails).length;
+			refreshView()
 		});
 
+	}
 
-
+	/**
+	 * since the pdf.kjs stuff is happening outside angular is is ansync we need this shit here
+	 *
+	 */
+	function refreshView() {
+		folder.ready =
+			(folder.stats.files > 0)
+			&& (folder.stats.analyzed >= folder.stats.files)
+			&& (folder.stats.loaded >= folder.stats.files)
+			&& (folder.stats.thumbnails >= folder.stats.files)
+		$rootScope.$broadcast('refreshView');
 	}
 
 	return folder;

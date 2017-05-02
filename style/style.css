@@ -442,6 +442,7 @@ input.form-check-input:checked + label:before {
 	width: 50%;
 	float: left;
 	padding-right: 4px;
+	white-space: nowrap;
 }
 
 @media (max-width:1138px) {

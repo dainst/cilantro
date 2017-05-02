@@ -3,7 +3,7 @@
 	<div class="row">
 		<div class="col-md-3">
 			<div ng-repeat="(key, stat) in message.stats" ng-show="key.substr(0,1) != '_'" class="stat">
-				{{key}}<span class="badge badge-pill badge-default pull-right" ng-class="{'alert-success': message.stats._isOk(key, stat) == 1, 'alert-danger': message.stats._isOk(key, stat) == -1}">{{stat}}</span>
+				<span class="badge badge-pill badge-default" ng-class="{'alert-success': message.stats._isOk(key, stat) == 1, 'alert-danger': message.stats._isOk(key, stat) == -1}">{{stat}}</span>{{key}}
 			</div>
 		</div>
 		<div class="col-md-9" ng-class="{'closed':!infoBoxOpen}">

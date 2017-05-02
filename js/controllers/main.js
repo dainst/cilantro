@@ -35,22 +35,22 @@ angular
 				"home": 	{
 					"template": "partials/view_home.html",
 					"title": "Start",
-					"condition": true
+					"condition": function() {return !documentsource.ready}
 				},
 				"overview": {
 					"template": "partials/view_overview.html",
 					"title": "Overview",
-					"condition": $scope.protocol.ready
+					"condition": function() {return documentsource.ready}
 				},
 				"articles": {
 					"template": "partials/view_articles.html",
 					"title": "Articles",
-					"condition": $scope.protocol.ready
+					"condition": function() {return documentsource.ready}
 				},
 				"publish": 	{
 					"template": "partials/view_finish.html",
 					"title": "Publish",
-					"condition": $scope.protocol.ready && journal.articleStats.undecided == 0 && journal.articleStats.articles > 0
+					"condition": function() {return documentsource.ready && journal.articleStats.undecided == 0 && journal.articleStats.articles > 0}
 				}
 			},
 			current:"home",
@@ -121,7 +121,6 @@ angular
 		$scope.getProtocol = function() {
 			console.log('load journal service ' +  $scope.protocols.current);
 			$scope.protocol = $scope.protocols.list[$scope.protocols.current];
-			$scope.protocol.main = $scope;
 		};
 
 		/* some pdf things happen outside angular and need this */

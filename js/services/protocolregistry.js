@@ -28,10 +28,8 @@ angular
 				},
 				register: function() {
 					registry.protocols[this.id] = this;
-				},
-				ready: true
+				}
 			}
-
 
 			p.run = function() {
 				console.log('running protocol')
