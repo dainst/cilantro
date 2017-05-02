@@ -9,7 +9,7 @@ angular
 	function($scope, settings, webservice, editables, journal) {
 
 		$scope.init = function() {
-			console.log("T")
+			//
 		}
 
 		$scope.xml = false;
@@ -17,14 +17,14 @@ angular
 		$scope.dainstMetadata = {};
 
 		$scope.renderXml = function() {
-			webservice.get('makeXML', {journal: $scope.journal.data, articles: $scope.articles}, function(response) {
+			webservice.get('makeXML', {journal: journal.data, articles: journal.articles}, function(response) {
 				$scope.xml = response.xml;
 			});
 		}
 
 		$scope.uploadToOjs = function() {
 			$scope.isInitialized = false;
-			webservice.get('toOJS', {journal: $scope.journal.data, articles: $scope.articles}, function(response) {
+			webservice.get('toOJS', {journal: journal.data, articles: journal.articles}, function(response) {
 				$scope.isInitialized = true;
 				console.log(response);
 				if (response.success) {

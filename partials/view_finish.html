@@ -45,8 +45,10 @@
 					<h2></h2>
 					<p>Status:</p>
 					<ul>
-						<li>Journal metadata: <span ng-show="journal.check()">OK</span></li>
-						<li>Articles confirmed: {{journal.articleStats.confirmed}} of {{journal.articles.length}}</li>
+						<li>Journal metadata: <span ng-show="journal.check()" class="badge badge-default alert-success">OK</span></li>
+						<li>Articles ready to upload:
+							<span class="badge badge-default alert-success">{{journal.articleStats.data.confirmed}}</span>
+						</li>
 					</ul>
 				</div>
 			</div>
