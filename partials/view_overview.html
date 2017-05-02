@@ -47,7 +47,7 @@
 				</tr> 
 			</thead>
 			<tbody>
-				<tr ng-repeat="article in journal.articles  | orderBy:'article.order.value.value'">
+				<tr ng-repeat="article in journal.articles  | orderBy:'article.order.value.value'" ng-class="{'row-confirmed': article._.confirmed === true, 'row-unconfirmed': article._.confirmed === false}">
 					<td style="width:600px">
 						<div class="thumbnail-refresh" ng-show="article.pages.check() == false">
 							<button class='btn btn-default' ng-click="updateThumbnail(article)">Reload thumbnail<span class="glyphicon glyphicon-refresh"></span></button>

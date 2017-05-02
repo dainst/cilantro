@@ -239,6 +239,15 @@ table.super-table thead td {
 	overflow: hidden
 }
 
+table.super-table tr.row-confirmed > td:first-child {
+	border-left: 3px solid #449d44;
+}
+table.super-table tr.row-unconfirmed > td:first-child {
+	border-left: 3px solid #d9534f;
+}
+
+
+
 .alert {
    padding: 10px;
 }
