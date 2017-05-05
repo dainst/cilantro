@@ -112,7 +112,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	function toOJS() {
 				
 		$data = $this->data;
-	
+		$data = $this->data;
+
 		try {
 			
 			$this->log->log('starting import');

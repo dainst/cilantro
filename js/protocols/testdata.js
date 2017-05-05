@@ -2,8 +2,8 @@
 
 angular
 .module('module.protocols.testdata', [])
-.factory("testdata", ['protocolregistry', 'journal',
-	function(protocolregistry, journal) {
+.factory("testdata", ['protocolregistry', 'journal', 'documentsource',
+	function(protocolregistry, journal, documentsource) {
 
 
 	var journalCtrl = new protocolregistry.Protocol('testdata');
@@ -42,7 +42,7 @@ angular
 			author: {firstname:'5Piller', lastname: '5Mann'},
 			pages: 1
 		}));
-
+		documentsource.ready = true;
 	};
 
 

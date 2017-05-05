@@ -3,10 +3,12 @@ angular
 .factory('documentsource', ['$rootScope', 'settings', 'webservice', 'messenger', 'journal',
 	function($rootScope, settings, webservice, messenger, journal) {
 
-	var folder = {
-		dir : [], // filenames
-		files : {}, // pdf.js documents / index: filenames
-		stats : {
+	var folder = {};
+
+	folder.reset = function() {
+		folder.dir = []; // filenames
+		folder.files  = {}; // pdf.js documents / index: filenames
+		folder.stats  = {
 			files: 0,
 			analyzed: 0,
 			loaded:  0,
@@ -14,13 +16,13 @@ angular
 			_isOk: function(k, v) {
 				return v >= folder.stats.files ? 1 : -1;
 			}
-		},
-		path : 'none',
-		ready: false
-	};
+		}
+		folder.path  = 'none';
+		folder.ready = false
+		console.log("FUCKSHIT");
+	}
 
-
-
+	folder.reset();
 
 	var requirePdfJs = new Promise(function(resolve) {
 		require.config({paths: {'pdfjs': 'inc/pdf.js'}});

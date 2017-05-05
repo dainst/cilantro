@@ -27,11 +27,6 @@ angular
 			ready: false
 		}
 
-		/* current document source */
-		$scope.documentSource = {
-			name: "none"
-		}
-
 		/* journal */
 		$scope.journal = journal; // @ TODO remove this?
 
@@ -41,7 +36,12 @@ angular
 				"home": 	{
 					"template": "partials/view_home.html",
 					"title": "Start",
-					"condition": function() {return !documentsource.ready}
+					"condition": function() {return !$scope.isStarted}
+				},
+				"restart": 	{
+					"template": "partials/view_restart.html",
+					"title": "Restart",
+					"condition": function() {return $scope.isStarted}
 				},
 				"overview": {
 					"template": "partials/view_overview.html",
@@ -56,8 +56,7 @@ angular
 				"publish": 	{
 					"template": "partials/view_finish.html",
 					"title": "Publish",
-					"condition": function() {return documentsource.ready && journal.articleStats.undecided == 0 && journal.articleStats.articles > 0}
-				}
+					"condition": function() {return $scope.isStarted && documentsource.ready && journal.isReadyToUpload()}}
 			},
 			current:"home",
 			change: function(to) {
@@ -95,6 +94,24 @@ angular
 		}
 
 
+		/* restart */
+		$scope.restart = function() {
+			journal.reset();
+			$scope.steps.change('home');
+			$scope.isInitialized = false;
+			$scope.isStarted = false;
+			$scope.protocol = {
+				id: "none",
+				ready: false
+			}
+			messenger.content.stats = {}
+			messenger.alert('Restart Importer', false);
+			documentsource.reset();
+			console.log(documentsource);
+			$scope.init();
+		}
+
+
 		/* document repository */
 		$scope.repository = {
 			list: [],
@@ -110,12 +127,17 @@ angular
 		$scope.sec = webservice.sec;
 
 		/* ctrl */
+
+		$scope.isStarted = false;
+
 		$scope.start = function() {
 			//checkPW
 			webservice.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal.data}, function(response) {
 				if (response.success) {
-					$scope.getProtocol();
+					$scope.protocol = $scope.protocols.list[$scope.protocols.current];
+					localStorage.setItem('protocol', $scope.protocol.id);
 					$scope.steps.change($scope.protocol.startView || 'overview');
+					$scope.isStarted = true;
 					$scope.protocol.init();
 				} else {
 					$scope.sec.password = '';
@@ -123,11 +145,6 @@ angular
 			});
 		}
 
-		// get journal specific service
-		$scope.getProtocol = function() {
-			$scope.protocol = $scope.protocols.list[$scope.protocols.current];
-			localStorage.setItem('protocol', $scope.protocol.id);
-		};
 
 		/* some pdf things happen outside angular and need this */
 		$scope.$on('refreshView', function() {

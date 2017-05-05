@@ -87,7 +87,7 @@
 
 					<tbody>
 					<thead></thead>
-					<tr ng-repeat="field in journal.showOnHomepage track by $index">
+					<tr ng-repeat="field in journal.settings.showOnHomepage track by $index">
 						<td>{{field}}</td>
 						<td>
 							<span editable item="journal.data[field]" />
