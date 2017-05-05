@@ -102,8 +102,8 @@ angular
 
 		// open file externally
 		$scope.openDocument = function(article) {
-			console.log("OPEN " + article._.url);
-			window.open(settings.rep_url + '/' + article._.url);
+			console.log("OPEN " + article.filepath);
+			window.open(settings.rep_url + '/' + article.filepath);
 		}
 
 		$scope.selectedToMerge = false;

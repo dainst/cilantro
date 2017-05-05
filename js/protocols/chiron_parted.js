@@ -20,7 +20,6 @@ angular
 
 		var article = new journal.Article();
 		 // special data for raw articles
-		article._.url = documentsource.files[fileName].url;
 		article.filepath.value.value =  documentsource.files[fileName].url;
 		article._.tmp = [
 			{
@@ -104,7 +103,8 @@ angular
 
 					article.title 	= editables.text(title.trim());
 					article.author 	= editables.authorlist(caseCorrection(author).split("–"));
-					article.pages 	= editables.page(pageNr, pageIdx - 1, {offset: pageIdx - parseInt(pageNr)});
+					documentsource.files[fileName].pagecontext = {offset: pageIdx - parseInt(pageNr)};
+					article.pages 	= editables.page(pageNr, pageIdx - 1, documentsource.files[fileName].pagecontext);
 					article.pages.value.endpage = parseInt(pageNr) + pdf.pdfInfo.numPages - pageIdx;
 					article.pages.resetDesc();
 

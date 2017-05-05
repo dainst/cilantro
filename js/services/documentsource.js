@@ -63,10 +63,10 @@ angular
 					folder.files[this.url] = {
 						pdf: pdf,
 						filename: this.filename,
-						url: this.url
+						url: this.url,
+						pagecontext: {offset:0}
 					};
 					journal.loadedFiles[this.url] = this.url;
-					console.log(journal.loadedFiles)
 					messenger.alert('document nr ' + Object.keys(folder.files).length + ' loaded');
 					$rootScope.$broadcast('gotFile', this.url);
 					refreshView();
@@ -117,12 +117,16 @@ angular
 	 * @param article
 	 */
 	folder.updateThumbnail = function(article) {
-		console.log("recreate thumbnail for", article, article.pages.getCutAt().start, article._.url);
-		console.log(article._.url, folder);
-		folder.files[article._.url].pdf.getPage(article.pages.getCutAt().start).then(function(page) {
+		console.log("recreate thumbnail for", article, article.pages.getCutAt().start, article.filepath);
+		folder.files[article.filepath.value.value].pdf.getPage(article.pages.getCutAt().start).then(function(page) {
 			folder.createThumbnail(page, article._.id)
 		});
 	}
+
+	$rootScope.$on('thumbnaildataChanged', function($event, article) {
+		article.pages.context = folder.files[article.filepath].pagecontext;
+		folder.updateThumbnail(article)
+	});
 
 	/**
 	 * ... or this from inside a getPage promise

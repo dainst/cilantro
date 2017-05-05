@@ -1,6 +1,6 @@
 angular
 .module("module.journal", [])
-.factory("journal", ['editables', function(editables) {
+.factory("journal", ['editables', '$rootScope', function(editables, $rootScope) {
 
 	var journal = {
 		data:{},
@@ -115,7 +115,7 @@ angular
 
 	/* prototype constructor functions */
 	journal.Article =  function(data) {
-
+		data = data || {};
 		function guid() {
 			function s4() {
 				return Math.floor((1 + Math.random()) * 0x10000)
@@ -126,8 +126,6 @@ angular
 				s4() + '-' + s4() + s4() + s4();
 		}
 
-
-		data = data || {};
 		var articlePrototype = {
 			'title':			editables.base(data.title),
 			'abstract':			editables.text(data.abstract, false),
@@ -140,11 +138,20 @@ angular
 			'attached':			editables.filelist(),
 			'order':			editables.number(0, false),
 			'createFrontpage':	editables.checkbox(journal.data.create_frontpage === true),
-			'zenonId':			editables.base('', false),
+			'zenonId':			editables.base('', false)
 		}
 		Object.defineProperty(articlePrototype, '_', {enumerable: false, configurable: false, value: {}});
 
 		articlePrototype._.id = guid();
+
+		function thumbnailDataObserver() {
+			console.log('changes!', articlePrototype);
+			$rootScope.$broadcast('thumbnaildataChanged', articlePrototype)
+		}
+
+		articlePrototype.filepath.watch(thumbnailDataObserver);
+		articlePrototype.pages.watch(thumbnailDataObserver);
+
 
 		return (articlePrototype);
 	}

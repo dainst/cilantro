@@ -19,10 +19,11 @@ angular
 			check: 		function() {return (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value == '')) ? 'This  field is mandatory' : false;},
 			set:		function(value) {this.value = value},
 			get:		function(){return this.value},
-			compare:	function(that){return 0}
+			compare:	function(that){return 0},
+			watch:		function(observer){this.observer=observer; return this},
+			observer:	false
 		}
 	}
-	
 	
 	editables.authorlist = function(seed, format) {
 		var obj = editables.base();
@@ -239,7 +240,7 @@ angular
 	}
 	
 	editables.filelist = function(seed, mandatory) {
-		var obj = {};
+		var obj = editables.base(seed, mandatory, true);
 		obj.type = 'filelist';
 		obj.check =	function() {return false}
 		obj.value = seed || [];
@@ -252,7 +253,7 @@ angular
 	}
 
 	editables.listitem = function(list, selected, noneallowed) {
-		var obj = {};
+		var obj = editables.base(selected, false, false);
 		obj.type = 'listitem';
 		obj.noneallowed = noneallowed || true;
 		obj.check =	function() {return false}

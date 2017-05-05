@@ -1,25 +1,30 @@
-<div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning'>{{warning}}</div>
+<div>
+	<div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning'>{{warning}}</div>
 
-<div class='row'><div class='col-xs-12'>Pages (as printed)</div></div>
+	<div class='row'><div class='col-xs-12'>Pages (as printed)</div></div>
 
-<div class='row'>
-	<div class='col-xs-5'>
-		<input class='editable text-right' ng-model='item.value.realpage' ng-change='item.updateDesc()'></input>
+	<div class='row'>
+		<div class='col-xs-5'>
+			<input class='editable text-right' ng-model='item.value.realpage' ng-change='item.updateDesc();item.observer ? item.observer() : ""'></input>
+		</div>
+		<div class='col-xs-2 text-center'> - </div>
+		<div class='col-xs-5'>
+			<input class='editable text-left' ng-model='item.value.endpage' ng-change='item.updateDesc();item.observer ? item.observer() : ""'></input>
+		</div>
 	</div>
-	<div class='col-xs-2 text-center'> - </div>
-	<div class='col-xs-5'>
-		<input class='editable text-left' ng-model='item.value.endpage' ng-change='item.updateDesc()'></input>
+
+	<div class='row'><div class='col-xs-12'>equals pages in PDF file:</div></div>
+
+	<div class='row'><div class='col-xs-12'><strong>{{item.getCutAt().desc}}</strong></div></div>
+
+	<div class='row'><div class='col-xs-12'>Displayed in index:</div></div>
+
+	<div class='row'>
+		<div class='col-xs-12'>
+			<input class='editable  text-center' ng-model='item.value.pagedesc' ng-change='item.updateDesc()' placeholder="{{item.value.showndesc}}"></input>
+		</div>
 	</div>
+
+	<div>{{item.getDesc()}}</div>
+	<div>{{item.context}}</div>
 </div>
-
-<div class='row'><div class='col-xs-12'>equals pages in PDF file:</div></div>
-
-<div class='row'><div class='col-xs-12'><strong>{{item.getCutAt().desc}}</strong></div></div>
-
-<div class='row'><div class='col-xs-12'>Displayed in index:</div></div>
-
-<div class='row'><div class='col-xs-12'>
-	<input class='editable  text-center' ng-model='item.value.pagedesc' ng-change='item.updateDesc()' placeholder="{{item.value.showndesc}}"></input>
-</div></div>
-
-<div>{{item.getDesc()}}</div>
