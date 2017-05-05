@@ -21,6 +21,7 @@ angular
 		var article = new journal.Article();
 		 // special data for raw articles
 		article._.url = documentsource.files[fileName].url;
+		article.filepath.value.value =  documentsource.files[fileName].url;
 		article._.tmp = [
 			{
 				fontName: '',

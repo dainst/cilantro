@@ -1,0 +1,6 @@
+<div>
+	<select class="form-control editable-select" ng-model="item.value.value" >
+		<option ng-if="item.noneallowed " value="none">==none==</option>
+		<option ng-repeat="(key, val) in item.list track by $index" value='{{key}}'>{{val}}</option>
+	</select>
+</div>

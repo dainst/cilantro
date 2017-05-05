@@ -1,6 +1,6 @@
 angular
 .module('module.editables', [])
-.factory("editables", ['$log', function($log) {
+.factory("editables", [function() {
 	
 	var editables = {};
 	
@@ -34,12 +34,12 @@ angular
 		
 		obj.addRow = function() {
 			obj.value.push(new editables.types['author']);
-			$log.log('Add author');
+			console.log('Add author');
 		}
 		
 		obj.delRow = function(k) {
 			obj.value.splice(k,1);
-			$log.log('Delete author ' + k);
+			console.log('Delete author ' + k);
 		}
 				
 		obj.format = (typeof format === "undefined") ? 0 : format;
@@ -55,7 +55,7 @@ angular
 			format = (angular.isUndefined(format)) ? 0 : format;
 			angular.forEach(authors, function(author) {
 				
-				//$log.log('author', author);
+				//console.log('author', author);
 				
 				if (!author) {
 					return;
@@ -69,7 +69,7 @@ angular
 				// create author from string
 				var split = author.trim().match(obj.formats[format][0]);
 				
-				//$log.log('split', split);
+				//console.log('split', split);
 				
 				if (!split) {
 					return;
@@ -248,8 +248,18 @@ angular
 			// @ TODO check if elem is OK value for this
 			obj.value.push(elem);
 		}
-		return obj;	
-		
+		return obj;
+	}
+
+	editables.listitem = function(list, selected, noneallowed) {
+		var obj = {};
+		obj.type = 'listitem';
+		obj.noneallowed = noneallowed || true;
+		obj.check =	function() {return false}
+		obj.value = {value: selected && selected in list ? selected : (obj.noneallowed ? 'none' : list[Object.keys(list)[0]])};
+		obj.compare = function(second) {return 0}
+		obj.list = list;
+		return obj;
 	}
 	
 	

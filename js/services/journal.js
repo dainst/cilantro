@@ -9,7 +9,8 @@ angular
 		articleStats: {
 			data: {}
 		},
-		settings: {}
+		settings: {},
+		loadedFiles: {}
 	}
 
 	/* default data */
@@ -29,6 +30,7 @@ angular
 		}
 		journal.articles = [];
 		journal.thumbnails = {};
+		journal.loadedFiles = {}; // for the file selector editable
 		/* they are not part of the article obj since they are very large and iterating over the
 		 articles array in the digest give performance issues otherwise! */
 		journal.articleStats.data = {
@@ -134,7 +136,7 @@ angular
 			'date_published':	editables.base(data.date_published || 'DD-MM-YYYY'),
 			'language':			editables.language('de_DE', false),
 			'auto_publish':		editables.checkbox(journal.data.default_publish_articles === true),
-			'filepath':			journal.data.importFilePath,
+			'filepath':			editables.listitem(journal.loadedFiles),
 			'attached':			editables.filelist(),
 			'order':			editables.number(0, false),
 			'createFrontpage':	editables.checkbox(journal.data.create_frontpage === true),

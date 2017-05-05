@@ -10,6 +10,7 @@ angular
 	'idai.components',
 	'idai.templates',
 
+	'module.documentsource',
 	'module.journal',
 	'module.protocolregistry',
 	'module.infobox',
@@ -23,9 +24,7 @@ angular
 	'controller.view_finish',
 
 
-//	'controller.pdf',
-//	'controller.nopdf',
-	'module.documentsource',
+
 	'controller.upload',
 	'directive.editable',
 	'directive.multiselect',

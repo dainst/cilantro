@@ -393,6 +393,16 @@ input.form-check-input:checked + label:before {
 	color:black
 }
 
+.editable-select {
+	background-color:#D9EDF7;
+	border:none;
+	height:auto;
+	padding: 0;
+	border-radius: 0px
+
+}
+
+
 
 /* lang selector */
 

@@ -65,6 +65,8 @@ angular
 						filename: this.filename,
 						url: this.url
 					};
+					journal.loadedFiles[this.url] = this.url;
+					console.log(journal.loadedFiles)
 					messenger.alert('document nr ' + Object.keys(folder.files).length + ' loaded');
 					$rootScope.$broadcast('gotFile', this.url);
 					refreshView();
