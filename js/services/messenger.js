@@ -31,8 +31,8 @@ angular
 			messenger.content.debug = content.debug || [];
 
 			if (!messenger.content.message) {
-				messenger.content.message = (content.success) ? 'OK' : 'Not OK';
-				messenger.content.message += (content.warnings) ? ' with warnings' : '';
+				messenger.content.message = (content.success) ? '' : 'Unknown Error';
+				messenger.content.message += (content.warnings && content.warnings.length > 0) ? '(Some warnings)' : '';
 			}
 
 		}

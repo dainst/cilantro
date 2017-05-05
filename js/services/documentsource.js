@@ -18,8 +18,7 @@ angular
 			}
 		}
 		folder.path  = 'none';
-		folder.ready = false
-		console.log("FUCKSHIT");
+		folder.ready = false;
 	}
 
 	folder.reset();
@@ -57,7 +56,7 @@ angular
 					folder.PDF.api.getDocument(url).then(resolve, fail)
 				},
 				function fail(reason) {
-					messenger.alert("get Document " + url + " failed: " + reason, true);
+					messenger.alert("get document " + url + " failed: " + reason, true);
 				}
 			).then(
 				function onGotDocument(pdf) {
@@ -66,8 +65,9 @@ angular
 						filename: this.filename,
 						url: this.url
 					};
-					messenger.alert('document nr' + Object.keys(folder.files).length + ' loaded');
+					messenger.alert('document nr ' + Object.keys(folder.files).length + ' loaded');
 					$rootScope.$broadcast('gotFile', this.url);
+					refreshView();
 				}.bind({filename: filename, url: folder.path + '/' + filename})
 			);
 
@@ -78,10 +78,8 @@ angular
 
 	}
 
-
-
 	folder.getDocuments = function(path) {
-		console.log("GO", path);
+		console.log("read path", path);
 		folder.path =  path;
 
 		var getFolder = new Promise(function(resolve) {
@@ -106,16 +104,16 @@ angular
 			loadFiles();
 			Promise.all(loadFilePromises).then(function() {
 				messenger.alert("All Files loaded");
-				refreshView()
+				refreshView();
 				$rootScope.$broadcast('gotAll');
 			})
 		});
 	}
 
-		/**
-		 * call this from a button or something ...
-		 * @param article
-		 */
+	/**
+	 * call this from a button or something ...
+	 * @param article
+	 */
 	folder.updateThumbnail = function(article) {
 		console.log("recreate thumbnail for", article, article.pages.getCutAt().start, article._.url);
 		console.log(article._.url, folder);
@@ -124,11 +122,11 @@ angular
 		});
 	}
 
-		/**
-		 * ... or this from inside a getPage promise
-		 * @param page
-		 * @param containerId
-		 */
+	/**
+	 * ... or this from inside a getPage promise
+	 * @param page
+	 * @param containerId
+	 */
 	folder.createThumbnail = function(page, containerId) {
 		var container = angular.element(document.querySelector('#thumbnail-container-' + containerId));
 		var img = container.find('img');
@@ -170,7 +168,7 @@ angular
 			(folder.stats.files > 0)
 			&& (folder.stats.analyzed >= folder.stats.files)
 			&& (folder.stats.loaded >= folder.stats.files)
-			&& (folder.stats.thumbnails >= folder.stats.files)
+			&& (folder.stats.thumbnails >= folder.stats.files);
 		$rootScope.$broadcast('refreshView');
 	}
 

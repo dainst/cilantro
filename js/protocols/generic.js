@@ -1,10 +1,18 @@
 angular
 .module("module.protocols.generic", [])
-.factory("generic", ['editables', 'protocolregistry', function(editables, protocolregistry) {
+.factory("generic", ['$rootScope', 'editables', 'protocolregistry', 'documentsource', 'journal',
+	function($rootScope, editables, protocolregistry, documentsource, journal) {
 
 	var journalCtrl = new protocolregistry.Protocol('generic');
 
 	journalCtrl.description = "Generic Import protocol";
+
+	journalCtrl.init = function() {
+		// get document(s)
+		documentsource.getDocuments(journal.data.importFilePath);
+	}
+
+
 
 
 	return (journalCtrl);

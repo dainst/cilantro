@@ -148,11 +148,20 @@ angular
 
 		/* some pdf things happen outside angular and need this */
 		$scope.$on('refreshView', function() {
-			console.log('REFRESH', $scope.protocol.ready);
 			$scope.$apply();
 		})
 
-
+		/* forward events to current protocol */
+		$scope.$on('gotFile', function($event, data) {
+			if (angular.isFunction($scope.protocol.onGotFile)) {
+				$scope.protocol.onGotFile(data)
+			}
+		})
+		$scope.$on('gotAll', function($event, data) {
+			if (angular.isFunction($scope.protocol.onAll)) {
+				$scope.protocol.onAll(data)
+			}
+		})
 
 		
 	}

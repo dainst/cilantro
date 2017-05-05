@@ -12,7 +12,8 @@ angular
 		documentsource.getDocuments(journal.data.importFilePath);
 	}
 
-	$rootScope.$on('gotFile', function($event, fileName) {
+	journalCtrl.onGotFile = function(fileName) {
+
 		documentsource.stats.loaded += 1;
 
 		var pdf = documentsource.files[fileName].pdf;
@@ -124,13 +125,7 @@ angular
 		}
 
 		getPage(pdf, 1);
-	});
-
-	$rootScope.$on('gotAll', function onGotAll() {
-		//
-	});
-
-
+	}
 
 
 

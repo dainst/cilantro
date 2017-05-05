@@ -4,7 +4,7 @@ angular
 
 .module('directive.editable', [])
 
-.directive('editable', ['$log', function($log) {
+.directive('editable', [function() {
 	
 	var killCache = '?nd=' + Date.now();
 	
@@ -19,7 +19,7 @@ angular
     	  scope.caption = attrs.caption;
     	  scope.getTemplateUrl = function() {
     		  if (angular.isUndefined(scope.item) || angular.isUndefined(scope.item.type) || scope.item.readonly) {
-    			  //$log.log(scope.item);
+    			  //console.log(scope.item);
     			  return 'partials/undefined.html' + killCache;
     		  }
 	    	  return 'partials/' + scope.item.type + '.html'  + killCache; 
