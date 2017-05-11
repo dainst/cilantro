@@ -44,9 +44,11 @@ angular
 		 */
 		messenger.alert = function(msg, isError) {
 			console.log('MSG', msg);
+			if (!messenger.content.success && (messenger.content.message !='')) {
+				messenger.content.warnings.push(messenger.content.message);
+			}
 			messenger.content.message = msg;
 			messenger.content.success = !isError;
-			messenger.content.warnings = [];
 			messenger.content.debug = [];
 			$rootScope.$broadcast('refreshView');
 		}

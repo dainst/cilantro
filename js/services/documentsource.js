@@ -45,6 +45,7 @@ angular
 	var loadFilePromises = [];
 
 	var loadFiles = function() {
+		folder.ready = false;
 
 		for (var fileid in folder.dir) {
 
@@ -141,6 +142,7 @@ angular
 				messenger.alert("All Files loaded");
 				refreshView();
 				$rootScope.$broadcast('gotAll');
+				folder.ready = true;
 			})
 		});
 	}
@@ -254,11 +256,6 @@ angular
 	 *
 	 */
 	function refreshView() {
-		folder.ready =
-			(folder.stats.files > 0)
-			&& (folder.stats.analyzed >= folder.stats.files)
-			&& (folder.stats.loaded >= folder.stats.files)
-			&& (folder.stats.thumbnails >= folder.stats.files);
 		$rootScope.$broadcast('refreshView');
 	}
 
