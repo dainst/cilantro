@@ -209,7 +209,8 @@ table.split-table > tbody > tr > td .thumbnail-container.enlarged {
 	position: fixed;
 	left: 10px;
 	top:0px;
-	z-index: 2;
+	z-index: 10002;
+	background: white;
 }
 table.split-table > tbody > tr > td .thumbnail-container.enlarged img {
 	margin-top: 0px;
@@ -288,7 +289,7 @@ table .alert {
 	
 	padding: 1em;
 	position: fixed;
-	z-index: 5000;
+	z-index: 10004;
 	right: 0em;
 	top: 50px;
 }
@@ -401,7 +402,6 @@ input.form-check-input:checked + label:before {
 	border-radius: 0px
 
 }
-
 
 
 /* lang selector */

@@ -1,6 +1,6 @@
 angular
 	.module('module.messenger', [])
-	.factory("messenger", function() {
+	.factory("messenger", ["$rootScope", function($rootScope) {
 		var messenger = {};
 
 		messenger.content = {}
@@ -34,7 +34,7 @@ angular
 				messenger.content.message = (content.success) ? '' : 'Unknown Error';
 				messenger.content.message += (content.warnings && content.warnings.length > 0) ? '(Some warnings)' : '';
 			}
-
+			$rootScope.$broadcast('refreshView');
 		}
 
 		/**
@@ -48,6 +48,7 @@ angular
 			messenger.content.success = !isError;
 			messenger.content.warnings = [];
 			messenger.content.debug = [];
+			$rootScope.$broadcast('refreshView');
 		}
 
 
@@ -60,10 +61,11 @@ angular
 			messenger.content.success = true;
 			messenger.content.warnings = [];
 			messenger.content.debug = [];
+			$rootScope.$broadcast('refreshView');
 		}
 
 
 
 		return (messenger);
-	}
+	}]
 )

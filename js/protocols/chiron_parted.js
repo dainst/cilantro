@@ -7,10 +7,9 @@ angular
 
 	journalCtrl.description = "Chiron - Articles present as single PDFs";
 
-	journalCtrl.init = function() {
-		// get document(s)
-		documentsource.getDocuments(journal.data.importFilePath);
-	}
+	/* the journal's settings */
+	journalCtrl.columns = ['pages','filepath'];
+
 
 	journalCtrl.onGotFile = function(fileName) {
 
@@ -103,10 +102,12 @@ angular
 
 					article.title 	= editables.text(title.trim());
 					article.author 	= editables.authorlist(caseCorrection(author).split("–"));
-					documentsource.files[fileName].pagecontext = {offset: pageIdx - parseInt(pageNr)};
-					article.pages 	= editables.page(pageNr, pageIdx - 1, documentsource.files[fileName].pagecontext);
-					article.pages.value.endpage = parseInt(pageNr) + pdf.pdfInfo.numPages - pageIdx;
-					article.pages.resetDesc();
+
+					documentsource.files[fileName].pagecontext.offset = - pageIdx + parseInt(pageNr);
+					article.pages.context = documentsource.files[fileName].pagecontext;
+					article.pages.startPrint = parseInt(pageNr);
+					article.pages.endPrint = parseInt(pageNr) + pdf.pdfInfo.numPages - pageIdx;
+					//article.pages.resetDesc();
 
 					article.order	= editables.number((journal.articles.length  + 1) * 10);
 

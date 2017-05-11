@@ -145,7 +145,6 @@ angular
 		articlePrototype._.id = guid();
 
 		function thumbnailDataObserver() {
-			console.log('changes!', articlePrototype);
 			$rootScope.$broadcast('thumbnaildataChanged', articlePrototype)
 		}
 

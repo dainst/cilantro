@@ -21,19 +21,14 @@ angular
 				id: id,
 				description: 'no description for ' + id,
 				columns: ['author', 'title', 'pages'],
+				startView: 'overview',
 				main: {},
-				init: function() {
-					console.log('init protocol: ' + this.id);
-					this.main.steps.change('overview');
-				},
 				register: function() {
 					registry.protocols[this.id] = this;
-				}
+				},
+				init: false
 			}
 
-			p.run = function() {
-				console.log('running protocol')
-			}
 
 			return p
 		}

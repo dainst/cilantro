@@ -103,7 +103,7 @@ angular
 		// open file externally
 		$scope.openDocument = function(article) {
 			console.log("OPEN " + article.filepath);
-			window.open(settings.rep_url + '/' + article.filepath);
+			window.open(settings.rep_url + '/' + article.filepath.value.value);
 		}
 
 		$scope.selectedToMerge = false;
@@ -212,7 +212,7 @@ angular
 		}
 
 
-
+		$scope.getFileInfo = documentsource.getFileInfo;
 
 	}
 ]);

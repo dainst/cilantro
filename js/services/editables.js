@@ -3,11 +3,8 @@ angular
 .factory("editables", [function() {
 	
 	var editables = {};
-	
-	editables.types = {
-		'author':	function(first, second) {return {'firstname': first, 'lastname': second}},
-		'page':		function(nr, desc) {return {'realpage': parseInt(nr), 'pagedesc': desc || nr, 'endpage': '', /*'offset': 0,*/ 'showndesc': desc || nr}}
-	}
+	editables.types = {}; // constructors fpr useful subtypes
+
 	
 	
 	editables.base = function(seed, mandatory, readonly) { 
@@ -24,17 +21,19 @@ angular
 			observer:	false
 		}
 	}
+
+	editables.types.Author = function(first, second) {return {'firstname': first, 'lastname': second}};
 	
 	editables.authorlist = function(seed, format) {
 		var obj = editables.base();
 		obj.type = 'authorlist';
 			
 		if (!angular.isArray(seed) || seed.length == 0) {
-			obj.value = [new editables.types['author']];
+			obj.value = [new editables.types.Author];
 		}
 		
 		obj.addRow = function() {
-			obj.value.push(new editables.types['author']);
+			obj.value.push(new editables.types.Author);
 			console.log('Add author');
 		}
 		
@@ -76,7 +75,7 @@ angular
 					return;
 				} 
 				
-				obj.value.push(editables.types['author'](split[obj.formats[format][1]], split[obj.formats[format][2]]));
+				obj.value.push(editables.types.Author(split[obj.formats[format][1]], split[obj.formats[format][2]]));
 				
 			});
 		
@@ -115,62 +114,117 @@ angular
 		
 		return obj;
 	}
-	
-	
-	editables.page = function(nr, realpage, context) {
-		var obj = editables.base([nr, realpage]);
+
+
+	/**
+	 * page editable
+	 * realpage = startPage - as printed
+	 * endpage = endPage - as printed
+	 *
+	 *
+	 * Pagecontext
+	 * @param d
+	 * @returns {{offset: number, maximum: (number|*)}}
+	 * @constructor
+	 */
+	editables.types.Pagecontext = function(d){
+		d = d || {offset:0, maximum: -1};
+		return {'offset': d.offset || 0, 'maximum': d.maximum || -1}
+	}
+	/**
+	 *
+	 * @returns {{type, value, mandatory, readonly, check, set, get, compare, watch, observer}}
+	 */
+	editables.page = function() {
+		var obj = editables.base();
 		obj.type = 'page';
-		obj.value = new editables.types['page'](nr, realpage);
-		
-		obj.context = context || {'offset': 0};
-		
-		obj.getCutAt = function() {
-			var start = parseInt(obj.value.realpage) + parseInt(obj.context.offset);
-			var end   = (obj.value.endpage) ? parseInt(obj.value.endpage) + parseInt(obj.context.offset) : start;
-			var desc  = (obj.value.endpage) ? start + ' - ' + end : start;
-			return {
-				start: start,
-				end: end,
-				desc: desc
-			}
+		obj.value = {
+			startPdf: 0,
+			endPdf: 0,
+			showndesc: '', // manually set page description
 		}
-		
-		obj.updateDesc = function(force) {
-			if (this.value.pagedesc == '' || force  === true) {
-				this.value.showndesc = parseInt(this.value.realpage);
-				this.value.showndesc += parseInt(this.value.endpage) ? '–' + parseInt(this.value.endpage) : '';
+		obj.context = new editables.types.Pagecontext();
+
+		Object.defineProperty(obj, 'startPrint', {
+			get: function() {
+				return parseInt(this.value.startPdf) + parseInt(this.context.offset);
+			},
+			set: function(y) {
+				this.value.startPdf = y - this.context.offset;
+			}
+		});
+		Object.defineProperty(obj, 'endPrint', {
+			get: function() {
+				return parseInt(this.value.endPdf) + parseInt(this.context.offset);
+			},
+			set: function(y) {
+				this.value.endPdf = y - this.context.offset;
+			}
+		});
+
+
+		var manualDesc = false;
+
+		Object.defineProperty(obj, 'desc', {
+			get: function() {
+				if (!manualDesc) {
+					obj.resetDesc();
+				}
+				return this.value.showndesc;
+			},
+			set: function(w) {
+				obj.resetDesc(w)
+			}
+		});
+
+		obj.resetDesc = function(w) {
+			if (typeof w !== "undefined" && w) {
+				this.value.showndesc = w;
+				manualDesc = true;
 			} else {
-				this.value.showndesc = this.value.pagedesc;
+				this.value.showndesc = parseInt(this.startPrint);
+				this.value.showndesc += parseInt(this.endPrint) ? '–' + parseInt(this.endPrint) : '';
+				manualDesc = false
 			}
 		}
-		
-		obj.resetDesc = function() {
-			obj.updateDesc(true);
-			this.value.pagedesc = this.value.showndesc;
+
+		obj.resetContext = function(d) {
+			obj.context = new editables.types.Pagecontext(d);
 		}
-		
+
 		obj.check =	function() {
-			if (!obj.value.realpage) {
-				return "Missing!";
+
+			if (!obj.value.startPdf) {
+				return "Start Page Missing!";
 			}
-			if (obj.value.realpage &&(obj.value.realpage != parseInt(obj.value.realpage))) {
+			if (obj.value.startPdf && (obj.value.startPdf != parseInt(obj.value.startPdf))) {
 				return "Number Only!";
 			}
-			if (obj.value.endpage && (obj.value.endpage != parseInt(obj.value.endpage))) {
+			if (obj.value.endPdf && (obj.value.endPdf != parseInt(obj.value.endPdf))) {
 				return "Number Only!";
 			}
-			if (obj.value.endpage && (parseInt(obj.value.endpage) < parseInt(obj.value.realpage))) {
-				return "endpage impossible";
+			if (obj.value.endPdf && (parseInt(obj.value.endPdf) < parseInt(obj.value.startPdf))) {
+				return "End page is impossible!";
 			}
-			
-			
+
+			if (obj.endPdf < 1) {
+				return "End page is impossible!"
+			}
+			if (obj.value.startPdf < 0) {
+				return "Start page is impossible!"
+			}
+			if (obj.context.maximum != -1 && obj.value.endPdf > obj.context.maximum) {
+				return "End Page exceeds maximum"
+			}
+
+
 			return false;
 		}
-		
+
 		obj.compare = function(second) {
-			return (this.value.realpage > second.value.realpage) ? 1 : -1;
+			return (this.value.startPdf > second.value.startPdf) ? 1 : -1;
 		}
-		
+
 		return obj;
 	}
 	

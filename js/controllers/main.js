@@ -138,7 +138,11 @@ angular
 					localStorage.setItem('protocol', $scope.protocol.id);
 					$scope.steps.change($scope.protocol.startView || 'overview');
 					$scope.isStarted = true;
-					$scope.protocol.init();
+					if (angular.isFunction($scope.protocol.init)) {
+						$scope.protocol.init();
+					} else {
+						documentsource.getDocuments(journal.data.importFilePath);
+					}
 				} else {
 					$scope.sec.password = '';
 				}
@@ -148,7 +152,9 @@ angular
 
 		/* some pdf things happen outside angular and need this */
 		$scope.$on('refreshView', function() {
-			$scope.$apply();
+			if(!$scope.$$phase) {
+				$scope.$apply();
+			}
 		})
 
 		/* forward events to current protocol */

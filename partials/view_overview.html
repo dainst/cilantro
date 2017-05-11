@@ -55,16 +55,21 @@
 								<button class='btn btn-default' ng-click="updateThumbnail(article)">Reload thumbnail<span class="glyphicon glyphicon-refresh"></span></button>
 							</div>
 							<div id="thumbnail-container-{{article._.id}}" class="thumbnail-container" ng-class="{'enlarged': article._.id==selectedThumb}" ng-click="selectThumb(article._.id)">
-								<img ng-show="journal.thumbnails[article._.id] != ''" data-ng-src="{{journal.thumbnails[article._.id]}}" />
+								<img data-ng-src="{{!angular.isUndefined(journal.thumbnails[article._.id]) ? journal.thumbnails[article._.id] : ''}}" />
 							</div>
 						</div>
 						<div ng-show="article.pages.check() || (article.filepath.value.value == 'none')">
 							<div class="alert alert-warning">You have to provide a pagenumber and a loaded file to get a preview.</div>
 						</div>
-
 					</td>
 					<td ng-repeat="(name, column) in columns" ng-show="column.checked">
-						<span editable item="article[name]" />
+						<span editable item="article[name]"></span>
+						<table ng-if="name=='filepath'">
+							<tr ng-repeat="(field, content) in getFileInfo(article)">
+								<td class="col-xs-6">{{field}}<td>
+								<td class="col-xs-6">{{content}}</td>
+							</tr>
+						</table>
 					</td>
 					<td>
 						<span class="btn btn-default btn-xs" ng-show="$index>0" ng-click="updateOrder('up', true, article)" data-tooltip="move above"><span class="glyphicon glyphicon-triangle-top"></span></span>

@@ -1,7 +1,7 @@
 angular
 .module('module.documentsource', ['module.messenger', 'module.webservice'])
-.factory('documentsource', ['$rootScope', 'settings', 'webservice', 'messenger', 'journal',
-	function($rootScope, settings, webservice, messenger, journal) {
+.factory('documentsource', ['$rootScope', 'settings', 'webservice', 'messenger', 'journal', 'editables',
+	function($rootScope, settings, webservice, messenger, journal, editables) {
 
 	var folder = {};
 
@@ -52,26 +52,59 @@ angular
 			var url = settings.rep_url + folder.path + '/' + filename;
 
 			var promise = new Promise(
-				function (resolve, fail) {
-					folder.PDF.api.getDocument(url).then(resolve, fail)
-				},
-				function fail(reason) {
-					messenger.alert("get document " + url + " failed: " + reason, true);
+				function documentPromiseResolve(resolve, fail) {
+
+					folder.PDF.api.getDocument(url).then(
+						function onGotDocument(pdf) {
+							var fileInfo = {
+								pdf: pdf,
+								filename: this.filename,
+								url: this.url,
+								pagecontext: new editables.types.Pagecontext({maximum: pdf.pdfInfo.numPages})
+							};
+
+							var promise1 = pdf.getMetadata().then(function (meta) {
+								console.log(meta);
+								this.meta = meta.info
+							}.bind(fileInfo));
+							var promise2 = pdf.getDownloadInfo().then(function (dil) {
+								function fileSize(b) {
+									var u = 0, s = 1024;
+									while (b >= s || -b >= s) {
+										b /= s;//
+										u++;
+									}
+									return (u ? b.toFixed(1) + ' ' : b) + ' KMGTPEZY'[u] + 'B';
+								}
+
+								this.size = fileSize(dil.length);
+							}.bind(fileInfo));
+
+							folder.files[this.url] = fileInfo;
+
+							var metadataLoaded = function () {
+								journal.loadedFiles[this.url] = this.url;
+								messenger.alert('document nr ' + Object.keys(folder.files).length + ' loaded');
+								$rootScope.$broadcast('gotFile', this.url);
+								refreshView();
+								resolve();
+							}.bind(this);
+
+
+							Promise.all([promise1, promise2]).then(metadataLoaded, metadataLoaded);
+							// if metadata could not be loaded, it's no reason not to continue... but we should at least try it
+
+
+						}.bind({filename: filename, url: folder.path + '/' + filename}),
+
+						function onFailDocument(reason) {
+							messenger.alert("get document " + url + " failed: " + reason, true);
+							resolve(); //!
+						}
+					)
 				}
-			).then(
-				function onGotDocument(pdf) {
-					folder.files[this.url] = {
-						pdf: pdf,
-						filename: this.filename,
-						url: this.url,
-						pagecontext: {offset:0}
-					};
-					journal.loadedFiles[this.url] = this.url;
-					messenger.alert('document nr ' + Object.keys(folder.files).length + ' loaded');
-					$rootScope.$broadcast('gotFile', this.url);
-					refreshView();
-				}.bind({filename: filename, url: folder.path + '/' + filename})
 			);
+
 
 			loadFilePromises.push(promise);
 			//console.log('promises collected: ' + loadFilePromises.length);
@@ -113,20 +146,64 @@ angular
 	}
 
 	/**
+	 *
+	 * @param article
+	 * @returns {*}
+	 */
+	folder.getFileInfo = function(article) {
+
+		if (article.filepath.value.value == 'none') {
+			return {}
+		}
+		var file = folder.files[article.filepath.value.value];
+		if (angular.isUndefined(file)) {
+			return {'alert': 'file not known'}
+		}
+
+		return {
+			'pages': file.pagecontext.maximum,
+			'page offset': file.pagecontext.offset,
+			'size': file.size
+		}
+
+	}
+
+
+	/**
+	 * trigger trumbnail recreation (on page or filepath change)
+	 */
+	$rootScope.$on('thumbnaildataChanged', function($event, article) {
+		if (article.pages.value.startPdf == 0) { // while creation
+			return;
+		}
+		if (!angular.isUndefined(folder.files[article.filepath.value.value])) {
+			article.pages.context = folder.files[article.filepath.value.value].pagecontext;
+			folder.updateThumbnail(article);
+		} else {
+			article.pages.resetContext();
+			folder.removeThumbnail(article._.id);
+		}
+	});
+
+
+	/**
 	 * call this from a button or something ...
 	 * @param article
 	 */
 	folder.updateThumbnail = function(article) {
-		console.log("recreate thumbnail for", article, article.pages.getCutAt().start, article.filepath);
-		folder.files[article.filepath.value.value].pdf.getPage(article.pages.getCutAt().start).then(function(page) {
-			folder.createThumbnail(page, article._.id)
-		});
+		console.log("recreate thumbnail for", article._.id, article.pages.value.startPdf, article.filepath.value.value);
+		folder.files[article.filepath.value.value].pdf.getPage(article.pages.value.startPdf).then(
+			function updateThumbnailGotPageSuccess(page) {
+				folder.createThumbnail(page, article._.id)
+			},
+			function updateThumbnailGotPageFail(page) {
+				messenger.alert("Page " + article.pages.value.startPdf + " not found", true);
+				console.log('page not found', article.pages.value.startPdf, article._.id);
+				folder.removeThumbnail(article._.id)
+			}
+		);
 	}
 
-	$rootScope.$on('thumbnaildataChanged', function($event, article) {
-		article.pages.context = folder.files[article.filepath].pagecontext;
-		folder.updateThumbnail(article)
-	});
 
 	/**
 	 * ... or this from inside a getPage promise
@@ -155,6 +232,7 @@ angular
 		});
 
 		page.render(renderContext).then(function(){
+			console.log("thumbnail created");
 			ctx.globalCompositeOperation = "destination-over";
 			ctx.fillStyle = "#123456";
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -163,6 +241,12 @@ angular
 			refreshView()
 		});
 
+	}
+
+	folder.removeThumbnail = function(containerId) {
+		console.log("thumbnail removed", containerId);
+		delete journal.thumbnails[containerId];
+		folder.stats.thumbnails = Object.keys(journal.thumbnails).length;
 	}
 
 	/**
