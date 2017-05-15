@@ -26,7 +26,7 @@ angular
 				register: function() {
 					registry.protocols[this.id] = this;
 				},
-				init: false
+				onInit: false
 			}
 
 

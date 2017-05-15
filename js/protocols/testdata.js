@@ -16,7 +16,7 @@ angular
 	/* the journal's settings */
 	journalCtrl.columns = ['title'];
 
-	journalCtrl.init = function() {
+	journalCtrl.onInit = function() {
 		journal.articles.push(new journal.Article({
 			title: "A lady centaur",
 			author: {firstname:'1peter', lastname: '1parker'},

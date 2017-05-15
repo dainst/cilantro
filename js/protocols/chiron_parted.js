@@ -8,8 +8,15 @@ angular
 	journalCtrl.description = "Chiron - Articles present as single PDFs";
 
 	/* the journal's settings */
-	journalCtrl.columns = ['pages','filepath'];
+	journalCtrl.columns = ['author', 'title', 'pages'];
 
+	journalCtrl.onInit = function() {
+		journal.data.identification = 'vol_year';
+		journal.data.ojs_journal_code = 'chiron';
+		journal.data.auto_publish_issue.value.value = true;
+		journal.data.default_create_frontpage = true;
+		documentsource.getDocuments(journal.data.importFilePath);
+	}
 
 	journalCtrl.onGotFile = function(fileName) {
 

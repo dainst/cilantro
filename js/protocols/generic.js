@@ -7,6 +7,15 @@ angular
 
 	journalCtrl.description = "Generic Import protocol";
 
+	journalCtrl.onInit = function() {
+		journal.data.identification = editables.text('', true); // @ TODO use list!
+		journal.data.ojs_journal_code = editables.text('', true);
+		journal.data.auto_publish_issue.value.value = true;
+		journal.data.default_create_frontpage = true;
+		documentsource.getDocuments(journal.data.importFilePath);
+	}
+
+
 	journalCtrl.onGotFile = function(fileName) {
 
 		documentsource.stats.loaded += 1;

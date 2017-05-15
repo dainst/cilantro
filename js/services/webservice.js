@@ -76,6 +76,16 @@ angular
 		}
 	}
 
+	webservice.getFileInfo = function(path) {
+		// not elegant, but hey okay
+		for (var i=0; i < webservice.repository.length; i++) {
+			if (webservice.repository[i].path == path) {
+				return webservice.repository[i];
+			}
+		}
+		messenger.alert(path + ' is not found in repository');
+	}
+
 
 	return webservice;
 }]);

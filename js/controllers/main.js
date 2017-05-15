@@ -117,6 +117,7 @@ angular
 			list: [],
 			update: function (repository, selected) {
 				$scope.repository.list = webservice.repository = repository;
+				console.log($scope.repository.list);
 				if (typeof selected !== "undefined") {
 					$scope.journal.data.importFilePath = selected;
 				}
@@ -138,10 +139,10 @@ angular
 					localStorage.setItem('protocol', $scope.protocol.id);
 					$scope.steps.change($scope.protocol.startView || 'overview');
 					$scope.isStarted = true;
-					if (angular.isFunction($scope.protocol.init)) {
-						$scope.protocol.init();
+					if (angular.isFunction($scope.protocol.onInit)) {
+						$scope.protocol.onInit();
 					} else {
-						documentsource.getDocuments(journal.data.importFilePath);
+
 					}
 				} else {
 					$scope.sec.password = '';

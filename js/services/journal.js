@@ -19,11 +19,10 @@ angular
 		journal.data = {
 			"volume": editables.base(''),
 			"year": editables.base(''),
-			"importFilePath": settings.devMode ? "checkdas.pdfdir" : '',
+			"importFilePath": settings.devMode ? "LLL.pdf" : '',
 			"identification": "vol_year",
 			"ojs_journal_code": "ojs_journal_code",
 			"ojs_user": "ojs_user",
-			"journal_code": "importer journal code",
 			"auto_publish_issue": editables.checkbox(false),
 			"default_publish_articles": true,
 			"default_create_frontpage": true
@@ -38,6 +37,15 @@ angular
 			undecided: 0,
 			confirmed: 0,
 			dismissed: 0
+		}
+		journal.articleStats.data._isOk = function(k, v) {
+			if (k == 'undecided') {
+				return 0;
+			} else if (k == 'confirmed') {
+				return 1;
+			} else if (k == 'dismissed') {
+				return -1;
+			}
 		}
 		/* editable fields in homepage */
 		journal.settings.showOnHomepage = ['volume', 'year'];
@@ -58,16 +66,7 @@ angular
 		return (invalid == 0);
 	}
 
-	/* stats */
-	journal.articleStats.data._isOk = function(k, v) {
-		if (k == 'undecided') {
-			return 0;
-		} else if (k == 'confirmed') {
-			return 1;
-		} else if (k == 'dismissed') {
-			return -1;
-		}
-	}
+
 
 	journal.articleStats.update = function() {
 		journal.articleStats.data.articles = journal.articles.length;
