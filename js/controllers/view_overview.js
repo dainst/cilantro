@@ -106,6 +106,8 @@ angular
 			window.open(settings.rep_url + '/' + article.filepath.value.value);
 		}
 
+
+		/* merging articles */
 		$scope.selectedToMerge = false;
 
 		$scope.mergeArticle = function(article) {
@@ -132,25 +134,15 @@ angular
 		}
 
 
-		$scope.selectedThumb = -1;
-		$scope.selectThumb = function(i) {
-			$scope.selectedThumb = (i == $scope.selectedThumb) ? -1 : i;
-		}
-		$scope.updateThumbnail = function(article) {
-			documentsource.updateThumbnail(article);
-		}
-
-
 		function mergeArticles(main, attach)  {
 
 			console.log('merge!', main, attach);
 			$scope.selectedToMerge = false;
 
-
-			//angular.extend(main.attached.value.value, attach.attached.value.value);
-
 			main.attached.push({
-				file: attach.filepath
+				file: attach.filepath.value.value,
+				from: attach.pages.value.startPdf,
+				to:   attach.pages.value.endPdf
 			});// we could add from and to, but we use the whole file anyway!
 
 			$scope.removeArticle(attach);
@@ -160,12 +152,24 @@ angular
 		}
 
 
+
+		/* delete */
 		$scope.removeArticle = function(article) {
 			//journal.deleteArticle(article)
 			article._.confirmed = false;
 		}
 
 
+		/* thumbnail enlargement */
+		$scope.selectedThumb = -1;
+		$scope.selectThumb = function(i) {
+			$scope.selectedThumb = (i == $scope.selectedThumb) ? -1 : i;
+		}
+		$scope.updateThumbnail = function(article) {
+			documentsource.updateThumbnail(article);
+		}
+
+		/* order */
 		$scope.updateOrder = function(order, asc, article) {
 
 			if (!order || (order == '')) {

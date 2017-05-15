@@ -19,10 +19,9 @@ angular
     	  scope.caption = attrs.caption;
     	  scope.getTemplateUrl = function() {
     		  if (angular.isUndefined(scope.item) || angular.isUndefined(scope.item.type) || scope.item.readonly) {
-    			  //console.log(scope.item);
     			  return 'partials/undefined.html' + killCache;
     		  }
-	    	  return 'partials/' + scope.item.type + '.html'  + killCache; 
+	    	  return 'partials/' + scope.item.type + '.html'  + killCache;
     	  }
     	  
       }

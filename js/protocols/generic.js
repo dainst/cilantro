@@ -7,6 +7,8 @@ angular
 
 	journalCtrl.description = "Generic Import protocol";
 
+	journalCtrl.columns = ['attached', 'pages'];
+
 	journalCtrl.onInit = function() {
 		journal.data.identification = editables.text('', true); // @ TODO use list!
 		journal.data.ojs_journal_code = editables.text('', true);

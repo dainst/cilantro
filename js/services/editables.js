@@ -294,7 +294,7 @@ angular
 	}
 	
 	editables.filelist = function(seed, mandatory) {
-		var obj = editables.base(seed, mandatory, true);
+		var obj = editables.base(seed, mandatory);
 		obj.type = 'filelist';
 		obj.check =	function() {return false}
 		obj.value = seed || [];

@@ -19,7 +19,7 @@ angular
 		journal.data = {
 			"volume": editables.base(''),
 			"year": editables.base(''),
-			"importFilePath": settings.devMode ? "LLL.pdf" : '',
+			"importFilePath": settings.devMode ? "checkdas.pdfdir" : '',
 			"identification": "vol_year",
 			"ojs_journal_code": "ojs_journal_code",
 			"ojs_user": "ojs_user",
