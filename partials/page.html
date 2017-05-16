@@ -23,7 +23,7 @@
 					class='editable text-left'
 					ng-model='item.value.endPdf'
 					ng-change='item.observer ? item.observer() : ""'
-					min="{{item.value.startPdf + 1}}"
+					min="{{item.value.startPdf}}"
 					max="{{item.context.maximum > -1 ? item.context.maximum : 1000}}"
 			/>
 		</div>
