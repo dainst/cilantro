@@ -105,7 +105,7 @@ angular
 		/* zenon connection */
 
 		$scope.zenon = {};
-		$scope.reportedToZenon = [];
+
 
 		$scope.zenonMapDoc = function(doc) {
 			function join(ar) {
@@ -235,32 +235,11 @@ angular
 
 		$scope.markAsMissingZenon = function() {
 			journal.articles[$scope.currentArticle].zenonId.value.value = '(((new)))';
+			journal.articles[$scope.currentArticle]._.reportToZenon = true;
 			//$scope.sendToZenon();
 		}
 
 
-		$scope.reportMissingToZenon = function() {
-			angular.forEach(journal.articlesConfirmed, function(article) {
-				if (article.zenonId.value.value == '(((new)))') {
-					webservice.get('sendToZenon', {journal: $scope.journal.data, article: article}, function (response) {
-						$scope.reportedToZenon.push(article);
-						console.log(response);
-					});
-				}
-			});
-		}
-
-		$scope.sendToZenon = function() {
-			$scope.server = {};
-			journal.articles[$scope.currentArticle].thumbnail = '';
-			webservice.get('sendToZenon', {journal: $scope.journal.data, article: journal.articles[$scope.currentArticle]}, function(response) {
-				$scope.server = response;
-			});
-		}
-
-		$scope.getReportUrl = function() {
-			return window.settings.log_url;
-		}
 
 		$scope.openFullFile = function(url) {
 			window.open(url);

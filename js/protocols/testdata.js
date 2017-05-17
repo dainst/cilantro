@@ -10,7 +10,7 @@ angular
 
 	journalCtrl.description = "Create some Testdata 3.0";
 
-	journalCtrl.startView = 'articles';
+	journalCtrl.startView = 'publish';
 
 
 	/* the journal's settings */
@@ -42,7 +42,10 @@ angular
 			author: {firstname:'5Piller', lastname: '5Mann'},
 			pages: 1
 		}));
+		journal.data.volume.value.value = '123';
+		journal.data.year.value.value = '123';
 		documentsource.ready = true;
+		console.log(journal.get())
 	};
 
 

@@ -125,7 +125,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$xmlFile = $this->makeXML(true);
 				
 			$this->log->log("pump into ojs");
-			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->journal->ojs_journal_code} {$this->settings['ojs_user']}";
+			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->data->ojs_journal_code} {$this->settings['ojs_user']}";
 		
 			$this->log->log("this is my last result");
 			$this->log->debug($execline);
@@ -173,7 +173,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			return;
 		}
 		uasort($this->data->articles, function($a, $b) {
-			return $a->order->value->value < $b->order->value->value  ? -1 : 1;
+			return $a->order < $b->order  ? -1 : 1;
 		});
 		
 		$this->log->log("order articles");
@@ -192,11 +192,11 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 		foreach ($data->articles as $nr => $article) {
 				
-			$start = (int) $article->pages->value->realpage + (int) $article->pages->context->offset;
-			$end   = (int) $article->pages->value->endpage  + (int) $article->pages->context->offset;
+			$start = (int) $article->pages->startPdf;
+			$end   = (int) $article->pages->endPdf;
 			$end   = $end ? $end : $start;
 			
-			$isDir = (substr($data->journal->importFilePath, -6) == 'pdfdir');
+			$isDir = (substr($data->data->importFilePath, -6) == 'pdfdir');
 			
 			$name  = $isDir ? $article->filepath : "{$article->filepath}.$nr.pdf";
 			$outp  = str_replace('/','-', $name);
@@ -213,8 +213,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			);
 			
 			// any "attached" files, files meant to merge		
-			if (isset($article->attached) and isset($article->attached->value)) {
-				$files = array_merge($files, $article->attached->value);
+			if (isset($article->attached)) {
+				$files = array_merge($files, $article->attached);
 			}
 			$mergeStr = $this->_mergePdfString($files);
 			
@@ -289,7 +289,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 */
 	function makeXML($save = false) {
 		$data = $this->data;
-		$journal = $data->journal;
+
+		$journal = $data->data;
 				
 		$this->orderArticles();
 		$articles = $data->articles;
@@ -327,7 +328,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 *
 	 */
 	function sendReport($filename, $content) {
-		file_put_contents($this->settings['log_path'] . '/' . $this->return['uploadId'] . '.' . $filename, $this->return['xml']);
+		file_put_contents($this->settings['log_path'] . '/' . $filename, $content);
 	}
 	
 	
@@ -339,8 +340,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	function sendToZenon() {
 			
 		$data = $this->data;
-		$journal = $data->journal;
-		$article = $data->article;
+		$journal = $data->data;
+		$article = $this->data->articles[0];
 	
 		ob_start();
 		include('marc_template.php');
@@ -348,11 +349,11 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		ob_end_clean();
 	
 		$test = new SimpleXMLElement($xml); // should throw an error on error..
-	
-		$this->return['message'] = "XML successfully generated";
-		$this->return['xml'] = $xml;
-	
-		$this->sendReport($data->article->title->value->value . '.xml', $xml);
+
+		$filename = $this->return['uploadId'] . '.' . $this->_clean_string($article->title) . '.xml';
+		$this->return['report'] = $filename;
+		$this->sendReport($filename, $xml);
+		$this->return['message'] = "Report >>$filename<< successfully generated";
 	}
 	
 
@@ -385,7 +386,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	function checkPw() {
 		$data = $this->data;
 		$this->log->log('pw sent ' . (isset($data->password) ? $data->password : ''));
-		$this->log->log('pw set ' . $this->settings['password']);
+		//$this->log->log('pw set ' . $this->settings['password']);
 		return (isset($data->password) and ($data->password == $this->settings['password']));
 	}
 		
@@ -439,7 +440,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 */
 	private function _assembleAuthorlist($article) {
 		$author_list = [];
-		foreach ($article->author->value as $author) {
+		foreach ($article->author as $author) {
 			$author_list[] = "{$author->firstname} {$author->lastname}";
 		}
 		return implode('; ', $author_list);
@@ -570,7 +571,12 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		return true;
 	}
 
+	private function _clean_string($string) {
+		$string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+		$string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 
+		return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
+	}
 
 
 

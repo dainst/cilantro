@@ -4,6 +4,7 @@
 		<div class="col-md-8">
 			<span class="btn-group">
 				<button ng-show="isReady()" class='btn btn-default' ng-click='renderXml()'>Preview transport XML<span class="glyphicon glyphicon-view"></span></button>
+				<button ng-show="isReady()" class='btn btn-default' ng-click='reportMissingToZenon()'>Preview Reports to Zenon<span class="glyphicon glyphicon-view"></span></button>
 			</span>
 		</div>
 		<div class="col-md-4 text-right">
@@ -54,14 +55,15 @@
 				</div>
 			</div>
 
-			<div class="panel panel-default" ng-show="done">
+			<div class="panel panel-default" ng-show="reportedToZenon.length">
 				<div class="panel-heading">Reports to zenon</div>
 				<div class="panel-body">
 					<p>The following articles where reported to Zenon</p>
 					<ul>
-						<li ng-repeat="(id, article) in reportedToZenon">{{article.title.value.value}}</li>
+						<li ng-repeat="(id, article) in reportedToZenon track by $index">
+							<a href='{{article._.zenonReport}}' target='_blank'>{{article.title.value.value}}</a>
+						</li>
 					</ul>
-					<p>See reports <a href='{{getReportUrl()}}' target='_blank'>here</a>. (UploadId: {{getUploadId()}})</p>
 				</div>
 			</div>
 

@@ -17,26 +17,26 @@ angular
 		$scope.dainstMetadata = {};
 
 		$scope.renderXml = function() {
-			webservice.get('makeXML', {journal: journal.data, articles: journal.articles}, function(response) {
+			console.log(journal.get());
+			webservice.get('makeXML', journal.get(), function(response) {
 				$scope.xml = response.xml;
 			});
 		}
 
 		$scope.uploadToOjs = function() {
 			$scope.isInitialized = false;
-			webservice.get('toOJS', {journal: journal.data, articles: journal.articles}, function(response) {
+			webservice.get('toOJS', journal.get(), function(response) {
 				$scope.isInitialized = true;
 				console.log(response);
 				if (response.success) {
 					$scope.done = true;
-					$scope.dainstMetadata = response.dainstMetadata;
-					//$scope.reportMissingToZenon(); @ TODO do it
+					$scope.reportMissingToZenon();
 				}
 			});
 		}
 
 		$scope.makeOjsUrl = function(id) {
-			return window.settings.ojs_url + 'index.php/'+ $scope.journal.data.ojs_journal_code + '/article/view/' + id;
+			return window.settings.ojs_url + 'index.php/'+ journal.data.ojs_journal_code + '/article/view/' + id;
 		}
 
 		$scope.isReady = function() {
@@ -44,5 +44,31 @@ angular
 			var journalReady = $scope.journal.check();
 			return articlesReady && journalReady && !$scope.done;
 		}
+
+
+
+		$scope.reportedToZenon = [];
+
+		$scope.reportMissingToZenon = function() {
+			console.log('creating zenon reports');
+			angular.forEach(journal.articles, function(article) {
+				if (article._.reportToZenon === true) {
+					webservice.get('sendToZenon', journal.get(article), function(response) {
+						if (response.success) {
+							article._.zenonReport = settings.log_url + response.report;
+							$scope.reportedToZenon.push(article);
+							console.log($scope.reportedToZenon);
+						}
+						console.log(response);
+					}, true);
+				}
+			});
+		}
+
+
+		$scope.getReportUrl = function() {
+			return window.settings.log_url;
+		}
+
 	}
 ]);

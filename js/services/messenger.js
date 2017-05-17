@@ -10,6 +10,13 @@ angular
 		messenger.content.debug = [];
 
 		/**
+		 * the distinguation between debug-info, warnings and the message itself (instead of having one single log,
+		 * containingg different types of msgs ) is a little bit clunky and emerged from the way the webservice creates
+		 * messages. it can be changed sometimes if it's inherent inelegance bothers to much, but it does it job
+		 *
+		 */
+
+		/**
 		 * should be like
 			 a:  1,
 			 b: 123,
@@ -23,8 +30,24 @@ angular
 		/**
 		 * set message box content
 		 * @param content
+		 * @param append - set true if msg should be appended to message box.
 		 */
-		messenger.cast = function(content) {
+		messenger.cast = function(content, append) {
+			append = append || false;
+
+			if (append) {
+
+				// wenn error dann füge error msg hinzu ansonsten debug msg @ STAND TODO TOWMORROW
+				if (!content.success) {
+					messenger.content.warnings.push(content.message)
+				} else {
+					messenger.content.debug.push(content.message)
+				}
+
+				$rootScope.$broadcast('refreshView');
+				return;
+			}
+
 			messenger.content.message = content.message;
 			messenger.content.success = content.success;
 			messenger.content.warnings = content.warnings || [];
@@ -34,6 +57,7 @@ angular
 				messenger.content.message = (content.success) ? '' : 'Unknown Error';
 				messenger.content.message += (content.warnings && content.warnings.length > 0) ? '(Some warnings)' : '';
 			}
+
 			$rootScope.$broadcast('refreshView');
 		}
 
@@ -41,10 +65,12 @@ angular
 		 * set message box content quick access
 		 * @param msg
 		 * @param isError
+		 * @param append - set true if msg should be appended
 		 */
-		messenger.alert = function(msg, isError) {
+		messenger.alert = function(msg, isError, append) {
 			console.log('MSG', msg);
-			if (!messenger.content.success && (messenger.content.message !='')) {
+			append = append || false;
+			if ((!messenger.content.success && (messenger.content.message !='')) || append) {
 				messenger.content.warnings.push(messenger.content.message);
 			}
 			messenger.content.message = msg;

@@ -14,8 +14,8 @@ angular
 			mandatory: 	angular.isUndefined(mandatory) ? true : mandatory,
 			readonly: 	angular.isUndefined(readonly) ? false : readonly,
 			check: 		function() {return (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value == '')) ? 'This  field is mandatory' : false;},
-			set:		function(value) {this.value = value},
-			get:		function(){return this.value},
+			set:		function(value) {this.value.value = value},
+			get:		function(){return this.value.value},
 			compare:	function(that){return 0},
 			watch:		function(observer){this.observer=observer; return this},
 			observer:	false
@@ -47,8 +47,12 @@ angular
 		obj.formats = [
 		    [/(((\S+)\s)*)(\S+)/, 1, 4], // "FirstName SecondName LastName"
 		    [/([^,]+),?\s?(.*)/, 2, 1]   // "Lastname, FirstName SecondName" 
-		]; 
-			
+		];
+
+		obj.get = function(){
+			return this.value
+		}
+
 		obj.setAuthors = function(authors, format) {
 			obj.value = [];
 			authors = (!angular.isArray(authors)) ? [authors] : authors;
@@ -135,12 +139,13 @@ angular
 	 *
 	 * @returns {{type, value, mandatory, readonly, check, set, get, compare, watch, observer}}
 	 */
-	editables.page = function() {
+	editables.page = function(initPage) {
 		var obj = editables.base();
 		obj.type = 'page';
+		obj.seed = initPage;
 		obj.value = {
-			startPdf: 0,
-			endPdf: 0,
+			startPdf: '',
+			endPdf: '',
 			showndesc: '', // manually set page description
 		}
 		obj.context = new editables.types.Pagecontext();
@@ -162,6 +167,8 @@ angular
 			}
 		});
 
+		obj.startPrint = initPage || 1;
+		obj.endPrint = initPage || 1;
 
 		var manualDesc = false;
 
@@ -190,6 +197,16 @@ angular
 
 		obj.resetContext = function(d) {
 			obj.context = new editables.types.Pagecontext(d);
+		}
+
+		obj.get = function(){
+			return {
+				startPdf: obj.value.startPdf,
+				endPdf: obj.value.endPdf,
+				showndesc: obj.desc,
+				startPrint: obj.startPrint,
+				endPrint: obj.endPrint
+			}
 		}
 
 		obj.check =	function() {
@@ -302,6 +319,9 @@ angular
 		obj.push = function(elem) {
 			// @ TODO check if elem is OK value for this
 			obj.value.push(elem);
+		}
+		obj.get = function(){
+			return this.value
 		}
 		return obj;
 	}

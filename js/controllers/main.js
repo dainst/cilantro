@@ -117,7 +117,6 @@ angular
 			list: [],
 			update: function (repository, selected) {
 				$scope.repository.list = webservice.repository = repository;
-				console.log($scope.repository.list);
 				if (typeof selected !== "undefined") {
 					$scope.journal.data.importFilePath = selected;
 				}

@@ -1,7 +1,7 @@
 angular
 .module('module.webservice', [])
-.factory("webservice", ['$log', '$http', '$rootScope', 'settings', 'messenger',
-	function($log, $http, $rootScope, settings, messenger) {
+.factory("webservice", ['$http', '$rootScope', 'settings', 'messenger',
+	function($http, $rootScope, settings, messenger) {
 
 	var webservice = {};
 	
@@ -14,10 +14,18 @@ angular
 	
 	webservice.uploadId = false; // should be named session Id because that is what it is actuallly
 
-	webservice.get = function(task, data, callback) {
-		$log.log('get', task);
+			/**
+		 *
+		 * @param task, the webservice shall be called (function of ojsis.php)
+		 * @param data, to be given to that function
+		 * @param callback, to be called back when done
+		 * @param appendLog, set true if messenmger should not be cleared
+		 */
+	webservice.get = function(task, data, callback, appendLog) {
+		appendLog = appendLog || false;
+		console.log('get', task);
 		
-		//$log.log(settings.server_url, send);		
+		//console.log(settings.server_url, send);		
 		
 		if (settings.devMode) {
 			webservice.sec.password = 'alpha';
@@ -33,23 +41,22 @@ angular
 		}).then(
 			function(response) {
 				if (response.data.success == false) {
-					$log.error(response.data.message);
+					console.error(response.data.message);
 				}  else {
-					$log.log("uid", webservice.uploadId);
+					console.log("uid", webservice.uploadId);
 
 					if (!webservice.uploadId) {
 						webservice.uploadId = response.data.uploadId;
 					}
 					if (webservice.uploadId != response.data.uploadId) {
-						$log.log("got new uploadID, that's so wrong", webservice.uploadId, response.data.uploadId);
+						console.log("got new uploadID, that's so wrong", webservice.uploadId, response.data.uploadId);
 					}
 				}
-
-				messenger.cast(response.data);
+				messenger.cast(response.data, appendLog);
 				callback(response.data);
 			},
 			function(err) {
-				messenger.alert(err,1);
+				messenger.alert(err,1, appendLog);
 				console.error(err);
 				callback(err);
 			}
@@ -64,13 +71,13 @@ angular
 		if (webservice.uploadId) {
 			send.uploadId = webservice.uploadId;
 		}
-		//$log.log(send);
+		//console.log(send);
 		return send;
 	}
 
 	webservice.updateRepository = function(repository, selected) {
 		webservice.repository = repository;
-		$log.log("sel", selected); // @ TODO autoselect
+		console.log("sel", selected); // @ TODO autoselect
 		if (typeof selected !== "undefined") {
 			//$scope.journal.importFilePath = selected;
 		}
@@ -89,3 +96,4 @@ angular
 
 	return webservice;
 }]);
+

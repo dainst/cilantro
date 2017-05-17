@@ -96,7 +96,12 @@ angular
 							// if metadata could not be loaded, it's no reason not to continue... but we should at least try it
 
 
-						}.bind({filename: filename, url: folder.path + '/' + filename}),
+						}.bind(
+							{
+								filename: filename,
+								url: (folder.path) ? folder.path + '/' + filename : filename
+							}
+						),
 
 						function onFailDocument(reason) {
 							messenger.alert("get document " + url + " failed: " + reason, true);
@@ -127,7 +132,6 @@ angular
 					console.log('1. got folder:' + folder.path, result);
 					if (result.success) {
 						folder.dir = result.dir;
-						console.log('SO', folder.dir);
 						folder.stats.files = result.dir.length;
 						messenger.alert('folder contents loaded');
 						resolve();

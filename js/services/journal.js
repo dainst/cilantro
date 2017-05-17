@@ -13,6 +13,8 @@ angular
 		loadedFiles: {}
 	}
 
+
+
 	/* default data */
 	journal.reset = function() {
 		console.log('reset journal');
@@ -89,6 +91,33 @@ angular
 	journal.isReadyToUpload = function() {
 		return (journal.articleStats.data.undecided == 0) && (journal.articleStats.data.articles > 0)
 	}
+
+	/**
+	 * get journal data in uploadable form
+	 * @param article  - optional - select only one article
+	 * @returns {{data: *, articles: Array}}
+	 */
+	journal.get = function(article) {
+
+		function flatten(obj) {
+			var newObj = {}
+			angular.forEach(obj, function(value, key) {
+				newObj[key] = angular.isFunction(value.get) ? value.get() : value;
+			});
+			return newObj;
+		}
+
+		return {
+			data: flatten(journal.data),
+			articles: Object.keys(journal.articles)
+				.filter(function(i) {return journal.articles[i]._.confirmed === true})
+				.filter(function (i) {return (typeof this._ !== "undefined") ? (this._.id === journal.articles[i]._.id) : true}.bind(article))
+				.map(function(i) {return flatten(journal.articles[i])})
+		}
+
+	}
+
+
 
 	/* articles */
 	journal.cleanArticles = function() {

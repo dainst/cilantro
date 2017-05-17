@@ -55,6 +55,7 @@ angular
 	}
 
 	journalCtrl.onAll = function() {
+		journalCtrl.ready = true;
 		messenger.alert('All documents loaded', false)
 	}
 
