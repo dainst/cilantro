@@ -13,6 +13,18 @@ angular
 		loadedFiles: {}
 	}
 
+	// compare with https://github.com/pkp/ojs/blob/ojs-stable-2_4_8/plugins/importexport/native/NativeExportDom.inc.php#L32
+	var ojs_identifications_codes = {
+		'num_vol_year_title':'num_vol_year_title',
+		'num_vol_year':'num_vol_year',
+		'vol_year':'vol_year',
+		'num_year_title':'num_year_title',
+		'year':'year',
+		'vol':'vol',
+		'title':'title'
+	}
+
+
 
 
 	/* default data */
@@ -22,7 +34,7 @@ angular
 			"volume": editables.base(''),
 			"year": editables.base(''),
 			"importFilePath": settings.devMode ? "checkdas.pdfdir" : '',
-			"identification": "vol_year",
+			"identification": editables.listitem(ojs_identifications_codes, 'vol_year', false),
 			"ojs_journal_code": "ojs_journal_code",
 			"ojs_user": "ojs_user",
 			"auto_publish_issue": editables.checkbox(false),
@@ -50,7 +62,7 @@ angular
 			}
 		}
 		/* editable fields in homepage */
-		journal.settings.showOnHomepage = ['volume', 'year'];
+		journal.settings.showOnHomepage = ['volume', 'year', 'identification'];
 
 	}
 

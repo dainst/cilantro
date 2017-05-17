@@ -329,9 +329,12 @@ angular
 	editables.listitem = function(list, selected, noneallowed) {
 		var obj = editables.base(selected, false, false);
 		obj.type = 'listitem';
-		obj.noneallowed = noneallowed || true;
+		obj.noneallowed = (noneallowed == true);
 		obj.check =	function() {return false}
-		obj.value = {value: selected && selected in list ? selected : (obj.noneallowed ? 'none' : list[Object.keys(list)[0]])};
+		obj.select = function(selected) {
+			this.value = {value: selected && selected in list ? selected : (obj.noneallowed ? 'none' : Object.keys(list)[0])}
+		}
+		obj.select(selected);
 		obj.compare = function(second) {return 0}
 		obj.list = list;
 		return obj;

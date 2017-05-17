@@ -168,7 +168,7 @@ angular
 				$scope.protocol.onAll(data)
 			}
 		})
-
+		
 		
 	}
 ]);
