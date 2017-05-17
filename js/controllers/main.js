@@ -14,13 +14,17 @@ angular
 		/* protocols */
 		function getLastProtocol() {
 			try {
-				return localStorage.getItem('protocol');
+				var p = localStorage.getItem('protocol');
+				if (angular.isFunction(protocolregistry.protocols[p].onSelect)) {
+					protocolregistry.protocols[p].onSelect()
+				}
+				return p;
 			} catch (e) {}
 			return ''
 		}
 		$scope.protocols = {
 			list: protocolregistry.protocols,
-			current:  getLastProtocol()
+			current: getLastProtocol()
 		}
 		$scope.protocol = {
 			id: "none",
@@ -130,6 +134,14 @@ angular
 
 		$scope.isStarted = false;
 
+		$scope.selectProtocol = function() {
+			var toBeSelected = $scope.protocols.list[$scope.protocols.current];
+			journal.reset();
+			if (angular.isFunction(toBeSelected.onSelect)) {
+				toBeSelected.onSelect();
+			}
+		}
+
 		$scope.start = function() {
 			//checkPW
 			webservice.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal.data}, function(response) {
@@ -168,7 +180,7 @@ angular
 				$scope.protocol.onAll(data)
 			}
 		})
-		
+
 		
 	}
 ]);

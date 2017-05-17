@@ -24,8 +24,21 @@ angular
 		'title':'title'
 	}
 
+	journal.descriptions = {
+		"volume": 			"Volume",
+		"number": 			"Number",
+		"year": 			"Year",
+		"ojs_journal_code": "OJS: Journal Code",
+		"ojs_user": 		"OJS: user",
+		"identification": 	"OJS: issue identification",
 
+		"importFilePath": 	"File(s) to import",
 
+		"auto_publish_issue": 		"Publish Issue after upload",
+		"default_publish_articles": "Publish Articles by default",
+		"default_create_frontpage": "Create Frontpage by default"
+	}
+	
 
 	/* default data */
 	journal.reset = function() {
@@ -33,6 +46,7 @@ angular
 		journal.data = {
 			"volume": editables.base(''),
 			"year": editables.base(''),
+			"number": editables.base(''),
 			"importFilePath": settings.devMode ? "checkdas.pdfdir" : '',
 			"identification": editables.listitem(ojs_identifications_codes, 'vol_year', false),
 			"ojs_journal_code": "ojs_journal_code",
@@ -62,7 +76,7 @@ angular
 			}
 		}
 		/* editable fields in homepage */
-		journal.settings.showOnHomepage = ['volume', 'year', 'identification'];
+		journal.settings.hideOnHomepage = ['importFilePath'];
 
 	}
 

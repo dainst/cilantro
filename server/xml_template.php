@@ -2,9 +2,21 @@
 <!DOCTYPE issues PUBLIC "-//PKP//OJS Articles and Issues XML//EN" "http://pkp.sfu.ca/ojs/dtds/2.4.8/native.dtd">
 <issues>
     <issue identification="<?php echo $journal->identification; ?>" published="<?php echo ($journal->auto_publish_issue) ? 'true' : 'false'?>">
-        <volume><?php echo $journal->volume; ?></volume>
-        <year><?php echo $journal->year; ?></year>
-        <section>            
+
+		<?php if (isset($journal->volume)) { ?>
+			<volume><?php echo $journal->volume; ?></volume>
+		<?php } ?>
+
+		<?php if (isset($journal->number)) { ?>
+			<number><?php echo $journal->number; ?></number>
+		<?php } ?>
+
+		<?php if (isset($journal->year)) { ?>
+			<year><?php echo $journal->year; ?></year>
+		<?php } ?>
+
+
+		<section>
             <title locale="en_US">Articles</title>
             <?php foreach ($articles as $article) { ?>
             	<?php $locale = (isset($article->language) && $article->language) ? 'language="' . substr($article->language, 0, 2) . '" locale="' . $article->language . '"' : '' ?>

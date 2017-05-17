@@ -146,7 +146,8 @@ tfoot > tr > td {
 
 table.journal-table td,
 table.article-table td {
-	padding: 0px !important
+	padding: 0px !important;
+	vertical-align: middle !important;
 }
 
 table.authorlist {

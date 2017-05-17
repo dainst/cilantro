@@ -26,7 +26,10 @@ angular
 				register: function() {
 					registry.protocols[this.id] = this;
 				},
-				onInit: false
+				onInit: false,
+				onSelect: false,
+				onGotFile: false,
+				onGoAll: false
 			}
 
 

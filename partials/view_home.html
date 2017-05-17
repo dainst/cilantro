@@ -30,7 +30,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Import Protocol</div>
 			<div class="panel-body">
-				<select class="form-control" ng-model="protocols.current">
+				<select class="form-control" ng-model="protocols.current"  ng-change="selectProtocol()">
 					<option ng-repeat="p in protocols.list" value='{{p.id}}'>{{p.description}}</option>
 				</select>
 			</div>
@@ -81,16 +81,16 @@
 
 
 		<div class="panel panel-default">
-			<div class="panel-heading">Journal Metadata</div>
+			<div class="panel-heading">Issue Metadata</div>
 			<div class="panel-body">
 				<table class='journal-table table'>
 
 					<tbody>
 					<thead></thead>
-					<tr ng-repeat="field in journal.settings.showOnHomepage track by $index">
-						<td>{{field}}</td>
-						<td>
-							<span editable item="journal.data[field]" />
+					<tr ng-repeat="(id, field) in journal.data track by $index">
+						<td ng-show="journal.settings.hideOnHomepage.indexOf(id)">{{journal.descriptions[id]}}</td>
+						<td ng-show="journal.settings.hideOnHomepage.indexOf(id)">
+							<span editable item="field" />
 						</td>
 					</tr>
 					</tbody>

@@ -42,11 +42,14 @@ angular
 			author: {firstname:'5Piller', lastname: '5Mann'},
 			pages: 1
 		}));
-		journal.data.volume.value.value = '123';
-		journal.data.year.value.value = '123';
 		documentsource.ready = true;
-		console.log(journal.get())
 	};
+
+	journalCtrl.onSelect= function() {
+		journal.data.volume.value.value = Math.round(Math.random()*10000);
+		journal.data.year.value.value = Math.round(Math.random()*10000);
+		journal.data.number.value.value = Math.round(Math.random()*10000);
+	}
 
 
 

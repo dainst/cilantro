@@ -9,11 +9,16 @@ angular
 
 	journalCtrl.columns = ['attached', 'pages'];
 
-	journalCtrl.onInit = function() {
+	journalCtrl.onSelect = function() {
 		journal.data.identification.select('year');
 		journal.data.ojs_journal_code = editables.text('', true);
 		journal.data.auto_publish_issue.value.value = true;
 		journal.data.default_create_frontpage = true;
+		journal.data.number.mandatory = false;
+		journal.data.volume.mandatory = false;
+	}
+
+	journalCtrl.onInit = function() {
 		documentsource.getDocuments(journal.data.importFilePath);
 	}
 

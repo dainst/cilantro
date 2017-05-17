@@ -10,11 +10,15 @@ angular
 	/* the journal's settings */
 	journalCtrl.columns = ['author', 'title', 'pages'];
 
-	journalCtrl.onInit = function() {
+	journalCtrl.onSelect = function() {
 		journal.data.identification = 'vol_year';
 		journal.data.ojs_journal_code = 'chiron';
 		journal.data.auto_publish_issue.value.value = true;
 		journal.data.default_create_frontpage = true;
+		delete journal.data.number;
+	}
+
+	journalCtrl.onInit = function() {
 		documentsource.getDocuments(journal.data.importFilePath);
 	}
 
@@ -136,7 +140,10 @@ angular
 		getPage(pdf, 1);
 	}
 
-
+	journalCtrl.onAll = function() {
+		journalCtrl.ready = true;
+		messenger.alert('All documents loaded', false)
+	}
 
 	return (journalCtrl);
 }])
