@@ -77,8 +77,6 @@ angular
 
 
 
-		/* proceed */
-
 		/**
 		 * initialization of overview view
 		 * needs main controller to have set properly documentsource and protocol
@@ -95,6 +93,16 @@ angular
 		}
 
 		/* tools & buttons */
+
+
+		$scope.addArticle = function() {
+			var a = new journal.Article('Article ' +  journal.articles.length);
+			journal.articles.push(a);
+			journal.articleStats.update();
+
+		}
+
+
 		$scope.continue = function() {
 			journal.cleanArticles();
 			$scope.steps.change('articles');
