@@ -27,7 +27,7 @@
 					<tbody>
 					<thead></thead>
 					<tr ng-repeat="(field, value) in journal.data track by $index">
-						<td>{{field}}</td>
+						<td>{{journal.descriptions[field]}}</td>
 						<td ng-model="journal.data[field]">
 							<span editable item="value" />
 						</td>

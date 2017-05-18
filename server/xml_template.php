@@ -14,7 +14,18 @@
 		<?php if (isset($journal->year)) { ?>
 			<year><?php echo $journal->year; ?></year>
 		<?php } ?>
+		<?php if (isset($journal->description)) { ?>
+			<description><?php echo $journal->description; ?></description>
+		<?php } ?>
+		<?php /*
+ 			@ TODO multi locale description:
+  				<description locale="en_US">...</description>
+ 				<description locale="de_DE">...</description>
 
+				Problem: es wird ein Fehler geworfen, wenn diese locale nicht für UI unterstützt wird für dieses journal...
+
+			*/
+		?>
 
 		<section>
             <title locale="en_US">Articles</title>

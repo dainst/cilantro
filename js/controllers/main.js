@@ -100,19 +100,15 @@ angular
 
 		/* restart */
 		$scope.restart = function() {
-			journal.reset();
-			$scope.steps.change('home');
 			$scope.isInitialized = false;
 			$scope.isStarted = false;
-			$scope.protocol = {
-				id: "none",
-				ready: false
-			}
 			messenger.content.stats = {}
-			messenger.alert('Restart Importer', false);
 			documentsource.reset();
-			console.log(documentsource);
+			journal.reset();
 			$scope.init();
+			$scope.protocol.onInit();
+			messenger.alert('Restart Importer', false);
+			$scope.steps.change('home');
 		}
 
 
