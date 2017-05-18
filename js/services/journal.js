@@ -38,7 +38,7 @@ angular
 		"default_publish_articles": "Publish Articles by default",
 		"default_create_frontpage": "Create Frontpage by default"
 	}
-	
+
 
 	/* default data */
 	journal.reset = function() {
@@ -67,11 +67,11 @@ angular
 			dismissed: 0
 		}
 		journal.articleStats.data._isOk = function(k, v) {
-			if (k == 'undecided') {
+			if (k === 'undecided') {
 				return 0;
-			} else if (k == 'confirmed') {
+			} else if (k === 'confirmed') {
 				return 1;
-			} else if (k == 'dismissed') {
+			} else if (k === 'dismissed') {
 				return -1;
 			}
 		}
@@ -91,7 +91,7 @@ angular
 				invalid += 1;
 			}
 		})
-		return (invalid == 0);
+		return (invalid === 0);
 	}
 
 

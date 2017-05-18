@@ -32,7 +32,7 @@ angular
 		}
 
 		/* journal */
-		$scope.journal = journal; // @ TODO remove this?
+		$scope.journal = journal;
 
 		/* step control */
 		$scope.steps = {

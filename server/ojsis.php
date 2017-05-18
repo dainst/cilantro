@@ -458,6 +458,12 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			throw new Exception("Unknown Error");
 		}
 
+		$acceptedFiles = array(
+			'application/acrobatreader',
+			'application/pdf',
+			'application/vnd.adobe.xdp+xml'
+		);
+
 		$uploadedFiles = [];
 
 		for($i = 0; $i < count($_FILES['files']['name']); $i++) {
@@ -474,7 +480,13 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				continue;
 			}
 
-			if (!in_array($_FILES['files']['type'][$i], array('application/acrobatreader', 'application/pdf'))) {
+			// bug in FF < 50 @see https://bugzilla.mozilla.org/show_bug.cgi?id=373621
+			if ($_FILES['files']['type'][$i] == 'application/force-download') {
+				$this->log->warning($_FILES['files']['name'][$i] . " has is detected as wrong filetype. \n\nIf you are using an outdated version of Firefox, this might be a result of a known and fixed bug. Please update your browser.");
+				continue;
+			}
+
+			if (!in_array($_FILES['files']['type'][$i], $acceptedFiles)) {
 				$this->log->warning($_FILES['files']['name'][$i] . ' has wrong type ' . $_FILES['files']['type'][$i]);
 				continue;
 			}

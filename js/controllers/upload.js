@@ -26,8 +26,7 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
             // server success
             }).then(function (response) {
             	$scope.progress = 0;
-            	console.log(response);
-            	
+
             	if (typeof response.data === "string") {
             		messenger.message(response.data, true);
             		return;
@@ -42,7 +41,7 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
 				$scope.result = response.data;
 
 				$scope.uploadedFiles = $scope.uploadedFiles.concat(response.data.uploadedFiles);
-				webservice.updateRepository(response.data.repository, response.data.uploadedFiles[response.data.uploadedFiles.length - 1]);
+				$scope.repository.update(response.data.repository, response.data.uploadedFiles[0]);
 				
             // server error
             }, function (response) {

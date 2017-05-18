@@ -36,8 +36,6 @@ angular
 			append = append || false;
 
 			if (append) {
-
-				// wenn error dann füge error msg hinzu ansonsten debug msg @ STAND TODO TOWMORROW
 				if (!content.success) {
 					messenger.content.warnings.push(content.message)
 				} else {
