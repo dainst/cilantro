@@ -23,8 +23,6 @@ angular
 	'controller.view_articles',
 	'controller.view_finish',
 
-
-
 	'controller.upload',
 	'directive.editable',
 	'directive.multiselect',
@@ -34,7 +32,8 @@ angular
 
 	'module.protocols.testdata',
 	'module.protocols.generic',
-	'module.protocols.chiron_parted'
+	'module.protocols.chiron_parted',
+	'module.protocols.csv_import'
 
 
 ])
