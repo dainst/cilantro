@@ -57,7 +57,7 @@
 				<thead></thead>
 				<tbody>
 					<tr ng-if="currentArticle > -1" ng-repeat="(property, item) in journal.articles[currentArticle] track by $index">
-						<td>{{property}}</td>
+						<td>{{journal.articleDescriptions[property].description || journal.articleDescriptions[property].title}}</td>
 						<td><span editable item="journal.articles[currentArticle][property]" /></td>
 					</tr>
 				</tbody>

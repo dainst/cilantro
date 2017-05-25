@@ -14,67 +14,24 @@ angular
 
 		messenger.content.stats = documentsource.stats;
 
-		$scope.columns = {
-			order: {
-				title: '#',
-				tooltip: 'order',
-				style: {minWidth: '50px', minWidth: '80px'},
-				checked: false
-			},
-			author: {
-				title: 'Author',
-				style: {minWidth: '400px'},
-				checked: false
-			},
-			title: {
-				title: 'Title',
-				style: {minWidth: '400px'},
-				checked: false
-			},
-			pages: {
-				title: 'Pages',
-				style: {minWidth: '200px'},
-				checked: false
-			},
-			abstract: {
-				title: 'Abstract',
-				style: {minWidth: '400px'},
-				checked: false
-			},
-			date_published: {
-				title: 'Date',
-				style: {minWidth: '150px'},
-				checked: false
-			},
-			auto_publish:  {
-				tooltip: 'auto publish?',
-				title: '#',
-				style: {minWidth: '10px'},
-				checked: false
-			},
-			filepath: {
-				title: 'filepath',
-				style: {minWidth: '150px'},
-				checked: false
-			},
-			attached: {
-				title: 'attached',
-				style: {minWidth: '400px'},
-				checked: false
-			},
-			createFrontpage: {
-				tooltip: 'create Frontpage?',
-				title: '#',
-				style: {minWidth: '10px'},
-				checked: false
-			},
-			zenonId: {
-				title: 'ZenonId',
-				style: {minWidth: '150px'},
-				checked: false
-			}
+		const colStyles = {
+			order: 			{minWidth: '50px', maxWidth: '80px'},
+			author:			{minWidth: '400px'},
+			title:			{minWidth: '400px'},
+			pages:			{minWidth: '200px'},
+			abstract:		{minWidth: '400px'},
+			date_published:	{minWidth: '150px'},
+			auto_publish:  	{minWidth: '10px'},
+			filepath:		{minWidth: '150px'},
+			attached:		{minWidth: '400px'},
+			createFrontpage:{minWidth: '10px'},
+			zenonId:		{minWidth: '150px'},
 		}
 
+
+		$scope.getStyle = function(columnName) {
+			return (typeof colStyles[columnName] !== "undefined") ? colStyles[columnName] : {minWidth: '400px'};
+		}
 
 
 		/**
@@ -87,7 +44,7 @@ angular
 
 			// adjust view
 			angular.forEach($scope.protocol.columns, function(col) {
-				$scope.columns[col].checked = true;
+				journal.settings.overviewColumns[col].checked = true;
 			})
 
 		}
@@ -120,7 +77,7 @@ angular
 
 		$scope.mergeArticle = function(article) {
 
-			if ($scope.selectedToMerge && ($scope.selectedToMerge._.id == article._.id)) {
+			if ($scope.selectedToMerge && ($scope.selectedToMerge._.id === article._.id)) {
 				messenger.ok();
 				$scope.selectedToMerge = false;
 				return;
@@ -155,7 +112,7 @@ angular
 
 			$scope.removeArticle(attach);
 
-			messenger.alert('Articles Merged!')
+			messenger.alert('Articles Merged!');
 			$scope.selectedToMerge = false;
 		}
 
@@ -171,7 +128,7 @@ angular
 		/* thumbnail enlargement */
 		$scope.selectedThumb = -1;
 		$scope.selectThumb = function(i) {
-			$scope.selectedThumb = (i == $scope.selectedThumb) ? -1 : i;
+			$scope.selectedThumb = (i === $scope.selectedThumb) ? -1 : i;
 		}
 		$scope.updateThumbnail = function(article) {
 			documentsource.updateThumbnail(article);
@@ -180,7 +137,7 @@ angular
 		/* order */
 		$scope.updateOrder = function(order, asc, article) {
 
-			if (!order || (order == '')) {
+			if (!order || (order === '')) {
 				return console.log('no order given');
 			}
 
@@ -204,14 +161,14 @@ angular
 				return obj;
 			}
 
-			if (order == 'up') {
+			if (order === 'up') {
 				console.log ('up');
 				article.order.value.value -= 15;
 				order = 'order';
 				asc = 1;
 			}
 
-			if (order == 'down') {
+			if (order === 'down') {
 				console.log ('down');
 				article.order.value.value += 15;
 				order = 'order';

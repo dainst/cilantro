@@ -10,11 +10,12 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 
 		journalCtrl.columns = ['author', 'title', 'pages'];
 
-		journalCtrl.onInit = function() {
-			documentsource.getDocuments(journal.data.importFilePath);
+		journalCtrl.onSelect = function() {
+
 		}
 
-		journalCtrl.onSelect = function() {
+		journalCtrl.onInit = function() {
+			//documentsource.getDocuments(journal.data.importFilePath);
 			console.log('go modal');
 
 			var modalInstance = $uibModal.open({
@@ -25,8 +26,9 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 				size: 'lg'
 			});
 
-			modalInstance.result.then(function (a) {
-				console.log(a)
+			modalInstance.result.then(function (filled_columns) {
+				console.log(filled_columns);
+				journalCtrl.columns = filled_columns;
 			}, function (a) {
 				console.log('E',a)
 			});
@@ -48,13 +50,15 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 
 	$scope.raw_csv =
 					//'author, title, pageFrom, pageTo' + "\n" +
- 					'"John Smith", "eine Überschrift", 125, 255, "lol.pdf"'
+ 					'"John Smith", "eine Überschrift", 125, 255, "lol.pdf", true, x, de_DE'
 					+ "\n" +
-					'"Peter Lustig", "Chronontology", 256, 300, "peter/baumeister.pdf"';
+					'"Peter Lustig", "Chronontology", 256, 300, "peter/parker.pdf", false, "", en_EN';
+	$scope.csv = [];
+
 
 	$scope.cols_types = {}
 	var cols_types = Object.keys(new journal.Article())
-		.concat(["pageFrom", "pageTo"])
+		.concat(["pageTo", "pageFrom"])
 
 	for (let i = 0; i < cols_types.length; i++) {
 		$scope.cols_types[normalize(cols_types[i])] = cols_types[i];
@@ -69,7 +73,32 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	$scope.separator = '\n';
 
 	$scope.ok = function() {
-		$uibModalInstance.close('flubba');
+
+		let filled_columns = [];
+
+		for (let r = 0; r < $scope.csv.length; r++) {
+			var article = new journal.Article();
+
+			for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
+				let col = $scope.columns[cols[i]].selected;
+				let prop = $scope.cols_types[col];
+				console.log(col,  prop);
+				if (col === '' || col === '_dimissed') {
+					continue;
+				}
+				if (!angular.isUndefined(article[prop])) {
+					console.log($scope.csv[r][cols[i]]);
+					article[prop].set($scope.csv[r][cols[i]]);
+					filled_columns.push(prop);
+					continue;
+				}
+
+
+			}
+
+			journal.articles.push(article);
+		}
+		$uibModalInstance.close(filled_columns);
 	}
 
 	$scope.cancel = function () {
@@ -77,21 +106,33 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	};
 
 	$scope.parse = function () {
-		$scope.result = CSVToArray($scope.raw_csv, $scope.delimiter);
-		analyzeCSV($scope.result);
+		$scope.csv = CSVToArray($scope.raw_csv, $scope.delimiter);
+		analyzeCSV();
 	}
 
-	function analyzeCSV(csv) {
+	$scope.selectField = function(field, columnId) {
+		console.log(field);
+		if (field === '_dismiss') {
+			return;
+		}
+		for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
+			let col = $scope.columns[cols[i]];
+			if ((i !== columnId) && (col.selected === field)) {
+				col.selected = '';
+			}
+		}
+	}
+
+	function analyzeCSV() {
 		// order by cols
 		var columns = {}
 
-
-		for (let i = 0; i < csv.length; i++) {
-			for (let j = 0; j < csv[i].length; j++) {
+		for (let i = 0; i < $scope.csv.length; i++) {
+			for (let j = 0; j < $scope.csv[i].length; j++) {
 				if (angular.isUndefined($scope.columns[j])) {
-					$scope.columns[j] = {values: [csv[i][j]], selected: ''}
+					$scope.columns[j] = {values: [$scope.csv[i][j]], selected: ''}
 				} else {
-					$scope.columns[j].values.push(csv[i][j]);
+					$scope.columns[j].values.push($scope.csv[i][j]);
 				}
 			}
 		}
@@ -100,7 +141,8 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 		var equal_length = true;
 		var last_length = 0;
 		var numbersFieldFound = false;
-
+		var numberFields = ['pagefrom', 'pageto'];
+		var boolFields = ['createfrontpage', 'autopublish'];
 
 		for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
 			let col = $scope.columns[cols[i]];
@@ -120,12 +162,8 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 
 			// 2. small numbers should be page numbers
 			let areNumbers = col.values.reduce(function(agg, v){let vv = parseInt(v); return agg && angular.isNumber(vv) && !isNaN(vv) && (vv <= 9999)}, true);
-			if (areNumbers && !numbersFieldFound) {
-				$scope.columns[cols[i]].selected = 'pagefrom';
-				numbersFieldFound = true;
-				continue;
-			} else if (areNumbers) {
-				$scope.columns[cols[i]].selected = 'pageto';
+			if (areNumbers && numberFields.length) {
+				$scope.columns[cols[i]].selected = numberFields.pop();
 				continue;
 			}
 
@@ -137,9 +175,25 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 			}
 
 			// 4. filepath
-			let arePaths = col.values.reduce(function(agg, v){console.log(v.match(/\.pdf$/));return agg && v.match(/\.pdf$/)}, true);
+			let arePaths = col.values.reduce(function(agg, v){return agg && v.match(/\.pdf$/)}, true);
 			if (arePaths) {
 				$scope.columns[cols[i]].selected = 'filepath';
+				continue;
+			}
+
+			// 5. booleans
+			let areXs = col.values.reduce(function(agg, v){return agg && ((v.toLowerCase() === 'x') || (v  === ''))}, true);
+			let are1s = col.values.reduce(function(agg, v){return agg && (['1', '0', 1, 0].indexOf(v) !== -1)}, true);
+			let areTs = col.values.reduce(function(agg, v){return agg && (['true', 'false'].indexOf(v.toLowerCase()) !== -1)}, true);
+			if (areXs || are1s || areTs) {
+				$scope.columns[cols[i]].selected = boolFields.pop();
+				continue;
+			}
+
+			// 6. filepath
+			let areLangs = col.values.reduce(function(agg, v){return agg && v.match(/^[a-z][a-z]_[A-Z][A-Z]$/)}, true);
+			if (areLangs) {
+				$scope.columns[cols[i]].selected = 'language';
 				continue;
 			}
 
@@ -151,14 +205,8 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 
 
 	// from https://www.bennadel.com/blog/1504-ask-ben-parsing-csv-strings-with-javascript-exec-regular-expression-command.htm
-	// This will parse a delimited string into an array of
-	// arrays. The default delimiter is the comma, but this
-	// can be overriden in the second argument.
-	function CSVToArray( strData, strDelimiter ){
-		// Check to see if the delimiter is defined. If not,
-		// then default to comma.
+	function CSVToArray(strData, strDelimiter) {
 		strDelimiter = (strDelimiter || ",");
-		// Create a regular expression to parse the CSV values.
 		var objPattern = new RegExp(
 			(
 				// Delimiters.
@@ -170,57 +218,29 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 			),
 			"gi"
 		);
-		// Create an array to hold our data. Give the array
-		// a default empty first row.
 		var arrData = [[]];
-		// Create an array to hold our individual pattern
-		// matching groups.
 		var arrMatches = null;
-		// Keep looping over the regular expression matches
-		// until we can no longer find a match.
 		while (arrMatches = objPattern.exec( strData )){
-			// Get the delimiter that was found.
-			var strMatchedDelimiter = arrMatches[ 1 ];
-			// Check to see if the given delimiter has a length
-			// (is not the start of string) and if it matches
-			// field delimiter. If id does not, then we know
-			// that this delimiter is a row delimiter.
-			if (
-				strMatchedDelimiter.length &&
-				(strMatchedDelimiter != strDelimiter)
-			){
-				// Since we have reached a new row of data,
-				// add an empty row to our data array.
+			var strMatchedDelimiter = arrMatches[1];
+			if (strMatchedDelimiter.length && (strMatchedDelimiter != strDelimiter)){
 				arrData.push( [] );
 			}
-			// Now that we have our delimiter out of the way,
-			// let's check to see which kind of value we
-			// captured (quoted or unquoted).
-			if (arrMatches[ 2 ]){
-				// We found a quoted value. When we capture
-				// this value, unescape any double quotes.
-				var strMatchedValue = arrMatches[ 2 ].replace(
-					new RegExp( "\"\"", "g" ),
-					"\""
-				);
+
+			if (arrMatches[2]){
+				var strMatchedValue = arrMatches[2].replace(new RegExp( "\"\"", "g" ), "\"");
 			} else {
 				// We found a non-quoted value.
-				var strMatchedValue = arrMatches[ 3 ];
+				var strMatchedValue = arrMatches[3];
 			}
-			// Now that we have our value string, let's add
-			// it to the data array.
+			strMatchedValue = (typeof strMatchedValue !== "undefined") ? strMatchedValue : '';
+
 			arrData[ arrData.length - 1 ].push( strMatchedValue );
 		}
-		// Return the parsed data.
 		return( arrData );
 	}
 
 	function normalize(term) {
-		return term.toLowerCase().replace(/[^a-z]/g, '');/*
-			.replace(/[^A-Za-z]/g,' ')
-			.replace(/(.)/g, function(a, l) { return l; })
-			.replace(/(\s.)/g, function(a, l) { return l.toUpperCase(); })
-			.replace(/[^A-Za-z\u00C0-\u00ff]/g,'')  // from https://stackoverflow.com/questions/2970525/converting-any-string-into-camel-case*/
+		return term.toLowerCase().replace(/[^a-z]/g, '');
 	}
 
 

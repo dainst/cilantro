@@ -19,33 +19,23 @@
 		<hr>
 		<form>
 			<div class="form-group">
-				<label for="result">Result</label>
-				<pre id="result">{{result}}</pre>
-				<pre id="result">{{columns}}</pre>
-				<pre id="result">{{cols_types}}</pre>
+				<label for="csv">Values</label>
 				<table>
 					<thead>
 						<tr>
-							<td ng-repeat="col in result[0] track by $index">
-								<select class="form-control" ng-model="columns[$index].selected">
-									<option ng-repeat="(normalized, field) in cols_types" value='{{normalized}}'>{{field}}</option>
+							<td ng-repeat="col in csv[0] track by $index">
+								<select class="form-control input-sm" ng-model="columns[$index].selected" ng-change="selectField(columns[$index].selected, $index)">
+									<option ng-repeat="(normalized, field) in cols_types" value='{{normalized}}' >{{field}}</option>
 									<option value='_dismiss'>==Dismiss==</option>
 								</select>
 							</td>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="row in result">
+						<tr ng-repeat="row in csv">
 							<td ng-repeat="col in row">{{col}}</td>
 						</tr>
 					</tbody>
-					<tfooter>
-						<tr>
-							<td ng-repeat="col in result[0]">
-
-							</td>
-						</tr>
-					</tfooter>
 				</table>
 			</div>
 		</form>

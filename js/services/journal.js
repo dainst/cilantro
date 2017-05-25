@@ -2,7 +2,9 @@ angular
 .module("module.journal", [])
 .factory("journal", ['editables', '$rootScope', function(editables, $rootScope) {
 
-	var journal = {
+	/* base contruction */
+
+	let journal = {
 		data:{},
 		articles: [],
 		thumbnails: {},
@@ -13,8 +15,12 @@ angular
 		loadedFiles: {}
 	}
 
+
+
+	/* constants */
+
 	// compare with https://github.com/pkp/ojs/blob/ojs-stable-2_4_8/plugins/importexport/native/NativeExportDom.inc.php#L32
-	var ojs_identifications_codes = {
+	const ojs_identifications_codes = {
 		'num_vol_year_title':'num_vol_year_title',
 		'num_vol_year':'num_vol_year',
 		'vol_year':'vol_year',
@@ -24,6 +30,15 @@ angular
 		'title':'title'
 	}
 
+
+	/**
+	 *
+	 * labels
+	 *
+	 * some may consider the following as a not good mixture between content, view and controller.
+	 * but I prefer this, because if you want to add anything to the Article model, you only do it one single file
+	 *
+	 */
 	journal.descriptions = {
 		"volume": 			"Volume",
 		"number": 			"Number",
@@ -41,20 +56,64 @@ angular
 	}
 
 
+	journal.articleDescriptions = {
+		order: {
+			title: '#',
+			description: 'Order',
+		},
+		author: {
+			title: 'Author',
+		},
+		title: {
+			title: 'Title',
+		},
+		pages: {
+			title: 'Pages',
+		},
+		abstract: {
+			title: 'Abstract',
+		},
+		date_published: {
+			title: 'Date',
+		},
+		auto_publish: {
+			description: 'Automatically publish?',
+			title: '#',
+		},
+		filepath: {
+			title: 'Loaded File',
+		},
+		attached: {
+			title: 'Attached',
+			description: 'Attached Files/Pages',
+		},
+		createFrontpage: {
+			description: 'Automatically Create Frontpage?',
+			title: '#',
+		},
+		zenonId: {
+			title: 'ZenonId',
+		},
+		language: {
+			title: 'language'
+		}
+	}
+
+
 	/* default data */
 	journal.reset = function() {
 		console.log('reset journal');
 		journal.data = {
-			"volume": editables.base(''),
-			"year": editables.base(''),
-			"number": editables.base(''),
-			"description": editables.base('[PDFs teilweise verfügbar]', false),
-			"importFilePath": settings.devMode ? "BEISPIEL.pdf" : '',
-			"identification": editables.listitem(ojs_identifications_codes, 'vol_year', false),
-			"ojs_journal_code": "ojs_journal_code",
-			"ojs_user": "ojs_user",
-			"auto_publish_issue": editables.checkbox(false),
-			"default_publish_articles": true,
+			"volume": 					editables.base(''),
+			"year": 					editables.base(''),
+			"number": 					editables.base(''),
+			"description": 				editables.base('[PDFs teilweise verfügbar]', false),
+			"importFilePath": 			settings.devMode ? "BEISPIEL.pdf" : '',
+			"identification": 			editables.listitem(ojs_identifications_codes, 'vol_year', false),
+			"ojs_journal_code": 		"ojs_journal_code",
+			"ojs_user": 				"ojs_user",
+			"auto_publish_issue": 		editables.checkbox(false),
+			"default_publish_articles":	true,
 			"default_create_frontpage": true
 		}
 		journal.articles = [];
@@ -77,17 +136,28 @@ angular
 				return -1;
 			}
 		}
+
+		/* settings (states of the views), editable by protocol */
+
 		/* editable fields in homepage */
 		journal.settings.hideOnHomepage = ['importFilePath'];
-
+		journal.settings.overviewColumns = {}
+		Object.keys(new journal.Article).map(function(key) {
+			journal.settings.overviewColumns[key] = {
+				'checked': false,
+				'title': (typeof journal.articleDescriptions[key] !== "undefined") ?
+					(journal.articleDescriptions[key].description || journal.articleDescriptions[key].title)
+					: key
+			}
+		})
 	}
 
-	journal.reset();
+
 
 
 	/* validate */
 	journal.check = function () {
-		var invalid = 0;
+		let invalid = 0;
 		angular.forEach(journal.data, function (property) {
 			if (angular.isObject(property) && (property.check() !== false)) {
 				invalid += 1;
@@ -97,14 +167,14 @@ angular
 	}
 
 
-
+	/* stats */
 	journal.articleStats.update = function() {
 		journal.articleStats.data.articles = journal.articles.length;
 		journal.articleStats.data.undecided = 0;
 		journal.articleStats.data.confirmed = 0;
 		journal.articleStats.data.dismissed = 0;
 
-		for (var i = 0; i < journal.articles.length; i++) {
+		for (let i = 0; i < journal.articles.length; i++) {
 			if (typeof journal.articles[i]._.confirmed === "undefined") {
 				journal.articleStats.data.undecided += 1;
 			} else if (journal.articles[i]._.confirmed === true) {
@@ -117,8 +187,13 @@ angular
 
 
 	journal.isReadyToUpload = function() {
-		return (journal.articleStats.data.undecided == 0) && (journal.articleStats.data.articles > 0)
+		return (journal.articleStats.data.undecided === 0) && (journal.articleStats.data.articles > 0)
 	}
+
+
+
+
+
 
 	/**
 	 * get journal data in uploadable form
@@ -128,7 +203,7 @@ angular
 	journal.get = function(article) {
 
 		function flatten(obj) {
-			var newObj = {}
+			let newObj = {}
 			angular.forEach(obj, function(value, key) {
 				newObj[key] = angular.isFunction(value.get) ? value.get() : value;
 			});
@@ -147,7 +222,7 @@ angular
 
 
 
-	/* articles */
+	/* article functions */
 	journal.cleanArticles = function() {
 		angular.forEach(journal.articles, function(article, k) {
 			if (typeof article._ !== "undefined") {
@@ -158,7 +233,7 @@ angular
 
 	journal.deleteArticle = function(article) {
 		// the price for using an array for articles...
-		for (var i = 0; i < journal.articles.length; i++) {
+		for (let i = 0; i < journal.articles.length; i++) {
 			if (article === journal.articles[i]) {
 				break;
 			}
@@ -169,7 +244,7 @@ angular
 
 
 
-	/* prototype constructor functions */
+	/* Article constructor function */
 	journal.Article =  function(data) {
 		data = data || {};
 		function guid() {
@@ -182,7 +257,7 @@ angular
 				s4() + '-' + s4() + s4() + s4();
 		}
 
-		var articlePrototype = {
+		let articlePrototype = {
 			'title':			editables.base(data.title),
 			'abstract':			editables.text(data.abstract, false),
 			'author':			editables.authorlist(data.author),
@@ -210,6 +285,11 @@ angular
 
 		return (articlePrototype);
 	}
+
+
+
+
+	journal.reset();
 
 	return (journal);
 }])
