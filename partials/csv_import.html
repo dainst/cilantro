@@ -1,47 +1,93 @@
 <div>
 	<div class="modal-header">
-		<h3 class="modal-title" id="modal-title">CSV Data</h3>
+		<ul class="nav nav-pills">
+			<li><h1>CSV Data Wizard</h1></li>
+			<li ng-class="{active:state.tab=='file'}" ng-click="clickTab('file')"><a href="#">1. Load File</a></li>
+			<li ng-class="{active:state.tab=='raw'}" ng-click="clickTab('raw')"><a href="#">2. Review CSV</a></li>
+			<li ng-class="{active:state.tab=='csv', disabled:csv.length==0}" ng-click="clickTab('csv')"><a href="#">3. Assign Columns</a></li>
+		</ul>
 	</div>
 	<div class="modal-body" id="modal-body">
-		<form>
-			<div class="form-group">
-				<label for="raw_csv">Raw CSV Data</label>
-				<textarea id="raw_csv" class="form-control" ng-model="raw_csv"></textarea>
+
+		<div
+				ng-show="state.tab=='file'"
+				ng-controller="upload"
+				ngf-drop="startUpload();uploadCSV($files, onGotCsv)"
+				ng-model="csvFiles"
+				ngf-model-invalid="invalidFiles"
+				ngf-multiple="false"
+				ngf-pattern="pattern"
+				ngf-accept="text/csv"
+				ngf-drag-over-class="'dragOver'"
+				ngf-validate="{pattern: '.csv'}"
+				ngf-keep="false"
+				ngf-allow-dir="false"
+				ngf-drop-available="dropAvailable"
+				id="fileDropAreaCSV">
+			<button class="btn btn-sm" ngf-select="uploadCSV($files, onGotCsv)" accept="text/csv">Select files to upload from your hard disk</button>
+			<span ng-show="dropAvailable"> or just drop a File into this Box.</span>
+			<br>
+			<span class="progressbar">
+				<div style="width:{{progress}}%" ng-bind="progress + '%'"></div>
+			</span>
+			<br>
+			<div class="alert alert-warning" ng-show="invalidFiles">Seems not to be a CSV file or lacks csv file extension in filename.</div>
+		</div>
+
+		<div ng-show="state.tab=='raw'">
+			<label for="raw_csv">Raw CSV Data</label>
+			<textarea id="raw_csv" class="form-control" ng-model="raw_csv"></textarea>
+
+			<div>
+				<a ng-click="toggleParseOptions()" href="#">CSV Options</a>
+				<div ng-show="state.parseOptions">
+					<form class="form-inline">
+						<div class="form-group input-group-sm">
+							Cell Delimiter
+							<select class="form-control" ng-model="delimiter">
+								<option ng-repeat="(key, val) in delimiters" value="{{val}}">{{key}}</option>
+							</select>
+							Author Delimiter
+							<select class="form-control" ng-model="authorDelimiter">
+								<option ng-repeat="(key, val) in delimiters" value="{{val}}">{{key}}</option>
+							</select>
+						</div>
+					</form>
+				</div>
 			</div>
-		</form>
-		<form class="form-inline">
-			<div class="form-group">
-				<input class="form-control" type="text" ng-model="delimiter" value=",">
-				<input class="form-control" type="text" ng-model="separator" value="\n">
-				<button class="btn btn-primary" ng-click="parse()">Parse CSV</button>
+			<div style="text-align:right">
+				<button class="btn btn-primary" ng-click="parse()">OK, take this data</button>
 			</div>
-		</form>
-		<hr>
-		<form>
-			<div class="form-group">
-				<label for="csv">Values</label>
-				<table>
-					<thead>
-						<tr>
-							<td ng-repeat="col in csv[0] track by $index">
-								<select class="form-control input-sm" ng-model="columns[$index].selected" ng-change="selectField(columns[$index].selected, $index)">
-									<option ng-repeat="(normalized, field) in cols_types" value='{{normalized}}' >{{field}}</option>
-									<option value='_dismiss'>==Dismiss==</option>
-								</select>
-							</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="row in csv">
-							<td ng-repeat="col in row">{{col}}</td>
-						</tr>
-					</tbody>
-				</table>
+		</div>
+
+		<div ng-show="state.tab=='csv'">
+
+			<form>
+				<div class="form-group">
+					Values
+					<table>
+						<thead>
+							<tr>
+								<td ng-repeat="col in csv[0] track by $index">
+									<select class="form-control input-sm" ng-model="columns[$index].selected" ng-change="selectField(columns[$index].selected, $index)">
+										<option ng-repeat="(normalized, field) in cols_types" value='{{normalized}}' >{{field}}</option>
+										<option value='_dismiss'>==Dismiss==</option>
+									</select>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="row in csv">
+								<td ng-repeat="col in row track by $index">{{col}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</form>
+			<div style="text-align:right">
+				<button class="btn btn-success" type="button" ng-click="ok()">OK</button>
+				<button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
 			</div>
-		</form>
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-		<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+		</div>
 	</div>
 </div>

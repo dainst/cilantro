@@ -50,6 +50,10 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				throw new Exception("Wrong Password");
 			}
 		}
+
+		if (!method_exists($this, $task)) {
+			throw new Exception("Task $task not known.");
+		}
 		
 		$this->$task();
 	}
@@ -455,7 +459,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 
 		// check for too big uploads
 		if (!isset($_FILES['files']) or !count($_FILES['files'])) {
-			throw new Exception("Unknown Error");
+			throw new Exception("Unknown Error, maybe file to big");
 		}
 
 		$acceptedFiles = array(
@@ -508,7 +512,33 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		
 
 	}
-	
+
+
+	function uploadCSV() {
+		$this->log->log($_FILES);
+
+		// check for too big uploads
+		if (!isset($_FILES['files']) or !count($_FILES['files'])) {
+			throw new Exception("Unknown Error, maybe file to big");
+		}
+
+		$i = 0;
+
+		$acceptedFiles = array(
+			'text/csv'
+		);
+
+		if (!in_array($_FILES['files']['type'][$i], $acceptedFiles)) {
+			throw new Exception($_FILES['files']['name'][$i] . ' has wrong type ' . $_FILES['files']['type'][$i]);
+		}
+
+		if ($_FILES['files']['error'][$i] != 0) {
+			throw new Exception('error  ' . $_FILES['files']['error'][$i] . ' in file ' . $_FILES['files']['name'][$i]);
+		}
+
+		$this->return['csv'] = file_get_contents($_FILES['files']['tmp_name'][$i]);
+
+	}
 	
 	
 	/* other */

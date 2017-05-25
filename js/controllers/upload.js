@@ -11,7 +11,7 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
     	console.log(f);
     }
 	
-	$scope.uploadFiles = function (files) {
+	$scope.uploadFiles = function(files, uploadTask, callback) {
         $scope.files = files;
 		messenger.ok();
         
@@ -19,7 +19,7 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
             Upload.upload({
                 url: settings.server_url,
                 data: {
-                	task: "upload",
+                	task: uploadTask || "upload",
                     files: files,
                     data:  webservice.ojsisQuery()
                 }
@@ -41,7 +41,15 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
 				$scope.result = response.data;
 
 				$scope.uploadedFiles = $scope.uploadedFiles.concat(response.data.uploadedFiles);
-				$scope.repository.update(response.data.repository, response.data.uploadedFiles[0]);
+
+				if (typeof $scope.repository !== "undefined") { // because this controller is also used in context fo csv dialogue
+					$scope.repository.update(response.data.repository, response.data.uploadedFiles[0]);
+				}
+
+				if (angular.isFunction(callback)) {
+					callback(response)
+				}
+
 				
             // server error
             }, function (response) {
@@ -54,7 +62,12 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
                 $scope.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
             });
         }
+
     };
+
+	$scope.uploadCSV = function(files, callback) {
+		$scope.uploadFiles(files, 'uploadCSV', callback)
+	}
 }]).filter('trustHtml', function($sce) {
     return function(val) {
         return $sce.trustAsHtml(val);

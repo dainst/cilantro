@@ -53,6 +53,8 @@ angular
 			return this.value
 		}
 
+
+
 		obj.setAuthors = function(authors, format) {
 			obj.value = [];
 			authors = (!angular.isArray(authors)) ? [authors] : authors;
@@ -84,7 +86,8 @@ angular
 			});
 		
 		}
-		
+
+		obj.set = obj.setAuthors;
 		
 		obj.check = function() {
 			
@@ -276,7 +279,7 @@ angular
 	}
 	
 	editables.checkbox = function(seed, mandatory) {
-		var obj = editables.base((seed && true), mandatory);
+		var obj = editables.base(seed, mandatory);
 		obj.type = 'checkbox';
 		obj.check =	function() {
 			return false;
@@ -284,6 +287,10 @@ angular
 		obj.compare = function(second) {
 			return (this.value.value === second.value.value) ? 0 : 1;
 		}
+		obj.set = function(value) {
+			this.value.value = ([false, 'false', 0, '0', NaN, '', undefined, null].indexOf(value) === -1);
+		}
+		obj.set(seed);
 		return obj;
 	}
 	
