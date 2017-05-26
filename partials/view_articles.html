@@ -74,14 +74,13 @@
 			</div>
 		</div>
 	</div>
-	
-	
 
 	<div class="col-lg-6">
 
 		<div ng-show="(currentArticle > -1) && (journal.articles.length > 0)" class="panel panel-default">
-			<div class="panel-heading">Search results in Zenon for Article Title "{{journal.articles[currentArticle].title.value.value}}"</div>
-		
+			<div class="panel-heading" ng-show="!zenon.searchId">Search results in Zenon for Article Title "{{journal.articles[currentArticle].title.value.value}}"</div>
+			<div class="panel-heading" ng-show="zenon.searchId">Search results in Zenon for ID "{{journal.articles[currentArticle].zenonId.value.value}}"</div>
+
 			<div class="panel-body">
 				
 				<p ng-if='(zenon.selected < 0) && (journal.articles[currentArticle].zenonId != "(((new)))")' class='alert alert alert-warning'  data-tooltip="Click in the results table to select one. Change title an hit new search for if there are no results.">No corresponding entry in in Zenon selected!</p>

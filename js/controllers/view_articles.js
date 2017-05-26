@@ -22,7 +22,7 @@ angular
 		}
 
 		$scope.addArticle = function(b, select) {
-			var a = new journal.Article('Article ' +  journal.articles.length);
+			let a = new journal.Article('Article ' +  journal.articles.length);
 
 			if (!angular.isUndefined(b)) {
 				angular.extend(a, b);
@@ -38,16 +38,22 @@ angular
 
 		$scope.selectArticle = function(k) {
 			$scope.currentArticle = k;
-			$scope.compareWithZenon();
+			if (journal.articles[$scope.currentArticle]._.autoFetchFromZenon && journal.articles[$scope.currentArticle].zenonId.value.value !== '') {
+				$scope.autoFetchFromZenon()
+			} else {
+				$scope.compareWithZenon();
+			}
+
+
 		}
 
 		$scope.selectNextArticle = function() {
-			for (var i = $scope.currentArticle; i < journal.articles.length; i++) {
+			for (let i = $scope.currentArticle; i < journal.articles.length; i++) {
 				if (typeof journal.articles[i]._.confirmed === "undefined") {
 					return $scope.selectArticle(i)
 				}
 			}
-			for (var i = 0; i < $scope.currentArticle; i++) {
+			for (let i = 0; i < $scope.currentArticle; i++) {
 				if (typeof journal.articles[i]._.confirmed === "undefined") {
 					return $scope.selectArticle(i)
 				}
@@ -56,7 +62,7 @@ angular
 		}
 
 		$scope.isArticleSelected = function() {
-			return ($scope.currentArticle != -1) && (journal.articles.length > 0)
+			return ($scope.currentArticle !== -1) && (journal.articles.length > 0)
 		};
 
 		$scope.checkArticle = function() {
@@ -112,12 +118,12 @@ angular
 				if (typeof ar === 'undefined') {
 					return '';
 				}
-				var r = [];
-				for (var i = 0; i < ar.length; i++) {
+				let r = [];
+				for (let i = 0; i < ar.length; i++) {
 					if (typeof ar[i] !== 'undefined') {
 						r = r.concat(ar[i]);
 					}
-				};
+				}
 				return r.join('; ');
 			}
 
@@ -140,24 +146,26 @@ angular
 				found: '',
 				start: 0,
 				search: '',
-				selected: 0
+				selected: 0,
+				searchId: false
 			};
 		}
 
 		$scope.compareWithZenon = function(more) {
 
-			if (($scope.currentArticle == -1) || (typeof journal.articles[$scope.currentArticle] === 'undefined')) {
+			if (($scope.currentArticle === -1) || (typeof journal.articles[$scope.currentArticle] === 'undefined')) {
 				return;
 			}
 
+			let term;
 			if (!more) {
 				$scope.resetZenon();
-				var term = journal.articles[$scope.currentArticle].title.value.value;
+				term = journal.articles[$scope.currentArticle].title.value.value;
 			} else {
-				var term = $scope.zenon.search
+				term = $scope.zenon.search
 			}
 
-			if (!term || term == "") {
+			if (!term || term === "") {
 				return;
 			}
 
@@ -184,21 +192,55 @@ angular
 					$scope.zenon.found = parseInt(data.response.numFound);
 					$scope.zenon.start = parseInt(data.responseHeader.params.start) + 10;
 					$scope.zenon.search = term;
-					if ($scope.zenon.found == 1) {
+					if ($scope.zenon.found === 1) {
 						$scope.selectFromZenon(0);
 					}
 				})
 				.error(function(err) {
 					console.error(err);
-					$scope.$broadcast('alert', 'Could not connect to Zenon!', true);
+					messenger.alert('Could not connect to Zenon!', true);
 				});
 
 		};
 
+
+		$scope.autoFetchFromZenon = function() {
+			$scope.resetZenon();
+			$http({
+				method: 'JSONP',
+				url: 'https://zenon.dainst.org/data/biblio/select',
+				params: {
+					'json.wrf': 'JSON_CALLBACK',
+					q: 'id:' + journal.articles[$scope.currentArticle].zenonId.value.value,
+					wt:	'json'
+				}
+			})
+				.success(function(data) {
+					console.log('success');
+					console.log(data);
+					$scope.zenon.results = $scope.zenon.results.concat(data.response.docs.map($scope.zenonMapDoc));
+					$scope.zenon.found = Number(data.response.numFound);
+					$scope.zenon.start = Number(data.responseHeader.params.start) + 10;
+					$scope.zenon.search = journal.articles[$scope.currentArticle].zenonId.value.value;
+					$scope.zenon.searchId = true;
+					if ($scope.zenon.found === 1) {
+						$scope.adoptFromZenon(0);
+						messenger.alert('Data fetched from zenon');
+					}
+					journal.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
+
+				})
+				.error(function(err) {
+					console.error(err);
+					messenger.alert('Could not connect to Zenon!', true);
+					journal.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
+				});
+		}
+
 		$scope.selectFromZenon = function(index) {
 			console.log('select = ' + index, $scope.zenon.results[index]);
-			$scope.zenon.selected = ($scope.zenon.selected == index) ? -1 : index;
-			journal.articles[$scope.currentArticle].zenonId.value.value = ($scope.zenon.selected == -1) ? '' : $scope.zenon.results[index].id;
+			$scope.zenon.selected = ($scope.zenon.selected === index) ? -1 : index;
+			journal.articles[$scope.currentArticle].zenonId.value.value = ($scope.zenon.selected === -1) ? '' : $scope.zenon.results[index].id;
 
 		}
 
@@ -206,11 +248,11 @@ angular
 
 			index = index || $scope.zenon.selected;
 
-			var doc = $scope.zenon.results[index];
+			let doc = $scope.zenon.results[index];
 
 			//console.log(doc);
 
-			var authors = [];
+			let authors = [];
 
 			if (doc.author) {
 				authors.push(doc.author);
@@ -220,17 +262,17 @@ angular
 				authors = authors.concat(doc.author2);
 			}
 
-			var article = journal.articles[$scope.currentArticle];
+			let article = journal.articles[$scope.currentArticle];
 
 			article.title.value.value = doc.title;
 			// article.abstract.value.value = abstract; // @ TODO adopt abstract from zenon?
 			article.author.setAuthors(authors, 1);
-			article.pages = editables.page(doc.pages);
+			article.pages.set(doc.pages.replace('.',''));
 			article.date_published = editables.base(doc.date);
 			//article.language = editables.language('de_DE', false); // @ TODO adopt language from zenon?
 
 
-			$scope.resetZenon();
+			//$scope.resetZenon();
 		};
 
 		$scope.markAsMissingZenon = function() {

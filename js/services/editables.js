@@ -212,6 +212,22 @@ angular
 			}
 		}
 
+		/**
+		 * takes strings like 10-12
+		 */
+		obj.set = function(seed) {
+			obj.seed = seed;
+			obj.resetDesc(seed);
+			let pages = seed.match(/(\d{1,3})\s?[\-\u2013\u2212]?\s?(\d{1,3})?/);
+			if (pages && pages.length > 1) {
+				obj.startPrint = Number(pages[1]);
+				if (typeof pages[2] !== "undefined") {
+					obj.endPrint = Number(pages[2]);
+				}
+			}
+
+		}
+
 		obj.check =	function() {
 
 			if (!obj.value.startPdf) {

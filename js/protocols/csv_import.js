@@ -16,9 +16,6 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 
 		journalCtrl.onInit = function() {
 			documentsource.getDocuments(journal.data.importFilePath);
-
-
-
 		}
 
 		journalCtrl.onGotFile = function(fileName) {
@@ -26,7 +23,6 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 		}
 
 		journalCtrl.onAll = function() {
-
 
 			let modalInstance = $uibModal.open({
 				animation: true,
@@ -37,21 +33,14 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 			});
 
 			modalInstance.result.then(function (filled_columns) {
-				console.log(filled_columns);
 				journalCtrl.columns = filled_columns;
-
 				for (let i = 0, ids = Object.keys(journal.articles); i < ids.length; i++) {
 					$rootScope.$broadcast('thumbnaildataChanged', journal.articles[ids[i]]);
 				}
-
-
 				journalCtrl.ready = true;
 			}, function (a) {
 				journalCtrl.ready = true;
 			});
-
-
-
 
 		}
 
@@ -64,7 +53,7 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', function($scope, $uibModalInstance, journal) {
 
 	/* raw csv data */
-	$scope.raw_csv = "";
+	$scope.raw_csv = "000371801";
 	/* csv as array of arrays */
 	$scope.csv = [];
 
@@ -83,7 +72,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	for (let i = 0; i < cols_types.length; i++) {
 		$scope.cols_types[normalize(cols_types[i])] = cols_types[i];
 	}
-	console.log($scope.cols_types)
+	//console.log($scope.cols_types)
 
 
 	$scope.columns = {}
@@ -93,7 +82,8 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 		delimiter: ',',
 		authorsDelimiter: ';',
 		ignoreFirstRow: false,
-		authorFormat: '0'
+		authorFormat: '0',
+		autoFetchFromZenon: false
 	}
 
 	$scope.delimiters = {
@@ -143,11 +133,16 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 			}
 		}
 	}
-/*
-	$scope.startUpload() = function() {
-		$scope.state.tab='file'
+
+	$scope.hasZenonId = function() {
+		for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
+			if ($scope.columns[cols[i]].selected === "zenonid") {
+				return true
+			}
+		}
+		return false
 	}
-*/
+
 
 	$scope.onGotCsv = function(r) {
 		$scope.raw_csv = r.data.csv;
@@ -308,7 +303,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	function CSV2Articles() {
 		Object.keys(journal.settings.overviewColumns).map(function(key) {
 			journal.settings.overviewColumns[key].checked = false;
-		})
+		});
 
 		for (let r = ($scope.options.ignoreFirstRow ? 1 : 0); r < $scope.csv.length; r++) {
 			let article = new journal.Article();
@@ -322,7 +317,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 				}
 
 				if (!angular.isUndefined(article[prop])) {
-					console.log($scope.csv[r][cols[i]]);
+					//console.log($scope.csv[r][cols[i]]);
 					if (col === 'author') {
 						article[prop].set($scope.csv[r][cols[i]].split($scope.options.authorsDelimiter),  Number($scope.options.authorFormat));
 					} else if (col === "pages") {
@@ -334,6 +329,11 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 					} else {
 						article[prop].set($scope.csv[r][cols[i]]);
 					}
+
+					if (col === 'zenonid' && $scope.options.autoFetchFromZenon) {
+						article._.autoFetchFromZenon = true; //!
+					}
+
 					journal.settings.overviewColumns[prop].checked = true;
 
 				} else if (col === "pagefrom") {

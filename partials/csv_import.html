@@ -96,7 +96,10 @@
 				</div>
 
 				<div class="checkbox">
-					<label><input type="checkbox" ng-model="options.ignoreFirstRow">Ignore Frist Row</label>
+					<label><input type="checkbox" ng-model="options.ignoreFirstRow">Ignore first Row</label>
+				</div>
+				<div class="checkbox" ng-show="hasZenonId()">
+					<label><input type="checkbox" ng-model="options.autoFetchFromZenon">Fetch data from Zenon automatically by this ID (happens, when in article is visited in article view)</label>
 				</div>
 
 			</form>

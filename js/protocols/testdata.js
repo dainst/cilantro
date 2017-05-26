@@ -10,18 +10,22 @@ angular
 
 	journalCtrl.description = "Create some Testdata 3.0";
 
-	journalCtrl.startView = 'publish';
+	journalCtrl.startView = 'articles';
 
 
 	/* the journal's settings */
 	journalCtrl.columns = ['title'];
 
 	journalCtrl.onInit = function() {
-		journal.articles.push(new journal.Article({
-			title: "A lady centaur",
+
+		let a = new journal.Article({
+			zenonId: "000371801",
 			author: {firstname:'1peter', lastname: '1parker'},
 			pages: 1
-		}));
+		})
+		a._.autoFetchFromZenon = true;
+
+		journal.articles.push(a);
 		journal.articles.push(new journal.Article({
 			title: "Something else",
 			author: {firstname:'2peter', lastname: '2parker'},

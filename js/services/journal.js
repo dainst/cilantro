@@ -269,7 +269,7 @@ angular
 			'attached':			editables.filelist(),
 			'order':			editables.number(0, false),
 			'createFrontpage':	editables.checkbox(journal.data.create_frontpage === true),
-			'zenonId':			editables.base('', false)
+			'zenonId':			editables.base(data.zenonId, false)
 		}
 		Object.defineProperty(articlePrototype, '_', {enumerable: false, configurable: false, value: {}});
 
