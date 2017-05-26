@@ -45,10 +45,10 @@
 				<tr>
 					<td>Preview</td>
 					<td
-							ng-repeat="(name, column) in journal.settings.overviewColumns"
-							ng-show="column.checked"
-							ng-style="styles[name]"
-							data-tooltip="{{journal.articleDescriptions[name].description}}"
+						ng-repeat="(name, column) in journal.settings.overviewColumns"
+						ng-show="column.checked"
+						ng-style="styles[name]"
+						data-tooltip="{{journal.articleDescriptions[name].description}}"
 					>{{journal.articleDescriptions[name].title}}</td>
 
 					<td></td>

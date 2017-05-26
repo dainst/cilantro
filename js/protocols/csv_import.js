@@ -1,8 +1,8 @@
 var mod = angular.module('module.protocols.csv_import', ['ui.bootstrap']);
 
 
-mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregistry', 'documentsource', 'journal',
-	function($rootScope, $uibModal, editables, protocolregistry, documentsource, journal) {
+mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregistry', 'documentsource', 'journal', 'messenger',
+	function($rootScope, $uibModal, editables, protocolregistry, documentsource, journal, messenger) {
 
 		var journalCtrl = new protocolregistry.Protocol('csv_import');
 
@@ -10,15 +10,25 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 
 		journalCtrl.columns = ['author', 'title', 'pages'];
 
-		journalCtrl.onInit = function() {
+		journalCtrl.onSelect = function() {
 
 		}
 
-		journalCtrl.onSelect = function() {
-			//documentsource.getDocuments(journal.data.importFilePath);
-			console.log('go modal');
+		journalCtrl.onInit = function() {
+			documentsource.getDocuments(journal.data.importFilePath);
 
-			var modalInstance = $uibModal.open({
+
+
+		}
+
+		journalCtrl.onGotFile = function(fileName) {
+			console.log(fileName)
+		}
+
+		journalCtrl.onAll = function() {
+
+
+			let modalInstance = $uibModal.open({
 				animation: true,
 				templateUrl: 'partials/csv_import.html',
 				controller: "csv_import_window",
@@ -29,20 +39,20 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 			modalInstance.result.then(function (filled_columns) {
 				console.log(filled_columns);
 				journalCtrl.columns = filled_columns;
+
+				for (let i = 0, ids = Object.keys(journal.articles); i < ids.length; i++) {
+					$rootScope.$broadcast('thumbnaildataChanged', journal.articles[ids[i]]);
+				}
+
+
+				journalCtrl.ready = true;
 			}, function (a) {
-				console.log('E',a)
+				journalCtrl.ready = true;
 			});
 
 
-		}
 
-		journalCtrl.onGotFile = function(fileName) {
-			console.log(fileName)
-		}
 
-		journalCtrl.onAll = function() {
-			journalCtrl.ready = true;
-			messenger.alert('All documents loaded', false)
 		}
 
 
@@ -54,21 +64,15 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', function($scope, $uibModalInstance, journal) {
 
 	/* raw csv data */
-	$scope.raw_csv =
-		/*
-					//'author, title, pageFrom, pageTo' + "\n" +
- 					'"John Smith", "eine Überschrift", 125, 255, "lol.pdf", true, x, de_DE'
-					+ "\n" +
-					'"Peter Lustig", "Chronontology", 256, 300, "peter/parker.pdf", false, "", en_EN';
-					*/
-		"alp	ha|	be	ta|13456	789"
+	$scope.raw_csv = "";
 	/* csv as array of arrays */
 	$scope.csv = [];
 
 	/* modal views state info */
 	$scope.state = {
-		parseOptions: true,
-		tab: 'file' // raw|file|csv
+		parseOptions: false,
+		tab: 'file', // raw|file|csv
+		unequalFieldsWarning: true
 	}
 
 	/* chosen / detected columns types */
@@ -84,9 +88,14 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 
 	$scope.columns = {}
 
-	/* parse settings */
-	$scope.delimiter = ',';
-	$scope.separator = '\n';
+	/* parse options */
+	$scope.options = {
+		delimiter: ',',
+		authorsDelimiter: ';',
+		ignoreFirstRow: false,
+		authorFormat: '0'
+	}
+
 	$scope.delimiters = {
 		',': 		',',
 		';': 		';',
@@ -94,10 +103,6 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 		':': 		'\u003A',
 		'{tab}': 	'\u0009'
 	}
-	$scope.authorDelimiter = ';'
-
-	//a	b	c
-
 
 	/* constrols */
 	$scope.ok = function() {
@@ -110,13 +115,13 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	};
 
 	$scope.parse = function () {
-		$scope.csv = CSVToArray($scope.raw_csv, $scope.delimiter);
+		$scope.csv = CSVToArray($scope.raw_csv, $scope.options.delimiter);
 		analyzeCSV();
 		$scope.state.tab= 'csv';
 	}
 
 	$scope.clickTab = function(tab) {
-		if (tab == 'csv' && $scope.csv.length == 0) {
+		if (tab === 'csv' && $scope.csv.length === 0) {
 			return;
 		}
 		$scope.state.tab = tab;
@@ -146,7 +151,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 
 	$scope.onGotCsv = function(r) {
 		$scope.raw_csv = r.data.csv;
-		$scope.delimiter = guessDelimiter(r.data.csv);
+		$scope.options.delimiter = guessDelimiter(r.data.csv);
 		console.log(guessDelimiter(r.data.csv));
 		$scope.state.tab = 'raw';
 	}
@@ -166,7 +171,6 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 				if (angular.isUndefined($scope.columns[j])) {
 					$scope.columns[j] = {values: [$scope.csv[i][j]], selected: ''}
 				} else {
-					console.log(i, j, $scope.csv[i][j])
 					$scope.columns[j].values.push($scope.csv[i][j]);
 				}
 			}
@@ -179,6 +183,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 		let numberFields = ['pageto', 'pagefrom'];
 		let boolFields = ['createfrontpage', 'autopublish'];
 		let longTextFields = ['abstract', 'title'];
+		let areHeadlines = true;
 
 		for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
 			let col = $scope.columns[cols[i]];
@@ -191,20 +196,21 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 
 			// 1. may the first row be a headline
 			let assumed_headline = normalize(col.values[0]);
-			if (typeof $scope.cols_types[assumed_headline] !== 'undefined') {
+			if ((typeof $scope.cols_types[assumed_headline] !== 'undefined') && areHeadlines) {
 				$scope.columns[cols[i]].selected = assumed_headline;
 				continue;
 			}
+			areHeadlines = false;
 
 			// 2. small numbers should be page numbers
-			let areNumbers = col.values.reduce(function(agg, v){let vv = parseInt(v); return agg && angular.isNumber(vv) && !isNaN(vv) && (vv <= 9999)}, true);
+			let areNumbers = col.values.reduce(function(agg, v){let vv = Number(v); return agg && angular.isNumber(vv) && !isNaN(vv) && (vv <= 9999)}, true);
 			if (areNumbers && numberFields.length) {
 				$scope.columns[cols[i]].selected = numberFields.pop();
 				continue;
 			}
 
 			// 3. big numbers = zenonIds
-			let areIds = col.values.reduce(function(agg, v){let vv = parseInt(v); return agg && angular.isNumber(vv) && !isNaN(vv) && (vv > 9999)}, true);
+			let areIds = col.values.reduce(function(agg, v){let vv = Number(v); return agg && angular.isNumber(vv) && !isNaN(vv) && (vv > 9999)}, true);
 			if (areIds) {
 				$scope.columns[cols[i]].selected = 'zenonid';
 				continue;
@@ -234,15 +240,21 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 			}
 
 			// 7. Authors
-			let nameRegex = new RegExp('^(([A-Z][a-z]{0,12}\\.?\\,?){1,3}\\' + $scope.authorDelimiter + '?\\s?)+$');
+			let nameRegex = new RegExp('^(([A-Z][a-z]{0,12}\\.?\\,?){1,3}\\' + $scope.options.authorsDelimiter + '?\\s?)+$');
 			let areNames = col.values.reduce(function(agg, v){return agg && v.match(nameRegex)}, true);
-			console.log(nameRegex, areNames);
 			if (areNames) {
 				$scope.columns[cols[i]].selected = 'author';
 				continue;
 			}
 
-			// pages
+			// 8. pages
+			let pageRegex = /^\d{1,3}(\s?[\-\u2013\u2212]\s?\d{1,3})?$/;
+			let arePages = col.values.reduce(function(agg, v){return agg && v.match(pageRegex)}, true);
+			if (arePages) {
+				$scope.columns[cols[i]].selected = 'pages';
+				continue;
+			}
+			console.log(arePages, col)
 
 			// 9. longtext
 			let arelongTexts = col.values.reduce(function(agg, v){return agg && (v.length > 8)}, true);
@@ -253,8 +265,8 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 
 		}
 
-
-		console.log(equal_length, $scope.columns)
+		$scope.options.ignoreFirstRow = areHeadlines;
+		$scope.state.unequalFieldsWarning = !equal_length;
 	}
 
 
@@ -298,17 +310,27 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 			journal.settings.overviewColumns[key].checked = false;
 		})
 
-		for (let r = 0; r < $scope.csv.length; r++) {
+		for (let r = ($scope.options.ignoreFirstRow ? 1 : 0); r < $scope.csv.length; r++) {
 			let article = new journal.Article();
 
 			for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
 				let col = $scope.columns[cols[i]].selected;
 				let prop = $scope.cols_types[col];
 
+				if (typeof $scope.csv[r][cols[i]]  === "undefined") {
+					return;
+				}
+
 				if (!angular.isUndefined(article[prop])) {
-					//console.log($scope.csv[r][cols[i]]);
+					console.log($scope.csv[r][cols[i]]);
 					if (col === 'author') {
-						article[prop].set($scope.csv[r][cols[i]].split($scope.authorDelimiter));
+						article[prop].set($scope.csv[r][cols[i]].split($scope.options.authorsDelimiter),  Number($scope.options.authorFormat));
+					} else if (col === "pages") {
+						let pages = $scope.csv[r][cols[i]].match(/^(\d{1,3})\s?[\-\u2013\u2212]?\s?(\d{1,3})?$/)
+						article.pages.value.startPdf = parseInt(pages[1]);
+						if (typeof pages[2] !== "undefined") {
+							article.pages.value.endPdf = parseInt(pages[2]);
+						}
 					} else {
 						article[prop].set($scope.csv[r][cols[i]]);
 					}
@@ -321,6 +343,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 				} else if (col === "pageto") {
 					article.pages.value.endPdf = parseInt($scope.csv[r][cols[i]]);
 					journal.settings.overviewColumns.pages.checked = true;
+
 				}
 
 			}

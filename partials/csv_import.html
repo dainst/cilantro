@@ -1,8 +1,8 @@
 <div>
 	<div class="modal-header">
 		<ul class="nav nav-pills">
-			<li><h1>CSV Data Wizard</h1></li>
-			<li ng-class="{active:state.tab=='file'}" ng-click="clickTab('file')"><a href="#">1. Load File</a></li>
+			<li><div style="padding: 10px 15px 10px 0px; font-weight:bold">CSV Data Wizard</div></li>
+			<li ng-class="{active:state.tab=='file'}" ng-click="clickTab('file')"><a href="#">1. Load CSV File</a></li>
 			<li ng-class="{active:state.tab=='raw'}" ng-click="clickTab('raw')"><a href="#">2. Review CSV</a></li>
 			<li ng-class="{active:state.tab=='csv', disabled:csv.length==0}" ng-click="clickTab('csv')"><a href="#">3. Assign Columns</a></li>
 		</ul>
@@ -37,26 +37,37 @@
 		<div ng-show="state.tab=='raw'">
 			<label for="raw_csv">Raw CSV Data</label>
 			<textarea id="raw_csv" class="form-control" ng-model="raw_csv"></textarea>
-
-			<div>
-				<a ng-click="toggleParseOptions()" href="#">CSV Options</a>
-				<div ng-show="state.parseOptions">
-					<form class="form-inline">
-						<div class="form-group input-group-sm">
-							Cell Delimiter
-							<select class="form-control" ng-model="delimiter">
-								<option ng-repeat="(key, val) in delimiters" value="{{val}}">{{key}}</option>
-							</select>
-							Author Delimiter
-							<select class="form-control" ng-model="authorDelimiter">
-								<option ng-repeat="(key, val) in delimiters" value="{{val}}">{{key}}</option>
-							</select>
-						</div>
-					</form>
+			<br>
+			<form class="form-inline">
+				<div class="form-group input-group-sm">
+					Cell Delimiter
+					<select class="form-control" ng-model="options.delimiter" ng-class="{'alert-danger':options.delimiter!=','}">
+						<option ng-repeat="(key, val) in delimiters" value="{{val}}">{{key}}</option>
+					</select>
 				</div>
+			</form>
+
+			<a ng-click="toggleParseOptions()" href="#">More Options</a>
+			<div ng-show="state.parseOptions">
+				<form class="form-inline">
+					<div class="form-group input-group-sm">
+
+						Author Delimiter
+						<select class="form-control" ng-model="options.authorsDelimiter">
+							<option ng-repeat="(key, val) in delimiters" value="{{val}}">{{key}}</option>
+						</select>
+						Name Formats
+						<select class="form-control" ng-model="options.authorFormat">
+							<option value="0">FirstName SecondName LastName</option>
+							<option value="1">Lastname, FirstName SecondName</option>
+						</select>
+					</div>
+				</form>
 			</div>
+			<br>
+			<div class="alert alert-warning" ng-show="options.delimiter!=','">It seems that your CSV Data is separated by something else instead of comma. Please make sure, that this is correct before continue.</div>
 			<div style="text-align:right">
-				<button class="btn btn-primary" ng-click="parse()">OK, take this data</button>
+				<button class="btn btn-primary" ng-show="raw_csv!=''" ng-click="parse()">OK, take this data</button>
 			</div>
 		</div>
 
@@ -77,13 +88,19 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="row in csv">
+							<tr ng-repeat="row in csv track by $index" ng-hide="options.ignoreFirstRow && ($index == 0)">
 								<td ng-repeat="col in row track by $index">{{col}}</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
+
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="options.ignoreFirstRow">Ignore Frist Row</label>
+				</div>
+
 			</form>
+			<div class="alert alert-warning" ng-show="state.unequalFieldsWarning">Your detected Columns have unequal lengths.</div>
 			<div style="text-align:right">
 				<button class="btn btn-success" type="button" ng-click="ok()">OK</button>
 				<button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
