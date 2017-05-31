@@ -1,17 +1,23 @@
 var mod = angular.module('module.protocols.csv_import', ['ui.bootstrap']);
 
+// @ todo this (and every protokol) shoueld inherit from generic...
 
 mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregistry', 'documentsource', 'journal', 'messenger',
 	function($rootScope, $uibModal, editables, protocolregistry, documentsource, journal, messenger) {
 
 		var journalCtrl = new protocolregistry.Protocol('csv_import');
 
-		journalCtrl.description = "Import data is stored in CSV";
+		journalCtrl.description = "Import abnd get metadata from a CSV-file";
 
 		journalCtrl.columns = ['author', 'title', 'pages'];
 
 		journalCtrl.onSelect = function() {
-
+			journal.data.identification.select('year');
+			journal.data.ojs_journal_code = editables.text('', true);
+			journal.data.auto_publish_issue.value.value = true;
+			journal.data.default_create_frontpage = true;
+			journal.data.number.mandatory = false;
+			journal.data.volume.mandatory = false;
 		}
 
 		journalCtrl.onInit = function() {
@@ -53,7 +59,7 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', function($scope, $uibModalInstance, journal) {
 
 	/* raw csv data */
-	$scope.raw_csv = "000371801";
+	$scope.raw_csv = "";
 	/* csv as array of arrays */
 	$scope.csv = [];
 
