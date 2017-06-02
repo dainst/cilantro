@@ -48,7 +48,7 @@ table td {
 	padding: 0.3em;
 	margin: 0em 0em 0em 0em;
 	content: attr(data-tooltip);
-	z-index: 10000;
+	z-index: 2000;
 	position: absolute;
 	top: 90%;
 	color: black;
@@ -97,6 +97,7 @@ table.author_box td {
 #main-container {
 	padding: 80px 20px 10px 20px;
 	overflow-x: hidden;
+	min-height: 600px;
 }
 
 
@@ -210,7 +211,7 @@ table.split-table > tbody > tr > td .thumbnail-container.enlarged {
 	position: fixed;
 	left: 10px;
 	top:0px;
-	z-index: 10002;
+	z-index: 1042;
 	background: white;
 }
 table.split-table > tbody > tr > td .thumbnail-container.enlarged img {
@@ -290,7 +291,7 @@ table .alert {
 	
 	padding: 1em;
 	position: fixed;
-	z-index: 10004;
+	z-index: 1044;
 	right: 0em;
 	top: 50px;
 }
@@ -325,7 +326,7 @@ table .alert {
 	bottom: 0px;
 	left: 0px;
 	background-color: white;
-	z-index: 5000;
+	z-index: 10000;
 }
 
 
@@ -440,7 +441,7 @@ input.form-check-input:checked + label:before {
 	bottom: 0px;
 	right: 24%;
 	left: 24%;
-	z-index: 10000;
+	z-index: 1040;
 	padding: 20px;
 	max-height: 100%;
 	overflow: auto;

@@ -91,40 +91,40 @@
 					<button ng-if="isArticleSelected() && (zenon.selected == -1)" ng-click='markAsMissingZenon()' ng-class="['btn', 'btn-default', {'active': (journal.articles[currentArticle].zenonId == '(((new)))')}]">Mark as missing in Zenon  <span class="glyphicon glyphicon-flag"></span></button>
 				</span>
 				
-			</div>
-				
-			<table class="table select-table">
-				<thead>
-					<tr>
-						<td ng-repeat="(field, value) in zenon.results[0]" ng-show="field != 'id'">{{field}}</td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="doc in zenon.results track by $index" ng-click='selectFromZenon($index)' ng-class="{'active': (zenon.selected == $index)}">
-						<td ng-repeat="(field, value) in doc" ng-show="field != 'id'" >{{value}}</td>
-						<!-- <td>
-							<span class='btn btn-default btn-xs' ng-class="{'btn-primary': ($index == zenon.selected)}" ng-click='selectFromZenon($index)'>
-								<span class='glyphicon glyphicon-ok-sign'></span>
-							</span>
-						</td> -->
-					</tr>					
-				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="8">
-							<p ng-show="zenon.results.length > 0">{{zenon.results.length}} of {{zenon.found}} results</p>
-						</td>
-					</tr>
-					<tr ng-show="zenon.start < zenon.found">
-						<td colspan="7">
-							<span class='btn btn-default btn-xs' ng-click='compareWithZenon(true)' data-tooltip='more results'><span class='glyphicon glyphicon-plus-sign'></span></span>
-						</td>
-						<td>&nbsp;</td>
-					</tr>
-				</tfoot>
-			</table>
-				
 
+				<div style="overflow-x:auto; padding-left: 1px;">
+					<table class="table select-table">
+						<thead>
+							<tr>
+								<td ng-repeat="(field, value) in zenon.results[0]" ng-show="field != 'id'">{{field}}</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="doc in zenon.results track by $index" ng-click='selectFromZenon($index)' ng-class="{'active': (zenon.selected == $index)}">
+								<td ng-repeat="(field, value) in doc" ng-show="field != 'id'" >{{value}}</td>
+								<!-- <td>
+									<span class='btn btn-default btn-xs' ng-class="{'btn-primary': ($index == zenon.selected)}" ng-click='selectFromZenon($index)'>
+										<span class='glyphicon glyphicon-ok-sign'></span>
+									</span>
+								</td> -->
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="8">
+									<p ng-show="zenon.results.length > 0">{{zenon.results.length}} of {{zenon.found}} results</p>
+								</td>
+							</tr>
+							<tr ng-show="zenon.start < zenon.found">
+								<td colspan="7">
+									<span class='btn btn-default btn-xs' ng-click='compareWithZenon(true)' data-tooltip='more results'><span class='glyphicon glyphicon-plus-sign'></span></span>
+								</td>
+								<td>&nbsp;</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 
