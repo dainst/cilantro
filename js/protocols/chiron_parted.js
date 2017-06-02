@@ -7,8 +7,6 @@ angular
 
 	journalCtrl.description = "Chiron - Articles present as single PDFs";
 
-	/* the journal's settings */
-	journalCtrl.columns = ['author', 'title', 'pages'];
 
 	journalCtrl.onSelect = function() {
 		journal.data.identification = 'vol_year';

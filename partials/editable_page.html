@@ -29,27 +29,28 @@
 		</div>
 	</div>
 
-	<div class='row'><div class='col-xs-12'><strong>Pages (as printed)</strong></div></div>
-
-	<div class='row'>
-		<div class='col-xs-5'>
-			<input
-					type="number"
-					class='editable text-right'
-					ng-change='item.observer ? item.observer() : ""'
-					ng-model='item.startPrint'
-					min="1"
-			/>
-		</div>
-		<div class='col-xs-2 text-center'> - </div>
-		<div class='col-xs-5'>
-			<input
-					type="number"
-					class='editable text-left'
-					ng-model='item.endPrint'
-					ng-change='item.observer ? item.observer() : ""'
-					min="1"
-			/>
+	<div ng-show="item.context.offset !== 0">
+		<div class='row'><div class='col-xs-12'><strong>Pages (as printed)</strong></div></div>
+		<div class='row'>
+			<div class='col-xs-5'>
+				<input
+						type="number"
+						class='editable text-right'
+						ng-change='item.observer ? item.observer() : ""'
+						ng-model='item.startPrint'
+						min="1"
+				/>
+			</div>
+			<div class='col-xs-2 text-center'> - </div>
+			<div class='col-xs-5'>
+				<input
+						type="number"
+						class='editable text-left'
+						ng-model='item.endPrint'
+						ng-change='item.observer ? item.observer() : ""'
+						min="1"
+				/>
+			</div>
 		</div>
 	</div>
 

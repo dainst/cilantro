@@ -7,9 +7,7 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 
 		var journalCtrl = new protocolregistry.Protocol('csv_import');
 
-		journalCtrl.description = "Import abnd get metadata from a CSV-file";
-
-		journalCtrl.columns = ['author', 'title', 'pages'];
+		journalCtrl.description = "Import and get metadata from a CSV-file";
 
 		journalCtrl.onSelect = function() {
 			journal.data.identification.select('year');

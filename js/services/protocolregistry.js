@@ -20,7 +20,7 @@ angular
 			var p = {
 				id: id,
 				description: 'no description for ' + id,
-				columns: ['author', 'title', 'pages'],
+				columns: ['author', 'title', 'pages', 'filepath'],
 				startView: 'overview',
 				main: {},
 				register: function() {

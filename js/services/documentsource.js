@@ -83,13 +83,17 @@ angular
 
 							folder.files[this.url] = fileInfo;
 
-							var metadataLoaded = function () {
-								journal.loadedFiles[this.url] = this.url;
+							let metadataLoaded = function () {
+								journal.loadedFiles[this.url] = {
+									size: this.size,
+									url: this.url,
+									pagecontext: this.pagecontext
+								};
 								messenger.alert('document nr ' + Object.keys(folder.files).length + ' loaded');
 								$rootScope.$broadcast('gotFile', this.url);
 								refreshView();
 								resolve();
-							}.bind(this);
+							}.bind(fileInfo);
 
 
 							Promise.all([promise1, promise2]).then(metadataLoaded, metadataLoaded);
@@ -124,7 +128,7 @@ angular
 
 
 		// is folder or file?
-		if (webservice.getFileInfo(path).type == 'dir') {
+		if (webservice.getFileInfo(path).type === 'dir') {
 			folder.path =  path;
 			var getFolder = new Promise(function(resolve) {
 				messenger.alert('loading folder contents: ' + folder.path);
@@ -166,7 +170,7 @@ angular
 	 */
 	folder.getFileInfo = function(article) {
 
-		if (article.filepath.value.value == 'none') {
+		if (article.filepath.value.value === 'none') {
 			return {}
 		}
 		var file = folder.files[article.filepath.value.value];
@@ -187,7 +191,7 @@ angular
 	 * trigger trumbnail recreation (on page or filepath change)
 	 */
 	$rootScope.$on('thumbnaildataChanged', function($event, article) {
-		if (article.pages.value.startPdf == 0) { // while creation
+		if (article.pages.value.startPdf === 0) { // while creation
 			return;
 		}
 		if (!angular.isUndefined(folder.files[article.filepath.value.value])) {

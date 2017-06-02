@@ -7,7 +7,6 @@ angular
 
 	journalCtrl.description = "Generic Import protocol";
 
-	journalCtrl.columns = ['attached', 'pages'];
 
 	journalCtrl.onSelect = function() {
 		journal.data.identification.select('year');

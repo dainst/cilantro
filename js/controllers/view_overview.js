@@ -18,7 +18,7 @@ angular
 			order: 			{minWidth: '50px', maxWidth: '80px'},
 			author:			{minWidth: '400px'},
 			title:			{minWidth: '400px'},
-			pages:			{minWidth: '200px'},
+			pages:			{minWidth: '170px'},
 			abstract:		{minWidth: '400px'},
 			date_published:	{minWidth: '150px'},
 			auto_publish:  	{minWidth: '10px'},

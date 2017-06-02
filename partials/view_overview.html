@@ -47,7 +47,7 @@
 					<td
 						ng-repeat="(name, column) in journal.settings.overviewColumns"
 						ng-show="column.checked"
-						ng-style="styles[name]"
+						ng-style="getStyle(name)"
 						data-tooltip="{{journal.articleDescriptions[name].description}}"
 					>{{journal.articleDescriptions[name].title}}</td>
 
@@ -72,12 +72,7 @@
 					</td>
 					<td ng-repeat="(name, column) in journal.settings.overviewColumns" ng-show="column.checked">
 						<span editable item="article[name]"></span>
-						<table ng-if="name=='filepath'">
-							<tr ng-repeat="(field, content) in getFileInfo(article)">
-								<td class="col-xs-6">{{field}}<td>
-								<td class="col-xs-6">{{content}}</td>
-							</tr>
-						</table>
+
 					</td>
 					<td>
 						<span class="btn btn-default btn-xs" ng-show="$index>0" ng-click="updateOrder('up', true, article)" data-tooltip="move above"><span class="glyphicon glyphicon-triangle-top"></span></span>

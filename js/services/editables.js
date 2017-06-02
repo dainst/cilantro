@@ -3,7 +3,7 @@ angular
 .factory("editables", [function() {
 	
 	var editables = {};
-	editables.types = {}; // constructors fpr useful subtypes
+	editables.types = {}; // constructors for useful subtypes
 
 	
 	
@@ -13,7 +13,7 @@ angular
 			value: 		angular.isObject(seed) ? seed : {value: seed},
 			mandatory: 	angular.isUndefined(mandatory) ? true : mandatory,
 			readonly: 	angular.isUndefined(readonly) ? false : readonly,
-			check: 		function() {return (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value == '')) ? 'This  field is mandatory' : false;},
+			check: 		function() {return (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value === '')) ? 'This  field is mandatory' : false;},
 			set:		function(value) {this.value.value = value},
 			get:		function(){return this.value.value},
 			compare:	function(that){return 0},
@@ -28,7 +28,7 @@ angular
 		var obj = editables.base();
 		obj.type = 'authorlist';
 			
-		if (!angular.isArray(seed) || seed.length == 0) {
+		if (!angular.isArray(seed) || seed.length === 0) {
 			obj.value = [new editables.types.Author];
 		}
 		
@@ -93,7 +93,7 @@ angular
 			
 			var error = false;
 			
-			if (!obj.value || obj.value.length == 0) {
+			if (!obj.value || obj.value.length === 0) {
 				error  = 'no Author!'
 			}
 			
@@ -233,10 +233,10 @@ angular
 			if (!obj.value.startPdf) {
 				return "Start Page Missing!";
 			}
-			if (obj.value.startPdf && (obj.value.startPdf != parseInt(obj.value.startPdf))) {
+			if (obj.value.startPdf && (obj.value.startPdf !== parseInt(obj.value.startPdf))) {
 				return "Number Only!";
 			}
-			if (obj.value.endPdf && (obj.value.endPdf != parseInt(obj.value.endPdf))) {
+			if (obj.value.endPdf && (obj.value.endPdf !== parseInt(obj.value.endPdf))) {
 				return "Number Only!";
 			}
 			if (obj.value.endPdf && (parseInt(obj.value.endPdf) < parseInt(obj.value.startPdf))) {
@@ -249,7 +249,7 @@ angular
 			if (obj.value.startPdf < 0) {
 				return "Start page is impossible!"
 			}
-			if (obj.context.maximum != -1 && obj.value.endPdf > obj.context.maximum) {
+			if (obj.context.maximum !== -1 && obj.value.endPdf > obj.context.maximum) {
 				return "End Page exceeds maximum"
 			}
 
@@ -280,10 +280,10 @@ angular
 		var obj = editables.base(parseInt(seed), mandatory);
 		obj.type = 'number';
 		obj.check =	function() {
-			if (obj.value.value != parseInt(obj.value.value) && (this.value.value != '')) {
+			if (obj.value.value !== parseInt(obj.value.value) && (this.value.value !== '')) {
 				return "Only number allowed";
 			}
-			if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value == '')) {
+			if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value === '')) {
 				return 'This field is mandatory'
 			} 
 			return false;
@@ -316,7 +316,7 @@ angular
 		obj.type = 'language';
 		obj.check =	function() {
 			//obj.value.value = obj.value.value.toLowerCase();
-			if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value == '')) {
+			if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value === '')) {
 				return 'This field is mandatory'
 			}
 			if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(this.value.value))  {
@@ -352,7 +352,7 @@ angular
 	editables.listitem = function(list, selected, noneallowed) {
 		var obj = editables.base(selected, false, false);
 		obj.type = 'listitem';
-		obj.noneallowed = (noneallowed == true);
+		obj.noneallowed = (noneallowed === true);
 		obj.check =	function() {return false}
 		obj.select = function(selected) {
 			this.value = {value: selected && selected in list ? selected : (obj.noneallowed ? 'none' : Object.keys(list)[0])}
@@ -363,7 +363,13 @@ angular
 		return obj;
 	}
 	
-	
+	editables.loadedfile = function(list, selected) {
+		var obj = editables.listitem(list, selected, false);
+		obj.type = 'loadedfile';
+
+		return obj;
+
+	}
 	
 	return (editables);
 }])

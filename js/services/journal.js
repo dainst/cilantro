@@ -265,7 +265,7 @@ angular
 			'date_published':	editables.base(data.date_published || 'DD-MM-YYYY'),
 			'language':			editables.language('de_DE', false),
 			'auto_publish':		editables.checkbox(journal.data.default_publish_articles === true),
-			'filepath':			editables.listitem(journal.loadedFiles),
+			'filepath':			editables.loadedfile(journal.loadedFiles),
 			'attached':			editables.filelist(),
 			'order':			editables.number(0, false),
 			'createFrontpage':	editables.checkbox(journal.data.create_frontpage === true),
