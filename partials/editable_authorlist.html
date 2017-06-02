@@ -2,6 +2,14 @@
 
 	<div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning'>{{warning}}</div>
 
+	<thead>
+		<tr>
+			<td>Fist Name(s)</td>
+			<td>Family Name</td>
+			<td></td>
+		</tr>
+	</thead>
+
 	<tbody>
 		<tr ng-repeat="author in item.value track by $index">
 			<td><input ng-model='author.firstname'></input></td>

@@ -33,7 +33,9 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 				templateUrl: 'partials/csv_import.html',
 				controller: "csv_import_window",
 				controllerAs: '$ctrl',
-				size: 'lg'
+				size: 'lg',
+				backdrop: 'static',
+				keyboard: false
 			});
 
 			modalInstance.result.then(function (filled_columns) {

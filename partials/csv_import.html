@@ -2,9 +2,10 @@
 	<div class="modal-header">
 		<ul class="nav nav-pills">
 			<li><div style="padding: 10px 15px 10px 0px; font-weight:bold">CSV Data Wizard</div></li>
-			<li ng-class="{active:state.tab=='file'}" ng-click="clickTab('file')"><a href="#">1. Load CSV File</a></li>
-			<li ng-class="{active:state.tab=='raw'}" ng-click="clickTab('raw')"><a href="#">2. Review CSV</a></li>
-			<li ng-class="{active:state.tab=='csv', disabled:csv.length==0}" ng-click="clickTab('csv')"><a href="#">3. Assign Columns</a></li>
+			<li ng-class="{active:state.tab=='file'}" ng-click="clickTab('file')"><a href="#">Load CSV File</a></li>
+			<li ng-class="{active:state.tab=='raw'}" ng-click="clickTab('raw')"><a href="#">Enter/Review CSV Data</a></li>
+			<li ng-class="{active:state.tab=='csv', disabled:csv.length==0}" ng-click="clickTab('csv')"><a href="#">Assign Columns</a></li>
+			<li class="btn btn-danger pull-right" type="button" ng-click="cancel()">Cancel</li>
 		</ul>
 	</div>
 	<div class="modal-body" id="modal-body">
@@ -67,13 +68,22 @@
 			<br>
 			<div class="alert alert-warning" ng-show="options.delimiter!=','">It seems that your CSV Data is separated by something else instead of comma. Please make sure, that this is correct before continue.</div>
 			<div style="text-align:right">
-				<button class="btn btn-primary" ng-show="raw_csv!=''" ng-click="parse()">OK, take this data</button>
+				<button class="btn btn-primary" ng-show="raw_csv!=''" ng-click="parse()">OK, take this data and assign columns</button>
 			</div>
 		</div>
 
 		<div ng-show="state.tab=='csv'">
 
 			<form>
+
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="options.ignoreFirstRow">Ignore first Row</label>
+				</div>
+				<div class="checkbox" ng-show="hasZenonId()">
+					<label><input type="checkbox" ng-model="options.autoFetchFromZenon">Fetch data from Zenon automatically by this ID (happens, when in article is visited in article view)</label>
+				</div>
+
+
 				<div class="form-group">
 					Values
 					<table>
@@ -95,18 +105,11 @@
 					</table>
 				</div>
 
-				<div class="checkbox">
-					<label><input type="checkbox" ng-model="options.ignoreFirstRow">Ignore first Row</label>
-				</div>
-				<div class="checkbox" ng-show="hasZenonId()">
-					<label><input type="checkbox" ng-model="options.autoFetchFromZenon">Fetch data from Zenon automatically by this ID (happens, when in article is visited in article view)</label>
-				</div>
 
 			</form>
 			<div class="alert alert-warning" ng-show="state.unequalFieldsWarning">Your detected Columns have unequal lengths.</div>
 			<div style="text-align:right">
 				<button class="btn btn-success" type="button" ng-click="ok()">OK</button>
-				<button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
 			</div>
 		</div>
 	</div>
