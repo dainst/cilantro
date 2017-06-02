@@ -3,28 +3,25 @@
 
 <div class="row toprow">
 	<div class="col-md-6">
-		<h1>iDai.publications Importer</h1>
+		<h1 style="margin-top:0px">
+			iDai.publications Importer
+			<input type="password" class="form-control pull-right" ng-model='sec.password' placeholder="password" style="width:150px; display:inline">
+		</h1>
+
 	</div>
 
 	<div class="col-md-6">
 
 		<div class="btn-toolbar pull-right">
-			<div class="input-group">
-				<input type="password" class="form-control" ng-model='sec.password' placeholder="password" style="width:150px">
-				<span class="input-group-btn" ng-show="sessionLocked">
-				<button class='btn btn-danger'  ng-click='resetSession()'>Reset System</button>
-			</span>
-				<span class="input-group-btn" ng-show="!sessionLocked">
-				<button class='btn btn-primary' ng-click='start()'>Start Import<span class="glyphicon glyphicon-chevron-right"></span></button>
-			</span>
-			</div>
+			<button ng-if="sessionLocked" class='btn btn-danger'  ng-click='resetSession()'>Reset System</button>
+			<button ng-if="!sessionLocked" class='btn btn-primary' ng-click='start()'>Start Import<span class="glyphicon glyphicon-chevron-right"></span></button>
 		</div>
 	</div>
 
 
 </div>
 
-<div class="row">
+<div class="row" ng-show="sec.password != ''">
 	<div class="col-md-6">
 
 		<div class="panel panel-default">
@@ -78,7 +75,8 @@
 				<div ng-show="invalidFiles" class="alert alert-warning">Wrong Filetype</div>
 			</div>
 		</div>
-
+	</div>
+	<div class="col-md-6">
 
 		<div class="panel panel-default">
 			<div class="panel-heading">Issue Metadata</div>
@@ -102,5 +100,5 @@
 	</div>
 
 
-</div>
+
 </div>
