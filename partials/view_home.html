@@ -97,6 +97,23 @@
 			</div>
 		</div>
 
+
+		<div class="panel panel-default">
+			<div class="panel-heading">Importer Version {{settings.versionInfo.version}}</div>
+			<div class="panel-body">
+				<strong>Version History</strong>
+				<ul style="max-height: 200px; overflow-y:auto">
+					<li ng-repeat="(version, features) in settings.versionInfo.history">
+						{{version}}
+						<ul>
+							<li ng-repeat="feature in features">{{feature}}</li>
+						</ul>
+					</li>
+				</ul>
+				<h4></h4>
+			</div>
+		</div>
+
 	</div>
 
 

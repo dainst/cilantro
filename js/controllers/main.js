@@ -31,6 +31,9 @@ angular
 			ready: false
 		}
 
+		/* settings / version info */
+		$scope.settings = settings;
+
 		/* journal */
 		$scope.journal = journal;
 

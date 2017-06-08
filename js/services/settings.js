@@ -2,8 +2,12 @@ angular
 .module('module.settings', [])
 .factory("settings", ['$log', '$http', function($log, $http) {
 	
-	var settings = {};
+	var settings = window.settings; // @ TODO better settings implementation!
 
-	return window.settings;
+	$http.get('version.json').success(function(response) {
+		return settings.versionInfo = response;
+	});
+
+	return settings;
 
 }]);
