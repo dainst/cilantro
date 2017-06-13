@@ -525,18 +525,28 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$i = 0;
 
 		$acceptedFiles = array(
-			'text/csv'
+			'text/comma-separated-values',
+			'text/csv',
+			'application/csv',
+			'application/excel',
+			'application/vnd.ms-excel',
+			'application/vnd.msexcel'
 		);
 
 		if (!in_array($_FILES['files']['type'][$i], $acceptedFiles)) {
 			throw new Exception($_FILES['files']['name'][$i] . ' has wrong type ' . $_FILES['files']['type'][$i]);
 		}
 
+
+
 		if ($_FILES['files']['error'][$i] != 0) {
 			throw new Exception('error  ' . $_FILES['files']['error'][$i] . ' in file ' . $_FILES['files']['name'][$i]);
 		}
 
+
+
 		$this->return['csv'] = file_get_contents($_FILES['files']['tmp_name'][$i]);
+
 
 	}
 	

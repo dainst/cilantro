@@ -58,6 +58,14 @@ function parse_size($size) {
 	}
 }
 
+function json_encode_with_errors($object) {
+	$json = json_encode($object);
+	if (json_last_error() !== JSON_ERROR_NONE) {
+		throw new Exception(json_last_error_msg());
+	}
+	return $json;
+}
+
 
 /**
  * go
@@ -155,6 +163,19 @@ try {
 	
 	$ojsis->finish();
 
+	$logger->log('OK');
+
+	// return  success
+	$return['task'] = $task;
+	$return['success'] = true;
+	$return['warnings'] = $logger->warnings;
+	if ($debugmode) {
+		$return['debug'] = $logger->log;
+	}
+
+	header('Content-Type: application/json');
+	echo json_encode_with_errors($return);
+
 } catch (Exception $a) {
 	ob_clean();
 	if (isset($ojsis)) {
@@ -171,21 +192,12 @@ try {
 	}	
 	
 	header('Content-Type: application/json');
-	echo json_encode($return);
-	die();
+	echo json_encode_with_errors($return);
+
 }
 
-$logger->log('OK');
 
 
-// return  success
-$return['task'] = $task;
-$return['success'] = true;
-$return['warnings'] = $logger->warnings;
-if ($debugmode) {
-	$return['debug'] = $logger->log;
-}
 
-header('Content-Type: application/json');
-echo json_encode($return);
+
 ?>
