@@ -328,9 +328,11 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 						article[prop].set($scope.csv[r][cols[i]].split($scope.options.authorsDelimiter),  Number($scope.options.authorFormat));
 					} else if (col === "pages") {
 						let pages = $scope.csv[r][cols[i]].match(/^(\d{1,3})\s?[\-\u2013\u2212]?\s?(\d{1,3})?$/)
-						article.pages.value.startPdf = parseInt(pages[1]);
-						if (typeof pages[2] !== "undefined") {
-							article.pages.value.endPdf = parseInt(pages[2]);
+						if (pages) {
+							article.pages.value.startPdf = parseInt(pages[1]);
+							if (typeof pages[2] !== "undefined") {
+								article.pages.value.endPdf = parseInt(pages[2]);
+							}
 						}
 					} else {
 						article[prop].set($scope.csv[r][cols[i]]);
