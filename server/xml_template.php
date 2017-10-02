@@ -58,8 +58,9 @@
 		            <?php } ?>
 
 					<?php 	// we abuse the page id to send a marker, that a front matter is missing...
+                    // @ TODO default $journal->default_create_frontpage makes it impossible to deny frontpage
 					$pages = htmlspecialchars($article->pages->showndesc);
-						$pages .= ($article->createFrontpage) ? '#DFM' : '';
+						$pages .= ($article->createFrontpage or $journal->default_create_frontpage) ? '#DFM' : '';
 					?>
 	                <pages><?php echo $pages; ?></pages>
 

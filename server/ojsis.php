@@ -273,7 +273,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * 
 	 */
 	function updateFrontmatters() {
-		$execline = "cd {$this->settings['ojs_path']} && php plugins/generic/ojs-dainst-frontpage-generator-plugin/dfmcli.php add missing 0";
+		$execline = "cd {$this->settings['ojs_path']} && php plugins/generic/ojs-dainst-frontpage-generator-plugin/dfmcli.php add thumbnails missing 0";
 		$this->log->debug($execline);
 		$message = shell_exec($execline);
 		$stop = array('Could ', 'Error:', 'Fatal error:');
@@ -298,7 +298,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				
 		$this->orderArticles();
 		$articles = $data->articles;
-				
+
+
 		ob_start();
 		include('xml_template.php');
 		$xml = ob_get_contents();
