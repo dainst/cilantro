@@ -4,9 +4,11 @@ angular
 	
 	var settings = window.settings; // @ TODO better settings implementation!
 
-	$http.get('version.json').success(function(response) {
+	$http.get('version.json').then(function(response) {
 		return settings.versionInfo = response;
-	});
+	}, function errorCallback(err) {
+		console.error(err);
+    });
 
 	return settings;
 

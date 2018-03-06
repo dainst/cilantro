@@ -1,0 +1,16 @@
+{
+  "name": "ojs-importer",
+  "version": "3.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dainst/ojs-importer.git"
+  },
+  "description": "",
+  "scripts": {
+    "build": "gulp build"
+  },
+  "dependencies": {
+    "ng-file-upload": "12.2.13",
+    "idai-components": "2.6.7"
+  }
+}

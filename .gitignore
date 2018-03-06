@@ -9,3 +9,5 @@ reports/*
 PIMPORT_REPO
 
 .idea/
+node_modules
+package-lock.json
