@@ -33,7 +33,7 @@ angular
 ])
 */
 .constant('componentsSettings', {
-		transl8Uri: "https://arachne.dainst.org/transl8/translation/jsonp?application=shared&lang={LANG}&callback=JSON_CALLBACK"
+		transl8Uri: "https://arachne.dainst.org/transl8/translation/jsonp?application=shared&lang={LANG}"
 	}
 )
 

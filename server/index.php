@@ -68,6 +68,7 @@ try {
 	// settings
 	$allowedIps		= array();
 	$errorReporting = true;
+    $debugmode = false;
 	$includePath = (!isset($includePath)) ? dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . '/' : $includePath;
 	if (file_exists($includePath . '/' . "settings.php")) {
 		include_once($includePath . '/' . "settings.php");
