@@ -42,7 +42,7 @@ angular
 			$scope.currentArticle = k;
 			if (journal.articles[$scope.currentArticle]._.autoFetchFromZenon && journal.articles[$scope.currentArticle].zenonId.value.value !== '') {
 				$scope.autoFetchFromZenon()
-			} else {
+			} else if (!journal.articles[$scope.currentArticle]._.reportToZenon) {
 				$scope.compareWithZenon();
 			}
 
@@ -154,6 +154,8 @@ angular
 		}
 
 		$scope.compareWithZenon = function(more) {
+
+            journal.articles[$scope.currentArticle]._.reportToZenon = false;
 
 			if (($scope.currentArticle === -1) || (typeof journal.articles[$scope.currentArticle] === 'undefined')) {
 				return;
