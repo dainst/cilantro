@@ -104,7 +104,7 @@
 				<strong>Version History</strong>
 				<ul style="max-height: 200px; overflow-y:auto">
 					<li ng-repeat="(version, features) in settings.versionInfo.history">
-						{{version}}
+                        <strong>{{version}}</strong>
 						<ul>
 							<li ng-repeat="feature in features">{{feature}}</li>
 						</ul>

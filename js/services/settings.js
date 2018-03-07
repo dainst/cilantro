@@ -5,7 +5,7 @@ angular
 	var settings = window.settings; // @ TODO better settings implementation!
 
 	$http.get('version.json').then(function(response) {
-		return settings.versionInfo = response;
+		return settings.versionInfo = response.data;
 	}, function errorCallback(err) {
 		console.error(err);
     });
