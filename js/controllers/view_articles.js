@@ -5,8 +5,10 @@ angular
 
 .module('controller.view_articles', [])
 
-.controller('view_articles', ['$scope', '$http', 'settings', 'webservice', 'editables', 'messenger', 'journal',
-	function($scope, $http, settings, webservice, editables, messenger, journal) {
+.controller('view_articles', ['$scope', '$http', '$sce', 'settings', 'webservice', 'editables', 'messenger', 'journal',
+	function($scope, $http, $sce, settings, webservice, editables, messenger, journal) {
+
+		var zenonEndpoint = $sce.trustAsResourceUrl('https://zenon.dainst.org/data/biblio/select');
 
 		$scope.currentArticle = -1;
 
@@ -177,29 +179,32 @@ angular
 
 			$http({
 				method: 'JSONP',
-				url: 'https://zenon.dainst.org/data/biblio/select',
+				url: zenonEndpoint,
 				params: {
-					'json.wrf': 'JSON_CALLBACK',
 					q: 'title:' + term.replace(':', ''),
 					wt:	'json',
 					start: parseInt($scope.zenon.start)
-				}
+				},
+                jsonpCallbackParam: 'json.wrf'
 			})
-				.success(function(data) {
-					console.log('success');
-					console.log(data);
-					$scope.zenon.results = $scope.zenon.results.concat(data.response.docs.map($scope.zenonMapDoc));
-					$scope.zenon.found = parseInt(data.response.numFound);
-					$scope.zenon.start = parseInt(data.responseHeader.params.start) + 10;
-					$scope.zenon.search = term;
-					if ($scope.zenon.found === 1) {
-						$scope.selectFromZenon(0);
+				.then(
+					function(data) {
+						console.log('success');
+						console.log(data);
+						data = data.data;
+						$scope.zenon.results = $scope.zenon.results.concat(data.response.docs.map($scope.zenonMapDoc));
+						$scope.zenon.found = parseInt(data.response.numFound);
+						$scope.zenon.start = parseInt(data.responseHeader.params.start) + 10;
+						$scope.zenon.search = term;
+						if ($scope.zenon.found === 1) {
+							$scope.selectFromZenon(0);
+						}
+					},
+					function(err) {
+						console.error(err);
+						messenger.alert('Could not connect to Zenon!', true);
 					}
-				})
-				.error(function(err) {
-					console.error(err);
-					messenger.alert('Could not connect to Zenon!', true);
-				});
+				);
 
 		};
 
@@ -207,34 +212,37 @@ angular
 		$scope.autoFetchFromZenon = function() {
 			$scope.resetZenon();
 			$http({
-				method: 'JSONP',
-				url: 'https://zenon.dainst.org/data/biblio/select',
-				params: {
-					'json.wrf': 'JSON_CALLBACK',
-					q: 'id:' + journal.articles[$scope.currentArticle].zenonId.value.value,
-					wt:	'json'
-				}
+					method: 'JSONP',
+					url: zenonEndpoint,
+					params: {
+						q: 'id:' + journal.articles[$scope.currentArticle].zenonId.value.value,
+						wt:	'json'
+					},
+					jsonpCallbackParam: 'json.wrf'
 			})
-				.success(function(data) {
-					console.log('success');
-					console.log(data);
-					$scope.zenon.results = $scope.zenon.results.concat(data.response.docs.map($scope.zenonMapDoc));
-					$scope.zenon.found = Number(data.response.numFound);
-					$scope.zenon.start = Number(data.responseHeader.params.start) + 10;
-					$scope.zenon.search = journal.articles[$scope.currentArticle].zenonId.value.value;
-					$scope.zenon.searchId = true;
-					if ($scope.zenon.found === 1) {
-						$scope.adoptFromZenon(0);
-						messenger.alert('Data fetched from zenon');
-					}
-					journal.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
+				.then(
+					function(data) {
+						console.log('success');
+						console.log(data);
+                        data = data.data;
+						$scope.zenon.results = $scope.zenon.results.concat(data.response.docs.map($scope.zenonMapDoc));
+						$scope.zenon.found = Number(data.response.numFound);
+						$scope.zenon.start = Number(data.responseHeader.params.start) + 10;
+						$scope.zenon.search = journal.articles[$scope.currentArticle].zenonId.value.value;
+						$scope.zenon.searchId = true;
+						if ($scope.zenon.found === 1) {
+							$scope.adoptFromZenon(0);
+							messenger.alert('Data fetched from zenon');
+						}
+						journal.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
 
-				})
-				.error(function(err) {
-					console.error(err);
-					messenger.alert('Could not connect to Zenon!', true);
-					journal.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
-				});
+					},
+					function(err) {
+						console.error(err);
+						messenger.alert('Could not connect to Zenon!', true);
+						journal.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
+					}
+				);
 		}
 
 		$scope.selectFromZenon = function(index) {
