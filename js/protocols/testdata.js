@@ -6,7 +6,7 @@ angular
 	function(protocolregistry, journal, documentsource) {
 
 
-	var journalCtrl = new protocolregistry.Protocol('testdata');
+	let journalCtrl = new protocolregistry.Protocol('testdata');
 
 	journalCtrl.description = "Create some Testdata 3.0";
 
@@ -22,7 +22,7 @@ angular
 			zenonId: "000371801",
 			author: {firstname:'1peter', lastname: '1parker'},
 			pages: 1
-		})
+		});
 		a._.autoFetchFromZenon = true;
 
 		journal.articles.push(a);
@@ -62,4 +62,4 @@ angular
 
 
 }])
-.run(function(testdata) {testdata.register()})
+.run(function(testdata) {testdata.register()});

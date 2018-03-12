@@ -5,9 +5,9 @@ var mod = angular.module('module.protocols.csv_import', ['ui.bootstrap']);
 mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregistry', 'documentsource', 'journal', 'messenger',
 	function($rootScope, $uibModal, editables, protocolregistry, documentsource, journal, messenger) {
 
-		var journalCtrl = new protocolregistry.Protocol('csv_import');
+        let journalCtrl = new protocolregistry.Protocol('csv_import');
 
-		journalCtrl.description = "Import and get metadata from a CSV-file";
+        journalCtrl.description = "Import and get metadata from a CSV-file";
 
 		journalCtrl.onSelect = function() {
 			journal.data.identification.select('year');

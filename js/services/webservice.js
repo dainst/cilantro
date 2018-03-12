@@ -39,7 +39,7 @@ angular
 			}
 		}).then(
 			function(response) {
-				if (response.data.success == false) {
+				if (response.data.success === false) {
 					console.error(response.data.message);
 				}  else {
 					console.log("uid", webservice.uploadId);
@@ -47,7 +47,7 @@ angular
 					if (!webservice.uploadId) {
 						webservice.uploadId = response.data.uploadId;
 					}
-					if (webservice.uploadId != response.data.uploadId) {
+					if (webservice.uploadId !== response.data.uploadId) {
 						console.log("got new uploadID, that's so wrong", webservice.uploadId, response.data.uploadId);
 					}
 				}
@@ -76,8 +76,8 @@ angular
 
 	webservice.getFileInfo = function(path) {
 		// not elegant, but hey okay
-		for (var i=0; i < webservice.repository.length; i++) {
-			if (webservice.repository[i].path == path) {
+		for (let i = 0; i < webservice.repository.length; i++) {
+			if (webservice.repository[i].path === path) {
 				return webservice.repository[i];
 			}
 		}

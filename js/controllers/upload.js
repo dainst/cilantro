@@ -34,7 +34,7 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
 
 				messenger.cast(response.data);
 
-            	if (response.data.success == false) {
+            	if (response.data.success === false) {
 					return;
 				} 
 				

@@ -87,7 +87,7 @@ angular
 				messenger.alert('Select another article to put it at the end of »' + article.title.get() + '«',1);
 				$scope.selectedToMerge = article;
 			} else {
-				var article2 = article;
+				let article2 = article;
 				article = $scope.selectedToMerge;
 				if (confirm('Really attach article »' + article2.title.get() + '« to the end of »' + article.title.get() + "« ?")) {
 					mergeArticles(article, article2);

@@ -40,8 +40,8 @@ angular
 		}
 
 		$scope.isReady = function() {
-			var articlesReady = journal.articleStats.data.undecided == 0;
-			var journalReady = $scope.journal.check();
+			let articlesReady = journal.articleStats.data.undecided === 0;
+			let journalReady = $scope.journal.check();
 			return articlesReady && journalReady && !$scope.done;
 		}
 

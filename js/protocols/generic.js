@@ -3,7 +3,7 @@ angular
 .factory("generic", ['$rootScope', 'editables', 'protocolregistry', 'documentsource', 'journal', 'messenger',
 	function($rootScope, editables, protocolregistry, documentsource, journal, messenger) {
 
-	var journalCtrl = new protocolregistry.Protocol('generic');
+	let journalCtrl = new protocolregistry.Protocol('generic');
 
 	journalCtrl.description = "Generic Import protocol";
 
@@ -25,9 +25,9 @@ angular
 
 		documentsource.stats.loaded += 1;
 
-		var file = documentsource.files[fileName];
+		let file = documentsource.files[fileName];
 
-		var article = new journal.Article();
+		let article = new journal.Article();
 		article.filepath.value.value = file.url;
 		article.title.value.value = !angular.isUndefined(file.meta.Title) ? file.meta.Title : '';
 		article.abstract.value.value = !angular.isUndefined(file.meta.Subject) ? file.meta.Subject : '';
@@ -38,22 +38,17 @@ angular
 
 		article.date_published.value.value = '';
 		if (!angular.isUndefined(file.meta.CreationDate)) {
-			if ((m = /^\D\:(\d\d\d\d)(\d\d)(\d\d)/.exec(file.meta.CreationDate)) !== null) {
+			if ((m = /^\D:(\d\d\d\d)(\d\d)(\d\d)/.exec(file.meta.CreationDate)) !== null) {
 				article.date_published.value.value = m[3] + '-' + m[2] + '-' + m[1]
 			}
 		}
-
 
 		journal.articles.push(article);
 		documentsource.stats.analyzed += 1;
 		documentsource.updateThumbnail(article);
 
-
 		console.log(file);
 		console.log(file.meta.Title);
-
-
-
 
 	}
 

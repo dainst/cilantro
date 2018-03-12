@@ -12,12 +12,12 @@ angular
 
 
 		/* protocol prototype */
-		registry.Protocol = function (id) {
+		registry.Protocol = function(id) {
 			console.log('create new protocol ' + id);
 			if (typeof id === "undefined") {
 				console.error("protocol id needed");
 			}
-			var p = {
+			return {
 				id: id,
 				description: 'no description for ' + id,
 				columns: ['author', 'title', 'pages', 'filepath'],
@@ -31,12 +31,7 @@ angular
 				onGotFile: false,
 				onGoAll: false
 			}
-
-
-			return p
 		}
-
-
 
 		return (registry);
 	}]);

@@ -217,7 +217,7 @@ angular
 			if (angular.isObject(property) && (property.check() !== false)) {
 				invalid += 1;
 			}
-		})
+		});
 		return (invalid === 0);
 	}
 
@@ -341,10 +341,7 @@ angular
 		return (articlePrototype);
 	}
 
-
-
-
 	journal.reset();
 
 	return (journal);
-}])
+}]);

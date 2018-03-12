@@ -77,7 +77,7 @@ angular
 			}
 
 			append = append || false;
-			if ((!messenger.content.success && (messenger.content.message !='')) || append) {
+			if ((!messenger.content.success && (messenger.content.message !== '')) || append) {
 				messenger.content.warnings.push(messenger.content.message);
 			}
 			messenger.content.message = msg;

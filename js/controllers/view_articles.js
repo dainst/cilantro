@@ -8,7 +8,7 @@ angular
 .controller('view_articles', ['$scope', '$http', '$sce', 'settings', 'webservice', 'editables', 'messenger', 'journal',
 	function($scope, $http, $sce, settings, webservice, editables, messenger, journal) {
 
-		var zenonEndpoint = $sce.trustAsResourceUrl('https://zenon.dainst.org/data/biblio/select');
+		const zenonEndpoint = $sce.trustAsResourceUrl('https://zenon.dainst.org/data/biblio/select');
 
 		$scope.currentArticle = -1;
 
@@ -68,19 +68,18 @@ angular
 		};
 
 		$scope.checkArticle = function() {
-			var article = journal.articles[$scope.currentArticle];
-			var invalid = 0;
+			let article = journal.articles[$scope.currentArticle];
+			let invalid = 0;
 			angular.forEach(article, function(property) {
 				if ((typeof property !== "undefined") && (typeof property.check === "function") && (property.check() !== false)) {
 					invalid += 1;
 				}
-			})
-			return (invalid == 0);
+			});
+			return (invalid === 0);
 		}
 
 		$scope.confirmArticle = function() {
-			var article = journal.articles[$scope.currentArticle];
-
+			let article = journal.articles[$scope.currentArticle];
 
 			if (article) {
 

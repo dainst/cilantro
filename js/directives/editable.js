@@ -6,7 +6,7 @@ angular
 
 .directive('editable', [function() {
 	
-	var killCache = '?nd=' + Date.now();
+	const killCache = '?nd=' + Date.now();
 	
 	return {
       template: '<ng-include src="getTemplateUrl()" />',
