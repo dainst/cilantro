@@ -6,7 +6,7 @@ angular
 	var webservice = {};
 	
 	webservice.sec = {
-		password: 'alpha'
+		password: ''
 	}
 
 	webservice.repository = [];
