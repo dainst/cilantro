@@ -33,7 +33,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	public $log = null;
 	
-	public $noPwFunctions = array('getRepository');
+	public $noPwFunctions = array('getRepository', 'getBackendData');
 	
 	/* system functions */
 	
@@ -182,7 +182,10 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		}
 	
 	}
-	
+
+	function testHard() {
+        $this->return['schnupo'] = "pupo";
+	}
 	
 	
 	/**
