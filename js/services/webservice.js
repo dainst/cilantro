@@ -25,10 +25,7 @@ angular
 		console.log('get', task);
 		
 		//console.log(settings.server_url, send);		
-		
-		if (settings.devMode) {
-			webservice.sec.password = 'alpha';
-		}
+
 		
 		$http({
 			method:	'POST',

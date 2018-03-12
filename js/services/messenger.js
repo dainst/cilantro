@@ -70,7 +70,7 @@ angular
 
 			let debug = [];
 			if (typeof msg.message !== "undefined") {
-				if (settings.devMode) {
+				if (settings.devMode()) {
 					debug = [msg.stack];
 				}
 				msg = msg.message;

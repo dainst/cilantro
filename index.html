@@ -3,7 +3,7 @@
 <head>
 
 	<meta charset="utf-8">
-	<title>iDai.journals - Mass Importer</title>
+	<title>iDAI.publications/importer</title>
 	<link href="favicon.ico" rel="Shortcut Icon">
 
 	<link rel="stylesheet" href="node_modules/idai-components/dist/css/idai-components.min.css">
@@ -28,7 +28,7 @@
 			user-object='{"username": false}'>
 
 			<ul class="nav navbar-nav">
-				<li ng-show="inDevMode()" class="dev-warning"><a type="button">Dev-Mode</a></li>
+				<li ng-show="settings.devMode()" class="dev-warning"><a type="button">Dev-Mode</a></li>
 				<li ng-show="protocol.id!='none'"><p class="navbar-text">Protocol: <strong>{{protocol.description || protocol.id}}</strong></p></li>
 				<li ng-repeat="(stepId, step) in steps.list">
 					<a ng-click="steps.change(stepId)" ng-class="{'active':steps.current==stepId}" ng-show="step.condition()">{{step.title}}</a>

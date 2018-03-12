@@ -1,6 +1,6 @@
 angular
 .module("module.journal", [])
-.factory("journal", ['editables', '$rootScope', function(editables, $rootScope) {
+.factory("journal", ['editables', '$rootScope', 'settings', function(editables, $rootScope, settings) {
 
 	/* base contruction */
 
@@ -143,12 +143,13 @@ angular
 		}
 
 		/* the journal metadata */
+		console.log("sett", settings);
 		journal.data = {
 			"volume": 					editables.base(''),
 			"year": 					editables.base(''),
 			"number": 					editables.base(''),
 			"description": 				editables.base('[PDFs teilweise verfügbar]', false),
-			"importFilePath": 			settings.devMode ? "BEISPIEL.pdf" : '',
+			"importFilePath": 			settings.devMode() ? "BEISPIEL.pdf" : '',
 			"identification": 			editables.listitem(ojs_identifications_codes, 'vol_year', false),
 			"ojs_journal_code": 		editables.listitem(journalCodes).watch(journalCodeChangedObserver),
 			"ojs_user": 				"ojs_user",

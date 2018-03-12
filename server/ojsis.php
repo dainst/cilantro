@@ -19,20 +19,15 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	// return value
 	public $return = array();
-	
 	// do we debug log? (change in server script)
 	public $debug = false;
 	// settings
 	public $settings = array();
 	// the data
 	public $data = null;
-	
-	private $_journal = null;
-	private $_base_path = "../";	
-	private $_db = null;
-	
+	// the log
 	public $log = null;
-	
+	// functions wich can be accessed w/o password
 	public $noPwFunctions = array('getRepository', 'getBackendData');
 	
 	/* system functions */
@@ -79,7 +74,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	/**
 	 * check if the file exists (get called in the beginning of uploading process)
 	 *
-	 * @param unknown $data
+	 * @param $data
 	 * @throws Exception
 	 */
 	function checkStart() {
@@ -130,8 +125,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @throws Exception
 	 */
 	function toOJS() {
-				
-		$data = $this->data;
+
 		$data = $this->data;
 
 		try {
@@ -361,10 +355,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	
 	
 	/* send to zenon */
-	
-	/**
-	 *
-	 */
 	function sendToZenon() {
 			
 		$data = $this->data;
@@ -376,7 +366,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$xml = ob_get_contents();
 		ob_end_clean();
 	
-		$test = new SimpleXMLElement($xml); // should throw an error on error..
+		new SimpleXMLElement($xml); // should throw an error on XML error..
 
 		$filename = $this->return['uploadId'] . '.' . $this->_clean_string($article->title) . '.xml';
 		$this->return['report'] = $filename;

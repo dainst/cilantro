@@ -191,9 +191,7 @@ angular
 		})
 
 
-        $scope.inDevMode = function() {
-		    return (typeof settings.password !== "undefined");
-        }
+
 
 	}
 ]);
