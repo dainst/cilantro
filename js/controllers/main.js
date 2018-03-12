@@ -14,7 +14,7 @@ angular
 		/* protocols */
 		function getLastProtocol() {
 			try {
-				var p = localStorage.getItem('protocol');
+				let p = localStorage.getItem('protocol');
 				if (angular.isFunction(protocolregistry.protocols[p].onSelect)) {
 					protocolregistry.protocols[p].onSelect()
 				}
@@ -76,7 +76,7 @@ angular
 					return;
 				}
 
-				if (to == $scope.steps.current) {
+				if (to === $scope.steps.current) {
 					return;
 				}
 
