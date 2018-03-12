@@ -10,7 +10,7 @@
     			<li ng-repeat="article in journal.articles track by $index">
 					<a href='#'
 					   ng-class="{'btn-primary': $index == currentArticle, 'btn-success': article._.confirmed === true, 'btn-danger': article._.confirmed === false}"
-					   ng-click="selectArticle($index)">{{article.author.value[0].lastname}} - {{article.title.getLabel()}}</a>
+					   ng-click="selectArticle($index)">{{article.author.value[0].lastname}} - {{article.title.get()}}</a>
 				</li>
     		</ul>
 		</div>
@@ -78,7 +78,7 @@
 	<div class="col-lg-6">
 
 		<div ng-show="(currentArticle > -1) && (journal.articles.length > 0)" class="panel panel-default">
-			<div class="panel-heading" ng-show="!zenon.searchId">Search results in Zenon for Article Title "{{journal.articles[currentArticle].title.getLabel()}}"</div>
+			<div class="panel-heading" ng-show="!zenon.searchId">Search results in Zenon for Article Title "{{journal.articles[currentArticle].title.get()}}"</div>
 			<div class="panel-heading" ng-show="zenon.searchId">Search results in Zenon for ID "{{journal.articles[currentArticle].zenonId.value.value}}"</div>
 
 			<div class="panel-body">

@@ -84,15 +84,16 @@ angular
 			}
 
 			if (!$scope.selectedToMerge)  {
-				messenger.alert('Select article to attach »' + article.title.getLabel() + '« to',1);
+				messenger.alert('Select another article to put it at the end of »' + article.title.get() + '«',1);
 				$scope.selectedToMerge = article;
 			} else {
 				var article2 = article;
 				article = $scope.selectedToMerge;
-				if (confirm('Really attach article »' + article2.title.getLabel() + '« to »' + article.title.getLabel() + "« ?!")) {
+				if (confirm('Really attach article »' + article2.title.get() + '« to the end of »' + article.title.get() + "« ?")) {
 					mergeArticles(article, article2);
 				} else {
-					$scope.mergeArticle(false);
+				    console.log("cancelled merging");
+                    $scope.selectedToMerge = false;
 				}
 			}
 
