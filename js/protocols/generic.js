@@ -10,7 +10,6 @@ angular
 
 	journalCtrl.onSelect = function() {
 		journal.data.identification.select('year');
-		journal.data.ojs_journal_code = editables.text('', true);
 		journal.data.auto_publish_issue.value.value = false;
 		journal.data.default_create_frontpage = true;
 		journal.data.number.mandatory = false;
