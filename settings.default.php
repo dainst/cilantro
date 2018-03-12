@@ -6,7 +6,7 @@ $settings = array(
 	'rep_path'		=> 	'/var/www/chiron/data',
 	'ojs_url'		=> 	'http://DOMAIN/ojs/',
 	'ojs_user'		=>  'admin',
-	'password'		=> 	'alpha'
+	'password'		=> 	'password'
 );
 
 // backend specific settings (some of the above will be found here in the future)
@@ -27,5 +27,6 @@ window.settings = {
 	"server_url": 	"http://DOMAIN/pimport/server/",
 	"ojs_url": 		"http://DOMAIN/ojs/",
 	"log_url":		"http://DOMAIN/pimport/reports/"
+    /* ,"password":     "password"  // your may include your password here for developing purpose" */
 }
 <?php } ?>

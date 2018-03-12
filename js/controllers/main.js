@@ -7,7 +7,6 @@ angular
 .controller('main',	['$scope', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'journal',
 	function ($scope, editables, webservice, settings, messenger, protocolregistry, documentsource, journal) {
 
-		
 		/* debug */
 		$scope.cacheKiller = '?nd=' + Date.now();
 
@@ -85,8 +84,6 @@ angular
 				$scope.steps.current = to;
 			}
 		}
-
-
 
 
 		/* initialize */
@@ -193,6 +190,10 @@ angular
 			}
 		})
 
-		
+
+        $scope.inDevMode = function() {
+		    return (typeof settings.password !== "undefined");
+        }
+
 	}
 ]);

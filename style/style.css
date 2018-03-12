@@ -513,3 +513,11 @@ input.form-check-input:checked + label:before {
 	color: #262626;
 	background-color: #f5f5f5;
 }
+
+
+/* misc */
+.dev-warning {
+	background: red;
+	position: absolute !important;
+	left: 50%;
+}
