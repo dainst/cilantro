@@ -3,8 +3,9 @@
 	<select class="form-control editable-select" ng-model="item.value.value" ng-change="item.observer ? item.observer() : ''">
 		<option ng-repeat="files in item.list track by $index" value='{{files.url}}'>{{files.url}}</option>
 	</select>
-	<hr>
-	<div class="row">
+
+	<hr ng-show="item.value.value">
+	<div class="row" ng-show="item.value.value">
 
 		<div class="col-xs-6">Size</div>
 		<div class="col-xs-6">{{item.list[item.value.value].size}}</div>

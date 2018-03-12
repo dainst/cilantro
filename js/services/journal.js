@@ -5,15 +5,37 @@ angular
 	/* base contruction */
 
 	let journal = {
-		data:{},
-		articles: [],
-		thumbnails: {},
-		articleStats: {
+		data: {},			// metadata for the imported issue
+		articles: [],			// collection of articles to import
+		thumbnails: {},			// their thumbnails
+		articleStats: {			// statistics about the articles
 			data: {}
 		},
-		settings: {},
-		loadedFiles: {}
+		settings: {},			// UI settings for displaying this journal
+		loadedFiles: {},		// information about loaded files
+		locales: [], 			// available locales
+	} // will be filled by journal.reset()
+
+	/**
+	 *  meta information
+	 *
+	 *  this is a set of information, wich can be set when we select the backend and get the info from there
+	 *  it should never be modified by protocol.
+	 *
+	 */
+	var journalConstraints = {} 	// information about available journals and their contraints
+	var journalCodes = {};			// list of journals. must be a separate thing, otherwise time problem
+	journal.getConstraint = function(journalCode, constraint) {
+		if ((typeof journalConstraints[journalCode] !== "undefined") && (typeof journalConstraints[journalCode][constraint] !== "undefined")) {
+			return journalConstraints[journalCode][constraint];
+		}
 	}
+	journal.setConstraints = function(constraints) {
+		journalConstraints = constraints;
+		Object.keys(constraints).map(function(item){journalCodes[item] = item});
+		console.log(journalCodes)
+	}
+
 
 
 
@@ -43,8 +65,8 @@ angular
 		"volume": 			"Volume",
 		"number": 			"Number",
 		"year": 			"Year",
-		"description":		"Description (z.B. '[PDFs teilweise verfügbar]')",
-		"ojs_journal_code": "OJS: Journal Code",
+		"description":		"Description (e.g. '[PDFs teilweise verfügbar]')",
+		"ojs_journal_code": "OJS: Journal Code (e.g. 'chiron', 'aa', 'efb')",
 		"ojs_user": 		"OJS: user",
 		"identification": 	"OJS: issue identification",
 
@@ -100,9 +122,27 @@ angular
 	}
 
 
+
 	/* default data */
 	journal.reset = function() {
 		console.log('reset journal');
+
+		let journalCodeChangedObserver = function() {
+			/**
+			 * this gets triggered when a journal is chosen, since we hopefully know wich locales this journal supports,
+			 * we replace locales with the journal specific.
+			 * it has to be done like the following, not just replace the array, since we would have a new instance
+			 * and the integrity of the editables using locales would break!
+			 * @type {number}
+			 */
+			journal.locales.length = 0;
+			journal.getConstraint(journal.data.ojs_journal_code.get(), 'locales').map(function(loc) {
+				journal.locales.push(loc);
+			});
+
+		}
+
+		/* the journal metadata */
 		journal.data = {
 			"volume": 					editables.base(''),
 			"year": 					editables.base(''),
@@ -110,17 +150,28 @@ angular
 			"description": 				editables.base('[PDFs teilweise verfügbar]', false),
 			"importFilePath": 			settings.devMode ? "BEISPIEL.pdf" : '',
 			"identification": 			editables.listitem(ojs_identifications_codes, 'vol_year', false),
-			"ojs_journal_code": 		"ojs_journal_code",
+			"ojs_journal_code": 		editables.listitem(journalCodes).watch(journalCodeChangedObserver),
 			"ojs_user": 				"ojs_user",
 			"auto_publish_issue": 		editables.checkbox(false),
 			"default_publish_articles":	true,
 			"default_create_frontpage": true
 		}
+
+		/* list of defined articles */
 		journal.articles = [];
+
+		/* list of loade files for the file selector editable */
+		journal.loadedFiles = {};
+
 		journal.thumbnails = {};
-		journal.loadedFiles = {}; // for the file selector editable
 		/* they are not part of the article obj since they are very large and iterating over the
 		 articles array in the digest give performance issues otherwise! */
+
+		journal.locales = ['de_DE', 'en_US', 'fr_FR', 'it_IT', 'es_ES'];
+		/* locales list is part of journal, since some journals might be limited to some locale or
+		might have extra ones */
+
+		/* statistical data */
 		journal.articleStats.data = {
 			articles: 0,
 			undecided: 0,
@@ -141,7 +192,11 @@ angular
 
 		/* editable fields in homepage */
 		journal.settings.hideOnHomepage = ['importFilePath'];
+
+		/* switched on columns in the overview */
 		journal.settings.overviewColumns = {}
+
+		/* apply */
 		Object.keys(new journal.Article).map(function(key) {
 			journal.settings.overviewColumns[key] = {
 				'checked': false,
@@ -258,12 +313,12 @@ angular
 		}
 
 		let articlePrototype = {
-			'title':			editables.base(data.title),
+			'title':			editables.base(data.title, true),
 			'abstract':			editables.text(data.abstract, false),
 			'author':			editables.authorlist(data.author),
 			'pages':			editables.page(data.pages),
 			'date_published':	editables.base(data.date_published || 'DD-MM-YYYY'),
-			'language':			editables.language('de_DE', false),
+			'language':			editables.language('de_DE', false, journal.locales),
 			'auto_publish':		editables.checkbox(journal.data.default_publish_articles === true),
 			'filepath':			editables.loadedfile(journal.loadedFiles),
 			'attached':			editables.filelist(),

@@ -61,19 +61,28 @@ angular
 
 		/**
 		 * set message box content quick access
-		 * @param msg
+		 * @param msg (String or error)
 		 * @param isError
 		 * @param append - set true if msg should be appended
 		 */
 		messenger.alert = function(msg, isError, append) {
 			console.log('MSG', msg);
+
+			let debug = [];
+			if (typeof msg.message !== "undefined") {
+				if (settings.devMode) {
+					debug = [msg.stack];
+				}
+				msg = msg.message;
+			}
+
 			append = append || false;
 			if ((!messenger.content.success && (messenger.content.message !='')) || append) {
 				messenger.content.warnings.push(messenger.content.message);
 			}
 			messenger.content.message = msg;
 			messenger.content.success = !isError;
-			messenger.content.debug = [];
+			messenger.content.debug = debug;
 			$rootScope.$broadcast('refreshView');
 		}
 

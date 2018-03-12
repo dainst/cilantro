@@ -37,6 +37,9 @@ angular
 		/* journal */
 		$scope.journal = journal;
 
+		/* backendData */
+		$scope.backendData = {} //some backend specific data.. will be a far more complex object when there are different backends
+
 		/* step control */
 		$scope.steps = {
 			list: {
@@ -91,13 +94,21 @@ angular
 
 		$scope.init = function() {
 			webservice.get('getRepository', {}, function(r) {
-				if ((r.success == false) && (r.message == "Session locked")) {
+				if ((r.success === false) && (r.message === "Session locked")) { // @ TODO  do this in webservice!
 					$scope.sessionLocked = true;
-				} else if (r.success == true) {
+				} else if (r.success === true) {
 					$scope.repository.update(r.repository);
 				}
-				$scope.isInitialized = true;
-			})
+
+				// this will be at a different place for the folowing,
+				// when there are actually different backends to choose
+				webservice.get('getBackendData', {backend: 'ojs2'}, function(r) {
+					if (r.success === true) {
+						journal.setConstraints(r.backendData.journals);
+					}
+					$scope.isInitialized = true;
+				});
+			});
 		}
 
 

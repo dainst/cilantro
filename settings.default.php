@@ -8,6 +8,17 @@ $settings = array(
 	'ojs_user'		=>  'admin',
 	'password'		=> 	'alpha'
 );
+
+// backend specific settings (some of the above will be found here in the future)
+$settings['ojs2']	= array(
+	'db_type'		=> 	'mysql', //or psql
+	'host' 			=>	'localhost',
+	'username' 		=>	'mysqluser',
+	'password' 		=>	'mysqlpassword',
+	'db' 			=>	'mysqldb'
+);
+
+
 	
 if (isset($_GET['js']) and ($_GET['js'] == 1)) {
 ?>

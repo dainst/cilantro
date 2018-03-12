@@ -461,6 +461,15 @@ input.form-check-input:checked + label:before {
 	margin-bottom: 2px;
 }
 
+.main-message {
+	max-height: none;
+}
+
+.closed .main-message {
+	max-height: 150px;
+	overflow: hidden
+}
+
 #info-container .stat {
 	width: 50%;
 	float: left;

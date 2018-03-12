@@ -84,12 +84,12 @@ angular
 			}
 
 			if (!$scope.selectedToMerge)  {
-				messenger.alert('Select article to attach »' + article.title.value.value + '« to',1);
+				messenger.alert('Select article to attach »' + article.title.getLabel() + '« to',1);
 				$scope.selectedToMerge = article;
 			} else {
 				var article2 = article;
 				article = $scope.selectedToMerge;
-				if (confirm('Really attach article »' + article2.title.value.value + '« to »' + article.title.value.value + "« ?!")) {
+				if (confirm('Really attach article »' + article2.title.getLabel() + '« to »' + article.title.getLabel() + "« ?!")) {
 					mergeArticles(article, article2);
 				} else {
 					$scope.mergeArticle(false);

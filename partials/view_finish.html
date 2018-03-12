@@ -61,7 +61,7 @@
 					<p>The following articles where reported to Zenon</p>
 					<ul>
 						<li ng-repeat="(id, article) in reportedToZenon track by $index">
-							<a href='{{article._.zenonReport}}' target='_blank'>{{article.title.value.value}}</a>
+							<a href='{{article._.zenonReport}}' target='_blank'>{{article.title.getLabel()}}</a>
 						</li>
 					</ul>
 				</div>

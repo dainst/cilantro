@@ -275,6 +275,162 @@ angular
 		
 		return obj;
 	}
+
+
+	editables.defaultLocales = ['de_DE', 'en_US', 'fr_FR', 'it_IT', 'es_ES'];
+
+	/**
+	 *
+	 * @param seed - inital value for the first language
+	 * @param mandatory
+	 * @param locales - list of available languages- editable will use A COPY of that
+	 * @returns {{type, value, mandatory, readonly, check, set, get, compare, watch, observer}}
+	 */
+	editables.language = function(seed, mandatory, locales) {
+		var obj = editables.base(seed, mandatory);
+		obj.type = 'language';
+
+
+		if (angular.isArray(locales) && locales.length >  1) {
+			obj.locales = angular.copy(locales);
+		} else {
+			obj.locales = angular.copy(editables.defaultLocales);
+		}
+
+		obj.check =	function() {
+			//obj.value.value = obj.value.value.toLowerCase();
+			if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value === '')) {
+				return 'This field is mandatory'
+			}
+			if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(this.value.value))  {
+				return 'seems not to be proper language code'
+			}
+
+			return false;
+
+		}
+		obj.compare = function(second) {
+			return (this.value.value.localeCompare(second.value.value));
+		}
+		return obj;
+
+	}
+
+	/**
+	 *
+	 * @param seed - inital value for the first language
+	 * @param mandatory
+	 * @param locales - list of available languages- editable will use A COPY of that
+	 * @returns {{type, value, mandatory, readonly, check, set, get, compare, watch, observer}}
+	 */
+	editables.multilingualtext = function(seed, mandatory, locales) {
+
+		var obj = editables.base('', mandatory);
+		obj.type = 'multilingualtext';
+
+		obj.locales = (angular.isArray(locales) && locales.length >  1) ? locales : editables.defaultLocales;
+
+		/**
+		 * the data as collection:
+		 * [
+		 *   {
+		 *     text:  "bla",
+		 *     locale: "de_DE"
+		 *   }, ...#
+		 * ]
+		 * @returns {Array}
+		 */
+		obj.value = [];
+
+		obj.addRow = function(text, locale) {
+			obj.value.push({
+				text: text,
+				locale: (typeof locale === "undefined") ? '' : locale
+			});
+		}
+
+		obj.delRow = function(index) {
+			obj.value.splice(index,1);
+		}
+
+		obj.set = obj.addRow;
+
+		obj.set(seed);
+
+		obj.get = function() {
+			return obj.value;
+		}
+
+		obj.getLabel = function() {////
+			return obj.value[Object.keys(obj.value)[0]];
+		}
+
+		/**
+		 * there is sometimes a case, where additional locales get added, for example int he case we do not know the locale...
+		 * that it can be switched
+		 * @param from
+		 * @param to
+		 */
+		obj.switchLocale = function(index, to) {
+			obj.value[index].locale = to;
+			obj.value.map(function(thing, idx) {
+				if ((thing.locale === to) && (index !== idx)) {
+					thing.locale = '';
+				}
+			})
+		}
+
+		obj.getRemainingLocales = function() {
+			let ul = obj.getUsedLocales();
+			return obj.locales.filter(function(x) {
+				return ul.indexOf(x) === -1
+			})
+
+		}
+
+		obj.getUsedLocales = function() {
+			return obj.value
+				.map(function(x){return obj.locales.indexOf(x.locale) !== -1 ? x.locale : false})
+				.filter(function(x){return x !== false})
+		}
+
+		obj.check =	function() {
+
+			if (!obj.value.reduce(function(acc, val) {return acc && (val.text !== '')}, true)) {
+				return 'Please fill out all selected languages or remove them'
+			}
+
+			if (this.mandatory && !Object.keys(obj.value).length) {
+				return 'At least one locale version of this is mandatory'
+			}
+
+			// if there is only translation and the locale is not selected it is okay
+
+			if (obj.value.length === 1 && obj.value[0].locale === '') {
+				return false;
+			}
+
+			// else check if all locales are supported
+			let errorLocales = obj.value
+				.map(function(x){return ((obj.locales.indexOf(x.locale) === -1) || (x.locale === '')) ? x.locale : false})
+				.filter(function(x){return (x !== false)});
+
+			if (errorLocales.length > 0) {
+				return 'These locales are not supported by selected journal: ' + errorLocales.join(', ');
+			}
+
+
+			return false;
+		}
+
+		// ?
+		obj.compare = function(second) {
+			return (this.value.value.localeCompare(second.value.value));
+		}
+
+		return obj;
+
+	}
 	
 	editables.number = function(seed, mandatory) {
 		var obj = editables.base(parseInt(seed), mandatory);

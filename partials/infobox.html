@@ -7,7 +7,7 @@
 			</div>
 		</div>
 		<div class="col-md-9" ng-class="{'closed':!infoBoxOpen}">
-			<div class="alert" ng-class="{'alert': message.message, 'alert-success': message.success, 'alert-danger': !message.success}">{{message.message}}<span ng-show="message.warnings.length + message.debug.length" class="badge badge-pill badge-default pull-right">{{message.warnings.length + message.debug.length}}</span></div>
+			<div class="alert main-message" ng-class="{'alert': message.message, 'alert-success': message.success, 'alert-danger': !message.success}">{{message.message}}<span ng-show="message.warnings.length + message.debug.length" class="badge badge-pill badge-default pull-right">{{message.warnings.length + message.debug.length}}</span></div>
 			<div class="alert alert-warning" ng-repeat="warning in message.warnings track by $index" ng-show="infoBoxOpen">{{warning}}</div>
 			<div class="alert alert-info" 	 ng-repeat="debug in message.debug track by $index" ng-show="infoBoxOpen">{{debug}}</div>
 		</div>

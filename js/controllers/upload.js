@@ -28,7 +28,7 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
             	$scope.progress = 0;
 
             	if (typeof response.data === "string") {
-            		messenger.alert(response.data, true);
+            		messenger.message(response.data, true);
             		return;
             	}
 

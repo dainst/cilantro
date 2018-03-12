@@ -10,7 +10,7 @@
     			<li ng-repeat="article in journal.articles track by $index">
 					<a href='#'
 					   ng-class="{'btn-primary': $index == currentArticle, 'btn-success': article._.confirmed === true, 'btn-danger': article._.confirmed === false}"
-					   ng-click="selectArticle($index)">{{article.author.value[0].lastname}} - {{article.title.value.value}}</a>
+					   ng-click="selectArticle($index)">{{article.author.value[0].lastname}} - {{article.title.getLabel()}}</a>
 				</li>
     		</ul>
 		</div>
@@ -78,7 +78,7 @@
 	<div class="col-lg-6">
 
 		<div ng-show="(currentArticle > -1) && (journal.articles.length > 0)" class="panel panel-default">
-			<div class="panel-heading" ng-show="!zenon.searchId">Search results in Zenon for Article Title "{{journal.articles[currentArticle].title.value.value}}"</div>
+			<div class="panel-heading" ng-show="!zenon.searchId">Search results in Zenon for Article Title "{{journal.articles[currentArticle].title.getLabel()}}"</div>
 			<div class="panel-heading" ng-show="zenon.searchId">Search results in Zenon for ID "{{journal.articles[currentArticle].zenonId.value.value}}"</div>
 
 			<div class="panel-body">
@@ -88,7 +88,7 @@
 				<span class="btn-group">
 					<button ng-if="isArticleSelected()" class='btn btn-default' ng-click='compareWithZenon()'>New Search<span class="glyphicon glyphicon-search"></span></button>
 					<button ng-if="isArticleSelected() && (zenon.selected > -1)" class='btn btn-default' ng-click='adoptFromZenon()' data-tooltip="Continue with the data from Zenon instead of the one you got from the investigation of the table of contents">Take Zenon Data<span class="glyphicon glyphicon-import"></span></button>
-					<button ng-if="isArticleSelected() && (zenon.selected == -1)" ng-click='markAsMissingZenon()' ng-class="['btn', 'btn-default', {'active': (journal.articles[currentArticle]._.reportToZenon)}]">Mark as missing in Zenon  <span class="glyphicon glyphicon-flag"></span></button>
+					<button ng-if="isArticleSelected() && (zenon.selected == -1)" ng-click='markAsMissingZenon()' ng-class="['btn', 'btn-default', {'active': (journal.articles[currentArticle].zenonId == '(((new)))')}]">Mark as missing in Zenon  <span class="glyphicon glyphicon-flag"></span></button>
 				</span>
 				
 
