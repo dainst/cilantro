@@ -157,13 +157,15 @@ angular
 			webservice.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal.data}, function(response) {
 				if (response.success) {
 					$scope.protocol = $scope.protocols.list[$scope.protocols.current];
+                    if (typeof $scope.protocol === "undefined") {
+                        messenger.alert("Please select an import protocol", true);
+                        return;
+                    }
 					localStorage.setItem('protocol', $scope.protocol.id);
 					$scope.steps.change($scope.protocol.startView || 'overview');
 					$scope.isStarted = true;
 					if (angular.isFunction($scope.protocol.onInit)) {
 						$scope.protocol.onInit();
-					} else {
-
 					}
 				} else {
 					$scope.sec.password = '';
