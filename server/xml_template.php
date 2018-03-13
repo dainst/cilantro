@@ -21,9 +21,7 @@
  			@ TODO multi locale description:
   				<description locale="en_US">...</description>
  				<description locale="de_DE">...</description>
-
 				Problem: es wird ein Fehler geworfen, wenn diese locale nicht für UI unterstützt wird für dieses journal...
-
 			*/
 		?>
 
@@ -33,24 +31,18 @@
             	<?php $locale = (isset($article->language) && $article->language) ? 'language="' . substr($article->language, 0, 2) . '" locale="' . $article->language . '"' : '' ?>
 				<article <?php echo $locale ?>>
 
-					<?php foreach ($article->title as $title) { ?>
-						<?php $loc = isset($title->locale) ? 'locale="' . $title->locale . '"' : ''?>
-						<title <?php echo $loc; ?>><?php echo htmlspecialchars($title->text); ?></title>
-					<?php } ?>
+	                <title><?php echo htmlspecialchars($article->title); ?></title>
 
-					<?php foreach ($article->abstract as $abstract) { ?>
-						<?php $loc = isset($abstract->locale) ? 'locale="' . $abstract->locale . '"' : ''?>
-						<abstract <?php echo $loc; ?>><?php echo htmlspecialchars($abstract->text); ?></abstract>
-					<?php } ?>
-					
-					<?php 
+	                <?php //<abstract></abstract> ?>
+
+					<?php
 						$zenonId  = (isset($article->zenonId) and $article->zenonId and ($article->zenonId != '(((new)))')) ? $article->zenonId : '';
 						if ($zenonId) {
 					?>
 						<id type="other::zenon"><?php echo $zenonId ?></id>
 					<?php } ?>
-	                
-	                <?php 
+
+	                <?php
 	                	if (!isset($article->author) or (!count($article->author))) {
 	                		throw new Exception("Article '{$article->title}' has no author!");
 	                	}
@@ -66,26 +58,23 @@
 					<?php 	// we abuse the page id to send a marker, that a front matter is missing...
                     // @ TODO default $journal->default_create_frontpage makes it impossible to deny frontpage
 					$pages = htmlspecialchars($article->pages->showndesc);
-						$pages .= ($article->createFrontpage) ? '#DFM' : '';
+						$pages .= ($article->createFrontpage or $journal->default_create_frontpage) ? '#DFM' : '';
 					?>
 	                <pages><?php echo $pages; ?></pages>
 
 
 					<date_published><?php htmlspecialchars($article->date_published); ?></date_published>
 	                <?php if ($article->auto_publish) { /* @ TODO auto_publish to be implemented */ } ?>
+	                <galley>
+	                    <label>PDF</label>
+	                    <file>
+	                        <href src="<?php echo htmlspecialchars($article->filepath); ?>" mime_type="application/pdf" />
+	                    </file>
 
-					<?php if (isset($article->filepath) and $article->filepath) { ?>
-						<galley>
-							<label>PDF</label>
-							<file>
-								<href src="<?php echo htmlspecialchars($article->filepath); ?>" mime_type="application/pdf" />
-							</file>
-
-						</galley>
-					<?php } ?>
+	                </galley>
 	            </article>
 	    	<?php } ?>
         </section>
-        
+
     </issue>
 </issues>
