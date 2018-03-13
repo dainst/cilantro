@@ -6,34 +6,51 @@ describe('importer', function() {
     it('should only start after right password input', function() {
         browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
-            .then(expect(elements.main.protocolSelect.isDisplayed()).toBeFalsy())
+            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
 
-            .then(elements.main.passwordInput.sendKeys(password + "wrong"))
-            .then(expect(elements.main.protocolSelect.isDisplayed()).toBeTruthy())
+            .then(elements.login.passwordInput.sendKeys(password + "wrong"))
+            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
 
-            .then(elements.main.startBtn.click)
-            .then(expect(elements.main.protocolSelect.isDisplayed()).toBeFalsy())
+            .then(elements.start.startBtn.click)
+            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
             .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-danger"))
 
-            .then(elements.main.passwordInput.sendKeys(password))
-            .then(elements.main.startBtn.click)
+            .then(elements.login.passwordInput.sendKeys(password))
+            .then(elements.start.startBtn.click)
             .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-danger"))
 
-            .then(elements.main.protocolSelect.element(by.css("[value='testdata']")).click)
-            .then(elements.main.startBtn.click)
+            .then(elements.start.protocolSelect.element(by.css("[value='testdata']")).click)
+            .then(elements.start.startBtn.click)
             .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-success"))
     });
 
     it('should abort and restart the import process', function() {
         browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
-            .then(elements.main.passwordInput.sendKeys(password))
-            .then(elements.main.protocolSelect.element(by.css("[value='generic']")).click)
-            .then(elements.main.startBtn.click)
-            .then(elements.main.restartBtn.click)
-            .then(elements.main.confirmRestartBtn.click)
-            .then(expect(elements.main.protocolSelect.isDisplayed()).toBeTruthy())
+            .then(elements.login.passwordInput.sendKeys(password))
+            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
+            .then(elements.start.startBtn.click)
+
+            .then(elements.restart.restartBtn.click)
+            .then(elements.restart.confirmRestartBtn.click)
+
+            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
     });
 
+    // requires the BEISPIEL.pdf in the repository (e.g. chiron/data), call prepareTesting.sh if needed
+    it('should upload a file', function() {
+        browser.driver.manage().window().maximize();
+        browser.get(browser.baseUrl)
+            .then(elements.login.passwordInput.sendKeys(password))
+
+            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
+            .then(elements.start.fileSelect.element(by.css("[value='BEISPIEL.pdf']")).click)
+
+            .then(elements.start.startBtn.click)
+            // file must be analyzed
+            .then(browser.driver.sleep(1000))
+            .then(elements.publish.proceedBtn.click)
+            .then(elements.publish.confirmBtn.click)
+    });
 
 });

@@ -3,7 +3,7 @@
 <div ng-controller="view_overview" data-ng-init="init()">
 
 
-	
+
 
 <div class="row">
 	<div class="col-md-8">
@@ -30,14 +30,14 @@
 	</div>
 
 	<div class="col-md-4 text-right">
-		<button class='btn btn-primary' ng-click='continue()' ng-show="protocol.ready">
+		<button id="proceed" class='btn btn-primary' ng-click='continue()' ng-show="protocol.ready">
 			Proceed<span class="glyphicon glyphicon-chevron-right"></span>
 		</button>
 	</div>
 </div>
 
 
-<div class="row">	
+<div class="row">
 	<div class="col-md-12" style="overflow-x:scroll">
 
 		<table class='split-table editable-table super-table'>
@@ -52,7 +52,7 @@
 					>{{journal.articleDescriptions[name].title}}</td>
 
 					<td></td>
-				</tr> 
+				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="article in journal.articles | orderBy:'article.order.value.value'" ng-show="article._.confirmed !== false" ng-class="{'row-confirmed': article._.confirmed === true}">
@@ -76,16 +76,16 @@
 					</td>
 					<td>
 						<span class="btn btn-default btn-xs" ng-show="$index>0" ng-click="updateOrder('up', true, article)" data-tooltip="move above"><span class="glyphicon glyphicon-triangle-top"></span></span>
-					
+
 						<span class="btn btn-default btn-xs" ng-click="removeArticle(article)" data-tooltip="delete article"><span class="glyphicon glyphicon-minus-sign"></span></span>
 						<span class="btn btn-default btn-xs" ng-click="openDocument(article)" data-tooltip="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
-						
+
 						<span class="btn btn-xs" ng-class="{'btn-default': (!selectedToMerge), 'btn-danger': (selectedToMerge)}" ng-click="mergeArticle(article)" data-tooltip="merge articles"><span class="glyphicon glyphicon-compressed"></span></span>
-						
+
 						<!-- <span class="btn btn-default btn-xs" ng-repeat="button in master.article_buttons" ng-click="button.function(article)" data-tooltip="{{button.tooltip}}">{{button.caption}}<span class="glyphicon {{button.glyphicon}}"></span></span> -->
-						
+
 						<span class="btn btn-default btn-xs" ng-show="$index<journal.articles.length-1" ng-click="updateOrder('down', true, article)" data-tooltip="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
-						
+
 					</td>
 				</tr>
 			</tbody>
