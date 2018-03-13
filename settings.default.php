@@ -15,7 +15,8 @@ $settings['ojs2']	= array(
 	'host' 			=>	'localhost',
 	'username' 		=>	'mysqluser',
 	'password' 		=>	'mysqlpassword',
-	'db' 			=>	'mysqldb'
+	'db' 			=>	'mysqldb',
+    'port'          =>  '5432' // currently used for psql-databases
 );
 
 
