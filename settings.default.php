@@ -4,6 +4,7 @@ $settings = array(
 	'tmp_path'		=> 	'/var/www/pimport/tmp',
 	'log_path'		=> 	'/var/www/pimport/reports',
 	'rep_path'		=> 	'/var/www/chiron/data',
+	'importer_url'	=> 	'http://DOMAIN/pimport/',
 	'ojs_url'		=> 	'http://DOMAIN/ojs/',
 	'ojs_user'		=>  'admin',
 	'password'		=> 	'password'
@@ -19,7 +20,7 @@ $settings['ojs2']	= array(
 );
 
 
-	
+
 if (isset($_GET['js']) and ($_GET['js'] == 1)) {
 ?>
 window.settings = {

@@ -1,5 +1,5 @@
 var elements = require("../util/elements");
-var password = require("../util/masterPassword").get();
+var password = require("../util/readSettings").get('password');
 
 describe('importer', function() {
 

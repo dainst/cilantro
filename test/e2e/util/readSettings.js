@@ -17,6 +17,6 @@ while ((m = regex.exec(contents)) !== null) {
 
 module.exports = {
     get: function(s) {
-        return settings[s || 'password'];
+        return settings[s];
     }
 };
