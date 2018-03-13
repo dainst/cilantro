@@ -11,13 +11,13 @@
 	<link rel="stylesheet" href="style/style.css">
 
 </head>
-	
+
 	<body ng-controller="main" data-ng-init="init()">
-	
+
 		<div id='loader' class='loader' ng-hide="isInitialized"></div>
 
        	<idai-navbar
-       		hide-register-button="true" 
+       		hide-register-button="true"
        		hide-contact-button="true"
        		hide-login-button="true"
        		hide-search-form="true"
@@ -30,8 +30,8 @@
 			<ul class="nav navbar-nav">
 				<li ng-show="settings.devMode()" class="dev-warning"><a type="button">Dev-Mode</a></li>
 				<li ng-show="protocol.id!='none'"><p class="navbar-text">Protocol: <strong>{{protocol.description || protocol.id}}</strong></p></li>
-				<li ng-repeat="(stepId, step) in steps.list">
-					<a ng-click="steps.change(stepId)" ng-class="{'active':steps.current==stepId}" ng-show="step.condition()">{{step.title}}</a>
+				<li ng-repeat="(stepId, step) in steps.list" >
+					<a ng-click="steps.change(stepId)" ng-class="{'active':steps.current==stepId}" ng-show="step.condition()" id="step-{{stepId}}">{{step.title}}</a>
 				</li>
 			</ul>
 
@@ -43,19 +43,19 @@
 		</div>
 
 		<idai-footer institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
-		
+
 		<!-- load settings -->
-		
+
 		<script src="settings.php?js=1"></script>
-		
+
 		<!-- load angular, bootstrap, idai-components -->
-		
+
 		<script src="node_modules/angular/angular.min.js"></script>
 		<script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
 		<script src="node_modules/idai-components/dist/idai-components.min.js"></script>
-		
+
 		<!--  load 3party angular moduls -->
-		
+
 		<script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
 		<!-- load pimport app -->
@@ -78,17 +78,17 @@
 		<script src="js/services/settings.js"></script>
 
 		<script src="js/app.js"></script>
-		
+
 		<!-- load import protocols -->
-		
+
 		<script src="js/protocols/generic.js"></script>
 		<script src="js/protocols/testdata.js"></script>
 		<script src="js/protocols/chiron_parted.js"></script>
 		<script src="js/protocols/csv_import.js"></script>
 
 		<!-- load require.js for non-angular modules -->
-		
+
 		<script src="inc/require.js"></script>
-	
+
 	</body>
 </html>
