@@ -56,9 +56,9 @@ namespace backends\ojs2 {
 
 		private function _queryPsql($sql) {
 			pg_send_query($this->connection, $sql);
-            $result = pg_get_result($this->connection);
-            $error = pg_result_error($result);
-            $return = array();
+		        $result = pg_get_result($this->connection);
+			$error = pg_result_error($result);
+			$return = array();
 			if ($error) {
 				throw new \Exception("An error occurred doing PSQL query: " . $error);
 			}
