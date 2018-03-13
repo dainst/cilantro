@@ -4,13 +4,13 @@ angular
 	function($http, $rootScope, settings, messenger) {
 
 	var webservice = {};
-	
+
 	webservice.sec = {
 		password: settings.password || ''
 	}
 
 	webservice.repository = [];
-	
+
 	webservice.uploadId = false; // should be named session Id because that is what it is actuallly
 
 			/**
@@ -23,10 +23,10 @@ angular
 	webservice.get = function(task, data, callback, appendLog) {
 		appendLog = appendLog || false;
 		console.log('get', task);
-		
-		//console.log(settings.server_url, send);		
 
-		
+		//console.log(settings.server_url, send);
+
+
 		$http({
 			method:	'POST',
 			url: settings.server_url,
@@ -58,7 +58,7 @@ angular
 			}
 		);
 	}
-	
+
 	webservice.ojsisQuery = function(send) {
 		send = send ||  {};
 		if (webservice.sec.password) {
@@ -72,6 +72,9 @@ angular
 	}
 
 	webservice.getFileInfo = function(path) {
+		if (!path) {
+			return;
+		}
 		// not elegant, but hey okay
 		for (let i = 0; i < webservice.repository.length; i++) {
 			if (webservice.repository[i].path === path) {
@@ -84,4 +87,3 @@ angular
 
 	return webservice;
 }]);
-
