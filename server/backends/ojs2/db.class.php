@@ -60,7 +60,7 @@ namespace backends\ojs2 {
             $error = pg_result_error($result);
             $return = array();
 			if ($error) {
-				throw new \Exception("An error occurred doing pg query:" . $error);
+				throw new \Exception("An error occurred doing PSQL query: " . $error);
 			}
 			while ((gettype($result) != 'boolean') and ($row = pg_fetch_assoc($result))) {
 				$return[] = $row;
