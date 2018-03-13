@@ -113,11 +113,10 @@ angular
 		$scope.restart = function() {
 			$scope.isInitialized = false;
 			$scope.isStarted = false;
-			messenger.content.stats = {}
+			messenger.content.stats = {};
 			documentsource.reset();
 			journal.reset();
 			$scope.init();
-			$scope.protocol.onInit();
 			messenger.alert('Restart Importer', false);
 			$scope.steps.change('home');
 		}
