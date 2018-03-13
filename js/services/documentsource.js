@@ -24,6 +24,9 @@ angular
 	folder.reset();
 
 	var requirePdfJs = new Promise(function(resolve) {
+        /**
+         * @ TODO include pdf.js (& require) with npm as well and replace this stuff
+         */
 		require.config({paths: {'pdfjs': 'inc/pdf.js'}});
 		require(['pdfjs/display/api', 'pdfjs/display/global'], function(pdfjs_api, pdfjs_global) {
 			console.log('2. required pdf.js');
@@ -268,7 +271,7 @@ angular
 	}
 
 	/**
-	 * since the pdf.kjs stuff is happening outside angular is is ansync we need this shit here
+	 * since the pdf.js stuff is happening outside angular is is ansync we need this shit here
 	 *
 	 */
 	function refreshView() {

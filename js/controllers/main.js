@@ -141,7 +141,7 @@ angular
 		$scope.isStarted = false;
 
 		$scope.selectProtocol = function() {
-			var toBeSelected = $scope.protocols.list[$scope.protocols.current];
+			let toBeSelected = $scope.protocols.list[$scope.protocols.current];
 			journal.reset();
 			if (angular.isFunction(toBeSelected.onSelect)) {
 				toBeSelected.onSelect();

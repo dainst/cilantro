@@ -37,13 +37,7 @@ angular
 
 
 ])
-/*
-.config(['$routeProvider', '$locationProvider',
-	function($routeProvider, $locationProvider) {
-		$locationProvider.html5Mode(true);
-	}
-])
-*/
+
 .constant('componentsSettings', {
 		transl8Uri: "https://arachne.dainst.org/transl8/translation/jsonp?application=shared&lang={LANG}"
 	}
