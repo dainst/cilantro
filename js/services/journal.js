@@ -143,13 +143,12 @@ angular
 		}
 
 		/* the journal metadata */
-		console.log("sett", settings);
 		journal.data = {
 			"volume": 					editables.base(''),
 			"year": 					editables.base(''),
 			"number": 					editables.base(''),
 			"description": 				editables.base('[PDFs teilweise verfügbar]', false),
-			"importFilePath": 			settings.devMode() ? "BEISPIEL.pdf" : '',
+			"importFilePath": 			"",
 			"identification": 			editables.listitem(ojs_identifications_codes, 'vol_year', false),
 			"ojs_journal_code": 		editables.listitem(journalCodes).watch(journalCodeChangedObserver),
 			"ojs_user": 				"ojs_user",
