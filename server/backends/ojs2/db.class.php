@@ -55,12 +55,12 @@ namespace backends\ojs2 {
 		}
 
 		private function _queryPsql($sql) {
-			$result = pg_query($this->connection, $sql);
-
-			$return = array();
-			if (!$result) {
-				throw new \Exception("An error occurred doing pg query.");
-				exit;
+			pg_send_query($this->connection, $sql);
+            $result = pg_get_result($this->connection);
+            $error = pg_result_error($result);
+            $return = array();
+			if ($error) {
+				throw new \Exception("An error occurred doing pg query:" . $error);
 			}
 			while ((gettype($result) != 'boolean') and ($row = pg_fetch_assoc($result))) {
 				$return[] = $row;
