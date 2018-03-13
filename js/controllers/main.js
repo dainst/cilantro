@@ -95,6 +95,9 @@ angular
 					$scope.sessionLocked = true;
 				} else if (r.success === true) {
 					$scope.repository.update(r.repository);
+                    if (settings.devMode() && (journal.data.importFilePath === "")) {
+                        journal.data.importFilePath = $scope.repository.getFirstFile().path;
+                    }
 				}
 
 				// this will be at a different place for the folowing,
@@ -130,7 +133,15 @@ angular
 				if (typeof selected !== "undefined") {
 					$scope.journal.data.importFilePath = selected;
 				}
-			}
+			},
+            getFirstFile: function() {
+			    let i = -1;
+                while (i++ < $scope.repository.list.length) {
+                    if ($scope.repository.list[i].type === "file") {
+                        return $scope.repository.list[i];
+                    }
+                }
+            }
 		}
 
 		/* security */
@@ -143,6 +154,9 @@ angular
 		$scope.selectProtocol = function() {
 			let toBeSelected = $scope.protocols.list[$scope.protocols.current];
 			journal.reset();
+			if (settings.devMode() && (journal.data.importFilePath === "")) {
+                journal.data.importFilePath = $scope.repository.getFirstFile().path;
+            }
 			if (angular.isFunction(toBeSelected.onSelect)) {
 				toBeSelected.onSelect();
 			}
