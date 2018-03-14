@@ -27,7 +27,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Import Protocol</div>
 			<div class="panel-body">
-				<select class="form-control" ng-model="protocols.current"  ng-change="selectProtocol()">
+				<select class="form-control" ng-model="protocols.current" ng-change="protocols.select()">
 					<option ng-repeat="p in protocols.list" value='{{p.id}}'>{{p.description}}</option>
 				</select>
 			</div>

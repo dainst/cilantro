@@ -10,28 +10,6 @@ angular
 		/* debug */
 		$scope.cacheKiller = '?nd=' + Date.now();
 
-		/* protocols */
-		function getLastProtocol() {
-			try {
-				let p = localStorage.getItem('protocol');
-				if (angular.isFunction(protocolregistry.protocols[p].onSelect)) {
-					protocolregistry.protocols[p].onSelect()
-				}
-				return p;
-			} catch (e) {}
-			return ''
-		}
-		$scope.protocols = {
-			list: protocolregistry.protocols,
-			current: getLastProtocol(),
-            isSelected: function() {
-			    return angular.isDefined($scope.protocol) && ($scope.protocol.id !== "none");
-            }
-		}
-		$scope.protocol = {
-			id: "none"
-		}
-
 		/* settings / version info */
 		$scope.settings = settings;
 
@@ -89,7 +67,6 @@ angular
 
 
 		/* initialize */
-        webservice.loading = true
 		$scope.isLoading = function() {
             return webservice.loading;
         };
@@ -100,9 +77,6 @@ angular
 					$scope.sessionLocked = true;
 				} else if (r.success === true) {
 					$scope.repository.update(r.repository);
-                    if (settings.devMode() && (journal.data.importFilePath === "")) {
-                        journal.data.importFilePath = $scope.repository.getFirstFile().path;
-                    }
 				}
 
 				// this will be at a different place for the folowing,
@@ -110,6 +84,7 @@ angular
 				webservice.get('getBackendData', {backend: 'ojs2'}, function(r) {
 					if (r.success === true) {
 						journal.setConstraints(r.backendData.journals);
+                        $scope.protocols.selectLast();
 					}
 				},false,true);
 			});
@@ -126,7 +101,7 @@ angular
 			$scope.init();
 			messenger.alert('Restart Importer', false);
 			$scope.steps.change('home');
-            getLastProtocol();
+            $scope.protocols.selectLast();
             webservice.loading = false;
 		}
 
@@ -141,6 +116,9 @@ angular
 				}
 			},
             getFirstFile: function() {
+			    if ($scope.repository.list.length < 1) {
+			        return null;
+                }
 			    let i = -1;
                 while (i++ < $scope.repository.list.length) {
                     if ($scope.repository.list[i].type === "file") {
@@ -150,6 +128,50 @@ angular
             }
 		}
 
+        /* protocols */ // @ TODO move to separate service
+        $scope.protocols = {
+            list: protocolregistry.protocols,
+            current: -1,
+            selectLast: function() {
+                try {
+                    let p = localStorage.getItem('protocol');
+                    $scope.protocols.select(p);
+                } catch (e) {
+                    $scope.protocols.select();
+                }
+            },
+            isSelected: function() {
+                return angular.isDefined($scope.protocol) && ($scope.protocol.id !== "none");
+            },
+            select: function(id) {
+                if (id) {
+                    $scope.protocols.current = id;
+                } else {
+                    id = $scope.protocols.current;
+                }
+                console.log("select protocol " + id);
+                $scope.protocol = $scope.protocols.list[id];
+                journal.reset();
+                if (settings.devMode() && (journal.data.importFilePath === "")) {
+                    let file = $scope.repository.getFirstFile();
+                    journal.data.importFilePath = file ? file.path : '';
+                }
+                if (angular.isFunction(protocolregistry.protocols[id].onSelect)) {
+                    protocolregistry.protocols[id].onSelect()
+                }
+            },
+            start: function() {
+                localStorage.setItem('protocol', $scope.protocol.id);
+                console.log("start protocol " + $scope.protocol.id);
+                $scope.steps.change($scope.protocol.startView || 'overview');
+                if (angular.isFunction($scope.protocol.onInit)) {
+                    $scope.protocol.onInit();
+                }
+            }
+        };
+        $scope.protocol = {};
+
+
 		/* security */
 		$scope.sec = webservice.sec;
 
@@ -157,33 +179,17 @@ angular
 
 		$scope.isStarted = false;
 
-		$scope.selectProtocol = function() {
-			let toBeSelected = $scope.protocols.list[$scope.protocols.current];
-			journal.reset();
-			if (settings.devMode() && (journal.data.importFilePath === "")) {
-                journal.data.importFilePath = $scope.repository.getFirstFile().path;
-            }
-			if (angular.isFunction(toBeSelected.onSelect)) {
-				toBeSelected.onSelect();
-			}
-			$scope.protocol = $scope.protocols.list[$scope.protocols.current];
-		}
 
 		$scope.start = function() {
 			//checkPW
 			webservice.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal.data}, function(response) {
 				if (response.success) {
-					$scope.protocol = $scope.protocols.list[$scope.protocols.current];
-                    if (typeof $scope.protocol === "undefined") {
+                    if (!$scope.protocols.isSelected()) {
                         messenger.alert("Please select an import protocol", true);
                         return;
                     }
-					localStorage.setItem('protocol', $scope.protocol.id);
-					$scope.steps.change($scope.protocol.startView || 'overview');
-					$scope.isStarted = true;
-					if (angular.isFunction($scope.protocol.onInit)) {
-						$scope.protocol.onInit();
-					}
+                    $scope.protocols.start();
+                    $scope.isStarted = true;
 				} else {
 					$scope.sec.password = '';
 				}
