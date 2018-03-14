@@ -1,4 +1,5 @@
 <div>
+	<div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning'>{{warning}}</div>
 	<select class="form-control editable-select" ng-model="item.value.value" ng-change="item.observer ? item.observer() : ''">
 		<option ng-if="item.noneallowed" value="none">==none==</option>
 		<option ng-repeat="(key, val) in item.list track by $index" value='{{key}}'>{{val}}</option>

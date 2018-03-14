@@ -509,7 +509,12 @@ angular
 		var obj = editables.base(selected, false, false);
 		obj.type = 'listitem';
 		obj.noneallowed = (noneallowed === true);
-		obj.check =	function() {return false}
+		obj.check =	function() {
+			if (!obj.value.value && !obj.noneallowed) {
+			    return "This is mandatory!"
+            }
+			return false;
+		}
 		obj.select = function(selected) {
 			this.value = {value: selected && selected in list ? selected : (obj.noneallowed ? 'none' : Object.keys(list)[0])}
 		}

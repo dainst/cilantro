@@ -150,7 +150,7 @@ angular
 			"description": 				editables.base('[PDFs teilweise verfügbar]', false),
 			"importFilePath": 			"",
 			"identification": 			editables.listitem(ojs_identifications_codes, 'vol_year', false),
-			"ojs_journal_code": 		editables.listitem(journalCodes).watch(journalCodeChangedObserver),
+			"ojs_journal_code": 		editables.listitem(journalCodes, false, false).watch(journalCodeChangedObserver),
 			"ojs_user": 				"ojs_user",
 			"auto_publish_issue": 		editables.checkbox(false),
 			"default_publish_articles":	true,
