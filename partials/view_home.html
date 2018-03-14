@@ -14,7 +14,7 @@
 
 		<div class="btn-toolbar pull-right">
 			<button ng-if="sessionLocked" class='btn btn-danger'  ng-click='resetSession()'>Reset System</button>
-			<button ng-if="!sessionLocked" class='btn btn-primary' ng-click='start()'>Start Import<span class="glyphicon glyphicon-chevron-right"></span></button>
+			<button ng-if="!sessionLocked && protocols.isSelected()" class='btn btn-primary' ng-click='start()'>Start Import<span class="glyphicon glyphicon-chevron-right"></span></button>
 		</div>
 	</div>
 
@@ -78,7 +78,7 @@
 	</div>
 	<div class="col-md-6">
 
-		<div class="panel panel-default">
+		<div class="panel panel-default" ng-show="protocols.isSelected()">
 			<div class="panel-heading">Issue Metadata</div>
 			<div class="panel-body">
 				<table class='journal-table table'>

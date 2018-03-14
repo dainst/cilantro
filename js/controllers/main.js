@@ -23,11 +23,13 @@ angular
 		}
 		$scope.protocols = {
 			list: protocolregistry.protocols,
-			current: getLastProtocol()
+			current: getLastProtocol(),
+            isSelected: function() {
+			    return angular.isDefined($scope.protocol) && ($scope.protocol.id !== "none");
+            }
 		}
 		$scope.protocol = {
-			id: "none",
-			ready: false
+			id: "none"
 		}
 
 		/* settings / version info */
@@ -164,6 +166,7 @@ angular
 			if (angular.isFunction(toBeSelected.onSelect)) {
 				toBeSelected.onSelect();
 			}
+			$scope.protocol = $scope.protocols.list[$scope.protocols.current];
 		}
 
 		$scope.start = function() {

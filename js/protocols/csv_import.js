@@ -287,7 +287,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 		let arrData = [[]];
 		let arrMatches = null;
 		let strMatchedValue;
-		while (arrMatches = objPattern.exec( strData )){
+		while (arrMatches = objPattern.exec(strData)) {
 			let strMatchedDelimiter = arrMatches[1];
 			if (strMatchedDelimiter.length && (strMatchedDelimiter !== strDelimiter)){
 				arrData.push([]);
