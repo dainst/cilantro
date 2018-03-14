@@ -4,12 +4,12 @@ angular
 
 .module('directive.editable', [])
 
-.directive('editable', [function() {
+.directive('editable', ['settings', function(settings) {
 	
 	const killCache = '?nd=' + Date.now();
 	
 	return {
-      template: '<ng-include src="getTemplateUrl()" />',
+      template: '<ng-include src="getTemplateUrl()" ng-click="debug()"/>',
       restrict: 'A',
       scope: {
         'item': '='
@@ -23,7 +23,11 @@ angular
     		  }
 	    	  return 'partials/editable_' + scope.item.type + '.html'  + killCache;
     	  }
-    	  
+    	  scope.debug = function() {
+            if (settings.devMode()) {
+                console.log('Editable Content: ', scope.item);
+            }
+		  }
       }
 	}
   }
