@@ -38,7 +38,7 @@ describe('importer', function() {
     });
 
     // requires the BEISPIEL.pdf in the repository (e.g. chiron/data), call prepareTesting.sh if needed
-    it('should upload a file', function() {
+    it('should publish a file', function() {
         browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
             .then(elements.login.passwordInput.sendKeys(password))
@@ -51,6 +51,15 @@ describe('importer', function() {
             .then(browser.driver.sleep(1000))
             .then(elements.publish.proceedBtn.click)
             .then(elements.publish.confirmBtn.click)
+            .then(elements.publish.uploadBtn.click)
+
+            .then(elements.publish.emptyInput.get(1).sendKeys('123'))
+            .then(elements.publish.finalBtn.click)
+
+            // dev mode without ojs
+            .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-danger"))
+            // production mode with ojs
+            // .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-success"))
     });
 
 });
