@@ -211,8 +211,8 @@ angular
 			}
 		})
 		$scope.$on('gotAll', function($event, data) {
-			if (angular.isFunction($scope.protocol.onAll)) {
-				$scope.protocol.onAll(data)
+			if (angular.isFunction($scope.protocol.onGotAll)) {
+				$scope.protocol.onGotAll(data)
 			}
 		})
 

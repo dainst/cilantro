@@ -52,7 +52,7 @@ angular
 
 	}
 
-	journalCtrl.onAll = function() {
+	journalCtrl.onGotAll = function() {
 		journalCtrl.ready = true;
 		messenger.alert('All documents loaded', false)
 	}

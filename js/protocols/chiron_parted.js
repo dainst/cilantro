@@ -138,7 +138,7 @@ angular
 		getPage(pdf, 1);
 	}
 
-	journalCtrl.onAll = function() {
+	journalCtrl.onGotAll = function() {
 		journalCtrl.ready = true;
 		messenger.alert('All documents loaded', false)
 	}

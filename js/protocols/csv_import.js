@@ -25,7 +25,7 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 			console.log(fileName)
 		}
 
-		journalCtrl.onAll = function() {
+		journalCtrl.onGotAll = function() {
 
 			let modalInstance = $uibModal.open({
 				animation: true,
