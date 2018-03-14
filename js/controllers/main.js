@@ -122,6 +122,7 @@ angular
 			$scope.init();
 			messenger.alert('Restart Importer', false);
 			$scope.steps.change('home');
+            getLastProtocol();
 		}
 
 
