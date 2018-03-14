@@ -511,7 +511,7 @@ angular
 		obj.noneallowed = (noneallowed === true);
 		obj.check =	function() {
 			if (!obj.value.value && !obj.noneallowed) {
-			    return "This is mandatory!"
+			    return "This field is mandatory"
             }
 			return false;
 		}
