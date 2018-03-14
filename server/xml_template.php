@@ -25,7 +25,7 @@
 
             <?php foreach ($articles as $article) { ?>
 
-                <!-- <?php print_r($article) ?> -->
+                <!-- <?php // print_r($article) ?> -->
 
                 <?php $locale = (isset($article->language) && $article->language) ? 'language="' . substr($article->language, 0, 2) . '" locale="' . $article->language . '"' : '' ?>
 
@@ -46,7 +46,7 @@
 
                     <?php foreach ($article->author as $author) { ?>
                         <author>
-                            <firstname><?php echo htmlspecialchars($author->firstname); ?></firstname>
+                            <firstname><?php echo isset($author->firstname) ? htmlspecialchars($author->firstname) : ""; ?></firstname>
                             <lastname><?php echo htmlspecialchars($author->lastname); ?></lastname>
                             <email>no@email.given</email>
                         </author>
@@ -65,7 +65,7 @@
 
                     <?php if ($article->auto_publish) { /* @ TODO auto_publish to be implemented */ } ?>
 
-                    <?php if (isset($article->filepath) and $article->filepath)) {?>
+                    <?php if (isset($article->filepath) and $article->filepath) {?>
                         <galley>
                             <label>PDF</label>
                             <file>
