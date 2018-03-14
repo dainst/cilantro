@@ -9,7 +9,6 @@ $settings = array(
 	'ojs_user'		=>  'admin',
 	'password'		=> 	'password'
 );
-
 // backend specific settings (some of the above will be found here in the future)
 $settings['ojs2']	= array(
 	'db_type'		=> 	'mysql', //or psql
@@ -19,9 +18,6 @@ $settings['ojs2']	= array(
 	'db' 			=>	'mysqldb',
     'port'          =>  '5432' // currently used for psql-databases
 );
-
-
-
 if (isset($_GET['js']) and ($_GET['js'] == 1)) {
 ?>
 window.settings = {
