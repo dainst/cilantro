@@ -24,15 +24,13 @@ angular
 		}
 
 		$scope.uploadToOjs = function() {
-			$scope.isInitialized = false;
 			webservice.get('toOJS', journal.get(), function(response) {
-				$scope.isInitialized = true;
 				console.log(response);
 				if (response.success) {
 					$scope.done = true;
 					$scope.reportMissingToZenon();
 				}
-			});
+			}, false, true);
 		}
 
 		$scope.makeOjsUrl = function(id) {

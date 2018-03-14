@@ -87,7 +87,10 @@ angular
 
 
 		/* initialize */
-		$scope.isInitialized = false;
+        webservice.loading = true
+		$scope.isLoading = function() {
+            return webservice.loading;
+        };
 
 		$scope.init = function() {
 			webservice.get('getRepository', {}, function(r) {
@@ -106,15 +109,14 @@ angular
 					if (r.success === true) {
 						journal.setConstraints(r.backendData.journals);
 					}
-					$scope.isInitialized = true;
-				});
+				},false,true);
 			});
 		}
 
 
 		/* restart */
 		$scope.restart = function() {
-			$scope.isInitialized = false;
+            webservice.loading = true;
 			$scope.isStarted = false;
 			messenger.content.stats = {};
 			documentsource.reset();
@@ -123,6 +125,7 @@ angular
 			messenger.alert('Restart Importer', false);
 			$scope.steps.change('home');
             getLastProtocol();
+            webservice.loading = false;
 		}
 
 

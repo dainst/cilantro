@@ -9,6 +9,8 @@ angular
 		password: settings.password || ''
 	}
 
+	webservice.loading = false;
+
 	webservice.repository = [];
 
 	webservice.uploadId = false; // should be named session Id because that is what it is actuallly
@@ -18,14 +20,15 @@ angular
 		 * @param task, the webservice shall be called (function of ojsis.php)
 		 * @param data, to be given to that function
 		 * @param callback, to be called back when done
-		 * @param appendLog, set true if messenmger should not be cleared
+		 * @param appendLog, set true if messenger should not be cleared
+         * @param showLoader, set tru to lock app while loading
 		 */
-	webservice.get = function(task, data, callback, appendLog) {
+	webservice.get = function(task, data, callback, appendLog, showLoader) {
 		appendLog = appendLog || false;
-		console.log('get', task);
+        showLoader = showLoader || false;
+        webservice.loading = showLoader;
 
-		//console.log(settings.server_url, send);
-
+        console.log('get', task);
 
 		$http({
 			method:	'POST',
@@ -36,6 +39,7 @@ angular
 			}
 		}).then(
 			function(response) {
+                webservice.loading = false;
 				if (response.data.success === false) {
 					console.error(response.data.message);
 				}  else {
@@ -52,6 +56,7 @@ angular
 				callback(response.data);
 			},
 			function(err) {
+                webservice.loading = false;
 				messenger.alert(err,1, appendLog);
 				console.error(err);
 				callback(err);
