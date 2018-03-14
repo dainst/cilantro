@@ -46,7 +46,7 @@
 
                     <?php foreach ($article->author as $author) { ?>
                         <author>
-                            <firstname><?php echo htmlspecialchars($author->firstname); ?></firstname>
+                            <firstname><?php echo isset($author->firstname) ? htmlspecialchars($author->firstname) : ""; ?></firstname>
                             <lastname><?php echo htmlspecialchars($author->lastname); ?></lastname>
                             <email>no@email.given</email>
                         </author>
