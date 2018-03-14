@@ -53,7 +53,8 @@ describe('importer', function() {
             .then(elements.publish.confirmBtn.click)
             .then(elements.publish.uploadBtn.click)
 
-            .then(elements.publish.emptyInput.get(1).sendKeys('123'))
+            .then(elements.publish.input.get(1).sendKeys('123'))
+            .then(elements.publish.select.get(1).element(by.css("[value='aa']")).click)
             .then(elements.publish.finalBtn.click)
 
             // dev mode without ojs
