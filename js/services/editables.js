@@ -13,11 +13,11 @@ angular
 			value: 		angular.isObject(seed) ? seed : {value: seed},
 			mandatory: 	angular.isUndefined(mandatory) ? true : mandatory,
 			readonly: 	angular.isUndefined(readonly) ? false : readonly,
-			check: 		function() {return (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value === '')) ? 'This  field is mandatory' : false;},
+			check: 		function() {return (this.mandatory && (angular.isUndefined(this.value.value) || (this.value.value === ''))) ? 'This  field is mandatory' : false},
 			set:		function(value) {this.value.value = value},
 			get:		function(){return this.value.value},
 			compare:	function(that){return 0},
-			watch:		function(observer){this.observer=observer; return this},
+			watch:		function(observer){this.observer = observer; return this},
 			observer:	false
 		}
 	}
