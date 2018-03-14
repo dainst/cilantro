@@ -19,7 +19,8 @@ module.exports = {
         proceedBtn: element(by.css('#proceed')),
         confirmBtn: element(by.css('.btn-success')),
         uploadBtn: element(by.css('#upload')),
-        emptyInput: element.all((by.css('input.editable'))),
+        input: element.all((by.css('input.editable'))),
+        select: element.all((by.css('select.editable-select'))),
         finalBtn: element(by.css('button[ng-click="uploadToOjs()"]')),
     },
     edit: {
