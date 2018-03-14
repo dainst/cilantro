@@ -40,32 +40,34 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * @throws Exception
 	 */
 	function __construct($data, $logger, $settings = array()) {
-
 		set_error_handler(array($this, 'errorHandler'));
 		$this->log = $logger;
-
-
 		$this->settings = $settings;
 		$this->data = $data;
-
 		$this->log->log('starting ojsis');
 		$this->getUploadId();
+		$this->setTmpDir();
+	}
 
-
+	function setTmpDir() {
+		$tmpDir = $this->settings['tmp_path'] . '/' . $this->getUploadId();
+		if (!is_dir($tmpDir)) {
+			$this->log->log('create working dir ' . $tmpDir);
+			mkdir($tmpDir);
+		}
+		$this->log->log('use working dir ' . $tmpDir);
+		$this->settings['work_path'] = $tmpDir;
 	}
 
 	function call($task, $additional_settings = array()) {
-
 		if (!in_array($task, $this->noPwFunctions)) {
 			if (!$this->checkPw() and !isset($additional_settings['skippw'])) {
 				throw new Exception("Wrong Password");
 			}
 		}
-
 		if (!method_exists($this, $task)) {
 			throw new Exception("Task $task not known.");
 		}
-
 		$this->$task();
 	}
 
@@ -139,7 +141,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$xmlFile = $this->makeXML(true);
 
 			$this->log->log("pump into ojs");
-			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['tmp_path']}/$xmlFile {$data->data->ojs_journal_code} {$this->settings['ojs_user']}";
+			$execline = "php {$this->settings['ojs_path']}/tools/importExport.php NativeImportExportPlugin import {$this->settings['work_path']}/$xmlFile {$data->data->ojs_journal_code} {$this->settings['ojs_user']}";
 
 			$this->log->log("this is my last result");
 			$this->log->debug($execline);
@@ -240,7 +242,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			}
 			$mergeStr = $this->_mergePdfString($files);
 
-			$shell = "pdftk $mergeStr output {$this->settings['tmp_path']}/$outp 2>&1";
+			$shell = "pdftk $mergeStr output {$this->settings['work_path']}/$outp 2>&1";
 
 			$this->log->debug($shell);
 
@@ -250,7 +252,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				throw new Exception($cut);
 			}
 
-			$data->articles[$nr]->filepath = "{$this->settings['tmp_path']}/$outp";
+			$data->articles[$nr]->filepath = "{$this->settings['work_path']}/$outp";
 
 		}
 
@@ -332,7 +334,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 
 		if ($save) {
 			$filename = 'importXml.' . $this->getUploadId() . '.xml';
-			file_put_contents($this->settings['tmp_path'] . '/' . $filename, $xml);
+			file_put_contents($this->settings['work_path'] . '/' . $filename, $xml);
 			$this->return['filename'] = $filename;
 			return $filename;
 		} else {
@@ -384,7 +386,9 @@ class ojsis { // you're my wonderwall bla bla whimmer
 	 * clear all tmp data
 	 */
 	function clearTmp() {
-		array_map('unlink', glob($this->settings['tmp_path'] . '/*'));
+		array_map('unlink', glob($this->settings['work_path'] . '/*'));
+		rmdir($this->settings['work_path']);
+		$this->log->log("cleaned {$this->settings['work_path']}");
 	}
 
 
@@ -669,6 +673,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 
 		return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
 	}
+
 
 
 
