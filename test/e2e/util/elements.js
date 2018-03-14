@@ -22,7 +22,11 @@ module.exports = {
         emptyInput: element.all((by.css('input.editable'))),
         finalBtn: element(by.css('button[ng-click="uploadToOjs()"]')),
     },
-
+    edit: {
+        deleteArticleBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
+        addArticleBtn: element(by.css('button[ng-click="addArticle()"]')),
+        articleView: element(by.css('input.ng-not-empty')),
+    },
     articles: {},
     finish: {},
     overview: {}

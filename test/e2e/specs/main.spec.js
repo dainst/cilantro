@@ -62,4 +62,19 @@ describe('importer', function() {
             // .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-success"))
     });
 
+    it('should add and delete an article', function() {
+        browser.driver.manage().window().maximize();
+        browser.get(browser.baseUrl)
+            .then(elements.login.passwordInput.sendKeys(password))
+
+            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
+
+            .then(elements.start.startBtn.click)
+
+            .then(expect(elements.edit.articleView.isDisplayed()).toBeFalsy())
+            .then(elements.edit.addArticleBtn.click)
+            .then(expect(elements.edit.articleView.isPresent()).toBeTruthy())
+            .then(elements.edit.deleteArticleBtn.click)
+            .then(expect(elements.edit.articleView.isDisplayed()).toBeFalsy())
+    });
 });
