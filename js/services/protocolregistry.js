@@ -29,7 +29,7 @@ angular
 				onInit: false,
 				onSelect: false,
 				onGotFile: false,
-				onGoAll: false
+				onGotAll: false
 			}
 		}
 
