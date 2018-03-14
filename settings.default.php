@@ -1,4 +1,4 @@
-<?php // change theese and remove the .default in file name
+<?php // change these and remove the .default in file name
 $settings = array(
 	'ojs_path'		=> 	'/var/www/ojs',
 	'tmp_path'		=> 	'/var/www/pimport/tmp',
