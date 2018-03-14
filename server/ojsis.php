@@ -543,7 +543,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 		$i = 0;
 
 		$acceptedFiles = array(
-			'text/csv'
+			'text/csv',
+			'application/vnd.ms-excel'
 		);
 
 		if (!in_array($_FILES['files']['type'][$i], $acceptedFiles)) {
