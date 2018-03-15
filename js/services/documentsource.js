@@ -129,11 +129,15 @@ angular
 	folder.getDocuments = function(path) {
 		console.log("read path", path);
 
+        if (path === "") {
+            return;
+        }
 
+        let getFolder = false;
 		// is folder or file?
 		if (webservice.getFileInfo(path).type === 'dir') {
-			folder.path =  path;
-			var getFolder = new Promise(function(resolve) {
+			folder.path = path;
+            getFolder = new Promise(function(resolve) {
 				messenger.alert('loading folder contents: ' + folder.path);
 				webservice.get('getRepositoryFolder', {dir: folder.path}, function(result) {
 					console.log('1. got folder:' + folder.path, result);
@@ -150,7 +154,7 @@ angular
 			folder.dir = [path];
 			folder.path = false;
 			folder.stats.files = 1;
-			var getFolder = true;
+			getFolder = true;
 		}
 
 
