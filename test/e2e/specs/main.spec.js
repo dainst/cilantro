@@ -1,5 +1,10 @@
 var elements = require("../util/elements");
 var password = require("../util/readSettings").get('password');
+var path = require('path');
+var fileToUpload = '../ressources/BEISPIEL.pdf';
+var absolutePath = path.resolve(__dirname, fileToUpload);
+// set file detector
+var remote = require('../../../node_modules/selenium-webdriver/remote');
 
 describe('importer', function() {
 
@@ -31,8 +36,23 @@ describe('importer', function() {
             .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-success"))
     });
 
-    // code needs a fix here
-    xit('should abort and restart the import process', function() {
+    it('should upload a file', function() {
+        browser.driver.manage().window().maximize();
+
+        browser.get(browser.baseUrl)
+            .then(elements.login.passwordInput.sendKeys(password))
+            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
+
+        browser.setFileDetector(new remote.FileDetector())
+        elements.upload.fileElem.sendKeys(absolutePath);
+        elements.start.fileSelect.element(by.css("[value='BEISPIEL.pdf']")).click
+
+        elements.start.startBtn.click
+        expect(elements.edit.articleView.isPresent()).toBeTruthy()
+    });
+
+
+    it('should abort and restart the import process', function() {
         browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
             .then(elements.login.passwordInput.sendKeys(password))
@@ -45,7 +65,6 @@ describe('importer', function() {
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
     });
 
-    // requires the BEISPIEL.pdf in the repository (e.g. chiron/data), call prepareTesting.sh if needed
     it('should publish a file', function() {
         browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
