@@ -58,10 +58,10 @@
 			<div class="panel panel-default" ng-show="reportedToZenon.length">
 				<div class="panel-heading">Reports to zenon</div>
 				<div class="panel-body">
-					<p>The following articles where reported to Zenon</p>
+					<p>The following aricles can be downloaded and reported to Zenon</p>
 					<ul>
 						<li ng-repeat="(id, article) in reportedToZenon track by $index">
-							<a href='{{article._.zenonReport}}' target='_blank'>{{article.title.get()}}</a>
+							<a class="downloadLink" href='{{article._.zenonReport}}' target='_blank'>{{article.title.get()}}</a>
 						</li>
 					</ul>
 				</div>
