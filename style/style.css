@@ -435,6 +435,16 @@ input.form-check-input:checked + label:before {
 .lang-selector input[type="text"] {
 }
 
+/* date selector */
+
+input.editable.date {
+    width:2.2em; display: inline; margin-right: 0.2em
+}
+input.editable.date.year {
+    width:4em; display: inline; margin-right: 0.2em
+}
+
+
 /* info */
 #info-container {
 	position: fixed;

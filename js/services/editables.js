@@ -533,6 +533,66 @@ angular
 		obj.type = 'loadedfile';
 		return obj;
 	}
+
+    editables.types.Date = function(year, month, day) {return {'day': day, 'month': month, 'year': year}};
+
+	editables.date = function(year, month, day, mandatory) {
+        let seed = new editables.types.Date(year, month, day);
+        let obj = editables.base(seed, mandatory);
+        obj.type = 'date';
+
+        function toJsDate(date) {
+            let year = parseInt(date.year) || 3000;
+            let month = parseInt(date.month) - 1 || 0;
+            let day = (date.day && date.month) ? (parseInt(date.day) || 1) : 1;
+
+            return new Date(year, month, day);
+        }
+
+        function isValidDate(date) {
+
+            if (!obj.value.year) {
+                return "Missing year";
+            }
+
+            // check full date
+            let jsDate = toJsDate(date);
+
+            if (date.year !== jsDate.getFullYear()) {
+                return "Invalid date";
+            }
+            if (date.month && (date.month !== jsDate.getMonth() + 1)) {
+                return "Invalid date";
+            }
+            if (date.day && (date.day !== jsDate.getDate())) {
+                return "Invalid date";
+            }
+            return false;
+        }
+
+        obj.check = function() {
+            return isValidDate(obj.value)
+        }
+
+        obj.get = function() {
+            return [obj.value.year, obj.value.month, obj.value.day].join('-');
+        }
+
+        obj.set = function(year, month, day) {
+            let today = new Date();
+            year = parseInt(year) || today.getFullYear();
+            month = parseInt(month) || "";
+            day = parseInt(day) || "";
+            obj.value = new editables.types.Date(year, month, day);
+        }
+
+        obj.compare = function(date1, date2) {
+            return toJsDate(date1) < toJsDate(date2);
+        }
+
+        obj.set(year, month, day);
+        return obj;
+    }
 	
 	return (editables);
 }])

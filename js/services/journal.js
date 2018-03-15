@@ -156,7 +156,7 @@ angular
 			"auto_publish_issue": 		editables.checkbox(false),
 			"default_publish_articles":	true,
 			"default_create_frontpage": true,
-			"allow_upload_without_file":false
+			"allow_upload_without_file":false,
 		}
 
 		/* list of defined articles */
@@ -310,8 +310,7 @@ angular
 					.toString(16)
 					.substring(1);
 			}
-			return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-				s4() + '-' + s4() + s4() + s4();
+			return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 		}
 
 		let articlePrototype = {
@@ -319,7 +318,7 @@ angular
 			'abstract':			editables.text(data.abstract, false),
 			'author':			editables.authorlist(data.author),
 			'pages':			editables.page(data.pages),
-			'date_published':	editables.base(data.date_published || 'DD-MM-YYYY'),
+			'date_published':	editables.date(data.date_published),
 			'language':			editables.language('de_DE', false, journal.locales),
 			'auto_publish':		editables.checkbox(journal.data.default_publish_articles === true),
 			'filepath':			editables.loadedfile(journal.loadedFiles, false, journal.data.allow_upload_without_file),

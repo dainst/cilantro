@@ -25,7 +25,7 @@
 
             <?php foreach ($articles as $article) { ?>
 
-                <!-- <?php // print_r($article) ?> -->
+                <!-- <?php  print_r($article) ?> -->
 
                 <?php $locale = (isset($article->language) && $article->language) ? 'language="' . substr($article->language, 0, 2) . '" locale="' . $article->language . '"' : '' ?>
 
@@ -61,7 +61,7 @@
 
                     <pages><?php echo $pages; ?></pages>
 
-                    <date_published><?php htmlspecialchars($article->date_published); ?></date_published>
+                    <date_published><?php echo htmlspecialchars($article->date_published); ?></date_published>
 
                     <?php if ($article->auto_publish) { /* @ TODO auto_publish to be implemented */ } ?>
 

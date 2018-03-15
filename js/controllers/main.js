@@ -184,7 +184,6 @@ angular
 
 		$scope.isStarted = false;
 
-
 		$scope.start = function() {
 			//checkPW
 			webservice.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal.data}, function(response) {
@@ -200,28 +199,25 @@ angular
 			});
 		}
 
-
 		/* some pdf things happen outside angular and need this */
 		$scope.$on('refreshView', function() {
 			if(!$scope.$$phase) {
 				$scope.$apply();
 			}
-		})
+		});
 
 		/* forward events to current protocol */
 		$scope.$on('gotFile', function($event, data) {
 			if (angular.isFunction($scope.protocol.onGotFile)) {
 				$scope.protocol.onGotFile(data)
 			}
-		})
+		});
+
 		$scope.$on('gotAll', function($event, data) {
 			if (angular.isFunction($scope.protocol.onGotAll)) {
 				$scope.protocol.onGotAll(data)
 			}
-		})
-
-
-
+		});
 
 	}
 ]);

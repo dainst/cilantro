@@ -17,8 +17,6 @@
 			<button ng-if="!sessionLocked && protocols.isSelected()" class='btn btn-primary' ng-click='start()'>Start Import<span class="glyphicon glyphicon-chevron-right"></span></button>
 		</div>
 	</div>
-
-
 </div>
 
 <div class="row" ng-show="sec.password != ''">
@@ -82,9 +80,8 @@
 			<div class="panel-heading">Issue Metadata</div>
 			<div class="panel-body">
 				<table class='journal-table table'>
-
-					<tbody>
 					<thead></thead>
+					<tbody>
 					<tr ng-repeat="(id, field) in journal.data track by $index">
 						<td ng-show="journal.settings.hideOnHomepage.indexOf(id)">{{journal.descriptions[id]}}</td>
 						<td ng-show="journal.settings.hideOnHomepage.indexOf(id)">

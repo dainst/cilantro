@@ -276,8 +276,8 @@ angular
 			article.title.set(doc.title);
 			// article.abstract.value.value = abstract; // @ TODO adopt abstract from zenon?
 			article.author.setAuthors(authors, 1);
-			article.pages.set(doc.pages.replace('.',''));
-			article.date_published = editables.base(doc.date);
+			article.pages.set(doc.pages.replace('.', ''));
+			article.date_published.set(doc.date);
 			//article.language = editables.language('de_DE', false); // @ TODO adopt language from zenon?
 
 
