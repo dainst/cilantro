@@ -146,7 +146,7 @@ angular
 		/* the journal metadata */
 		journal.data = {
 			"volume": 					editables.base(''),
-			"year": 					editables.base(''),
+			"year": 					editables.number(2018),
 			"number": 					editables.base(''),
 			"description": 				editables.base('[PDFs teilweise verfügbar]', false),
 			"importFilePath": 			"",

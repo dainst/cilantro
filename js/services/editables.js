@@ -110,8 +110,8 @@ angular
 		
 		
 		obj.compare = function(that) {
-			var a = (typeof this.value[0] !== "undefined") ? this.value[0].lastname : '';
-			var b = (typeof that.value[0] !== "undefined") ? that.value[0].lastname : '';
+			let a = (typeof this.value[0] !== "undefined") ? this.value[0].lastname : '';
+			let b = (typeof that.value[0] !== "undefined") ? that.value[0].lastname : '';
 			
 			return (a.localeCompare(b));
 		}
@@ -433,17 +433,20 @@ angular
 	}
 	
 	editables.number = function(seed, mandatory) {
-		var obj = editables.base(parseInt(seed), mandatory);
+		let obj = editables.base(parseInt(seed), mandatory);
 		obj.type = 'number';
 		obj.check =	function() {
-			if (obj.value.value !== parseInt(obj.value.value) && (this.value.value !== '')) {
-				return "Only number allowed";
+			if ((obj.value.value.toString() !== parseInt(obj.value.value).toString()) && (this.value.value !== '')) {
+				return "Only numbers allowed";
 			}
 			if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value === '')) {
 				return 'This field is mandatory'
 			} 
 			return false;
 		}
+		obj.get = function() {
+		    return parseInt(obj.value.value);
+        }
 		obj.compare = function(second) {
 			return (this.value.value > second.value.value)  ? 1 : -1;
 		}
@@ -476,7 +479,7 @@ angular
 				return 'This field is mandatory'
 			}
 			if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(this.value.value))  {
-				return 'seems not to be proper language code'
+				return 'Seems not to be proper language code'
 			}
 
 			return false;
