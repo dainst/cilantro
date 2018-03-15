@@ -31,7 +31,7 @@ module.exports = {
     edit: {
         deleteArticleBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
         addArticleBtn: element(by.css('button[ng-click="addArticle()"]')),
-        articleView: element(by.css('input.ng-not-empty')),
+        articleView: element.all(by.css('input.ng-not-empty')).first(),
     },
     zenon: {
         markMissing: element(by.css('button[ng-click="markAsMissingZenon()"]')),
