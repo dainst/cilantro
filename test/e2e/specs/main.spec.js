@@ -77,7 +77,7 @@ describe('importer', function() {
             .then(elements.start.fileSelect.element(by.css("[value='e2e-testing.pdf']")).click)
 
             .then(elements.start.startBtn.click)
-            .then(browser.wait(EC.visibilityOf(elements.publish.proceedBtn), 5000))
+            .then(browser.wait(EC.visibilityOf(elements.publish.proceedBtn)))
             .then(elements.publish.proceedBtn.click)
             .then(elements.publish.confirmBtn.click)
             .then(elements.publish.uploadBtn.click)
@@ -92,6 +92,35 @@ describe('importer', function() {
             // .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-success"))
     });
 
+    fit('should report a file to zenon', function() {
+        browser.driver.manage().window().maximize();
+        browser.get(browser.baseUrl)
+            .then(elements.login.passwordInput.sendKeys(password))
+
+            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
+            .then(elements.start.fileSelect.element(by.css("[value='e2e-testing.pdf']")).click)
+
+            .then(elements.start.startBtn.click)
+            .then(browser.wait(EC.visibilityOf(elements.publish.proceedBtn)))
+            .then(elements.publish.proceedBtn.click)
+
+            .then(elements.zenon.markMissing.click)
+            .then(elements.publish.confirmBtn.click)
+            .then(elements.publish.uploadBtn.click)
+
+            .then(elements.publish.input.get(1).sendKeys('123'))
+            .then(elements.publish.select.get(1).element(by.css("[value='aa']")).click)
+            .then(elements.zenon.reportMissing.click)
+            .then(elements.zenon.downloadLink.click)
+            //
+            // .then(elements.publish.finalBtn.click)
+            //
+            // // dev mode without ojs
+            // .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-danger"))
+            // production mode with ojs
+            // .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-success"))
+    });
+
     it('should add and delete an article', function() {
         browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
@@ -102,7 +131,7 @@ describe('importer', function() {
             .then(elements.start.startBtn.click)
 
             .then(expect(elements.edit.articleView.isPresent()).toBeTruthy())
-            .then(browser.wait(EC.visibilityOf(elements.edit.deleteArticleBtn), 5000))
+            .then(browser.wait(EC.visibilityOf(elements.edit.deleteArticleBtn)))
             .then(elements.edit.deleteArticleBtn.click)
             .then(expect(elements.edit.articleView.isDisplayed()).toBeFalsy())
             .then(elements.edit.addArticleBtn.click)

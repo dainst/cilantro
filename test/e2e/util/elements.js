@@ -33,6 +33,11 @@ module.exports = {
         addArticleBtn: element(by.css('button[ng-click="addArticle()"]')),
         articleView: element(by.css('input.ng-not-empty')),
     },
+    zenon: {
+        markMissing: element(by.css('button[ng-click="markAsMissingZenon()"]')),
+        reportMissing: element(by.css('button[ng-click="reportMissingToZenon()"]')),
+        downloadLink: element(by.css('a.downloadLink')),
+    },
     articles: {},
     finish: {},
     overview: {}
