@@ -11,6 +11,11 @@ module.exports = {
         fileSelect: element(by.model('journal.data.importFilePath')),
         startBtn: element(by.css('.row.toprow .btn-primary')),
     },
+    upload: {
+        fileUploadArea: element(by.css('#fileDropArea')),
+        fileUploadBtn: element(by.css('#uploadFileSelect')),
+        fileElem: element(by.css('input[type="file"]')),
+    },
     restart: {
         restartBtn: element(by.css('#step-restart')),
         confirmRestartBtn: element(by.css('.btn-danger')),
