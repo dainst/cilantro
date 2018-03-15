@@ -12,18 +12,18 @@ module.exports = {
         startBtn: element(by.css('.row.toprow .btn-primary')),
     },
     upload: {
-        fileUploadArea: element(by.css('#fileDropArea')),
-        fileUploadBtn: element(by.css('#uploadFileSelect')),
+        fileUploadArea: element(by.id('fileDropArea')),
+        fileUploadBtn: element(by.id('uploadFileSelect')),
         fileElem: element(by.css('input[type="file"]')),
     },
     restart: {
-        restartBtn: element(by.css('#step-restart')),
+        restartBtn: element(by.id('step-restart')),
         confirmRestartBtn: element(by.css('.btn-danger')),
     },
     publish: {
-        proceedBtn: element(by.css('#proceed')),
+        proceedBtn: element(by.id('proceed')),
         confirmBtn: element(by.css('.btn-success')),
-        uploadBtn: element(by.css('#upload')),
+        uploadBtn: element(by.id('upload')),
         input: element.all((by.css('input.editable'))),
         select: element.all((by.css('select.editable-select'))),
         finalBtn: element(by.css('button[ng-click="uploadToOjs()"]')),
