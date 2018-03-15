@@ -1,6 +1,6 @@
-var mod = angular.module('module.protocols.csv_import', ['ui.bootstrap']);
+let mod = angular.module('module.protocols.csv_import', ['ui.bootstrap']);
 
-// @ todo this (and every protokol) shoueld inherit from generic...
+// @ todo this (and every protocol) should inherit from generic...
 
 mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregistry', 'documentsource', 'journal', 'messenger',
 	function($rootScope, $uibModal, editables, protocolregistry, documentsource, journal, messenger) {
@@ -73,12 +73,14 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	$scope.cols_types = {}
 
 	/* available column types */
-	let cols_types = Object.keys(new journal.Article()).concat(["pageTo", "pageFrom"])
+	let cols_types = Object.keys(new journal.Article()).concat(["pageTo", "pageFrom"]);
 	for (let i = 0; i < cols_types.length; i++) {
 		$scope.cols_types[normalize(cols_types[i])] = cols_types[i];
 	}
+
 	//console.log($scope.cols_types)
 
+    $scope.col_type_lab
 
 	$scope.columns = {}
 
@@ -155,6 +157,15 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 		console.log(guessDelimiter(r.data.csv));
 		$scope.state.tab = 'raw';
 	}
+
+    $scope.getLabel = function(key) {
+        if (!angular.isDefined(journal.articleDescriptions[key])) {
+            return key;
+        }
+        return (angular.isDefined(journal.articleDescriptions[key].description)) ?
+            journal.articleDescriptions[key].description :
+            journal.articleDescriptions[key].title;
+    }
 
 	/* mighty functions */
 
@@ -253,7 +264,6 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 				$scope.columns[cols[i]].selected = 'pages';
 				continue;
 			}
-			console.log(arePages, col)
 
 			// 9. longtext
 			let arelongTexts = col.values.reduce(function(agg, v){return agg && (v.length > 8)}, true);
@@ -375,6 +385,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	function normalize(term) {
 		return term.toLowerCase().replace(/[^a-z]/g, '');
 	}
+
 
 
 }])
