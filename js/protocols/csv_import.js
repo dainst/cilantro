@@ -73,7 +73,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	$scope.cols_types = {}
 
 	/* available column types */
-	let cols_types = Object.keys(new journal.Article()).concat(["pageTo", "pageFrom"])
+	let cols_types = Object.keys(new journal.Article()).concat(["pageFrom", "pageTo"])
 	for (let i = 0; i < cols_types.length; i++) {
 		$scope.cols_types[normalize(cols_types[i])] = cols_types[i];
 	}
@@ -180,7 +180,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 		let equal_length = true;
 		let last_length = 0;
 		let numbersFieldFound = false;
-		let numberFields = ['pageto', 'pagefrom'];
+		let numberFields = ['pagefrom', 'pageto'];
 		let boolFields = ['createfrontpage', 'autopublish'];
 		let longTextFields = ['abstract', 'title'];
 		let areHeadlines = true;
@@ -376,4 +376,3 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 
 
 }])
-
