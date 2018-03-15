@@ -179,7 +179,6 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 		// analyze
 		let equal_length = true;
 		let last_length = 0;
-		let numbersFieldFound = false;
 		let numberFields = ['pageto', 'pagefrom'];
 		let boolFields = ['createfrontpage', 'autopublish'];
 		let longTextFields = ['abstract', 'title'];
@@ -326,7 +325,10 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 					if (col === 'author') {
 						article[prop].set($scope.csv[r][cols[i]].split($scope.options.authorsDelimiter),  Number($scope.options.authorFormat));
 					} else if (col === "pages") {
-						let pages = $scope.csv[r][cols[i]].match(/^(\d{1,3})\s?[\-\u2013\u2212]?\s?(\d{1,3})?$/)
+						let pages = $scope.csv[r][cols[i]].match(/^(\d{1,3})\s?[\-\u2013\u2212]?\s?(\d{1,3})?$/);
+						if (pages === null) {
+						    pages = [$scope.csv[r][cols[i]]];
+                        }
 						article.pages.value.startPdf = parseInt(pages[1]);
 						if (typeof pages[2] !== "undefined") {
 							article.pages.value.endPdf = parseInt(pages[2]);
