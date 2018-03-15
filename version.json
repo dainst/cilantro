@@ -1,0 +1,15 @@
+{
+  "version": "3.0",
+  "history": {
+	"3.0": [
+	  "Get back and forward in the workflow",
+	  "Undo deleted articles",
+	  "Import data from CSV files",
+	  "Automatically import a list of datasets by their zenon-ids",
+	  "Edit issue description, article abstract and more...",
+	  "Better error management",
+	  "& much more"
+	]
+  }
+
+}

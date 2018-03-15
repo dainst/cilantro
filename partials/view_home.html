@@ -1,0 +1,121 @@
+<div>
+
+
+<div class="row toprow">
+	<div class="col-md-6">
+		<h1 style="margin-top:0px">
+			iDAI.publications/importer
+			<input type="password" class="form-control pull-right" ng-model='sec.password' placeholder="password" style="width:150px; display:inline">
+		</h1>
+
+	</div>
+
+	<div class="col-md-6">
+
+		<div class="btn-toolbar pull-right">
+			<button ng-if="sessionLocked" class='btn btn-danger'  ng-click='resetSession()'>Reset System</button>
+			<button ng-if="!sessionLocked && protocols.isSelected()" class='btn btn-primary' ng-click='start()'>Start Import<span class="glyphicon glyphicon-chevron-right"></span></button>
+		</div>
+	</div>
+
+
+</div>
+
+<div class="row" ng-show="sec.password != ''">
+	<div class="col-md-6">
+
+		<div class="panel panel-default">
+			<div class="panel-heading">Import Protocol</div>
+			<div class="panel-body">
+				<select class="form-control" ng-model="protocols.current" ng-change="protocols.select()">
+					<option ng-repeat="p in protocols.list" value='{{p.id}}'>{{p.description}}</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">Select PDF file (or folder) from upload folder</div>
+			<div class="panel-body">
+				<select class="form-control" ng-model="journal.data.importFilePath">
+					<option ng-repeat="file in repository.list track by $index" value='{{file.path}}'>{{file.caption}}</option>
+				</select>
+			</div>
+		</div>
+
+		<div 	ng-controller="upload"
+				class="panel panel-default"
+				ngf-drop="uploadFiles($files)"
+	       		ng-model="files"
+	       		ngf-model-invalid="invalidFiles"
+	            ngf-multiple="multiple"
+	            ngf-pattern="pattern"
+	            ngf-accept="application/pdf"
+	            ngf-drag-over-class="'dragOver'"
+	            ngf-validate="{pattern: '.pdf'}"
+	            ngf-keep="false"
+	            ngf-allow-dir="false"
+	           	ngf-drop-available="dropAvailable"
+	            id="fileDropArea">
+
+			<div class="panel-heading">Or upload PDF file</div>
+			<div class="panel-body">
+			    <button id="uploadFileSelect" class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File into this Box.</span> 
+			    <br>
+
+			    <span class="progressbar">
+			        <div style="width:{{progress}}%" ng-bind="progress + '%'"></div>
+			    </span>
+
+			    <br><span  ng-show="uploadedFiles.length > 0">Files:</span>
+				<ul>
+					<li ng-repeat="f in uploadedFiles track by $index">{{f}}</li>
+			    </ul>
+				<div ng-show="errorMsg" class="alert alert-danger" ng-bind-html="errorMsg | trustHtml"></div>
+				<div ng-show="warningsMsg.length >  0" ng-repeat="warning in warningsMsg track by $index" class="alert alert-warning">{{warning}}</div>
+				<div ng-show="invalidFiles" class="alert alert-warning">Wrong Filetype</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+
+		<div class="panel panel-default" ng-show="protocols.isSelected()">
+			<div class="panel-heading">Issue Metadata</div>
+			<div class="panel-body">
+				<table class='journal-table table'>
+
+					<tbody>
+					<thead></thead>
+					<tr ng-repeat="(id, field) in journal.data track by $index">
+						<td ng-show="journal.settings.hideOnHomepage.indexOf(id)">{{journal.descriptions[id]}}</td>
+						<td ng-show="journal.settings.hideOnHomepage.indexOf(id)">
+							<span editable item="field" />
+						</td>
+					</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+			</div>
+		</div>
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading">Importer Version {{settings.versionInfo.version}}</div>
+			<div class="panel-body">
+				<strong>Version History</strong>
+				<ul style="max-height: 200px; overflow-y:auto">
+					<li ng-repeat="(version, features) in settings.versionInfo.history">
+                        <strong>{{version}}</strong>
+						<ul>
+							<li ng-repeat="feature in features">{{feature}}</li>
+						</ul>
+					</li>
+				</ul>
+				<h4></h4>
+			</div>
+		</div>
+
+	</div>
+
+
+
+</div>

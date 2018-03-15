@@ -44,23 +44,24 @@ table td {
 	position: relative;
 }
 
-[data-tooltip]:hover:after { /**/
+[data-tooltip]:hover:before { /**/
 	padding: 0.3em;
 	margin: 0em 0em 0em 0em;
 	content: attr(data-tooltip);
-	z-index: 10000;
+	z-index: 2000;
 	position: absolute;
-	left: 25%;
 	top: 90%;
 	color: black;
 	font-weight: normal;
 	font-size: small;
 	font-family: sans;
-	
 	background: white;
 	box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
 	border: 1px solid rgba(0, 0, 0, 0.15);
 	border-radius: 3px;
+	white-space: normal;
+	display: block;
+	left: -100%;
 }
 
 /* author_box */
@@ -94,7 +95,9 @@ table.author_box td {
 /* -- */
 
 #main-container {
-	padding: 80px 20px 10px 20px
+	padding: 80px 20px 10px 20px;
+	overflow-x: hidden;
+	min-height: 600px;
 }
 
 
@@ -144,7 +147,8 @@ tfoot > tr > td {
 
 table.journal-table td,
 table.article-table td {
-	padding: 0px !important
+	padding: 0px !important;
+	vertical-align: middle !important;
 }
 
 table.authorlist {
@@ -205,9 +209,10 @@ table.split-table > tbody > tr > td .thumbnail-container.enlarged {
 	border: 1px solid rgba(0, 0, 0, 0.15);
 	margin-top: 60px;
 	position: fixed;
-	right: 10px;
+	left: 10px;
 	top:0px;
-	z-index: 2;
+	z-index: 1042;
+	background: white;
 }
 table.split-table > tbody > tr > td .thumbnail-container.enlarged img {
 	margin-top: 0px;
@@ -229,6 +234,24 @@ table.split-table > tbody > tr > td hr {
     margin-top: 7px;
     margin-bottom: 7px;
 }
+
+table.super-table {
+	width: auto;
+	min-width: 100%
+}
+
+table.super-table thead td {
+	overflow: hidden
+}
+
+table.super-table tr.row-confirmed > td:first-child {
+	border-left: 3px solid #449d44;
+}
+table.super-table tr.row-unconfirmed > td:first-child {
+	border-left: 3px solid #d9534f;
+}
+
+
 
 .alert {
    padding: 10px;
@@ -268,13 +291,23 @@ table .alert {
 	
 	padding: 1em;
 	position: fixed;
-	z-index: 5000;
+	z-index: 1044;
 	right: 0em;
 	top: 50px;
 }
 
 .navbar-default {
     background-color: rgba(85, 114, 161, 1)  !important;
+}
+
+.navbar .active {
+	color: #fff;
+	background-color: rgba(116,141,181,.9);
+	cursor: default
+}
+
+.navbar .active:hover {
+
 }
 
 
@@ -293,7 +326,7 @@ table .alert {
 	bottom: 0px;
 	left: 0px;
 	background-color: white;
-	z-index: 5000;
+	z-index: 10000;
 }
 
 
@@ -363,6 +396,15 @@ input.form-check-input:checked + label:before {
 	color:black
 }
 
+.editable-select {
+	background-color:#D9EDF7;
+	border:none;
+	height:auto;
+	padding: 0;
+	border-radius: 0px
+
+}
+
 
 /* lang selector */
 
@@ -391,4 +433,91 @@ input.form-check-input:checked + label:before {
 
 
 .lang-selector input[type="text"] {
+}
+
+/* info */
+#info-container {
+	position: fixed;
+	bottom: 0px;
+	right: 24%;
+	left: 24%;
+	z-index: 1040;
+	padding: 20px;
+	max-height: 100%;
+	overflow: auto;
+
+	background-color: #fff;
+	border: 1px solid rgba(0,0,0,.15);
+	box-shadow: 0 6px 12px rgba(0,0,0,.176);
+	font-size: 14px;
+
+}
+.alert {
+	white-space: pre-wrap;
+}
+
+.closed .alert,
+.alert:last-child {
+	margin-bottom: 2px;
+}
+
+.main-message {
+	max-height: none;
+}
+
+.closed .main-message {
+	max-height: 150px;
+	overflow: hidden
+}
+
+#info-container .stat {
+	width: 50%;
+	float: left;
+	padding-right: 4px;
+	white-space: nowrap;
+}
+
+@media (max-width:1138px) {
+	#info-container {
+		right: 12%;
+		left: 12%;
+	}
+}
+
+@media (max-width:991px) {
+	#info-container {
+		right: 0;
+		left: 0;
+	}
+}
+
+
+/* multiselect */
+
+
+.multiselect li label {
+    display: block;
+    font-weight: 400;
+    color: #333;
+    padding: 3px 20px;
+    line-height: 1.42857143;
+    white-space: nowrap;
+}
+
+.multiselect li input {
+	display: inline
+}
+
+.multiselect li label:hover {
+	text-decoration: none;
+	color: #262626;
+	background-color: #f5f5f5;
+}
+
+
+/* misc */
+.dev-warning {
+	background: red;
+	position: absolute !important;
+	left: 50%;
 }

@@ -4,12 +4,12 @@ angular
 
 .module('directive.editable', [])
 
-.directive('editable', ['$log', function($log) {
+.directive('editable', ['settings', function(settings) {
 	
-	var killCache = '?nd=' + Date.now();
+	const killCache = '?nd=' + Date.now();
 	
 	return {
-      template: '<ng-include src="getTemplateUrl()" />',
+      template: '<ng-include src="getTemplateUrl()" ng-click="debug()"/>',
       restrict: 'A',
       scope: {
         'item': '='
@@ -17,16 +17,17 @@ angular
       link: function(scope, elem, attrs) {  	  
     	  scope.id = 'ID#' + Math.random();
     	  scope.caption = attrs.caption;
-		  
-    	  
-    	  scope.getTemplateUrl = function() {  		  
+    	  scope.getTemplateUrl = function() {
     		  if (angular.isUndefined(scope.item) || angular.isUndefined(scope.item.type) || scope.item.readonly) {
-    			  //$log.log(scope.item);
-    			  return 'partials/undefined.html' + killCache;
+    			  return 'partials/editable_undefined.html' + killCache;
     		  }
-	    	  return 'partials/' + scope.item.type + '.html'  + killCache; 
+	    	  return 'partials/editable_' + scope.item.type + '.html'  + killCache;
     	  }
-    	  
+    	  scope.debug = function() {
+            if (settings.devMode()) {
+                console.log('Editable Content: ', scope.item);
+            }
+		  }
       }
 	}
   }

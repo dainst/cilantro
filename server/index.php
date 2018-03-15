@@ -58,6 +58,14 @@ function parse_size($size) {
 	}
 }
 
+function json_encode_with_errors($object) {
+	$json = json_encode($object);
+	if (json_last_error() !== JSON_ERROR_NONE) {
+		throw new Exception(json_last_error_msg());
+	}
+	return $json;
+}
+
 
 /**
  * go
@@ -68,7 +76,7 @@ try {
 	// settings
 	$allowedIps		= array();
 	$errorReporting = true;
-    $debugmode = false;
+	$debugmode      = false;
 	$includePath = (!isset($includePath)) ? dirname(dirname($_SERVER['SCRIPT_FILENAME'])) . '/' : $includePath;
 	if (file_exists($includePath . '/' . "settings.php")) {
 		include_once($includePath . '/' . "settings.php");
@@ -93,7 +101,7 @@ try {
 					'success'	=> false,
 					'message'	=> "500 / Internal Server Error" . ": {$error['message']} in line {$error['line']} of {$error['file']}"
 				);
-	
+
 				http_response_code(200);
 				header('Content-Type: application/json');
 				echo json_encode($return);
@@ -116,7 +124,7 @@ try {
 		header('Access-Control-Allow-Credentials: true');
 		header('Access-Control-Max-Age: 86400');    // cache for 1 day
 	}
-	
+
 	// Access-Control headers are received during OPTIONS request
 	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 		if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
@@ -127,7 +135,7 @@ try {
 		}
 		exit(0);
 	}
-	
+
 	// low budget security check
 	$ip	= $_SERVER['REMOTE_ADDR'];
 	if (!in_array($ip, $allowedIps) and count($allowedIps)) {
@@ -136,7 +144,7 @@ try {
 
 	// also get angular's post data (there is something shitty going on between angular and php)
 	$_ANGULAR_POST = json_decode(file_get_contents("php://input"));
-	
+
 	$task = isset($_ANGULAR_POST->task) ? $_ANGULAR_POST->task : (isset($_POST['task']) ? $_POST['task'] : '');
 	if (!isset($task)) {
 		$log->log($_ANGULAR_POST);
@@ -151,17 +159,30 @@ try {
 	$ojsis = new ojsis($data, $logger, $settings);
 	$ojsis->debug = $debugmode;
 	$ojsis->call($task);
-	
+
 	$return = $ojsis->return;
-	
+
 	$ojsis->finish();
+
+	$logger->log('OK');
+
+	// return  success
+	$return['task'] = $task;
+	$return['success'] = true;
+	$return['warnings'] = $logger->warnings;
+	if ($debugmode) {
+		$return['debug'] = $logger->log;
+	}
+
+	header('Content-Type: application/json');
+	echo json_encode_with_errors($return);
 
 } catch (Exception $a) {
 	ob_clean();
 	if (isset($ojsis)) {
 		$ojsis->finish();
 	}
-	
+
 	$return = array(
 		'success'	=> false,
 		'message'	=> $a->getMessage(),
@@ -169,24 +190,15 @@ try {
 	);
 	if ($debugmode) {
 		$return['debug'] = $logger->log;
-	}	
-	
+	}
+
 	header('Content-Type: application/json');
-	echo json_encode($return);
-	die();
+	echo json_encode_with_errors($return);
+
 }
 
-$logger->log('OK');
 
 
-// return  success
-$return['task'] = $task;
-$return['success'] = true;
-$return['warnings'] = $logger->warnings;
-if ($debugmode) {
-	$return['debug'] = $logger->log;
-}
 
-header('Content-Type: application/json');
-echo json_encode($return);
+
 ?>

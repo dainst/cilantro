@@ -1,0 +1,116 @@
+<div>
+	<div class="modal-header">
+		<ul class="nav nav-pills">
+			<li><div style="padding: 10px 15px 10px 0px; font-weight:bold">CSV Data Wizard</div></li>
+			<li ng-class="{active:state.tab=='file'}" ng-click="clickTab('file')"><a href="#">Load CSV File</a></li>
+			<li ng-class="{active:state.tab=='raw'}" ng-click="clickTab('raw')"><a href="#">Enter/Review CSV Data</a></li>
+			<li ng-class="{active:state.tab=='csv', disabled:csv.length==0}" ng-click="clickTab('csv')"><a href="#">Assign Columns</a></li>
+			<li class="btn btn-danger pull-right" type="button" ng-click="cancel()">Cancel</li>
+		</ul>
+	</div>
+	<div class="modal-body" id="modal-body">
+
+		<div
+				ng-show="state.tab=='file'"
+				ng-controller="upload"
+				ngf-drop="startUpload();uploadCSV($files, onGotCsv)"
+				ng-model="csvFiles"
+				ngf-model-invalid="invalidFiles"
+				ngf-multiple="false"
+				ngf-pattern="pattern"
+				ngf-accept="text/csv"
+				ngf-drag-over-class="'dragOver'"
+				ngf-validate="{pattern: '.csv'}"
+				ngf-keep="false"
+				ngf-allow-dir="false"
+				ngf-drop-available="dropAvailable"
+				id="fileDropAreaCSV">
+			<button class="btn btn-sm" ngf-select="uploadCSV($files, onGotCsv)" accept="text/csv">Select files to upload from your hard disk</button>
+			<span ng-show="dropAvailable"> or just drop a File into this Box.</span>
+			<br>
+			<span class="progressbar">
+				<div style="width:{{progress}}%" ng-bind="progress + '%'"></div>
+			</span>
+			<br>
+			<div class="alert alert-warning" ng-show="invalidFiles">Seems not to be a CSV file or lacks csv file extension in filename.</div>
+		</div>
+
+		<div ng-show="state.tab=='raw'">
+			<label for="raw_csv">Raw CSV Data</label>
+			<textarea id="raw_csv" class="form-control" ng-model="raw_csv"></textarea>
+			<br>
+			<form class="form-inline">
+				<div class="form-group input-group-sm">
+					Cell Delimiter
+					<select class="form-control" ng-model="options.delimiter" ng-class="{'alert-danger':options.delimiter!=','}">
+						<option ng-repeat="(key, val) in delimiters" value="{{val}}">{{key}}</option>
+					</select>
+				</div>
+			</form>
+
+			<a ng-click="toggleParseOptions()" href="#">More Options</a>
+			<div ng-show="state.parseOptions">
+				<form class="form-inline">
+					<div class="form-group input-group-sm">
+
+						Author Delimiter
+						<select class="form-control" ng-model="options.authorsDelimiter">
+							<option ng-repeat="(key, val) in delimiters" value="{{val}}">{{key}}</option>
+						</select>
+						Name Formats
+						<select class="form-control" ng-model="options.authorFormat">
+							<option value="0">FirstName SecondName LastName</option>
+							<option value="1">Lastname, FirstName SecondName</option>
+						</select>
+					</div>
+				</form>
+			</div>
+			<br>
+			<div class="alert alert-warning" ng-show="options.delimiter!=','">It seems that your CSV Data is separated by something else instead of comma. Please make sure, that this is correct before continue.</div>
+			<div style="text-align:right">
+				<button class="btn btn-primary" ng-show="raw_csv!=''" ng-click="parse()">OK, take this data and assign columns</button>
+			</div>
+		</div>
+
+		<div ng-show="state.tab=='csv'">
+
+			<form>
+
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="options.ignoreFirstRow">Ignore first Row</label>
+				</div>
+				<div class="checkbox" ng-show="hasZenonId()">
+					<label><input type="checkbox" ng-model="options.autoFetchFromZenon">Fetch data from Zenon automatically by this ID (happens, when in article is visited in article view)</label>
+				</div>
+
+
+				<div class="form-group">
+					Values
+					<table>
+						<thead>
+							<tr>
+								<td ng-repeat="col in csv[0] track by $index">
+									<select class="form-control input-sm" ng-model="columns[$index].selected" ng-change="selectField(columns[$index].selected, $index)">
+										<option ng-repeat="(normalized, field) in cols_types" value='{{normalized}}' >{{field}}</option>
+										<option value='_dismiss'>==Dismiss==</option>
+									</select>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="row in csv track by $index" ng-hide="options.ignoreFirstRow && ($index == 0)">
+								<td ng-repeat="col in row track by $index">{{col}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+
+			</form>
+			<div class="alert alert-warning" ng-show="state.unequalFieldsWarning">Your detected Columns have unequal lengths.</div>
+			<div style="text-align:right">
+				<button class="btn btn-success" type="button" ng-click="ok()">OK</button>
+			</div>
+		</div>
+	</div>
+</div>

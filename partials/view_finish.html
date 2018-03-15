@@ -1,0 +1,86 @@
+<div ng-controller="view_finish" data-ng-init="init()">
+
+	<div class="row toprow" >
+		<div class="col-md-8">
+			<span class="btn-group">
+				<button ng-show="isReady()" class='btn btn-default' ng-click='renderXml()'>Preview transport XML<span class="glyphicon glyphicon-view"></span></button>
+				<button ng-show="isReady()" class='btn btn-default' ng-click='reportMissingToZenon()'>Preview Reports to Zenon<span class="glyphicon glyphicon-view"></span></button>
+			</span>
+		</div>
+		<div class="col-md-4 text-right">
+			<span class="btn-group">
+				<button ng-if="done" class='btn btn-success' ng-click='restart()'>Next Import<span class="glyphicon glyphicon-chevron-right"></span></button>
+				<button ng-if="!done && isReady()" class='btn btn-primary' ng-click='uploadToOjs()'>Upload<span class="glyphicon glyphicon-chevron-right"></span></button>
+			</span>
+		</div>
+	</div>
+
+	<div class="row">
+
+		<div class="col-lg-6">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Journal Metadata</div>
+
+				<table class='journal-table table'>
+
+					<tbody>
+					<thead></thead>
+					<tr ng-repeat="(field, value) in journal.data track by $index">
+						<td>{{journal.descriptions[field]}}</td>
+						<td ng-model="journal.data[field]">
+							<span editable item="value" />
+						</td>
+					</tr>
+					</tbody>
+					<tfoot></tfoot>
+				</table>
+			</div>
+
+
+		</div>
+
+		<div class="col-lg-6">
+			<div class="panel panel-default" ng-show="!done">
+				<div class="panel-heading">Import into OJS</div>
+				<div class="panel-body">
+					<h2></h2>
+					<p>Status:</p>
+					<ul>
+						<li>Journal metadata: <span ng-show="journal.check()" class="badge badge-default alert-success">OK</span></li>
+						<li>Articles ready to upload:
+							<span class="badge badge-default alert-success">{{journal.articleStats.data.confirmed}}</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="panel panel-default" ng-show="reportedToZenon.length">
+				<div class="panel-heading">Reports to zenon</div>
+				<div class="panel-body">
+					<p>The following articles where reported to Zenon</p>
+					<ul>
+						<li ng-repeat="(id, article) in reportedToZenon track by $index">
+							<a href='{{article._.zenonReport}}' target='_blank'>{{article.title.get()}}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<div class="row" ng-show="xml">
+		<div class="col-lg-12">
+			<div class="panel panel-default" >
+				<div class="panel-heading">XML Preview</div>
+				<div class="panel-body">
+					<pre>{{xml}}</pre>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

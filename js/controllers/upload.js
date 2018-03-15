@@ -1,71 +1,73 @@
 //inject angular file upload directives and services.
 var app = angular.module('controller.upload', ['ngFileUpload']);
 
-app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'pimportws', '$log', function ($scope, Upload, $timeout, settings, pimportws, $log) {
+app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservice', 'messenger',
+	function ($scope, Upload, $timeout, settings, webservice, messenger) {
 
-    $scope.errorMsg = '';
-    $scope.warningsMsg = [];
-    
+
     $scope.uploadedFiles = [];
     
     $scope.dropFile = function(f)  {
-    	$log.log(f);
+    	console.log(f);
     }
 	
-	$scope.uploadFiles = function (files) {
+	$scope.uploadFiles = function(files, uploadTask, callback) {
         $scope.files = files;
-
-        $scope.errorMsg = '';
-        $scope.warningsMsg = [];
+		messenger.ok();
         
         if (files && files.length) {
             Upload.upload({
                 url: settings.server_url,
                 data: {
-                	task: "upload",
+                	task: uploadTask || "upload",
                     files: files,
-                    data:  pimportws.ojsisQuery()
+                    data:  webservice.ojsisQuery()
                 }
             // server success
             }).then(function (response) {
             	$scope.progress = 0;
-            	$log.log(response);
-            	$scope.warningsMsg = response.data.warnings;
-            	
+
             	if (typeof response.data === "string") {
-            		$scope.errorMsg = response.data;
+            		messenger.message(response.data, true);
             		return;
             	}
-            	
-				if (response.data.success == false) {
-					$scope.errorMsg = response.data.message;
+
+				messenger.cast(response.data);
+
+            	if (response.data.success === false) {
 					return;
 				} 
 				
 				$scope.result = response.data;
-				if (!pimportws.uploadId) {
-					pimportws.uploadId = response.data.uploadId;
-				}
-				if (pimportws.uploadId != response.data.uploadId) {
-					$log.log("got new uploadID, that's so wrong", pimportws.uploadId, response.data.uploadId);
-				}
-				$scope.errorMsg = '';
+
 				$scope.uploadedFiles = $scope.uploadedFiles.concat(response.data.uploadedFiles);
-				pimportws.updateRepository(response.data.repository, response.data.uploadedFiles[response.data.uploadedFiles.length - 1]);
+
+				if (typeof $scope.repository !== "undefined") { // because this controller is also used in context fo csv dialogue
+					$scope.repository.update(response.data.repository, response.data.uploadedFiles[0]);
+				}
+
+				if (angular.isFunction(callback)) {
+					callback(response)
+				}
+
 				
             // server error
             }, function (response) {
-            	$scope.warningsMsg = [];
             	$scope.progress = 0;
                 if (response.status > 0) {
-                    $scope.errorMsg = response.data;
+					messenger.message(response.data, true);
                 }
             // progress
             }, function (evt) {
                 $scope.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
             });
         }
+
     };
+
+	$scope.uploadCSV = function(files, callback) {
+		$scope.uploadFiles(files, 'uploadCSV', callback)
+	}
 }]).filter('trustHtml', function($sce) {
     return function(val) {
         return $sce.trustAsHtml(val);

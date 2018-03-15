@@ -1,0 +1,34 @@
+<div>
+
+	<select class="form-control editable-select" ng-model="item.value.value" ng-change="item.observer ? item.observer() : ''">
+		<option ng-repeat="files in item.list track by $index" value='{{files.url}}'>{{files.url}}</option>
+	</select>
+
+	<hr ng-show="item.value.value">
+	<div class="row" ng-show="item.value.value">
+
+		<div class="col-xs-6">Size</div>
+		<div class="col-xs-6">{{item.list[item.value.value].size}}</div>
+
+		<div class="col-xs-6">Pages</div>
+		<div class="col-xs-6">{{item.list[item.value.value].pagecontext.maximum}}</div>
+
+		<div class="col-xs-6"><strong>Offset</strong></div>
+		<div class="col-xs-6">
+			<input
+					type="number"
+					class='editable'
+					ng-model='item.list[item.value.value].pagecontext.offset'
+					ng-change='item.observer ? item.observer() : ""'
+			/>
+		</div>
+	</div>
+	<!--
+	<pre>{{item.value.value}}</pre>
+	<pre>{{item.list[item.value.value]}}</pre>
+
+
+	<br>
+	<pre>{{item}}</pre>
+	-->
+</div>
