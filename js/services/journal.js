@@ -91,13 +91,13 @@ angular
 			title: 'Title',
 		},
 		pages: {
-			title: 'Pages',
+            title: 'Range of Pages',
 		},
 		abstract: {
 			title: 'Abstract',
 		},
 		date_published: {
-			title: 'Date',
+			title: 'Date of Publishing',
 		},
 		auto_publish: {
 			description: 'Automatically publish?',
@@ -111,14 +111,14 @@ angular
 			description: 'Attached Files/Pages',
 		},
 		createFrontpage: {
-			description: 'Automatically Create Frontpage?',
+			description: 'Automatically create frontpage?',
 			title: '#',
 		},
 		zenonId: {
-			title: 'ZenonId',
+			title: 'Zenon-Id',
 		},
 		language: {
-			title: 'language'
+			title: 'Language'
 		}
 	}
 
@@ -244,7 +244,6 @@ angular
 
 
 	journal.isReadyToUpload = function() {
-	    console.log('stats', journal.articleStats, (journal.articleStats.data.undecided === 0), (journal.articleStats.data.confirmed > 0));
 		return (journal.articleStats.data.undecided === 0) && (journal.articleStats.data.confirmed > 0)
 	}
 

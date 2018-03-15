@@ -5,6 +5,8 @@ var fileToUpload = '../ressources/BEISPIEL.pdf';
 var absolutePath = path.resolve(__dirname, fileToUpload);
 // set file detector
 var remote = require('../../../node_modules/selenium-webdriver/remote');
+var EC = protractor.ExpectedConditions;
+
 
 describe('importer', function() {
 
@@ -44,19 +46,19 @@ describe('importer', function() {
             .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
 
         browser.setFileDetector(new remote.FileDetector())
-        elements.upload.fileElem.sendKeys(absolutePath);
+        elements.upload.fileElem.sendKeys(absolutePath)
         elements.start.fileSelect.element(by.css("[value='BEISPIEL.pdf']")).click
 
         elements.start.startBtn.click
         expect(elements.edit.articleView.isPresent()).toBeTruthy()
     });
 
-
     it('should abort and restart the import process', function() {
         browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
             .then(elements.login.passwordInput.sendKeys(password))
             .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
+            .then(elements.start.fileSelect.element(by.css("[value='BEISPIEL.pdf']")).click)
             .then(elements.start.startBtn.click)
 
             .then(elements.restart.restartBtn.click)
@@ -74,8 +76,7 @@ describe('importer', function() {
             .then(elements.start.fileSelect.element(by.css("[value='BEISPIEL.pdf']")).click)
 
             .then(elements.start.startBtn.click)
-            // file must be analyzed
-            .then(browser.driver.sleep(1000))
+            .then(browser.wait(EC.visibilityOf(elements.publish.proceedBtn), 5000))
             .then(elements.publish.proceedBtn.click)
             .then(elements.publish.confirmBtn.click)
             .then(elements.publish.uploadBtn.click)
@@ -96,13 +97,15 @@ describe('importer', function() {
             .then(elements.login.passwordInput.sendKeys(password))
 
             .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
-
+            .then(elements.start.fileSelect.element(by.css("[value='BEISPIEL.pdf']")).click)
             .then(elements.start.startBtn.click)
 
+            .then(expect(elements.edit.articleView.isPresent()).toBeTruthy())
+            .then(browser.wait(EC.visibilityOf(elements.edit.deleteArticleBtn), 5000))
+            .then(elements.edit.deleteArticleBtn.click)
             .then(expect(elements.edit.articleView.isDisplayed()).toBeFalsy())
             .then(elements.edit.addArticleBtn.click)
             .then(expect(elements.edit.articleView.isPresent()).toBeTruthy())
-            .then(elements.edit.deleteArticleBtn.click)
-            .then(expect(elements.edit.articleView.isDisplayed()).toBeFalsy())
     });
+
 });
