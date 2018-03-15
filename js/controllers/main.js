@@ -156,8 +156,8 @@ angular
                     let file = $scope.repository.getFirstFile();
                     journal.data.importFilePath = file ? file.path : '';
                 }
-                if (angular.isFunction(protocolregistry.protocols[id].onSelect)) {
-                    protocolregistry.protocols[id].onSelect()
+                if ($scope.protocol && angular.isFunction($scope.protocol.onSelect)) {
+                    $scope.protocol.onSelect()
                 }
             },
             start: function() {
