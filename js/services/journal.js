@@ -244,7 +244,8 @@ angular
 
 
 	journal.isReadyToUpload = function() {
-		return (journal.articleStats.data.undecided === 0) && (journal.articleStats.data.articles > 0)
+	    console.log('stats', journal.articleStats, (journal.articleStats.data.undecided === 0), (journal.articleStats.data.confirmed > 0));
+		return (journal.articleStats.data.undecided === 0) && (journal.articleStats.data.confirmed > 0)
 	}
 
 

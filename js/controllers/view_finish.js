@@ -38,7 +38,7 @@ angular
 		}
 
 		$scope.isReady = function() {
-			let articlesReady = journal.articleStats.data.undecided === 0;
+			let articlesReady = $scope.journal.isReadyToUpload();
 			let journalReady = $scope.journal.check();
 			return articlesReady && journalReady && !$scope.done;
 		}
