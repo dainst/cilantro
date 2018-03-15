@@ -129,34 +129,32 @@ angular
 	folder.getDocuments = function(path) {
 		console.log("read path", path);
 
-        if (path === "") {
-            return;
+        let getFolder = true;
+
+        // path given
+        if (path !== "") {
+            // is folder or file?
+            if (webservice.getFileInfo(path).type === 'dir') {
+                folder.path = path;
+                getFolder = new Promise(function(resolve) {
+                    messenger.alert('loading folder contents: ' + folder.path);
+                    webservice.get('getRepositoryFolder', {dir: folder.path}, function(result) {
+                        console.log('got folder:' + folder.path, result);
+                        if (result.success) {
+                            folder.dir = result.dir;
+                            folder.stats.files = result.dir.length;
+                            messenger.alert('folder contents loaded');
+                            resolve();
+                        }
+                    })
+
+                });
+            } else {
+                folder.dir = [path];
+                folder.path = false;
+                folder.stats.files = 1;
+            }
         }
-
-        let getFolder = false;
-		// is folder or file?
-		if (webservice.getFileInfo(path).type === 'dir') {
-			folder.path = path;
-            getFolder = new Promise(function(resolve) {
-				messenger.alert('loading folder contents: ' + folder.path);
-				webservice.get('getRepositoryFolder', {dir: folder.path}, function(result) {
-					console.log('1. got folder:' + folder.path, result);
-					if (result.success) {
-						folder.dir = result.dir;
-						folder.stats.files = result.dir.length;
-						messenger.alert('folder contents loaded');
-						resolve();
-					}
-				})
-
-			});
-		} else {
-			folder.dir = [path];
-			folder.path = false;
-			folder.stats.files = 1;
-			getFolder = true;
-		}
-
 
 		Promise.all([getFolder, requirePdfJs]).then(function() {
 			messenger.alert('ready for loading files');
