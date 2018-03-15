@@ -74,7 +74,8 @@ angular
 
 		"auto_publish_issue": 		"Publish Issue after upload",
 		"default_publish_articles": "Publish Articles by default",
-		"default_create_frontpage": "Create Frontpage by default"
+		"default_create_frontpage": "Create Frontpage by default",
+        "allow_upload_without_file": "Upload without selected file is allowed?"
 	}
 
 
@@ -154,7 +155,8 @@ angular
 			"ojs_user": 				"ojs_user",
 			"auto_publish_issue": 		editables.checkbox(false),
 			"default_publish_articles":	true,
-			"default_create_frontpage": true
+			"default_create_frontpage": true,
+			"allow_upload_without_file":false
 		}
 
 		/* list of defined articles */
@@ -320,7 +322,7 @@ angular
 			'date_published':	editables.base(data.date_published || 'DD-MM-YYYY'),
 			'language':			editables.language('de_DE', false, journal.locales),
 			'auto_publish':		editables.checkbox(journal.data.default_publish_articles === true),
-			'filepath':			editables.loadedfile(journal.loadedFiles),
+			'filepath':			editables.loadedfile(journal.loadedFiles, false, journal.data.allow_upload_without_file),
 			'attached':			editables.filelist(),
 			'order':			editables.number(0, false),
 			'createFrontpage':	editables.checkbox(journal.data.create_frontpage === true),
@@ -336,7 +338,6 @@ angular
 
 		articlePrototype.filepath.watch(thumbnailDataObserver);
 		articlePrototype.pages.watch(thumbnailDataObserver);
-
 
 		return (articlePrototype);
 	}

@@ -70,7 +70,7 @@ angular
 		$scope.checkArticle = function() {
 			let article = journal.articles[$scope.currentArticle];
 			let invalid = 0;
-			angular.forEach(article, function(property) {
+			angular.forEach(article, function(property, id) {
 				if ((typeof property !== "undefined") && (typeof property.check === "function") && (property.check() !== false)) {
 					invalid += 1;
 				}

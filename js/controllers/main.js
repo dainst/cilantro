@@ -161,12 +161,17 @@ angular
                 }
             },
             start: function() {
+                if (!journal.data.allow_upload_without_file && !journal.data.importFilePath) {
+                    messenger.alert("Please select a file or folder to upload!", true);
+                    return false;
+                }
                 localStorage.setItem('protocol', $scope.protocol.id);
                 console.log("start protocol " + $scope.protocol.id);
                 $scope.steps.change($scope.protocol.startView || 'overview');
                 if (angular.isFunction($scope.protocol.onInit)) {
                     $scope.protocol.onInit();
                 }
+                return true;
             }
         };
         $scope.protocol = {};
@@ -188,8 +193,7 @@ angular
                         messenger.alert("Please select an import protocol", true);
                         return;
                     }
-                    $scope.protocols.start();
-                    $scope.isStarted = true;
+                    $scope.isStarted = $scope.protocols.start();
 				} else {
 					$scope.sec.password = '';
 				}

@@ -506,7 +506,7 @@ angular
 	}
 
 	editables.listitem = function(list, selected, noneallowed) {
-		var obj = editables.base(selected, false, false);
+		let obj = editables.base(selected, false, false);
 		obj.type = 'listitem';
 		obj.noneallowed = (noneallowed === true);
 		obj.check =	function() {
@@ -524,12 +524,11 @@ angular
 		return obj;
 	}
 	
-	editables.loadedfile = function(list, selected) {
-		var obj = editables.listitem(list, selected, false);
+	editables.loadedfile = function(list, selected, noneallowed) {
+    	noneallowed = noneallowed || false;
+		let obj = editables.listitem(list, selected, noneallowed);
 		obj.type = 'loadedfile';
-
 		return obj;
-
 	}
 	
 	return (editables);

@@ -53,6 +53,7 @@ angular
 		journal.data.volume.value.value = Math.round(Math.random()*10000);
 		journal.data.year.value.value = Math.round(Math.random()*10000);
 		journal.data.number.value.value = Math.round(Math.random()*10000);
+        journal.data.allow_upload_without_file = true;
 	}
 
 
