@@ -10,10 +10,11 @@ var EC = protractor.ExpectedConditions;
 
 describe('importer', function() {
 
-    // uploads a file
     beforeAll(function() {
         browser.driver.manage().window().maximize();
+    });
 
+    it('should upload a pdf-file', function() {
         browser.get(browser.baseUrl)
             .then(elements.login.passwordInput.sendKeys(password))
             .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
@@ -27,7 +28,6 @@ describe('importer', function() {
     });
 
     it('should only start after right password input', function() {
-        browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
 
@@ -45,7 +45,6 @@ describe('importer', function() {
     });
 
     it('should start the testdata protocol', function() {
-        browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
             .then(elements.login.passwordInput.sendKeys(password))
             .then(elements.start.protocolSelect.element(by.css("[value='testdata']")).click)
@@ -55,7 +54,6 @@ describe('importer', function() {
     });
 
     it('should abort and restart the import process', function() {
-        browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
             .then(elements.login.passwordInput.sendKeys(password))
             .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
@@ -69,7 +67,6 @@ describe('importer', function() {
     });
 
     it('should publish a file', function() {
-        browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
             .then(elements.login.passwordInput.sendKeys(password))
 
@@ -92,8 +89,7 @@ describe('importer', function() {
             // .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-success"))
     });
 
-    fit('should report a file to zenon', function() {
-        browser.driver.manage().window().maximize();
+    it('should report a file to zenon', function() {
         browser.get(browser.baseUrl)
             .then(elements.login.passwordInput.sendKeys(password))
 
@@ -112,17 +108,14 @@ describe('importer', function() {
             .then(elements.publish.select.get(1).element(by.css("[value='aa']")).click)
             .then(elements.zenon.reportMissing.click)
             .then(elements.zenon.downloadLink.click)
-            //
-            // .then(elements.publish.finalBtn.click)
-            //
-            // // dev mode without ojs
-            // .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-danger"))
-            // production mode with ojs
-            // .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-success"))
+        browser.getAllWindowHandles().then(function (handles) {
+            browser.driver.switchTo().window(handles[1]);
+            browser.driver.close();
+            browser.driver.switchTo().window(handles[0]);
+        });
     });
 
     it('should add and delete an article', function() {
-        browser.driver.manage().window().maximize();
         browser.get(browser.baseUrl)
             .then(elements.login.passwordInput.sendKeys(password))
 
