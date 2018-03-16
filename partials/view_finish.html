@@ -10,7 +10,7 @@
 		<div class="col-md-4 text-right">
 			<span class="btn-group">
 				<button ng-if="done" class='btn btn-success' ng-click='restart()'>Next Import<span class="glyphicon glyphicon-chevron-right"></span></button>
-				<button ng-if="!done && isReady()" class='btn btn-primary' ng-click='uploadToOjs()'>Upload<span class="glyphicon glyphicon-chevron-right"></span></button>
+				<button id="upload" ng-if="!done && isReady()" class='btn btn-primary' ng-click='uploadToOjs()'>Upload<span class="glyphicon glyphicon-chevron-right"></span></button>
 			</span>
 		</div>
 	</div>

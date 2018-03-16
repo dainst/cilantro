@@ -22,23 +22,22 @@ module.exports = {
     },
     publish: {
         proceedBtn: element(by.id('proceed')),
-        confirmBtn: element(by.css('.btn-success')),
         uploadBtn: element(by.id('upload')),
         input: element.all((by.css('input.editable'))),
         select: element.all((by.css('select.editable-select'))),
         finalBtn: element(by.css('button[ng-click="uploadToOjs()"]')),
     },
-    edit: {
+    articles: {
         deleteArticleBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
         addArticleBtn: element(by.css('button[ng-click="addArticle()"]')),
         articleView: element.all(by.css('input.ng-not-empty')).first(),
+        confirmBtn: element(by.css('.btn-success')),
     },
     zenon: {
         markMissing: element(by.css('button[ng-click="markAsMissingZenon()"]')),
         reportMissing: element(by.css('button[ng-click="reportMissingToZenon()"]')),
         downloadLink: element(by.css('a.downloadLink')),
     },
-    articles: {},
     finish: {},
     overview: {}
 

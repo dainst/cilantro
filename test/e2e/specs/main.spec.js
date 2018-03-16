@@ -1,12 +1,10 @@
 var elements = require("../util/elements");
-var password = require("../util/readSettings").get('password');
-var path = require('path');
-var fileToUpload = '../ressources/e2e-testing.pdf';
-var absolutePath = path.resolve(__dirname, fileToUpload);
-// set file detector
-var remote = require('../../../node_modules/selenium-webdriver/remote');
-var EC = protractor.ExpectedConditions;
 
+var action = require('../util/actions');
+var select = require('../util/selectors');
+var button = require('../util/buttons');
+var message = require('../util/messages');
+var input = require('../util/inputs');
 
 describe('importer', function() {
 
@@ -16,119 +14,109 @@ describe('importer', function() {
 
     it('should upload a pdf-file', function() {
         browser.get(browser.baseUrl)
-            .then(elements.login.passwordInput.sendKeys(password))
-            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
-
-        browser.setFileDetector(new remote.FileDetector())
-        elements.upload.fileElem.sendKeys(absolutePath)
-        elements.start.fileSelect.element(by.css("[value='e2e-testing.pdf']")).click
-
-        elements.start.startBtn.click
-        expect(elements.edit.articleView.isPresent()).toBeTruthy()
+            .then(action.login())
+            .then(select.protocol())
+            .then(action.uploadFile())
+            .then(button.startImport())
+            .then(expect(elements.articles.articleView.isPresent()).toBeTruthy())
     });
 
     it('should only start after right password input', function() {
         browser.get(browser.baseUrl)
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
 
-            .then(elements.login.passwordInput.sendKeys(password + "wrong"))
+            .then(action.login(false))
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
-            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
 
-            .then(elements.start.startBtn.click)
+            .then(select.protocol())
+            .then(select.file())
+            .then(button.startImport())
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
-            .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-danger"))
+            .then(expect(message.classOfMain()).toContain("alert-danger"))
 
-            .then(elements.login.passwordInput.sendKeys(password))
-            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
-            .then(elements.start.startBtn.click)
+            .then(action.login())
+            .then(select.protocol())
+            .then(select.file())
+            .then(button.startImport())
+            .then(expect(message.classOfMain()).toContain("alert-success"))
     });
 
     it('should start the testdata protocol', function() {
         browser.get(browser.baseUrl)
-            .then(elements.login.passwordInput.sendKeys(password))
-            .then(elements.start.protocolSelect.element(by.css("[value='testdata']")).click)
-            .then(elements.start.startBtn.click)
-
-            .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-success"))
+            .then(action.login())
+            .then(select.protocol('testdata'))
+            .then(button.startImport())
+            .then(expect(message.classOfMain()).toContain("alert-success"))
     });
 
     it('should abort and restart the import process', function() {
         browser.get(browser.baseUrl)
-            .then(elements.login.passwordInput.sendKeys(password))
-            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
-            .then(elements.start.fileSelect.element(by.css("[value='e2e-testing.pdf']")).click)
-            .then(elements.start.startBtn.click)
+            .then(action.login())
+            .then(select.protocol())
+            .then(select.file())
+            .then(button.startImport())
+            .then(expect(message.classOfMain()).toContain("alert-success"))
 
-            .then(elements.restart.restartBtn.click)
-            .then(elements.restart.confirmRestartBtn.click)
-
+            .then(button.restart())
+            .then(button.confirmRestart())
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
+
     });
 
     it('should publish a file', function() {
         browser.get(browser.baseUrl)
-            .then(elements.login.passwordInput.sendKeys(password))
+            .then(action.login())
+            .then(select.protocol())
+            .then(select.file())
+            .then(button.startImport())
+            .then(expect(message.classOfMain()).toContain("alert-success"))
 
-            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
-            .then(elements.start.fileSelect.element(by.css("[value='e2e-testing.pdf']")).click)
-
-            .then(elements.start.startBtn.click)
-            .then(browser.wait(EC.visibilityOf(elements.publish.proceedBtn)))
-            .then(elements.publish.proceedBtn.click)
-            .then(elements.publish.confirmBtn.click)
-            .then(elements.publish.uploadBtn.click)
-
-            .then(elements.publish.input.get(1).sendKeys('123'))
-            .then(elements.publish.select.get(1).element(by.css("[value='aa']")).click)
-            .then(elements.publish.finalBtn.click)
-
+            .then(button.proceed())
+            .then(button.confirmArticle())
+            .then(button.uploadPub())
+            .then(input.year())
+            .then(select.journalCode())
+            .then(button.uploadPub())
             // dev mode without ojs
-            .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-danger"))
+            .then(expect(message.classOfMain()).toContain("alert-danger"))
             // production mode with ojs
-            // .then(expect(elements.main.mainMessage.getAttribute("class")).toContain("alert-success"))
+            // .then(expect(message.classOfMain()).toContain("alert-success"))
     });
 
     it('should report a file to zenon', function() {
         browser.get(browser.baseUrl)
-            .then(elements.login.passwordInput.sendKeys(password))
+            .then(action.login())
+            .then(select.protocol())
+            .then(select.file())
+            .then(button.startImport())
+            .then(expect(message.classOfMain()).toContain("alert-success"))
 
-            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
-            .then(elements.start.fileSelect.element(by.css("[value='e2e-testing.pdf']")).click)
+            .then(button.proceed())
+            .then(button.zenonMarkMissing())
+            .then(button.confirmArticle())
+            .then(button.uploadPub())
+            .then(input.year())
+            .then(select.journalCode())
+            .then(button.zenonReportMissing())
+            .then(button.zenonDownloadXML())
+            .then(action.closeTab())
 
-            .then(elements.start.startBtn.click)
-            .then(browser.wait(EC.visibilityOf(elements.publish.proceedBtn)))
-            .then(elements.publish.proceedBtn.click)
-
-            .then(elements.zenon.markMissing.click)
-            .then(elements.publish.confirmBtn.click)
-            .then(elements.publish.uploadBtn.click)
-
-            .then(elements.publish.input.get(1).sendKeys('123'))
-            .then(elements.publish.select.get(1).element(by.css("[value='aa']")).click)
-            .then(elements.zenon.reportMissing.click)
-            .then(elements.zenon.downloadLink.click)
-        browser.getAllWindowHandles().then(function (handles) {
-            browser.driver.switchTo().window(handles[1]);
-            browser.driver.close();
-            browser.driver.switchTo().window(handles[0]);
-        });
     });
 
     it('should add and delete an article', function() {
         browser.get(browser.baseUrl)
-            .then(elements.login.passwordInput.sendKeys(password))
+            .then(action.login())
+            .then(select.protocol())
+            .then(select.file())
+            .then(button.startImport())
+            .then(expect(message.classOfMain()).toContain("alert-success"))
+            .then(expect(elements.articles.articleView.isPresent()).toBeTruthy())
 
-            .then(elements.start.protocolSelect.element(by.css("[value='generic']")).click)
-            .then(elements.start.fileSelect.element(by.css("[value='e2e-testing.pdf']")).click)
-            .then(elements.start.startBtn.click)
+            .then(button.deleteArticle())
+            .then(expect(elements.articles.articleView.isDisplayed()).toBeFalsy())
 
-            .then(expect(elements.edit.articleView.isPresent()).toBeTruthy())
-            .then(browser.wait(EC.visibilityOf(elements.edit.deleteArticleBtn)))
-            .then(elements.edit.deleteArticleBtn.click)
-            .then(expect(elements.edit.articleView.isDisplayed()).toBeFalsy())
-            .then(elements.edit.addArticleBtn.click)
-            .then(expect(elements.edit.articleView.isPresent()).toBeTruthy())
+            .then(button.addArticle())
+            .then(expect(elements.articles.articleView.isPresent()).toBeTruthy())
     });
 
 });
