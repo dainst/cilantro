@@ -8,6 +8,16 @@ var Buttons = function() {
         return elements.start.startBtn.click;
     };
 
+    this.proceed = function() {
+        browser.wait(EC.visibilityOf(elements.publish.proceedBtn));
+        return elements.publish.proceedBtn.click;
+    };
+
+    this.uploadPub = function() {
+        return elements.publish.uploadBtn.click;
+    };
+
+
     this.restart = function() {
         return elements.restart.restartBtn.click;
     };
@@ -16,15 +26,6 @@ var Buttons = function() {
         return elements.restart.confirmRestartBtn.click;
     };
 
-    this.proceed = function() {
-        browser.wait(EC.visibilityOf(elements.publish.proceedBtn));
-        return elements.publish.proceedBtn.click;
-    };
-
-    this.deleteArticle = function() {
-        browser.wait(EC.visibilityOf(elements.articles.deleteArticleBtn));
-        elements.articles.deleteArticleBtn.click;
-    };
 
     this.addArticle = function() {
         elements.articles.addArticleBtn.click;
@@ -33,6 +34,12 @@ var Buttons = function() {
     this.confirmArticle = function() {
         return elements.articles.confirmBtn.click;
     };
+
+    this.deleteArticle = function() {
+        browser.wait(EC.visibilityOf(elements.articles.deleteArticleBtn));
+        elements.articles.deleteArticleBtn.click;
+    };
+
 
     this.zenonMarkMissing = function() {
         return elements.zenon.markMissing.click;
@@ -45,11 +52,6 @@ var Buttons = function() {
     this.zenonDownloadXML = function() {
         return elements.zenon.downloadLink.click;
     };
-
-    this.uploadPub = function() {
-        return elements.publish.uploadBtn.click;
-    };
-
 
 };
 

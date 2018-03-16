@@ -13,6 +13,7 @@ var Selectors = function() {
     this.journalCode = function(code = 'aa') {
         return elements.publish.select.get(1).element(by.css("[value='" + code + "']")).click
     };
+    
 };
 
 module.exports = new Selectors();
