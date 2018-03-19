@@ -136,4 +136,17 @@ describe('importer', function() {
 
     });
 
+    it('should not be able to upload without articles', function(){
+        browser.get(browser.baseUrl)
+          .then(action.login())
+          .then(select.protocol())
+          .then(select.file())
+          .then(button.startImport())
+          .then(button.proceed())
+          .then(button.dismissArticle())
+          .then(button.uploadPub())
+
+          .then(expect(elements.publish.uploadBtn.count()).toEqual(0))
+    })
+
 });

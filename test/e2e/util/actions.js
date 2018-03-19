@@ -32,6 +32,7 @@ var Actions = function() {
         (expected != 0) ? browser.wait(EC.presenceOf(elements.articles.articleView)) : null;
         return expect(elements.articles.articleView.count()).toEqual(expected);
     }
+    
 };
 
 module.exports = new Actions();
