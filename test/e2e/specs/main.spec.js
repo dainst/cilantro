@@ -119,4 +119,20 @@ describe('importer', function() {
             .then(expect(action.countArticles()).toEqual(1))
     });
 
+    it('should import data with csv protocol', function() {
+        var articlesInCsv = 2;
+        browser.get(browser.baseUrl)
+            .then(action.login())
+            .then(select.protocol('csv_import'))
+            .then(select.file())
+            .then(button.startImport())
+            .then(expect(message.classOfMain()).toContain("alert-success"))
+
+            .then(action.uploadFile('../ressources/e2e-testing.csv'))
+            .then(button.takeCsvData())
+            .then(input.ignoreFirstRow())
+            .then(button.confirmCsv())
+            .then(expect(action.countArticles()).toEqual(articlesInCsv))
+    });
+
 });

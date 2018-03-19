@@ -53,6 +53,15 @@ var Buttons = function() {
         return elements.zenon.downloadLink.click;
     };
 
+
+    this.takeCsvData = function() {
+        return elements.csv.takeData.click;
+    };
+
+    this.confirmCsv = function() {
+        return elements.csv.confirm.click;
+    };
+
 };
 
 module.exports = new Buttons();

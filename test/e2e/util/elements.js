@@ -38,6 +38,11 @@ module.exports = {
         reportMissing: element(by.css('button[ng-click="reportMissingToZenon()"]')),
         downloadLink: element(by.css('a.downloadLink')),
     },
+    csv: {
+        takeData: element(by.css('button[ng-click="parse()"]')),
+        ignoreFirstRow: element(by.model('options.ignoreFirstRow')),
+        confirm: element(by.css('button[ng-click="ok()"]')),
+    },
     finish: {},
     overview: {}
 
