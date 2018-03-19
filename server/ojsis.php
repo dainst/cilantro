@@ -220,8 +220,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				continue;
 			}
 
-			$isDir = (substr($data->data->importFilePath, -6) == 'pdfdir');
-
+			$isDir = (is_dir($data->data->importFilePath));
 			$name  = $isDir ? $article->filepath : "{$article->filepath}.$nr.pdf";
 			$outp  = str_replace('/','-', $name);
 			$outp  = str_replace(' ','-', $outp);
@@ -590,7 +589,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				continue;
 			}
 
-			if ($ext == 'pdfdir' and is_dir($file)) {
+			if (is_dir($file)) {
 				$list[] = array('path' => $fil, 'caption' => "[DIR] $fil", 'type' => 'dir');
 			}
 
