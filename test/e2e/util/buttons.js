@@ -28,7 +28,7 @@ var Buttons = function() {
 
 
     this.addArticle = function() {
-        elements.articles.addArticleBtn.click;
+        return elements.articles.addArticleBtn.click;
     };
 
     this.confirmArticle = function() {
@@ -37,7 +37,7 @@ var Buttons = function() {
 
     this.deleteArticle = function() {
         browser.wait(EC.visibilityOf(elements.articles.deleteArticleBtn));
-        elements.articles.deleteArticleBtn.click;
+        return elements.articles.deleteArticleBtn.click;
     };
 
 

@@ -3,6 +3,8 @@ var elements = require("../util/elements");
 var path = require('path');
 var remote = require('../../../node_modules/selenium-webdriver/remote');
 
+var EC = protractor.ExpectedConditions;
+
 var Actions = function() {
 
     this.login = function(success = true) {
@@ -14,6 +16,7 @@ var Actions = function() {
     this.uploadFile = function(file = '../ressources/e2e-testing.pdf') {
         browser.setFileDetector(new remote.FileDetector());
         var absolutePath = path.resolve(__dirname, file);
+        browser.wait(EC.presenceOf(elements.upload.fileElem));
         elements.upload.fileElem.sendKeys(absolutePath);
     };
 
@@ -25,6 +28,11 @@ var Actions = function() {
         });
     };
 
+    this.countArticles = function() {
+        // TODO: needs to be more elegant!!
+        browser.sleep(300);
+        return elements.articles.articleView.count();
+    }
 };
 
 module.exports = new Actions();

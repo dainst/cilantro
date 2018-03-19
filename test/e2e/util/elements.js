@@ -30,7 +30,7 @@ module.exports = {
     articles: {
         deleteArticleBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
         addArticleBtn: element(by.css('button[ng-click="addArticle()"]')),
-        articleView: element.all(by.css('input.ng-not-empty')).first(),
+        articleView: element.all(by.css('tr[article="true"][class="ng-scope"]')),
         confirmBtn: element(by.css('.btn-success')),
     },
     zenon: {

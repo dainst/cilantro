@@ -18,7 +18,7 @@ describe('importer', function() {
             .then(select.protocol())
             .then(action.uploadFile())
             .then(button.startImport())
-            .then(expect(elements.articles.articleView.isPresent()).toBeTruthy())
+            .then(expect(action.countArticles()).toEqual(1))
     });
 
     it('should only start after right password input', function() {
@@ -110,13 +110,13 @@ describe('importer', function() {
             .then(select.file())
             .then(button.startImport())
             .then(expect(message.classOfMain()).toContain("alert-success"))
-            .then(expect(elements.articles.articleView.isPresent()).toBeTruthy())
+            .then(expect(action.countArticles()).toEqual(1))
 
             .then(button.deleteArticle())
-            .then(expect(elements.articles.articleView.isDisplayed()).toBeFalsy())
+            .then(expect(action.countArticles()).toEqual(0))
 
             .then(button.addArticle())
-            .then(expect(elements.articles.articleView.isPresent()).toBeTruthy())
+            .then(expect(action.countArticles()).toEqual(1))
     });
 
 });
