@@ -18,7 +18,7 @@ describe('importer', function() {
             .then(select.protocol())
             .then(action.uploadFile())
             .then(button.startImport())
-            .then(expect(action.countArticles()).toEqual(1))
+            .then(action.ExpectNumberOfArticles(1))
     });
 
     it('should only start after right password input', function() {
@@ -110,13 +110,13 @@ describe('importer', function() {
             .then(select.file())
             .then(button.startImport())
             .then(expect(message.classOfMain()).toContain("alert-success"))
-            .then(expect(action.countArticles()).toEqual(1))
+            .then(action.ExpectNumberOfArticles(1))
 
             .then(button.deleteArticle())
-            .then(expect(action.countArticles()).toEqual(0))
+            .then(action.ExpectNumberOfArticles(0))
 
             .then(button.addArticle())
-            .then(expect(action.countArticles()).toEqual(1))
+            .then(action.ExpectNumberOfArticles(1))
     });
 
     it('should import data with csv protocol', function() {
@@ -132,7 +132,8 @@ describe('importer', function() {
             .then(button.takeCsvData())
             .then(input.ignoreFirstRow())
             .then(button.confirmCsv())
-            .then(expect(action.countArticles()).toEqual(articlesInCsv))
+            .then(action.ExpectNumberOfArticles(articlesInCsv))
+
     });
 
 });
