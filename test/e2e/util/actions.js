@@ -30,7 +30,7 @@ var Actions = function() {
 
     this.countArticles = function() {
         // TODO: needs to be more elegant!!
-        browser.sleep(300);
+        browser.sleep(2000);
         return elements.articles.articleView.count();
     }
 };

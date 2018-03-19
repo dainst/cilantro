@@ -135,4 +135,32 @@ describe('importer', function() {
             .then(expect(action.countArticles()).toEqual(articlesInCsv))
     });
 
+    /*File-Upload von Directories nicht möglich (?), deswegen müsste für
+      diesen Test an jedem Testrechner manuell das test-directory hinzugefüget
+      werden..
+    it('should be able to import a whole directory', function() {
+        var articlesInTestDirectory = 3;
+        browser.get(browser.baseUrl)
+          .then(action.login())
+          .then(select.protocol())
+          .then(select.file('test-directory'))
+          .then(button.startImport())
+          .then(expect(message.classOfMain()).toContain("alert-success"))
+
+          .then(expect(action.countArticles()).toEqual(articlesInTestDirectory))
+    });*/
+
+    it('should not be able to upload without articles', function(){
+        browser.get(browser.baseUrl)
+          .then(action.login())
+          .then(select.protocol())
+          .then(select.file())
+          .then(button.startImport())
+          .then(button.proceed())
+          .then(button.dismissArticle())
+          .then(button.uploadPub())
+
+          .then(expect(elements.publish.uploadBtn.count()).toEqual(0))
+    })
+
 });

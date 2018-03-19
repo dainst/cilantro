@@ -35,6 +35,10 @@ var Buttons = function() {
         return elements.articles.confirmBtn.click;
     };
 
+    this.dismissArticle = function() {
+        return elements.articles.dismissBtn.click;
+    };
+
     this.deleteArticle = function() {
         browser.wait(EC.visibilityOf(elements.articles.deleteArticleBtn));
         return elements.articles.deleteArticleBtn.click;

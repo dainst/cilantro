@@ -22,9 +22,9 @@ module.exports = {
     },
     publish: {
         proceedBtn: element(by.id('proceed')),
-        uploadBtn: element(by.id('upload')),
-        input: element.all((by.css('input.editable'))),
-        select: element.all((by.css('select.editable-select'))),
+        uploadBtn: element.all(by.id('upload')),
+        input: element.all(by.css('input.editable')),
+        select: element.all(by.css('select.editable-select')),
         finalBtn: element(by.css('button[ng-click="uploadToOjs()"]')),
     },
     articles: {
@@ -32,6 +32,8 @@ module.exports = {
         addArticleBtn: element(by.css('button[ng-click="addArticle()"]')),
         articleView: element.all(by.css('tr[article="true"][class="ng-scope"]')),
         confirmBtn: element(by.css('.btn-success')),
+        dismissBtn: element(by.css('.btn-danger')),
+        displayColumn: element.all(by.css('button[ng-click="toggleList()"]')),
     },
     zenon: {
         markMissing: element(by.css('button[ng-click="markAsMissingZenon()"]')),
