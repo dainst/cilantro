@@ -19,6 +19,7 @@ var Buttons = function() {
 
 
     this.restart = function() {
+        browser.wait(EC.visibilityOf(elements.restart.restartBtn));
         return elements.restart.restartBtn.click;
     };
 
