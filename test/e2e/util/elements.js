@@ -1,9 +1,9 @@
 module.exports = {
-    
-    articles: {
-        deleteArticleBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
-        addArticleBtn: element(by.css('button[ng-click="addArticle()"]')),
-        articleView: element.all(by.css('tr[article="true"][class="ng-scope"]')),
+
+    article: {
+        deleteBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
+        addBtn: element(by.css('button[ng-click="addArticle()"]')),
+        entry: element.all(by.css('tr[article="true"][class="ng-scope"]')),
         confirmBtn: element(by.css('.btn-success')),
         dismissBtn: element(by.css('.btn-danger')),
         displayColumn: element.all(by.css('button[ng-click="toggleList()"]')),
@@ -16,8 +16,8 @@ module.exports = {
     login: {
         passwordInput: element(by.css('h1 input[type="password"]')),
     },
-    main: {
-        mainMessage: element(by.css('#info-container .alert.main-message')),
+    message: {
+        main: element(by.css('#info-container .alert.main-message')),
     },
     publish: {
         proceedBtn: element(by.id('proceed')),
@@ -27,8 +27,8 @@ module.exports = {
         finalBtn: element(by.css('button[ng-click="uploadToOjs()"]')),
     },
     restart: {
-        restartBtn: element(by.id('step-restart')),
-        confirmRestartBtn: element(by.css('.btn-danger')),
+        initiateBtn: element(by.id('step-restart')),
+        confirmBtn: element(by.css('.btn-danger')),
     },
     start: {
         protocolSelect: element(by.model("protocols.current")),
