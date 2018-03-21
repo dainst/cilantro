@@ -1,11 +1,11 @@
 var elements = require("../util/elements");
 
-var action = require('../util/actions');
-var check = require('../util/checks');
-var select = require('../util/selectors');
-var button = require('../util/buttons');
-var message = require('../util/messages');
-var input = require('../util/inputs');
+var action = require('../modules/actions');
+var check = require('../modules/checks');
+var select = require('../modules/selectors');
+var button = require('../modules/buttons');
+var message = require('../modules/messages');
+var input = require('../modules/inputs');
 
 describe('importer', function() {
 
