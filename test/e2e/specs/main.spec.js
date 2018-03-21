@@ -1,6 +1,7 @@
 var elements = require("../util/elements");
 
 var action = require('../util/actions');
+var check = require('../util/checks');
 var select = require('../util/selectors');
 var button = require('../util/buttons');
 var message = require('../util/messages');
@@ -18,7 +19,7 @@ describe('importer', function() {
             .then(select.protocol())
             .then(action.uploadFile())
             .then(button.startImport())
-            .then(action.ExpectNumberOfArticles(1))
+            .then(check.numberOfArticles(1))
     });
 
     it('should only start after right password input', function() {
@@ -110,13 +111,13 @@ describe('importer', function() {
             .then(select.file())
             .then(button.startImport())
             .then(expect(message.classOfMain()).toContain("alert-success"))
-            .then(action.ExpectNumberOfArticles(1))
+            .then(check.numberOfArticles(1))
 
             .then(button.deleteArticle())
-            .then(action.ExpectNumberOfArticles(0))
+            .then(check.numberOfArticles(0))
 
             .then(button.addArticle())
-            .then(action.ExpectNumberOfArticles(1))
+            .then(check.numberOfArticles(1))
     });
 
     it('should import data with csv protocol', function() {
@@ -132,7 +133,7 @@ describe('importer', function() {
             .then(button.takeCsvData())
             .then(input.ignoreFirstRow())
             .then(button.confirmCsv())
-            .then(action.ExpectNumberOfArticles(articlesInCsv))
+            .then(check.numberOfArticles(articlesInCsv))
 
     });
 
