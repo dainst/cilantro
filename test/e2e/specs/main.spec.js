@@ -1,10 +1,11 @@
 var elements = require("../util/elements");
 
-var action = require('../util/actions');
-var select = require('../util/selectors');
-var button = require('../util/buttons');
-var message = require('../util/messages');
-var input = require('../util/inputs');
+var action = require('../modules/actions');
+var check = require('../modules/checks');
+var select = require('../modules/selectors');
+var button = require('../modules/buttons');
+var message = require('../modules/messages');
+var input = require('../modules/inputs');
 
 describe('importer', function() {
 
@@ -18,7 +19,7 @@ describe('importer', function() {
             .then(select.protocol())
             .then(action.uploadFile())
             .then(button.startImport())
-            .then(expect(elements.articles.articleView.isPresent()).toBeTruthy())
+            .then(check.numberOfArticles(1))
     });
 
     it('should only start after right password input', function() {
@@ -110,13 +111,43 @@ describe('importer', function() {
             .then(select.file())
             .then(button.startImport())
             .then(expect(message.classOfMain()).toContain("alert-success"))
-            .then(expect(elements.articles.articleView.isPresent()).toBeTruthy())
+            .then(check.numberOfArticles(1))
 
             .then(button.deleteArticle())
-            .then(expect(elements.articles.articleView.isDisplayed()).toBeFalsy())
+            .then(check.numberOfArticles(0))
 
             .then(button.addArticle())
-            .then(expect(elements.articles.articleView.isPresent()).toBeTruthy())
+            .then(check.numberOfArticles(1))
     });
+
+    it('should import data with csv protocol', function() {
+        var articlesInCsv = 2;
+        browser.get(browser.baseUrl)
+            .then(action.login())
+            .then(select.protocol('csv_import'))
+            .then(select.file())
+            .then(button.startImport())
+            .then(expect(message.classOfMain()).toContain("alert-success"))
+
+            .then(action.uploadFile('../ressources/e2e-testing.csv'))
+            .then(button.takeCsvData())
+            .then(input.ignoreFirstRow())
+            .then(button.confirmCsv())
+            .then(check.numberOfArticles(articlesInCsv))
+
+    });
+
+    it('should not be able to upload without articles', function(){
+        browser.get(browser.baseUrl)
+          .then(action.login())
+          .then(select.protocol())
+          .then(select.file())
+          .then(button.startImport())
+          .then(button.proceed())
+          .then(button.dismissArticle())
+          .then(button.uploadPub())
+
+          .then(expect(elements.publish.uploadBtn.count()).toEqual(0))
+    })
 
 });
