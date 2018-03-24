@@ -19,25 +19,30 @@ var Buttons = function() {
 
 
     this.restart = function() {
-        return elements.restart.restartBtn.click;
+        browser.wait(EC.visibilityOf(elements.restart.initiateBtn));
+        return elements.restart.initiateBtn.click;
     };
 
     this.confirmRestart = function() {
-        return elements.restart.confirmRestartBtn.click;
+        return elements.restart.confirmBtn.click;
     };
 
 
     this.addArticle = function() {
-        elements.articles.addArticleBtn.click;
+        return elements.article.addBtn.click;
     };
 
     this.confirmArticle = function() {
-        return elements.articles.confirmBtn.click;
+        return elements.article.confirmBtn.click;
+    };
+
+    this.dismissArticle = function() {
+        return elements.article.dismissBtn.click;
     };
 
     this.deleteArticle = function() {
-        browser.wait(EC.visibilityOf(elements.articles.deleteArticleBtn));
-        elements.articles.deleteArticleBtn.click;
+        browser.wait(EC.visibilityOf(elements.article.deleteBtn));
+        return elements.article.deleteBtn.click;
     };
 
 
@@ -51,6 +56,15 @@ var Buttons = function() {
 
     this.zenonDownloadXML = function() {
         return elements.zenon.downloadLink.click;
+    };
+
+
+    this.takeCsvData = function() {
+        return elements.csv.takeData.click;
+    };
+
+    this.confirmCsv = function() {
+        return elements.csv.confirm.click;
     };
 
 };
