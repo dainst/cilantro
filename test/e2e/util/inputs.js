@@ -7,7 +7,9 @@ var Inputs = function() {
     };
 
     this.year = function(value = '2000') {
-        elements.publish.input.get(1).sendKeys(value);
+        elements.publish.input.get(1)
+            .clear()
+            .sendKeys(value);
     };
 
 
