@@ -30,11 +30,15 @@ services:
 
   task-worker:
     build: ./workers
+    volumes:
+      - ./data:/app/data
     environment:
       BROKER_HOST: "task-broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
       DB_HOST: "task-db"
+      REPOSITORY_DIR: ${REPOSITORY_DIR}
+      WORKING_DIR: ${WORKING_DIR}
 
   task-monitor:
     build: ./monitor
