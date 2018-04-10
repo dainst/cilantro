@@ -35,3 +35,12 @@ services:
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
       DB_HOST: "task-db"
+
+  task-monitor:
+    build: ./monitor
+    ports:
+      - "5555:5555"
+    environment:
+      BROKER_HOST: "task-broker"
+      BROKER_USER: ${BROKER_USER}
+      BROKER_PASSWORD: ${BROKER_PASSWORD}
