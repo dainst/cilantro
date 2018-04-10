@@ -10,6 +10,14 @@ services:
     ports:
       - "5672:5672"
 
+  task-db:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - ./redis-data:/data
+    ports:
+      - "6379:6379"
+
   task-service:
     build: ./service
     ports:
@@ -18,6 +26,7 @@ services:
       BROKER_HOST: "task-broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
+      DB_HOST: "task-db"
 
   task-worker:
     build: ./workers
@@ -25,3 +34,4 @@ services:
       BROKER_HOST: "task-broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
+      DB_HOST: "task-db"
