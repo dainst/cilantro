@@ -1,0 +1,27 @@
+version: '3.5'
+
+services:
+
+  task-broker:
+    image: rabbitmq:latest
+    environment:
+      - RABBITMQ_DEFAULT_USER=${BROKER_USER}
+      - RABBITMQ_DEFAULT_PASS=${BROKER_PASSWORD}
+    ports:
+      - "5672:5672"
+
+  task-service:
+    build: ./service
+    ports:
+      - "5000:5000"
+    environment:
+      BROKER_HOST: "task-broker"
+      BROKER_USER: ${BROKER_USER}
+      BROKER_PASSWORD: ${BROKER_PASSWORD}
+
+  task-worker:
+    build: ./workers
+    environment:
+      BROKER_HOST: "task-broker"
+      BROKER_USER: ${BROKER_USER}
+      BROKER_PASSWORD: ${BROKER_PASSWORD}
