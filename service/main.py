@@ -17,6 +17,12 @@ def task_create():
 
 @app.route('/task/status/<task_id>')
 def task_status(task_id):
-    print('Stub implementation ...')
+    task = celery.AsyncResult(task_id)
+    response = {
+        'status': task.state
+    }
+    if hasattr(task.info, 'result'):
+        response['result'] = task.info['result']
+    return jsonify(response)
 
 app.run(host='0.0.0.0')
