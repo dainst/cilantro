@@ -12,8 +12,8 @@ def index():
 @app.route('/task/create', methods=['POST'])
 def task_create():
     chain = signature('tasks.retrieve', ['foo'], immutable=True)
-    chain |= signature('tasks.convert_folder', ['foo', 'retrieve', '*.tif'], immutable=True)
-    chain |= signature('tasks.publish', ['foo', 'convert_folder'], immutable=True)
+    chain |= signature('tasks.match', ['foo', 'retrieve', '*.tif', 'convert'], immutable=True)
+    chain |= signature('tasks.publish', ['foo', 'convert'], immutable=True)
     task = chain.apply_async()
     return jsonify({'status': 'Accepted', 'task': task.id}),\
             202, {'Location': url_for('task_status', task_id=task.id)}

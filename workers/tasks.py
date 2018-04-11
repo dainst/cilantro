@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from celery import signature, group
 from celery_client import celery
 import time
 import os
@@ -20,29 +21,22 @@ def retrieve(object_id):
         shutil.rmtree(target)
     shutil.copytree(source, target)
 
-# not working yet
-@celery.task
-def match(object_id, prev_task, pattern, run):
+@celery.task(bind=True)
+def match(self, object_id, prev_task, pattern, run):
     source = os.path.join(working_dir, object_id, prev_task)
+    subtasks = []
     for file in glob.iglob(os.path.join(source, pattern)):
-        celery.send_task("tasks.%s" % run, {object_id: object_id, prev_task: prev_task, file_path: file})
-        # TODO: group tasks and return when all are done
+        subtasks.append(signature("tasks.%s" % run, [object_id, prev_task, file]))
+    raise self.replace(group(subtasks))
 
 @celery.task
-def convert(object_id, prev_task, file_path):
-    new_file_path = file_path.replace('.tif','.jpg')
-    shutil.copyfile(file_path, new_file_path)
-
-@celery.task
-def convert_folder(object_id, prev_task, pattern):
+def convert(object_id, prev_task, file):
     source = os.path.join(working_dir, object_id, prev_task)
-    target = os.path.join(working_dir, object_id, 'convert_folder')
+    target = os.path.join(working_dir, object_id, 'convert')
     if not os.path.exists(target):
         os.makedirs(target)
-    for file_path in glob.iglob(os.path.join(source, pattern)):
-        new_file_path = file_path.replace('.tif','.jpg').replace(source, target)
-        print("copying %s to %s" % (file_path, new_file_path))
-        shutil.copyfile(file_path, new_file_path)
+    new_file = file.replace('.tif','.jpg').replace(source, target)
+    shutil.copyfile(file, new_file)
 
 @celery.task
 def publish(object_id, prev_task):
