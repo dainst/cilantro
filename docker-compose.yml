@@ -22,6 +22,9 @@ services:
     build: ./service
     ports:
       - "5000:5000"
+    volumes:
+      - ./service:/app
+    working_dir: /app
     environment:
       BROKER_HOST: "task-broker"
       BROKER_USER: ${BROKER_USER}
