@@ -24,12 +24,14 @@ services:
       - "5000:5000"
     volumes:
       - ./service:/app
+      - ./config:/config
     working_dir: /app
     environment:
       BROKER_HOST: "task-broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
       DB_HOST: "task-db"
+      CONFIG_DIR: ${CONFIG_DIR}
 
   task-worker:
     build: ./workers

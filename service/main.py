@@ -2,8 +2,12 @@
 from celery import signature
 from celery_client import celery
 from flask import Flask, jsonify, url_for
+from job_config import JobConfig
 
 app = Flask('cilantro')
+
+job_config = JobConfig()
+print("job types: %s" % job_config.job_types)
 
 @app.route('/')
 def index():
@@ -11,10 +15,10 @@ def index():
 
 @app.route('/task/create', methods=['POST'])
 def task_create():
-    chain = signature('tasks.retrieve', ['foo'], immutable=True)
-    chain |= signature('tasks.match', ['foo', 'retrieve', '*.tif', 'convert'], immutable=True)
-    chain |= signature('tasks.publish', ['foo', 'convert'], immutable=True)
+    chain = job_config.generate_job('test', 'foo')
+    print("created chain: %s" % chain)
     task = chain.apply_async()
+    print("created task with id: %s" % task.id)
     return jsonify({'status': 'Accepted', 'task': task.id}),\
             202, {'Location': url_for('task_status', task_id=task.id)}
 
