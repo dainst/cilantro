@@ -3,8 +3,6 @@ import glob
 import os
 from celery import signature
 
-config_dir = os.environ['CONFIG_DIR']
-
 
 def _extract_job_type(file_name):
     return os.path.splitext(os.path.basename(file_name))[0]
@@ -38,6 +36,7 @@ def _create_signature(task_def, object_id, prev_task=None):
 class JobConfig:
 
     def __init__(self):
+        self._config_dir = os.environ['CONFIG_DIR']
         self.job_types = {}
         self._parse_job_config()
 
@@ -52,8 +51,11 @@ class JobConfig:
         return job
 
     def _parse_job_config(self):
-        pattern = os.path.join(config_dir, "job_types", "*.yml")
+        pattern = os.path.join(self._config_dir, "job_types", "*.yml")
+        print("looking for job type configs in %s" % pattern)
+        print(os.getcwd())
         for file_name in glob.iglob(pattern):
+            print("found job type config in %s" % file_name)
             job_type = _extract_job_type(file_name)
-            print("found job type defintion %s" % job_type)
+            print("extracted job type defintion %s" % job_type)
             self.job_types[job_type] = _read_job_config_file(file_name)

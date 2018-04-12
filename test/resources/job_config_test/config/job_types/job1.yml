@@ -1,0 +1,5 @@
+- retrieve
+- match:
+    pattern: "*.tif"
+    run: convert
+- publish
