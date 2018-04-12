@@ -52,7 +52,9 @@ services:
       WORKING_DIR: ${WORKING_DIR}
 
   task-monitor:
-    build: ./monitor
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-monitor
     ports:
       - "5555:5555"
     environment:
