@@ -18,6 +18,8 @@ def _read_job_config_file(file_name):
         return yaml.load(file)
     except Exception as err:
         raise ConfigParseException("Error while reading job type definition from %s: %s" % (file_name, err))
+    finally:
+        file.close()
 
 
 def _create_task_def(task):
