@@ -1,7 +1,7 @@
 #!/usr/bin/python
-from celery_client import celery
+from .celery_client import celery
 from flask import Flask, jsonify, url_for
-from job_config import JobConfig
+from .job_config import JobConfig
 
 app = Flask('cilantro')
 

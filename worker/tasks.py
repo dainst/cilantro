@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import glob
 import os
 import shutil
