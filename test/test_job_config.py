@@ -3,7 +3,7 @@ import os
 
 from celery.canvas import Signature
 
-from service.job_config import JobConfig, ConfigParseException
+from service.job_config import JobConfig, ConfigParseException, UnknownJobTypeException
 
 
 class JobConfigTest(unittest.TestCase):
@@ -38,6 +38,11 @@ class JobConfigTest(unittest.TestCase):
 
         tasks = job2['kwargs']['tasks']
         self.assertEqual(6, len(tasks))
+
+    def test_unknown_job_type(self):
+        os.environ['CONFIG_DIR'] = "test/resources/job_config_test/config_valid"
+        job_config = JobConfig()
+        self.assertRaises(UnknownJobTypeException, job_config.generate_job, "job3", "foo")
 
     def test_invalid_yaml(self):
         os.environ['CONFIG_DIR'] = "test/resources/job_config_test/config_invalid_yaml"

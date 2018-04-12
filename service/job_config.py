@@ -8,6 +8,10 @@ class ConfigParseException(Exception):
     pass
 
 
+class UnknownJobTypeException(Exception):
+    pass
+
+
 def _extract_job_type(file_name):
     return os.path.splitext(os.path.basename(file_name))[0]
 
@@ -47,6 +51,8 @@ class JobConfig:
         self._parse_job_config()
 
     def generate_job(self, job_type, object_id):
+        if job_type not in self.job_types:
+            raise UnknownJobTypeException("No definition for given job type '%s' found" % job_type)
         job_def = self.job_types[job_type]
         job = _create_signature(_create_task_def(job_def[0]), object_id)
         prev_task = job_def[0]
