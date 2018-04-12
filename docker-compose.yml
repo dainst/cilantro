@@ -19,11 +19,13 @@ services:
       - "6379:6379"
 
   task-service:
-    build: ./service
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-service
     ports:
       - "5000:5000"
     volumes:
-      - ./service:/app
+      - .:/app
       - ./config:/config
     working_dir: /app
     environment:
