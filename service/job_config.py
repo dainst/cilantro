@@ -6,35 +6,54 @@ from celery import signature
 config_dir = os.environ['CONFIG_DIR']
 
 
+def _extract_job_type(file_name):
+    return os.path.splitext(os.path.basename(file_name))[0]
+
+
+def _read_job_config_file(file_name):
+    try:
+        file = open(file_name, 'r')
+        return yaml.load(file)
+    except Exception as err:
+        print("Error while reading job type definition from %s: %s" % (file_name, err))
+
+
+def _create_task_def(task):
+    if isinstance(task, str):
+        return {'name': task}
+    else:
+        task_name = next(iter(task))  # first key
+        return {'name': task_name, 'params': task[task_name]}
+
+
+def _create_signature(task_def, object_id, prev_task=None):
+    kwargs = {'object_id': object_id}
+    if prev_task is not None:
+        kwargs['prev_task'] = prev_task
+    if 'params' in task_def:
+        kwargs.update(task_def['params'])
+    return signature("tasks.%s" % task_def['name'], kwargs=kwargs, immutable=True)
+
+
 class JobConfig:
 
     def __init__(self):
-
-        self.job_types = { }
-        pattern = os.path.join(config_dir, "job_types", "*.yml")
-        print("reading job config from %s" % pattern)
-        for file_name in glob.iglob(pattern):
-            print("found job type defintion %s" % file_name)
-            job_type = os.path.splitext(os.path.basename(file_name))[0]
-            try:
-                file = open(file_name, 'r')
-                self.job_types[job_type] = yaml.load(file)
-            except Exception as err:
-                print("Error while reading job type definition from %s: %s" % (file_name, err))
+        self.job_types = {}
+        self._parse_job_config()
 
     def generate_job(self, job_type, object_id):
         job_def = self.job_types[job_type]
-        job = signature("tasks.%s" % job_def[0], [object_id], immutable=True)
+        job = _create_signature(_create_task_def(job_def[0]), [object_id])
         prev_task = job_def[0]
         for task in job_def[1:]:
-            task_name = task
-            args = [object_id]
-            if not prev_task is None:
-                args.append(prev_task)
-            if not isinstance(task, str):
-                task_name = next(iter(task)) # first key
-                for key, val in task[task_name].items():
-                    args.append(val)
-            job |= signature("tasks.%s" % task_name, args, immutable=True)
-            prev_task = task_name
+            task_def = _create_task_def(task)
+            job |= _create_signature(task_def, object_id, prev_task)
+            prev_task = task_def['name']
         return job
+
+    def _parse_job_config(self):
+        pattern = os.path.join(config_dir, "job_types", "*.yml")
+        for file_name in glob.iglob(pattern):
+            job_type = _extract_job_type(file_name)
+            print("found job type defintion %s" % job_type)
+            self.job_types[job_type] = _read_job_config_file(file_name)
