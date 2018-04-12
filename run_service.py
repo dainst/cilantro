@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from service.celery_client import celery
+from utils.celery_client import celery
 from flask import Flask, jsonify, url_for
 from service.job_config import JobConfig
 

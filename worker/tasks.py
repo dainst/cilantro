@@ -4,7 +4,7 @@ import shutil
 
 from celery import signature, group
 
-from .celery_client import celery
+from utils.celery_client import celery
 
 repository_dir = os.environ['REPOSITORY_DIR']
 working_dir = os.environ['WORKING_DIR']
