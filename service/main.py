@@ -24,9 +24,9 @@ def job_create(job_type, object_id):
             202, {'Location': url_for('task_status', task_id=task.id)}
 
 
-@app.route('/task/status/<task_id>')
-def task_status(task_id):
-    task = celery.AsyncResult(task_id)
+@app.route('/job/<task_id>', methods=['GET'])
+def task_status(job_id):
+    task = celery.AsyncResult(job_id)
     response = {
         'status': task.state
     }
