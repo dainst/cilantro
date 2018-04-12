@@ -5,6 +5,7 @@ from celery import signature
 
 config_dir = os.environ['CONFIG_DIR']
 
+
 class JobConfig:
 
     def __init__(self):

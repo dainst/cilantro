@@ -1,13 +1,15 @@
 #!/usr/bin/python
-from celery import signature, group
-from celery_client import celery
-import time
+import glob
 import os
 import shutil
-import glob
+
+from celery import signature, group
+
+from celery_client import celery
 
 repository_dir = os.environ['REPOSITORY_DIR']
 working_dir = os.environ['WORKING_DIR']
+
 
 @celery.task
 def retrieve(object_id):
@@ -21,6 +23,7 @@ def retrieve(object_id):
         shutil.rmtree(target)
     shutil.copytree(source, target)
 
+
 @celery.task(bind=True)
 def match(self, object_id, prev_task, pattern, run):
     source = os.path.join(working_dir, object_id, prev_task)
@@ -28,6 +31,7 @@ def match(self, object_id, prev_task, pattern, run):
     for file in glob.iglob(os.path.join(source, pattern)):
         subtasks.append(signature("tasks.%s" % run, [object_id, prev_task, 'match', file]))
     raise self.replace(group(subtasks))
+
 
 @celery.task
 def convert(object_id, prev_task, parent_task, file):
@@ -40,6 +44,7 @@ def convert(object_id, prev_task, parent_task, file):
             print("could not create dir, eating exception")
     new_file = file.replace('.tif','.jpg').replace(source, target)
     shutil.copyfile(file, new_file)
+
 
 @celery.task
 def publish(object_id, prev_task):
