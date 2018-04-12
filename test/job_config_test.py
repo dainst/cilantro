@@ -3,13 +3,13 @@ import os
 
 from celery.canvas import Signature
 
-from job_config import JobConfig
+from job_config import JobConfig, ConfigParseException
 
 
 class JobConfigTest(unittest.TestCase):
 
     def test_valid(self):
-        os.environ['CONFIG_DIR'] = "resources/job_config_test/config"
+        os.environ['CONFIG_DIR'] = "resources/job_config_test/config_valid"
 
         job_config = JobConfig()
         job1 = job_config.generate_job("job1", "foo")
@@ -38,3 +38,7 @@ class JobConfigTest(unittest.TestCase):
 
         tasks = job2['kwargs']['tasks']
         self.assertEqual(6, len(tasks))
+
+    def test_invalid(self):
+        os.environ['CONFIG_DIR'] = "resources/job_config_test/config_invalid"
+        self.assertRaises(ConfigParseException, JobConfig)

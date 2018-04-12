@@ -4,6 +4,10 @@ import os
 from celery import signature
 
 
+class ConfigParseException(Exception):
+    pass
+
+
 def _extract_job_type(file_name):
     return os.path.splitext(os.path.basename(file_name))[0]
 
@@ -13,7 +17,7 @@ def _read_job_config_file(file_name):
         file = open(file_name, 'r')
         return yaml.load(file)
     except Exception as err:
-        print("Error while reading job type definition from %s: %s" % (file_name, err))
+        raise ConfigParseException("Error while reading job type definition from %s: %s" % (file_name, err))
 
 
 def _create_task_def(task):
