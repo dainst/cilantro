@@ -489,7 +489,12 @@ class ojsis { // you're my wonderwall bla bla whimmer
 
 		for($i = 0; $i < count($_FILES['files']['name']); $i++) {
 
+
+			$meta = $_POST;
+			$relative_path = $meta['path'][$i];
+			$folder = explode('/', $relative_path)[0];
 			$destination = $_FILES['files']['name'][$i];
+
 			while (file_exists($this->settings['rep_path'] . '/' . $destination)) {
 				$destination = '_' . $destination;
 			}
@@ -507,6 +512,8 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				continue;
 			}
 
+			$this->log->warning($_FILES['files']['type'][$i]);
+
 			if (!in_array($_FILES['files']['type'][$i], $acceptedFiles)) {
 				$this->log->warning($_FILES['files']['name'][$i] . ' has wrong type ' . $_FILES['files']['type'][$i]);
 				continue;
@@ -517,7 +524,19 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				continue;
 			}
 
-			$x  = move_uploaded_file($_FILES['files']['tmp_name'][$i], $this->settings['rep_path'] . '/' . $destination);
+
+			if ($meta['path'][$i] == 'undefined'){
+				$x  = move_uploaded_file($_FILES['files']['tmp_name'][$i], $this->settings['rep_path'] . '/' . $destination);
+			} else {
+				if(!is_dir($this->settings['rep_path'] . '/' . $folder)){
+					mkdir($this->settings['rep_path'] . '/' . $folder, 0700);
+					}
+				$x = move_uploaded_file($_FILES['files']['tmp_name'][$i], $this->settings['rep_path'] . '/' . $folder . '/' . $destination);
+			}
+
+
+
+			$this->log->log($meta['path'][$i][0]);
 			$this->log->log('ul:' . $x . ':' . $destination);
 
 			$uploadedFiles[] = $destination;

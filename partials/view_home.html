@@ -43,21 +43,21 @@
 		<div 	ng-controller="upload"
 				class="panel panel-default"
 				ngf-drop="uploadFiles($files)"
-	       		ng-model="files"
-	       		ngf-model-invalid="invalidFiles"
-	            ngf-multiple="multiple"
-	            ngf-pattern="pattern"
-	            ngf-accept="application/pdf"
-	            ngf-drag-over-class="'dragOver'"
-	            ngf-validate="{pattern: '.pdf'}"
-	            ngf-keep="false"
-	            ngf-allow-dir="false"
-	           	ngf-drop-available="dropAvailable"
-	            id="fileDropArea">
+     		ng-model="files"
+        ngf-multiple="true"
+        ngf-pattern="pattern"
+        ngf-accept="application/pdf"
+        ngf-drag-over-class="'dragOver'"
+        ngf-validate="{pattern: '.pdf'}"
+        ngf-keep="false"
+        ngf-allow-dir="true"
+				ngf-include-dir="true"
+       	ngf-drop-available="dropAvailable"
+        id="fileDropArea">
 
 			<div class="panel-heading">Or upload PDF file</div>
 			<div class="panel-body">
-			    <button id="uploadFileSelect" class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File into this Box.</span> 
+			    <button id="uploadFileSelect" class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File into this Box.</span>
 			    <br>
 
 			    <span class="progressbar">
