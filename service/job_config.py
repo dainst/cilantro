@@ -43,7 +43,7 @@ class JobConfig:
 
     def generate_job(self, job_type, object_id):
         job_def = self.job_types[job_type]
-        job = _create_signature(_create_task_def(job_def[0]), [object_id])
+        job = _create_signature(_create_task_def(job_def[0]), object_id)
         prev_task = job_def[0]
         for task in job_def[1:]:
             task_def = _create_task_def(task)
