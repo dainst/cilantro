@@ -19,13 +19,13 @@ def job_create(job_type, object_id):
     chain = job_config.generate_job(job_type, object_id)
     print("created chain: %s" % chain)
     task = chain.apply_async()
-    print("created task with id: %s" % task.id)
-    return jsonify({'status': 'Accepted', 'task': task.id}),\
-            202, {'Location': url_for('task_status', task_id=task.id)}
+    print("created job with id: %s" % task.id)
+    return jsonify({'status': 'Accepted', 'job_id': task.id}),\
+            202, {'Location': url_for('job_status', job_id=task.id)}
 
 
 @app.route('/job/<task_id>', methods=['GET'])
-def task_status(job_id):
+def job_status(job_id):
     task = celery.AsyncResult(job_id)
     response = {
         'status': task.state
