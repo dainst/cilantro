@@ -40,9 +40,9 @@ def convert(object_id, prev_task, parent_task, file):
     if not os.path.exists(target):
         try:
             os.makedirs(target)
-        except:
+        except OSError:
             print("could not create dir, eating exception")
-    new_file = file.replace('.tif','.jpg').replace(source, target)
+    new_file = file.replace('.tif', '.jpg').replace(source, target)
     shutil.copyfile(file, new_file)
 
 
