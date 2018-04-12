@@ -7,7 +7,7 @@ operate on file system objects. It is written in Python and uses
 ## Running the app with docker
 
     docker-compose build
-    docker-compose run
+    docker-compose up
 
 ### Testing the application
 
