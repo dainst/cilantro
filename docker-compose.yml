@@ -34,10 +34,10 @@ services:
       CONFIG_DIR: ${CONFIG_DIR}
 
   task-worker:
-    build: ./workers
+    build: ./worker
     volumes:
       - ./data:/data
-      - ./workers:/app
+      - ./worker:/app
     working_dir: /app
     environment:
       BROKER_HOST: "task-broker"
