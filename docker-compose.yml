@@ -36,10 +36,12 @@ services:
       CONFIG_DIR: ${CONFIG_DIR}
 
   task-worker:
-    build: ./worker
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-worker
     volumes:
+      - .:/app
       - ./data:/data
-      - ./worker:/app
     working_dir: /app
     environment:
       BROKER_HOST: "task-broker"
