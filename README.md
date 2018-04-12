@@ -8,3 +8,10 @@ operate on file system objects. It is written in Python and uses
 
     docker-compose build
     docker-compose run
+
+The web service runs on port 5000. The following command will create a test task:
+
+    curl -XPOST http://localhost:5000/task/create
+
+[Flower](https://flower.readthedocs.io/) is included in the docker config and
+is available for debugging under http://localhost:5555.
