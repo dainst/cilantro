@@ -14,9 +14,9 @@ def index():
     return 'cilantro is up and running ...'
 
 
-@app.route('/task/create', methods=['POST'])
-def task_create():
-    chain = job_config.generate_job('test', 'foo')
+@app.route('/job/<job_type>/<object_id>', methods=['POST'])
+def job_create(job_type, object_id):
+    chain = job_config.generate_job(job_type, object_id)
     print("created chain: %s" % chain)
     task = chain.apply_async()
     print("created task with id: %s" % task.id)
