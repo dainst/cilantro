@@ -9,7 +9,7 @@ operate on file system objects. It is written in Python and uses
     docker-compose build
     docker-compose up
 
-### Testing the application
+### Testing the application manually
 
 In order for the test to function properly you have to create some files with
 .tif ending in the folder `./data/repository/foo/upload`.
@@ -26,3 +26,8 @@ You can then query the job status with the returned job_id:
 
 [Flower](https://flower.readthedocs.io/) is included in the docker config and
 is available for debugging under http://localhost:5555.
+
+## Running unit tests
+
+    pip install -r test/requirements.txt
+    python -m unittest
