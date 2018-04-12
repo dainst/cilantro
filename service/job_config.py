@@ -63,3 +63,5 @@ class JobConfig:
             job_type = _extract_job_type(file_name)
             print("extracted job type defintion %s" % job_type)
             self.job_types[job_type] = _read_job_config_file(file_name)
+            if not isinstance(self.job_types[job_type], list):
+                raise ConfigParseException("Error while reading job type definition: %s has to contain list at root")

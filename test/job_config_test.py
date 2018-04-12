@@ -39,6 +39,10 @@ class JobConfigTest(unittest.TestCase):
         tasks = job2['kwargs']['tasks']
         self.assertEqual(6, len(tasks))
 
-    def test_invalid(self):
-        os.environ['CONFIG_DIR'] = "resources/job_config_test/config_invalid"
+    def test_invalid_yaml(self):
+        os.environ['CONFIG_DIR'] = "resources/job_config_test/config_invalid_yaml"
+        self.assertRaises(ConfigParseException, JobConfig)
+
+    def test_invalid_definition(self):
+        os.environ['CONFIG_DIR'] = "resources/job_config_test/config_invalid_definition"
         self.assertRaises(ConfigParseException, JobConfig)
