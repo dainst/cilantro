@@ -8,4 +8,4 @@ EXPOSE 5000
 ENV FLASK_APP run_service.py
 #ENV FLASK_DEBUG 1
 
-ENTRYPOINT [ "flask", "run", "--host=0.0.0.0" ]
+ENTRYPOINT watchmedo auto-restart --recursive --patterns="*.py" -- flask run --host=0.0.0.0
