@@ -1,7 +1,7 @@
 # Cilantro
 
 Cilantro is a task runner designed to manage long running distributed jobs that
-operate on file system objects. It is written in Python and uses
+operate on file system objects. It is written in Python (3.6+) and uses
 [Celery](http://docs.celeryproject.org/) and [Flask](http://flask.pocoo.org/).
 
 ## Running the app with docker
@@ -28,6 +28,12 @@ You can then query the job status with the returned job_id:
 is available for debugging under http://localhost:5555.
 
 ## Running unit tests
+Use
+
+    pip3 install -r test/requirements.txt
+    python3 -m unittest
+or
 
     pip install -r test/requirements.txt
     python -m unittest
+if your python is defaulted to `v3`.
