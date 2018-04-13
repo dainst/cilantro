@@ -15,7 +15,7 @@ def job_create(job_type, object_id):
     task = chain.apply_async()
     print("created job with id: %s" % task.id)
     return jsonify({'status': 'Accepted', 'job_id': task.id}), \
-           202, {'Location': url_for('job_status', job_id=task.id)}
+           202, {'Location': url_for('job.job_status', job_id=task.id)}
 
 
 @job.route('/<job_id>', methods=['GET'])
