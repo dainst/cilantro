@@ -19,8 +19,8 @@ def match(self, object_id, prev_task, pattern, run):
     raise self.replace(group(subtasks))
 
 
-@celery.task(name="tasks.convert")
-def convert(object_id, prev_task, parent_task, file):
+@celery.task(name="tasks.rename")
+def rename(object_id, prev_task, parent_task, file):
     source = os.path.join(working_dir, object_id, prev_task)
     target = os.path.join(working_dir, object_id, parent_task)
     if not os.path.exists(target):
