@@ -3,7 +3,7 @@ import os
 
 from celery.canvas import Signature
 
-from service.job_config import JobConfig, ConfigParseException, UnknownJobTypeException
+from job.job_config import JobConfig, ConfigParseException, UnknownJobTypeException
 
 
 class JobConfigTest(unittest.TestCase):
