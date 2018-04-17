@@ -19,16 +19,16 @@ class JobConfigTest(unittest.TestCase):
         tasks = job1.tasks
         self.assertEqual(3, len(tasks))
 
-        self.assertEqual('tasks.retrieve', tasks[0]['task'])
+        self.assertEqual('retrieve', tasks[0]['task'])
         self.assertEqual('foo', tasks[0]['kwargs']['object_id'])
 
-        self.assertEqual('tasks.match', tasks[1]['task'])
+        self.assertEqual('match', tasks[1]['task'])
         self.assertEqual('foo', tasks[1]['kwargs']['object_id'])
         self.assertEqual('retrieve', tasks[1]['kwargs']['prev_task'])
         self.assertEqual('*.tif', tasks[1]['kwargs']['pattern'])
         self.assertEqual('convert', tasks[1]['kwargs']['run'])
 
-        self.assertEqual('tasks.publish', tasks[2]['task'])
+        self.assertEqual('publish', tasks[2]['task'])
         self.assertEqual('foo', tasks[2]['kwargs']['object_id'])
         self.assertEqual('match', tasks[2]['kwargs']['prev_task'])
 

@@ -11,18 +11,18 @@ repository_dir = os.environ['REPOSITORY_DIR']
 working_dir = os.environ['WORKING_DIR']
 
 
-@celery.task(bind=True, name="tasks.match")
+@celery.task(bind=True, name="match")
 def match(self, object_id, job_id, prev_task, run, pattern='*.tif'):
     source = os.path.join(working_dir, job_id, object_id, prev_task)
     subtasks = []
     for file in glob.iglob(os.path.join(source, pattern)):
         subtasks.append(signature(
-            "tasks.%s" % run, [object_id, job_id, prev_task, 'match', file]
+            run, [object_id, job_id, prev_task, self.name, file]
         ))
     raise self.replace(group(subtasks))
 
 
-@celery.task(name="tasks.rename")
+@celery.task(name="rename")
 def rename(object_id, job_id, prev_task, parent_task, file):
     source = os.path.join(working_dir, job_id, object_id, prev_task)
     target = os.path.join(working_dir, job_id, object_id, parent_task)
@@ -36,7 +36,7 @@ def rename(object_id, job_id, prev_task, parent_task, file):
     shutil.copyfile(file, new_file)
 
 
-@celery.task(name="tasks.cleanup_workdir")
+@celery.task(name="cleanup_workdir")
 def cleanup_workdir(object_id, job_id, prev_task):
     folder = os.path.join(working_dir, job_id)
     shutil.rmtree(folder)

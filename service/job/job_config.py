@@ -45,7 +45,7 @@ def _create_signature(task_def, object_id, params=None, prev_task=None):
         kwargs.update(task_def['params'])
     if params and task_name in params:
         kwargs.update(params[task_name])
-    return signature("tasks.%s" % task_name, kwargs=kwargs, immutable=True)
+    return signature(task_name, kwargs=kwargs, immutable=True)
 
 
 class JobConfig:
