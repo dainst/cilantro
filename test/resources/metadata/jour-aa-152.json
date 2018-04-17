@@ -1,0 +1,45 @@
+{
+    "@id": "jour-aa-152",
+    "created": "2018-04-17T18:25:43.511Z",
+    "lastModified": "2018-04-17T19:25:43.511Z",
+    "creator": {
+        "title": "Lukas C. Bossert"
+    },
+    "dataset": "test",
+    "isAbout": {
+        "@id": "https://zenon.dainst.org/Record/001487197",
+        "title": "Archäologischer Anzeiger: 1. Halbband 2016",
+        "description": "[PDFs verfügbar]",
+        "isA": "journal-issue",
+        "created": "2016",
+        "physicalStructure": [
+            "___e2e_testing.pdf",
+            "______e2e-testing.pdf"
+        ],
+        "hasPart": [{
+            "@id": "https://zenon.dainst.org/Record/001487198",
+            "title": "Die Ausgrabungen in Boğazköy-Hattuša 2015",
+            "creator": [{
+                "firstname": "Andreas",
+                "lastname": "Schachner"
+            }],
+            "description": "Fasc.1, p.1-47.",
+            "physicalStructure": [
+                "___e2e_testing.pdf#from=1&to=47",
+                "______e2e-testing.pdf#from=1&to=1"
+            ]
+        },
+        {
+            "@id": "https://zenon.dainst.org/Record/001487200",
+            "title": "Reconsidering the Hera-Pottery from the Samian Heraion and Its Distribution",
+            "creator": [{
+                "title": "Amalia Avramidou"
+            }],
+            "description": "Fasc.1, p.49-65.",
+            "physicalStructure": [
+                "___e2e_testing.pdf#from=49&to=65",
+                "______e2e-testing.pdf#from=2&to=2"
+            ]
+        }]
+    }
+}
