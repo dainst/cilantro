@@ -11,18 +11,24 @@
         "title": "Archäologischer Anzeiger: 1. Halbband 2016",
         "description": "[PDFs verfügbar]",
         "isA": "journal-issue",
-        "created": "2016",
+        "created": "2017",
+        "issue_year": "2016",
+        "issue_no": "1",
+        "issue_volume": "",
         "physicalStructure": [
             "___e2e_testing.pdf",
             "______e2e-testing.pdf"
         ],
         "hasPart": [{
             "@id": "https://zenon.dainst.org/Record/001487198",
-            "title": "Die Ausgrabungen in Boğazköy-Hattuša 2015",
+            "title": {
+                "de": "Die Ausgrabungen in Boğazköy-Hattuša 2015"
+            },
             "creator": [{
                 "firstname": "Andreas",
                 "lastname": "Schachner"
             }],
+            "language": "de",
             "description": "Fasc.1, p.1-47.",
             "physicalStructure": [
                 "___e2e_testing.pdf#from=1&to=47",
@@ -35,11 +41,17 @@
             "creator": [{
                 "title": "Amalia Avramidou"
             }],
+            "language": "en",
             "description": "Fasc.1, p.49-65.",
             "physicalStructure": [
                 "___e2e_testing.pdf#from=49&to=65",
                 "______e2e-testing.pdf#from=2&to=2"
             ]
         }]
+    },
+    "files": {
+        "___e2e_testing.pdf": {
+            "type": "application/pdf"
+        }
     }
 }
