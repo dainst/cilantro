@@ -1,8 +1,8 @@
 from flask import Blueprint
 
-front = Blueprint('front', __name__)
+front_controller = Blueprint('front', __name__)
 
 
-@front.route('/')
+@front_controller.route('/')
 def index():
     return 'cilantro is up and running ...'

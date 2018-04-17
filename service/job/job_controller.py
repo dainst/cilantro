@@ -2,13 +2,13 @@ from flask import Blueprint, url_for, jsonify
 from utils.celery_client import celery
 from service.job.job_config import JobConfig
 
-job_blueprint = Blueprint('job', __name__)
+job_controller = Blueprint('job', __name__)
 
 job_config = JobConfig()
 print("job types: %s" % job_config.job_types)
 
 
-@job_blueprint.route('/<job_type>/<object_id>', methods=['POST'])
+@job_controller.route('/<job_type>/<object_id>', methods=['POST'])
 def job_create(job_type, object_id):
     job = job_config.generate_job(job_type, object_id)
     print("created job: %s" % job)
@@ -18,7 +18,7 @@ def job_create(job_type, object_id):
            202, {'Location': url_for('job.job_status', job_id=task.id)}
 
 
-@job_blueprint.route('/<job_id>', methods=['GET'])
+@job_controller.route('/<job_id>', methods=['GET'])
 def job_status(job_id):
     task = celery.AsyncResult(job_id)
     response = {
