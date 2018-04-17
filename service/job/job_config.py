@@ -36,13 +36,16 @@ def _create_task_def(task):
         return {'name': task_name, 'params': task[task_name]}
 
 
-def _create_signature(task_def, object_id, prev_task=None):
+def _create_signature(task_def, object_id, params=None, prev_task=None):
+    task_name = task_def['name']
     kwargs = {'object_id': object_id}
     if prev_task is not None:
         kwargs['prev_task'] = prev_task
     if 'params' in task_def:
         kwargs.update(task_def['params'])
-    return signature("tasks.%s" % task_def['name'], kwargs=kwargs, immutable=True)
+    if params and task_name in params:
+        kwargs.update(params[task_name])
+    return signature("tasks.%s" % task_name, kwargs=kwargs, immutable=True)
 
 
 class JobConfig:
@@ -52,15 +55,15 @@ class JobConfig:
         self.job_types = {}
         self._parse_job_config()
 
-    def generate_job(self, job_type, object_id):
+    def generate_job(self, job_type, object_id, params=None):
         if job_type not in self.job_types:
             raise UnknownJobTypeException("No definition for given job type '%s' found" % job_type)
         job_def = self.job_types[job_type]
-        chain = _create_signature(_create_task_def(job_def[0]), object_id)
+        chain = _create_signature(_create_task_def(job_def[0]), object_id, params)
         prev_task = job_def[0]
         for task in job_def[1:]:
             task_def = _create_task_def(task)
-            chain |= _create_signature(task_def, object_id, prev_task)
+            chain |= _create_signature(task_def, object_id, params, prev_task)
             prev_task = task_def['name']
         return Job(chain)
 

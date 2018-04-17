@@ -1,6 +1,5 @@
 - retrieve
 - match:
-    pattern: "*.tif"
     run: rename
 - publish
 - cleanup_workdir

@@ -1,4 +1,4 @@
-from flask import Blueprint, url_for, jsonify
+from flask import Blueprint, url_for, jsonify, request
 from utils.celery_client import celery
 from service.job.job_config import JobConfig
 
@@ -10,7 +10,8 @@ print("job types: %s" % job_config.job_types)
 
 @job_controller.route('/<job_type>/<object_id>', methods=['POST'])
 def job_create(job_type, object_id):
-    job = job_config.generate_job(job_type, object_id)
+    params = request.get_json(force=True, silent=True)
+    job = job_config.generate_job(job_type, object_id, params)
     print("created job: %s" % job)
     task = job.run()
     print("created job with id: %s" % task.id)

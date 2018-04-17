@@ -12,7 +12,7 @@ working_dir = os.environ['WORKING_DIR']
 
 
 @celery.task(bind=True, name="tasks.match")
-def match(self, object_id, job_id, prev_task, pattern, run):
+def match(self, object_id, job_id, prev_task, run, pattern='*.tif'):
     source = os.path.join(working_dir, job_id, object_id, prev_task)
     subtasks = []
     for file in glob.iglob(os.path.join(source, pattern)):
