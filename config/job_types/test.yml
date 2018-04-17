@@ -1,5 +1,5 @@
-- retrieve
+- retrieve_from_staging
 - match:
     run: rename
-- publish
+- publish_to_repository
 - cleanup_workdir
