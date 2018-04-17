@@ -34,3 +34,9 @@ def rename(object_id, job_id, prev_task, parent_task, file):
     time.sleep(10)
     new_file = file.replace('.tif', '.jpg').replace(source, target)
     shutil.copyfile(file, new_file)
+
+
+@celery.task(name="tasks.cleanup_workdir")
+def cleanup_workdir(object_id, job_id, prev_task):
+    folder = os.path.join(working_dir, job_id)
+    shutil.rmtree(folder)
