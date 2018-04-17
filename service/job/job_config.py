@@ -1,6 +1,8 @@
 import yaml
 import glob
 import os
+import sys
+from service.job.job import Job
 from celery import signature
 
 
@@ -54,13 +56,13 @@ class JobConfig:
         if job_type not in self.job_types:
             raise UnknownJobTypeException("No definition for given job type '%s' found" % job_type)
         job_def = self.job_types[job_type]
-        job = _create_signature(_create_task_def(job_def[0]), object_id)
+        chain = _create_signature(_create_task_def(job_def[0]), object_id)
         prev_task = job_def[0]
         for task in job_def[1:]:
             task_def = _create_task_def(task)
-            job |= _create_signature(task_def, object_id, prev_task)
+            chain |= _create_signature(task_def, object_id, prev_task)
             prev_task = task_def['name']
-        return job
+        return Job(chain)
 
     def _parse_job_config(self):
         pattern = os.path.join(self._config_dir, "job_types", "*.yml")
