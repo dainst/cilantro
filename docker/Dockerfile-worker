@@ -1,5 +1,10 @@
 FROM python:alpine
 
+# needed for Pillow / PIL
+RUN apk update
+RUN apk add build-base jpeg-dev zlib-dev
+ENV LIBRARY_PATH=/lib:/usr/lib
+
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
