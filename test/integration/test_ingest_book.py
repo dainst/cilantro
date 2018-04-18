@@ -1,7 +1,7 @@
 from integration.job_type_test import JobTypeTest
 
 
-class JobTypeTestTest(JobTypeTest):
+class IngestBookTest(JobTypeTest):
 
     def setUp(self):
         super().setUp()
@@ -12,7 +12,7 @@ class JobTypeTestTest(JobTypeTest):
         super().tearDown()
 
     def test_success(self):
-        data = self.post_job('test', 'some_tiffs')
+        data = self.post_job('ingest_book', 'some_tiffs')
         self.assertEqual('Accepted', data['status'])
         self.assert_file_in_repository('some_tiffs', 'test.jpg')
         self.assert_status(data['job_id'], 'SUCCESS')
