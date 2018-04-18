@@ -9,7 +9,7 @@ from service.job.job_config import JobConfig, ConfigParseException, UnknownJobTy
 class JobConfigTest(unittest.TestCase):
 
     def test_valid(self):
-        os.environ['CONFIG_DIR'] = "test/resources/job_config_test/config_valid"
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_valid"
 
         job_config = JobConfig()
         job1 = job_config.generate_job("job1", "foo").chain
@@ -40,14 +40,14 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual(6, len(tasks))
 
     def test_unknown_job_type(self):
-        os.environ['CONFIG_DIR'] = "test/resources/job_config_test/config_valid"
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_valid"
         job_config = JobConfig()
         self.assertRaises(UnknownJobTypeException, job_config.generate_job, "job3", "foo")
 
     def test_invalid_yaml(self):
-        os.environ['CONFIG_DIR'] = "test/resources/job_config_test/config_invalid_yaml"
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_invalid_yaml"
         self.assertRaises(ConfigParseException, JobConfig)
 
     def test_invalid_definition(self):
-        os.environ['CONFIG_DIR'] = "test/resources/job_config_test/config_invalid_definition"
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_invalid_definition"
         self.assertRaises(ConfigParseException, JobConfig)
