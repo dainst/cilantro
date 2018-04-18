@@ -14,20 +14,21 @@ retry_time = 100
 
 class JobTypeTest(unittest.TestCase):
 
+    resource_dir = os.environ['RESOURCE_DIR']
     staging_dir = os.environ['STAGING_DIR']
     working_dir = os.environ['WORKING_DIR']
     repository_dir = os.environ['REPOSITORY_DIR']
 
     def setUp(self):
-        os.mkdir(self.working_dir)
-        os.mkdir(self.repository_dir)
+        try:
+            os.makedirs(self.staging_dir)
+            os.makedirs(self.working_dir)
+            os.makedirs(self.repository_dir)
+        except OSError:
+            pass
 
         app.testing = True
         self.client = app.test_client()
-
-    def tearDown(self):
-        shutil.rmtree(self.working_dir)
-        shutil.rmtree(self.repository_dir)
 
     def assert_file_in_repository(self, object_id, file_path):
         waited = 0
@@ -60,3 +61,12 @@ class JobTypeTest(unittest.TestCase):
     def post_job(self, job_type, object_id):
         response = self.client.post('/%s/%s' % (job_type, object_id))
         return json.loads(response.get_data(as_text=True))
+
+    def stage_resource(self, folder, object_id):
+        source = os.path.join(self.resource_dir, folder, object_id)
+        target = os.path.join(self.staging_dir, object_id)
+        shutil.copytree(source, target)
+
+    def unstage_resource(self, object_id):
+        source = os.path.join(self.staging_dir, object_id)
+        shutil.rmtree(source)

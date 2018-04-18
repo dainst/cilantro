@@ -1,9 +1,15 @@
-import os
-
 from integration.job_type_test import JobTypeTest
 
 
 class JobTypeTestTest(JobTypeTest):
+
+    def setUp(self):
+        super().setUp()
+        self.stage_resource('job_type_test', 'test_object')
+
+    def tearDown(self):
+        self.unstage_resource('test_object')
+        super().tearDown()
 
     def test_success(self):
         data = self.post_job('test', 'foo')
