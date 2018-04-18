@@ -1,5 +1,6 @@
 - retrieve_from_staging
 - match:
+    pattern: "*.tif"
     run: rename
 - publish_to_repository
 - cleanup_workdir
