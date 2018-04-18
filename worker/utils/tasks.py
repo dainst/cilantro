@@ -1,7 +1,6 @@
 import glob
 import os
 import shutil
-import time
 
 from celery import signature, group
 
