@@ -19,13 +19,15 @@ class JobTypeTest(unittest.TestCase):
     repository_dir = os.environ['REPOSITORY_DIR']
 
     def setUp(self):
+        os.mkdir(self.working_dir)
+        os.mkdir(self.repository_dir)
+
         app.testing = True
         self.client = app.test_client()
 
     def tearDown(self):
-        #shutil.rmtree(self.working_dir)
-        #shutil.rmtree(self.repository_dir)
-        pass
+        shutil.rmtree(self.working_dir)
+        shutil.rmtree(self.repository_dir)
 
     def assert_file_in_repository(self, object_id, file_path):
         waited = 0
