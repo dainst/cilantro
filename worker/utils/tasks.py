@@ -28,7 +28,6 @@ def match(self, object_id, job_id, prev_task, run, pattern='*.tif'):
 def rename(object_id, job_id, prev_task, parent_task, file):
     source = os.path.join(working_dir, job_id, object_id, prev_task)
     target = os.path.join(working_dir, job_id, object_id, parent_task)
-    time.sleep(10)
     new_file = file.replace('.tif', '.jpg').replace(source, target)
     shutil.copyfile(file, new_file)
 
