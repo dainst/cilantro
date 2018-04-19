@@ -82,7 +82,7 @@
 
 			<div class="panel-body">
 
-				<p ng-if='(zenon.selected < 0) && (journal.articles[currentArticle].zenonId != "(((new)))")' class='alert alert alert-warning'  data-tooltip="Click in the results table to select one. Change title an hit new search for if there are no results.">No corresponding entry in in Zenon selected!</p>
+				<p ng-if='(zenon.selected < 0) && (journal.articles[currentArticle].zenonId != "(((new)))")' class='alert alert alert-warning'  data-tooltip="Click in the results table to select one. Change title and hit New Search if there are no results.">No corresponding entry in in Zenon selected!</p>
 
 				<span class="btn-group">
 					<button ng-if="isArticleSelected()" class='btn btn-default' ng-click='compareWithZenon()'>New Search<span class="glyphicon glyphicon-search"></span></button>
