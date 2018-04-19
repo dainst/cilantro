@@ -13,6 +13,8 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
     }
 
 	$scope.uploadFiles = function(files, uploadTask, callback) {
+
+		//folder upload: saving relative path of file and adding it to meta data, for rebuilding directory structure
 		var i;
 		var paths = [];
 		for (i = 0; i < files.length; i++) {

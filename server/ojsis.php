@@ -489,7 +489,7 @@ class ojsis { // you're my wonderwall bla bla whimmer
 
 		for($i = 0; $i < count($_FILES['files']['name']); $i++) {
 
-
+			//folder upload - get directory structure information
 			$meta = $_POST;
 			$relative_path = $meta['path'][$i];
 			$folder = explode('/', $relative_path)[0];
