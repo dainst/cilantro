@@ -512,7 +512,11 @@ class ojsis { // you're my wonderwall bla bla whimmer
 				continue;
 			}
 
-			$this->log->warning($_FILES['files']['type'][$i]);
+			//folder-upload in firefox
+			if ($_FILES['files']['type'][$i] == 'application/octet-stream') {
+				$this->log->warning($_FILES['files']['name'][$i] . " is detected as a wrong filetype. \n\nIf you are trying to use folder upload, please switch to Chrome to use this feature.");
+				continue;
+			}
 
 			if (!in_array($_FILES['files']['type'][$i], $acceptedFiles)) {
 				$this->log->warning($_FILES['files']['name'][$i] . ' has wrong type ' . $_FILES['files']['type'][$i]);
