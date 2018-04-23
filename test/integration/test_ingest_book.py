@@ -1,4 +1,4 @@
-from integration.job_type_test import JobTypeTest
+from test.integration.job_type_test import JobTypeTest
 
 
 class IngestBookTest(JobTypeTest):

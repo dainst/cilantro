@@ -1,7 +1,7 @@
 import os
 import unittest
 from pathlib import Path
-from convert.converter import convert_tif2jpg
+from worker.convert.converter import convert_tif2jpg
 
 
 class Tif2JpgTest(unittest.TestCase):
