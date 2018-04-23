@@ -37,7 +37,7 @@
 
                     <?php $zenonId  = (isset($article->zenonId) and $article->zenonId and ($article->zenonId != '(((new)))')) ? $article->zenonId : ''; ?>
                     <?php if ($zenonId) { ?>
-                        <id type="other::zenon"><?php echo $zenonId ?></id>
+                        <id type="zenon_id"><?php echo $zenonId ?></id>
                     <?php } ?>
 
                     <?php if (!isset($article->author) or (!count($article->author))) {
