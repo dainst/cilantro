@@ -24,17 +24,14 @@
 			<button
 					ng-if="isArticleSelected()"
 					ng-click='dismissArticle()'
-					class='btn'
-					ng-class="{'btn-danger':(journal.articles[currentArticle]._.confirmed !== true)  && (journal.articles[currentArticle]._.confirmed !== false)}"
+					class='btn btn-danger'
 					ng-disabled="journal.articles[currentArticle]._.confirmed === false"
 			>{{journal.articles[currentArticle]._.confirmed === false ? "Dismissed" : "Dismiss"}}<span class="glyphicon glyphicon-remove"></span></button>
 			<button
 					ng-if="isArticleSelected() && checkArticle()"
 					ng-click='confirmArticle()'
-					class='btn'
-					ng-class="{'btn-success':(journal.articles[currentArticle]._.confirmed !== true)  && (journal.articles[currentArticle]._.confirmed !== false)}"
-					ng-disabled="journal.articles[currentArticle]._.confirmed === true"
-			>{{journal.articles[currentArticle]._.confirmed === true ? "Confirmed" : "Confirm"}}<span class="glyphicon glyphicon-chevron-right"></span></button>
+					class='btn btn-success'
+			>Confirm<span class="glyphicon glyphicon-chevron-right"></span></button>
 			<button
 					id = "upload"
 					ng-if="journal.articleStats.data.undecided == 0"
