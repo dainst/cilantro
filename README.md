@@ -12,7 +12,7 @@ operate on file system objects. It is written in Python (3.6+) and uses
 ### Testing the application manually
 
 In order for the test to function properly you have to create some files with
-.tif ending in the folder `./data/repository/foo/upload`.
+.tif ending in the folder `./data/staging/foo`.
 
 The web service runs on port 5000. The following command will create a test task:
 
@@ -36,4 +36,5 @@ or
 
     pip install -r test/requirements.txt
     python -m unittest
+    
 if your python is defaulted to `v3`.
