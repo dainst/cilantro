@@ -1,8 +1,9 @@
 import os
 
+
 def cut_pdf(data):
     articles = data['articles']
-    for number, article  in articles:
+    for number, article in articles:
         (start, end) = _start_end(article['pages'])
         name = _set_name(data, articles, number)
         try:
@@ -12,13 +13,13 @@ def cut_pdf(data):
                 "to": end,
                 "absolute": True
             }
-        except(NameError):
+        except NameError:
             print("Article without file")
         else:
             try:
                 attached = article['attached']
                 files = {**files, **attached}
-            except(NameError):
+            except NameError:
                 pass
 
             merge_str = _merge_pdf_string(files)
@@ -35,10 +36,11 @@ def _start_end(pages):
     start = pages['startPdf']
     try:
         end = pages['endPdf']
-    except(NameError):
+    except NameError:
         end = start
 
     return (start, end)
+
 
 def _set_name(data, article, number):
     isdir = os.path.isdir(data['data']['importFilePath'])
@@ -46,6 +48,7 @@ def _set_name(data, article, number):
     name = name.replace('/', '-').replace(' ', '-')
 
     return name
+
 
 def _merge_pdf_string(files):
     handles = "ABCDEFGHIJKLMNOPQRTUVWXYZ"
@@ -62,7 +65,7 @@ def _merge_pdf_string(files):
             handle_def.append(handle + '="' + file['file'] + '"')
             try:
                 cut_def.append(f"{handle}{file['from']}-{file['to']}")
-            except(NameError):
+            except NameError:
                 cut_def.append(handle)
         else:
             print(f"file {file['file']} could not be found")
