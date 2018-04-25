@@ -8,7 +8,7 @@ from flask import json
 from run_service import app
 from pathlib import Path
 
-wait_time = 15000
+wait_time = 5000
 retry_time = 100
 
 
@@ -65,8 +65,14 @@ class JobTypeTest(unittest.TestCase):
     def stage_resource(self, folder, object_id):
         source = os.path.join(self.resource_dir, folder, object_id)
         target = os.path.join(self.staging_dir, object_id)
-        shutil.copytree(source, target)
+        try:
+            shutil.copytree(source, target)
+        except FileExistsError:
+            pass
 
     def unstage_resource(self, object_id):
         source = os.path.join(self.staging_dir, object_id)
-        shutil.rmtree(source)
+        try:
+            shutil.rmtree(source)
+        except FileNotFoundError:
+            pass
