@@ -11,6 +11,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5000
 
 ENV FLASK_APP run_service.py
-#ENV FLASK_DEBUG 1
 
 ENTRYPOINT watchmedo auto-restart -R -d service -p="*.py" -- flask run --host=0.0.0.0
