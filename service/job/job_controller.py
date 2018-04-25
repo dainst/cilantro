@@ -39,8 +39,8 @@ def job_status(job_id):
 
 
 def _get_task_ids(task):
-    task_ids = []
+    task_ids = [task.id]
     while task.parent is not None:
-        task_ids.insert(0, task.id)
+        task_ids.insert(0, task.parent.id)
         task = task.parent
     return task_ids
