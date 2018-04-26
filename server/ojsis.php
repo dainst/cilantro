@@ -400,6 +400,12 @@ class ojsis { // you're my wonderwall bla bla whimmer
 
 	/* password related functions */
 
+	/* Front-End Kommunikation */
+
+	function checkPassword() {
+		$this->return['pw'] = $this->checkPw();
+	}
+
 	/**
 	 *
 	 * @return boolean
