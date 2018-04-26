@@ -17,7 +17,7 @@ class IngestBookTest(JobTypeTest):
     commented out until proper solution for
     http://dai-softsource.uni-koeln.de/issues/8297
     is found
-    
+
     def test_error(self):
         self.stage_resource('objects', 'test_object')
 

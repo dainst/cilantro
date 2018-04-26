@@ -1,5 +1,9 @@
 FROM python:alpine
 
+# needed for Pillow / PIL
+RUN apk update
+RUN apk add build-base jpeg-dev zlib-dev tiff-dev
+
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
