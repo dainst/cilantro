@@ -11,6 +11,7 @@ var Actions = function() {
         var correctPassword = require("../util/readSettings").get('password');
         var password = (success == false) ? correctPassword + "wrong": correctPassword;
         elements.login.passwordInput.sendKeys(password);
+        elements.login.submitPassword.click();
     };
 
     this.uploadFile = function(file = '../ressources/e2e-testing.pdf') {

@@ -22,26 +22,6 @@ describe('importer', function() {
             .then(check.numberOfArticles(1))
     });
 
-    it('should only start after right password input', function() {
-        browser.get(browser.baseUrl)
-            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
-
-            .then(action.login(false))
-            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
-
-            .then(select.protocol())
-            .then(select.file())
-            .then(button.startImport())
-            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
-            .then(expect(message.classOfMain()).toContain("alert-danger"))
-
-            .then(action.login())
-            .then(select.protocol())
-            .then(select.file())
-            .then(button.startImport())
-            .then(expect(message.classOfMain()).toContain("alert-success"))
-    });
-
     it('should start the testdata protocol', function() {
         browser.get(browser.baseUrl)
             .then(action.login())
@@ -63,6 +43,8 @@ describe('importer', function() {
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
 
     });
+
+    //'should only display input fields after right password input'
 
     it('should publish a file', function() {
         browser.get(browser.baseUrl)
