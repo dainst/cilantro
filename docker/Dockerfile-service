@@ -19,4 +19,4 @@ EXPOSE 5000
 
 ENV FLASK_APP run_service.py
 
-ENTRYPOINT watchmedo auto-restart -R -d service -p="*.py" -- flask run --host=0.0.0.0
+ENTRYPOINT watchmedo auto-restart -R -d service -d config -p="*.py;*.yml" -- flask run --host=0.0.0.0
