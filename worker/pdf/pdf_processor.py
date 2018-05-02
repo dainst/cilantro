@@ -3,7 +3,9 @@ import os
 
 def cut_pdf(data):
     articles = data['articles']
-    for number, article in articles:
+    number = 0
+    for article in articles:
+        number += 1
         (start, end) = _start_end(article['pages'])
         name = _set_name(data, articles, number)
         try:
@@ -17,7 +19,8 @@ def cut_pdf(data):
             print("Article without file")
         else:
             try:
-                attached = article['attached']
+                attached = dict(article['attached'])
+                print(f"Type files: {type(files)}, attached: {type(attached)}")
                 files = {**files, **attached}
             except NameError:
                 pass
@@ -25,12 +28,12 @@ def cut_pdf(data):
             merge_str = _merge_pdf_string(files)
             shell = f"pdftk {merge_str} output {os.environ['WORKING_DIR']}/{name} 2>&1"
             print(f"Excecuting shell command {shell}")
-            pdftk = os.system(shell)
-            if not (pdftk == ''):
-                raise Exception(f"Pdftk occured an error using {shell}, it returns {pdftk}.")
+            # pdftk = os.system(shell)
+            # if not (pdftk == ''):
+            #     raise Exception(f"Pdftk occured an error using {shell}, it returns {pdftk}.")
 
-            articles[number]['filepath'] = f"{os.environ['WORKING_DIR']}/{name}"
-
+            article['filepath'] = f"{os.environ['WORKING_DIR']}/{name}"
+    return 'success'
 
 def _start_end(pages):
     start = pages['startPdf']
@@ -43,7 +46,9 @@ def _start_end(pages):
 
 
 def _set_name(data, article, number):
+    article = article[0]
     isdir = os.path.isdir(data['data']['importFilePath'])
+    print(article)
     name = article['filepath'] if isdir else f"{article['filepath']}{number}.pdf"
     name = name.replace('/', '-').replace(' ', '-')
 
@@ -55,8 +60,10 @@ def _merge_pdf_string(files):
     handle_def = []
     cut_def = []
     position = 0
+    files = [files]
 
     for file in files:
+        print(f"FILES: {files}")
         position += 1
         if os.path.isfile(file['file']):
             handle = handles[position]
