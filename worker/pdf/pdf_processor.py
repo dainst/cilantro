@@ -3,14 +3,12 @@ import os
 
 def cut_pdf(data):
     articles = data['articles']
-    number = 0
-    for article in articles:
-        number += 1
+    for nr, article in enumerate(articles):
         (start, end) = _start_end(article['pages'])
-        name = _set_name(data, articles, number)
         try:
+            output = _set_output(data, article, nr)
             files = {
-                "file": f"{os.environ['REPOSITORY_DIR']}/{article['filepath']}",
+                "file": article['filepath'],
                 "from": start,
                 "to": end,
                 "absolute": True
@@ -18,22 +16,24 @@ def cut_pdf(data):
         except NameError:
             print("Article without file")
         else:
+            file_list = [files]
             try:
-                attached = dict(article['attached'])
-                print(f"Type files: {type(files)}, attached: {type(attached)}")
-                files = {**files, **attached}
+                attached = article['attached']
             except NameError:
                 pass
-
-            merge_str = _merge_pdf_string(files)
-            shell = f"pdftk {merge_str} output {os.environ['WORKING_DIR']}/{name} 2>&1"
+            else:
+                for attached_file in attached:
+                    file_list.append(attached_file)
+            merge_str = _merge_pdf_string(file_list)
+            shell = f"pdftk {merge_str} output {os.environ['WORKING_DIR']}/{output} 2>&1"
             print(f"Excecuting shell command {shell}")
             # pdftk = os.system(shell)
             # if not (pdftk == ''):
             #     raise Exception(f"Pdftk occured an error using {shell}, it returns {pdftk}.")
 
-            article['filepath'] = f"{os.environ['WORKING_DIR']}/{name}"
+            data['articles'][nr]['filepath'] = f"{os.environ['WORKING_DIR']}/{output}"
     return 'success'
+
 
 def _start_end(pages):
     start = pages['startPdf']
@@ -45,14 +45,13 @@ def _start_end(pages):
     return (start, end)
 
 
-def _set_name(data, article, number):
-    article = article[0]
+def _set_output(data, article, nr):
     isdir = os.path.isdir(data['data']['importFilePath'])
-    print(article)
-    name = article['filepath'] if isdir else f"{article['filepath']}{number}.pdf"
-    name = name.replace('/', '-').replace(' ', '-')
+    
+    name = article['filepath'] if isdir else f"{article['filepath']}.{nr}.pdf"
+    output = name.replace('/', '-').replace(' ', '-')
 
-    return name
+    return output
 
 
 def _merge_pdf_string(files):
@@ -60,15 +59,15 @@ def _merge_pdf_string(files):
     handle_def = []
     cut_def = []
     position = 0
-    files = [files]
 
     for file in files:
-        print(f"FILES: {files}")
+        try:
+            file['absoulte']
+        except KeyError:
+            file['file'] = f"{os.environ['REPOSITORY_DIR']}/{file['file']}"
+        handle = handles[position]
         position += 1
         if os.path.isfile(file['file']):
-            handle = handles[position]
-            if not file['absoulte']:
-                file['file'] = f"{os.environ['REPOSITORY_DIR']}/{file['file']}"
             handle_def.append(handle + '="' + file['file'] + '"')
             try:
                 cut_def.append(f"{handle}{file['from']}-{file['to']}")
