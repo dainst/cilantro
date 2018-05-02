@@ -51,7 +51,7 @@ def _merge_pdf_string(files):
         try:
             file['absoulte']
         except KeyError:
-            file['file'] = f"{os.environ['REPOSITORY_DIR']}/{file['file']}"
+            file['file'] = f"{os.environ['WORKING_DIR']}/{file['file']}"
         handle = handles[position]
         position += 1
         if os.path.isfile(file['file']):
