@@ -13,10 +13,13 @@ def cut_pdf(data):
             merge_str = _merge_pdf_string(files)
             output = _set_output(data, article, nr)
             shell = f"pdftk {merge_str} output {os.environ['WORKING_DIR']}/{output} 2>&1"
-            print(f"Excecuting shell command {shell}, but pdftk is not installed yet so we dont really excecute it")
-            # pdftk = os.system(shell)
-            # if not (pdftk == ''):
-            #     raise Exception(f"Pdftk occured an error using {shell}, it returns {pdftk}.")
+            print(f"Excecuting shell command {shell}")
+            pdftk = os.system(shell)
+            if not pdftk == 0:
+                if (pdftk == 32512):
+                    raise Exception(f"Pdftk not installed")
+                else:
+                    raise Exception(f"Pdftk occured an error using {shell}, it returns {pdftk}.")
 
             data['articles'][nr]['filepath'] = f"{os.environ['WORKING_DIR']}/{output}"
     return 'success'

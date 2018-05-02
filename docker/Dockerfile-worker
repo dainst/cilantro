@@ -1,8 +1,8 @@
-FROM python:alpine
+FROM python:rc-alpine
 
 # needed for Pillow / PIL
 RUN apk update
-RUN apk add build-base jpeg-dev zlib-dev tiff-dev
+RUN apk add build-base jpeg-dev zlib-dev tiff-dev pdftk
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
