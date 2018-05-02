@@ -3,10 +3,21 @@ FROM python:alpine
 # needed for Pillow / PIL
 RUN apk update
 RUN apk add build-base jpeg-dev zlib-dev tiff-dev
-ENV LIBRARY_PATH=/lib:/usr/lib
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+ENV LIBRARY_PATH=/lib:/usr/lib
+ENV PIPENV_VENV_IN_PROJECT=true
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
+
+RUN set -ex && mkdir /app
+# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
+WORKDIR /app
+
+COPY docker/Pipfile-worker Pipfile
+COPY docker/Pipfile-worker.lock Pipfile.lock
+
+RUN pip3 install pipenv
+RUN set -ex && pipenv install --deploy --system
 
 USER nobody
 

@@ -5,4 +5,4 @@ celery.autodiscover_tasks([
     'worker.convert',
     'worker.repository',
     'worker.utils'
-])
+], force=True)

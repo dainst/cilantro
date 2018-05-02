@@ -13,6 +13,11 @@ class IngestBookTest(JobTypeTest):
 
         self.unstage_resource('some_tiffs')
 
+    '''
+    commented out until proper solution for
+    http://dai-softsource.uni-koeln.de/issues/8297
+    is found
+
     def test_error(self):
         self.stage_resource('objects', 'test_object')
 
@@ -21,3 +26,4 @@ class IngestBookTest(JobTypeTest):
         self.assert_status(data['job_id'], 'ERROR')
 
         self.unstage_resource('test_object')
+    '''

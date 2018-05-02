@@ -1,5 +1,0 @@
-Flask
-celery[redis]
-pyyaml
-watchdog
-Pillow
