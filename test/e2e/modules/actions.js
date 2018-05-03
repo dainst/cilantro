@@ -14,6 +14,10 @@ var Actions = function() {
         elements.login.submitPassword.click();
     };
 
+    this.clearLoginField = function(){
+      elements.login.passwordInput.clear();
+    };
+
     this.uploadFile = function(file = '../ressources/e2e-testing.pdf') {
         browser.setFileDetector(new remote.FileDetector());
         var absolutePath = path.resolve(__dirname, file);
