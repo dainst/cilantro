@@ -1,11 +1,14 @@
 from flask import Blueprint, url_for, jsonify, request
 from utils.celery_client import celery
 from service.job.job_config import JobConfig
+import logging
+
+logger = logging.getLogger(__name__)
 
 job_controller = Blueprint('job', __name__)
 
 job_config = JobConfig()
-print("job types: %s" % job_config.job_types)
+logger.info(("job types: %s" % job_config.job_types)
 
 
 @job_controller.route('/<job_type>/<object_id>', methods=['POST'])
@@ -13,7 +16,7 @@ def job_create(job_type, object_id):
     params = request.get_json(force=True, silent=True)
     job = job_config.generate_job(job_type, object_id, params)
     task = job.run()
-    print("created job with id: %s" % task.id)
+    logger.info("created job with id: %s" % task.id)
 
     job_id = task.id
     task_ids = _get_task_ids(task)

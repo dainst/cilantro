@@ -2,8 +2,13 @@ import yaml
 import glob
 import os
 import sys
+import logging
 from service.job.job import Job
-from celery import signature
+from celery import signature, chord
+from utils.celery_client import celery
+
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigParseException(Exception):
@@ -69,12 +74,11 @@ class JobConfig:
 
     def _parse_job_config(self):
         pattern = os.path.join(self._config_dir, "job_types", "*.yml")
-        print("looking for job type configs in %s" % pattern)
-        print(os.getcwd())
+        logger.info("looking for job type configs in %s" % pattern)
         for file_name in glob.iglob(pattern):
-            print("found job type config in %s" % file_name)
+            logger.info("found job type config in %s" % file_name)
             job_type = _extract_job_type(file_name)
-            print("extracted job type defintion %s" % job_type)
+            logger.info("extracted job type defintion %s" % job_type)
             self.job_types[job_type] = _read_job_config_file(file_name)
             if not isinstance(self.job_types[job_type], list):
                 raise ConfigParseException("Error while reading job type definition: %s has to contain list at root")
