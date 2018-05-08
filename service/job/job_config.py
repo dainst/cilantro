@@ -8,9 +8,6 @@ from celery import signature, chord
 from utils.celery_client import celery
 
 
-logger = logging.getLogger(__name__)
-
-
 class ConfigParseException(Exception):
     pass
 
@@ -56,6 +53,7 @@ def _create_signature(task_def, object_id, params=None, prev_task=None):
 class JobConfig:
 
     def __init__(self):
+        self.logger = logging.getLogger(__name__)
         self._config_dir = os.environ['CONFIG_DIR']
         self.job_types = {}
         self._parse_job_config()
@@ -74,11 +72,12 @@ class JobConfig:
 
     def _parse_job_config(self):
         pattern = os.path.join(self._config_dir, "job_types", "*.yml")
-        logger.info("looking for job type configs in %s" % pattern)
+        self.logger.debug("looking for job type configs in %s" % pattern)
         for file_name in glob.iglob(pattern):
-            logger.info("found job type config in %s" % file_name)
+            self.logger.debug("found job type config in %s" % file_name)
             job_type = _extract_job_type(file_name)
-            logger.info("extracted job type defintion %s" % job_type)
+            self.logger.debug("extracted job type defintion %s" % job_type)
             self.job_types[job_type] = _read_job_config_file(file_name)
             if not isinstance(self.job_types[job_type], list):
                 raise ConfigParseException("Error while reading job type definition: %s has to contain list at root")
+        self.logger.info(("job types: %s" % self.job_types))
