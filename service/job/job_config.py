@@ -1,7 +1,6 @@
 import yaml
 import glob
 import os
-import sys
 import logging
 from service.job.job import Job
 from celery import signature, chord
