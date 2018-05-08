@@ -42,6 +42,7 @@ services:
     volumes:
       - .:/app
       - ./data:/data
+      - ./config:/config
     working_dir: /app
     environment:
       BROKER_HOST: "task-broker"
@@ -51,6 +52,7 @@ services:
       REPOSITORY_DIR: ${REPOSITORY_DIR}
       WORKING_DIR: ${WORKING_DIR}
       STAGING_DIR: ${STAGING_DIR}
+      CONFIG_DIR: ${CONFIG_DIR}
 
   task-monitor:
     build:
