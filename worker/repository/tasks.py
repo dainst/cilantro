@@ -1,14 +1,14 @@
 import os
 import shutil
 
-from utils.celery_client import celery
+from utils.celery_client import celery_app
 
 repository_dir = os.environ['REPOSITORY_DIR']
 working_dir = os.environ['WORKING_DIR']
 staging_dir = os.environ['STAGING_DIR']
 
 
-@celery.task(name="retrieve_from_staging", bind=True)
+@celery_app.task(name="retrieve_from_staging", bind=True)
 def retrieve_from_staging(self, object_id, job_id):
     if not os.path.exists(staging_dir):
         os.makedirs(staging_dir)
@@ -21,7 +21,7 @@ def retrieve_from_staging(self, object_id, job_id):
     shutil.copytree(source, target)
 
 
-@celery.task(name="publish_to_repository")
+@celery_app.task(name="publish_to_repository")
 def publish_to_repository(object_id, job_id, prev_task):
     source = os.path.join(working_dir, job_id, object_id, prev_task)
     target = os.path.join(repository_dir, object_id)

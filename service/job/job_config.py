@@ -5,7 +5,6 @@ import sys
 import logging
 from service.job.job import Job
 from celery import signature, chord
-from utils.celery_client import celery
 
 
 class ConfigParseException(Exception):

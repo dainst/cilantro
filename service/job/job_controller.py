@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, jsonify, request, g
-from utils.celery_client import celery
+from utils.celery_client import celery_app
 from service.job.job_config import JobConfig
 import logging
 
@@ -36,7 +36,7 @@ def job_create(job_type, object_id):
 
 @job_controller.route('/<job_id>', methods=['GET'])
 def job_status(job_id):
-    task = celery.AsyncResult(job_id)
+    task = celery_app.AsyncResult(job_id)
     response = {
         'status': task.state
     }
