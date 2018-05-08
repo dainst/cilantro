@@ -8,4 +8,4 @@ setup_logging()
 
 app = Flask('cilantro')
 app.register_blueprint(front_controller)
-app.register_blueprint(job_controller)
+app.register_blueprint(job_controller, url_prefix="/job")
