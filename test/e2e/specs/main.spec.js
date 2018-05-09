@@ -13,7 +13,8 @@ describe('importer', function() {
         browser.driver.manage().window().maximize();
     });
 
-    it('should upload a pdf-file', function() {
+    // TODO this test does not work with mock-backend because it can not handle file upload yet
+    xit('should upload a pdf-file', function() {
         browser.get(browser.baseUrl)
             .then(action.login())
             .then(select.protocol())
@@ -22,23 +23,25 @@ describe('importer', function() {
             .then(check.numberOfArticles(1))
     });
 
-    it('should only start after right password input', function() {
+
+    // TODO this test does not work with mock-backend because it can not distinguish between right and wrong pw
+    xit('should only start after right password input', function() {
         browser.get(browser.baseUrl)
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
 
             .then(action.login(false))
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
 
-            .then(select.protocol())
-            .then(select.file())
-            .then(button.startImport())
+            .then(select.protocol)
+            .then(select.file)
+            .then(button.startImport)
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
             .then(expect(message.classOfMain()).toContain("alert-danger"))
 
-            .then(action.login())
-            .then(select.protocol())
-            .then(select.file())
-            .then(button.startImport())
+            .then(action.login(true))
+            .then(select.protocol)
+            .then(select.file)
+            .then(button.startImport)
             .then(expect(message.classOfMain()).toContain("alert-success"))
     });
 
@@ -78,11 +81,9 @@ describe('importer', function() {
             .then(input.year())
             .then(select.journalCode())
             .then(button.uploadPub())
-            // dev mode without ojs
-            .then(expect(message.classOfMain()).toContain("alert-danger"))
-            // production mode with ojs
-            // .then(expect(message.classOfMain()).toContain("alert-success"))
+            .then(expect(message.classOfMain()).toContain("alert-success"))
     });
+
 
     it('should report a file to zenon', function() {
         browser.get(browser.baseUrl)
@@ -120,7 +121,8 @@ describe('importer', function() {
             .then(check.numberOfArticles(1))
     });
 
-    it('should import data with csv protocol', function() {
+    // TODO this test does not work with mock-backend because it can not handle file upload yet
+    xit('should import data with csv protocol', function() {
         var articlesInCsv = 2;
         browser.get(browser.baseUrl)
             .then(action.login())

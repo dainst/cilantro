@@ -10,7 +10,7 @@ var Selectors = function() {
         return elements.start.fileSelect.element(by.css("[value='" + file + "']")).click
     };
 
-    this.journalCode = function(code = 'aa') {
+    this.journalCode = function(code = 'test') {
         return elements.publish.select.get(1).element(by.css("[value='" + code + "']")).click
     };
     

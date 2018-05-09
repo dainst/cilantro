@@ -1,0 +1,6 @@
+{
+    "rep_url":      "http://localhost/repository/",
+    "server_url":   "http://localhost/importer/server/",
+    "ojs_url":      "http://ojs/",
+    "log_url":      "http://localhost/reports/"
+}

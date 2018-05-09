@@ -8,8 +8,8 @@ var EC = protractor.ExpectedConditions;
 var Actions = function() {
 
     this.login = function(success = true) {
-        var correctPassword = require("../util/readSettings").get('password');
-        var password = (success == false) ? correctPassword + "wrong": correctPassword;
+        var correctPassword = 'e2e-test-password';
+        var password = (success === false) ? correctPassword + "wrong": correctPassword;
         elements.login.passwordInput.sendKeys(password);
     };
 

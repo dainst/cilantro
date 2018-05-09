@@ -7,8 +7,11 @@
   },
   "description": "",
   "scripts": {
-    "build": "gulp build",
-    "e2e": "protractor test/e2e/protractor.conf.js"
+    "e2e_test": "protractor test/e2e/protractor.conf.js",
+    "mock-backend": "cd test/e2e/mock-backend && node backend.js",
+    "e2e": "npm run mock-backend & npm run server & npm run e2e_test",
+    "server": "gulp server",
+    "start": "npm run server"
   },
   "dependencies": {
     "angular": "1.6.7",
@@ -22,6 +25,10 @@
     "jasmine-core": "2.8.0",
     "protractor": "5.2.1",
     "protractor-console-plugin": "0.1.1",
-    "webdriver-manager": "12.0.6"
+    "webdriver-manager": "12.0.6",
+    "gulp": "3.9.1",
+    "json-server": "0.12.1",
+    "connect-modrewrite": "0.10.2",
+    "browser-sync": "2.18.13"
   }
 }

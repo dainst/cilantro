@@ -2,7 +2,7 @@ angular
 .module('module.settings', [])
 .factory("settings", ['$http', function($http) {
 	
-	var settings = angular.extend({}, window.settings); // @ TODO better settings implementation!
+	let settings = angular.extend({}, window.settings); // @ TODO better settings implementation!
 
 	$http.get('version.json').then(function(response) {
 		return settings.versionInfo = response.data;
@@ -12,7 +12,7 @@ angular
 
     settings.devMode = function() {
         return (typeof settings.password !== "undefined");
-    }
+    };
 
 	return settings;
 

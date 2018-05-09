@@ -18,13 +18,4 @@ $settings['ojs2']	= array(
 	'db' 			=>	'mysqldb',
     'port'          =>  '5432' // currently used for psql-databases
 );
-if (isset($_GET['js']) and ($_GET['js'] == 1)) {
-?>
-window.settings = {
-	"rep_url": 		"http://DOMAIN/chiron/data/",
-	"server_url": 	"http://DOMAIN/pimport/server/",
-	"ojs_url": 		"http://DOMAIN/ojs/",
-	"log_url":		"http://DOMAIN/pimport/reports/"
-    /* ,"password":     "password"  // your may include your password here for developing purpose" */
-}
-<?php } ?>
+
