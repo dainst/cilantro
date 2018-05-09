@@ -1,22 +1,10 @@
-var fs = require('fs');
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
 
-var settings = {};
-
-var contents = fs.readFileSync(path.join(__dirname,'../../../settings.php'), 'utf8');
-
-let regex = /'(\w+)'\s*=>\s*'([^']+)'/g;
-while ((m = regex.exec(contents)) !== null) {
-    if (m.index === regex.lastIndex) {
-        regex.lastIndex++;
-    }
-    if (typeof settings[m[1]] === "undefined") {
-        settings[m[1]] = m[2];
-    }
-}
+const config = JSON.parse(fs.readFileSync(path.join(__dirname,'../../../settings.test.json'), 'utf8'));
 
 module.exports = {
     get: function(s) {
-        return settings[s];
+        return config[s];
     }
 };

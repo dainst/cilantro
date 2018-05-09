@@ -3,6 +3,7 @@
 .project
 .settings
 settings.php
+settings.json
 standDerDinge.txt
 tmp/*
 reports/*

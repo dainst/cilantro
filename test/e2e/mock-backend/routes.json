@@ -1,0 +1,73 @@
+{
+  "getRepository": {
+    "task": "getRepository",
+    "success": true,
+    "warnings": [],
+    "uploadId": "test",
+    "repository": [
+      {
+        "path": "e2e-testing.pdf",
+        "caption": "e2e-testing.pdf",
+        "type": "file"
+      }
+    ]
+  },
+
+  "getBackendData": {
+    "task": "getBackendData",
+    "success": true,
+    "warnings": [],
+    "uploadId": "test",
+    "backendData": {
+      "journals": {
+        "test": {
+          "id": "2",
+          "locales": [
+            "en_US",
+            "de_DE",
+            "ru_RU",
+            "es_ES",
+            "fr_FR"
+          ]
+        }
+      }
+    }
+  },
+
+  "checkStart": {
+    "uploadId": "test",
+    "task": "checkStart",
+    "success": true,
+    "warnings": []
+  },
+
+  "toOJS": {
+    "uploadId": "test",
+    "task": "toOJS",
+    "success": true,
+    "message": "This would be an successfull upload if this where a real backend. Don't delete this message.",
+    "warnings": ["Don't believe this warning."]
+  },
+
+  "uploadCSV": {
+    "uploadId": "test",
+    "task": "uploadCSV",
+    "success": true,
+    "message": "Success",
+    "warnings": [],
+    "csv": "Titel,Name,Seiten,Startseite,Endseite,PDF-start,PDF-Ende\nDidyma und Milet in archaischer Zeit,Norbert Ehrhardt,11–20,11,20,19,28\nMilet und Athen im zweiten Jahrhundert v. Chr.,Wolfgang Günther,21–34,21,34,29,42"
+  },
+
+  "sendToZenon": {
+    "uploadId":"test",
+    "report":"aReport.xml",
+    "message":"Report successfully generated",
+    "task":"sendToZenon",
+    "success":true,
+    "warnings":[]
+  }
+
+
+
+
+}

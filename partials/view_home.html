@@ -103,6 +103,8 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Importer Version {{settings.versionInfo.version}}</div>
 			<div class="panel-body">
+                <div ng-show="settings.testMode()" class="alert alert-warning">Using Test-Config</div>
+                <div ng-show="settings.devMode()" class="alert alert-warning">In Dev-Mode (password provided)</div>
 				<strong>Version History</strong>
 				<ul style="max-height: 200px; overflow-y:auto">
 					<li ng-repeat="(version, features) in settings.versionInfo.history">
