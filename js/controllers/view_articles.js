@@ -92,8 +92,13 @@ angular
 
 				//journal.articles.splice($scope.currentArticle, 1);
 			}
-			$scope.selectNextArticle();
 			journal.articleStats.update();
+
+			if (journal.articleStats.data.undecided === 0){
+				$scope.continue();
+			} else {
+				$scope.selectNextArticle();
+			}
 
 		}
 
@@ -103,8 +108,13 @@ angular
 
 			journal.articles[$scope.currentArticle]._.confirmed = false;
 
-			$scope.selectNextArticle();
 			journal.articleStats.update();
+
+			if (journal.articleStats.data.undecided === 0){
+				$scope.continue();
+			} else {
+				$scope.selectNextArticle();
+			}
 		}
 
 
