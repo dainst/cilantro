@@ -11,6 +11,11 @@ var Actions = function() {
         var correctPassword = 'e2e-test-password';
         var password = (success === false) ? correctPassword + "wrong": correctPassword;
         elements.login.passwordInput.sendKeys(password);
+        elements.login.submitPassword.click();
+    };
+
+    this.clearLoginField = function(){
+      elements.login.passwordInput.clear();
     };
 
     this.uploadFile = function(file = '../ressources/e2e-testing.pdf') {

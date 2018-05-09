@@ -32,11 +32,6 @@
 					ng-click='confirmArticle()'
 					class='btn btn-success'
 			>Confirm<span class="glyphicon glyphicon-chevron-right"></span></button>
-			<button
-					id = "upload"
-					ng-if="journal.articleStats.data.undecided == 0"
-					class='btn btn-primary'
-					ng-click='continue()'>Upload<span class="glyphicon glyphicon-chevron-right"></span>
 			</button>
 		</span>
 	</div>
@@ -81,7 +76,7 @@
 
 			<div class="panel-body">
 
-				<p ng-if='(zenon.selected < 0) && (journal.articles[currentArticle].zenonId != "(((new)))")' class='alert alert alert-warning'  data-tooltip="Click in the results table to select one. Change title an hit new search for if there are no results.">No corresponding entry in in Zenon selected!</p>
+				<p ng-if='(zenon.selected < 0) && (journal.articles[currentArticle].zenonId != "(((new)))")' class='alert alert alert-warning'  data-tooltip="Click in the results table to select one. Change title and hit New Search if there are no results.">No corresponding entry in in Zenon selected!</p>
 
 				<span class="btn-group">
 					<button ng-if="isArticleSelected()" class='btn btn-default' ng-click='compareWithZenon()'>New Search<span class="glyphicon glyphicon-search"></span></button>

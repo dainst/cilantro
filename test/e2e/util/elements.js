@@ -15,6 +15,7 @@ module.exports = {
     },
     login: {
         passwordInput: element(by.css('h1 input[type="password"]')),
+        submitPassword: element(by.id('submit')),
     },
     message: {
         main: element(by.css('#info-container .alert.main-message')),

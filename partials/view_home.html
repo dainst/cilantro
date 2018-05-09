@@ -5,7 +5,12 @@
 	<div class="col-md-6">
 		<h1 style="margin-top:0px">
 			iDAI.publications/importer
-			<input type="password" class="form-control pull-right" ng-model='sec.password' placeholder="password" style="width:150px; display:inline">
+
+			<form class="form-inline input-group pull-right" ng-submit='checkPassword()' >
+			<input type="password" class="form-control" ng-model='sec.password' placeholder="password" style="width:150px; display:inline">
+			<input type="submit" id="submit" class="btn" value="Submit" />
+		</form>
+
 		</h1>
 
 	</div>
@@ -19,7 +24,7 @@
 	</div>
 </div>
 
-<div class="row" ng-show="sec.password != ''">
+<div class="row" ng-show="password_checked == true">
 	<div class="col-md-6">
 
 		<div class="panel panel-default">
@@ -57,7 +62,7 @@
 
 			<div class="panel-heading">Or upload PDF file</div>
 			<div class="panel-body">
-			    <button id="uploadFileSelect" class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File into this Box.</span>
+			    <button id="uploadFileSelect" class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File or Folder into this Box.</span>
 			    <br>
 
 			    <span class="progressbar">

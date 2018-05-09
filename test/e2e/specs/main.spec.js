@@ -67,6 +67,18 @@ describe('importer', function() {
 
     });
 
+    it('should only display input fields after correct password input', function () {
+        browser.get(browser.baseUrl)
+            .then(action.login(false))
+            .then(expect(message.classOfMain()).toContain("alert-danger"))
+            .then(action.clearLoginField())
+            .then(action.login())
+            .then(select.protocol())
+            .then(select.file())
+            .then(button.startImport())
+            .then(expect(message.classOfMain()).toContain("alert-success"))
+    })
+
     it('should publish a file', function() {
         browser.get(browser.baseUrl)
             .then(action.login())

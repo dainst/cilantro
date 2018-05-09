@@ -199,6 +199,16 @@ angular
 			});
 		}
 
+		/*checking password for first time login - to enable data input on first page */
+		$scope.checkPassword = function() {
+			//checkPw
+			webservice.get('checkPassword', {}, function(response) {
+					if(response.success){
+						$scope.password_checked = true;
+					}
+			});
+		}
+
 		/* some pdf things happen outside angular and need this */
 		$scope.$on('refreshView', function() {
 			if(!$scope.$$phase) {
