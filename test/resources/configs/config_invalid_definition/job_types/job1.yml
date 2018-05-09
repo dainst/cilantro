@@ -1,4 +1,4 @@
-tasks:
+task:
   - retrieve
   - match:
       pattern: "*.tif"
