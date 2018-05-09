@@ -537,9 +537,11 @@ class ojsis { // you're my wonderwall bla bla whimmer
 
 			if ($meta['path'][$i] == 'undefined'){
 				$x  = move_uploaded_file($_FILES['files']['tmp_name'][$i], $this->settings['rep_path'] . '/' . $destination);
+				$uploadedFiles[] = $destination;
 			} else {
 				if(!is_dir($this->settings['rep_path'] . '/' . $folder)){
 					mkdir($this->settings['rep_path'] . '/' . $folder, 0700);
+					$uploadedFiles[] = "[DIR] " . $folder;
 					}
 				$x = move_uploaded_file($_FILES['files']['tmp_name'][$i], $this->settings['rep_path'] . '/' . $folder . '/' . $destination);
 			}
@@ -549,7 +551,6 @@ class ojsis { // you're my wonderwall bla bla whimmer
 			$this->log->log($meta['path'][$i][0]);
 			$this->log->log('ul:' . $x . ':' . $destination);
 
-			$uploadedFiles[] = $destination;
 		}
 
 		$this->return['uploadedFiles'] = $uploadedFiles;
