@@ -1,6 +1,7 @@
  {
     "rep_url":      "http://localhost:3000/test/",
     "server_url":   "http://localhost:3000/test/",
+    "importer_url": "http://localhost:8086",
     "ojs_url":      "none",
     "log_url":      "none",
     "test":         true
