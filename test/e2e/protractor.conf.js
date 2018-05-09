@@ -3,7 +3,7 @@ process = require('process');
 
 exports.config = {
     chromeDriver : '../../node_modules/chromedriver/lib/chromedriver/chromedriver' + (process.platform === 'win32' ? '.exe' : ''),
-    baseUrl: require('./util/readSettings').get('importer_url'),
+    baseUrl: require('../settings.test.json').importer_url,
     suites: {
        util: './util/delays.js',
        tests: 'specs/*.spec.js'

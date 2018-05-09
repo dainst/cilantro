@@ -3,11 +3,11 @@ angular
 .factory("webservice", ['$http', '$rootScope', 'settings', 'messenger',
 	function($http, $rootScope, settings, messenger) {
 
-	var webservice = {};
+	let webservice = {};
 
 	webservice.sec = {
 		password: settings.password || ''
-	}
+	};
 
 	webservice.loading = false;
 
@@ -30,38 +30,41 @@ angular
 
         console.log('get', task);
 
-		$http({
-			method:	'POST',
-			url: settings.server_url,
-			data: {
-				task: task,
-				data: webservice.ojsisQuery(data)
-			}
-		}).then(
-			function(response) {
-                webservice.loading = false;
-				if (response.data.success === false) {
-					console.error(response.data.message);
-				}  else {
-					console.log("uid", webservice.uploadId);
+        settings._loaded.then(function() {
+            $http({
+                method:	'POST',
+                url: settings.server_url,
+                data: {
+                    task: task,
+                    data: webservice.ojsisQuery(data)
+                }
+            }).then(
+                function(response) {
+                    webservice.loading = false;
+                    if (response.data.success === false) {
+                        console.error(response.data.message);
+                    }  else {
+                        console.log("uid", webservice.uploadId);
 
-					if (!webservice.uploadId) {
-						webservice.uploadId = response.data.uploadId;
-					}
-					if (webservice.uploadId !== response.data.uploadId) {
-						console.log("got new uploadID, that's so wrong", webservice.uploadId, response.data.uploadId);
-					}
-				}
-				messenger.cast(response.data, appendLog);
-				callback(response.data);
-			},
-			function(err) {
-                webservice.loading = false;
-				messenger.alert(err,1, appendLog);
-				console.error(err);
-				callback(err);
-			}
-		);
+                        if (!webservice.uploadId) {
+                            webservice.uploadId = response.data.uploadId;
+                        }
+                        if (webservice.uploadId !== response.data.uploadId) {
+                            console.log("got new uploadID, that's so wrong", webservice.uploadId, response.data.uploadId);
+                        }
+                    }
+                    messenger.cast(response.data, appendLog);
+                    callback(response.data);
+                },
+                function(err) {
+                    webservice.loading = false;
+                    messenger.alert(err,1, appendLog);
+                    console.error(err);
+                    callback(err);
+                }
+            );
+		});
+
 	}
 
 	webservice.ojsisQuery = function(send) {
