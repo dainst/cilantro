@@ -3,7 +3,7 @@ The future Cilantro-Frontend
 
 # installation
 
-## a) with old PHP-Backend and Apache
+## a) with oldgit push origi8n PHP-Backend and Apache
 - clone to /var/www/importer or similar
 - configure apache to serve /var/www
 - npm install
