@@ -28,13 +28,14 @@ angular
 	'directive.multiselect',
 	'module.editables',
 
-	'module.settings',
+
 
 	'module.protocols.testdata',
 	'module.protocols.generic',
 	'module.protocols.chiron_parted',
-	'module.protocols.csv_import'
+	'module.protocols.csv_import',
 
+    'module.settings'
 
 ])
 

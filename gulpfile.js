@@ -35,15 +35,11 @@ gulp.task('server-e2e-test', function() {
 
     browserSync.init({
         server: {
-            rewriteRules: [
-                {
-                    match: /settings\.js/g,
-                    replace: "settings.test.js"
-                }
-            ],
+
             baseDir: '.',
             middleware: [
                 // rewrite for AngularJS HTML5 mode, redirect all non-file urls to index.html (copied from arache)
+                modRewrite(['settings.json$ settings.test.json [L]']),
                 modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg|\\.gif|\\.json|\\.woff2|\\.woff|\\.ttf$ /index.html [L]'])
             ]
         },

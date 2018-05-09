@@ -12,16 +12,19 @@ angular
                 console.log('settings', settings);
             }, function errorCallback(err) {
                 console.error(err);
-                //messenger.error("Version Info could not be loaded!");
             });
         }, function errorCallback(err) {
             console.error(err);
-            //messenger.error("Settings file could not be loaded!");
+            alert("settings file not available");
         });
 
 
     settings.devMode = function() {
         return (typeof settings.password !== "undefined");
+    };
+
+    settings.testMode = function() {
+      return (typeof settings.test !== "undefined") && settings.test;
     };
 
 	return settings;

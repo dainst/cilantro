@@ -3,7 +3,7 @@ angular
 	.factory("messenger", ["$rootScope", "settings", function($rootScope, settings) {
 		var messenger = {};
 
-		messenger.content = {}
+		messenger.content = {};
 		messenger.content.message = '';
 		messenger.content.success = true;
 		messenger.content.warnings = [];

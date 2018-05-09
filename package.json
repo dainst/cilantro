@@ -7,9 +7,10 @@
   },
   "description": "",
   "scripts": {
-    "e2e_test": "protractor test/e2e/protractor.conf.js",
-    "mock-backend": "cd test/e2e/mock-backend && node backend.js",
-    "e2e": "npm run mock-backend & npm run server & npm run e2e_test",
+    "e2e-test": "protractor test/e2e/protractor.conf.js",
+    "e2e-mock-backend": "cd test/e2e/mock-backend && node backend.js",
+    "e2e-server": "gulp server-e2e-test",
+    "e2e": "npm run e2e-mock-backend & npm run e2e-server & npm run e2e-test",
     "server": "gulp server",
     "start": "npm run server"
   },
