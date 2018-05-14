@@ -1,20 +1,22 @@
 import os
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def cut_pdf(data, source, target):
-
     articles = data['articles']
     for nr, article in enumerate(articles):
         try:
             article['filepath']
         except NameError:
-            print("Article without file")
+            log.info("Article without file")
         else:
             files = _set_files(article)
             merge_str = _merge_pdf_string(files, source)
             output = _set_output(data, article, nr)
             shell = f"pdftk {merge_str} output {target}/{output} 2>&1"
-            print(f"Excecuting shell command {shell}")
+            log.debug(f"Excecuting shell command {shell}")
             pdftk = os.system(shell)
             if not pdftk == 0:
                 if pdftk == 32512:
@@ -23,8 +25,6 @@ def cut_pdf(data, source, target):
                     raise Exception(f"Pdftk occured an error using {shell}, it returns {pdftk}.")
 
             data['articles'][nr]['filepath'] = f"{source}/{output}"
-    print('finished')
-    return 'success'
 
 
 def _start_end(pages):
@@ -66,11 +66,10 @@ def _merge_pdf_string(files, source):
             except NameError:
                 cut_def.append(handle)
         else:
-            print(f"file {file['file']} could not be found")
+            log.debug(f"file {file['file']} could not be found")
 
     handle_def = " ".join(handle_def)
     cut_def = " ".join(cut_def)
-    print(f"{handle_def} cat {cut_def}")
     return f"{handle_def} cat {cut_def}"
 
 
