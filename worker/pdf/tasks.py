@@ -1,10 +1,10 @@
 import os
 import json
 from worker.pdf.pdf_processor import cut_pdf
-from utils.celery_client import celery
+from utils.celery_client import celery_app
 
 
-@celery.task(name="process_pdf")
+@celery_app.task(name="process_pdf")
 def process_pdf(object_id, job_id, prev_task):
     source = os.path.join(os.environ['WORKING_DIR'], job_id, object_id, prev_task)
     target = os.path.join(os.environ['WORKING_DIR'], job_id, object_id, 'process_pdf')
