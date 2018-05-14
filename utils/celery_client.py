@@ -10,4 +10,4 @@ db_host = os.environ['DB_HOST']
 broker_config = 'amqp://' + broker_user + ':' + broker_password + '@' + broker_host + '/'
 result_config = 'redis://' + db_host
 
-celery = Celery('cilantro', broker=broker_config, backend=result_config)
+celery_app = Celery('cilantro', broker=broker_config, backend=result_config)

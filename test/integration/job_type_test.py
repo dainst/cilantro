@@ -54,12 +54,12 @@ class JobTypeTest(unittest.TestCase):
             status = self.get_status(job_id)
 
     def get_status(self, job_id):
-        response = self.client.get('/%s' % job_id)
+        response = self.client.get('/job/%s' % job_id)
         data = json.loads(response.get_data(as_text=True))
         return data['status']
 
     def post_job(self, job_type, object_id):
-        response = self.client.post('/%s/%s' % (job_type, object_id))
+        response = self.client.post('/job/%s/%s' % (job_type, object_id))
         return json.loads(response.get_data(as_text=True))
 
     def stage_resource(self, folder, object_id):

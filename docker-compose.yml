@@ -26,6 +26,7 @@ services:
       - "5000:5000"
     volumes:
       - .:/app
+      - ./data:/data
       - ./config:/config
     working_dir: /app
     environment:
@@ -33,6 +34,7 @@ services:
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
       DB_HOST: "task-db"
+      STAGING_DIR: ${STAGING_DIR}
       CONFIG_DIR: ${CONFIG_DIR}
 
   task-worker:
@@ -42,6 +44,7 @@ services:
     volumes:
       - .:/app
       - ./data:/data
+      - ./config:/config
     working_dir: /app
     environment:
       BROKER_HOST: "task-broker"
@@ -51,6 +54,7 @@ services:
       REPOSITORY_DIR: ${REPOSITORY_DIR}
       WORKING_DIR: ${WORKING_DIR}
       STAGING_DIR: ${STAGING_DIR}
+      CONFIG_DIR: ${CONFIG_DIR}
 
   task-monitor:
     build:
