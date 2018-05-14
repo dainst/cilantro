@@ -1,7 +1,8 @@
 import os
 
 
-def cut_pdf(data):
+def cut_pdf(data, source, target):
+
     articles = data['articles']
     for nr, article in enumerate(articles):
         try:
@@ -10,18 +11,19 @@ def cut_pdf(data):
             print("Article without file")
         else:
             files = _set_files(article)
-            merge_str = _merge_pdf_string(files)
+            merge_str = _merge_pdf_string(files, source)
             output = _set_output(data, article, nr)
-            shell = f"pdftk {merge_str} output {os.environ['WORKING_DIR']}/{output} 2>&1"
+            shell = f"pdftk {merge_str} output {target}/{output} 2>&1"
             print(f"Excecuting shell command {shell}")
             pdftk = os.system(shell)
             if not pdftk == 0:
-                if (pdftk == 32512):
+                if pdftk == 32512:
                     raise Exception(f"Pdftk not installed")
                 else:
                     raise Exception(f"Pdftk occured an error using {shell}, it returns {pdftk}.")
 
-            data['articles'][nr]['filepath'] = f"{os.environ['WORKING_DIR']}/{output}"
+            data['articles'][nr]['filepath'] = f"{source}/{output}"
+    print('finished')
     return 'success'
 
 
@@ -32,7 +34,7 @@ def _start_end(pages):
     except NameError:
         end = start
 
-    return (start, end)
+    return start, end
 
 
 def _set_output(data, article, nr):
@@ -44,7 +46,7 @@ def _set_output(data, article, nr):
     return output
 
 
-def _merge_pdf_string(files):
+def _merge_pdf_string(files, source):
     handles = "ABCDEFGHIJKLMNOPQRTUVWXYZ"
     handle_def = []
     cut_def = []
@@ -54,7 +56,7 @@ def _merge_pdf_string(files):
         try:
             file['absoulte']
         except KeyError:
-            file['file'] = f"{os.environ['WORKING_DIR']}/{file['file']}"
+            file['file'] = f"{source}/{file['file']}"
         handle = handles[position]
         position += 1
         if os.path.isfile(file['file']):
@@ -68,8 +70,9 @@ def _merge_pdf_string(files):
 
     handle_def = " ".join(handle_def)
     cut_def = " ".join(cut_def)
-
+    print(f"{handle_def} cat {cut_def}")
     return f"{handle_def} cat {cut_def}"
+
 
 def _set_files(article):
     (start, end) = _start_end(article['pages'])

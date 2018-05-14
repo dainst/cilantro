@@ -7,40 +7,39 @@ from worker.pdf.pdf_processor import cut_pdf
 
 class PdfProcessTest(unittest.TestCase):
 
-    test_pdf_res = 'test/resources/objects/pdf/e2e-testing.pdf'
+    resource_dir = os.environ['RESOURCE_DIR']
+    working_dir = os.environ['WORKING_DIR']
+    pdf_src = f'{resource_dir}/objects/pdf/e2e-testing.pdf'
     files_generated = [
-        'data/workspace/e2e-testing.pdf',
-        'data/workspace/e2e-testing.pdf.0.pdf',
-        'data/workspace/e2e-testing.pdf.1.pdf'
+        f'{working_dir}/e2e-testing.pdf',
+        f'{working_dir}/e2e-testing.pdf.0.pdf',
+        f'{working_dir}/e2e-testing.pdf.1.pdf'
     ]
+    source = working_dir
+    target = source
 
     def setUp(self):
-        try:
-            shutil.copy(self.test_pdf_res, self.files_generated[0])
-        except:
-            raise Exception(f'Copying {self.test_pdf_res} to {self.files_generated[0]} failed')
+        shutil.copy(self.pdf_src, self.files_generated[0])
 
     def test_success_no_attachment(self):
-        json_path = 'test/resources/objects/pdf/data_json/data.json'
+        json_path = f'{self.resource_dir}/objects/pdf/data_json/data.json'
         with open(json_path) as data_object:
             data = json.load(data_object)
-        cut_pdf(data)
+        cut_pdf(data, self.source, self.target)
         for f in self.files_generated:
             self.assertTrue(os.path.isfile(f))
 
     def test_success_attachment(self):
-        json_path = 'test/resources/objects/pdf/data_json/data_attached.json'
+        json_path = f'{self.resource_dir}/objects/pdf/data_json/data_attached.json'
         with open(json_path) as data_object:
             data = json.load(data_object)
-        cut_pdf(data)
+        cut_pdf(data, self.source, self.target)
         for f in self.files_generated:
             self.assertTrue(os.path.isfile(f))
 
-    # def tearDown(self):
-    #     for f in self.files_generated:
-    #         try:
-    #             os.remove(f)
-    #         except FileNotFoundError:
-    #             pass
-    #         except:
-    #             raise Exception(f'Removing {f} failed')
+    def tearDown(self):
+        for f in self.files_generated:
+            try:
+                os.remove(f)
+            except FileNotFoundError:
+                pass

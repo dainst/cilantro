@@ -1,0 +1,4 @@
+- retrieve_from_staging
+- process_pdf
+- publish_to_repository
+- cleanup_workdir

@@ -1,8 +1,8 @@
-FROM python:rc-alpine
+FROM python:3
 
 # needed for Pillow / PIL
-RUN apk update
-RUN apk add build-base jpeg-dev zlib-dev tiff-dev pdftk
+RUN apt-get update
+RUN apt-get -y install build-essential libjpeg-dev zlib1g-dev libtiff-dev pdftk
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
