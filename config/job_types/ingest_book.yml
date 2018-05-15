@@ -1,7 +1,6 @@
 tasks:
   - retrieve_from_staging
-  - match:
-      pattern: "*.[tT][iI][fF]*"
-      run: tif_to_jpg
+  - foreach: "*.[tT][iI][fF]*"
+    run: tif_to_jpg
   - publish_to_repository
   - cleanup_workdir

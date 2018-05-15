@@ -42,6 +42,8 @@ def _validate_job_type(job_config, job_type):
 def _create_task_def(task):
     if isinstance(task, str):
         return {'name': task}
+    elif 'foreach' in task:
+        return {'name': 'match', 'params': {'run': task['run']}}
     else:
         task_name = next(iter(task))  # first key
         return {'name': task_name, 'params': task[task_name]}
