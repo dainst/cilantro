@@ -61,6 +61,17 @@ def _create_signature(task_def, object_id, params=None, prev_task=None):
     return signature(task_name, kwargs=kwargs, immutable=True)
 
 
+def generate_chain(object_id, tasks_def, params):
+    chain = _create_signature(
+        _create_task_def(tasks_def[0]), object_id, params)
+    prev_task = tasks_def[0]
+    for task in tasks_def[1:]:
+        task_def = _create_task_def(task)
+        chain |= _create_signature(task_def, object_id, params, prev_task)
+        prev_task = task_def['name']
+    return chain
+
+
 class JobConfig:
 
     def __init__(self):
@@ -74,14 +85,7 @@ class JobConfig:
             raise UnknownJobTypeException(
                 "No definition for given job type '%s' found" % job_type)
         tasks_def = self.job_types[job_type]['tasks']
-        chain = _create_signature(
-            _create_task_def(tasks_def[0]), object_id, params)
-        prev_task = tasks_def[0]
-        for task in tasks_def[1:]:
-            task_def = _create_task_def(task)
-            chain |= _create_signature(task_def, object_id, params, prev_task)
-            prev_task = task_def['name']
-        return Job(chain)
+        return Job(generate_chain(object_id, tasks_def, params))
 
     def _parse_job_config(self):
         pattern = os.path.join(self._config_dir, "job_types", "*.yml")
