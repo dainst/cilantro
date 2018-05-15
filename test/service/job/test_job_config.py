@@ -26,7 +26,8 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('foo', tasks[1]['kwargs']['object_id'])
         self.assertEqual('retrieve', tasks[1]['kwargs']['prev_task'])
         self.assertEqual('*.tif', tasks[1]['kwargs']['pattern'])
-        self.assertEqual('convert', tasks[1]['kwargs']['do'])
+        self.assertEqual('convert', tasks[1]['kwargs']['do']['task'])
+        self.assertEqual('high', tasks[1]['kwargs']['do']['quality'])
 
         self.assertEqual('publish', tasks[2]['task'])
         self.assertEqual('foo', tasks[2]['kwargs']['object_id'])
@@ -38,6 +39,9 @@ class JobConfigTest(unittest.TestCase):
 
         tasks = job2.tasks
         self.assertEqual(6, len(tasks))
+
+        self.assertEqual('generate_pdf', tasks[1]['task'])
+        self.assertEqual('average', tasks[1]['kwargs']['quality'])
 
     def test_unknown_job_type(self):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_valid"
