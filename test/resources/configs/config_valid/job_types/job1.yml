@@ -1,6 +1,5 @@
 tasks:
   - retrieve
-  - match:
-      pattern: "*.tif"
-      run: convert
+  - foreach: "*.tif"
+    do: convert
   - publish

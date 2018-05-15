@@ -22,15 +22,15 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('retrieve', tasks[0]['task'])
         self.assertEqual('foo', tasks[0]['kwargs']['object_id'])
 
-        self.assertEqual('match', tasks[1]['task'])
+        self.assertEqual('foreach', tasks[1]['task'])
         self.assertEqual('foo', tasks[1]['kwargs']['object_id'])
         self.assertEqual('retrieve', tasks[1]['kwargs']['prev_task'])
         self.assertEqual('*.tif', tasks[1]['kwargs']['pattern'])
-        self.assertEqual('convert', tasks[1]['kwargs']['run'])
+        self.assertEqual('convert', tasks[1]['kwargs']['do'])
 
         self.assertEqual('publish', tasks[2]['task'])
         self.assertEqual('foo', tasks[2]['kwargs']['object_id'])
-        self.assertEqual('match', tasks[2]['kwargs']['prev_task'])
+        self.assertEqual('foreach', tasks[2]['kwargs']['prev_task'])
 
         job2 = job_config.generate_job("job2", "bar").chain
         self.assertTrue(isinstance(job2, Signature), "job2 is an instance of '%s', expected 'Signature'" % type(job1))
