@@ -9,8 +9,8 @@ repository_dir = os.environ['REPOSITORY_DIR']
 working_dir = os.environ['WORKING_DIR']
 
 
-@celery_app.task(bind=True, name="match")
-def match(self, object_id, job_id, prev_task, run, pattern='*.tif'):
+@celery_app.task(bind=True, name="foreach")
+def foreach(self, object_id, job_id, prev_task, do, pattern='*.tif'):
     source = os.path.join(working_dir, job_id, object_id, prev_task)
     target = os.path.join(working_dir, job_id, object_id, self.name)
     os.makedirs(target)
@@ -22,7 +22,7 @@ def match(self, object_id, job_id, prev_task, run, pattern='*.tif'):
             'file': file,
             'prev_task': prev_task
         }
-        subtasks.append(generate_chain(object_id, run, params))
+        subtasks.append(generate_chain(object_id, do, params))
     raise self.replace(group(subtasks))
 
 
