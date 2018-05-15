@@ -56,12 +56,12 @@ def _create_signature(task_def, object_id, params=None, prev_task=None):
         kwargs['prev_task'] = prev_task
     if 'params' in task_def:
         kwargs.update(task_def['params'])
-    if params and task_name in params:
-        kwargs.update(params[task_name])
+    if params:
+        kwargs.update(params)
     return signature(task_name, kwargs=kwargs, immutable=True)
 
 
-def generate_chain(object_id, tasks_def, params):
+def generate_chain(object_id, tasks_def, params=None):
     if not isinstance(tasks_def, list):
         tasks_def = [tasks_def]
     chain = _create_signature(

@@ -1,9 +1,8 @@
 import glob
 import os
 import shutil
-
-from celery import signature, group
-
+from service.job.job_config import generate_chain
+from celery import group
 from utils.celery_client import celery_app
 
 repository_dir = os.environ['REPOSITORY_DIR']
@@ -17,9 +16,13 @@ def match(self, object_id, job_id, prev_task, run, pattern='*.tif'):
     os.makedirs(target)
     subtasks = []
     for file in glob.iglob(os.path.join(source, pattern)):
-        subtasks.append(signature(
-            run, [object_id, job_id, prev_task, self.name, file]
-        ))
+        params = {
+            'job_id': job_id,
+            'parent_task': self.name,
+            'file': file,
+            'prev_task': prev_task
+        }
+        subtasks.append(generate_chain(object_id, run, params))
     raise self.replace(group(subtasks))
 
 
