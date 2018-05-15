@@ -11,7 +11,7 @@ tasks:
   - retrieve_from_staging
   - split_pdf
   - foreach: "article_*"
-    run:
+    do:
       - if: do_ocr
         do:
           - convert_pdf_to_tiff

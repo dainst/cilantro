@@ -10,11 +10,11 @@ working_dir = os.environ['WORKING_DIR']
 
 
 @celery_app.task(bind=True, name="foreach")
-def foreach(self, object_id, job_id, prev_task, do, pattern='*.tif'):
+def foreach(self, object_id, job_id, prev_task, subtasks, pattern='*.tif'):
     source = os.path.join(working_dir, job_id, object_id, prev_task)
     target = os.path.join(working_dir, job_id, object_id, self.name)
     os.makedirs(target)
-    subtasks = []
+    group_tasks = []
     for file in glob.iglob(os.path.join(source, pattern)):
         params = {
             'job_id': job_id,
@@ -22,8 +22,8 @@ def foreach(self, object_id, job_id, prev_task, do, pattern='*.tif'):
             'file': file,
             'prev_task': prev_task
         }
-        subtasks.append(generate_chain(object_id, do, params))
-    raise self.replace(group(subtasks))
+        group_tasks.append(generate_chain(object_id, subtasks, params))
+    raise self.replace(group(group_tasks))
 
 
 @celery_app.task(name="rename")

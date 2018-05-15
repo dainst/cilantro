@@ -1,3 +1,4 @@
+import logging
 import unittest
 import os
 
@@ -26,8 +27,8 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('foo', tasks[1]['kwargs']['object_id'])
         self.assertEqual('retrieve', tasks[1]['kwargs']['prev_task'])
         self.assertEqual('*.tif', tasks[1]['kwargs']['pattern'])
-        self.assertEqual('convert', tasks[1]['kwargs']['do']['task'])
-        self.assertEqual('high', tasks[1]['kwargs']['do']['quality'])
+        self.assertEqual('convert', tasks[1]['kwargs']['subtasks'][0]['name'])
+        self.assertEqual('high', tasks[1]['kwargs']['subtasks'][0]['params']['quality'])
 
         self.assertEqual('publish', tasks[2]['task'])
         self.assertEqual('foo', tasks[2]['kwargs']['object_id'])
