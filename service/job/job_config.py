@@ -62,6 +62,8 @@ def _create_signature(task_def, object_id, params=None, prev_task=None):
 
 
 def generate_chain(object_id, tasks_def, params):
+    if not isinstance(tasks_def, list):
+        tasks_def = [tasks_def]
     chain = _create_signature(
         _create_task_def(tasks_def[0]), object_id, params)
     prev_task = tasks_def[0]
