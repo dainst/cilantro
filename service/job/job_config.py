@@ -46,8 +46,8 @@ def _create_task_def(task):
         params = {'pattern': task['foreach'], 'do': task['do']}
         return {'name': 'foreach', 'params': params}
     else:
-        task_name = next(iter(task))  # first key
-        return {'name': task_name, 'params': task[task_name]}
+        task_name = task.pop('task')
+        return {'name': task_name, 'params': task}
 
 
 def _create_signature(task_def, object_id, params=None, prev_task=None):
