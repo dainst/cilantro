@@ -43,7 +43,8 @@ def _create_task_def(task):
     if isinstance(task, str):
         return {'name': task}
     elif 'foreach' in task:
-        return {'name': 'foreach', 'params': {'do': task['do']}}
+        params = {'pattern': task['foreach'], 'do': task['do']}
+        return {'name': 'foreach', 'params': params}
     else:
         task_name = next(iter(task))  # first key
         return {'name': task_name, 'params': task[task_name]}
