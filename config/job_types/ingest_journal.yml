@@ -1,5 +1,5 @@
 tasks:
   - retrieve_from_staging
-  - process_pdf
+  - split_pdf
   - publish_to_repository
   - cleanup_workdir
