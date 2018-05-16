@@ -1,6 +1,7 @@
 tasks:
   - retrieve
-  - generate_pdf
+  - task: generate_pdf
+    quality: average
   - ocr_pdf
   - split_pdf
   - merge_pdf

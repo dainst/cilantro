@@ -2,8 +2,9 @@ import yaml
 import glob
 import os
 import logging
+
 from service.job.job import Job
-from celery import signature, chord
+from celery import signature
 
 
 class ConfigParseException(Exception):
@@ -30,7 +31,7 @@ def _read_job_config_file(file_name):
         file.close()
 
 
-def _validate_job_type(job_config, job_type):
+def _validate_job_config(job_config, job_type):
     if 'tasks' not in job_config:
         raise ConfigParseException(
             "Missing attribute 'tasks' in job type %s" % job_type)
@@ -39,24 +40,68 @@ def _validate_job_type(job_config, job_type):
             "Attribute 'tasks' is no list in job type %s" % job_type)
 
 
-def _create_task_def(task):
-    if isinstance(task, str):
-        return {'name': task}
-    else:
-        task_name = next(iter(task))  # first key
-        return {'name': task_name, 'params': task[task_name]}
+def _expand_tasks_def(tasks_def):
+    task_list = []
+    if not isinstance(tasks_def, list):
+        tasks_def = [tasks_def]
+    for task_def in tasks_def:
+        task_list.append(_expand_task_def(task_def))
+    return task_list
 
 
-def _create_signature(task_def, object_id, params=None, prev_task=None):
-    task_name = task_def['name']
+def _expand_task_def(task_def):
+    if isinstance(task_def, str):
+        return {
+            'type': 'task',
+            'name': task_def
+        }
+    elif 'task' in task_def:
+        task_name = task_def.pop('task')
+        return {
+            'type': 'task',
+            'name': task_name,
+            'params': task_def
+        }
+    elif 'foreach' in task_def:
+        return {
+            'type': 'foreach',
+            'name': 'foreach',
+            'pattern': task_def['foreach'],
+            'do': _expand_tasks_def(task_def['do'])
+        }
+
+
+def generate_chain(object_id, tasks_def, request_params=None):
+    chain = _create_signature(tasks_def[0], object_id, request_params)
+    prev_task = tasks_def[0]['name']
+    for task_def in tasks_def[1:]:
+        chain |= _create_signature(task_def, object_id, request_params, prev_task)
+        prev_task = task_def['name']
+    return chain
+
+
+def _create_signature(task_def, object_id, request_params=None, prev_task=None):
+    if task_def['type'] == 'foreach':
+        return _create_foreach_signature(task_def, object_id, prev_task)
+    return _create_signature_for_task(task_def, object_id, request_params, prev_task)
+
+
+def _create_foreach_signature(task_def, object_id, prev_task=None):
+    kwargs = {'object_id': object_id, 'pattern': task_def['pattern'], 'subtasks': task_def['do']}
+    if prev_task is not None:
+        kwargs['prev_task'] = prev_task
+    return signature('foreach', kwargs=kwargs, immutable=True)
+
+
+def _create_signature_for_task(task_def, object_id, request_params=None, prev_task=None):
     kwargs = {'object_id': object_id}
     if prev_task is not None:
         kwargs['prev_task'] = prev_task
     if 'params' in task_def:
         kwargs.update(task_def['params'])
-    if params and task_name in params:
-        kwargs.update(params[task_name])
-    return signature(task_name, kwargs=kwargs, immutable=True)
+    if request_params:
+        kwargs.update(request_params)
+    return signature(task_def['name'], kwargs=kwargs, immutable=True)
 
 
 class JobConfig:
@@ -67,19 +112,12 @@ class JobConfig:
         self.job_types = {}
         self._parse_job_config()
 
-    def generate_job(self, job_type, object_id, params=None):
+    def generate_job(self, job_type, object_id, request_params=None):
         if job_type not in self.job_types:
             raise UnknownJobTypeException(
                 "No definition for given job type '%s' found" % job_type)
         tasks_def = self.job_types[job_type]['tasks']
-        chain = _create_signature(
-            _create_task_def(tasks_def[0]), object_id, params)
-        prev_task = tasks_def[0]
-        for task in tasks_def[1:]:
-            task_def = _create_task_def(task)
-            chain |= _create_signature(task_def, object_id, params, prev_task)
-            prev_task = task_def['name']
-        return Job(chain)
+        return Job(generate_chain(object_id, tasks_def, request_params))
 
     def _parse_job_config(self):
         pattern = os.path.join(self._config_dir, "job_types", "*.yml")
@@ -88,6 +126,7 @@ class JobConfig:
             self.logger.debug("found job type config in %s" % file_name)
             job_type = _extract_job_type(file_name)
             self.logger.debug("extracted job type defintion %s" % job_type)
-            self.job_types[job_type] = _read_job_config_file(file_name)
-            _validate_job_type(self.job_types[job_type], job_type)
+            job_config = _read_job_config_file(file_name)
+            _validate_job_config(job_config, job_type)
+            self.job_types[job_type] = {'tasks': _expand_tasks_def(job_config['tasks'])}
         self.logger.info(("job types: %s" % self.job_types))

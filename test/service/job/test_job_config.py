@@ -1,3 +1,4 @@
+import logging
 import unittest
 import os
 
@@ -22,15 +23,16 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('retrieve', tasks[0]['task'])
         self.assertEqual('foo', tasks[0]['kwargs']['object_id'])
 
-        self.assertEqual('match', tasks[1]['task'])
+        self.assertEqual('foreach', tasks[1]['task'])
         self.assertEqual('foo', tasks[1]['kwargs']['object_id'])
         self.assertEqual('retrieve', tasks[1]['kwargs']['prev_task'])
         self.assertEqual('*.tif', tasks[1]['kwargs']['pattern'])
-        self.assertEqual('convert', tasks[1]['kwargs']['run'])
+        self.assertEqual('convert', tasks[1]['kwargs']['subtasks'][0]['name'])
+        self.assertEqual('high', tasks[1]['kwargs']['subtasks'][0]['params']['quality'])
 
         self.assertEqual('publish', tasks[2]['task'])
         self.assertEqual('foo', tasks[2]['kwargs']['object_id'])
-        self.assertEqual('match', tasks[2]['kwargs']['prev_task'])
+        self.assertEqual('foreach', tasks[2]['kwargs']['prev_task'])
 
         job2 = job_config.generate_job("job2", "bar").chain
         self.assertTrue(isinstance(job2, Signature), "job2 is an instance of '%s', expected 'Signature'" % type(job1))
@@ -38,6 +40,9 @@ class JobConfigTest(unittest.TestCase):
 
         tasks = job2.tasks
         self.assertEqual(6, len(tasks))
+
+        self.assertEqual('generate_pdf', tasks[1]['task'])
+        self.assertEqual('average', tasks[1]['kwargs']['quality'])
 
     def test_unknown_job_type(self):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_valid"

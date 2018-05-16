@@ -1,39 +1,24 @@
-params:
-  do_ocr: boolean
-  publish_to_webanno: boolean
-  ojs_journal_code: string
-  auto_publish_issue: boolean
-  default_publish_articles: boolean
-  default_create_frontpage: boolean
-  allow_upload_without_file: boolean
-
 tasks:
   - retrieve_from_staging
   - split_pdf
-  - match:
-      pattern: "article_*"
-      run:
-        - if:
-            test: do_ocr
-            then:
-              - convert_pdf_to_tiff
-              - ocr_from_tiff
-            else: extract_txt_from_pdf
-        - generate_frontmatter
+  - foreach: "article_*"
+    do:
+      - if: do_ocr
+        do:
+          - convert_pdf_to_tiff
+          - ocr_from_tiff
+        else: extract_txt_from_pdf
+      - generate_frontmatter
   - publish_to_ojs
-  - match:
-      pattern: "article_*"
-      run:
-        - if_not:
-            test: do_ocr
-            then: convert_pdf_to_tiff
-        - match:
-            pattern: "*.[tT][iI][fF]*"
-            run: convert_tif_to_jpg
-        - extract_entities
-        - if:
-            test: publish_to_webanno
-            then: publish_to_webanno
-        - convert_tsv_to_wadm:
-            mapping: config/tsv_mappings/webanno.yml
+  - foreach: "article_*"
+    do:
+      - unless: do_ocr
+        do: convert_pdf_to_tiff
+      - foreach: "*.[tT][iI][fF]*"
+        do: convert_tif_to_jpg
+      - extract_entities
+      - if: publish_to_webanno
+        do: publish_to_webanno
+      - task: convert_tsv_to_wadm
+        mapping: config/tsv_mappings/webanno.yml
   - cleanup_workdir
