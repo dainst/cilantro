@@ -4,7 +4,8 @@ Cilantro is a task runner designed to manage long running distributed jobs that
 operate on file system objects. It is written in Python (3.6+) and uses
 [Celery](http://docs.celeryproject.org/) and [Flask](http://flask.pocoo.org/).
 
-
+## Install
+Copy the `.env-default` file to `.env` and modify it, do the same thing with `test/integration/env-default.py`.
 ## Running the app with docker
 
     docker-compose build
