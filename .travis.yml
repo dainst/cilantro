@@ -1,0 +1,13 @@
+language: python
+sudo: required
+services:
+  - docker
+python:
+  - 3.6
+before_install:
+  - pip install pipenv
+  - docker-compose build
+  - docker-compose up
+install:
+  - pipenv install
+script: python -m unittests
