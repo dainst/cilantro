@@ -12,8 +12,7 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - pip install pipenv
-  - docker-compose build
-  - docker-compose start
+  - docker-compose up -d
 install:
   - pipenv install
 script: python -m unittests
