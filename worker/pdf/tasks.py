@@ -1,6 +1,6 @@
 import os
 import json
-from worker.pdf.pdf_processor import cut_pdf
+from worker.pdf.pdf import cut_pdf
 from utils.celery_client import celery_app
 
 

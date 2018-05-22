@@ -2,10 +2,10 @@ import json
 import shutil
 import os
 import unittest
-from worker.pdf.pdf_processor import cut_pdf
+from worker.pdf.pdf import cut_pdf
 
 
-class PdfProcessTest(unittest.TestCase):
+class CutPdfTest(unittest.TestCase):
 
     resource_dir = os.environ['RESOURCE_DIR']
     working_dir = os.environ['WORKING_DIR']
