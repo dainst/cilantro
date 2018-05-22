@@ -38,6 +38,7 @@ services:
       CONFIG_DIR: ${CONFIG_DIR}
 
   task-worker:
+    user: ${UID}
     build:
       context: .
       dockerfile: docker/Dockerfile-worker

@@ -13,4 +13,5 @@ class IngestJournalTest(JobTypeTest):
         files_generated = [f'e2e-testing.pdf.0.pdf', f'e2e-testing.pdf.1.pdf']
         for file in files_generated:
             self.assert_file_in_repository('pdf', file)
+            self.remove_file_from_repository('pdf', file)
         self.unstage_resource('pdf')

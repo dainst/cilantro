@@ -7,7 +7,9 @@ import unittest
 from flask import json
 from run_service import app
 from pathlib import Path
+import logging
 
+log = logging.getLogger(__name__)
 wait_time = 5000
 retry_time = 100
 
@@ -76,3 +78,14 @@ class JobTypeTest(unittest.TestCase):
             shutil.rmtree(source)
         except FileNotFoundError:
             pass
+
+    def remove_file_from_repository(self, object_id, file_path):
+        file = os.path.join(self.repository_dir, object_id, file_path)
+        log.info(f'FILE: {file}')
+        try:
+            os.remove(file)
+            print(f'\n\n\nremoved {file}\n\n\n')
+        except PermissionError:
+            user = os.getuid()
+            group = os.getegid()
+            raise PermissionError(f'Permission for removing {file} denied for user {user} group {group}')
