@@ -28,3 +28,4 @@ def publish_to_repository(object_id, job_id, prev_task):
     if os.path.exists(target):
         shutil.rmtree(target)
     shutil.copytree(source, target)
+

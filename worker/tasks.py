@@ -13,6 +13,7 @@ def on_celery_setup_logging(**kwargs):
 
 celery_app.autodiscover_tasks([
     'worker.convert',
+    'worker.pdf',
     'worker.repository',
     'worker.utils'
 ], force=True)
