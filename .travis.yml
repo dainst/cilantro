@@ -12,7 +12,6 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - pip install pipenv==${PIPENV_VERSION}
-  - echo "Current UID: $UID"
   - mkdir data
   - mkdir data/staging
   - mkdir data/repository
