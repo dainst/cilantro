@@ -30,7 +30,7 @@ operate on file system objects. It is written in Python (3.6+) and uses
 
 To stop the application run:
 
-    `docker-compose stop`
+    docker-compose stop
 
 ### Testing the application manually
 
@@ -71,6 +71,6 @@ This will build, start and stop the docker infrastructure and run the tests.
 On Linux hosts the tests will fail because the data directory created by
 docker not have the right permissions and the user account that runs the test can not access it. The easiest way to fix that is just to change the owner on the whole directory and subfolders.
 
-    `sudo chown -R $(whoami):$(whoami) data/`
+    sudo chown -R $(whoami):$(whoami) data/
 
 After that re-run the tests and they may succeed.
