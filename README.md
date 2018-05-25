@@ -55,6 +55,11 @@ is available for debugging under http://localhost:5555.
 * Start the application as described under [Running the app with docker
 ](https://github.com/dainst/cilantro#running-the-app-with-docker)
 
+* Activate the vrtual environment. When active you will see the name of the virtual environment (cilantro) in brackets in front of the shell prompt.
+You can leave the virtual environment by typing 'exit' or Ctrl-D.
+
+    `pipenv shell`
+
 * Run the tests
 
     `python3 -m unittest`
