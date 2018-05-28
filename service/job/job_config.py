@@ -4,7 +4,7 @@ import os
 import logging
 
 from service.job.job import Job
-from celery import signature
+from utils.celery_client import celery_app
 
 
 class ConfigParseException(Exception):
@@ -90,7 +90,7 @@ def _create_foreach_signature(task_def, object_id, prev_task=None):
     kwargs = {'object_id': object_id, 'pattern': task_def['pattern'], 'subtasks': task_def['do']}
     if prev_task is not None:
         kwargs['prev_task'] = prev_task
-    return signature('foreach', kwargs=kwargs, immutable=True)
+    return celery_app.signature('foreach', kwargs=kwargs, immutable=True)
 
 
 def _create_signature_for_task(task_def, object_id, request_params=None, prev_task=None):
@@ -101,7 +101,7 @@ def _create_signature_for_task(task_def, object_id, request_params=None, prev_ta
         kwargs.update(task_def['params'])
     if request_params:
         kwargs.update(request_params)
-    return signature(task_def['name'], kwargs=kwargs, immutable=True)
+    return celery_app.signature(task_def['name'], kwargs=kwargs, immutable=True)
 
 
 class JobConfig:
