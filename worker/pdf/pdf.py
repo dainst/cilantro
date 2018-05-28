@@ -10,7 +10,7 @@ def cut_pdf(data, source, target):
         try:
             article['filepath']
         except NameError:
-            log.info("Article without file")
+            raise Exception("Article without file")
         else:
             files = _set_files(article)
             merge_str = _merge_pdf_string(files, source)
