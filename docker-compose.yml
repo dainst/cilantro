@@ -57,6 +57,27 @@ services:
       STAGING_DIR: ${STAGING_DIR}
       CONFIG_DIR: ${CONFIG_DIR}
 
+  cilantro-test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-test
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    working_dir: /app
+    tty: true
+    environment:
+      BROKER_HOST: "task-broker"
+      BROKER_USER: ${BROKER_USER}
+      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      DB_HOST: "task-db"
+      REPOSITORY_DIR: ${REPOSITORY_DIR}
+      WORKING_DIR: ${WORKING_DIR}
+      STAGING_DIR: ${STAGING_DIR}
+      CONFIG_DIR: ${CONFIG_DIR}
+      RESOURCE_DIR: "test/resources"
+
   task-monitor:
     build:
       context: .
