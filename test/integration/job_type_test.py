@@ -2,7 +2,6 @@ import os
 import shutil
 import time
 # noinspection PyUnresolvedReferences
-import test.integration.env
 import unittest
 from flask import json
 from run_service import app
