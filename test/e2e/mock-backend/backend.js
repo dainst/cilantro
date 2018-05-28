@@ -13,8 +13,7 @@ server.use(bodyParser.json());
 server.use(middleWares);
 server.use(fakeRest);
 
-server.use('/test/e2e-testing.pdf', express.static(path.join(__dirname, '/../ressources/e2e-testing.pdf')));
-server.use('/test/e2e-testing.csv', express.static(path.join(__dirname, '/../ressources/e2e-testing.csv')));
+server.use('/test', express.static(path.join(__dirname, '/../ressources')));
 
 server.use(router);
 server.listen(port, () => {
