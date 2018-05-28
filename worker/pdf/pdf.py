@@ -39,7 +39,7 @@ def _start_end(pages):
 
 def _set_output(data, article, nr):
     isdir = os.path.isdir(data['data']['importFilePath'])
-    
+
     name = article['filepath'] if isdir else f"{article['filepath']}.{nr}.pdf"
     output = name.replace('/', '-').replace(' ', '-')
 
