@@ -11,12 +11,9 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
-  - pip install pipenv==${PIPENV_VERSION}
   - mkdir data
   - mkdir data/staging
   - mkdir data/repository
   - mkdir data/workspace
   - docker-compose up -d
-install:
-  - pipenv install
-script: python -m unittest
+script: docker exec cilantro_cilantro-test_1 pipenv run python -m unittest
