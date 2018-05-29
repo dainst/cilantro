@@ -9,7 +9,7 @@ from pathlib import Path
 import logging
 
 log = logging.getLogger(__name__)
-wait_time = 5000
+wait_time = 20000
 retry_time = 100
 
 
