@@ -55,14 +55,9 @@ is available for debugging under http://localhost:5555.
 * Start the application as described under [Running the app with docker
 ](https://github.com/dainst/cilantro#running-the-app-with-docker)
 
-* Activate the vrtual environment. When active you will see the name of the virtual environment (cilantro) in brackets in front of the shell prompt.
-You can leave the virtual environment by typing 'exit' or Ctrl-D.
+* Run the tests inside the dedicated docker container
 
-    `pipenv shell`
-
-* Run the tests
-
-    `python3 -m unittest`
+    `docker exec cilantro_cilantro-test_1 pipenv run python -m unittest`
 
 * Alternatively you can run the complete build script out of the [build-scripts repository](https://github.com/dainst/build-scripts/).
 After cloing the repo into your workspace, run the following command from within your cilantro directory.
