@@ -17,4 +17,4 @@ before_install:
   - mkdir data/workspace
   - docker-compose build
   - docker-compose up -d
-script: docker exec cilantro_cilantro-test_1 pipenv run python -m unittest
+script: docker exec cilantro_cilantro-test_1 python -m unittest
