@@ -5,7 +5,14 @@ services:
 python:
   - 3.6
 env:
-  - DOCKER_COMPOSE_VERSION=1.21.1 
+  global:
+    - DOCKER_COMPOSE_VERSION=1.21.1
+    - BROKER_USER=user
+    - BROKER_PASSWORD=password
+    - REPOSITORY_DIR=/data/repository
+    - WORKING_DIR=/data/workspace
+    - STAGING_DIR=/data/staging
+    - CONFIG_DIR=/config
 before_install:
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
