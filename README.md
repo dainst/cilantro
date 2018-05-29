@@ -5,23 +5,17 @@ operate on file system objects. It is written in Python (3.6+) and uses
 [Celery](http://docs.celeryproject.org/) and [Flask](http://flask.pocoo.org/).
 
 ## Install
-* Copy the `.env-default` file to `.env` and modify it, do the same thing with `test/integration/env-default.py`.
+* Copy the `.env-default` file to `.env` and modify it. In most cases only
+  `UID` has to be adjusted. The UID / GID of the current user can be read with
+  `id -u` / `id -g` on UNIX systems.
 
 * Install docker (Community Edition)
 
-    You might have to add the proper 3rd party PPA. Refer to the official documentation. Example for Ubuntu-based distributions: https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce
+    You might have to add the proper 3rd party PPA. Refer to the officia
+    documentation. Example for Ubuntu-based distributions:
+    https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce
 
     `sudo apt install docker-ce`
-
-* Install Pip and Pipenv
-
-    `sudo apt-get install python3-pip`
-
-    `pip install pipenv`
-
-* Install the necessary python packages via pipenv. This uses the local Pipfile in the directory.
-
-    `pipenv install`
 
 ## Running the app with docker
 
@@ -57,10 +51,11 @@ is available for debugging under http://localhost:5555.
 
 * Run the tests inside the dedicated docker container
 
-    `docker exec cilantro_cilantro-test_1 pipenv run python -m unittest`
+    `docker exec cilantro_cilantro-test_1 python -m unittest`
 
-* Alternatively you can run the complete build script out of the [build-scripts repository](https://github.com/dainst/build-scripts/).
-After cloing the repo into your workspace, run the following command from within your cilantro directory.
+* Alternatively you can run the complete build script out of the
+  [build-scripts repository](https://github.com/dainst/build-scripts/).
+  After cloing the repo into your workspace, run the following command from within your cilantro directory.
 
     `../build-scripts/cilantro-build.sh`
 
