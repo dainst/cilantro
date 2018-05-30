@@ -5,13 +5,14 @@ operate on file system objects. It is written in Python (3.6+) and uses
 [Celery](http://docs.celeryproject.org/) and [Flask](http://flask.pocoo.org/).
 
 ## Install
+
 * Copy the `.env-default` file to `.env` and modify it. In most cases only
   `UID` has to be adjusted. The UID / GID of the current user can be read with
   `id -u` / `id -g` on UNIX systems.
 
 * Install docker (Community Edition)
 
-    You might have to add the proper 3rd party PPA. Refer to the officia
+    You might have to add the proper 3rd party PPA. Refer to the official
     documentation. Example for Ubuntu-based distributions:
     https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce
 

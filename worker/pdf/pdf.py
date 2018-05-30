@@ -10,7 +10,7 @@ def cut_pdf(data, source, target):
         try:
             article['filepath']
         except NameError:
-            log.info("Article without file")
+            raise Exception("Article without file")
         else:
             files = _set_files(article)
             merge_str = _merge_pdf_string(files, source)
@@ -39,7 +39,7 @@ def _start_end(pages):
 
 def _set_output(data, article, nr):
     isdir = os.path.isdir(data['data']['importFilePath'])
-    
+
     name = article['filepath'] if isdir else f"{article['filepath']}.{nr}.pdf"
     output = name.replace('/', '-').replace(' ', '-')
 
