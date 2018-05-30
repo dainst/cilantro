@@ -80,10 +80,9 @@ class JobTypeTest(unittest.TestCase):
 
     def remove_file_from_repository(self, object_id, file_path):
         file = os.path.join(self.repository_dir, object_id, file_path)
-        log.info(f'FILE: {file}')
         try:
             os.remove(file)
-            print(f'\n\n\nremoved {file}\n\n\n')
+            log.debug(f'\n\n\nremoved {file}\n\n\n')
         except PermissionError:
             user = os.getuid()
             group = os.getegid()
