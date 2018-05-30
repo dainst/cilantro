@@ -26,20 +26,20 @@ class CutPdfTest(unittest.TestCase):
         with open(json_path) as data_object:
             data = json.load(data_object)
         cut_pdf(data, self.source, self.target)
-        for f in self.files_generated:
-            self.assertTrue(os.path.isfile(f))
+        for file_generated in self.files_generated:
+            self.assertTrue(os.path.isfile(file_generated))
 
     def test_success_attachment(self):
         json_path = f'{self.resource_dir}/objects/pdf/data_json/data_attached.json'
         with open(json_path) as data_object:
             data = json.load(data_object)
         cut_pdf(data, self.source, self.target)
-        for f in self.files_generated:
-            self.assertTrue(os.path.isfile(f))
+        for file_generated in self.files_generated:
+            self.assertTrue(os.path.isfile(file_generated))
 
     def tearDown(self):
-        for f in self.files_generated:
+        for file_generated in self.files_generated:
             try:
-                os.remove(f)
+                os.remove(file_generated)
             except FileNotFoundError:
                 pass
