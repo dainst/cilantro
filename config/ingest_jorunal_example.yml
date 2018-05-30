@@ -3,9 +3,6 @@ params:
   publish_to_webanno: boolean
   ojs_journal_code: string
   auto_publish_issue: boolean
-  default_publish_articles: boolean
-  default_create_frontpage: boolean
-  allow_upload_without_file: boolean
 
 tasks:
   - retrieve_from_staging
@@ -18,7 +15,8 @@ tasks:
           - ocr_from_tiff
         else: extract_txt_from_pdf
       - generate_frontmatter
-  - publish_to_ojs
+  - task: publish_to_ojs
+    config: config/tasks/publish_to_ojs.yml
   - foreach: "article_*"
     do:
       - unless: do_ocr
@@ -29,5 +27,5 @@ tasks:
       - if: publish_to_webanno
         do: publish_to_webanno
       - task: convert_tsv_to_wadm
-        mapping: config/tsv_mappings/webanno.yml
-- cleanup_workdir
+        config: config/tasks/convert_tsv_to_wadm.yml
+  - cleanup_workdir

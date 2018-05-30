@@ -2,6 +2,7 @@
 **/workspace.xml
 **/tasks.xml
 dictionaries
+codeStyles
 
 # Sensitive or high-churn files
 **/dataSources/
