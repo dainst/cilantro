@@ -52,7 +52,7 @@ is available for debugging under http://localhost:5555.
 
 * Run the tests inside the dedicated docker container
 
-    `docker exec cilantro_cilantro-test_1 python -m unittest`
+    `docker exec cilantro_cilantro-test_1 python -m unittest -v`
 
 * Alternatively you can run the complete build script out of the
   [build-scripts repository](https://github.com/dainst/build-scripts/).
