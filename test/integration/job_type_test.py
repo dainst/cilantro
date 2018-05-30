@@ -2,7 +2,6 @@ import os
 import shutil
 import time
 # noinspection PyUnresolvedReferences
-import test.integration.env
 import unittest
 from flask import json
 from run_service import app
@@ -10,7 +9,7 @@ from pathlib import Path
 import logging
 
 log = logging.getLogger(__name__)
-wait_time = 5000
+wait_time = 20000
 retry_time = 100
 
 
