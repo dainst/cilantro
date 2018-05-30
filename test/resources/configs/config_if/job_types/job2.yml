@@ -1,0 +1,10 @@
+params:
+  do_task2: boolean
+
+tasks:
+  - task1
+  - if: do_task2
+    do: task2
+    else: task3
+  - task4
+  - split_pdf
