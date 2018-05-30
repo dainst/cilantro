@@ -65,3 +65,43 @@ class JobConfigTest(unittest.TestCase):
     def test_invalid_definition(self):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_invalid_def"
         self.assertRaises(ConfigParseException, JobConfig)
+
+    def test_if_param_true(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
+
+        job_config = JobConfig()
+
+        job1 = job_config.generate_job("job1", "foo", {"do_task2": True}).chain
+
+        tasks = job1.tasks
+        self.assertEqual(3, len(tasks))
+
+        self.assertEqual('task1', tasks[0]['task'])
+        self.assertEqual('task2', tasks[1]['task'])
+        self.assertEqual('task3', tasks[2]['task'])
+
+    def test_if_param_false(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
+
+        job_config = JobConfig()
+
+        job1 = job_config.generate_job("job1", "foo", {"do_task2": False}).chain
+
+        tasks = job1.tasks
+        self.assertEqual(2, len(tasks))
+
+        self.assertEqual('task1', tasks[0]['task'])
+        self.assertEqual('task3', tasks[1]['task'])
+
+    def test_if_param_not_set(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
+
+        job_config = JobConfig()
+
+        job1 = job_config.generate_job("job1", "foo").chain
+
+        tasks = job1.tasks
+        self.assertEqual(2, len(tasks))
+
+        self.assertEqual('task1', tasks[0]['task'])
+        self.assertEqual('task3', tasks[1]['task'])
