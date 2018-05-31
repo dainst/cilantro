@@ -123,8 +123,6 @@ def _create_if_signature(task_def, object_id, request_params, prev_task=None):
         else:
             return _evaluate_else(task_def, object_id,
                                   request_params, prev_task)
-    except NameError:
-        return _evaluate_else(task_def, object_id, request_params, prev_task)
 
 
 def _evaluate_else(task_def, object_id, request_params, prev_task=None):
