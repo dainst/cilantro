@@ -70,12 +70,15 @@ def _expand_task_def(task_def):
             'do': _expand_tasks_def(task_def['do'])
         }
     elif 'if' in task_def:
-        return {
+        expanded_task = {
             'type': 'if',
             'name': 'if',
             'condition': task_def['if'],
             'do': _expand_tasks_def(task_def['do'])
         }
+        if 'else' in task_def:
+            expanded_task['else'] = _expand_tasks_def(task_def['else'])
+        return expanded_task
 
 
 def generate_chain(object_id, tasks_def, request_params=None, prev_task=None):
@@ -118,8 +121,17 @@ def _create_if_signature(task_def, object_id, request_params, prev_task=None):
             return generate_chain(object_id, task_def['do'],
                                   request_params, prev_task)
         else:
-            return False
+            return _evaluate_else(task_def, object_id,
+                                  request_params, prev_task)
     except NameError:
+        return _evaluate_else(task_def, object_id, request_params, prev_task)
+
+
+def _evaluate_else(task_def, object_id, request_params, prev_task=None):
+    if 'else' in task_def:
+        return generate_chain(object_id, task_def['else'],
+                              request_params, prev_task)
+    else:
         return False
 
 

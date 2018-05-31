@@ -119,7 +119,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task1', tasks[0]['task'])
         self.assertEqual('task2', tasks[1]['task'])
         self.assertEqual('task3', tasks[2]['task'])
-        self.assertEqual('task4', tasks[3]['task'])
+        self.assertEqual('task5', tasks[3]['task'])
 
     def test_if_else_param_false(self):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
