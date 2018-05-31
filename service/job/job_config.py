@@ -116,13 +116,12 @@ def _create_foreach_signature(task_def, object_id, prev_task=None):
 
 
 def _create_if_signature(task_def, object_id, request_params, prev_task=None):
-    try:
-        if eval(task_def['condition'], request_params):
-            return generate_chain(object_id, task_def['do'],
-                                  request_params, prev_task)
-        else:
-            return _evaluate_else(task_def, object_id,
-                                  request_params, prev_task)
+    if eval(task_def['condition'], request_params):
+        return generate_chain(object_id, task_def['do'],
+                              request_params, prev_task)
+    else:
+        return _evaluate_else(task_def, object_id,
+                              request_params, prev_task)
 
 
 def _evaluate_else(task_def, object_id, request_params, prev_task=None):
