@@ -4,6 +4,9 @@ import unittest
 from flask import json
 from run_service import app
 
+test_object = 'pdf'
+test_file = 'e2e-testing.pdf'
+
 
 class RepositoryControllerTest(unittest.TestCase):
 
@@ -16,18 +19,18 @@ class RepositoryControllerTest(unittest.TestCase):
         except OSError:
             pass
 
-        self._copy_object_to_repository('objects', 'some_tiffs')
+        self._copy_object_to_repository('objects', test_object)
 
         app.testing = True
         self.client = app.test_client()
 
+    def tearDown(self):
+        shutil.rmtree(os.path.join(self.repository_dir, test_object))
+
     def _copy_object_to_repository(self, folder, object_id):
         source = os.path.join(self.resource_dir, folder, object_id)
         target = os.path.join(self.repository_dir, object_id)
-        try:
-            shutil.copytree(source, target)
-        except FileExistsError:
-            pass
+        shutil.copytree(source, target)
 
     def _get(self, path):
         response = self.client.get(path)
@@ -36,4 +39,9 @@ class RepositoryControllerTest(unittest.TestCase):
     def test_list_root(self):
         data = self._get('/repository')
         self.assertIsInstance(data, list)
-        self.assertIn('some_tiffs', data)
+        self.assertIn(test_object, data)
+
+    def test_list_dir(self):
+        data = self._get(f'/repository/{test_object}')
+        self.assertIsInstance(data, list)
+        self.assertIn(test_file, data)
