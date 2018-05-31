@@ -1,0 +1,8 @@
+params:
+  skip_task2: boolean
+
+tasks:
+  - task1
+  - if: not skip_task2
+    do: task2
+  - task3
