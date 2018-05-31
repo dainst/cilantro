@@ -5,7 +5,7 @@ import os
 from celery.canvas import Signature
 
 from service.job.job_config import JobConfig, ConfigParseException,\
-    UnknownJobTypeException
+    UnknownJobTypeException, RequestParameterException
 
 
 class JobConfigTest(unittest.TestCase):
@@ -193,3 +193,19 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task1', tasks[0]['task'])
         self.assertEqual('task2', tasks[1]['task'])
         self.assertEqual('task3', tasks[2]['task'])
+
+    def test_invalid_request_param(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
+
+        job_config = JobConfig()
+
+        with self.assertRaises(RequestParameterException):
+            job_config.generate_job("job1", "foo", {"skip_task2": True})
+
+    def test_invalid_request_param_type(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
+
+        job_config = JobConfig()
+
+        with self.assertRaises(RequestParameterException):
+            job_config.generate_job("job1", "foo", {"do_task2": "foo"})

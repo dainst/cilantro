@@ -15,6 +15,10 @@ class UnknownJobTypeException(Exception):
     pass
 
 
+class RequestParameterException(Exception):
+    pass
+
+
 def _extract_job_type(file_name):
     return os.path.splitext(os.path.basename(file_name))[0]
 
@@ -25,8 +29,8 @@ def _read_job_config_file(file_name):
         return yaml.load(file)
     except Exception as err:
         raise ConfigParseException(
-            "Error while reading job type definition from %s: %s"
-            % (file_name, err))
+            f"Error while reading job type definition from {file_name}: {err}"
+        )
     finally:
         file.close()
 
@@ -34,10 +38,12 @@ def _read_job_config_file(file_name):
 def _validate_job_config(job_config, job_type):
     if 'tasks' not in job_config:
         raise ConfigParseException(
-            "Missing attribute 'tasks' in job type %s" % job_type)
+            "Missing attribute 'tasks' in job type %s" % job_type
+        )
     if not isinstance(job_config['tasks'], list):
         raise ConfigParseException(
-            "Attribute 'tasks' is no list in job type %s" % job_type)
+            "Attribute 'tasks' is no list in job type %s" % job_type
+        )
 
 
 def _expand_tasks_def(tasks_def):
@@ -154,8 +160,32 @@ def _init_default_params(params):
         else:
             raise ConfigParseException(
                 f"Parameter type '{param_type}' for "
-                f"parameter '{param_name}' is invalid!")
+                f"parameter '{param_name}' is invalid!"
+            )
     return default_params
+
+
+def _validate_request_params(default_params, request_params):
+    logging.getLogger(__name__).debug(f"request_params: {request_params}")
+    params = default_params
+    if request_params:
+        for request_param in request_params:
+            if request_param in params:
+                expected_type = type(params[request_param])
+                request_param_value = request_params[request_param]
+                if isinstance(request_param_value, expected_type):
+                    params[request_param] = request_params[request_param]
+                else:
+                    raise RequestParameterException(
+                        f"Wrong parameter type: '{request_param}' is expected "
+                        f"to be '{expected_type}' but was "
+                        f"'{type(request_param_value)}'"
+                    )
+            else:
+                raise RequestParameterException(
+                    f"Unknown request parameter '{request_param}'!"
+                )
+    return params
 
 
 class JobConfig:
@@ -172,9 +202,7 @@ class JobConfig:
                 "No definition for given job type '%s' found" % job_type)
         tasks_def = self.job_types[job_type]['tasks']
         default_params = self.job_types[job_type]['params']
-        if request_params is None:
-            request_params = {}
-        params = {**default_params, **request_params}
+        params = _validate_request_params(default_params, request_params)
         return Job(generate_chain(object_id, tasks_def, params))
 
     def _parse_job_config(self):
