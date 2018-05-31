@@ -1,11 +1,30 @@
 # ojs-importer
-a tool to mass import retrodigitalized journals into an ojs system
+The future Cilantro-Frontend
 
-# installation notes
-- clone to /var/www/pimport or similar
-- configure apache to /var/www
+# installation
+
+## a) with oldgit push origi8n PHP-Backend and Apache
+- clone to /var/www/importer or similar
+- configure apache to serve /var/www
 - npm install
-- create tmp and reports folder inside pimport
-- create /var/www/chiron/data (file storage) and /var/www/ojs (OJS), can be empty for developing purposes
+- create folders:
+    - tmp 
+    - reports
+    - staging
 - create settings.php like settings.default.php and fill out
-- reach importer with "DOMAIN/pimport", e.g. "localhost:123/pimport"
+- create settings.json like settings.default.json and fill out
+- http://localhost/importer
+
+## b) without backend
+- npm install
+- mv settings.test.json settings.json
+- npm run server
+
+We use a the mock-backend here which was created für the npm tests and serve the app with gulp.
+
+# build
+There is no build process right now.
+
+# test
+- npm run e2e
+- unit tests are missing 

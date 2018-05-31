@@ -1,9 +1,9 @@
 angular
 	.module('module.messenger', [])
-	.factory("messenger", ["$rootScope", function($rootScope) {
+	.factory("messenger", ["$rootScope", "settings", function($rootScope, settings) {
 		var messenger = {};
 
-		messenger.content = {}
+		messenger.content = {};
 		messenger.content.message = '';
 		messenger.content.success = true;
 		messenger.content.warnings = [];
@@ -11,8 +11,8 @@ angular
 
 		/**
 		 * the distinguation between debug-info, warnings and the message itself (instead of having one single log,
-		 * containingg different types of msgs ) is a little bit clunky and emerged from the way the webservice creates
-		 * messages. it can be changed sometimes if it's inherent inelegance bothers to much, but it does it job
+		 * containing different types of msgs ) is a little bit clunky and emerged from the way the webservice creates
+		 * messages. it can be changed sometimes if it's inherent inelegance bothers to much, but it does it's job
 		 *
 		 */
 

@@ -24,8 +24,7 @@
 			<button
 					ng-if="isArticleSelected()"
 					ng-click='dismissArticle()'
-					class='btn'
-					ng-class="{'btn-danger':(journal.articles[currentArticle]._.confirmed !== true)  && (journal.articles[currentArticle]._.confirmed !== false)}"
+					class='btn btn-danger'
 					ng-disabled="journal.articles[currentArticle]._.confirmed === false"
 			>{{journal.articles[currentArticle]._.confirmed === false ? "Dismissed" : "Dismiss"}}<span class="glyphicon glyphicon-remove"></span></button>
 			<button

@@ -98,7 +98,7 @@ angular
 
 		/* restart */
 		$scope.restart = function() {
-      webservice.loading = true;
+      		webservice.loading = true;
 			$scope.isStarted = false;
 			messenger.content.stats = {};
 			documentsource.reset();
@@ -106,8 +106,8 @@ angular
 			$scope.init();
 			messenger.alert('Restart Importer', false);
 			$scope.steps.change('home');
-      $scope.protocols.selectLast();
-      webservice.loading = false;
+			$scope.protocols.selectLast();
+			webservice.loading = false;
 		}
 
 

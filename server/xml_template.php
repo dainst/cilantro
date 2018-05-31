@@ -25,7 +25,7 @@
 
             <?php foreach ($articles as $article) { ?>
 
-                <!-- <?php  print_r($article) ?> -->
+                <!-- <?php  //print_r($article) ?> -->
 
                 <?php $locale = (isset($article->language) && $article->language) ? 'language="' . substr($article->language, 0, 2) . '" locale="' . $article->language . '"' : '' ?>
 
