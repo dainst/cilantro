@@ -32,6 +32,11 @@ angular
 					"title": "Restart",
 					"condition": function() {return $scope.isStarted}
 				},
+				"documents": {
+					"template": "partials/view_documents.html",
+					"title": "Documents",
+					"condition": function() {return documentsource.ready}
+				},
 				"overview": {
 					"template": "partials/view_overview.html",
 					"title": "Overview",
