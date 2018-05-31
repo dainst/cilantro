@@ -83,7 +83,8 @@ def generate_chain(object_id, tasks_def, request_params=None, prev_task=None):
     if not prev_task:
         prev_task = tasks_def[0]['name']
     for task_def in tasks_def[1:]:
-        signature = _create_signature(task_def, object_id, request_params, prev_task)
+        signature = _create_signature(task_def, object_id,
+                                      request_params, prev_task)
         if signature:
             chain |= signature
         prev_task = task_def['name']
@@ -94,8 +95,10 @@ def _create_signature(task_def, object_id, request_params=None, prev_task=None):
     if task_def['type'] == 'foreach':
         return _create_foreach_signature(task_def, object_id, prev_task)
     if task_def['type'] == 'if':
-        return _create_if_signature(task_def, object_id, request_params, prev_task)
-    return _create_signature_for_task(task_def, object_id, request_params, prev_task)
+        return _create_if_signature(task_def, object_id,
+                                    request_params, prev_task)
+    return _create_signature_for_task(task_def, object_id,
+                                      request_params, prev_task)
 
 
 def _create_foreach_signature(task_def, object_id, prev_task=None):
@@ -112,14 +115,16 @@ def _create_foreach_signature(task_def, object_id, prev_task=None):
 def _create_if_signature(task_def, object_id, request_params, prev_task=None):
     try:
         if eval(task_def['condition'], request_params):
-            return generate_chain(object_id, task_def['do'], request_params, prev_task)
+            return generate_chain(object_id, task_def['do'],
+                                  request_params, prev_task)
         else:
             return False
     except NameError:
         return False
 
 
-def _create_signature_for_task(task_def, object_id, request_params=None, prev_task=None):
+def _create_signature_for_task(task_def, object_id,
+                               request_params=None, prev_task=None):
     kwargs = {'object_id': object_id}
     if prev_task is not None:
         kwargs['prev_task'] = prev_task
@@ -154,5 +159,6 @@ class JobConfig:
             self.logger.debug("extracted job type defintion %s" % job_type)
             job_config = _read_job_config_file(file_name)
             _validate_job_config(job_config, job_type)
-            self.job_types[job_type] = {'tasks': _expand_tasks_def(job_config['tasks'])}
+            expanded_tasks = _expand_tasks_def(job_config['tasks'])
+            self.job_types[job_type] = {'tasks': expanded_tasks}
         self.logger.info(("job types: %s" % self.job_types))
