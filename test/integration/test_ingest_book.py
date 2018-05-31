@@ -12,6 +12,7 @@ class IngestBookTest(JobTypeTest):
         self.assert_status(data['job_id'], 'SUCCESS')
 
         self.unstage_resource('some_tiffs')
+        self.remove_object_from_repository('some_tiffs')
 
     '''
     commented out until proper solution for

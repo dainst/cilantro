@@ -78,12 +78,9 @@ class JobTypeTest(unittest.TestCase):
         except FileNotFoundError:
             pass
 
-    def remove_file_from_repository(self, object_id, file_path):
-        file = os.path.join(self.repository_dir, object_id, file_path)
+    def remove_object_from_repository(self, object_id):
+        source = os.path.join(self.repository_dir, object_id)
         try:
-            os.remove(file)
-            log.debug(f'\n\n\nremoved {file}\n\n\n')
-        except PermissionError:
-            user = os.getuid()
-            group = os.getegid()
-            raise PermissionError(f'Permission for removing {file} denied for user {user} group {group}')
+            shutil.rmtree(source)
+        except FileNotFoundError:
+            pass
