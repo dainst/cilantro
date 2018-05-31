@@ -144,6 +144,20 @@ def _create_signature_for_task(task_def, object_id,
     return celery_app.signature(task_def['name'], kwargs=kwargs, immutable=True)
 
 
+def _init_default_params(params):
+    default_params = {}
+    for param_name, param_type in params.items():
+        if param_type == 'boolean':
+            default_params[param_name] = False
+        elif param_type == 'string':
+            default_params[param_name] = ''
+        else:
+            raise ConfigParseException(
+                f"Parameter type '{param_type}' for "
+                f"parameter '{param_name}' is invalid!")
+    return default_params
+
+
 class JobConfig:
 
     def __init__(self):
@@ -157,7 +171,11 @@ class JobConfig:
             raise UnknownJobTypeException(
                 "No definition for given job type '%s' found" % job_type)
         tasks_def = self.job_types[job_type]['tasks']
-        return Job(generate_chain(object_id, tasks_def, request_params))
+        default_params = self.job_types[job_type]['params']
+        if request_params is None:
+            request_params = {}
+        params = {**default_params, **request_params}
+        return Job(generate_chain(object_id, tasks_def, params))
 
     def _parse_job_config(self):
         pattern = os.path.join(self._config_dir, "job_types", "*.yml")
@@ -168,6 +186,13 @@ class JobConfig:
             self.logger.debug("extracted job type defintion %s" % job_type)
             job_config = _read_job_config_file(file_name)
             _validate_job_config(job_config, job_type)
+            try:
+                default_params = _init_default_params(job_config['params'])
+            except KeyError:
+                default_params = {}
             expanded_tasks = _expand_tasks_def(job_config['tasks'])
-            self.job_types[job_type] = {'tasks': expanded_tasks}
+            self.job_types[job_type] = {
+                'params': default_params,
+                'tasks': expanded_tasks
+            }
         self.logger.info(("job types: %s" % self.job_types))

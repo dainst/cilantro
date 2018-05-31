@@ -66,6 +66,10 @@ class JobConfigTest(unittest.TestCase):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_invalid_def"
         self.assertRaises(ConfigParseException, JobConfig)
 
+    def test_invalid_params(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_invalid_param"
+        self.assertRaises(ConfigParseException, JobConfig)
+
     def test_if_param_true(self):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
 
