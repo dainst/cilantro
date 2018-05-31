@@ -69,13 +69,23 @@ def _expand_task_def(task_def):
             'pattern': task_def['foreach'],
             'do': _expand_tasks_def(task_def['do'])
         }
+    elif 'if' in task_def:
+        return {
+            'type': 'if',
+            'name': 'if',
+            'condition': task_def['if'],
+            'do': _expand_tasks_def(task_def['do'])
+        }
 
 
-def generate_chain(object_id, tasks_def, request_params=None):
+def generate_chain(object_id, tasks_def, request_params=None, prev_task=None):
     chain = _create_signature(tasks_def[0], object_id, request_params)
-    prev_task = tasks_def[0]['name']
+    if not prev_task:
+        prev_task = tasks_def[0]['name']
     for task_def in tasks_def[1:]:
-        chain |= _create_signature(task_def, object_id, request_params, prev_task)
+        signature = _create_signature(task_def, object_id, request_params, prev_task)
+        if signature:
+            chain |= signature
         prev_task = task_def['name']
     return chain
 
@@ -83,14 +93,30 @@ def generate_chain(object_id, tasks_def, request_params=None):
 def _create_signature(task_def, object_id, request_params=None, prev_task=None):
     if task_def['type'] == 'foreach':
         return _create_foreach_signature(task_def, object_id, prev_task)
+    if task_def['type'] == 'if':
+        return _create_if_signature(task_def, object_id, request_params, prev_task)
     return _create_signature_for_task(task_def, object_id, request_params, prev_task)
 
 
 def _create_foreach_signature(task_def, object_id, prev_task=None):
-    kwargs = {'object_id': object_id, 'pattern': task_def['pattern'], 'subtasks': task_def['do']}
-    if prev_task is not None:
+    kwargs = {
+        'object_id': object_id,
+        'pattern': task_def['pattern'],
+        'subtasks': task_def['do']
+    }
+    if prev_task:
         kwargs['prev_task'] = prev_task
     return celery_app.signature('foreach', kwargs=kwargs, immutable=True)
+
+
+def _create_if_signature(task_def, object_id, request_params, prev_task=None):
+    try:
+        if eval(task_def['condition'], request_params):
+            return generate_chain(object_id, task_def['do'], request_params, prev_task)
+        else:
+            return False
+    except NameError:
+        return False
 
 
 def _create_signature_for_task(task_def, object_id, request_params=None, prev_task=None):

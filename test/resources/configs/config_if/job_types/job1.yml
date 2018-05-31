@@ -6,4 +6,3 @@ tasks:
   - if: do_task2
     do: task2
   - task3
-  - split_pdf
