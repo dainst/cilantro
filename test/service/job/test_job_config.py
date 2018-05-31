@@ -71,9 +71,9 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job1 = job_config.generate_job("job1", "foo", {"do_task2": True}).chain
+        job = job_config.generate_job("job1", "foo", {"do_task2": True}).chain
 
-        tasks = job1.tasks
+        tasks = job.tasks
         self.assertEqual(3, len(tasks))
 
         self.assertEqual('task1', tasks[0]['task'])
@@ -85,9 +85,9 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job1 = job_config.generate_job("job1", "foo", {"do_task2": False}).chain
+        job = job_config.generate_job("job1", "foo", {"do_task2": False}).chain
 
-        tasks = job1.tasks
+        tasks = job.tasks
         self.assertEqual(2, len(tasks))
 
         self.assertEqual('task1', tasks[0]['task'])
@@ -98,10 +98,53 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job1 = job_config.generate_job("job1", "foo").chain
+        job = job_config.generate_job("job1", "foo").chain
 
-        tasks = job1.tasks
+        tasks = job.tasks
         self.assertEqual(2, len(tasks))
 
         self.assertEqual('task1', tasks[0]['task'])
         self.assertEqual('task3', tasks[1]['task'])
+
+    def test_if_else_param_true(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
+
+        job_config = JobConfig()
+
+        job = job_config.generate_job("job2", "foo", {"do_task2": True}).chain
+
+        tasks = job.tasks
+        self.assertEqual(4, len(tasks))
+
+        self.assertEqual('task1', tasks[0]['task'])
+        self.assertEqual('task2', tasks[1]['task'])
+        self.assertEqual('task3', tasks[2]['task'])
+        self.assertEqual('task4', tasks[3]['task'])
+
+    def test_if_else_param_false(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
+
+        job_config = JobConfig()
+
+        job = job_config.generate_job("job2", "foo", {"do_task2": False}).chain
+
+        tasks = job.tasks
+        self.assertEqual(3, len(tasks))
+
+        self.assertEqual('task1', tasks[0]['task'])
+        self.assertEqual('task4', tasks[1]['task'])
+        self.assertEqual('task5', tasks[2]['task'])
+
+    def test_if_else_param_not_set(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
+
+        job_config = JobConfig()
+
+        job = job_config.generate_job("job2", "foo").chain
+
+        tasks = job.tasks
+        self.assertEqual(3, len(tasks))
+
+        self.assertEqual('task1', tasks[0]['task'])
+        self.assertEqual('task4', tasks[1]['task'])
+        self.assertEqual('task5', tasks[2]['task'])
