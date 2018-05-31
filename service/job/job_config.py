@@ -181,7 +181,7 @@ class JobConfig:
         pattern = os.path.join(self._config_dir, "job_types", "*.yml")
         self.logger.debug("looking for job type configs in %s" % pattern)
         for file_name in glob.iglob(pattern):
-            self.logger.debug("found job type config in %s" % file_name)
+            self.logger.info("found job type config in %s" % file_name)
             job_type = _extract_job_type(file_name)
             self.logger.debug("extracted job type defintion %s" % job_type)
             job_config = _read_job_config_file(file_name)
@@ -195,4 +195,4 @@ class JobConfig:
                 'params': default_params,
                 'tasks': expanded_tasks
             }
-        self.logger.info(("job types: %s" % self.job_types))
+        self.logger.debug(("job types: %s" % self.job_types))

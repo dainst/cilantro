@@ -8,17 +8,16 @@ formatters:
 handlers:
   console:
     class: logging.StreamHandler
-    level: DEBUG
     formatter: simple
     stream: ext://sys.stdout
 
 loggers:
   service:
-    level: DEBUG
+    level: INFO
     handlers: [console]
     propagate: no
   worker:
-    level: DEBUG
+    level: INFO
     handlers: [console]
     propagate: no
 
