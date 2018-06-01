@@ -8,7 +8,7 @@ working_dir = os.environ['WORKING_DIR']
 
 
 @celery_app.task(bind=True, name="tif_to_jpg", base=BaseTask)
-def tif2jpg(self, object_id, job_id, file):
+def task_tif2jpg(self, object_id, job_id, file):
     _, extension = os.path.splitext(file)
     new_file = file.replace(extension, '.jpg')
     convert_tif2jpg(file, new_file)
