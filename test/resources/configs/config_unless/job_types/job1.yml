@@ -1,9 +1,0 @@
-params:
-  dont_do_task2: boolean
-
-tasks:
-  - task1
-  - unless: dont_do_task2
-    do: task2
-  - task3
-  - split_pdf
