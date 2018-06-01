@@ -19,7 +19,7 @@ tasks:
     config: config/tasks/publish_to_ojs.yml
   - foreach: "article_*"
     do:
-      - unless: do_ocr
+      - if: not do_ocr
         do: convert_pdf_to_tiff
       - foreach: "*.[tT][iI][fF]*"
         do: convert_tif_to_jpg
