@@ -1,20 +1,17 @@
 import os
 import json
-import shutil
 
+from worker.tasks import BaseTask
 from worker.marcxml.marcxml_generator import generate_marcxml
 from utils.celery_client import celery_app
 
 
-@celery_app.task(name="generate_marcxml")
-def task_generate_marcxml(object_id, job_id, prev_task):
-    source = os.path.join(os.environ['WORKING_DIR'], job_id, object_id, prev_task)
-    target = os.path.join(os.environ['WORKING_DIR'], job_id, object_id, 'generate_marcxml')
+@celery_app.task(bind=True, name="generate_marcxml", base=BaseTask)
+def task_generate_marcxml(self, object_id, job_id):
+    work_path = self.get_work_path(job_id)
 
-    shutil.copytree(source, target)
-
-    json_path = os.path.join(target, 'data_json/data.json')
+    json_path = os.path.join(work_path, 'data_json/data.json')
     with open(json_path) as data_object:
         data = json.load(data_object)
 
-    generate_marcxml(data, target)
+    generate_marcxml(data, work_path)
