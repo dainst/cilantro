@@ -41,6 +41,13 @@
     "warnings": []
   },
 
+  "checkPassword": {
+    "uploadId": "test",
+    "task": "checkPassword",
+    "success": true,
+    "warnings": []
+  },
+
   "toOJS": {
     "uploadId": "test",
     "task": "toOJS",
