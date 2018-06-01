@@ -17,7 +17,7 @@ class JobConfigTest(unittest.TestCase):
         job1 = job_config.generate_job("job1", "foo").chain
         self.assertTrue(
             isinstance(job1, Signature),
-            "job1 is an instance of '%s', expected 'Signature'" % type(job1)
+            f"job1 is an instance of '{type(job1)}, expected 'Signature'"
         )
         self.assertEqual('celery.chain', job1['task'])
 
@@ -42,7 +42,7 @@ class JobConfigTest(unittest.TestCase):
         job2 = job_config.generate_job("job2", "bar").chain
         self.assertTrue(
             isinstance(job2, Signature),
-            "job2 is an instance of'%s', expected 'Signature'" % type(job1)
+            f"job2 is an instance of '{type(job1)}', expected 'Signature'"
         )
         self.assertEqual('celery.chain', job2['task'])
 

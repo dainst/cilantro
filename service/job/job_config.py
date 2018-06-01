@@ -68,11 +68,11 @@ def _read_job_config_file(file_name):
 def _validate_job_config(job_config, job_type):
     if 'tasks' not in job_config:
         raise ConfigParseException(
-            "Missing attribute 'tasks' in job type %s" % job_type
+            f"Missing attribute 'tasks' in job type {job_type}"
         )
     if not isinstance(job_config['tasks'], list):
         raise ConfigParseException(
-            "Attribute 'tasks' is no list in job type %s" % job_type
+            f"Attribute 'tasks' is no list in job type {job_type}"
         )
 
 

@@ -36,8 +36,9 @@ class JobTypeTest(unittest.TestCase):
         file = Path(os.path.join(self.repository_dir, object_id, file_path))
         while not file.is_file():
             if waited > wait_time:
-                raise AssertionError("experienced timeout while waiting for "
-                                     "file '%s' to appear in repository" % file_path)
+                raise AssertionError(f"experienced timeout while waiting for "
+                                     f"file '{file_path}' to appear "
+                                     f"in repository")
             else:
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
@@ -47,20 +48,21 @@ class JobTypeTest(unittest.TestCase):
         status = self.get_status(job_id)
         while status != expected_status:
             if waited > wait_time:
-                raise AssertionError("experienced timeout while waiting for "
-                                     "status '%s', last status was '%s'" % (expected_status, status))
+                raise AssertionError(f"experienced timeout while waiting for "
+                                     f"status '{expected_status}', last status "
+                                     f"was '{status}'")
             else:
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
             status = self.get_status(job_id)
 
     def get_status(self, job_id):
-        response = self.client.get('/job/%s' % job_id)
+        response = self.client.get(f'/job/{job_id}')
         data = json.loads(response.get_data(as_text=True))
         return data['status']
 
     def post_job(self, job_type, object_id):
-        response = self.client.post('/job/%s/%s' % (job_type, object_id))
+        response = self.client.post(f'/job/{job_type}/{object_id}')
         return json.loads(response.get_data(as_text=True))
 
     def stage_resource(self, folder, object_id):
