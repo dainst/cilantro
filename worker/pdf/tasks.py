@@ -5,7 +5,7 @@ from utils.celery_client import celery_app
 
 
 @celery_app.task(name="split_pdf")
-def split_pdf(object_id, job_id, prev_task):
+def task_split_pdf(object_id, job_id, prev_task):
     source = os.path.join(os.environ['WORKING_DIR'], job_id, object_id, prev_task)
     target = os.path.join(os.environ['WORKING_DIR'], job_id, object_id, 'split_pdf')
     json_path = os.path.join(source, 'data_json/data.json')
