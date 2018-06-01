@@ -9,7 +9,7 @@ staging_dir = os.environ['STAGING_DIR']
 
 
 @celery_app.task(name="retrieve_from_staging", bind=True)
-def retrieve_from_staging(self, object_id, job_id):
+def task_retrieve_from_staging(self, object_id, job_id):
     if not os.path.exists(staging_dir):
         os.makedirs(staging_dir)
     if not os.path.exists(working_dir):
@@ -22,10 +22,9 @@ def retrieve_from_staging(self, object_id, job_id):
 
 
 @celery_app.task(name="publish_to_repository")
-def publish_to_repository(object_id, job_id, prev_task):
+def task_publish_to_repository(object_id, job_id, prev_task):
     source = os.path.join(working_dir, job_id, object_id, prev_task)
     target = os.path.join(repository_dir, object_id)
     if os.path.exists(target):
         shutil.rmtree(target)
     shutil.copytree(source, target)
-
