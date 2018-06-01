@@ -1,16 +1,16 @@
 import os
 import json
+
+from worker.tasks import BaseTask
 from worker.pdf.pdf import cut_pdf
 from utils.celery_client import celery_app
 
 
-@celery_app.task(name="split_pdf")
-def split_pdf(object_id, job_id, prev_task):
-    source = os.path.join(os.environ['WORKING_DIR'], job_id, object_id, prev_task)
-    target = os.path.join(os.environ['WORKING_DIR'], job_id, object_id, 'split_pdf')
-    json_path = os.path.join(source, 'data_json/data.json')
-    os.mkdir(target)
+@celery_app.task(bind=True, name="split_pdf", base=BaseTask)
+def split_pdf(self, object_id, job_id, prev_task):
+    work_path = self.get_work_path(job_id)
+    json_path = os.path.join(work_path, 'data_json/data.json')
     with open(json_path) as data_object:
         data = json.load(data_object)
 
-    cut_pdf(data, source, target)
+    cut_pdf(data, work_path, work_path)
