@@ -28,7 +28,6 @@ module.exports = {
         finalBtn: element(by.css('button[ng-click="uploadToOjs()"]')),
     },
     restart: {
-        initiateBtn: element(by.id('step-restart')),
         confirmBtn: element(by.css('.btn-danger')),
     },
     start: {
@@ -46,5 +45,12 @@ module.exports = {
         reportMissing: element(by.css('button[ng-click="reportMissingToZenon()"]')),
         downloadLink: element(by.css('a.downloadLink')),
     },
+    navbar: {
+        overview: element(by.id('step-overview')),
+        articles: element(by.id('step-articles')),
+        restart: element(by.id('step-restart')),
+        publish: element(by.id('step-publish')),
+        toggle: element(by.css('.navbar-toggle'))
+    }
 
 };

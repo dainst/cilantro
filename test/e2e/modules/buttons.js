@@ -19,11 +19,12 @@ var Buttons = function() {
 
 
     this.restart = function() {
-        browser.wait(EC.visibilityOf(elements.restart.initiateBtn));
-        return elements.restart.initiateBtn.click;
+        browser.wait(EC.visibilityOf(elements.navbar.restart));
+        return elements.navbar.restart.click;
     };
 
     this.confirmRestart = function() {
+        browser.wait(EC.visibilityOf(elements.restart.confirmBtn));
         return elements.restart.confirmBtn.click;
     };
 

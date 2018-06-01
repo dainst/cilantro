@@ -9,10 +9,6 @@ var input = require('../modules/inputs');
 
 describe('importer', function() {
 
-    beforeAll(function() {
-        browser.driver.manage().window().maximize();
-    });
-
     // TODO this test does not work with mock-backend because it can not handle file upload yet
     xit('should upload a pdf-file', function() {
         browser.get(browser.baseUrl)
@@ -60,8 +56,7 @@ describe('importer', function() {
             .then(select.file())
             .then(button.startImport())
             .then(expect(message.classOfMain()).toContain("alert-success"))
-
-            .then(button.restart())
+            .then(action.clickNavbarButton("restart"))
             .then(button.confirmRestart())
             .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
 
@@ -77,7 +72,7 @@ describe('importer', function() {
             .then(select.file())
             .then(button.startImport())
             .then(expect(message.classOfMain()).toContain("alert-success"))
-    })
+    });
 
     it('should publish a file', function() {
         browser.get(browser.baseUrl)
@@ -97,7 +92,8 @@ describe('importer', function() {
     });
 
 
-    it('should report a file to zenon', function() {
+    // TODO this test does not work with mock-backend can not produce XMLs yet
+    xit('should report a file to zenon', function() {
         browser.get(browser.baseUrl)
             .then(action.login())
             .then(select.protocol())
@@ -106,7 +102,9 @@ describe('importer', function() {
             .then(expect(message.classOfMain()).toContain("alert-success"))
 
             .then(button.proceed())
+            .then(browser.executeScript('window.scrollTo(0,document.body.scrollHeight);'))
             .then(button.zenonMarkMissing())
+            .then(browser.executeScript('window.scrollTo(0,0);'))
             .then(button.confirmArticle())
             .then(button.uploadPub())
             .then(input.year())
