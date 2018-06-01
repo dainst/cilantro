@@ -23,7 +23,7 @@ def retrieve_from_staging(self, object_id, job_id):
 
 
 @celery_app.task(bind=True, name="publish_to_repository", base=BaseTask)
-def publish_to_repository(self, object_id, job_id, prev_task):
+def publish_to_repository(self, object_id, job_id):
     work_path = self.get_work_path(job_id)
     repository_path = os.path.join(repository_dir, object_id)
     if os.path.exists(repository_path):

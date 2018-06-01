@@ -30,14 +30,12 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('foreach', tasks[1]['task'])
         kwargs = tasks[1]['kwargs']
         self.assertEqual('foo', kwargs['object_id'])
-        self.assertEqual('retrieve', kwargs['prev_task'])
         self.assertEqual('*.tif', kwargs['pattern'])
         self.assertEqual('convert', kwargs['subtasks'][0]['name'])
         self.assertEqual('high', kwargs['subtasks'][0]['params']['quality'])
 
         self.assertEqual('publish', tasks[2]['task'])
         self.assertEqual('foo', tasks[2]['kwargs']['object_id'])
-        self.assertEqual('foreach', tasks[2]['kwargs']['prev_task'])
 
         job2 = job_config.generate_job("job2", "bar").chain
         self.assertTrue(

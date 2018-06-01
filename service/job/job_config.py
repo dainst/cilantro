@@ -19,28 +19,23 @@ class RequestParameterException(Exception):
     pass
 
 
-def generate_chain(object_id, tasks_def, request_params=None, prev_task=None):
+def generate_chain(object_id, tasks_def, request_params=None):
     """
     Create a celery task chain for an object
     :param str object_id:
     :param list tasks_def: A list of (expanded) task definition objects
     :param dict request_params: Additional params that override the default ones
-    :param str prev_task: The name of the previous task
     :return Chain: Celery task chain
     """
     chain = _create_signature(tasks_def[0], object_id, request_params)
-    if not prev_task:
-        prev_task = tasks_def[0]['name']
     for task_def in tasks_def[1:]:
         signature = _create_signature(
             task_def,
             object_id,
-            request_params,
-            prev_task
+            request_params
         )
         if signature:
             chain |= signature
-        prev_task = task_def['name']
     return chain
 
 
@@ -132,49 +127,41 @@ def _expand_task_def(task_def):
         return expanded_task
 
 
-def _create_signature(task_def, object_id, request_params=None, prev_task=None):
+def _create_signature(task_def, object_id, request_params=None):
     if task_def['type'] == 'foreach':
-        return _create_foreach_signature(task_def, object_id, prev_task)
+        return _create_foreach_signature(task_def, object_id)
     if task_def['type'] == 'if':
         return _create_if_signature(task_def, object_id,
-                                    request_params, prev_task)
+                                    request_params)
     return _create_signature_for_task(task_def, object_id,
-                                      request_params, prev_task)
+                                      request_params)
 
 
-def _create_foreach_signature(task_def, object_id, prev_task=None):
+def _create_foreach_signature(task_def, object_id):
     kwargs = {
         'object_id': object_id,
         'pattern': task_def['pattern'],
         'subtasks': task_def['do']
     }
-    if prev_task:
-        kwargs['prev_task'] = prev_task
     return celery_app.signature('foreach', kwargs=kwargs, immutable=True)
 
 
-def _create_if_signature(task_def, object_id, request_params, prev_task=None):
+def _create_if_signature(task_def, object_id, request_params):
     if eval(task_def['condition'], request_params):
-        return generate_chain(object_id, task_def['do'],
-                              request_params, prev_task)
+        return generate_chain(object_id, task_def['do'], request_params)
     else:
-        return _evaluate_else(task_def, object_id,
-                              request_params, prev_task)
+        return _evaluate_else(task_def, object_id, request_params)
 
 
-def _evaluate_else(task_def, object_id, request_params, prev_task=None):
+def _evaluate_else(task_def, object_id, request_params,):
     if 'else' in task_def:
-        return generate_chain(object_id, task_def['else'],
-                              request_params, prev_task)
+        return generate_chain(object_id, task_def['else'], request_params)
     else:
         return False
 
 
-def _create_signature_for_task(task_def, object_id,
-                               request_params=None, prev_task=None):
+def _create_signature_for_task(task_def, object_id, request_params=None):
     kwargs = {'object_id': object_id}
-    if prev_task is not None:
-        kwargs['prev_task'] = prev_task
     if 'params' in task_def:
         kwargs.update(task_def['params'])
     if request_params:
