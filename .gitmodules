@@ -1,0 +1,3 @@
+[submodule "nlp_worker/nlp_components"]
+	path = nlp_worker/nlp_components
+	url = https://github.com/dainst/nlp_components.git
