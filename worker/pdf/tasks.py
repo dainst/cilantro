@@ -14,4 +14,4 @@ def task_split_pdf(self, object_id, job_id):
     with open(json_path) as data_object:
         data = json.load(data_object)
 
-    cut_pdf(data, work_path, work_path)
+    cut_pdf(data, work_path)
