@@ -4,6 +4,7 @@ import json
 from worker.tasks import BaseTask
 import shutil
 from worker.pdf.pdf import cut_pdf
+from worker.pdf.pdf import pypdf2_cut_pdf
 from utils.celery_client import celery_app
 
 
@@ -13,5 +14,5 @@ def task_split_pdf(self, object_id, job_id):
     json_path = os.path.join(work_path, 'data_json/data.json')
     with open(json_path) as data_object:
         data = json.load(data_object)
-
-    cut_pdf(data, work_path, work_path)
+    pypdf2_cut_pdf(data, work_path, work_path)
+    #cut_pdf(data, work_path, work_path)

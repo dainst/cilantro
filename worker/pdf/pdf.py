@@ -1,7 +1,55 @@
 import os
 import logging
+from PyPDF2 import PdfFileWriter, PdfFileReader
 
 log = logging.getLogger(__name__)
+
+
+def pypdf2_cut_pdf(data, source, target):
+    articles = data['articles']
+
+    for nr, article in enumerate(articles):
+        try:
+            article['filepath']
+        except NameError:
+            raise Exception("Article without file")
+        else:
+            files = _set_files(article)
+            pdf_new = PdfFileWriter()
+
+            # We need to close the streams after writing the files as pages are only references to the input stream.
+            input_streams = []
+
+            for file in files:
+                input_str = f"{source}/{file['file']}"
+
+                input_stream = open(input_str, "rb")
+                input_streams.append(input_stream)
+
+                pdf = PdfFileReader(input_stream)
+
+                if pdf.flattenedPages is None:
+                    pdf.getNumPages()  # make the file page based
+
+                requested_pages = []
+                start_end = _start_end(article['pages'])
+                for index in range(start_end[0]-1, start_end[1]):
+                    requested_pages.append(index)
+
+                for num_page in requested_pages:
+                    pdf_new.addPage(pdf.getPage(num_page))
+
+            output_str = _set_output(data, article, nr)
+
+            file_name = os.path.join(target, output_str)
+
+            with open(file_name, "wb") as output_stream:
+                pdf_new.write(output_stream)
+
+            for input_stream in input_streams:
+                input_stream.close()
+
+            data['articles'][nr]['filepath'] = f"{source}/{output_str}"  # Update Json Data
 
 
 def cut_pdf(data, source, target):
