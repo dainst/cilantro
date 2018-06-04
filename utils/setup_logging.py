@@ -11,5 +11,5 @@ def setup_logging():
         logging.config.dictConfig(config)
     else:
         logging.basicConfig(level='INFO')
-        logging.warning("Logging configuration at %s does not exist!",
-                        logging_conf)
+        logging.warning(f"Logging configuration at {logging_conf} "
+                        f"does not exist!")

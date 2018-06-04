@@ -20,7 +20,7 @@ def job_create(job_type, object_id):
     job = get_job_config().generate_job(job_type, object_id, params)
     task = job.run()
     logger = logging.getLogger(__name__)
-    logger.info("created job with id: %s" % task.id)
+    logger.info(f"created job with id: {task.id}")
 
     job_id = task.id
     task_ids = _get_task_ids(task)
