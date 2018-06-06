@@ -62,7 +62,7 @@ services:
     user: ${UID}
     build:
       context: .
-      dockerfile: docker/Dockerfile-nlp
+      dockerfile: docker/Dockerfile-nlp-worker
     volumes:
       - .:/app
       - ./data:/data
