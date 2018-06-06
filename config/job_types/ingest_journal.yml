@@ -2,5 +2,6 @@ tasks:
   - retrieve_from_staging
   - split_pdf
   - generate_marcxml
+  - generate_ojsxml
   - publish_to_repository
   - cleanup_workdir
