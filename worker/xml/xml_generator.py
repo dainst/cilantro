@@ -54,7 +54,7 @@ def _write_template_to_file(template, target_path, target_file_name):
     text_file.close()
 
 
-def _prepare_marc_data(data):  # TODO sollte nicht mehr nötig sein mit jinja
+def _prepare_marc_data(data):
     """
     Build some variables needed in the marc XML template.
     :param dict data: JSON file which contains the data to fill the marc-XML
@@ -90,7 +90,7 @@ def _prepare_ojs_data(data):
     return data
 
 
-def _assemble_author_list(article):  # TODO sollte nicht mehr nötig sein mit jinja
+def _assemble_author_list(article):
     author_list = []
     for author in article['author']:
         author_list.append(f"{author['firstname']} {author['lastname']}")
