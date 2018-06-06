@@ -9,8 +9,8 @@ log = logging.getLogger(__name__)
 
 def generate_xml(work_path, data=None, xml_type='marc'):
     """
-    Main function for XML-Generation. Uses json file as parameters for the XML template and writes the generated files
-    to the working directory.
+    Main function for XML-Generation. Uses json file as parameters for the
+    XML template and writes the generated files to the working directory.
     :param work_path: Directory of the job
     :param data: XML metadata
     :param xml_type: used to choose the template file - either marc or ojs
