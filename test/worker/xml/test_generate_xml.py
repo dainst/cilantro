@@ -37,5 +37,6 @@ class GenerateXMLTest(unittest.TestCase):
             try:
                 os.remove(self.generated_filename1)
                 os.remove(self.generated_filename2)
+                os.remove(self.generated_filename3)
             except FileNotFoundError:
                 pass
