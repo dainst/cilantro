@@ -2,11 +2,10 @@ import json
 import shutil
 import os
 import unittest
-from worker.pdf.pdf import pypdf2_cut_pdf
+from worker.pdf.pdf import cut_pdf
 
 
 class CutPdfTest(unittest.TestCase):
-
     resource_dir = os.environ['RESOURCE_DIR']
     working_dir = os.environ['WORKING_DIR']
     pdf_src = f'{resource_dir}/objects/pdf/e2e-testing.pdf'
@@ -26,7 +25,7 @@ class CutPdfTest(unittest.TestCase):
         json_path = f'{self.resource_dir}/objects/pdf/data_json/data.json'
         with open(json_path) as data_object:
             data = json.load(data_object)
-        pypdf2_cut_pdf(data, self.source_path, self.target_path)
+        cut_pdf(data, self.source_path, self.target_path)
         for file_generated in self.files_generated:
             self.assertTrue(os.path.isfile(file_generated))
 
@@ -36,16 +35,13 @@ class CutPdfTest(unittest.TestCase):
         with open(json_path) as data_object:
             data = json.load(data_object)
 
-        pypdf2_cut_pdf(data, self.source_path, self.target_path)
+        cut_pdf(data, self.source_path, self.target_path)
         for file_generated in self.files_generated:
             self.assertTrue(os.path.isfile(file_generated))
 
     def tearDown(self):
-        return
         for file_generated in self.files_generated:
-
             try:
                 os.remove(file_generated)
             except FileNotFoundError:
                 pass
-
