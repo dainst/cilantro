@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM python:3
 
 MAINTAINER Deutsches Archäologisches Institut "dev@dainst.de"
 
@@ -76,8 +76,27 @@ RUN pip3 install \
 
 RUN python3 -m nltk.downloader -d /usr/local/share/nltk_data punkt
 
-COPY docker/Pipfile-nlp-worker /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt
-RUN rm /tmp/requirements.txt
+ARG GITHUB_ACCESS_TOKEN
+ENV PYLIB /usr/local/lib/python3.6/site-packages
 
-ENTRYPOINT watchmedo auto-restart --recursive --patterns="*.py" -- celery -A worker.celery_tasks worker --loglevel=info
+RUN git clone https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/dainst/nlp_components.git $PYLIB/nlp_components
+RUN cp -R $PYLIB/nlp_components/idai_journals $PYLIB/idai_journals
+
+ENV LIBRARY_PATH=/lib:/usr/lib
+ENV PIPENV_VENV_IN_PROJECT=true
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
+
+RUN set -ex && mkdir /app
+# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
+WORKDIR /app
+RUN cd $WORKDIR
+COPY docker/Pipfile-nlp-worker Pipfile
+COPY docker/Pipfile-nlp-worker.lock Pipfile.lock
+
+RUN pip3 install pipenv
+RUN set -ex && pipenv install --deploy --system
+
+USER nobody
+
+ENTRYPOINT watchmedo auto-restart -R -d nlp_worker -p="*.py" -- celery -Q nlp -A nlp_worker.tasks worker --loglevel=info

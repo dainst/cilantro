@@ -63,6 +63,8 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile-nlp-worker
+      args:
+        GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN}
     volumes:
       - .:/app
       - ./data:/data
