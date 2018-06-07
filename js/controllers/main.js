@@ -115,29 +115,6 @@ angular
 			webservice.loading = false;
 		}
 
-
-		/* document repository 
-		$scope.repository = {
-			list: [],
-			update: function (repository, selected) {
-				$scope.repository.list = webservice.repository = repository;
-				if (typeof selected !== "undefined") {
-					$scope.journal.data.importFilePath = selected;
-				}
-			},
-            getFirstFile: function() {
-			    if ($scope.repository.list.length < 1) {
-			        return null;
-                }
-			    let i = -1;
-                while (i++ < $scope.repository.list.length) {
-                    if ($scope.repository.list[i].type === "file") {
-                        return $scope.repository.list[i];
-                    }
-                }
-            }
-		} */
-
         /* protocols */ // @ TODO move to separate service
         $scope.protocols = {
             list: protocolregistry.protocols,
