@@ -5,7 +5,10 @@ import PyPDF2
 log = logging.getLogger(__name__)
 
 
-def cut_pdf(data, source, target):
+def cut_pdf(data, source, target=None):
+    if not target:
+        target = source
+
     articles = data['articles']
     for nr, article in enumerate(articles):
         try:
