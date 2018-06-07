@@ -16,6 +16,7 @@ angular
 	'module.infobox',
 	'module.messenger',
 	'module.webservice',
+	'module.repository',
 
 	'controller.main',
 

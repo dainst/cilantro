@@ -1,7 +1,7 @@
 angular
 .module('module.webservice', [])
-.factory("webservice", ['$http', '$rootScope', 'settings', 'messenger',
-	function($http, $rootScope, settings, messenger) {
+.factory("webservice", ['$http', '$rootScope', 'settings', 'messenger', 'repository',
+	function($http, $rootScope, settings, messenger, repository) {
 
 	let webservice = {};
 
@@ -11,7 +11,7 @@ angular
 
 	webservice.loading = false;
 
-	webservice.repository = [];
+	webservice.repository = repository;
 
 	webservice.uploadId = false; // should be named session Id because that is what it is actuallly
 

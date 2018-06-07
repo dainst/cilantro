@@ -4,8 +4,8 @@ angular
 
 .module('controller.main', [])
 
-.controller('main',	['$scope', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'journal',
-	function ($scope, editables, webservice, settings, messenger, protocolregistry, documentsource, journal) {
+.controller('main',	['$scope', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'journal', 'repository',
+	function ($scope, editables, webservice, settings, messenger, protocolregistry, documentsource, journal, repository) {
 
 		/* debug */
 		$scope.cacheKiller = '?nd=' + Date.now();
@@ -18,6 +18,11 @@ angular
 
 		/* backendData */
 		$scope.backendData = {} //some backend specific data.. will be a far more complex object when there are different backends
+
+		/* repository */
+		$scope.repository = repository;
+		/*step control
+		$scope.steps = steps; */
 
 		/* step control */
 		$scope.steps = {
@@ -68,7 +73,7 @@ angular
 				//$scope.message.reset();
 				$scope.steps.current = to;
 			}
-		}
+		} 
 
 
 		/* initialize */
@@ -111,7 +116,7 @@ angular
 		}
 
 
-		/* document repository */
+		/* document repository 
 		$scope.repository = {
 			list: [],
 			update: function (repository, selected) {
@@ -131,7 +136,7 @@ angular
                     }
                 }
             }
-		}
+		} */
 
         /* protocols */ // @ TODO move to separate service
         $scope.protocols = {
