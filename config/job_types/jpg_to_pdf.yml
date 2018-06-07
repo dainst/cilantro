@@ -1,0 +1,7 @@
+tasks:
+  - retrieve_from_staging
+  - foreach: "*.[jJ][pP][gG]*"
+    do: jpg_to_pdf
+  - pdf_merge
+  - publish_to_repository
+  - cleanup_workdir
