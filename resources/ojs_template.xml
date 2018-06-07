@@ -22,11 +22,12 @@
         <section>
             <title locale="en_US">Articles</title>
 
-            {%- for article in articles %}
-
-                <article {{article.locale}}>
+            {% for article in articles %}
+                <article {{'language="' + article['language'][0:2] + '" locale="' + article['language'] + '"'}}>
                     <title>{{article.title}}</title>
+                    {% if article.zenonId and article.zenonId != '(((new)))'%}
                     <id type="other::zenon">{{article.zenonId}}</id>
+                    {% endif %}
                     {% for author in article.author %}
                     <author>
                         <firstname>{{author.firstname}}</firstname>
@@ -34,9 +35,8 @@
                         <email>no@email.given</email>
                     </author>
                     {% endfor %}
-                    <pages>{{article.pages_new}}</pages>
+                    <pages>{{article['pages']['showndesc'] + ('#DFM' if article['createFrontpage'] else '')}}</pages>
                     <date_published>{{article.date_published}}</date_published>
-                    {# Might be useful later  <auto_publish_article>{{article.auto_publish}}</auto_publish_article>#}
                     {% if article.filepath %}
                     <galley>
                         <label>PDF</label>

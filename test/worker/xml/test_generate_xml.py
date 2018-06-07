@@ -3,6 +3,7 @@ import os
 import json
 
 from worker.xml.xml_generator import generate_xml
+from worker.xml.marc_xml_generator import generate_marc_xml
 
 
 class GenerateXMLTest(unittest.TestCase):
@@ -19,7 +20,11 @@ class GenerateXMLTest(unittest.TestCase):
             with open(data_path) as json_object:
                 data = json.load(json_object)
 
-            generate_xml(self.working_dir, data, 'marc')
+            template_file = open('resources/marc_template.xml', 'r')
+            template_string = template_file.read()
+            template_file.close()
+
+            generate_marc_xml(self.working_dir, data, template_string)
 
             self.assertTrue(os.path.isfile(self.generated_filename1))
             self.assertTrue(os.path.isfile(self.generated_filename2))
@@ -29,7 +34,11 @@ class GenerateXMLTest(unittest.TestCase):
             with open(data_path) as json_object:
                 data = json.load(json_object)
 
-            generate_xml(self.working_dir, data, 'ojs')
+            template_file = open('resources/ojs_template.xml', 'r')
+            template_string = template_file.read()
+            template_file.close()
+
+            generate_xml(self.working_dir, data, template_string)
 
             self.assertTrue(os.path.isfile(self.generated_filename3))
 

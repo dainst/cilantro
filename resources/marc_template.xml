@@ -6,13 +6,18 @@
         <leader>     nab a22      a 4500</leader>
 
         <datafield tag="100" ind1="1" ind2=" ">
-            <subfield code="a">{{main_author}}</subfield>
+            <subfield code="a">{{author[0]['firstname']}} {{author[0]['lastname']}}</subfield>
         </datafield>
 
         <datafield tag="245" ind1="1" ind2="0">
             <subfield code="a">{{title}}</subfield>
             <subfield code="b"></subfield>
             <subfield code="c">{{author_list}}</subfield>
+            <subfield code="c">
+                {%- for author_item in author -%}
+                    {{author_item['firstname']}} {{author_item['lastname']}}{%- if not loop.last %}, {% endif %}
+                {% endfor -%}
+            </subfield>
         </datafield>
 
         <datafield tag="260" ind1=" " ind2=" ">
@@ -22,7 +27,7 @@
         </datafield>
 
         <datafield tag="300" ind1=" " ind2=" ">
-            <subfield code="a">{{startPrint}}-{{endPrint}}</subfield>
+            <subfield code="a">{{pages.startPrint}}-{{pages.endPrint}}</subfield>
         </datafield>
 
         <datafield tag="504" ind1=" " ind2=" ">

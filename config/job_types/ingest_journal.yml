@@ -1,7 +1,9 @@
 tasks:
   - retrieve_from_staging
   - split_pdf
-  - generate_marcxml
-  - generate_ojsxml
+  - task: generate_marc_xml
+    xml_template_path: resources/marc_template.xml
+  - task: generate_xml
+    xml_template_path: resources/ojs_template.xml
   - publish_to_repository
   - cleanup_workdir
