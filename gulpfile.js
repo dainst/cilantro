@@ -15,7 +15,7 @@ gulp.task('server', function() {
                 modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg|\\.gif|\\.json|\\.woff2|\\.woff|\\.ttf$ /index.html [L]'])
             ]
         },
-        port: 8082,
+        port: 9082,
         notify: false
     });
 
@@ -43,7 +43,7 @@ gulp.task('server-e2e-test', function() {
                 modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg|\\.gif|\\.json|\\.woff2|\\.woff|\\.ttf$ /index.html [L]'])
             ]
         },
-        port: 8082,
+        port: 9082,
         notify: false
     });
 

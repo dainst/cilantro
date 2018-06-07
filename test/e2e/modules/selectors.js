@@ -1,6 +1,6 @@
-var elements = require("../util/elements");
+let elements = require("../util/elements");
 
-var Selectors = function() {
+let Selectors = function() {
 
     this.protocol = function(protocol = 'generic') {
         return elements.start.protocolSelect.element(by.css("[value='" + protocol + "']")).click;
