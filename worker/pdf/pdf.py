@@ -27,6 +27,7 @@ def cut_pdf(data, source, target):
                 for index in range(start_end[0] - 1, start_end[1]):
                     pdf_new.addPage(pdf.getPage(index))
             output_str = _set_output(data, article, nr)
+
             file_name = os.path.join(target, output_str)
             with open(file_name, "wb") as output_stream:
                 pdf_new.write(output_stream)
