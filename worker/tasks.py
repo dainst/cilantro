@@ -56,12 +56,12 @@ class BaseTask(Task):
         try:
             self.job_id = params['job_id']
         except KeyError:
-            raise KeyError(f"job_id has to be set before running a task")
+            raise KeyError("job_id has to be set before running a task")
 
         try:
             self.object_id = params['object_id']
         except KeyError:
-            raise KeyError(f"object_id has to be set before running a task")
+            raise KeyError("object_id has to be set before running a task")
 
 
 celery_app.autodiscover_tasks([
