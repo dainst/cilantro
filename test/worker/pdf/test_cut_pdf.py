@@ -15,6 +15,7 @@ class CutPdfTest(unittest.TestCase):
         f'{working_dir}/e2e-testing.pdf.1.pdf'
     ]
     source_path = working_dir
+    target_path = source_path
 
     def setUp(self):
         shutil.copy(self.pdf_src, self.files_generated[0])
@@ -24,7 +25,7 @@ class CutPdfTest(unittest.TestCase):
         json_path = f'{self.resource_dir}/objects/pdf/data_json/data.json'
         with open(json_path) as data_object:
             data = json.load(data_object)
-        cut_pdf(data, self.source_path)
+        cut_pdf(data, self.source_path, self.target_path)
         for file_generated in self.files_generated:
             self.assertTrue(os.path.isfile(file_generated))
 
@@ -45,4 +46,3 @@ class CutPdfTest(unittest.TestCase):
                 os.remove(file_generated)
             except FileNotFoundError:
                 pass
-
