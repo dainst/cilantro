@@ -13,10 +13,11 @@ class SplitPdfTask(BaseTask):
     def execute_task(self):
         work_path = self.get_work_path(self.job_id)
         json_path = os.path.join(work_path, 'data_json/data.json')
-        with open(json_path) as data_object:
+        with open(json_path, 'r') as data_object:
             data = json.load(data_object)
-
-        cut_pdf(data, work_path)
+        data = cut_pdf(data, work_path, work_path)
+        with open(json_path, 'w') as data_object:
+            json.dump(data, data_object)
 
 
 SplitPdfTask = celery_app.register_task(SplitPdfTask())
