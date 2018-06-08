@@ -18,4 +18,4 @@ class TifToJpgTask(BaseTask):
         convert_tif2jpg(file, new_file)
 
 
-celery_app.register_task(TifToJpgTask())
+TifToJpgTask = celery_app.register_task(TifToJpgTask())

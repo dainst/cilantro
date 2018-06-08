@@ -34,3 +34,6 @@ class PublishToRepositoryTask(BaseTask):
         if os.path.exists(repository_path):
             shutil.rmtree(repository_path)
         shutil.copytree(work_path, repository_path)
+
+
+PublishToRepositoryTask = celery_app.register_task(PublishToRepositoryTask())

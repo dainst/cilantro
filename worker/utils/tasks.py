@@ -37,3 +37,6 @@ class CleanupWorkdirTask(BaseTask):
     def execute_task(self):
         work_path = self.get_work_path(self.job_id)
         shutil.rmtree(work_path)
+
+
+CleanupWorkdirTask = celery_app.register_task(CleanupWorkdirTask())

@@ -19,4 +19,4 @@ class SplitPdfTask(BaseTask):
         cut_pdf(data, work_path)
 
 
-celery_app.register_task(SplitPdfTask())
+SplitPdfTask = celery_app.register_task(SplitPdfTask())
