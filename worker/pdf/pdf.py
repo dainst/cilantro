@@ -8,6 +8,7 @@ log = logging.getLogger(__name__)
 def cut_pdf(data, source, target):
     newdata = data
     articles = newdata['articles']
+
     for nr, article in enumerate(articles):
         try:
             article['filepath']

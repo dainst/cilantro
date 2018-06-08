@@ -28,5 +28,5 @@ celery_app.autodiscover_tasks([
     'worker.pdf',
     'worker.repository',
     'worker.utils',
-    'worker.marcxml'
+    'worker.xml'
 ], force=True)
