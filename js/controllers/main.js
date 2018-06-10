@@ -4,8 +4,8 @@ angular
 
 .module('controller.main', [])
 
-.controller('main',	['$scope', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'journal', 'repository',
-	function ($scope, editables, webservice, settings, messenger, protocolregistry, documentsource, journal, repository) {
+.controller('main',	['$scope', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'journal', 'repository', 'steps',
+	function ($scope, editables, webservice, settings, messenger, protocolregistry, documentsource, journal, repository, steps) {
 
 		/* debug */
 		$scope.cacheKiller = '?nd=' + Date.now();
@@ -21,60 +21,10 @@ angular
 
 		/* repository */
 		$scope.repository = repository;
-		/*step control
-		$scope.steps = steps; */
-
+		
+		/*step control*/
 		/* step control */
-		$scope.steps = {
-			list: {
-				"home": 	{
-					"template": "partials/view_home.html",
-					"title": "Start",
-					"condition": function() {return !$scope.isStarted}
-				},
-				"restart": 	{
-					"template": "partials/view_restart.html",
-					"title": "Restart",
-					"condition": function() {return $scope.isStarted}
-				},
-				"documents": {
-					"template": "partials/view_documents.html",
-					"title": "Documents",
-					"condition": function() {return documentsource.ready}
-				},
-				"overview": {
-					"template": "partials/view_overview.html",
-					"title": "Overview",
-					"condition": function() {return documentsource.ready}
-				},
-				"articles": {
-					"template": "partials/view_articles.html",
-					"title": "Articles",
-					"condition": function() {return documentsource.ready}
-				},
-				"publish": 	{
-					"template": "partials/view_finish.html",
-					"title": "Publish",
-					"condition": function() {return $scope.isStarted && documentsource.ready && journal.isReadyToUpload()}}
-			},
-			current:"home",
-			change: function(to) {
-
-				if (typeof $scope.steps.list[to] === "undefined") {
-					console.warn('view ' + to + ' does not exist');
-					return;
-				}
-
-				if (to === $scope.steps.current) {
-					return;
-				}
-
-				console.log('Tab change to: ', to);
-				//$scope.message.reset();
-				$scope.steps.current = to;
-			}
-		} 
-
+		$scope.steps = steps;
 
 		/* initialize */
 		$scope.isLoading = function() {
@@ -104,7 +54,7 @@ angular
 		/* restart */
 		$scope.restart = function() {
       		webservice.loading = true;
-			$scope.isStarted = false;
+			$scope.steps.isStarted = false;
 			messenger.content.stats = {};
 			documentsource.reset();
 			journal.reset();
@@ -169,8 +119,6 @@ angular
 
 		/* ctrl */
 
-		$scope.isStarted = false;
-
 		$scope.start = function() {
 			//checkPW
 			webservice.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal.data}, function(response) {
@@ -179,7 +127,7 @@ angular
                         messenger.alert("Please select an import protocol", true);
                         return;
                     }
-                    $scope.isStarted = $scope.protocols.start();
+                    $scope.steps.isStarted = $scope.protocols.start();
 				} else {
 					$scope.sec.password = '';
 				}
