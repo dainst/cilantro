@@ -3,7 +3,7 @@ import json
 from os import listdir
 from worker.tasks import BaseTask
 from worker.pdf.pdf import cut_pdf
-from worker.pdf.jpg_to_pdf import jpg_to_pdf, pdf_merge
+from worker.pdf.jpg_to_pdf import convert_jpg_to_pdf, pdf_merge
 from utils.celery_client import celery_app
 
 
@@ -30,7 +30,7 @@ class JpgToPdfTask(BaseTask):
             raise Exception('NO FILE')
         _, extension = os.path.splitext(file)
         new_file = file.replace(extension, '.converted.pdf')
-        jpg_to_pdf(file, new_file)
+        convert_jpg_to_pdf(file, new_file)
 
 
 class PdfMergeConverted(BaseTask):
