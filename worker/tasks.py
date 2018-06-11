@@ -12,7 +12,10 @@ setup_logging()
 
 
 @celery.signals.setup_logging.connect
-def on_celery_setup_logging(**kwargs):
+def on_celery_setup_logging(**_):  # underscore is a throwaway-variable, to avoid code style warning for unused variable
+    """
+    Enables manual logging configuration, independent of celery.
+    """
     pass
 
 

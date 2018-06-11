@@ -7,12 +7,13 @@ from worker.convert.converter import convert_tif2jpg
 
 
 log = logging.getLogger(__name__)
+
+
 class Tif2JpgTest(unittest.TestCase):
 
     tif_path = 'test/resources/objects/some_tiffs/test.tif'
     broken_tif_path = 'test/resources/objects/test_object/image1.tif'
     jpg_path = 'test/resources/objects/some_tiffs/test.jpg'
-
 
     def test_success(self):
         convert_tif2jpg(self.tif_path, self.jpg_path)
@@ -22,6 +23,7 @@ class Tif2JpgTest(unittest.TestCase):
 
     def test_error(self):
         self.assertRaises(OSError, convert_tif2jpg, self.broken_tif_path, self.jpg_path)
+
     @classmethod
     def tearDownClass(cls):
         try:
