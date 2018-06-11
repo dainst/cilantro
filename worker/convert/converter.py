@@ -11,6 +11,8 @@ def convert_tif2jpg(source_file, target_file):
 
 
 def convert_pdf2txts(source_file, output_dir):
+    logging.getLogger(__name__).debug(f"Creating txt files from {source_file} "
+                                      f"to {output_dir}")
     with open(source_file, "rb") as input_stream:
         pdf = pdftotext.PDF(input_stream)
         index = 0
