@@ -50,6 +50,7 @@ class BaseTask(Task):
         the actual implementation logic of the specific task.
         :return:
         """
+        raise NotImplementedError("Execute Task method not implemented")
 
     def _init_params(self, params):
         self.params = params
