@@ -5,11 +5,10 @@ import PyPDF2
 log = logging.getLogger(__name__)
 
 
-def cut_pdf(data, source, target=None):
-    if not target:
-        target = source
+def cut_pdf(data, source, target):
+    newdata = data
+    articles = newdata['articles']
 
-    articles = data['articles']
     for nr, article in enumerate(articles):
         try:
             article['filepath']
@@ -30,14 +29,16 @@ def cut_pdf(data, source, target=None):
                 for index in range(start_end[0] - 1, start_end[1]):
                     pdf_new.addPage(pdf.getPage(index))
             output_str = _set_output(data, article, nr)
+
             file_name = os.path.join(target, output_str)
             with open(file_name, "wb") as output_stream:
                 pdf_new.write(output_stream)
             for input_stream in input_streams:
                 input_stream.close()
-            data['articles'][nr]['filepath'] = f"{source}/{output_str}"  # Update Json Data
 
-    return data
+            newdata['articles'][nr]['filepath'] = f"{source}/{output_str}"  # Update Json Data
+
+    return newdata
 
 
 def _start_end(pages):
