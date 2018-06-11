@@ -33,7 +33,7 @@ class CutPdfTest(unittest.TestCase):
         json_path = f'{self.resource_dir}/objects/pdf/data_json/data_attached.json'
         with open(json_path) as data_object:
             data = json.load(data_object)
-        cut_pdf(data, self.source_path)
+        cut_pdf(data, self.source_path, self.target_path)
         for file_generated in self.files_generated:
             self.assertTrue(os.path.isfile(file_generated))
 

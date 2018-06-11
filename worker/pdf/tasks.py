@@ -8,7 +8,6 @@ from utils.celery_client import celery_app
 
 
 class SplitPdfTask(BaseTask):
-
     name = "split_pdf"
 
     def execute_task(self):
@@ -33,18 +32,19 @@ class JpgToPdfTask(BaseTask):
         new_file = file.replace(extension, '.converted.pdf')
         jpg_to_pdf(file, new_file)
 
+
 class PdfMergeConverted(BaseTask):
 
     name = "pdf_merge_converted"
 
     def execute_task(self):
-        work_path = self.get_work_path(job_id)
+        work_path = self.get_work_path(self.job_id)
         files = list_files(work_path, '.converted.pdf')
         pdf_merge(files, work_path + '/merged.pdf')  # TODO incorporate JSON data for the filename and metadatas.
 
 
-    def list_files(directory, extension):
-        return (directory + "/" + f for f in listdir(directory) if f.endswith(extension))
+def list_files(directory, extension):
+    return (directory + "/" + f for f in listdir(directory) if f.endswith(extension))
 
 
 SplitPdfTask = celery_app.register_task(SplitPdfTask())

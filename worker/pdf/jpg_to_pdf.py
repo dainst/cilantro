@@ -8,7 +8,7 @@ def jpg_to_pdf(source_file, target_file):
 
 def pdf_merge(file_paths, output_path):
     if not file_paths:
-        return
+        raise Exception('No files given to merge.')
     input_streams = []
     pdf_new = PyPDF2.PdfFileWriter()
     for file in file_paths:
