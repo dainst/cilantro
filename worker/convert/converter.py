@@ -3,7 +3,7 @@ from PIL import Image
 import pdftotext
 
 
-def convert_tif2jpg(source_file, target_file):
+def convert_tif_to_jpg(source_file, target_file):
     if source_file != target_file:
         logging.getLogger(__name__).debug(f"Converting {source_file} "
                                           f"to {target_file}")

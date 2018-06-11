@@ -2,7 +2,12 @@ import json
 import shutil
 import os
 import unittest
+import logging
+
 from worker.pdf.pdf import cut_pdf
+
+
+log = logging.getLogger(__name__)
 
 
 class CutPdfTest(unittest.TestCase):
@@ -17,8 +22,9 @@ class CutPdfTest(unittest.TestCase):
     source_path = working_dir
     target_path = source_path
 
-    def setUp(self):
-        shutil.copy(self.pdf_src, self.files_generated[0])
+    @classmethod
+    def setUpClass(cls):
+        shutil.copy(cls.pdf_src, cls.files_generated[0])
 
     def test_success_no_attachment(self):
 
@@ -40,9 +46,11 @@ class CutPdfTest(unittest.TestCase):
         for file_generated in self.files_generated:
             self.assertTrue(os.path.isfile(file_generated))
 
-    def tearDown(self):
-        for file_generated in self.files_generated:
+    @classmethod
+    def tearDownClass(cls):
+        for file_generated in cls.files_generated:
             try:
                 os.remove(file_generated)
-            except FileNotFoundError:
-                pass
+                log.debug("Deleted file: " + file_generated)
+            except FileNotFoundError as e:
+                log.error("File not found: " + e.filename)
