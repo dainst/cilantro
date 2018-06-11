@@ -6,9 +6,8 @@ log = logging.getLogger(__name__)
 
 
 def cut_pdf(data, source, target):
-    newdata = data
-    articles = newdata['articles']
-
+    new_data = data
+    articles = new_data['articles']
     for nr, article in enumerate(articles):
         try:
             article['filepath']
@@ -36,9 +35,9 @@ def cut_pdf(data, source, target):
             for input_stream in input_streams:
                 input_stream.close()
 
-            newdata['articles'][nr]['filepath'] = f"{source}/{output_str}"  # Update Json Data
+            new_data['articles'][nr]['filepath'] = f"{source}/{output_str}"  # Update Json Data
 
-    return newdata
+    return new_data
 
 
 def _start_end(pages):
