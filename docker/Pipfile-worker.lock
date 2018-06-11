@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "94000edb938665e1b97fa1ae3020a0c827514515ed48c6e5d8d96c41694f1e94"
+            "sha256": "1c0305906a3fdc94c49855aa718588762ea2f6ec2830af3c9fc3142860d3facb"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -39,11 +39,11 @@
         },
         "celery": {
             "hashes": [
-                "sha256:6fc4678d1692af97e137b2a9f1c04efd8e7e2fb7134c5c5ad60738cdd927762f",
-                "sha256:d1f2a3359bdbdfb344edce98b8e891f5fe64f8a11c5a45538ec20ac237c971f5"
+                "sha256:2082cbd82effa8ac8a8a58977d70bb203a9f362817e3b66f4578117b9f93d8a9",
+                "sha256:ff727c115533edbc7b81b2b4ba1ec88d1c2fc4836e1e2f4c3c33a76ff53e5d7f"
             ],
             "index": "pypi",
-            "version": "==4.1.1"
+            "version": "==4.2.0"
         },
         "jinja2": {
             "hashes": [
@@ -71,6 +71,13 @@
                 "sha256:7c35c5421a39bb82e58018febd90e3b6e5db34c5443aaaf742b3f33d4655f1c0"
             ],
             "version": "==0.1.2"
+        },
+        "pdftotext": {
+            "hashes": [
+                "sha256:b7312302007e19fc784263a321b41682f01a582af84e14200cef53b3f4e69a50"
+            ],
+            "index": "pypi",
+            "version": "==2.1.0"
         },
         "pillow": {
             "hashes": [
