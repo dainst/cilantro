@@ -7,6 +7,8 @@ def jpg_to_pdf(source_file, target_file):
 
 
 def pdf_merge(file_paths, output_path):
+    if not file_paths:
+        return
     input_streams = []
     pdf_new = PyPDF2.PdfFileWriter()
     for file in file_paths:
@@ -18,7 +20,6 @@ def pdf_merge(file_paths, output_path):
                 pdf_new.addPage(pdf.getPage(index))
         else:
             pdf_new.addPage(pdf.getPage(0))
-
     with open(output_path, "wb") as output_stream:
         pdf_new.write(output_stream)
     for input_stream in input_streams:
