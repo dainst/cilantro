@@ -17,7 +17,9 @@ def convert_pdf2txts(source_file, output_dir):
         pdf = pdftotext.PDF(input_stream)
         index = 0
         for page in pdf:
-            output = open('%s%d.txt' % (output_dir, index), 'wb')
-            output.write(page.encode('utf-8'))
-            output.close()
+            try:
+                output = open('%s%d.txt' % (output_dir, index), 'wb')
+                output.write(page.encode('utf-8'))
+            finally:
+                output.close()
             index = index + 1
