@@ -36,6 +36,7 @@ class CutPdfTest(unittest.TestCase):
             data = json.load(data_object)
 
         cut_pdf(data, self.source_path, self.target_path)
+
         for file_generated in self.files_generated:
             self.assertTrue(os.path.isfile(file_generated))
 

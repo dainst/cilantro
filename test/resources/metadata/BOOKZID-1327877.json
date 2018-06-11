@@ -3,7 +3,8 @@
     "created": "2018-04-17T18:25:43.511Z",
     "lastModified": "2018-04-17T19:25:43.511Z",
     "creator": {
-        "title": "Shabnam Moshfeg Nia"
+        "firstname": "Shabnam Moshfeg Nia",
+        "lastname": "Nia"
     },
     "dataset": "test",
     "isAbout": {
@@ -14,7 +15,8 @@
         "isA": "book",
         "created": "1836-1879",
         "creator": {
-            "title": "Deutsches Archäologisches Institut. Römische Abteilung",
+            "firstname": "Peter",
+            "lastname": "Baumeister"
         },
         "physicalStructure": [
             "BOOK-1327877-0002_798033.jpg",
