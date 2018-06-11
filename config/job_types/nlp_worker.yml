@@ -1,4 +1,3 @@
 tasks:
   - retrieve_from_staging
   - annotate
-  - annotate

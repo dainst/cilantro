@@ -1,4 +1,4 @@
-FROM python:3
+FROM ubuntu:18.04
 
 MAINTAINER Deutsches Archäologisches Institut "dev@dainst.de"
 
@@ -77,7 +77,7 @@ RUN pip3 install \
 RUN python3 -m nltk.downloader -d /usr/local/share/nltk_data punkt
 
 ARG GITHUB_ACCESS_TOKEN
-ENV PYLIB /usr/local/lib/python3.6/site-packages
+ENV PYLIB /usr/local/lib/python3.6/dist-packages
 
 RUN git clone https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/dainst/nlp_components.git $PYLIB/nlp_components
 RUN cp -R $PYLIB/nlp_components/idai_journals $PYLIB/idai_journals
