@@ -1,7 +1,7 @@
 tasks:
   - retrieve_from_staging
   - foreach: "*.[tT][iI][fF]*"
-    do: tif_to_jpg
+    do: convert_tif_to_jpg
   - foreach: "*.[jJ][pP][gG]*"
     do: jpg_to_pdf
   - pdf_merge_converted

@@ -1,9 +1,12 @@
 import unittest
 import os
 import json
+import logging
 
 from worker.xml.xml_generator import generate_xml
 from worker.xml.marc_xml_generator import generate_marc_xml
+
+log = logging.getLogger(__name__)
 
 
 class GenerateXMLTest(unittest.TestCase):
@@ -42,10 +45,20 @@ class GenerateXMLTest(unittest.TestCase):
 
             self.assertTrue(os.path.isfile(self.generated_filename3))
 
-        def tearDown(self):
+        @classmethod
+        def tearDownClass(cls):
             try:
-                os.remove(self.generated_filename1)
-                os.remove(self.generated_filename2)
-                os.remove(self.generated_filename3)
-            except FileNotFoundError:
-                pass
+                os.remove(cls.generated_filename1)
+                log.debug("Deleted file: " + cls.generated_filename1)
+            except FileNotFoundError as e:
+                log.error("File not found: " + e.filename)
+            try:
+                os.remove(cls.generated_filename2)
+                log.debug("Deleted file: " + cls.generated_filename2)
+            except FileNotFoundError as e:
+                log.error("File not found: " + e.filename)
+            try:
+                os.remove(cls.generated_filename3)
+                log.debug("Deleted file: " + cls.generated_filename3)
+            except FileNotFoundError as e:
+                log.error("File not found: " + e.filename)
