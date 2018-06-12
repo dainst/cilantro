@@ -19,20 +19,20 @@ class RequestParameterException(Exception):
     pass
 
 
-def generate_chain(object_id, tasks_def, request_params=None):
+def generate_chain(object_id, tasks_def, params=None):
     """
     Create a celery task chain for an object
     :param str object_id:
     :param list tasks_def: A list of (expanded) task definition objects
-    :param dict request_params: Additional params that override the default ones
+    :param dict params: Additional params that are made available to all tasks
     :return Chain: Celery task chain
     """
-    chain = _create_signature(tasks_def[0], object_id, request_params)
+    chain = _create_signature(tasks_def[0], object_id, params)
     for task_def in tasks_def[1:]:
         signature = _create_signature(
             task_def,
             object_id,
-            request_params
+            params
         )
         if signature:
             chain |= signature
@@ -127,14 +127,14 @@ def _expand_task_def(task_def):
         return expanded_task
 
 
-def _create_signature(task_def, object_id, request_params=None):
+def _create_signature(task_def, object_id, params=None):
     if task_def['type'] == 'foreach':
         return _create_foreach_signature(task_def, object_id)
     if task_def['type'] == 'if':
         return _create_if_signature(task_def, object_id,
-                                    request_params)
+                                    params)
     return _create_signature_for_task(task_def, object_id,
-                                      request_params)
+                                      params)
 
 
 def _create_foreach_signature(task_def, object_id):
@@ -146,26 +146,26 @@ def _create_foreach_signature(task_def, object_id):
     return celery_app.signature('foreach', kwargs=kwargs, immutable=True)
 
 
-def _create_if_signature(task_def, object_id, request_params):
-    if eval(task_def['condition'], request_params):
-        return generate_chain(object_id, task_def['do'], request_params)
+def _create_if_signature(task_def, object_id, params):
+    if eval(task_def['condition'], params):
+        return generate_chain(object_id, task_def['do'], params)
     else:
-        return _evaluate_else(task_def, object_id, request_params)
+        return _evaluate_else(task_def, object_id, params)
 
 
-def _evaluate_else(task_def, object_id, request_params,):
+def _evaluate_else(task_def, object_id, params, ):
     if 'else' in task_def:
-        return generate_chain(object_id, task_def['else'], request_params)
+        return generate_chain(object_id, task_def['else'], params)
     else:
         return False
 
 
-def _create_signature_for_task(task_def, object_id, request_params=None):
+def _create_signature_for_task(task_def, object_id, params=None):
     kwargs = {'object_id': object_id}
     if 'params' in task_def:
         kwargs.update(task_def['params'])
-    if request_params:
-        kwargs.update(request_params)
+    if params:
+        kwargs.update(params)
     return celery_app.signature(task_def['name'], kwargs=kwargs, immutable=True)
 
 
@@ -191,6 +191,12 @@ def _init_default_params(params):
 
 
 def _validate_request_params(default_params, request_params):
+    """
+    Validates and merges the request parameters
+    :param dict default_params:
+    :param dict request_params:
+    :return dict: default params overridden with request params
+    """
     logging.getLogger(__name__).debug(f"request_params: {request_params}")
     params = default_params
     if request_params:
@@ -217,6 +223,14 @@ class JobConfig:
     """
     Handles job config parsing and job chain creation based on
     the YAML job_type definition found in the config directory.
+    
+    Parameters for tasks can be set in three different places:
+    1. Default values are generated based on the data type configured in the
+       params section of the job config YAML.
+    2. Task specific parameters can be set in the tasks section of the job
+       config.
+    3. Additional parameters that override the values derived from the job
+       config can be set when creating a job chain.
     """
 
     def __init__(self):

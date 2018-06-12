@@ -24,6 +24,7 @@ class BaseTask(Task):
     This is the abstract base class for all tasks in cilantro.
     It provides parameter handling and utility methods for accessing
     the file system.
+
     Implementations should override the execute_task() method.
     """
 
