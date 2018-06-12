@@ -3,7 +3,7 @@ import PyPDF2
 
 
 def convert_jpg_to_pdf(source_file, target_file):
-    PIL.Image.Image.save(PIL.Image.open(source_file), target_file, 'PDF', resolution=100.0)
+    PIL.Image.open(source_file).save(target_file, 'PDF', resolution=100.0)
 
 
 def pdf_merge(file_paths, output_path):
