@@ -9,8 +9,8 @@ RUN set -ex && mkdir /app
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 WORKDIR /app
 
-COPY docker/Pipfile-service Pipfile
-COPY docker/Pipfile-service.lock Pipfile.lock
+COPY docker/service/Pipfile Pipfile
+COPY docker/service/Pipfile.lock Pipfile.lock
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system

@@ -10,8 +10,8 @@ ENV LANG C.UTF-8
 
 WORKDIR /app
 
-COPY docker/Pipfile-test Pipfile
-COPY docker/Pipfile-test.lock Pipfile.lock
+COPY docker/test/Pipfile Pipfile
+COPY docker/test/Pipfile.lock Pipfile.lock
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system
