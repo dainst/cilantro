@@ -1,10 +1,10 @@
 import os
 import json
-from os import listdir
+
+from utils.celery_client import celery_app
 from worker.tasks import BaseTask
 from worker.pdf.pdf import cut_pdf
 from worker.pdf.jpg_to_pdf import convert_jpg_to_pdf, pdf_merge
-from utils.celery_client import celery_app
 
 
 class SplitPdfTask(BaseTask):
@@ -44,7 +44,7 @@ class PdfMergeConverted(BaseTask):
 
 
 def list_files(directory, extension):
-    return (directory + "/" + f for f in listdir(directory) if f.endswith(extension))
+    return (directory + "/" + f for f in os.listdir(directory) if f.endswith(extension))
 
 
 SplitPdfTask = celery_app.register_task(SplitPdfTask())

@@ -1,8 +1,8 @@
 import os
 import shutil
 
-from worker.tasks import BaseTask
 from utils.celery_client import celery_app
+from worker.tasks import BaseTask
 
 repository_dir = os.environ['REPOSITORY_DIR']
 working_dir = os.environ['WORKING_DIR']

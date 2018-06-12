@@ -1,12 +1,12 @@
 import logging
 import os
+from abc import abstractmethod
 
 import celery.signals
 from celery.task import Task
-from abc import abstractmethod
 
-from utils.setup_logging import setup_logging
 from utils.celery_client import celery_app
+from utils.setup_logging import setup_logging
 
 
 setup_logging()

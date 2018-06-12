@@ -1,8 +1,8 @@
+from utils.celery_client import celery_app
 from worker.tasks import BaseTask
 from worker.metadata.loader import load_metadata
 from worker.xml.xml_generator import generate_xml
 from worker.xml.marc_xml_generator import generate_marc_xml
-from utils.celery_client import celery_app
 
 
 class GenerateMarcXMLTask(BaseTask):

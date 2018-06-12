@@ -1,11 +1,12 @@
 import glob
 import os
 import shutil
-from service.job.job_config import generate_chain
+
 from celery import group
 
-from worker.tasks import BaseTask
 from utils.celery_client import celery_app
+from service.job.job_config import generate_chain
+from worker.tasks import BaseTask
 
 
 class ForeachTask(BaseTask):

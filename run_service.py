@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from flask import Flask
+
 from utils.setup_logging import setup_logging
 from service.front_controller import front_controller
 from service.job.job_controller import job_controller
