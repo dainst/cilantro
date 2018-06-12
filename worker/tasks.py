@@ -1,3 +1,4 @@
+import logging
 import os
 
 import celery.signals
@@ -32,6 +33,7 @@ class BaseTask(Task):
     params = {}
     job_id = None
     object_id = None
+    log = logging.getLogger(__name__)
 
     def get_work_path(self, job_id):
         return os.path.join(self.working_dir, job_id)
@@ -67,6 +69,7 @@ class BaseTask(Task):
             self.object_id = params['object_id']
         except KeyError:
             raise KeyError("object_id has to be set before running a task")
+        self.log.debug(f"initialized params: {self.params}")
 
 
 celery_app.autodiscover_tasks([
