@@ -8,10 +8,10 @@ class IngestBookTest(JobTypeTest):
 
         data = self.post_job('ingest_book', 'some_tiffs')
         self.assertEqual('Accepted', data['status'])
+        self.assert_job_successful(data['task_ids'])
         self.assert_file_in_repository('some_tiffs', 'test.jpg')
         self.assert_file_in_repository('some_tiffs', 'test.converted.pdf')
         self.assert_file_in_repository('some_tiffs', 'merged.pdf')
-        self.assert_status(data['job_id'], 'SUCCESS')
 
         self.unstage_resource('some_tiffs')
         self.remove_object_from_repository('some_tiffs')

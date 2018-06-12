@@ -13,6 +13,14 @@ wait_time = 20000
 retry_time = 100
 
 
+def _assert_wait_time(waited):
+    if waited > wait_time:
+        raise TimeoutError()
+    else:
+        time.sleep(0.001 * retry_time)
+        return waited + retry_time
+
+
 class JobTypeTest(unittest.TestCase):
 
     resource_dir = os.environ['RESOURCE_DIR']
@@ -43,17 +51,37 @@ class JobTypeTest(unittest.TestCase):
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
 
+    def assert_job_successful(self, task_ids):
+        waited = 0
+        success = False
+        while not success:
+            print("---")
+            for task_id in task_ids:
+                status = self.get_status(task_id)
+                print(f"{task_id}: {status}")
+                if status == 'FAILURE':
+                    raise AssertionError("child task in FAILURE state")
+                elif status == 'SUCCESS':
+                    success = True
+                else:
+                    success = False
+                    continue
+            try:
+                waited = _assert_wait_time(waited)
+            except TimeoutError:
+                raise AssertionError("experienced timeout while waiting for"
+                                     "SUCCESS status")
+
     def assert_status(self, job_id, expected_status):
         waited = 0
         status = self.get_status(job_id)
         while status != expected_status:
-            if waited > wait_time:
+            try:
+                waited = _assert_wait_time(waited)
+            except TimeoutError:
                 raise AssertionError(f"experienced timeout while waiting for "
                                      f"status '{expected_status}', last status "
                                      f"was '{status}'")
-            else:
-                waited += retry_time
-                time.sleep(0.001 * retry_time)
             status = self.get_status(job_id)
 
     def get_status(self, job_id):
