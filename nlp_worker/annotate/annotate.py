@@ -13,28 +13,6 @@ def annotate(text, params):
     return {'result': result, 'status': 'Processing completed.'}
 
 
-def get_entities(text, params):
-    text_analyzer = TextAnalyzer(text)
-    if 'lang' in params:
-        text_analyzer.lang = params['lang']
-    if params['entity_type'] is not None:
-        exclusive_entity_type = \
-            [text_analyzer.SUPPORTED_ENTITY_TYPES[params["entity_type"]]]
-    else:
-        exclusive_entity_type = []
-
-    entity_list = \
-        text_analyzer.get_entities(
-            text_analyzer.do_ner(),
-            exclusive_entity_type,
-            params['include_references'])
-
-    entities = {'entity_list': [entity.to_json() for entity in entity_list]}
-    result = _add_metadata(text_analyzer, entities)
-
-    return {'result': result, 'status': 'Processing completed.'}
-
-
 def _run_annotation(text_analyzer, params):
 
     result = dict()
