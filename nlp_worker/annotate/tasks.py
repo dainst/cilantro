@@ -1,10 +1,13 @@
 import os
 import json
+import logging
 
 from utils.celery_client import celery_app
 from worker.tasks import BaseTask
 
 from nlp_worker.annotate.annotate import annotate
+
+log = logging.getLogger(__name__)
 
 
 class AnnotateTask(BaseTask):
@@ -20,7 +23,7 @@ class AnnotateTask(BaseTask):
         self.update_state(state='PROGRESS',
                           meta={'status': 'Running NLP analysis...'})
         result = annotate(data['text'], data['params'])
-        print(result)
+        log.info(result)
 
 
 AnnotateTask = celery_app.register_task(AnnotateTask())
