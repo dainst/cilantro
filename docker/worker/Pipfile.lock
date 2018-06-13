@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "94000edb938665e1b97fa1ae3020a0c827514515ed48c6e5d8d96c41694f1e94"
+            "sha256": "ba2634e02447d82e9a5b8e63dd5c6fedaf5ee4194c93744927c6366727f57f2a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -71,6 +71,13 @@
                 "sha256:7c35c5421a39bb82e58018febd90e3b6e5db34c5443aaaf742b3f33d4655f1c0"
             ],
             "version": "==0.1.2"
+        },
+        "pdftotext": {
+            "hashes": [
+                "sha256:b7312302007e19fc784263a321b41682f01a582af84e14200cef53b3f4e69a50"
+            ],
+            "index": "pypi",
+            "version": "==2.1.0"
         },
         "pillow": {
             "hashes": [
@@ -167,6 +174,14 @@
                 "sha256:6849544be74ec3638e84d90bc1cf2e1e9224cc10d96cd4383ec3f69e9bce077b"
             ],
             "version": "==1.1.4"
+        },
+        "wand": {
+            "hashes": [
+                "sha256:28e0454c9d16d69c5d5034918d96320d8f9f1377b4fdaf4944eec2f938c74704",
+                "sha256:fb50d0ad4cad995f0b59b13f76bced22682ab80b4299084a2c3c535b225850c9"
+            ],
+            "index": "pypi",
+            "version": "==0.4.4"
         },
         "watchdog": {
             "hashes": [

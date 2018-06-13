@@ -10,6 +10,8 @@ celery = {extras = ["redis"]}
 pillow = "*"
 docker-compose = "*"
 PyPDF2 = "*"
+pdftotext = "*"
+Wand = "*"
 
 [dev-packages]
 

@@ -11,7 +11,7 @@ tasks:
     do:
       - if: do_ocr
         do:
-          - convert_pdf_to_tiff
+          - convert_pdf_to_tifs
           - ocr_from_tiff
         else: extract_txt_from_pdf
       - generate_frontmatter
@@ -20,7 +20,7 @@ tasks:
   - foreach: "article_*"
     do:
       - if: not do_ocr
-        do: convert_pdf_to_tiff
+        do: convert_pdf_to_tifs
       - foreach: "*.[tT][iI][fF]*"
         do: convert_tif_to_jpg
       - extract_entities
