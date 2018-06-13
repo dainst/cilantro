@@ -9,6 +9,8 @@ pyyaml = "*"
 celery = {extras = ["redis"]}
 pillow = "*"
 docker-compose = "*"
+PyPDF2 = "*"
+jinja2 = "*"
 
 [dev-packages]
 
