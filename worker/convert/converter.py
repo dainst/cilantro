@@ -1,6 +1,8 @@
 import logging
 
-from PIL import Image
+from PIL import Image, ImageSequence
+from wand.image import Image as Img
+
 import pdftotext
 
 
@@ -24,3 +26,16 @@ def convert_pdf2txts(source_file, output_dir):
             finally:
                 output.close()
             index = index + 1
+
+
+def convert_pdf2tiffs(source_file, output_dir, compression_quality=80):
+    logging.getLogger(__name__).debug(f"Creating tiff files from {source_file} "
+                                      f"to {output_dir}")
+    try:
+        with Img(filename=source_file, resolution=200) as img:
+            img.save(filename=output_dir + f"0.tiff")
+            pages = len(img.sequence)
+            for i in range(pages):
+                Img(img.sequence[i]).save(filename=output_dir + f"{i}.tiff")
+    except Exception as e:
+        raise e

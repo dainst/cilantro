@@ -21,8 +21,7 @@ class SplitPdfTask(BaseTask):
 
 
 class JpgToPdfTask(BaseTask):
-
-    name = "jpg_to_pdf"
+    name = "convert_jpg_to_pdf"
 
     def execute_task(self):
         file = self.get_param("file")

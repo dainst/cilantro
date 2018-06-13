@@ -9,6 +9,7 @@ celery = {extras = ["redis"]}
 pillow = "*"
 PyPDF2 = "*"
 pdftotext = "*"
+Wand = "*"
 jinja2 = "*"
 
 [dev-packages]

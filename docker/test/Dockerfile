@@ -2,7 +2,7 @@ FROM python:3
 
 # needed for Pillow / PIL
 RUN apt-get update
-RUN apt-get -y install build-essential libjpeg-dev zlib1g-dev libtiff-dev libpoppler-cpp-dev pkg-config python-dev
+RUN apt-get -y install build-essential libjpeg-dev zlib1g-dev libtiff-dev libpoppler-cpp-dev pkg-config python-dev libmagickwand-dev ghostscript
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV LC_ALL C.UTF-8

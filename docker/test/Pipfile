@@ -11,6 +11,7 @@ pillow = "*"
 docker-compose = "*"
 PyPDF2 = "*"
 pdftotext = "*"
+Wand = "*"
 
 [dev-packages]
 
