@@ -16,12 +16,16 @@ class AnnotateTask(BaseTask):
 
     def execute_task(self):
         work_path = self.get_work_path(self.job_id)
-        json_path = os.path.join(work_path, 'text.json')
-        with open(json_path) as data_object:
-            data = json.load(data_object)
+        json_path = os.path.join(work_path, 'nlp_params.json')
+        text_path = os.path.join(work_path, 'nlp_text.txt')
 
-        result = annotate(data['text'], data['params'])
-        log.debug(result)
+        with open(json_path) as data_object:
+            params = json.load(data_object)
+        with open(text_path, 'r') as file:
+            text = file.read().replace('\n', '')
+
+        result = annotate(text, params)
+        log.info(result)
 
 
 AnnotateTask = celery_app.register_task(AnnotateTask())
