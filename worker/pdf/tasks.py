@@ -33,8 +33,7 @@ class JpgToPdfTask(BaseTask):
 
 
 class PdfMergeConverted(BaseTask):
-
-    name = "pdf_merge_converted"
+    name = "merge_converted_pdfs"
 
     def execute_task(self):
         work_path = self.get_work_path(self.job_id)

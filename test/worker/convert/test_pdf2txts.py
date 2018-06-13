@@ -1,7 +1,7 @@
 import os
 import unittest
 from pathlib import Path
-from worker.convert.converter import convert_pdf2txts
+from worker.convert.converter import convert_pdf_to_txts
 
 
 class Pdf2TxtsTest(unittest.TestCase):
@@ -16,7 +16,7 @@ class Pdf2TxtsTest(unittest.TestCase):
                 pass
 
     def test_success(self):
-        convert_pdf2txts(self.pdf_path, 'test/resources/objects/pdf/')
+        convert_pdf_to_txts(self.pdf_path, 'test/resources/objects/pdf/')
         p = self.txt_path.format(0)
         self.assertTrue(Path(p).is_file())
         stat = os.stat(p)
