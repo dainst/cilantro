@@ -20,10 +20,8 @@ class AnnotateTask(BaseTask):
         with open(json_path) as data_object:
             data = json.load(data_object)
 
-        self.update_state(state='PROGRESS',
-                          meta={'status': 'Running NLP analysis...'})
         result = annotate(data['text'], data['params'])
-        log.info(result)
+        log.debug(result)
 
 
 AnnotateTask = celery_app.register_task(AnnotateTask())
