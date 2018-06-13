@@ -3,6 +3,13 @@ from nlp_components.idai_journals.publications import TextAnalyzer
 
 
 def annotate(text, params):
+    """
+    :param text: the given text to annotate
+    :param params: some configuration options, given as dict
+    :return: result and status of the process
+    Uses the TextAnalyzer of the dainst/nlp_components in the nlp-worker
+    docker container to annotate the text
+    """
     text_analyzer = TextAnalyzer(text)
     if 'lang' in params:
         text_analyzer.lang = params['lang']
@@ -14,8 +21,7 @@ def annotate(text, params):
 
 
 def _run_annotation(text_analyzer, params):
-
-    result = dict()
+    result = {}
 
     if 'NER' in params['operation']:
         result['named_entities'] = text_analyzer.do_ner()
