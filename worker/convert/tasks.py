@@ -1,5 +1,6 @@
 import os
 
+from utils.celery_client import celery_app
 from worker.tasks import BaseTask
 from worker.convert.converter import convert_tif2jpg, convert_pdf2txts
 from utils.celery_client import celery_app

@@ -1,7 +1,9 @@
+import logging
+
 from flask import Blueprint, url_for, jsonify, request, g
+
 from utils.celery_client import celery_app
 from service.job.job_config import JobConfig
-import logging
 
 
 def get_job_config():

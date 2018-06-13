@@ -1,8 +1,8 @@
 import os
 import unittest
 import logging
-
 from pathlib import Path
+
 from worker.convert.converter import convert_tif_to_jpg
 
 

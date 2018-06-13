@@ -21,7 +21,7 @@ services:
   task-service:
     build:
       context: .
-      dockerfile: docker/Dockerfile-service
+      dockerfile: docker/service/Dockerfile
     ports:
       - "5000:5000"
     volumes:
@@ -42,7 +42,7 @@ services:
     user: ${UID}
     build:
       context: .
-      dockerfile: docker/Dockerfile-worker
+      dockerfile: docker/worker/Dockerfile
     volumes:
       - .:/app
       - ./data:/data
@@ -62,7 +62,7 @@ services:
     user: ${UID}
     build:
       context: .
-      dockerfile: docker/Dockerfile-test
+      dockerfile: docker/test/Dockerfile
     volumes:
       - .:/app
       - ./data:/data
@@ -83,7 +83,7 @@ services:
   task-monitor:
     build:
       context: .
-      dockerfile: docker/Dockerfile-monitor
+      dockerfile: docker/monitor/Dockerfile
     ports:
       - "5555:5555"
     environment:

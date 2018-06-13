@@ -1,5 +1,6 @@
 import os
 import logging
+
 import PyPDF2
 
 log = logging.getLogger(__name__)

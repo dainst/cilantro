@@ -67,6 +67,30 @@ class JobConfigTest(unittest.TestCase):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_invalid_param"
         self.assertRaises(ConfigParseException, JobConfig)
 
+    def test_config_param_in_task(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_params"
+
+        job_config = JobConfig()
+
+        job = job_config.generate_job("job1", "foo").chain
+
+        tasks = job.tasks
+
+        self.assertIn('do_task2', tasks[0].kwargs)
+        self.assertIn('do_task2', tasks[1].kwargs)
+
+    def test_request_param_in_task(self):
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_params"
+
+        job_config = JobConfig()
+
+        job = job_config.generate_job("job1", "foo", {'do_task2': True}).chain
+
+        tasks = job.tasks
+
+        self.assertIn('do_task2', tasks[0].kwargs)
+        self.assertIn('do_task2', tasks[1].kwargs)
+
     def test_if_param_true(self):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
 
