@@ -5,7 +5,7 @@ MAINTAINER Deutsches Archäologisches Institut "dev@dainst.de"
 ARG GITHUB_ACCESS_TOKEN
 
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y wget \
+RUN apt-get install -y \
       wget \
       unzip \
       default-jre \
