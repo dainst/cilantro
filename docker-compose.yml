@@ -19,9 +19,7 @@ services:
       - "6379:6379"
 
   task-service:
-    build:
-      context: .
-      dockerfile: docker/service/Dockerfile
+    image: dainst/cilantro-task-service
     ports:
       - "5000:5000"
     volumes:
@@ -40,9 +38,7 @@ services:
 
   task-worker:
     user: ${UID}
-    build:
-      context: .
-      dockerfile: docker/worker/Dockerfile
+    image: dainst/cilantro-default-worker
     volumes:
       - .:/app
       - ./data:/data
@@ -60,11 +56,7 @@ services:
 
   task-nlp:
     user: ${UID}
-    build:
-      context: .
-      dockerfile: docker/nlp/Dockerfile
-      args:
-        GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN}
+    image: dainst/cilantro-nlp-worker
     volumes:
       - .:/app
       - ./data:/data
@@ -82,9 +74,7 @@ services:
 
   cilantro-test:
     user: ${UID}
-    build:
-      context: .
-      dockerfile: docker/test/Dockerfile
+    image: dainst/cilantro-test
     volumes:
       - .:/app
       - ./data:/data
@@ -103,9 +93,7 @@ services:
       RESOURCE_DIR: "test/resources"
 
   task-monitor:
-    build:
-      context: .
-      dockerfile: docker/monitor/Dockerfile
+    image: dainst/cilantro-task-monitor
     ports:
       - "5555:5555"
     environment:
