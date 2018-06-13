@@ -1,6 +1,6 @@
 import logging
 
-from PIL import Image, ImageSequence
+from PIL import Image
 from wand.image import Image as Img
 
 import pdftotext
