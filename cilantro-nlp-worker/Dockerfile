@@ -90,8 +90,8 @@ RUN set -ex && mkdir /app
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 WORKDIR /app
 RUN cd $WORKDIR
-COPY Pipfile-nlp-worker Pipfile
-COPY Pipfile-nlp-worker.lock Pipfile.lock
+COPY Pipfile Pipfile
+COPY Pipfile.lock Pipfile.lock
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system
