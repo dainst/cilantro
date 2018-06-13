@@ -20,7 +20,7 @@ class SplitPdfTask(BaseTask):
             json.dump(data, data_object)
 
 
-class JpgToPdfTask(BaseTask):
+class ConvertJpgToPdfTask(BaseTask):
     name = "convert_jpg_to_pdf"
 
     def execute_task(self):
@@ -32,7 +32,7 @@ class JpgToPdfTask(BaseTask):
         convert_jpg_to_pdf(file, new_file)
 
 
-class PdfMergeConverted(BaseTask):
+class MergeConvertedPdfsTask(BaseTask):
     name = "merge_converted_pdfs"
 
     def execute_task(self):
@@ -46,5 +46,5 @@ def list_files(directory, extension):
 
 
 SplitPdfTask = celery_app.register_task(SplitPdfTask())
-JpgToPdfTask = celery_app.register_task(JpgToPdfTask())
-PdfMergeConverted = celery_app.register_task(PdfMergeConverted())
+JpgToPdfTask = celery_app.register_task(ConvertJpgToPdfTask())
+PdfMergeConverted = celery_app.register_task(MergeConvertedPdfsTask())
