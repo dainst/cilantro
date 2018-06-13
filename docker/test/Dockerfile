@@ -2,7 +2,7 @@ FROM python:3
 
 # needed for Pillow / PIL
 RUN apt-get update
-RUN apt-get -y install build-essential libjpeg-dev zlib1g-dev libtiff-dev pdftk
+RUN apt-get -y install build-essential libjpeg-dev zlib1g-dev libtiff-dev
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV LC_ALL C.UTF-8
@@ -10,8 +10,8 @@ ENV LANG C.UTF-8
 
 WORKDIR /app
 
-COPY docker/Pipfile-test Pipfile
-COPY docker/Pipfile-test.lock Pipfile.lock
+COPY docker/test/Pipfile Pipfile
+COPY docker/test/Pipfile.lock Pipfile.lock
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system

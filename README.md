@@ -70,3 +70,11 @@ docker not have the right permissions and the user account that runs the test ca
     sudo chown -R $(whoami):$(whoami) data/
 
 After that re-run the tests and they may succeed.
+
+## Code style
+
+Cilantro generally uses the [PEP 8 style guide](https://www.python.org/dev/peps/pep-0008/).
+
+Additionally parameters in method docstrings should be given as follows:
+
+    :param param_type param_name: parameter description

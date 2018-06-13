@@ -2,7 +2,7 @@ FROM python:3
 
 # needed for Pillow / PIL
 RUN apt-get update
-RUN apt-get -y install build-essential libjpeg-dev zlib1g-dev libtiff-dev pdftk
+RUN apt-get -y install build-essential libjpeg-dev zlib1g-dev libtiff-dev
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
@@ -13,12 +13,12 @@ RUN set -ex && mkdir /app
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 WORKDIR /app
 
-COPY docker/Pipfile-worker Pipfile
-COPY docker/Pipfile-worker.lock Pipfile.lock
+COPY docker/worker/Pipfile Pipfile
+COPY docker/worker/Pipfile.lock Pipfile.lock
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system
 
 USER nobody
 
-ENTRYPOINT watchmedo auto-restart -R -d worker -p="*.py" -- celery -Q celery,default -A worker.tasks worker --loglevel=info
+ENTRYPOINT watchmedo auto-restart -R -d service -d config -p="*.py;*.yml" -- celery -A worker.tasks worker --loglevel=info
