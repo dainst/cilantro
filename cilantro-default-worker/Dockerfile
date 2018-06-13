@@ -2,7 +2,7 @@ FROM python:3
 
 # needed for Pillow / PIL
 RUN apt-get update
-RUN apt-get -y install build-essential libjpeg-dev zlib1g-dev libtiff-dev pdftk
+RUN apt-get -y install build-essential libjpeg-dev zlib1g-dev libtiff-dev
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
@@ -21,4 +21,4 @@ RUN set -ex && pipenv install --deploy --system
 
 USER nobody
 
-ENTRYPOINT watchmedo auto-restart -R -d worker -p="*.py" -- celery -Q celery,default -A worker.tasks worker --loglevel=info
+ENTRYPOINT watchmedo auto-restart -R -d service -d config -p="*.py;*.yml" -- celery -A worker.tasks -Q default,celery worker --loglevel=info
