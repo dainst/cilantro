@@ -62,7 +62,7 @@ services:
     user: ${UID}
     build:
       context: .
-      dockerfile: docker/Dockerfile-nlp-worker
+      dockerfile: docker/nlp/Dockerfile
       args:
         GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN}
     volumes:
