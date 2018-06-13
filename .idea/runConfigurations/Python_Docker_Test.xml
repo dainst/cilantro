@@ -7,9 +7,6 @@
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/exec_docker_test.sh" />
     <option name="PARAMETERS" value="" />
     <module name="" />
-    <envs>
-      <env name="PYTHONPATH" value="docker/nlp_components/idai.journals" />
-    </envs>
     <method />
   </configuration>
 </component>
