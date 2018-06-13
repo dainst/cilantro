@@ -2,11 +2,9 @@ FROM ubuntu:18.04
 
 MAINTAINER Deutsches Archäologisches Institut "dev@dainst.de"
 
-ENV REFRESHED_AT 2018-03-19
-ENV DEBIAN_FRONTEND noninteractive
+ARG GITHUB_ACCESS_TOKEN
 
-RUN apt-get update && apt-get clean
-
+RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y \
       wget \
       unzip \
@@ -15,6 +13,7 @@ RUN apt-get install -y \
       python3 \
       python3-pip \
       git
+RUN apt-get clean && apt-get autoremove
 
 RUN rm -rf /var/lib/apt/lists/*
 RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
@@ -76,13 +75,13 @@ RUN pip3 install \
 
 RUN python3 -m nltk.downloader -d /usr/local/share/nltk_data punkt
 
-ARG GITHUB_ACCESS_TOKEN
 ENV PYLIB /usr/local/lib/python3.6/dist-packages
-
 RUN git clone https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/dainst/nlp_components.git $PYLIB/nlp_components
 RUN cp -R $PYLIB/nlp_components/idai_journals $PYLIB/idai_journals
+# Kind of ugly, need to find a better way for adding a path to python
+# inside of docker, except of copying it into it. Export does not work.
 
-ENV LIBRARY_PATH=/lib:/usr/lib
+ENV LIBARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
@@ -91,8 +90,8 @@ RUN set -ex && mkdir /app
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 WORKDIR /app
 RUN cd $WORKDIR
-COPY docker/nlp/Pipfile Pipfile
-COPY docker/nlp/Pipfile.lock Pipfile.lock
+COPY docker/nlp/Pipfile-nlp-worker Pipfile
+COPY docker/nlp/Pipfile-nlp-worker.lock Pipfile.lock
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system
