@@ -33,7 +33,6 @@ def convert_pdf2tiffs(source_file, output_dir, compression_quality=80):
                                       f"to {output_dir}")
     try:
         with Img(filename=source_file, resolution=200) as img:
-            img.save(filename=output_dir + f"0.tiff")
             pages = len(img.sequence)
             for i in range(pages):
                 Img(img.sequence[i]).save(filename=output_dir + f"{i}.tiff")
