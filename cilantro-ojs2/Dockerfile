@@ -5,6 +5,7 @@ LABEL maintainer="Deutsches Archäologisches Institut: dev@dainst.de"
 EXPOSE 80
 USER root
 
+ARG GITHUB_ACCESS_TOKEN
 
 ENV admin_user=admin
 ENV admin_password="password"
@@ -56,19 +57,19 @@ RUN mkdir /var/www/tmp \
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install ImageMagick Exiftool pdftk
 
 # dainst - plugins
-RUN git clone https://x-access-token:${github_access_token}@github.com/dainst/ojs-dainst-theme.git /var/www/html/ojs/plugins/themes/dainst \
+RUN git clone https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/dainst/ojs-dainst-theme.git /var/www/html/ojs/plugins/themes/dainst \
   && cd /var/www/html/ojs/plugins/themes/dainst \
   && git submodule init \
   && git submodule update
-RUN git clone https://x-access-token:${github_access_token}@github.com/dainst/ojs-dainst-frontpage-generator-plugin.git /var/www/html/ojs/plugins/generic/ojs-dainst-frontpage-generator-plugin \
+RUN git clone https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/dainst/ojs-dainst-frontpage-generator-plugin.git /var/www/html/ojs/plugins/generic/ojs-dainst-frontpage-generator-plugin \
   && cd /var/www/html/ojs/plugins/generic/ojs-dainst-frontpage-generator-plugin \
   && git submodule init \
   && git submodule update
-RUN git clone https://x-access-token:${github_access_token}@github.com/dainst/ojs-dainst-zenonlink-plugin.git /var/www/html/ojs/plugins/pubIds/zenon
-RUN git clone https://x-access-token:${github_access_token}@github.com/dainst/ojs-plugin-urnDNB -b ojs2 /var/www/html/ojs/plugins/pubIds/urnDNB
+RUN git clone https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/dainst/ojs-dainst-zenonlink-plugin.git /var/www/html/ojs/plugins/pubIds/zenon
+RUN git clone https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/dainst/ojs-plugin-urnDNB -b ojs2 /var/www/html/ojs/plugins/pubIds/urnDNB
 
 # set up test journal and activate plugins
-RUN git clone https://x-access-token:${github_access_token}@github.com/dainst/ojs-config-tool.git /root/ojs-config-tool
+RUN git clone https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/dainst/ojs-config-tool.git /root/ojs-config-tool
 RUN service mysql start  \
   && php /root/ojs-config-tool/ojs2.php --theme=dainst --journal.theme=dainst --journal.plugins=${enable_plugins}
 
