@@ -1,0 +1,4 @@
+tasks:
+  - retrieve_from_staging
+  - annotate
+  - cleanup_workdir
