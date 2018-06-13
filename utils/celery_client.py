@@ -13,8 +13,6 @@ result_config = 'redis://' + db_host
 
 celery_app = Celery('cilantro', broker=broker_config, backend=result_config)
 
-
-# http://docs.celeryproject.org/en/latest/userguide/routing.html#id2
 default_exchange = Exchange('default', type='direct')
 nlp_exchange = Exchange('nlp', type='direct')
 
@@ -25,8 +23,8 @@ celery_app.conf.task_queues = (
 celery_app.conf.task_default_queue = 'default'
 celery_app.conf.task_default_exchange = 'default'
 celery_app.conf.task_default_routing_key = 'default'
-# ----------
 
+# specify tasks excecuted by non-default workers here!
 celery_app.conf.task_routes = {
     'annotate': {
         'queue': 'nlp',
