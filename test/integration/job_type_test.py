@@ -55,10 +55,8 @@ class JobTypeTest(unittest.TestCase):
         waited = 0
         success = False
         while not success:
-            print("---")
             for task_id in task_ids:
                 status = self.get_status(task_id)
-                print(f"{task_id}: {status}")
                 if status == 'FAILURE':
                     raise AssertionError("child task in FAILURE state")
                 elif status == 'SUCCESS':

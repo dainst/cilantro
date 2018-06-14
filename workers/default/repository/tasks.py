@@ -15,7 +15,6 @@ def _copy_path(src, dest):
     :param str src:
     :param str dest:
     """
-    print(f"src: {src}, dest: {dest}")
     if os.path.isdir(src):
         for path in os.listdir(src):
             _copy_path(os.path.join(src, path), dest)
