@@ -31,7 +31,7 @@ services:
       BROKER_HOST: "broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
-      DB_HOST: "task-db"
+      DB_HOST: "db"
       REPOSITORY_DIR: ${REPOSITORY_DIR}
       STAGING_DIR: ${STAGING_DIR}
       CONFIG_DIR: ${CONFIG_DIR}
@@ -48,7 +48,7 @@ services:
       BROKER_HOST: "broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
-      DB_HOST: "task-db"
+      DB_HOST: "db"
       REPOSITORY_DIR: ${REPOSITORY_DIR}
       WORKING_DIR: ${WORKING_DIR}
       STAGING_DIR: ${STAGING_DIR}
@@ -66,7 +66,7 @@ services:
       BROKER_HOST: "broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
-      DB_HOST: "task-db"
+      DB_HOST: "db"
       REPOSITORY_DIR: ${REPOSITORY_DIR}
       WORKING_DIR: ${WORKING_DIR}
       STAGING_DIR: ${STAGING_DIR}
@@ -84,7 +84,7 @@ services:
       BROKER_HOST: "broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
-      DB_HOST: "task-db"
+      DB_HOST: "db"
       REPOSITORY_DIR: ${REPOSITORY_DIR}
       WORKING_DIR: ${WORKING_DIR}
       STAGING_DIR: ${STAGING_DIR}
@@ -103,7 +103,7 @@ services:
       BROKER_HOST: "broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
-      DB_HOST: "task-db"
+      DB_HOST: "db"
       REPOSITORY_DIR: ${REPOSITORY_DIR}
       WORKING_DIR: ${WORKING_DIR}
       STAGING_DIR: ${STAGING_DIR}
