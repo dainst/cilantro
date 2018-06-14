@@ -6,6 +6,7 @@ To build a new image or to rebuild it run the build script in the folder. Make s
 Currently used:
 * stable
 * dev
+
 You can use your own tag for developing, e.g. the name of your feature branch.
 
 New repositories is automatically created if you permissions are sufficient.
