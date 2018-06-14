@@ -23,7 +23,7 @@ class ForeachTask(BaseTask):
                 'job_id': self.job_id,
                 'file': file
             }
-            chain = generate_chain(self.object_id, subtasks, params)
+            chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
         raise self.replace(group(group_tasks))
 
