@@ -7,6 +7,7 @@ name = "pypi"
 watchdog = "*"
 celery = {extras = ["redis"]}
 jinja2 = "*"
+lxml = "*"
 
 [dev-packages]
 
