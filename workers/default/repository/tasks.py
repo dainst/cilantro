@@ -21,11 +21,11 @@ class RetrieveFromStagingTask(BaseTask):
         if os.path.exists(work_path):
             shutil.rmtree(work_path)
 
-        files = self.get_param('files')
-        for file in files:
-            src = os.path.join(staging_path, file)
-            dest = os.path.join(work_path, file)
-            shutil.copyfile(src, dest)
+        paths = self.get_param('paths')
+        for path in paths:
+            src = os.path.join(staging_path, path)
+            dest = os.path.join(work_path, path)
+            shutil.copytree(src, dest)
 
 
 RetrieveFromStagingTask = celery_app.register_task(RetrieveFromStagingTask())
