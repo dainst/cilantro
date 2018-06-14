@@ -2,8 +2,8 @@
 <collection xmlns="http://www.loc.gov/MARC21/slim">
     <record>
 
-        <controlfield tag="008">160120s2015    gw            000   ger d</controlfield>
         <leader>     nab a22      a 4500</leader>
+        <controlfield tag="008">160120s2015    gw            000   ger d</controlfield>
 
         <datafield tag="100" ind1="1" ind2=" ">
             <subfield code="a">{{author[0]['firstname']}} {{author[0]['lastname']}}</subfield>
