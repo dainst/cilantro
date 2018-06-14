@@ -98,4 +98,4 @@ RUN set -ex && pipenv install --deploy --system
 
 USER nobody
 
-ENTRYPOINT watchmedo auto-restart -R -d nlp_worker -p="*.py" -- celery -Q nlp -A nlp_worker.tasks worker --loglevel=info
+ENTRYPOINT watchmedo auto-restart -R -d workers -p="*.py" -- celery -Q nlp -A workers.nlp.tasks worker --loglevel=info

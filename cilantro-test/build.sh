@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
-docker image build -t cilantro-test .
-docker tag cilantro-test dainst/cilantro-test
-docker push dainst/cilantro-test
+name=cilantro-test
+tag=stable
+
+docker image build -t ${name}:${tag} .
+docker tag ${name}:${tag} dainst/${name}:${tag}
+docker push dainst/${name}:${tag}

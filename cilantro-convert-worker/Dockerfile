@@ -21,4 +21,4 @@ RUN set -ex && pipenv install --deploy --system
 
 USER nobody
 
-ENTRYPOINT watchmedo auto-restart -R -d service -d config -d workers -p="*.py;*.yml" -- celery -A workers.default.tasks -Q default,celery worker --loglevel=info
+ENTRYPOINT watchmedo auto-restart -R -d service -d config -d workers -p="*.py;*.yml" -- celery -A workers.convert.tasks -Q convert worker --loglevel=info

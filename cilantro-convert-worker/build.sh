@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-name=cilantro-default-worker
+name=cilantro-convert-worker
 tag=stable
 
 docker image build -t ${name}:${tag} .
