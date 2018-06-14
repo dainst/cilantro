@@ -54,6 +54,24 @@ services:
       STAGING_DIR: ${STAGING_DIR}
       CONFIG_DIR: ${CONFIG_DIR}
 
+  convert-worker:
+    user: ${UID}
+    image: dainst/cilantro-convert-worker:dev
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    working_dir: /app
+    environment:
+      BROKER_HOST: "task-broker"
+      BROKER_USER: ${BROKER_USER}
+      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      DB_HOST: "task-db"
+      REPOSITORY_DIR: ${REPOSITORY_DIR}
+      WORKING_DIR: ${WORKING_DIR}
+      STAGING_DIR: ${STAGING_DIR}
+      CONFIG_DIR: ${CONFIG_DIR}
+
   nlp-worker:
     user: ${UID}
     image: dainst/cilantro-nlp-worker:dev
