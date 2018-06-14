@@ -7,6 +7,10 @@ from service.job.job_config import JobConfig
 
 
 def get_job_config():
+    """
+    Get the job config singleton or creates it if it does not exist already
+    :return JobConfig:
+    """
     job_config = getattr(g, '_job_config', None)
     if job_config is None:
         job_config = g._job_config = JobConfig()
