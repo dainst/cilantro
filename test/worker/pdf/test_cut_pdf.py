@@ -4,7 +4,7 @@ import os
 import unittest
 import logging
 
-from worker.pdf.pdf import cut_pdf
+from workers.default.pdf.pdf import cut_pdf
 
 
 log = logging.getLogger(__name__)

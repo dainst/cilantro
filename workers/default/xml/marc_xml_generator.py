@@ -1,4 +1,4 @@
-from worker.xml.xml_generator import generate_xml
+from workers.default.xml.xml_generator import generate_xml
 
 
 def generate_marc_xml(work_path, data, template):

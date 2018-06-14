@@ -1,8 +1,8 @@
 import os
 
 from utils.celery_client import celery_app
-from worker.tasks import BaseTask
-from worker.convert.converter import convert_tif_to_jpg
+from workers.base_task import BaseTask
+from workers.default.convert.converter import convert_tif_to_jpg
 
 
 working_dir = os.environ['WORKING_DIR']

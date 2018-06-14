@@ -38,7 +38,7 @@ services:
 
   task-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:stable
+    image: dainst/cilantro-default-worker:dev
     volumes:
       - .:/app
       - ./data:/data
@@ -56,7 +56,7 @@ services:
 
   task-nlp:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:stable
+    image: dainst/cilantro-nlp-worker:dev
     volumes:
       - .:/app
       - ./data:/data

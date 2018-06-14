@@ -3,7 +3,7 @@ import unittest
 import logging
 from pathlib import Path
 
-from worker.convert.converter import convert_tif_to_jpg
+from workers.default.convert.converter import convert_tif_to_jpg
 
 
 log = logging.getLogger(__name__)

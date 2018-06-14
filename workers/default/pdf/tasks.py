@@ -2,9 +2,9 @@ import os
 import json
 
 from utils.celery_client import celery_app
-from worker.tasks import BaseTask
-from worker.pdf.pdf import cut_pdf
-from worker.pdf.jpg_to_pdf import convert_jpg_to_pdf, pdf_merge
+from workers.base_task import BaseTask
+from workers.default.pdf.pdf import cut_pdf
+from workers.default.pdf.jpg_to_pdf import convert_jpg_to_pdf, pdf_merge
 
 
 class SplitPdfTask(BaseTask):

@@ -6,7 +6,7 @@ from celery import group
 
 from utils.celery_client import celery_app
 from service.job.job_config import generate_chain
-from worker.tasks import BaseTask
+from workers.base_task import BaseTask
 
 
 class ForeachTask(BaseTask):
