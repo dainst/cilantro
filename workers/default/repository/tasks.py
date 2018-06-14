@@ -9,6 +9,20 @@ working_dir = os.environ['WORKING_DIR']
 staging_dir = os.environ['STAGING_DIR']
 
 
+def _copy_path(src, dest):
+    """
+    Recursively copies and flattens the given paths
+    :param str src:
+    :param str dest:
+    """
+    print(f"src: {src}, dest: {dest}")
+    if os.path.isdir(src):
+        for path in os.listdir(src):
+            _copy_path(os.path.join(src, path), dest)
+    else:
+        shutil.copy2(src, dest)
+
+
 class RetrieveFromStagingTask(BaseTask):
 
     name = "retrieve_from_staging"
@@ -20,12 +34,13 @@ class RetrieveFromStagingTask(BaseTask):
         work_path = self.get_work_path(self.job_id)
         if os.path.exists(work_path):
             shutil.rmtree(work_path)
+        os.mkdir(work_path)
 
         paths = self.get_param('paths')
         for path in paths:
             src = os.path.join(staging_path, path)
-            dest = os.path.join(work_path, path)
-            shutil.copytree(src, dest)
+            dest = os.path.join(work_path)
+            _copy_path(src, dest)
 
 
 RetrieveFromStagingTask = celery_app.register_task(RetrieveFromStagingTask())
