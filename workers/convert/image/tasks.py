@@ -1,8 +1,8 @@
 import os
 
 from utils.celery_client import celery_app
-from worker.tasks import BaseTask
-from worker.convert.converter import convert_tif_to_jpg
+from workers.base_task import BaseTask
+from workers.convert.image.converter import convert_tif_to_jpg
 
 
 working_dir = os.environ['WORKING_DIR']
@@ -10,7 +10,7 @@ working_dir = os.environ['WORKING_DIR']
 
 class TifToJpgTask(BaseTask):
 
-    name = "convert_tif_to_jpg"
+    name = "convert.tif_to_jpg"
 
     def execute_task(self):
         file = self.get_param('file')

@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from worker.pdf.jpg_to_pdf import convert_jpg_to_pdf, pdf_merge
+from workers.convert.pdf.jpg_to_pdf import convert_jpg_to_pdf, pdf_merge
 
 
 class Jpg2PdfTest(unittest.TestCase):

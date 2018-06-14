@@ -15,10 +15,12 @@ celery_app = Celery('cilantro', broker=broker_config, backend=result_config)
 
 default_exchange = Exchange('default', type='direct')
 nlp_exchange = Exchange('nlp', type='direct')
+convert_exchange = Exchange('convert', type='direct')
 
 celery_app.conf.task_queues = (
     Queue('default', default_exchange, routing_key='default'),
     Queue('nlp', nlp_exchange, routing_key='nlp'),
+    Queue('convert', nlp_exchange, routing_key='convert'),
 )
 celery_app.conf.task_default_queue = 'default'
 celery_app.conf.task_default_exchange = 'default'
@@ -26,9 +28,13 @@ celery_app.conf.task_default_routing_key = 'default'
 
 # specify tasks excecuted by non-default workers here!
 celery_app.conf.task_routes = {
-    'annotate': {
+    'nlp.*': {
         'queue': 'nlp',
         'routing_key': 'nlp',
     },
+    'convert.*': {
+            'queue': 'convert',
+            'routing_key': 'convert',
+    }
 }
 

@@ -5,14 +5,14 @@ import logging
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask
 
-from nlp_worker.annotate.annotate import annotate
+from workers.nlp.annotate.annotate import annotate
 
 log = logging.getLogger(__name__)
 
 
 class AnnotateTask(BaseTask):
 
-    name = "annotate"
+    name = "nlp.annotate"
 
     def execute_task(self):
         work_path = self.get_work_path(self.job_id)

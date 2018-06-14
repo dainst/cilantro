@@ -1,9 +1,9 @@
-import PIL
 import PyPDF2
+from PIL import Image
 
 
 def convert_jpg_to_pdf(source_file, target_file):
-    PIL.Image.open(source_file).save(target_file, 'PDF', resolution=100.0)
+    Image.open(source_file).save(target_file, 'PDF', resolution=100.0)
 
 
 def pdf_merge(file_paths, output_path):

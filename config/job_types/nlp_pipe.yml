@@ -1,4 +1,4 @@
 tasks:
   - retrieve_from_staging
-  - annotate
+  - nlp.annotate
   - cleanup_workdir

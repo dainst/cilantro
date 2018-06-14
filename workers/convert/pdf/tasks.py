@@ -2,13 +2,13 @@ import os
 import json
 
 from utils.celery_client import celery_app
-from worker.tasks import BaseTask
-from worker.pdf.pdf import cut_pdf
-from worker.pdf.jpg_to_pdf import convert_jpg_to_pdf, pdf_merge
+from workers.base_task import BaseTask
+from workers.convert.pdf.pdf import cut_pdf
+from workers.convert.pdf.jpg_to_pdf import convert_jpg_to_pdf, pdf_merge
 
 
 class SplitPdfTask(BaseTask):
-    name = "split_pdf"
+    name = "convert.split_pdf"
 
     def execute_task(self):
         work_path = self.get_work_path(self.job_id)
@@ -22,7 +22,7 @@ class SplitPdfTask(BaseTask):
 
 class JpgToPdfTask(BaseTask):
 
-    name = "jpg_to_pdf"
+    name = "convert.jpg_to_pdf"
 
     def execute_task(self):
         file = self.get_param("file")
@@ -35,7 +35,7 @@ class JpgToPdfTask(BaseTask):
 
 class PdfMergeConverted(BaseTask):
 
-    name = "pdf_merge_converted"
+    name = "convert.pdf_merge_converted"
 
     def execute_task(self):
         work_path = self.get_work_path(self.job_id)

@@ -5,7 +5,6 @@ from abc import abstractmethod
 import celery.signals
 from celery.task import Task
 
-from utils.celery_client import celery_app
 from utils.setup_logging import setup_logging
 
 
@@ -70,12 +69,3 @@ class BaseTask(Task):
         except KeyError:
             raise KeyError("object_id has to be set before running a task")
         self.log.debug(f"initialized params: {self.params}")
-
-
-celery_app.autodiscover_tasks([
-    'worker.convert',
-    'worker.pdf',
-    'worker.repository',
-    'worker.utils',
-    'worker.xml'
-], force=True)

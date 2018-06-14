@@ -3,8 +3,8 @@ import os
 import json
 import logging
 
-from worker.xml.xml_generator import generate_xml
-from worker.xml.marc_xml_generator import generate_marc_xml
+from workers.default.xml.xml_generator import generate_xml
+from workers.default.xml.marc_xml_generator import generate_marc_xml
 
 log = logging.getLogger(__name__)
 
