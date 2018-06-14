@@ -19,7 +19,7 @@ services:
       - "6379:6379"
 
   task-service:
-    image: dainst/cilantro-task-service
+    image: dainst/cilantro-task-service:stable
     ports:
       - "5000:5000"
     volumes:
@@ -38,7 +38,7 @@ services:
 
   task-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker
+    image: dainst/cilantro-default-worker:stable
     volumes:
       - .:/app
       - ./data:/data
@@ -56,7 +56,7 @@ services:
 
   task-nlp:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker
+    image: dainst/cilantro-nlp-worker:stable
     volumes:
       - .:/app
       - ./data:/data
@@ -74,7 +74,7 @@ services:
 
   cilantro-test:
     user: ${UID}
-    image: dainst/cilantro-test
+    image: dainst/cilantro-test:stable
     volumes:
       - .:/app
       - ./data:/data
@@ -93,7 +93,7 @@ services:
       RESOURCE_DIR: "test/resources"
 
   task-monitor:
-    image: dainst/cilantro-task-monitor
+    image: dainst/cilantro-task-monitor:stable
     ports:
       - "5555:5555"
     environment:
