@@ -126,5 +126,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-# custom build scripts
+# custom build
 cilantro-build.sh
+docker.log
