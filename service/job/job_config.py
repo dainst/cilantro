@@ -19,19 +19,17 @@ class RequestParameterException(Exception):
     pass
 
 
-def generate_chain(object_id, tasks_def, params=None):
+def generate_chain(tasks_def, params=None):
     """
-    Create a celery task chain for an object
-    :param str object_id:
+    Create a celery task chain
     :param list tasks_def: A list of (expanded) task definition objects
     :param dict params: Additional params that are made available to all tasks
     :return Chain: Celery task chain
     """
-    chain = _create_signature(tasks_def[0], object_id, params)
+    chain = _create_signature(tasks_def[0], params)
     for task_def in tasks_def[1:]:
         signature = _create_signature(
             task_def,
-            object_id,
             params
         )
         if signature:
@@ -127,41 +125,38 @@ def _expand_task_def(task_def):
         return expanded_task
 
 
-def _create_signature(task_def, object_id, params=None):
+def _create_signature(task_def, params=None):
     if task_def['type'] == 'foreach':
-        return _create_foreach_signature(task_def, object_id)
+        return _create_foreach_signature(task_def)
     if task_def['type'] == 'if':
-        return _create_if_signature(task_def, object_id,
-                                    params)
-    return _create_signature_for_task(task_def, object_id,
-                                      params)
+        return _create_if_signature(task_def, params)
+    return _create_signature_for_task(task_def, params)
 
 
-def _create_foreach_signature(task_def, object_id):
+def _create_foreach_signature(task_def):
     kwargs = {
-        'object_id': object_id,
         'pattern': task_def['pattern'],
         'subtasks': task_def['do']
     }
     return celery_app.signature('foreach', kwargs=kwargs, immutable=True)
 
 
-def _create_if_signature(task_def, object_id, params):
+def _create_if_signature(task_def, params):
     if eval(task_def['condition'], params):
-        return generate_chain(object_id, task_def['do'], params)
+        return generate_chain(task_def['do'], params)
     else:
-        return _evaluate_else(task_def, object_id, params)
+        return _evaluate_else(task_def, params)
 
 
-def _evaluate_else(task_def, object_id, params, ):
+def _evaluate_else(task_def, params, ):
     if 'else' in task_def:
-        return generate_chain(object_id, task_def['else'], params)
+        return generate_chain(task_def['else'], params)
     else:
         return False
 
 
-def _create_signature_for_task(task_def, object_id, params=None):
-    kwargs = {'object_id': object_id}
+def _create_signature_for_task(task_def, params=None):
+    kwargs = {}
     if 'params' in task_def:
         kwargs.update(task_def['params'])
     if params:
@@ -242,11 +237,10 @@ class JobConfig:
         self.job_types = {}
         self._parse_job_config()
 
-    def generate_job(self, job_type, object_id, request_params=None):
+    def generate_job(self, job_type, request_params=None):
         """
-        Generates a celery job chain for an object
+        Generates a celery job chain
         :param str job_type: The name of the config file that defines the job
-        :param str object_id: The object the job operates on
         :param dict request_params: Additional parameters that overwrite the
             default parameters
         :return Job:
@@ -257,7 +251,7 @@ class JobConfig:
         tasks_def = self.job_types[job_type]['tasks']
         default_params = self.job_types[job_type]['params']
         params = _validate_request_params(default_params, request_params)
-        return Job(generate_chain(object_id, tasks_def, params))
+        return Job(generate_chain(tasks_def, params))
 
     def _parse_job_config(self):
         pattern = os.path.join(self._config_dir, "job_types", "*.yml")

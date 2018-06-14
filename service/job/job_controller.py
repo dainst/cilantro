@@ -20,10 +20,10 @@ def get_job_config():
 job_controller = Blueprint('job', __name__)
 
 
-@job_controller.route('/<job_type>/<object_id>', methods=['POST'])
-def job_create(job_type, object_id):
+@job_controller.route('/<job_type>', methods=['POST'])
+def job_create(job_type):
     params = request.get_json(force=True, silent=True)
-    job = get_job_config().generate_job(job_type, object_id, params)
+    job = get_job_config().generate_job(job_type, params)
     task = job.run()
     logger = logging.getLogger(__name__)
     logger.info(f"created job with id: {task.id}")
