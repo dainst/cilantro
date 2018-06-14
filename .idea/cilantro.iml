@@ -9,6 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/worker" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/utils" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.6 (cilantro)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
