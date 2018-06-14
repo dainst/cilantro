@@ -31,7 +31,6 @@ class BaseTask(Task):
     working_dir = os.environ['WORKING_DIR']
     params = {}
     job_id = None
-    object_id = None
     log = logging.getLogger(__name__)
 
     def get_work_path(self, job_id):
@@ -63,9 +62,4 @@ class BaseTask(Task):
             self.job_id = params['job_id']
         except KeyError:
             raise KeyError("job_id has to be set before running a task")
-
-        try:
-            self.object_id = params['object_id']
-        except KeyError:
-            raise KeyError("object_id has to be set before running a task")
         self.log.debug(f"initialized params: {self.params}")
