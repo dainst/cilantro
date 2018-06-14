@@ -1,3 +1,6 @@
+params:
+  paths: list
+
 tasks:
   - retrieve_from_staging
   - nlp.annotate
