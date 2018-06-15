@@ -6,22 +6,26 @@ from jinja2 import Template
 log = logging.getLogger(__name__)
 
 
-def generate_xml(work_path, data, template_string, target_filename='ojs_import.xml'):
+def generate_xml(work_path, data, template_string, target_path='', target_filename='ojs_import.xml'):
     """
     Builds Jinja2 template and writes it to target file.
-    :param work_path: Path to put the generated XML
-    :param data: Journal metadata
-    :param template_string: XML template
-    :param target_filename: self explanatory...
-    :return: None
+    :param string work_path: Path to put the generated XML
+    :param dict data: Journal metadata
+    :param string template_string: XML template
+    :param string target_path: self explanatory...
+    :param string target_filename: self explanatory...
+    :return str: Path to generated XML file
     """
     template = Template(template_string, trim_blocks=True, lstrip_blocks=True)
     filled_template = template.render(data)
-    _write_xml_to_file(filled_template, work_path, target_filename)
+    _write_xml_to_file(filled_template, os.path.join(work_path, target_path), target_filename)
+    return os.path.join(work_path, target_path, target_filename)
 
 
 def _write_xml_to_file(template, target_path, target_file_name):
-    log.debug("Saving XML file to" + os.path.join(target_path, target_file_name))
+    log.debug("Saving XML file to" + os.path.join(target_path, target_path, target_file_name))
+    if not os.path.exists(target_path):
+        os.makedirs(target_path)
     text_file = open(os.path.join(target_path, target_file_name), "w")
     text_file.write(str(template))
     text_file.close()

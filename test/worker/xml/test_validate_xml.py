@@ -2,7 +2,7 @@ import unittest
 
 from lxml import etree
 
-from worker.xml.xml_validator import validate_xml
+from workers.default.xml.xml_validator import validate_xml
 
 
 class ValidateXMLTest(unittest.TestCase):
