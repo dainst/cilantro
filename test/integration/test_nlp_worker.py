@@ -6,9 +6,10 @@ class NlpWorkerTest(JobTypeTest):
     def test_success(self):
         self.stage_resource('objects', 'nlp')
 
-        job = self.post_job('nlp_pipe', 'nlp')
-        self.assertEqual('Accepted', job['status'])
-        self.assert_status(job['job_id'], 'SUCCESS')
+        data = self.post_job('nlp_pipe', {'paths': ['nlp']})
+        job_id = data['job_id']
+        self.assertEqual('Accepted', data['status'])
+        self.assert_status(job_id, 'SUCCESS')
 
         self.unstage_resource('nlp')
-        self.remove_object_from_repository('nlp')
+        self.remove_object_from_repository(job_id)

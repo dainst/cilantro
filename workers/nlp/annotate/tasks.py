@@ -15,7 +15,7 @@ class AnnotateTask(BaseTask):
     name = "nlp.annotate"
 
     def execute_task(self):
-        work_path = self.get_work_path(self.job_id)
+        work_path = self.get_work_path()
         json_path = os.path.join(work_path, 'nlp_params.json')
         text_path = os.path.join(work_path, 'nlp_text.txt')
 

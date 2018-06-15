@@ -17,7 +17,7 @@ class ForeachTask(BaseTask):
     def execute_task(self):
         pattern = self.get_param('pattern')
         subtasks = self.get_param('subtasks')
-        work_path = self.get_work_path(self.job_id)
+        work_path = self.get_work_path()
         group_tasks = []
         regex = re.compile(pattern)
         files = [f for f in os.listdir(work_path) if regex.search(f)]
@@ -26,7 +26,7 @@ class ForeachTask(BaseTask):
                 'job_id': self.job_id,
                 'file': os.path.join(work_path, file)
             }
-            chain = generate_chain(self.object_id, subtasks, params)
+            chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
         raise self.replace(group(group_tasks))
 
@@ -39,7 +39,7 @@ class CleanupWorkdirTask(BaseTask):
     name = "cleanup_workdir"
 
     def execute_task(self):
-        work_path = self.get_work_path(self.job_id)
+        work_path = self.get_work_path()
         shutil.rmtree(work_path)
 
 

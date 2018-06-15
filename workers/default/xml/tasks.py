@@ -10,7 +10,7 @@ class GenerateMarcXMLTask(BaseTask):
     name = "generate_marc_xml"
 
     def execute_task(self):
-        work_path = self.get_work_path(self.job_id)
+        work_path = self.get_work_path()
         data = load_metadata(work_path)
         xml_template_string = _read_template_file(self.get_param('xml_template_path'))
         generate_marc_xml(work_path, data, xml_template_string)
@@ -23,7 +23,7 @@ class GenerateXMLTask(BaseTask):
     name = "generate_xml"
 
     def execute_task(self):
-        work_path = self.get_work_path(self.job_id)
+        work_path = self.get_work_path()
         data = load_metadata(work_path)
         xml_template_string = _read_template_file(self.get_param('xml_template_path'))
         generate_xml(work_path, data, xml_template_string)
