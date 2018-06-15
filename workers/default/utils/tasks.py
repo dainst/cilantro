@@ -1,5 +1,6 @@
 import glob
 import os
+import re
 import shutil
 
 from celery import group
@@ -18,10 +19,12 @@ class ForeachTask(BaseTask):
         subtasks = self.get_param('subtasks')
         work_path = self.get_work_path(self.job_id)
         group_tasks = []
-        for file in glob.iglob(os.path.join(work_path, pattern)):
+        regex = re.compile(pattern)
+        files = [f for f in os.listdir(work_path) if regex.search(f)]
+        for file in files:
             params = {
                 'job_id': self.job_id,
-                'file': file
+                'file': os.path.join(work_path, file)
             }
             chain = generate_chain(self.object_id, subtasks, params)
             group_tasks.append(chain)
