@@ -29,16 +29,10 @@ class RetrieveFromStagingTask(BaseTask):
     def execute_task(self):
         staging_path = os.path.join(staging_dir)
 
-        # TODO: move to base class
-        work_path = self.get_work_path(self.job_id)
-        if os.path.exists(work_path):
-            shutil.rmtree(work_path)
-        os.mkdir(work_path)
-
         paths = self.get_param('paths')
         for path in paths:
             src = os.path.join(staging_path, path)
-            dest = os.path.join(work_path)
+            dest = os.path.join(self.get_work_path())
             _copy_path(src, dest)
 
 
@@ -50,7 +44,7 @@ class PublishToRepositoryTask(BaseTask):
     name = "publish_to_repository"
 
     def execute_task(self):
-        work_path = self.get_work_path(self.job_id)
+        work_path = self.get_work_path()
         repository_path = os.path.join(repository_dir, self.job_id)
         if os.path.exists(repository_path):
             shutil.rmtree(repository_path)

@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 from abc import abstractmethod
 
 import celery.signals
@@ -33,8 +34,11 @@ class BaseTask(Task):
     job_id = None
     log = logging.getLogger(__name__)
 
-    def get_work_path(self, job_id):
-        return os.path.join(self.working_dir, job_id)
+    def get_work_path(self):
+        work_path = os.path.join(self.working_dir, self.job_id)
+        if not os.path.exists(work_path):
+            os.mkdir(work_path)
+        return work_path
 
     def run(self, **params):
         self._init_params(params)

@@ -16,7 +16,7 @@ class ForeachTask(BaseTask):
     def execute_task(self):
         pattern = self.get_param('pattern')
         subtasks = self.get_param('subtasks')
-        work_path = self.get_work_path(self.job_id)
+        work_path = self.get_work_path()
         group_tasks = []
         for file in glob.iglob(os.path.join(work_path, pattern)):
             params = {
@@ -36,7 +36,7 @@ class CleanupWorkdirTask(BaseTask):
     name = "cleanup_workdir"
 
     def execute_task(self):
-        work_path = self.get_work_path(self.job_id)
+        work_path = self.get_work_path()
         shutil.rmtree(work_path)
 
 
