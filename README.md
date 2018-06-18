@@ -1,20 +1,25 @@
 # cilantro-images
 Docker images for dainst/cilantro, found at [dockerhub](https://hub.docker.com/r/dainst/).
 
-## Installation
+## Building & publishing docker images
+
+### Prerequisites
+
 Copy the `.env-default` file to `.env` and enter your github_access_token there.
-## Instructions
+
+Login to dockerhub:
+
+    docker login
+
+### Instructions
+
 To build a new image or to rebuild it run the build script
 
-        `./build.sh <name> <tag>`
-Make sure to provide the right name and tag to the script. 
-Tag defaults to latest.
+    `./build.sh <image-name> <tag>`
 
-This tags are currently used:
-* stable
-* dev
+Tag defaults to stable.
 
-You can use your own tag for developing, e.g. the name of your feature branch.
+You should use your own tag for developing, e.g. the name of your feature branch.
 
-New repositories is automatically created if your permissions are sufficient.
+New repositories are automatically created on dockerhub if your permissions are sufficient.
 Make sure to provide a description for them at dockerhub!
