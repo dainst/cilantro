@@ -4,19 +4,17 @@ angular
 	
 	let settings = {};
 
-    settings._loaded =
-        $http.get('settings.json').then(function(response) {
-            settings = angular.extend(settings, response.data);
-            $http.get('version.json').then(function(response) {
-                settings.versionInfo = response.data;
-                console.log('settings', settings);
-            }, function errorCallback(err) {
-                console.error(err);
-            });
-        }, function errorCallback(err) {
-            console.error(err);
-            alert("settings file not available");
-        });
+    settings.loadingPromise = new Promise(function(resolve, reject) {
+        $http.get('settings.json')
+            .then(function(response) {
+                settings = angular.extend(settings, response.data);
+                $http.get('version.json').then(function(response) {
+                    settings.versionInfo = response.data;
+                    console.log('settings', settings);
+                    resolve();
+                }, reject);
+            }, reject)
+    });
 
 
     settings.devMode = function() {

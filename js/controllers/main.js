@@ -45,7 +45,13 @@ angular
 				"publish": 	{
 					"template": "partials/view_finish.html",
 					"title": "Publish",
-					"condition": function() {return $scope.isStarted && documentsource.ready && journal.isReadyToUpload()}}
+					"condition": function() {return $scope.isStarted && documentsource.ready && journal.isReadyToUpload()}
+				},
+                "fatal": {
+                    "template": "partials/view_fatal.html",
+                    "title": "Fatal Error",
+                    "condition": function(){return false}
+                }
 			},
 			current:"home",
 			change: function(to) {
@@ -72,23 +78,24 @@ angular
         };
 
 		$scope.init = function() {
-			webservice.get('getRepository', {}, function(r) {
-				if ((r.success === false) && (r.message === "Session locked")) { // @ TODO  do this in webservice!
-					$scope.sessionLocked = true;
-				} else if (r.success === true) {
-					$scope.repository.update(r.repository);
-				}
 
-				// this will be at a different place for the folowing,
-				// when there are actually different backends to choose
-				webservice.get('getBackendData', {backend: 'ojs2'}, function(r) {
-					if (r.success === true) {
-						journal.setConstraints(r.backendData.journals);
-                        $scope.protocols.selectLast();
-					}
-				},false,true);
-			});
-		}
+		    function failFatal(err) {
+                messenger.error(err);
+                $scope.steps.current = "fatal";
+            }
+
+		    settings.loadingPromise
+                .then(function() {
+                    webservice.get(["ojs_url", 'getJournalInfo'])
+                        .then(webservice.get('stagingFolder'))
+                        .then(function(r) {
+                            journal.setConstraints(r);
+                            $scope.protocols.selectLast();
+                        })
+                        .catch(failFatal)
+                })
+                .catch(failFatal)
+		};
 
 
 		/* restart */
@@ -196,16 +203,6 @@ angular
 				} else {
 					$scope.sec.password = '';
 				}
-			});
-		}
-
-		/*checking password for first time login - to enable data input on first page */
-		$scope.checkPassword = function() {
-			//checkPw
-			webservice.get('checkPassword', {}, function(response) {
-					if(response.success){
-						$scope.password_checked = true;
-					}
 			});
 		}
 

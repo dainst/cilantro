@@ -1,5 +1,5 @@
 {
-  "getRepository": {
+  "stagingFolder": {
     "task": "getRepository",
     "success": true,
     "warnings": [],
@@ -11,27 +11,6 @@
         "type": "file"
       }
     ]
-  },
-
-  "getBackendData": {
-    "task": "getBackendData",
-    "success": true,
-    "warnings": [],
-    "uploadId": "test",
-    "backendData": {
-      "journals": {
-        "test": {
-          "id": "2",
-          "locales": [
-            "en_US",
-            "de_DE",
-            "ru_RU",
-            "es_ES",
-            "fr_FR"
-          ]
-        }
-      }
-    }
   },
 
   "checkStart": {
@@ -72,9 +51,20 @@
     "task":"sendToZenon",
     "success":true,
     "warnings":[]
+  },
+
+  "getJournalInfo": {
+    "test": {
+      "id": "2",
+      "locales": [
+        "en_US",
+        "de_DE",
+        "ru_RU",
+        "es_ES",
+        "fr_FR"
+      ]
+    }
   }
-
-
 
 
 }

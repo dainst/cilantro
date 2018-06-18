@@ -15,69 +15,36 @@ angular
 
 	webservice.uploadId = false; // should be named session Id because that is what it is actuallly
 
-		/**
-		 *
-		 * @param task, the webservice shall be called (function of ojsis.php)
-		 * @param data, to be given to that function
-		 * @param callback, to be called back when done
-		 * @param appendLog, set true if messenger should not be cleared
-         * @param showLoader, set tru to lock app while loading
-		 */
-	webservice.get = function(task, data, callback, appendLog, showLoader) {
-		appendLog = appendLog || false;
-        showLoader = showLoader || false;
-        webservice.loading = showLoader;
+    webservice.get = function(endpoint, method, data) {
 
-        console.log('get', task);
-
-        settings._loaded.then(function() {
+        endpoint = angular.isArray(endpoint) ? settings[endpoint[0]] + endpoint[1] : settings.server_url + endpoint;
+        method = method || "get";
+        data = data || {};
+console.log(endpoint, method, data);
+        return new Promise(function(resolve, reject) {
             $http({
-                method:	'POST',
-                url: settings.server_url,
-                data: {
-                    task: task,
-                    data: webservice.ojsisQuery(data)
-                }
+                method:	method,
+                url: endpoint,
+                data: data
             }).then(
                 function(response) {
+                    console.log(response);
                     webservice.loading = false;
                     if (response.data.success === false) {
-                        console.error(response.data.message);
-                    }  else {
-                        console.log("uid", webservice.uploadId);
-
-                        if (!webservice.uploadId) {
-                            webservice.uploadId = response.data.uploadId;
-                        }
-                        if (webservice.uploadId !== response.data.uploadId) {
-                            console.log("got new uploadID, that's so wrong", webservice.uploadId, response.data.uploadId);
-                        }
+                        messenger.error(response.message);
+                        reject();
+                    } else {
+                        resolve(response.data);
                     }
-                    messenger.cast(response.data, appendLog);
-                    callback(response.data);
                 },
                 function(err) {
                     webservice.loading = false;
-                    messenger.alert(err,1, appendLog);
-                    console.error(err);
-                    callback(err);
+                    messenger.error(endpoint + ": " + err.status + " " + err.statusText);
+                    reject();
                 }
-            );
-		});
-
-	}
-
-	webservice.ojsisQuery = function(send) {
-		send = send ||  {};
-		if (webservice.sec.password) {
-			send.password = webservice.sec.password;
-		}
-		if (webservice.uploadId) {
-			send.uploadId = webservice.uploadId;
-		}
-		//console.log(send);
-		return send;
-	}
+            )
+        })
+    };
 
 	webservice.getFileInfo = function(path) {
 		if (!path) {

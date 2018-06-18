@@ -87,6 +87,10 @@ angular
 		}
 
 
+        messenger.error = function(msg) {
+            messenger.alert(msg, 1, 1);
+        }
+
 		/**
 		 * reset status (except stats) to normal
 		 */
