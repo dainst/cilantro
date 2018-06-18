@@ -1,9 +1,9 @@
 tasks:
   - retrieve_from_staging
   - foreach: "*.[tT][iI][fF]*"
-    do: convert_tif_to_jpg
+    do: convert.tif_to_jpg
   - foreach: "*.[jJ][pP][gG]*"
-    do: convert_jpg_to_pdf
-  - merge_converted_pdfs
+    do: convert.jpg_to_pdf
+  - convert.merge_pdf
   - publish_to_repository
   - cleanup_workdir

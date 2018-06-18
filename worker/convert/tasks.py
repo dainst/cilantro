@@ -1,15 +1,14 @@
 import os
 
 from worker.tasks import BaseTask
-from worker.convert.converter import convert_tif_to_jpg, convert_pdf_to_txts, convert_pdf_to_tifs
+from worker.convert.converter import convert_tif_to_jpg, convert_pdf_to_txt, convert_pdf_to_tif
 from utils.celery_client import celery_app
 
 working_dir = os.environ['WORKING_DIR']
 
 
 class TifToJpgTask(BaseTask):
-
-    name = "convert_tif_to_jpg"
+    name = "convert.tif_to_jpg"
 
     def execute_task(self):
         file = self.get_param('file')
@@ -21,23 +20,23 @@ class TifToJpgTask(BaseTask):
 TifToJpgTask = celery_app.register_task(TifToJpgTask())
 
 
-class ConvertPdfToTxtsTask(BaseTask):
-    name = "convert_pdf_to_txts"
+class ConvertPdfToTxtTask(BaseTask):
+    name = "convert.pdf_to_txt"
 
     def execute_task(self):
         file = self.get_param('file')
-        convert_pdf_to_txts(file, working_dir)
+        convert_pdf_to_txt(file, working_dir)
 
 
-PdfToTxtsTask = celery_app.register_task(ConvertPdfToTxtsTask())
+PdfToTxtsTask = celery_app.register_task(ConvertPdfToTxtTask())
 
 
-class ConvertPdfToTifsTask(BaseTask):
-    name = "convert_pdf_to_tifs"
+class ConvertPdfToTifTask(BaseTask):
+    name = "convert.pdf_to_tif"
 
     def execute_task(self):
         file = self.get_param('file')
-        convert_pdf_to_tifs(file, working_dir)
+        convert_pdf_to_tif(file, working_dir)
 
 
-PdfToTifsTask = celery_app.register_task(ConvertPdfToTifsTask())
+PdfToTifsTask = celery_app.register_task(ConvertPdfToTifTask())
