@@ -1,6 +1,7 @@
 const gulp = require('gulp');
 const modRewrite = require('connect-modrewrite');
 const browserSync = require('browser-sync').create();
+const reload = browserSync.reload;
 
 // runs the development server and sets up browser reloading
 gulp.task('server', function() {
@@ -21,11 +22,11 @@ gulp.task('server', function() {
 
 
 
-    gulp.watch('style/**/*.css', ['watch-css']);
-    gulp.watch('js/**/*.js', ['watch-js']);
-    gulp.watch('partials/**/*.html', ['watch-js']);
-    gulp.watch('index.html', ['watch-index']);
-    gulp.watch('info/**/*', ['watch-info']);
+    gulp.watch('style/**/*.css', ['watch']);
+    gulp.watch('js/**/*.js', ['watch']);
+    gulp.watch('partials/**/*.html', ['watch']);
+    gulp.watch('index.html', ['watch']);
+    gulp.watch('setting.json', ['watch']);
 
 });
 
@@ -51,3 +52,5 @@ gulp.task('server-e2e-test', function() {
 
 
 });
+
+gulp.task('watch', function(done) { reload(); done(); });
