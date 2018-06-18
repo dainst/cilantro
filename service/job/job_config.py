@@ -220,7 +220,7 @@ class JobConfig:
     """
     Handles job config parsing and job chain creation based on
     the YAML job_type definition found in the config directory.
-    
+
     Parameters for tasks can be set in three different places:
     1. Default values are generated based on the data type configured in the
        params section of the job config YAML.
