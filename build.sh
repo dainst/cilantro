@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 name=${1-0}
-tag=${2-latest}
+tag=${2-stable}
 token=$(grep github_access_token .env | xargs)
 token=${token#*=}
 
