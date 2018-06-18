@@ -12,7 +12,7 @@ class SplitPdfTask(BaseTask):
     def execute_task(self):
         work_path = self.get_work_path()
 
-        cut_pdf(self.get_param('files'), work_path, work_path)
+        cut_pdf(self.get_param('files_to_split'), work_path, work_path)
 
 
 class JpgToPdfTask(BaseTask):

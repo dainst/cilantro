@@ -1,4 +1,5 @@
 params:
+  files_to_split: list
   paths: list
 
 tasks:

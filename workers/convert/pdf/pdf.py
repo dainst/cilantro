@@ -5,7 +5,7 @@ import PyPDF2
 
 def cut_pdf(files, source, target):
     """
-    Takes multiple pdf files, cuts them and merges them together
+    Make cuts out of multiple pdf files
     :param List files: List of Dictionaries with keys 'file' and 'range'.
         Lists the different Files that needs to be merged.
     :param string source: The working directory where we find the different files to be merged
@@ -13,12 +13,10 @@ def cut_pdf(files, source, target):
     """
 
     pdf_new = PyPDF2.PdfFileWriter()
-    input_streams = []
     for nr, article in enumerate(files):
 
         input_str = f"{source}/{article['file']}"
         input_stream = open(input_str, "rb")
-        input_streams.append(input_stream)
 
         pdf = PyPDF2.PdfFileReader(input_stream)
         if pdf.flattenedPages is None:
@@ -27,14 +25,11 @@ def cut_pdf(files, source, target):
         for index in range(start_end[0] - 1, start_end[1]):
             pdf_new.addPage(pdf.getPage(index))
 
-    output_str = _set_output(article, nr)
+        output_str = _set_output(article, nr)
 
-    file_name = os.path.join(target, output_str)
-    with open(file_name, "wb") as output_stream:
-        pdf_new.write(output_stream)
-
-    for input_stream in input_streams:
-        input_stream.close()
+        file_name = os.path.join(target, output_str)
+        with open(file_name, "wb") as output_stream:
+            pdf_new.write(output_stream)
 
 
 def _set_output(article, nr):
