@@ -7,9 +7,9 @@ def cut_pdf(files, source, target):
     """
     Make cuts out of multiple pdf files
     :param List files: List of Dictionaries with keys 'file' and 'range'.
-        Lists the different Files that needs to be merged.
-    :param string source: The working directory where we find the different files to be merged
-    :param string target: The created file path
+        Lists the different Files that needs to be cut.
+    :param string source: The working directory where we find the different files to be cut
+    :param string target: The directory where the created files go
     """
 
     pdf_new = PyPDF2.PdfFileWriter()
