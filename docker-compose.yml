@@ -38,7 +38,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:dev
+    image: dainst/cilantro-default-worker:stable
     volumes:
       - .:/app
       - ./data:/data
@@ -92,7 +92,7 @@ services:
 
   test:
     user: ${UID}
-    image: dainst/cilantro-test:dev
+    image: dainst/cilantro-test:stable
     volumes:
       - .:/app
       - ./data:/data
