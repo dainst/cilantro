@@ -1,6 +1,7 @@
 params:
   files_to_split: list
   paths: list
+  metadata: dict
 
 tasks:
   - retrieve_from_staging

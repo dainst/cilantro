@@ -179,6 +179,8 @@ def _init_default_params(params):
             default_params[param_name] = ''
         elif param_type == 'list':
             default_params[param_name] = []
+        elif param_type == 'dict':
+            default_params[param_name] = {}
         else:
             raise ConfigParseException(
                 f"Parameter type '{param_type}' for "
