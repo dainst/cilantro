@@ -19,7 +19,7 @@ class GenerateMarcXMLTask(BaseTask):
         generate_marc_xml(work_path, data, xml_template_string)
 
         for article_dir in os.listdir(os.path.join(work_path, 'articles')):
-            file_path = os.path.join(work_path, 'articles') + '/' + article_dir + '/marc.xml'
+            file_path = os.path.join(work_path, 'articles', article_dir, 'marc.xml')
             validate_xml(file_path)
 
 
