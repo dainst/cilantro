@@ -23,7 +23,7 @@ class Jpg2PdfTest(unittest.TestCase):
             pass
 
 
-class PdfMergeTest(unittest.TestCase):
+class MergeConvertedPdfTest(unittest.TestCase):
     resource_dir = os.environ['RESOURCE_DIR']
     working_dir = os.environ['WORKING_DIR']
     pdf_1 = f'{resource_dir}/objects/pdf/e2e-testing.pdf'

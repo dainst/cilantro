@@ -34,7 +34,7 @@ class JpgToPdfTask(BaseTask):
         convert_jpg_to_pdf(file, new_file)
 
 
-class MergePdfTask(BaseTask):
+class MergeConvertedPdf(BaseTask):
 
     name = "convert.pdf_merge_converted"
 
@@ -50,5 +50,5 @@ def _list_files(directory, extension):
 
 SplitPdfTask = celery_app.register_task(SplitPdfTask())
 JpgToPdfTask = celery_app.register_task(JpgToPdfTask())
-PdfMergeConverted = celery_app.register_task(MergePdfTask())
+PdfMergeConverted = celery_app.register_task(MergeConvertedPdf())
 
