@@ -12,7 +12,7 @@ describe('importer', function() {
     // TODO this test does not work with mock-backend because it can not handle file upload yet
     xit('should upload a pdf-file', function() {
         browser.get(browser.baseUrl)
-            .then(action.login())
+            //.then(action.login())
             .then(select.protocol())
             .then(action.uploadFile())
             .then(button.startImport())
@@ -43,7 +43,7 @@ describe('importer', function() {
 
     it('should start the testdata protocol', function() {
         browser.get(browser.baseUrl)
-            .then(action.login())
+            //.then(action.login())
             .then(select.protocol('testdata'))
             .then(button.startImport())
             .then(expect(message.classOfMain()).toContain("alert-success"))
@@ -51,7 +51,7 @@ describe('importer', function() {
 
     it('should abort and restart the import process', function() {
         browser.get(browser.baseUrl)
-            .then(action.login())
+            //.then(action.login())
             .then(select.protocol())
             .then(select.file())
             .then(button.startImport())
@@ -68,7 +68,7 @@ describe('importer', function() {
             .then(action.login(false))
             .then(expect(message.classOfMain()).toContain("alert-danger"))
             .then(action.clearLoginField())*/
-            .then(action.login())
+            //.then(action.login())
             .then(select.protocol())
             .then(select.file())
             .then(button.startImport())
@@ -77,7 +77,7 @@ describe('importer', function() {
 
     it('should publish a file', function() {
         browser.get(browser.baseUrl)
-            .then(action.login())
+            //.then(action.login())
             .then(select.protocol())
             .then(select.file())
             .then(button.startImport())
@@ -118,7 +118,7 @@ describe('importer', function() {
 
     it('should add and delete an article', function() {
         browser.get(browser.baseUrl)
-            .then(action.login())
+            //.then(action.login())
             .then(select.protocol())
             .then(select.file())
             .then(button.startImport())
@@ -136,7 +136,7 @@ describe('importer', function() {
     xit('should import data with csv protocol', function() {
         var articlesInCsv = 2;
         browser.get(browser.baseUrl)
-            .then(action.login())
+            //.then(action.login())
             .then(select.protocol('csv_import'))
             .then(select.file())
             .then(button.startImport())
@@ -152,7 +152,7 @@ describe('importer', function() {
 
     it('should not be able to upload without articles', function(){
         browser.get(browser.baseUrl)
-          .then(action.login())
+          //.then(action.login())
           .then(select.protocol())
           .then(select.file())
           .then(button.startImport())

@@ -80,14 +80,13 @@ angular
 		$scope.init = function() {
 
 		    function failFatal(err) {
-                messenger.error(err);
                 $scope.steps.current = "fatal";
             }
 
-		    settings.loadingPromise
+		    return settings.loadingPromise
                 .then(function() {
                     webservice.get(["ojs_url", 'getJournalInfo'])
-                        .then(webservice.get('stagingFolder'))
+                        .then(webservice.get('stagingFolder').catch(failFatal))
                         .then(function(r) {
                             journal.setConstraints(r);
                             $scope.protocols.selectLast();
@@ -105,12 +104,13 @@ angular
 			messenger.content.stats = {};
 			documentsource.reset();
 			journal.reset();
-			$scope.init();
-			messenger.alert('Restart Importer', false);
-			$scope.steps.change('home');
-			$scope.protocols.selectLast();
-			webservice.loading = false;
-		}
+			$scope.init().then(function() {
+                messenger.alert('Restart Importer', false);
+                $scope.steps.change('home');
+                $scope.protocols.selectLast();
+                webservice.loading = false;
+            });
+		};
 
 
 		/* document repository */

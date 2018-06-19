@@ -20,7 +20,7 @@ angular
         endpoint = angular.isArray(endpoint) ? settings[endpoint[0]] + endpoint[1] : settings.server_url + endpoint;
         method = method || "get";
         data = data || {};
-console.log(endpoint, method, data);
+
         return new Promise(function(resolve, reject) {
             $http({
                 method:	method,
@@ -28,11 +28,11 @@ console.log(endpoint, method, data);
                 data: data
             }).then(
                 function(response) {
-                    console.log(response);
+                    console.log("response", response);
                     webservice.loading = false;
                     if (response.data.success === false) {
                         messenger.error(response.message);
-                        reject();
+                        reject(response.message);
                     } else {
                         resolve(response.data);
                     }
@@ -40,7 +40,7 @@ console.log(endpoint, method, data);
                 function(err) {
                     webservice.loading = false;
                     messenger.error(endpoint + ": " + err.status + " " + err.statusText);
-                    reject();
+                    reject(endpoint + ": " + err.status + " " + err.statusText);
                 }
             )
         })
