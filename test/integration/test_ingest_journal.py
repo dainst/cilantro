@@ -13,7 +13,11 @@ class IngestJournalTest(JobTypeTest):
         self.assertEqual('Accepted', data['status'])
         self.assert_status(job_id, 'SUCCESS')
 
-        files_generated = [f'e2e-testing.pdf.0.pdf', f'e2e-testing.pdf.1.pdf']
+        files_generated = [
+            'e2e-testing.pdf.0.pdf',
+            'e2e-testing.pdf.1.pdf',
+            'data.json'
+        ]
         for file in files_generated:
             self.assert_file_in_repository(job_id, file)
         self.unstage_resource('pdf')
