@@ -19,8 +19,11 @@ operate on file system objects. It is written in Python (3.6+) and uses
     `sudo apt install docker-ce`
 
 ## Running the app with docker
+Docker images can be found at [dockerhub](https://hub.docker.com/u/dainst/), 
+Dockerfiles and Pipfiles at [github](https://github.com/dainst/cilantro-images). 
+To build the images follow the instructions provided in the repository.
+To start run
 
-    docker-compose build
     docker-compose up
 
 To stop the application run:
@@ -50,11 +53,9 @@ is available for debugging under http://localhost:5555.
 * Start the application as described under [Running the app with docker
 ](https://github.com/dainst/cilantro#running-the-app-with-docker)
 
-* Run the tests inside the dedicated docker container
+* Run the tests inside the dedicated docker container with the `test/exec_docker_test.sh` script.
 
-    `docker exec cilantro_cilantro-test_1 python -m unittest -v`
-
-* Alternatively you can run the complete build script out of the
+*  Alternatively you can run the complete build script out of the
   [build-scripts repository](https://github.com/dainst/build-scripts/).
   After cloing the repo into your workspace, run the following command from within your cilantro directory.
 

@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
 
-  task-broker:
+  broker:
     image: rabbitmq:latest
     environment:
       - RABBITMQ_DEFAULT_USER=${BROKER_USER}
@@ -10,7 +10,7 @@ services:
     ports:
       - "5672:5672"
 
-  task-db:
+  db:
     image: redis:latest
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
@@ -18,10 +18,8 @@ services:
     ports:
       - "6379:6379"
 
-  task-service:
-    build:
-      context: .
-      dockerfile: docker/service/Dockerfile
+  service:
+    image: dainst/cilantro-service:stable
     ports:
       - "5000:5000"
     volumes:
@@ -30,39 +28,71 @@ services:
       - ./config:/config
     working_dir: /app
     environment:
-      BROKER_HOST: "task-broker"
+      BROKER_HOST: "broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
-      DB_HOST: "task-db"
+      DB_HOST: "db"
       REPOSITORY_DIR: ${REPOSITORY_DIR}
       STAGING_DIR: ${STAGING_DIR}
       CONFIG_DIR: ${CONFIG_DIR}
 
-  task-worker:
+  default-worker:
     user: ${UID}
-    build:
-      context: .
-      dockerfile: docker/worker/Dockerfile
+    image: dainst/cilantro-default-worker:stable
     volumes:
       - .:/app
       - ./data:/data
       - ./config:/config
     working_dir: /app
     environment:
-      BROKER_HOST: "task-broker"
+      BROKER_HOST: "broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
-      DB_HOST: "task-db"
+      DB_HOST: "db"
       REPOSITORY_DIR: ${REPOSITORY_DIR}
       WORKING_DIR: ${WORKING_DIR}
       STAGING_DIR: ${STAGING_DIR}
       CONFIG_DIR: ${CONFIG_DIR}
 
-  cilantro-test:
+  convert-worker:
     user: ${UID}
-    build:
-      context: .
-      dockerfile: docker/test/Dockerfile
+    image: dainst/cilantro-convert-worker:stable
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    working_dir: /app
+    environment:
+      BROKER_HOST: "broker"
+      BROKER_USER: ${BROKER_USER}
+      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      DB_HOST: "db"
+      REPOSITORY_DIR: ${REPOSITORY_DIR}
+      WORKING_DIR: ${WORKING_DIR}
+      STAGING_DIR: ${STAGING_DIR}
+      CONFIG_DIR: ${CONFIG_DIR}
+
+  nlp-worker:
+    user: ${UID}
+    image: dainst/cilantro-nlp-worker:stable
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    working_dir: /app
+    environment:
+      BROKER_HOST: "broker"
+      BROKER_USER: ${BROKER_USER}
+      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      DB_HOST: "db"
+      REPOSITORY_DIR: ${REPOSITORY_DIR}
+      WORKING_DIR: ${WORKING_DIR}
+      STAGING_DIR: ${STAGING_DIR}
+      CONFIG_DIR: ${CONFIG_DIR}
+
+  test:
+    user: ${UID}
+    image: dainst/cilantro-test:stable
     volumes:
       - .:/app
       - ./data:/data
@@ -70,23 +100,21 @@ services:
     working_dir: /app
     tty: true
     environment:
-      BROKER_HOST: "task-broker"
+      BROKER_HOST: "broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
-      DB_HOST: "task-db"
+      DB_HOST: "db"
       REPOSITORY_DIR: ${REPOSITORY_DIR}
       WORKING_DIR: ${WORKING_DIR}
       STAGING_DIR: ${STAGING_DIR}
       CONFIG_DIR: ${CONFIG_DIR}
       RESOURCE_DIR: "test/resources"
 
-  task-monitor:
-    build:
-      context: .
-      dockerfile: docker/monitor/Dockerfile
+  monitor:
+    image: dainst/cilantro-monitor:stable
     ports:
       - "5555:5555"
     environment:
-      BROKER_HOST: "task-broker"
+      BROKER_HOST: "broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}

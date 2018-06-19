@@ -1,9 +1,12 @@
+params:
+  paths: list
+
 tasks:
   - retrieve_from_staging
-  - foreach: "*.[tT][iI][fF]*"
+  - foreach: "\\.(tif|tiff|TIF|TIFF)$"
     do: convert.tif_to_jpg
-  - foreach: "*.[jJ][pP][gG]*"
+  - foreach: "\\.(jpg|jpeg|JPG|JPEG)$"
     do: convert.jpg_to_pdf
-  - convert.merge_pdf
+  - convert.pdf_merge_converted
   - publish_to_repository
   - cleanup_workdir

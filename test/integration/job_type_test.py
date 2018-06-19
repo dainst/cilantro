@@ -55,10 +55,8 @@ class JobTypeTest(unittest.TestCase):
         waited = 0
         success = False
         while not success:
-            print("---")
             for task_id in task_ids:
                 status = self.get_status(task_id)
-                print(f"{task_id}: {status}")
                 if status == 'FAILURE':
                     raise AssertionError("child task in FAILURE state")
                 elif status == 'SUCCESS':
@@ -89,20 +87,24 @@ class JobTypeTest(unittest.TestCase):
         data = json.loads(response.get_data(as_text=True))
         return data['status']
 
-    def post_job(self, job_type, object_id):
-        response = self.client.post(f'/job/{job_type}/{object_id}')
+    def post_job(self, job_type, data):
+        response = self.client.post(
+            f'/job/{job_type}',
+            data=json.dumps(data),
+            content_type='application/json'
+        )
         return json.loads(response.get_data(as_text=True))
 
-    def stage_resource(self, folder, object_id):
-        source = os.path.join(self.resource_dir, folder, object_id)
-        target = os.path.join(self.staging_dir, object_id)
+    def stage_resource(self, folder, path):
+        source = os.path.join(self.resource_dir, folder, path)
+        target = os.path.join(self.staging_dir, path)
         try:
             shutil.copytree(source, target)
         except FileExistsError:
             pass
 
-    def unstage_resource(self, object_id):
-        source = os.path.join(self.staging_dir, object_id)
+    def unstage_resource(self, path):
+        source = os.path.join(self.staging_dir, path)
         try:
             shutil.rmtree(source)
         except FileNotFoundError:

@@ -27,5 +27,13 @@ class Job:
         return self.chain.apply_async(task_id=self.id)
 
     def _set_job_id_for_tasks(self):
-        for task in self.chain.tasks:
+        # When there is only one element in the task chain, the tasks property
+        # is not available.
+        # In this case we just take the chain itself as a list as a workaround.
+        if hasattr(self.chain, 'tasks'):
+            task_chain = self.chain.tasks
+        else:
+            task_chain = [self.chain]
+
+        for task in task_chain:
             task.kwargs['job_id'] = self.id
