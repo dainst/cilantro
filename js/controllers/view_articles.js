@@ -5,8 +5,8 @@ angular
 
 .module('controller.view_articles', [])
 
-.controller('view_articles', ['$scope', '$http', '$sce', 'settings', 'webservice', 'editables', 'messenger', 'journal',
-	function($scope, $http, $sce, settings, webservice, editables, messenger, journal) {
+.controller('view_articles', ['$scope', '$http', '$sce', 'settings', 'webservice', 'editables', 'messenger', 'journal', 'steps',
+	function($scope, $http, $sce, settings, webservice, editables, messenger, journal, steps) {
 
 		const zenonEndpoint = $sce.trustAsResourceUrl('https://zenon.dainst.org/data/biblio/select');
 
@@ -20,7 +20,7 @@ angular
 		}
 
 		$scope.continue = function() {
-			$scope.steps.change('publish');
+			steps.change('publish');
 		}
 
 		$scope.addArticle = function(b, select) {

@@ -9,8 +9,8 @@ angular
 
 .module('controller.view_overview', [])
 
-.controller('view_overview', ['$scope', 'settings', 'webservice', 'editables', 'messenger', 'journal', 'documentsource',
-	function($scope, settings, webservice, editables, messenger, journal, documentsource) {
+.controller('view_overview', ['$scope', 'settings', 'webservice', 'editables', 'messenger', 'journal', 'documentsource', 'steps',
+	function($scope, settings, webservice, editables, messenger, journal, documentsource, steps) {
 
 		messenger.content.stats = documentsource.stats;
 

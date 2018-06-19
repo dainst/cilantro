@@ -1,7 +1,7 @@
 angular
 .module('module.documentsource', ['module.messenger', 'module.webservice'])
-.factory('documentsource', ['$rootScope', 'settings', 'webservice', 'messenger', 'journal', 'editables',
-	function($rootScope, settings, webservice, messenger, journal, editables) {
+.factory('documentsource', ['$rootScope', 'settings', 'webservice', 'messenger', 'journal', 'editables','repository',
+	function($rootScope, settings, webservice, messenger, journal, editables,repository) {
 
 	var folder = {};
 
@@ -57,7 +57,7 @@ angular
 
 			var promise = new Promise(
 				function documentPromiseResolve(resolve, fail) {
-
+					console.log("url is" + url);
 					folder.PDF.api.getDocument(url).then(
 						function onGotDocument(pdf) {
 							var fileInfo = {
@@ -91,7 +91,8 @@ angular
 									size: this.size,
 									url: this.url,
 									pagecontext: this.pagecontext
-								};
+								}; 
+								console.log("loadedFiles updated");
 								messenger.alert('document nr ' + Object.keys(folder.files).length + ' loaded');
 								$rootScope.$broadcast('gotFile', this.url);
 								refreshView();
@@ -134,7 +135,7 @@ angular
         // path given
         if (path !== "") {
             // is folder or file?
-            if (webservice.getFileInfo(path).type === 'dir') {
+            if (repository.getFileInfo(path).type === 'dir') {
                 folder.path = path;
                 getFolder = new Promise(function(resolve) {
                     messenger.alert('loading folder contents: ' + folder.path);

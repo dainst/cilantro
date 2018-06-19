@@ -1,17 +1,13 @@
 angular
 .module('module.webservice', [])
-.factory("webservice", ['$http', '$rootScope', 'settings', 'messenger',
-	function($http, $rootScope, settings, messenger) {
+.factory("webservice", ['$http', '$rootScope', 'settings', 'messenger', 'repository',
+	function($http, $rootScope, settings, messenger, repository) {
 
 	let webservice = {};
 
 	webservice.sec = {
 		password: settings.password || ''
 	};
-
-	webservice.repository = [];
-
-	webservice.uploadId = false; // should be named session Id because that is what it is actuallly
 
     webservice.get = function(endpoint, method, data) {
 
@@ -47,13 +43,13 @@ angular
 			return;
 		}
 		// not elegant, but hey okay
-		for (let i = 0; i < webservice.repository.length; i++) {
-			if (webservice.repository[i].path === path) {
-				return webservice.repository[i];
+		for (let i = 0; i < repository.length; i++) {
+			if (repository[i].path === path) {
+				return repository[i];
 			}
 		}
 		messenger.alert(path + ' is not found in repository');
-	}
+	};
 
 
 	return webservice;
