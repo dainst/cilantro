@@ -5,6 +5,7 @@ params:
 
 tasks:
   - retrieve_from_staging
+  - write_metadata
   - convert.split_pdf
   - task: generate_marc_xml
     xml_template_path: resources/marc_template.xml

@@ -116,3 +116,9 @@ class JobTypeTest(unittest.TestCase):
             shutil.rmtree(source)
         except FileNotFoundError:
             pass
+
+    def load_params_from_file(self, folder, path):
+        source = os.path.join(self.resource_dir, folder, path)
+        with open(source) as data_object:
+            data = json.load(data_object)
+        return data
