@@ -56,7 +56,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:pr
+    image: dainst/cilantro-convert-worker:stable
     volumes:
       - .:/app
       - ./data:/data
@@ -92,7 +92,7 @@ services:
 
   test:
     user: ${UID}
-    image: dainst/cilantro-test:pr
+    image: dainst/cilantro-test:stable
     volumes:
       - .:/app
       - ./data:/data
