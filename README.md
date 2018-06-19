@@ -19,8 +19,8 @@ operate on file system objects. It is written in Python (3.6+) and uses
     `sudo apt install docker-ce`
 
 ## Running the app with docker
-Docker images can be found at [dockerhub](https://hub.docker.com/u/dainst/), 
-Dockerfiles and Pipfiles at [github](https://github.com/dainst/cilantro-images). 
+Docker images can be found at [dockerhub](https://hub.docker.com/u/dainst/),
+Dockerfiles and Pipfiles at [github](https://github.com/dainst/cilantro-images).
 To build the images follow the instructions provided in the repository.
 To start run
 
@@ -79,3 +79,4 @@ Cilantro generally uses the [PEP 8 style guide](https://www.python.org/dev/peps/
 Additionally parameters in method docstrings should be given as follows:
 
     :param param_type param_name: parameter description
+    :raises ErrorType: Exception throw-condition description
