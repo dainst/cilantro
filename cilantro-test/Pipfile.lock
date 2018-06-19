@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "41e1d8b65d2e08954b62cf03189d6dbec1387db622adba261d66ba3f0232fabe"
+            "sha256": "0e2b68a47fc632b3d34771787e1e847e22b570fe326d04716a9276a097b68aa4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -68,10 +68,10 @@
         },
         "docker": {
             "hashes": [
-                "sha256:43b45b92bed372161a5d4f3c7137e16b30d93845e99a00bc727938e52850694e",
-                "sha256:dc5cc0971a0d36fe94c5ce89bd4adb6c892713500af7b0818708229c3199911a"
+                "sha256:dbed56b8ba57b23919794e7cdcf7340c5052e9fd1cbe64b90b4eb9106437e0e3",
+                "sha256:e9cc39e24905e67ba9e2df14c94488f5cf030fb72ae1c60de505ce5ea90503f7"
             ],
-            "version": "==3.3.0"
+            "version": "==3.4.0"
         },
         "docker-compose": {
             "hashes": [
@@ -181,6 +181,13 @@
                 "sha256:a6be69091dac236ea9c6bc7d012beab42010fa914c459791d627dad4910eb665"
             ],
             "version": "==1.0"
+        },
+        "pdftotext": {
+            "hashes": [
+                "sha256:b7312302007e19fc784263a321b41682f01a582af84e14200cef53b3f4e69a50"
+            ],
+            "index": "pypi",
+            "version": "==2.1.0"
         },
         "pillow": {
             "hashes": [
@@ -305,6 +312,14 @@
                 "sha256:6849544be74ec3638e84d90bc1cf2e1e9224cc10d96cd4383ec3f69e9bce077b"
             ],
             "version": "==1.1.4"
+        },
+        "wand": {
+            "hashes": [
+                "sha256:28e0454c9d16d69c5d5034918d96320d8f9f1377b4fdaf4944eec2f938c74704",
+                "sha256:fb50d0ad4cad995f0b59b13f76bced22682ab80b4299084a2c3c535b225850c9"
+            ],
+            "index": "pypi",
+            "version": "==0.4.4"
         },
         "websocket-client": {
             "hashes": [

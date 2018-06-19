@@ -8,6 +8,8 @@ watchdog = "*"
 celery = {extras = ["redis"]}
 pillow = "*"
 PyPDF2 = "*"
+pdftotext = "*"
+Wand = "*"
 
 [dev-packages]
 

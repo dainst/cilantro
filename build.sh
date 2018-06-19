@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-name=${1-0}
-tag=${2-stable}
+name=${1}
+tag=${2-latest}
 token=$(grep github_access_token .env | xargs)
 token=${token#*=}
 
-if [ "${name}" == "0" ]
+if [ -z "${name}" ]
     then
         echo "Please specify a name"
         read name
