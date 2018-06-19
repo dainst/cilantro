@@ -6,7 +6,8 @@ class IngestJournalTest(JobTypeTest):
     def test_success(self):
         self.stage_resource('objects', 'pdf')
 
-        data = self.post_job('ingest_journal', {'paths': ['pdf']})
+        files = [{"file": "e2e-testing.pdf", "range": [1, 20]}, {"file": "e2e-testing.pdf", "range": [21, 27]}]
+        data = self.post_job('ingest_journal', {'paths': ['pdf'], 'files_to_split': files})
         job_id = data['job_id']
         self.assertEqual('Accepted', data['status'])
         self.assert_status(job_id, 'SUCCESS')

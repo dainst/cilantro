@@ -1,5 +1,4 @@
 import os
-import json
 
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask
@@ -12,12 +11,8 @@ class SplitPdfTask(BaseTask):
 
     def execute_task(self):
         work_path = self.get_work_path()
-        json_path = os.path.join(work_path, 'data.json')
-        with open(json_path, 'r') as data_object:
-            data = json.load(data_object)
-        data = cut_pdf(data, work_path, work_path)
-        with open(json_path, 'w') as data_object:
-            json.dump(data, data_object)
+
+        cut_pdf(self.get_param('files_to_split'), work_path, work_path)
 
 
 class JpgToPdfTask(BaseTask):
