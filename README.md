@@ -76,10 +76,13 @@ After that re-run the tests and they may succeed.
 
 Cilantro generally uses the [PEP 8 style guide](https://www.python.org/dev/peps/pep-0008/).
 
+Docstrings are to be added to all public methods and functions (i.e. everything not starting with underscore).
 Additionally parameters in method docstrings should be given as follows:
 
     :param param_type param_name: parameter description
     :raises ErrorType: Exception throw-condition description
+
+**Make sure to insert an empty line between the description and parameter list. This helps for generating API documentation.**
 
 ## Documentation
 
