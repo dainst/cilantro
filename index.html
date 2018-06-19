@@ -13,7 +13,7 @@
 
 	<body ng-controller="main" data-ng-init="init()">
 
-		<div id='loader' class='loader' ng-show="isLoading()"></div>
+		<div id='loader' class='loader' ng-if="isLoading"></div>
 
        	<idai-navbar
        		hide-register-button="true"

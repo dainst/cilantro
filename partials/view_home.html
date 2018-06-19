@@ -30,7 +30,7 @@
 			<div class="panel-heading">Select PDF file (or folder) from upload folder</div>
 			<div class="panel-body">
 				<select class="form-control" ng-model="journal.data.importFilePath">
-					<option ng-repeat="file in repository.list track by $index" value='{{file.path}}'>{{file.caption}}</option>
+					<option ng-repeat="file in repository.list track by $index" value='{{file.name}}'>{{file.name}}</option>
 				</select>
 			</div>
 		</div>

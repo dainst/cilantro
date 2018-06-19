@@ -6,50 +6,24 @@ var select = require('../modules/selectors');
 var button = require('../modules/buttons');
 var message = require('../modules/messages');
 var input = require('../modules/inputs');
+var EC = protractor.ExpectedConditions;
 
 describe('importer', function() {
 
-    // TODO this test does not work with mock-backend because it can not handle file upload yet
-    xit('should upload a pdf-file', function() {
-        browser.get(browser.baseUrl)
-            //.then(action.login())
-            .then(select.protocol())
-            .then(action.uploadFile())
-            .then(button.startImport())
-            .then(check.numberOfArticles(1))
-    });
-
-
-    // TODO this test does not work with mock-backend because it can not distinguish between right and wrong pw
-    xit('should only start after right password input', function() {
-        browser.get(browser.baseUrl)
-            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
-
-            .then(action.login(false))
-            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
-
-            .then(select.protocol)
-            .then(select.file)
-            .then(button.startImport)
-            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
-            .then(expect(message.classOfMain()).toContain("alert-danger"))
-
-            .then(action.login(true))
-            .then(select.protocol)
-            .then(select.file)
-            .then(button.startImport)
-            .then(expect(message.classOfMain()).toContain("alert-success"))
-    });
-
     it('should start the testdata protocol', function() {
         browser.get(browser.baseUrl)
-            //.then(action.login())
             .then(select.protocol('testdata'))
             .then(button.startImport())
             .then(expect(message.classOfMain()).toContain("alert-success"))
     });
 
-    it('should abort and restart the import process', function() {
+    it('should read the staging directory contents', function() {
+        browser.get(browser.baseUrl)
+            .then(browser.wait(EC.not(EC.visibilityOf(elements.loader))))
+            .then(expect(elements.start.fileSelect.all(by.css("option")).count()).toEqual(4));
+    });
+
+    xit('should abort and restart the import process', function() {
         browser.get(browser.baseUrl)
             //.then(action.login())
             .then(select.protocol())
@@ -62,7 +36,7 @@ describe('importer', function() {
 
     });
 
-    it('should only display input fields after correct password input', function () {
+    xit('should only display input fields after correct password input', function () {
         browser.get(browser.baseUrl)
             /* TODO password check disabled since maock-backend cannot distinguish between right and wrong password
             .then(action.login(false))
@@ -75,7 +49,7 @@ describe('importer', function() {
             .then(expect(message.classOfMain()).toContain("alert-success"))
     });
 
-    it('should publish a file', function() {
+    xit('should publish a file', function() {
         browser.get(browser.baseUrl)
             //.then(action.login())
             .then(select.protocol())
@@ -116,7 +90,7 @@ describe('importer', function() {
 
     });
 
-    it('should add and delete an article', function() {
+    xit('should add and delete an article', function() {
         browser.get(browser.baseUrl)
             //.then(action.login())
             .then(select.protocol())
@@ -150,7 +124,7 @@ describe('importer', function() {
 
     });
 
-    it('should not be able to upload without articles', function(){
+    xit('should not be able to upload without articles', function(){
         browser.get(browser.baseUrl)
           //.then(action.login())
           .then(select.protocol())
@@ -161,6 +135,38 @@ describe('importer', function() {
           .then(button.uploadPub())
 
           .then(expect(elements.publish.uploadBtn.count()).toEqual(0))
-    })
+    });
+
+    // TODO this test does not work with mock-backend because it can not handle file upload yet
+    xit('should upload a pdf-file', function() {
+        browser.get(browser.baseUrl)
+        //.then(action.login())
+            .then(select.protocol())
+            .then(action.uploadFile())
+            .then(button.startImport())
+            .then(check.numberOfArticles(1))
+    });
+
+
+    // TODO this test does not work with mock-backend because it can not distinguish between right and wrong pw
+    xit('should only start after right password input', function() {
+        browser.get(browser.baseUrl)
+            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
+
+            .then(action.login(false))
+            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeTruthy())
+
+            .then(select.protocol)
+            .then(select.file)
+            .then(button.startImport)
+            .then(expect(elements.start.protocolSelect.isDisplayed()).toBeFalsy())
+            .then(expect(message.classOfMain()).toContain("alert-danger"))
+
+            .then(action.login(true))
+            .then(select.protocol)
+            .then(select.file)
+            .then(button.startImport)
+            .then(expect(message.classOfMain()).toContain("alert-success"))
+    });
 
 });

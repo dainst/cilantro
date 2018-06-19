@@ -73,25 +73,34 @@ angular
 
 
 		/* initialize */
-		$scope.isLoading = function() {
-            return webservice.loading;
-        };
+		$scope.isLoading = true;
 
 		$scope.init = function() {
 
 		    function failFatal(err) {
+                $scope.isLoading = false;
                 $scope.steps.current = "fatal";
             }
 
+            $scope.isLoading = true;
+
 		    return settings.loadingPromise
-                .then(function() {
+                .then(() => {
                     webservice.get(["ojs_url", 'getJournalInfo'])
-                        .then(webservice.get('stagingFolder').catch(failFatal))
-                        .then(function(r) {
-                            journal.setConstraints(r);
-                            $scope.protocols.selectLast();
+                        .then((journalInfo) => {
+                            console.log("journalInfo", journalInfo);
+                            journal.setConstraints(journalInfo);
+                            webservice.get('staging')
+                                .then((stagingFolder) => {
+                                    console.log("stagingFolder", stagingFolder);
+                                    $scope.repository.update(stagingFolder);
+                                    $scope.protocols.selectLast();
+                                    $scope.isLoading = false;
+                                    $scope.$apply();
+                                })
+                                .catch(failFatal);
                         })
-                        .catch(failFatal)
+                        .catch(failFatal);
                 })
                 .catch(failFatal)
 		};
@@ -99,7 +108,7 @@ angular
 
 		/* restart */
 		$scope.restart = function() {
-      		webservice.loading = true;
+      		$scope.isLoading = true;
 			$scope.isStarted = false;
 			messenger.content.stats = {};
 			documentsource.reset();
@@ -108,7 +117,7 @@ angular
                 messenger.alert('Restart Importer', false);
                 $scope.steps.change('home');
                 $scope.protocols.selectLast();
-                webservice.loading = false;
+                $scope.isLoading = false;
             });
 		};
 
@@ -192,19 +201,12 @@ angular
 		$scope.isStarted = false;
 
 		$scope.start = function() {
-			//checkPW
-			webservice.get('checkStart', {'file': $scope.journal.data.importFilePath, 'unlock': true, 'journal': $scope.journal.data}, function(response) {
-				if (response.success) {
-                    if (!$scope.protocols.isSelected()) {
-                        messenger.alert("Please select an import protocol", true);
-                        return;
-                    }
-                    $scope.isStarted = $scope.protocols.start();
-				} else {
-					$scope.sec.password = '';
-				}
-			});
-		}
+            if (!$scope.protocols.isSelected()) {
+                messenger.alert("Please select an import protocol", true);
+                return;
+            }
+            $scope.isStarted = $scope.protocols.start();
+		};
 
 		/* some pdf things happen outside angular and need this */
 		$scope.$on('refreshView', function() {

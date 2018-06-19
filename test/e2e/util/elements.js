@@ -1,5 +1,7 @@
 module.exports = {
 
+    loader: element(by.css("#loader")),
+
     article: {
         deleteBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
         addBtn: element(by.css('button[ng-click="addArticle()"]')),

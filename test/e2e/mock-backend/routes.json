@@ -1,17 +1,32 @@
 {
-  "stagingFolder": {
-    "task": "getRepository",
-    "success": true,
-    "warnings": [],
-    "uploadId": "test",
-    "repository": [
-      {
-        "path": "e2e-testing.pdf",
-        "caption": "e2e-testing.pdf",
-        "type": "file"
-      }
-    ]
-  },
+  "staging": [
+    {
+      "type": "file",
+      "name": "e2e-testing.csv"
+    },
+    {
+      "type": "file",
+      "name": "e2e-testing.pdf"
+    },
+    {
+      "type": "directory",
+      "name": "test-directory",
+      "contents": [
+        {
+          "type": "file",
+          "name": "pdf1.pdf"
+        },
+        {
+          "type": "file",
+          "name": "pdf2.pdf"
+        },
+        {
+          "type": "file",
+          "name": "pdf3.pdf"
+        }
+      ]
+    }
+  ],
 
   "checkStart": {
     "uploadId": "test",

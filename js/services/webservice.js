@@ -9,8 +9,6 @@ angular
 		password: settings.password || ''
 	};
 
-	webservice.loading = false;
-
 	webservice.repository = [];
 
 	webservice.uploadId = false; // should be named session Id because that is what it is actuallly
@@ -29,7 +27,6 @@ angular
             }).then(
                 function(response) {
                     console.log("response", response);
-                    webservice.loading = false;
                     if (response.data.success === false) {
                         messenger.error(response.message);
                         reject(response.message);
@@ -38,7 +35,6 @@ angular
                     }
                 },
                 function(err) {
-                    webservice.loading = false;
                     messenger.error(endpoint + ": " + err.status + " " + err.statusText);
                     reject(endpoint + ": " + err.status + " " + err.statusText);
                 }
