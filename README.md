@@ -80,3 +80,26 @@ Additionally parameters in method docstrings should be given as follows:
 
     :param param_type param_name: parameter description
     :raises ErrorType: Exception throw-condition description
+
+## Documentation
+
+It is possible to generate API documentation for all modules via [Sphinx](http://www.sphinx-doc.org/en/master/) and it's extension [Autodoc](http://www.sphinx-doc.org/en/master/ext/autodoc.html).
+This example generates HTML files.
+
+* Change to folder
+
+
+    cd doc/
+
+* Generate the reStructuredText source files
+
+
+    sphinx-apidoc -o source ../
+
+* Generate HTML from reStructuredText
+
+
+    make html
+
+
+You can now view the Documentation by opening `doc/build/html/index.html`
