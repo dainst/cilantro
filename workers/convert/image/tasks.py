@@ -22,7 +22,7 @@ class TifToJpgTask(BaseTask):
 TifToJpgTask = celery_app.register_task(TifToJpgTask())
 
 
-class ConvertPdfToTxtTask(BaseTask):
+class PdfToTxtTask(BaseTask):
     name = "convert.pdf_to_txt"
 
     def execute_task(self):
@@ -30,10 +30,10 @@ class ConvertPdfToTxtTask(BaseTask):
         convert_pdf_to_txt(file, working_dir)
 
 
-PdfToTxtsTask = celery_app.register_task(ConvertPdfToTxtTask())
+PdfToTxtsTask = celery_app.register_task(PdfToTxtTask())
 
 
-class ConvertPdfToTifTask(BaseTask):
+class PdfToTifTask(BaseTask):
     name = "convert.pdf_to_tif"
 
     def execute_task(self):
@@ -41,4 +41,4 @@ class ConvertPdfToTifTask(BaseTask):
         convert_pdf_to_tif(file, working_dir)
 
 
-PdfToTifsTask = celery_app.register_task(ConvertPdfToTifTask())
+PdfToTifsTask = celery_app.register_task(PdfToTifTask())

@@ -8,6 +8,7 @@ from workers.convert.pdf.jpg_to_pdf import convert_jpg_to_pdf, pdf_merge
 
 
 class SplitPdfTask(BaseTask):
+
     name = "convert.split_pdf"
 
     def execute_task(self):
@@ -33,20 +34,21 @@ class JpgToPdfTask(BaseTask):
         convert_jpg_to_pdf(file, new_file)
 
 
-class PdfMergeConverted(BaseTask):
+class MergePdfTask(BaseTask):
 
     name = "convert.pdf_merge_converted"
 
     def execute_task(self):
         work_path = self.get_work_path()
-        files = list_files(work_path, '.converted.pdf')
+        files = _list_files(work_path, '.converted.pdf')
         pdf_merge(files, work_path + '/merged.pdf')  # TODO incorporate JSON data for the filename and metadatas.
 
 
-def list_files(directory, extension):
+def _list_files(directory, extension):
     return (directory + "/" + f for f in os.listdir(directory) if f.endswith(extension))
 
 
 SplitPdfTask = celery_app.register_task(SplitPdfTask())
-JpgToPdfTask = celery_app.register_task(ConvertJpgToPdfTask())
+JpgToPdfTask = celery_app.register_task(JpgToPdfTask())
 PdfMergeConverted = celery_app.register_task(MergePdfTask())
+

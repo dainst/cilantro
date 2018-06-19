@@ -4,7 +4,7 @@ import shutil
 import unittest
 from pathlib import Path
 
-from worker.convert.converter import convert_pdf_to_tif
+from workers.convert.image.converter import convert_pdf_to_tif
 
 
 class PdfToTifTest(unittest.TestCase):

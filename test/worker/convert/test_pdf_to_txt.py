@@ -1,10 +1,12 @@
 import os
 import unittest
 from pathlib import Path
-from worker.convert.converter import convert_pdf_to_txt
+
+from workers.convert.image.converter import convert_pdf_to_txt
 
 
-class Pdf2TxtsTest(unittest.TestCase):
+class PdfToTxtTest(unittest.TestCase):
+
     pdf_path = 'test/resources/objects/pdf/e2e-testing.pdf'
     txt_path = 'test/resources/objects/pdf/{}.txt'
 
