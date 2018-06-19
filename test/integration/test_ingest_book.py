@@ -16,18 +16,3 @@ class IngestBookTest(JobTypeTest):
 
         self.unstage_resource('some_tiffs')
         self.remove_object_from_repository(job_id)
-
-    '''
-    commented out until proper solution for
-    http://dai-softsource.uni-koeln.de/issues/8297
-    is found
-
-    def test_error(self):
-        self.stage_resource('objects', 'test_object')
-
-        data = self.post_job('ingest_book', 'test_object')
-        self.assertEqual('Accepted', data['status'])
-        self.assert_status(data['job_id'], 'ERROR')
-
-        self.unstage_resource('test_object')
-    '''
