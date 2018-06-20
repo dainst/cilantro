@@ -8,7 +8,8 @@ def convert_jpg_to_pdf(source_file, target_file):
 
 def pdf_merge(file_paths, output_path):
     """
-    Create a single pdf from multiple ones merged together
+    Create a single pdf from multiple ones merged together.
+
     :param generator file_paths: list of paths to the pdf files to be merged in order
     :param str output_path: path for the generated pdf file
     """

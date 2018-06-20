@@ -9,10 +9,11 @@ log = logging.getLogger(__name__)
 def generate_xml(work_path, data, template_string, target_filename='ojs_import.xml'):
     """
     Builds Jinja2 template and writes it to target file.
-    :param work_path: Path to put the generated XML
-    :param data: Journal metadata
-    :param template_string: XML template
-    :param target_filename: self explanatory...
+
+    :param str work_path: Path to put the generated XML
+    :param dict data: Journal metadata
+    :param str template_string: XML template
+    :param str target_filename: self explanatory...
     :return: None
     """
     template = Template(template_string, trim_blocks=True, lstrip_blocks=True)
