@@ -14,8 +14,8 @@ class GenerateXMLTest(unittest.TestCase):
         resource_dir = os.environ['RESOURCE_DIR']
         working_dir = os.environ['WORKING_DIR']
 
-        generated_filename1 = f'{working_dir}/Ein_kleines_Musterdokument_mit_zweizeiligem_Titel.xml'
-        generated_filename2 = f'{working_dir}/Titel_2.xml'
+        generated_filename1 = f'{working_dir}/articles/Ein_kleines_Musterdokument_mit_zweizeiligem_Titel/marc.xml'
+        generated_filename2 = f'{working_dir}/articles/Titel_2/marc.xml'
         generated_filename3 = f'{working_dir}/ojs_import.xml'
 
         def test_generate_marcxml(self):
