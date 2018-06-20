@@ -4,4 +4,5 @@ params:
 tasks:
   - retrieve_from_staging
   - nlp.annotate
+  - publish_to_repository
   - cleanup_workdir

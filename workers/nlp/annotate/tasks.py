@@ -11,7 +11,10 @@ log = logging.getLogger(__name__)
 
 
 class AnnotateTask(BaseTask):
-
+    """
+    Annotates the text in nlp_text.txt with the params in
+    nlp_params.json and stores the annotations in annotations.json
+    """
     name = "nlp.annotate"
 
     def execute_task(self):
@@ -25,7 +28,8 @@ class AnnotateTask(BaseTask):
             text = file.read().replace('\n', '')
 
         result = annotate(text, params)
-        log.info(result)
+        with open(os.path.join(work_path, 'annotations.json'), 'w') as file:
+            json.dump(result, file)
 
 
 AnnotateTask = celery_app.register_task(AnnotateTask())
