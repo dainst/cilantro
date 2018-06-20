@@ -13,7 +13,8 @@ ALLOWED_EXTENSIONS = set(['xml', 'pdf', 'tif', 'tiff', 'json'])
 @staging_controller.route('', methods=['GET'], strict_slashes=False)
 def list_staging():
     """
-    List files in the staging area
+    Lists files in the staging area.
+
     :return list(str):
     """
     return jsonify(os.listdir(staging_dir))
@@ -22,7 +23,7 @@ def list_staging():
 @staging_controller.route('', methods=['POST'], strict_slashes=False)
 def upload_to_staging():
     """
-    Upload files to the staging area
+    Uploads files to the staging area.
 
     The upload endpoint is able to handle single files that were posted
     under the 'file' key as well as multiple files at once that have been
