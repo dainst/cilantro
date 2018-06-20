@@ -7,7 +7,7 @@ staging_controller = Blueprint('staging', __name__)
 
 staging_dir = os.environ['STAGING_DIR']
 
-ALLOWED_EXTENSIONS = set(['xml', 'pdf', 'tif', 'tiff', 'json'])
+allowed_extensions = ['xml', 'pdf', 'tif', 'tiff', 'json']
 
 
 @staging_controller.route('', methods=['GET'], strict_slashes=False)
@@ -40,7 +40,7 @@ def upload_to_staging():
     if 'file' in request.files:
         file = request.files['file']
         if file:
-            if _allowed_file(file.filename):
+            if _is_allowed_file(file.filename):
                 _upload_file(file)
                 return jsonify({'success': True})
             else:
@@ -49,7 +49,7 @@ def upload_to_staging():
     elif 'files' in request.files:
         files = request.files.getlist("files")
         for file in files:
-            if _allowed_file(file.filename):
+            if _is_allowed_file(file.filename):
                 _upload_file(file)
             else:
                 return jsonify({'success': False}), 415
@@ -63,8 +63,8 @@ def _upload_file(file):
     file.save(os.path.join(staging_dir, filename))
 
 
-def _allowed_file(filename):
+def _is_allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
