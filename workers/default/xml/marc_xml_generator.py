@@ -15,4 +15,5 @@ def generate_marc_xml(work_path, data, template):
         generate_xml(work_path,
                      {**data['data'], **article},
                      template,
-                     article['title'].replace(' ', '_') + ".xml")
+                     'articles/' + article['title'].replace(' ', '_'),
+                     "marc.xml")

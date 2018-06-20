@@ -6,28 +6,24 @@
         <controlfield tag="008">160120s2015    gw            000   ger d</controlfield>
 
         <datafield tag="100" ind1="1" ind2=" ">
-            <subfield code="a">{{author[0]['firstname']}} {{author[0]['lastname']}}</subfield>
+            <subfield code="a">Autor Dererste</subfield>
         </datafield>
 
         <datafield tag="245" ind1="1" ind2="0">
-            <subfield code="a">{{title}}</subfield>
+            <subfield code="a">Titel 2</subfield>
             <subfield code="b"></subfield>
-            <subfield code="c">{{author_list}}</subfield>
-            <subfield code="c">
-                {%- for author_item in author -%}
-                    {{author_item['firstname']}} {{author_item['lastname']}}{%- if not loop.last %}, {% endif %}
-                {% endfor -%}
-            </subfield>
+            <subfield code="c"></subfield>
+            <subfield code="c">Autor Dererste</subfield>
         </datafield>
 
         <datafield tag="260" ind1=" " ind2=" ">
             <subfield code="a">München :</subfield>
             <subfield code="b">Beck,</subfield>
-            <subfield code="c">{{year}}</subfield>
+            <subfield code="c">2018</subfield>
         </datafield>
 
         <datafield tag="300" ind1=" " ind2=" ">
-            <subfield code="a">{{pages.startPrint}}-{{pages.endPrint}}</subfield>
+            <subfield code="a">21-27</subfield>
         </datafield>
 
         <datafield tag="504" ind1=" " ind2=" ">
@@ -46,8 +42,8 @@
             <subfield code="a">ANA</subfield>
             <subfield code="b">(manuell: ID des Bandes)</subfield>
             <subfield code="l">DAI01</subfield>
-            <subfield code="n">Chiron. Mitteilungen der Kommission für Alte Geschichte und Epigraphik des Deutschen Archäologischen Instituts, {{volume}} {{year}}</subfield>
-            <subfield code="m">{{title}}</subfield>
+            <subfield code="n">Chiron. Mitteilungen der Kommission für Alte Geschichte und Epigraphik des Deutschen Archäologischen Instituts,  2018</subfield>
+            <subfield code="m">Titel 2</subfield>
         </datafield>
 
     </record>

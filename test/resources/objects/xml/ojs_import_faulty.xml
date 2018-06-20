@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE issues PUBLIC "-//PKP//OJS Articles and Issues XML//EN" "http://pkp.sfu.ca/ojs/dtds/2.4.8/native.dtd">
+<issues>
+    <issue identification="year" published="False">
+
+        <year>2018</year>
+        <description>[PDFs teilweise verfügbar]</description>
+
+        
+            <title locale="en_US">Articles</title>
+
+                <article language="de" locale="de_DE">
+                    <title>Ein kleines Musterdokument mit zweizeiligem Titel</title>
+                    <author>
+                        <firstname>Erich </firstname>
+                        <lastname>Mustermann</lastname>
+                        <email>no@email.given</email>
+                    </author>
+                    <pages>1–20</pages>
+                    <date_published>2018--</date_published>
+                    <galley>
+                        <label>PDF</label>
+                        <file>
+                            <href src="e2e-testing.pdf" mime_type="application/pdf" />
+                        </file>
+                    </galley>
+                </article>
+
+                <article language="de" locale="de_DE">
+                    <title>Titel 2</title>
+                    <author>
+                        <firstname>Autor</firstname>
+                        <lastname>Dererste</lastname>
+                        <email>no@email.given</email>
+                    </author>
+                    <pages>21–27</pages>
+                    <date_published>2018--</date_published>
+                    <galley>
+                        <label>PDF</label>
+                        <file>
+                            <href src="e2e-testing.pdf" mime_type="application/pdf" />
+                        </file>
+                    </galley>
+                </article>
+
+        </section>
+
+    </issue>
+</issues>
