@@ -14,18 +14,18 @@ describe('importer', function() {
         browser.get(browser.baseUrl)
             .then(select.protocol('testdata'))
             .then(button.startImport())
-            .then(expect(message.classOfMain()).toContain("alert-success"))
+            .then(expect(message.classOfMain()).toContain("alert-success"));
     });
 
     it('should read the staging directory contents', function() {
         browser.get(browser.baseUrl)
             .then(browser.wait(EC.not(EC.visibilityOf(elements.loader))))
-            .then(expect(elements.start.fileSelect.all(by.css("option")).count()).toEqual(4));
+            .then(expect(elements.start.fileSelect.all(by.css("option")).count()).toEqual(7));
     });
 
-    xit('should abort and restart the import process', function() {
+    it('should abort and restart the import process', function() {
         browser.get(browser.baseUrl)
-            //.then(action.login())
+            .then(browser.wait(EC.not(EC.visibilityOf(elements.loader))))
             .then(select.protocol())
             .then(select.file())
             .then(button.startImport())
