@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, jsonify, request, abort
+from flask import Blueprint, jsonify, request
 from werkzeug.utils import secure_filename
 
 staging_controller = Blueprint('staging', __name__)
