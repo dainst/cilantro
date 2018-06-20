@@ -39,23 +39,30 @@ def upload_to_staging():
 
     if 'file' in request.files:
         file = request.files['file']
-        if file:
-            if _is_allowed_file(file.filename):
-                _upload_file(file)
-                return jsonify({'success': True})
-            else:
-                return jsonify({'success': False}), 415
+        return _upload_single_file(file)
 
     elif 'files' in request.files:
         files = request.files.getlist("files")
-        for file in files:
-            if _is_allowed_file(file.filename):
-                _upload_file(file)
-            else:
-                return jsonify({'success': False}), 415
-        return jsonify({'success': True})
+        return _upload_multiple_files(files)
 
     return jsonify({'success': False}), 400
+
+
+def _upload_single_file(file):
+    if _is_allowed_file(file.filename):
+        _upload_file(file)
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False}), 415
+
+
+def _upload_multiple_files(files):
+    for file in files:
+        if _is_allowed_file(file.filename):
+            _upload_file(file)
+        else:
+            return jsonify({'success': False}), 415
+    return jsonify({'success': True})
 
 
 def _upload_file(file):
