@@ -13,37 +13,37 @@ angular
 
     steps.views = {
         "home": {
-            "template": "partials/view_home.html",
+            "template": "partials/views/home.html",
             "title": "Start",
             "showIf": function() {return !steps.isStarted}
         },
         "restart": {
-            "template": "partials/view_restart.html",
+            "template": "partials/views/restart.html",
             "title": "Restart",
             "showIf": function() {return steps.isStarted}
         },
         "documents": {
-            "template": "partials/view_documents.html",
+            "template": "partials/views/documents.html",
             "title": "Documents",
             "showIf": function() {return documentsource.ready}
         },
         "overview": {
-            "template": "partials/view_overview.html",
+            "template": "partials/views/overview.html",
             "title": "Overview",
             "showIf": function() {return documentsource.ready}
         },
         "articles": {
-            "template": "partials/view_articles.html",
+            "template": "partials/views/articles.html",
             "title": "Articles",
             "showIf": function() {return documentsource.ready}
         },
         "publish": {
-            "template": "partials/view_finish.html",
+            "template": "partials/views/finish.html",
             "title": "Publish",
             "showIf": function() {return steps.isStarted && documentsource.ready && journal.isReadyToUpload()}
         },
         "fatal": {
-            "template": "partials/view_fatal.html",
+            "template": "partials/views/fatal.html",
             "title": "Fatal Error",
             "showIf": function() {return false}
         }

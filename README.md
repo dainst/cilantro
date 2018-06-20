@@ -40,14 +40,15 @@ There is no build process right now.
 
 # code style
 
-- 4 Spaces instead of tab
+- indentation: 4 Spaces instead of tab
     - idea: settings->editor->javascript
     - atom: settings->editor
-- variable/function names
+- names
     - for js-variables: camelCase 
     - for members of datamodel (journal, article): under_score
     - private functions with _ prefix
     - in css: snake-case 
+    - filenames snake-case myController in my-controller.js
 - ES6
     - `let/const` instead of `var` where it makes sense: http://es6-features.org/#BlockScopedVariables
 - more    

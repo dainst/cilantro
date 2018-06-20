@@ -29,7 +29,7 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 
 			let modalInstance = $uibModal.open({
 				animation: true,
-				templateUrl: 'partials/csv_import.html',
+				templateUrl: 'partials/modals/csv-import.html',
 				controller: "csv_import_window",
 				controllerAs: '$ctrl',
 				size: 'lg',
