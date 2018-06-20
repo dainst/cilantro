@@ -89,6 +89,11 @@ Additionally parameters in method docstrings should be given as follows:
 It is possible to generate API documentation for all modules via [Sphinx](http://www.sphinx-doc.org/en/master/) and it's extension [Autodoc](http://www.sphinx-doc.org/en/master/ext/autodoc.html).
 This example generates HTML files.
 
+* Prerequisite: Install Sphinx
+
+
+    sudo apt-get install python3-sphinx
+
 * Change to folder
 
 
