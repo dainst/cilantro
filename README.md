@@ -3,7 +3,15 @@ The future Cilantro-Frontend
 
 # installation
 
-## a) with old PHP-Backend and Apache
+## a) without backend
+- `npm install`
+- `mv settings.test.json settings.json`
+- `npm run server`
+
+## b) with cilantro as backend
+COMING SOON
+
+## c) with old PHP-Backend and Apache (lagacy-branch)
 - clone to /var/www/importer or similar
 - configure apache to serve /var/www
 - npm install
@@ -15,10 +23,7 @@ The future Cilantro-Frontend
 - create settings.json like settings.default.json and fill out
 - http://localhost/importer
 
-## b) without backend
-- npm install
-- mv settings.test.json settings.json
-- npm run server
+
 
 We use a the mock-backend here which was created für the npm tests and serve the app with gulp.
 
@@ -26,5 +31,26 @@ We use a the mock-backend here which was created für the npm tests and serve th
 There is no build process right now.
 
 # test
-- npm run e2e
+- `npm run e2e`
+    - or in 3 tabs
+        - `npm run e2e-mock-backend`
+        - `npm run server`
+        - `npm run e2e-test`
 - unit tests are missing 
+
+# code style
+
+- 4 Spaces instead of tab
+    - idea: settings->editor->javascript
+    - atom: settings->editor
+- variable/function names
+    - for js-variables: camelCase 
+    - for members of datamodel (journal, article): under_score
+    - private functions with _ prefix
+    - in css: snake-case 
+- ES6
+    - `let/const` instead of `var` where it makes sense: http://es6-features.org/#BlockScopedVariables
+- more    
+    - `===` instead of `==`
+    - line endings with `;` even after `}` 
+    
