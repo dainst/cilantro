@@ -15,7 +15,7 @@ def list_staging():
     """
     Lists files in the staging area.
 
-    :return list(str):
+    :return: JSON array containing file names
     """
     return jsonify(os.listdir(staging_dir))
 
@@ -34,7 +34,7 @@ def upload_to_staging():
     Returns HTTP status code 400 if neither 'file' nor 'files' contained valid
     file data.
 
-    :return dict:
+    :return: A JSON object indicating success (e.g. "{ 'success': true }")
     """
 
     if 'file' in request.files:
