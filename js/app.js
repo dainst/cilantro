@@ -28,9 +28,9 @@ angular
 	'controller.upload',
 	'directive.editable',
 	'directive.multiselect',
+    'directive.salviaNavbar',
+
 	'module.editables',
-
-
 
 	'module.protocols.testdata',
 	'module.protocols.generic',

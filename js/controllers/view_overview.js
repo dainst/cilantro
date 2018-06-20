@@ -62,7 +62,7 @@ angular
 
 		$scope.continue = function() {
 			journal.cleanArticles();
-			$scope.steps.change('articles');
+			steps.change('articles');
 		}
 
 		// open file externally

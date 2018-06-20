@@ -22,7 +22,7 @@ angular
     			  return 'partials/editable_undefined.html' + killCache;
     		  }
 	    	  return 'partials/editable_' + scope.item.type + '.html'  + killCache;
-    	  }
+    	  };
     	  scope.debug = function() {
             if (settings.devMode()) {
                 console.log('Editable Content: ', scope.item);

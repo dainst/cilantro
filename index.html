@@ -25,20 +25,12 @@
 			login-function=""
 			logout-function=""
 			user-object='{"username": false}'>
-
-			<ul class="nav navbar-nav">
-				<li ng-show="settings.devMode()" class="dev-warning"><a type="button">Dev-Mode</a></li>
-				<li ng-show="protocols.isSelected()"><p class="navbar-text">Protocol: <strong>{{protocol.description || protocol.id}}</strong></p></li>
-				<li ng-if ="!done" ng-repeat="(stepId, step) in steps.list" >
-					<a ng-click="steps.change(stepId)" ng-class="{'active':steps.current==stepId}" ng-show="step.condition()" id="step-{{stepId}}">{{step.title}}</a>
-				</li>
-			</ul>
-
+			<salvia-navbar></salvia-navbar>
 		</idai-navbar>
 
 		<div id='main-container' class="container-fluid">
 			<ng-include src="'partials/infobox.html'"></ng-include>
-			<ng-include src="steps.list[steps.current].template + cacheKiller"></ng-include>
+			<ng-include src="steps.getTemplate()"></ng-include>
 		</div>
 
 		<idai-footer institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
@@ -53,8 +45,7 @@
 
 		<script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
-		<!-- load pimport app -->
-
+		<!-- load salvia app -->
     
 		<script src="js/services/journal.js"></script>
 		<script src="js/services/messenger.js"></script>
@@ -72,6 +63,7 @@
 		<script src="js/controllers/upload.js"></script>
 		<script src="js/directives/editable.js"></script>
 		<script src="js/directives/multiselect.js"></script>
+		<script src="js/directives/salviaNavbar.js"></script>
 		<script src="js/services/editables.js"></script>
 		<script src="js/services/settings.js"></script>
 

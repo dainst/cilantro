@@ -21,9 +21,9 @@ angular
 
 		/* repository */
 		$scope.repository = repository;
-		
-		/* step control */
-		$scope.steps = steps;
+
+        /* steps */
+        $scope.steps = steps;
 
 		/* initialize */
         $scope.isLoading = true;
@@ -33,7 +33,7 @@ angular
 		    function failFatal(err) {
 		        console.error("fatal error", err);
                 $scope.isLoading = false;
-                $scope.steps.current = "fatal";
+                steps.change("fatal");
                 refreshView();
             }
 
@@ -63,14 +63,13 @@ angular
 
 		/* restart */
 		$scope.restart = function() {
-			$scope.isStarted = false;
-			$scope.steps.isStarted = false;
+			steps.isStarted = false;
 			messenger.content.stats = {};
 			documentsource.reset();
 			journal.reset();
 			$scope.init().then(function() {
                 messenger.alert('Restart Importer', false);
-                $scope.steps.change('home');
+                steps.change('home');
                 $scope.protocols.selectLast();
                 $scope.isLoading = false;
             });
@@ -115,7 +114,7 @@ angular
                 }
                 localStorage.setItem('protocol', $scope.protocol.id);
                 console.log("start protocol " + $scope.protocol.id);
-                $scope.steps.change($scope.protocol.startView || 'overview');
+                steps.change($scope.protocol.startView || 'overview');
                 if (angular.isFunction($scope.protocol.onInit)) {
                     $scope.protocol.onInit();
                 }
@@ -124,20 +123,14 @@ angular
         };
         $scope.protocol = {};
 
-
-		/* security */
-		$scope.sec = webservice.sec;
-
 		/* ctrl */
-
 		$scope.start = function() {
             if (!$scope.protocols.isSelected()) {
                 messenger.alert("Please select an import protocol", true);
                 return;
             }
-            $scope.isStarted = $scope.protocols.start();
+            steps.isStarted = $scope.protocols.start();
 		};
-
 
 		/* some pdf things happen outside angular and need this */
         function refreshView() {
