@@ -2,19 +2,19 @@ angular
 .module("module.journal", [])
 .factory("journal", ['editables', '$rootScope', 'settings', function(editables, $rootScope, settings) {
 
-	/* base contruction */
+	/* base construction */
 
 	let journal = {
-		data: {},			// metadata for the imported issue
+		data: {},				// metadata for the imported issue
 		articles: [],			// collection of articles to import
 		thumbnails: {},			// their thumbnails
 		articleStats: {			// statistics about the articles
 			data: {}
 		},
+        loadedFiles: {},        // files loaded into pdf.js
 		settings: {},			// UI settings for displaying this journal
-		loadedFiles: {},		// information about loaded files
 		locales: [], 			// available locales
-	} // will be filled by journal.reset()
+	}; // will be filled by journal.reset()
 
 	/**
 	 *  meta information
@@ -23,18 +23,18 @@ angular
 	 *  it should never be modified by protocol.
 	 *
 	 */
-	var journalConstraints = {} 	// information about available journals and their contraints
+	var journalConstraints = {}; 	// information about available journals and their contraints
 	var journalCodes = {};			// list of journals. must be a separate thing, otherwise time problem
 	journal.getConstraint = function(journalCode, constraint) {
 		if ((typeof journalConstraints[journalCode] !== "undefined") && (typeof journalConstraints[journalCode][constraint] !== "undefined")) {
 			return journalConstraints[journalCode][constraint];
 		}
-	}
+	};
 	journal.setConstraints = function(constraints) {
 		journalConstraints = constraints;
 		Object.keys(constraints).map(function(item){journalCodes[item] = item});
 		console.log(journalCodes)
-	}
+	};
 
 
 

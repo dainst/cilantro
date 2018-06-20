@@ -30,7 +30,7 @@
 			<div class="panel-heading">Select PDF file (or folder) from upload folder</div>
 			<div class="panel-body">
 				<select class="form-control" ng-model="journal.data.importFilePath">
-					<option ng-repeat="file in repository.list track by $index" value='{{file.name}}'>{{file.name}}</option>
+					<option ng-repeat="file in repository.list track by $index" value='{{file.path}}'>{{file.type==="directory" ? "[DIR]" : ""}}{{file.path}}</option>
 				</select>
 			</div>
 		</div>
@@ -38,17 +38,17 @@
 		<div 	ng-controller="upload"
 				class="panel panel-default"
 				ngf-drop="uploadFiles($files)"
-     		ng-model="files"
-        ngf-multiple="true"
-        ngf-pattern="pattern"
-        ngf-accept="application/pdf"
-        ngf-drag-over-class="'dragOver'"
-        ngf-validate="{pattern: '.pdf'}"
-        ngf-keep="false"
-        ngf-allow-dir="true"
+				ng-model="files"
+				ngf-multiple="true"
+				ngf-pattern="pattern"
+				ngf-accept="application/pdf"
+				ngf-drag-over-class="'dragOver'"
+				ngf-validate="{pattern: '.pdf'}"
+				ngf-keep="false"
+				ngf-allow-dir="true"
 				ngf-include-dir="true"
-       	ngf-drop-available="dropAvailable"
-        id="fileDropArea">
+				ngf-drop-available="dropAvailable"
+				id="fileDropArea">
 
 			<div class="panel-heading">Or upload PDF file</div>
 			<div class="panel-body">
@@ -56,7 +56,7 @@
 			    <br>
 
 			    <span class="progressbar">
-			        <div style="width:{{progress}}%" ng-bind="progress + '%'"></div>
+			        <div ng-style="{width: progress +'%'}" ng-bind="progress + '%'"></div>
 			    </span>
 
 			    <br><span  ng-show="uploadedFiles.length > 0">Files:</span>

@@ -3,10 +3,10 @@
 	<div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning'>{{warning}}</div>
 
 	<select class="form-control editable-select" ng-model="item.value.value" ng-change="item.observer ? item.observer() : ''">
-		<option ng-repeat="files in item.list track by $index" value='{{files.url}}'>{{files.url}}</option>
+		<option ng-repeat="file in item.list track by $index" value='{{file.url}}'>{{file.url}}</option>
 	</select>
 
-	<div class="row" ng-show="item.check()">
+	<div class="row" ng-show="!item.check()">
 
 		<div class="col-xs-6">Size</div>
 		<div class="col-xs-6">{{item.list[item.value.value].size}}</div>
@@ -24,12 +24,4 @@
 			/>
 		</div>
 	</div>
-	<!--
-	<pre>{{item.value.value}}</pre>
-	<pre>{{item.list[item.value.value]}}</pre>
-
-
-	<br>
-	<pre>{{item}}</pre>
-	-->
 </div>

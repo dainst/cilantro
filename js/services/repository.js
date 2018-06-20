@@ -1,14 +1,32 @@
 angular
 .module("module.repository", [])
-.factory("repository", ['journal', function(journal) {
+.factory("repository", ["messenger", function(messenger) {
 
-	var repository = {};
-	repository.list = [];
+	let repository = {};
+	repository.list = {};
+    repository.tree = [];
 
-	repository.update = function (loaded_repository) {
-		repository.list = loaded_repository;
-		console.log(repository.list);
-	}
+	function addPaths(tree) {
+        tree.path = (this.path || "") + tree.name;
+        if (tree.type === "directory") {
+            tree.contents.forEach(addPaths.bind({path:tree.path + '/'}))
+        }
+    }
+
+    function flattenTree(tree) {
+        repository.list[tree.path] = tree;
+        if (tree.type === "directory") {
+            tree.contents.map(flattenTree);
+        }
+    }
+
+	repository.update = function(loaded_repository) {
+		repository.tree = loaded_repository;
+		repository.tree.forEach(addPaths);
+        repository.tree.forEach(flattenTree);
+		console.log("files-tree", repository.tree);
+		console.log("files-list", repository.list);
+	};
 
 	repository.getFirstFile = function() {
 		if (repository.list.length < 1) {
@@ -20,20 +38,15 @@ angular
 				return repository.list[i];
 			}
 		}
-	}
+	};
 
 	repository.getFileInfo = function(path) {
-		if (!path) {
-			return;
-		}
-		// not elegant, but hey okay
-		for (let i = 0; i < repository.list.length; i++) {
-			if (repository.list[i].path === path) {
-				return repository.list[i];
-			}
-		}
-		messenger.alert(path + ' is not found in repository');
-	}
+		if (angular.isUndefined(repository.list[path])) {
+            messenger.alert(path + ' is not found in repository', 1);
+            return;
+        }
+		return repository.list[path];
+	};
 
 	return (repository);
 

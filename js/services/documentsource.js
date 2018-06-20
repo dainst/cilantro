@@ -52,12 +52,13 @@ angular
 
 		for (var fileid in folder.dir) {
 
-			var filename = folder.dir[fileid];
+			var filename = folder.dir[fileid].name;
 			var url = settings.rep_url + (folder.path ? folder.path + '/' : '') + filename;
+            console.log("URL is " + url);
 
 			var promise = new Promise(
 				function documentPromiseResolve(resolve, fail) {
-					console.log("url is" + url);
+
 					folder.PDF.api.getDocument(url).then(
 						function onGotDocument(pdf) {
 							var fileInfo = {
@@ -92,7 +93,7 @@ angular
 									url: this.url,
 									pagecontext: this.pagecontext
 								}; 
-								console.log("loadedFiles updated");
+								console.log("loadedFiles updated", journal.loadedFiles);
 								messenger.alert('document nr ' + Object.keys(folder.files).length + ' loaded');
 								$rootScope.$broadcast('gotFile', this.url);
 								refreshView();
@@ -128,36 +129,33 @@ angular
 	}
 
 	folder.getDocuments = function(path) {
-		console.log("read path", path);
+		console.log("selected files to load", path);
 
-        let getFolder = true;
-
-        // path given
-        if (path !== "") {
-            // is folder or file?
-            if (repository.getFileInfo(path).type === 'dir') {
-                folder.path = path;
-                getFolder = new Promise(function(resolve) {
-                    messenger.alert('loading folder contents: ' + folder.path);
-                    webservice.get('getRepositoryFolder', {dir: folder.path}, function(result) {
-                        console.log('got folder:' + folder.path, result);
-                        if (result.success) {
-                            folder.dir = result.dir;
-                            folder.stats.files = result.dir.length;
-                            messenger.alert('folder contents loaded');
-                            resolve();
-                        }
-                    })
-
-                });
-            } else {
-                folder.dir = [path];
-                folder.path = false;
-                folder.stats.files = 1;
-            }
+        if (!path || path === "") {
+            return;
         }
 
-		Promise.all([getFolder, requirePdfJs]).then(function() {
+        let filesObject = repository.getFileInfo(path);
+
+        if (filesObject.type === 'directory') {
+            folder.path = path;
+
+            messenger.alert('loading folder contents: ' + folder.path);
+
+            folder.dir = repository.list[folder.path].contents;
+
+            console.log('got folder:' + folder.path, folder);
+
+            folder.stats.files = folder.dir.length;
+            messenger.alert('folder contents loaded');
+
+        } else {
+            folder.dir = [filesObject];
+            folder.path = false;
+            folder.stats.files = 1;
+        }
+
+        requirePdfJs.then(function() {
 			messenger.alert('ready for loading files');
 			loadFiles();
 			Promise.all(loadFilePromises).then(function() {
@@ -167,7 +165,7 @@ angular
 				folder.ready = true;
 			})
 		});
-	}
+	};
 
 	/**
 	 *
