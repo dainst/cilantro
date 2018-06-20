@@ -21,6 +21,7 @@ class Job:
     def run(self):
         """
         Trigger asynchronous execution of the job chain
+
         :return AsyncResult: Celery result
         """
         self._set_job_id_for_tasks()
