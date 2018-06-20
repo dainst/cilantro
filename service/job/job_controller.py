@@ -8,7 +8,8 @@ from service.job.job_config import JobConfig
 
 def get_job_config():
     """
-    Get the job config singleton or creates it if it does not exist already
+    Get the job config singleton or creates it if it does not exist already.
+
     :return JobConfig:
     """
     job_config = getattr(g, '_job_config', None)
@@ -22,6 +23,19 @@ job_controller = Blueprint('job', __name__)
 
 @job_controller.route('/<job_type>', methods=['POST'])
 def job_create(job_type):
+    """
+    Creates a job of the specified job type.
+
+    A task chain is constructed as defined in the corresponding job type
+    definition YAML file and executed.
+
+    Parameters can be provided as JSON objects as part of the request body
+    and must match the parameters defined in the corresponding job config YAML.
+
+    :param str job_type:
+    :return: A JSON object containing the status, the job id and the task ids
+        of every subtask in the chain
+    """
     params = request.get_json(force=True, silent=True)
     job = get_job_config().generate_job(job_type, params)
     task = job.run()
@@ -42,6 +56,12 @@ def job_create(job_type):
 
 @job_controller.route('/<job_id>', methods=['GET'])
 def job_status(job_id):
+    """
+    Returns the status information for a job.
+
+    :param str job_id:
+    :return: A JSON object containing the status (e.g. "{ 'status': 'PENDING' }"
+    """
     task = celery_app.AsyncResult(job_id)
     response = {
         'status': task.state
