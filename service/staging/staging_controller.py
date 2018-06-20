@@ -27,19 +27,33 @@ def upload_to_staging():
     The upload endpoint is able to handle single files that were posted
     under the 'file' key as well as multiple files at once that have been
     posted under the 'files' key.
+
+    Returns HTTP status code 415 if one of the files' extension is not allowed.
+
+    Returns HTTP status code 400 if neither 'file' nor 'files' contained valid
+    file data.
+
     :return dict:
     """
+
     if 'file' in request.files:
         file = request.files['file']
-        if file and _allowed_file(file.filename):
-            _upload_file(file)
-            return jsonify({'success': True})
+        if file:
+            if _allowed_file(file.filename):
+                _upload_file(file)
+                return jsonify({'success': True})
+            else:
+                return jsonify({'success': False}), 415
+
     elif 'files' in request.files:
         files = request.files.getlist("files")
         for file in files:
-            if file and _allowed_file(file.filename):
+            if _allowed_file(file.filename):
                 _upload_file(file)
+            else:
+                return jsonify({'success': False}), 415
         return jsonify({'success': True})
+
     return jsonify({'success': False}), 400
 
 

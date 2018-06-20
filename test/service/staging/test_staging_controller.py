@@ -1,3 +1,4 @@
+import io
 import os
 import unittest
 from pathlib import Path
@@ -53,6 +54,11 @@ class RepositoryControllerTest(unittest.TestCase):
         finally:
             for file in files:
                 file[0].close()
+
+    def test_upload_file_extension_not_allowed(self):
+        response = self._upload_to_staging(
+            {'file': (io.BytesIO(b'asdf'), 'foo.asdf')})
+        self.assertEqual(response.status_code, 415)
 
     def _upload_to_staging(self, data):
         return self.client.post(
