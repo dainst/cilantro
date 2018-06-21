@@ -27,20 +27,24 @@ class AnnotateTest(unittest.TestCase):
         self.assertRaises(NoTextProvidedException, annotate, text, params)
 
     def test_valid_operations(self, mock_init):
-        mock_init.return_value = TextAnalyzer()
-        text = "Foo"
-        params = {
-            "operations": ["POS"]
-        }
-        annotate(text, params)
-        params = {
-            "operations": ["NER"]
-        }
-        annotate(text, params)
-        params = {
-            "operations": ["POS", "NER", "Bar"]
-        }
-        annotate(text, params)
+        try:
+            mock_init.return_value = TextAnalyzer()
+            text = "Foo"
+            params = {
+                "operations": ["POS"]
+            }
+            annotate(text, params)
+            params = {
+                "operations": ["NER"]
+            }
+            annotate(text, params)
+            params = {
+                "operations": ["POS", "NER", "Bar"]
+            }
+            annotate(text, params)
+        except InvalidNlpOperationException as e:
+            self.fail(f"Test unexpectedly raised InvalidNlpOperationException: "
+                      f"{e}")
 
     def test_invalid_operations(self, mock_init):
         mock_init.return_value = TextAnalyzer()
