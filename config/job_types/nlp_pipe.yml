@@ -1,7 +1,7 @@
 about:
   title: Create Annotations
   description: Create Annotations for document
-  tags: NLP, Information Retrieval, Data Mining, Annotations
+  tags: [NLP, Information Retrieval, Data Mining, Annotations]
 
 params:
   paths: list
