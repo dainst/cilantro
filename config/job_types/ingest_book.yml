@@ -9,9 +9,9 @@ params:
 tasks:
   - retrieve_from_staging
   - foreach: "\\.(tif|tiff|TIF|TIFF)$"
-    do: convert_tif_to_jpg
+    do: convert.tif_to_jpg
   - foreach: "\\.(jpg|jpeg|JPG|JPEG)$"
-    do: convert_jpg_to_pdf
-  - convert_pdf_merge_converted
+    do: convert.jpg_to_pdf
+  - convert.pdf_merge_converted
   - publish_to_repository
   - cleanup_workdir
