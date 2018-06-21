@@ -1,12 +1,8 @@
-from nlp_components.idai_journals.publications import TextAnalyzer
-# dependency in docker container
-
-
-class NoTextProvided(Exception):
+class NoTextProvidedException(Exception):
     pass
 
 
-class InvalidNlpOperations(Exception):
+class InvalidNlpOperationException(Exception):
     pass
 
 
@@ -19,14 +15,49 @@ def annotate(text, params):
     :return dict: generated annotations with metadata
     """
     _validate_input(text, params)
-    text_analyzer = TextAnalyzer(text)
+    text_analyzer = _init_text_analyzer(text)
     if 'lang' in params:
         text_analyzer.lang = params['lang']
 
     annotation = _run_annotation(text_analyzer, params['operations'])
     result = _add_metadata(text_analyzer, annotation)
-
     return result
+
+
+def _init_text_analyzer(text):
+    """
+    Initialises the Text Analyzer of the nlp components
+    :param str text: The text to Analyze
+    :return class: The text_analyzer
+    """
+    from nlp_components.idai_journals.publications import TextAnalyzer
+    # dependency in docker container
+    text_analyzer = TextAnalyzer(text)
+    return text_analyzer
+
+
+def _validate_input(text, params):
+    """
+    Validates the text and parameters given. This avoids long
+    initialising of text_analyzer if invalid text or params are provided.
+    :param str text: the text to validate
+    :param dict params: the parameters to validate
+    :raises NoTextProvided: if text is empty string
+    :raises InvalidNlpOperations: if params['operations'] does not contain
+        POS or NER
+    """
+    if text is "":
+        raise NoTextProvidedException("The provided Text is an empty string")
+
+    try:
+        params['operations']
+    except KeyError:
+        raise InvalidNlpOperationException("No operations specified in params")
+
+    valid_params = {"POS", "NER"}
+    if not (set(params['operations']).intersection(valid_params)):
+        raise InvalidNlpOperationException(f"No valid operation found in "
+                                           f"{params['operations']}")
 
 
 def _run_annotation(text_analyzer, operations):
@@ -62,19 +93,3 @@ def _add_metadata(text_analyzer, annotations):
         **annotations,
         **metadata
     }
-
-
-def _validate_input(text, params):
-    """
-    Validates the text and parameters given. This avoids long
-    initialising of text_analyzer if invalid text or params are provided.
-    :param str text: the text to validate
-    :param dict params: the parameters to validate
-    :raises NoTextProvided: if text is empty string
-    :raises InvalidNlpoperations: if params['operations'] does not contain
-        POS or NER
-    """
-    if text is "":
-        raise NoTextProvided(f"The provided Text is an empty string")
-    if ('NER' or 'POS') not in params['operations']:
-        raise InvalidNlpOperations(f"Ivalid operations {params['operations']}")

@@ -23,7 +23,10 @@ class AnnotateTask(BaseTask):
         text_path = os.path.join(work_path, 'nlp_text.txt')
 
         with open(json_path) as data_object:
-            params = json.load(data_object)
+            try:
+                params = json.load(data_object)
+            except json.decoder.JSONDecodeError:
+                params = {}
         with open(text_path, 'r') as file:
             text = file.read().replace('\n', '')
 
