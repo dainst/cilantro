@@ -14,6 +14,7 @@ pdftotext = "*"
 Wand = "*"
 jinja2 = "*"
 lxml = "*"
+flask-cors = "*"
 
 [dev-packages]
 
