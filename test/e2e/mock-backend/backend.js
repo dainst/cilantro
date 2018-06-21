@@ -13,7 +13,8 @@ server.use(bodyParser.json());
 server.use(middleWares);
 server.use(fakeRest);
 
-server.use('/test', express.static(path.join(__dirname, '/../ressources')));
+console.log("FOLDA:", path.join(__dirname, '/../ressources'));
+server.use('/files', express.static(path.join(__dirname, '/../ressources')));
 
 server.use(router);
 server.listen(port, () => {
