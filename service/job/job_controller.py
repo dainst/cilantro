@@ -1,9 +1,13 @@
+import os
 import logging
 
 from flask import Blueprint, url_for, jsonify, request, g
 
 from utils.celery_client import celery_app
 from service.job.job_config import JobConfig
+
+
+config_dir = os.environ['CONFIG_DIR']
 
 
 def get_job_config():
@@ -69,6 +73,17 @@ def job_status(job_id):
     if hasattr(task.info, 'result'):
         response['result'] = task.info['result']
     return jsonify(response)
+
+
+@job_controller.route('/jobtypes', methods=['GET'])
+def get_job_types():
+    """
+    Returns a list of available job types. Job types are taken from the
+    config directory.
+
+    :return str: JSON list containing the type names
+    """
+    return jsonify(os.listdir(config_dir))
 
 
 def _get_task_ids(task):
