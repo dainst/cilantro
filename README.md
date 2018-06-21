@@ -76,7 +76,38 @@ After that re-run the tests and they may succeed.
 
 Cilantro generally uses the [PEP 8 style guide](https://www.python.org/dev/peps/pep-0008/).
 
+Docstrings are to be added to all public methods and functions (i.e. everything not starting with underscore).
 Additionally parameters in method docstrings should be given as follows:
 
     :param param_type param_name: parameter description
     :raises ErrorType: Exception throw-condition description
+
+**Make sure to insert an empty line between the description and parameter list. This helps for generating API documentation.**
+
+## Documentation
+
+It is possible to generate API documentation for all modules via [Sphinx](http://www.sphinx-doc.org/en/master/) and it's extension [Autodoc](http://www.sphinx-doc.org/en/master/ext/autodoc.html).
+To regenerate the HTML files do the following steps.
+
+Prerequisite: Install Sphinx
+
+
+    sudo apt-get install python3-sphinx
+
+* Change to the documentation folder
+
+
+    cd docs/
+
+* Generate the reStructuredText files from the python sources
+
+
+    sphinx-apidoc -o source ../
+
+* Generate HTML from reStructuredText
+
+
+    make html
+
+
+You can now view the Documentation by opening `docs/build/html/index.html`

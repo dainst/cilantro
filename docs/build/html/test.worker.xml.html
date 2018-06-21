@@ -1,0 +1,161 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>test.worker.xml package &#8212; Cilantro alpha documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="test-worker-xml-package">
+<h1>test.worker.xml package<a class="headerlink" href="#test-worker-xml-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="test-worker-xml-test-generate-xml-module">
+<h2>test.worker.xml.test_generate_xml module<a class="headerlink" href="#test-worker-xml-test-generate-xml-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-test.worker.xml.test_validate_xml">
+<span id="test-worker-xml-test-validate-xml-module"></span><h2>test.worker.xml.test_validate_xml module<a class="headerlink" href="#module-test.worker.xml.test_validate_xml" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="test.worker.xml.test_validate_xml.ValidateXMLTest">
+<em class="property">class </em><code class="descclassname">test.worker.xml.test_validate_xml.</code><code class="descname">ValidateXMLTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test/worker/xml/test_validate_xml.html#ValidateXMLTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.worker.xml.test_validate_xml.ValidateXMLTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="test.worker.xml.test_validate_xml.ValidateXMLTest.marc_schema_file">
+<code class="descname">marc_schema_file</code><em class="property"> = 'resources/MARC21slim.xsd'</em><a class="headerlink" href="#test.worker.xml.test_validate_xml.ValidateXMLTest.marc_schema_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="test.worker.xml.test_validate_xml.ValidateXMLTest.marc_xml_file">
+<code class="descname">marc_xml_file</code><em class="property"> = 'test/resources/objects/xml/marc.xml'</em><a class="headerlink" href="#test.worker.xml.test_validate_xml.ValidateXMLTest.marc_xml_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="test.worker.xml.test_validate_xml.ValidateXMLTest.marc_xml_file_faulty">
+<code class="descname">marc_xml_file_faulty</code><em class="property"> = 'test/resources/objects/xml/marc_faulty.xml'</em><a class="headerlink" href="#test.worker.xml.test_validate_xml.ValidateXMLTest.marc_xml_file_faulty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="test.worker.xml.test_validate_xml.ValidateXMLTest.ojs_xml_file">
+<code class="descname">ojs_xml_file</code><em class="property"> = 'test/resources/objects/xml/ojs_import.xml'</em><a class="headerlink" href="#test.worker.xml.test_validate_xml.ValidateXMLTest.ojs_xml_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="test.worker.xml.test_validate_xml.ValidateXMLTest.ojs_xml_file_faulty">
+<code class="descname">ojs_xml_file_faulty</code><em class="property"> = 'test/resources/objects/xml/ojs_import_faulty.xml'</em><a class="headerlink" href="#test.worker.xml.test_validate_xml.ValidateXMLTest.ojs_xml_file_faulty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="test.worker.xml.test_validate_xml.ValidateXMLTest.test_validate_xml">
+<code class="descname">test_validate_xml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test/worker/xml/test_validate_xml.html#ValidateXMLTest.test_validate_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.worker.xml.test_validate_xml.ValidateXMLTest.test_validate_xml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="test.worker.xml.test_validate_xml.ValidateXMLTest.test_validate_xml_with_schema">
+<code class="descname">test_validate_xml_with_schema</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test/worker/xml/test_validate_xml.html#ValidateXMLTest.test_validate_xml_with_schema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.worker.xml.test_validate_xml.ValidateXMLTest.test_validate_xml_with_schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="test.worker.xml.test_validate_xml.ValidateXMLTest.test_validation_failed_by_schema">
+<code class="descname">test_validation_failed_by_schema</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test/worker/xml/test_validate_xml.html#ValidateXMLTest.test_validation_failed_by_schema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.worker.xml.test_validate_xml.ValidateXMLTest.test_validation_failed_by_schema" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="test.worker.xml.test_validate_xml.ValidateXMLTest.test_validation_failed_by_syntax">
+<code class="descname">test_validation_failed_by_syntax</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test/worker/xml/test_validate_xml.html#ValidateXMLTest.test_validation_failed_by_syntax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#test.worker.xml.test_validate_xml.ValidateXMLTest.test_validation_failed_by_syntax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-test.worker.xml">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-test.worker.xml" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">test.worker.xml package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#test-worker-xml-test-generate-xml-module">test.worker.xml.test_generate_xml module</a></li>
+<li><a class="reference internal" href="#module-test.worker.xml.test_validate_xml">test.worker.xml.test_validate_xml module</a></li>
+<li><a class="reference internal" href="#module-test.worker.xml">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/test.worker.xml.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, DAI WissIT.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/test.worker.xml.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
