@@ -1,3 +1,8 @@
+about:
+  title: Ingest a Journal-Issue to iDAI.publications/journals
+  description: Create a new Issue of an existing journal, and upload it's files to iDAI.publications/journals
+  tags: OJS, iDAI.publications/journals, publish, journal, pdf
+
 params:
   files_to_split: list
   paths: list
