@@ -1,3 +1,5 @@
+import os
+
 from workers.default.xml.xml_generator import generate_xml
 
 
@@ -14,5 +16,5 @@ def generate_marc_xml(work_path, data, template):
         generate_xml(work_path,
                      {**data['data'], **article},
                      template,
-                     'articles/' + article['title'].replace(' ', '_'),
+                     os.path.join('articles', article['title'].replace(' ', '_')),
                      "marc.xml")
