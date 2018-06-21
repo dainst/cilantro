@@ -8,5 +8,5 @@ params:
 
 tasks:
   - retrieve_from_staging
-  - nlp.annotate
+  - nlp_annotate
   - cleanup_workdir
