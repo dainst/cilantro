@@ -1,3 +1,8 @@
+about:
+  title: Ingest a Journal-Issue to iDAI.publications/journals
+  description: Create a new Issue of an existing journal, and upload it's files to iDAI.publications/journals
+  tags: [OJS, iDAI.publications/journals, publish, journal, pdf]
+
 params:
   do_ocr: boolean
   publish_to_webanno: boolean
@@ -11,7 +16,7 @@ tasks:
     do:
       - if: do_ocr
         do:
-          - convert.pdf_to_tif
+          - convert_pdf_to_tiff
           - ocr_from_tiff
         else: extract_txt_from_pdf
       - generate_frontmatter
@@ -20,9 +25,9 @@ tasks:
   - foreach: "article_*"
     do:
       - if: not do_ocr
-        do: convert.pdf_to_tif
+        do: convert_pdf_to_tiff
       - foreach: "*.[tT][iI][fF]*"
-        do: convert.tif_to_jpg
+        do: convert_tif_to_jpg
       - extract_entities
       - if: publish_to_webanno
         do: publish_to_webanno
