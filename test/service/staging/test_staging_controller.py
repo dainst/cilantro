@@ -38,6 +38,29 @@ class StagingControllerTest(unittest.TestCase):
 
     def test_upload_multiple_files(self):
         object_path = os.path.join(self.resource_dir, 'objects', test_object)
+        response = self._upload_folder_to_staging(object_path)
+        self.assertEqual(response.status_code, 200)
+        self._assert_file_in_staging(test_file)
+        for file_name in os.listdir(object_path):
+            self._assert_file_in_staging(file_name)
+
+    def test_upload_file_extension_not_allowed(self):
+        response = self._upload_to_staging(
+            {'file': (io.BytesIO(b'asdf'), 'foo.asdf')})
+        self.assertEqual(response.status_code, 415)
+
+    def test_list_staging(self):
+        object_path = os.path.join(self.resource_dir, 'objects', test_object)
+        file_names = os.listdir(object_path)
+        self._upload_folder_to_staging(object_path)
+
+        response = self.client.get('/staging')
+        response_object = response.get_json()
+        self.assertGreaterEqual(len(response_object), len(file_names))
+        staged_files = [e for e in response_object if e['name'] in file_names]
+        self.assertEqual(len(staged_files), len(file_names))
+
+    def _upload_folder_to_staging(self, object_path):
         file_names = os.listdir(object_path)
         files = []
         try:
@@ -46,19 +69,10 @@ class StagingControllerTest(unittest.TestCase):
                 file = (open(file_path, 'rb'), file_name)
                 files.append(file)
 
-            response = self._upload_to_staging({'files': files})
-            self.assertEqual(response.status_code, 200)
-            self._assert_file_in_staging(test_file)
-            for file_name in file_names:
-                self._assert_file_in_staging(file_name)
+            return self._upload_to_staging({'files': files})
         finally:
             for file in files:
                 file[0].close()
-
-    def test_upload_file_extension_not_allowed(self):
-        response = self._upload_to_staging(
-            {'file': (io.BytesIO(b'asdf'), 'foo.asdf')})
-        self.assertEqual(response.status_code, 415)
 
     def _upload_to_staging(self, data):
         return self.client.post(
