@@ -9,7 +9,7 @@ test_object = 'some_tiffs'
 test_file = 'test.tif'
 
 
-class RepositoryControllerTest(unittest.TestCase):
+class StagingControllerTest(unittest.TestCase):
 
     resource_dir = os.environ['RESOURCE_DIR']
     staging_dir = os.environ['STAGING_DIR']
