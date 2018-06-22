@@ -28,7 +28,7 @@ class JobTypeTest(unittest.TestCase):
 
         response = self.client.get('/job_types')
 
-        self.assertEqual(len(job_types_from_files), len(json.loads(response.get_data(as_text=True))))
+        self.assertEqual(len(job_types_from_files), len(response.get_json()))
 
     def test_first_job_types_exists(self):
         """
