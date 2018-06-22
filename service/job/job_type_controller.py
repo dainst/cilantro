@@ -27,3 +27,15 @@ def get_job_types():
                           'about': job_meta})
 
     return jsonify(job_types)
+
+
+@job_type_controller.route('<job_type>', methods=['GET'])
+def get_job_type_detail(job_type):
+    """
+    Serves the contents of the YAML file for the job type definition.
+
+    :param str job_type: Name of the job
+    :return: YAML file content fo the job type
+    """
+    with open(os.path.join(job_types_dir, job_type) + '.yml', 'r') as f:
+        return f.read()

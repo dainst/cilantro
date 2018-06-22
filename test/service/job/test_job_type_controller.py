@@ -39,3 +39,18 @@ class JobTypeTest(unittest.TestCase):
         response_text = self.client.get('/job_types').get_data(as_text=True)
 
         self.assertIn(first_job_type_name, response_text)
+
+    def test_job_type_detail(self):
+        """
+        Checks if the file contents of the first file found in the job type
+        directory is the same as what is served by the API when called with that
+        name.
+
+        :return: None
+        """
+        first_job_type_file = os.listdir(job_types_dir)[0]
+        with open(os.path.join(job_types_dir, first_job_type_file), 'r') as f:
+            first_job_type_file_content = f.read()
+        response_text = self.client.get('/job_types/' + first_job_type_file.rsplit('.', 1)[0]).get_data(as_text=True)
+
+        self.assertEqual(first_job_type_file_content, response_text)
