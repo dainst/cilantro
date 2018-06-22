@@ -10,14 +10,35 @@ staging_dir = os.environ['STAGING_DIR']
 allowed_extensions = ['xml', 'pdf', 'tif', 'tiff', 'json']
 
 
+def _list_dir(dir_path):
+    tree = []
+    for entry in os.scandir(dir_path):
+        if entry.is_file():
+            tree.append({
+                "type": "file",
+                "name": entry.name
+            })
+        else:
+            tree.append({
+                "type": "directory",
+                "name": entry.name,
+                "content": _list_dir(os.path.join(dir_path, entry.name))
+            })
+    return tree
+
+
 @staging_controller.route('', methods=['GET'], strict_slashes=False)
 def list_staging():
     """
-    Lists files in the staging area.
+    Lists files and directories in the staging area.
 
-    :return: JSON array containing file names
+    Returns a complete recursive folder hierarchy.
+
+    :return: JSON array containing objects for files and folders
     """
-    return jsonify(os.listdir(staging_dir))
+
+    tree = _list_dir(staging_dir)
+    return jsonify(tree)
 
 
 @staging_controller.route('', methods=['POST'], strict_slashes=False)
