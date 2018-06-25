@@ -8,6 +8,8 @@ class InvalidNlpOperationException(Exception):
 
 def annotate(text, params):
     """
+    Annotates the given text.
+
     Uses the TextAnalyzer of the dainst/nlp_components in the
     nlp-worker docker container to annotate the text.
 
@@ -40,8 +42,10 @@ def _init_text_analyzer(text):
 
 def _validate_input(text, params):
     """
-    Validates the text and parameters given. This avoids long
-    initialising of text_analyzer if invalid text or params are provided.
+    Validates the text and parameters given.
+
+    This avoids long initialising of text_analyzer if invalid text or
+    params are provided.
 
     :param str text: the text to validate
     :param dict params: the parameters to validate
