@@ -23,7 +23,8 @@ Docker images can be found at [dockerhub](https://hub.docker.com/u/dainst/),
 Dockerfiles and Pipfiles at [github](https://github.com/dainst/cilantro-images).
 To build the images follow the instructions provided in the repository.
 To start run
-
+    
+    docker-compose pull
     docker-compose up
 
 To stop the application run:
