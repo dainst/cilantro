@@ -2,7 +2,7 @@ import os
 import unittest
 from pathlib import Path
 
-from workers.convert.image_pdf.converter import convert_pdf_to_txt
+from workers.convert.image_pdf.convert_pdf import convert_pdf_to_txt
 
 
 class PdfToTxtTest(unittest.TestCase):

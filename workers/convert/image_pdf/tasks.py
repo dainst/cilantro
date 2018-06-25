@@ -3,10 +3,12 @@ import os
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask
 
-from workers.convert.image_pdf.pdf import cut_pdf
-from workers.convert.image_pdf.jpg_to_pdf import convert_jpg_to_pdf, pdf_merge
-from workers.convert.image_pdf.converter \
-    import convert_tif_to_jpg, convert_pdf_to_txt, convert_pdf_to_tif
+
+from workers.convert.image_pdf.convert_image import convert_tif_to_jpg
+from workers.convert.image_pdf.convert_pdf import convert_pdf_to_txt, \
+    pdf_merge, cut_pdf
+from workers.convert.image_pdf.convert_image_pdf import convert_pdf_to_tif, \
+    convert_jpg_to_pdf
 
 
 class SplitPdfTask(BaseTask):
