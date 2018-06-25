@@ -1,7 +1,7 @@
 import os
 import yaml
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, abort
 
 job_type_controller = Blueprint('job_types', __name__)
 
@@ -37,5 +37,8 @@ def get_job_type_detail(job_type):
     :param str job_type: Name of the job
     :return: YAML file content fo the job type
     """
-    with open(os.path.join(job_types_dir, job_type) + '.yml', 'r') as f:
-        return f.read()
+    try:
+        with open(os.path.join(job_types_dir, job_type) + '.yml', 'r') as f:
+            return jsonify(yaml.safe_load(f.read()))
+    except FileNotFoundError:
+        abort(404)
