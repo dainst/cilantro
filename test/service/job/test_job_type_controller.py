@@ -1,6 +1,7 @@
 import unittest
 import os
 import yaml
+import json
 
 from run_service import app
 
@@ -38,8 +39,13 @@ class JobTypeTest(unittest.TestCase):
         """
         first_job_type_name = os.listdir(job_types_dir)[0].rsplit('.', 1)[0]
         response_text = self.client.get('/job_types').get_data(as_text=True)
+        response_json = json.loads(response_text)
 
-        self.assertIn(first_job_type_name, response_text)
+        type_found = False
+        for job_type in response_json:
+            type_found = (job_type['name'] == first_job_type_name) or type_found
+
+        self.assertTrue(type_found)
 
     def test_job_type_detail(self):
         """
