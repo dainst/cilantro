@@ -9,7 +9,8 @@ class InvalidNlpOperationException(Exception):
 def annotate(text, params):
     """
     Uses the TextAnalyzer of the dainst/nlp_components in the
-    nlp-worker docker container to annotate the text
+    nlp-worker docker container to annotate the text.
+
     :param str text: the given text to annotate
     :param dict params: some configuration options
     :return dict: generated annotations with metadata
@@ -26,7 +27,8 @@ def annotate(text, params):
 
 def _init_text_analyzer(text):
     """
-    Initialises the Text Analyzer of the nlp components
+    Initialises the Text Analyzer of the nlp components.
+
     :param str text: The text to Analyze
     :return class: The text_analyzer
     """
@@ -40,6 +42,7 @@ def _validate_input(text, params):
     """
     Validates the text and parameters given. This avoids long
     initialising of text_analyzer if invalid text or params are provided.
+
     :param str text: the text to validate
     :param dict params: the parameters to validate
     :raises NoTextProvided: if text is empty string
@@ -62,7 +65,8 @@ def _validate_input(text, params):
 
 def _run_annotation(text_analyzer, operations):
     """
-    Calls a method of the text_analyzer depending on the operations
+    Calls a method of the text_analyzer depending on the operations.
+
     :param class text_analyzer: the text_analyzer of nlp_components
     :param list operations: the operations to be excecuted
     :return dict: pure annotations without metadata
@@ -79,7 +83,8 @@ def _run_annotation(text_analyzer, operations):
 
 def _add_metadata(text_analyzer, annotations):
     """
-    Adds metadata to the annotations
+    Adds metadata to the annotations.
+
     :param class text_analyzer: the text_analyzer of nlp_components
     :param dict annotations: annotations made before
     :return dict: annotations with metadata

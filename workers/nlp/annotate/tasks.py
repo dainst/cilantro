@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 class AnnotateTask(BaseTask):
     """
     Annotates the text in nlp_text.txt with the params in
-    nlp_params.json and stores the annotations in annotations.json
+    nlp_params.json and stores the annotations in annotations.json.
     """
     name = "nlp.annotate"
 
