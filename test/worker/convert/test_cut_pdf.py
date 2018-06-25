@@ -1,10 +1,9 @@
-import json
 import shutil
 import os
 import unittest
 import logging
 
-from workers.convert.pdf.pdf import cut_pdf
+from workers.convert.image_pdf.pdf import cut_pdf
 
 log = logging.getLogger(__name__)
 
