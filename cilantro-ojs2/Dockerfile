@@ -65,14 +65,22 @@ RUN git clone https://github.com/dainst/ojs-dainst-frontpage-generator-plugin.gi
   && cd /var/www/html/ojs/plugins/generic/ojs-dainst-frontpage-generator-plugin \
   && git submodule init \
   && git submodule update
+RUN git clone https://github.com/dainst/ojs-cilantro-plugin.git /var/www/html/ojs/plugins/generic/ojs-cilantro-plugin \
+  && cd /var/www/html/ojs/plugins/generic/ojs-cilantro-plugin \
+  && git submodule init \
+  && git submodule update
 RUN git clone https://github.com/dainst/ojs-dainst-zenonlink-plugin.git /var/www/html/ojs/plugins/pubIds/zenon
 RUN git clone https://github.com/dainst/ojs-plugin-urnDNB -b ojs2 /var/www/html/ojs/plugins/pubIds/urnDNB
-
 
 # set up test journal and activate plugins
 RUN git clone https://github.com/dainst/ojs-config-tool.git /root/ojs-config-tool
 RUN service mysql start  \
   && php /root/ojs-config-tool/ojs2.php --theme=dainst --journal.theme=dainst --journal.plugins=${enable_plugins}
+
+# some final configs
+RUN a2enmod rewrite
+RUN chmod -R 777 /OJSfiles
+RUN chmod -R 777 /var/www/html/ojs/plugins/generic/ojs-dainst-frontpage-generator-plugin/lib/tcpdf/fonts/
 
 # startup script
 RUN echo "#!/bin/bash\nservice mysql start\napachectl -DFOREGROUND" >> /root/startup.sh  \
