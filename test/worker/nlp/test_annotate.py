@@ -9,7 +9,7 @@ from workers.nlp.annotate.annotate import annotate, NoTextProvidedException, \
 @patch('workers.nlp.annotate.annotate._init_text_analyzer')
 class AnnotateTest(unittest.TestCase):
 
-    def test_success(self, mock_init):
+    def test_valid_text_and_params(self, mock_init):
         mock_init.return_value = TextAnalyzer("success")
         text = "Perikles war ein Grieche. Genauso wie Aristoteles aus Stageira."
         params = {
