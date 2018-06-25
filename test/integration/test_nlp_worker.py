@@ -9,7 +9,9 @@ class NlpWorkerTest(JobTypeTest):
         data = self.post_job('nlp_pipe', {'paths': ['nlp']})
         job_id = data['job_id']
         self.assertEqual('Accepted', data['status'])
+
         self.assert_status(job_id, 'SUCCESS')
+        self.assert_file_in_repository(job_id, 'annotations.json')
 
         self.unstage_resource('nlp')
         self.remove_object_from_repository(job_id)

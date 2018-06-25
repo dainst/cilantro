@@ -1,4 +1,6 @@
 {
     "lang": "de",
-    "operation": "NER"
+    "operations": [
+        "NER"
+    ]
 }
