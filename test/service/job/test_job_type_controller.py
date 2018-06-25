@@ -1,5 +1,6 @@
 import unittest
 import os
+import yaml
 
 from run_service import app
 
@@ -42,9 +43,11 @@ class JobTypeTest(unittest.TestCase):
 
     def test_job_type_detail(self):
         """
+        Compares job file content with API return value as YAML.
+
         Checks if the file contents of the first file found in the job type
         directory is the same as what is served by the API when called with that
-        name.
+        name. Contents are both converted to YAML for comparison.
 
         :return: None
         """
@@ -53,4 +56,4 @@ class JobTypeTest(unittest.TestCase):
             first_job_type_file_content = f.read()
         response_text = self.client.get('/job_types/' + first_job_type_file.rsplit('.', 1)[0]).get_data(as_text=True)
 
-        self.assertEqual(first_job_type_file_content, response_text)
+        self.assertEqual(yaml.safe_load(first_job_type_file_content), yaml.safe_load(str(response_text)))
