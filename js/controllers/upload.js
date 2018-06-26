@@ -1,4 +1,4 @@
-angular.module('controller.upload', ['ngFileUpload']);
+angular.module('controller.upload', ['ngFileUpload'])
 
 .controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservice', 'messenger', 'repository',
 	function ($scope, Upload, $timeout, settings, webservice, messenger, repository) {
