@@ -1,7 +1,6 @@
-//inject angular file upload directives and services.
-var app = angular.module('controller.upload', ['ngFileUpload']);
+angular.module('controller.upload', ['ngFileUpload']);
 
-app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservice', 'messenger', 'repository',
+.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservice', 'messenger', 'repository',
 	function ($scope, Upload, $timeout, settings, webservice, messenger, repository) {
 
 
@@ -10,14 +9,13 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
 
 		$scope.dropFile = function(f)  {
 			console.log(f);
-		}
+		};
 
 		$scope.uploadFiles = function(files, uploadTask, callback) {
 
 		//folder upload: saving relative path of file and adding it to meta data, for rebuilding directory structure
-		var i;
 		var paths = [];
-		for (i = 0; i < files.length; i++) {
+		for (let i = 0; i < files.length; i++) {
 			if (files[i].path){
 				paths.push(files[i].path);
 			} else {
@@ -38,7 +36,6 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
 			data: {
 				task: uploadTask || "upload",
 				files: files,
-				data:  webservice.ojsisQuery(),
 				path: paths
 			}
 
@@ -70,9 +67,9 @@ app.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservic
 				callback(response)
 			}
 
-						$scope.invalidFiles = false;
+			$scope.invalidFiles = false;
 
-          // server error
+          	// server error
       },
       function uploadError(response) {
       	$scope.progress = 0;
