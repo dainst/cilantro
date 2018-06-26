@@ -8,8 +8,32 @@ The future Cilantro-Frontend
 - `mv settings.test.json settings.json`
 - `npm run server`
 
-## b) with cilantro as backend
-COMING SOON
+## b) example configuration with local cilantro as backend and local ojs2 with docker
+- get an OJS2
+    ```
+    cd /mydir
+    mkdir ojs-docker-container
+    cd ojs-docker-container
+    wget https://github.com/dainst/cilantro-images/blob/master/cilantro-ojs2/Dockerfile
+    docker run -p 4444:80 ojs2
+    ```
+- get cilantro
+    - Clone https://github.com/dainst/cilantro and follow install instructions
+    - `docker-compose up`
+   
+- set up salvia
+    - go to salvia-dir
+    - `npm install`
+    - create settings.json
+        ```
+        {
+          "rep_url":      "http://localhost:5000/staging/",
+          "server_url":   "http://localhost:5000/",
+          "importer_url": "http://localhost:9082/",
+          "ojs_url":      "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api/",
+        }
+        ```    
+    - `npm run server`
 
 ## c) with old PHP-Backend and Apache (lagacy-branch)
 - clone to /var/www/importer or similar
