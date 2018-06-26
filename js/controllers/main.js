@@ -44,7 +44,7 @@ angular
                     webservice.get(["ojs_url", 'getJournalInfo'])
                         .then((journalInfo) => {
                             console.log("journalInfo", journalInfo);
-                            journal.setConstraints(journalInfo);
+                            journal.setConstraints(journalInfo.data);
                             webservice.get('staging')
                                 .then((stagingFolder) => {
                                     console.log("stagingFolder", stagingFolder);

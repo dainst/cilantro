@@ -69,15 +69,17 @@
   },
 
   "getJournalInfo": {
-    "test": {
-      "id": "2",
-      "locales": [
-        "en_US",
-        "de_DE",
-        "ru_RU",
-        "es_ES",
-        "fr_FR"
-      ]
+    "data": {
+      "test": {
+        "id": "2",
+        "locales": [
+          "en_US",
+          "de_DE",
+          "ru_RU",
+          "es_ES",
+          "fr_FR"
+        ]
+      }
     }
   }
 
