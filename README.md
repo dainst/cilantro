@@ -27,7 +27,7 @@ The future Cilantro-Frontend
     - create settings.json
         ```
         {
-          "rep_url":      "http://localhost:5000/staging/",
+          "files_url":      "http://localhost:5000/staging/",
           "server_url":   "http://localhost:5000/",
           "importer_url": "http://localhost:9082/",
           "ojs_url":      "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api/",

@@ -52,7 +52,7 @@ angular
         for (let fileid in folder.dir) {
 
             console.log("URL", fileid);
-            var url = settings.rep_url + folder.dir[fileid].path;
+            var url = settings.files_url + folder.dir[fileid].path;
             console.log("URL is " + url);
 
             var promise = new Promise(

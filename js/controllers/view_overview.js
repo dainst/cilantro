@@ -53,12 +53,11 @@ angular
 
 
 		$scope.addArticle = function() {
-			var a = new journal.Article('Article ' +  journal.articles.length);
+			let a = new journal.Article('Article ' +  journal.articles.length);
 			journal.articles.push(a);
 			journal.articleStats.update();
 
 		}
-
 
 		$scope.continue = function() {
 			journal.cleanArticles();
@@ -68,7 +67,7 @@ angular
 		// open file externally
 		$scope.openDocument = function(article) {
 			console.log("OPEN " + article.filepath);
-			window.open(settings.rep_url + '/' + article.filepath.value.value);
+			window.open(settings.files_url + article.filepath.value.value);
 		}
 
 

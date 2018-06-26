@@ -1,5 +1,5 @@
 {
-  "rep_url":      "http://localhost/ ##staging_folder##",
+  "files_url":      "http://localhost/ ##staging_folder##",
   "server_url":   "http://localhost/importer/ ##backend##",
   "ojs_url":      "http:// ##ojs2 installation ##/plugins/generic/ojs-cilantro-plugin/api/",
 }

@@ -1,5 +1,5 @@
  {
-    "rep_url":      "http://localhost:3333/files/",
+    "files_url":    "http://localhost:3333/files/",
     "server_url":   "http://localhost:3333/",
     "importer_url": "http://localhost:9082",
     "ojs_url":      "http://localhost:3333/",
