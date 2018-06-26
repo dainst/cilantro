@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_file, abort
 from werkzeug.utils import secure_filename
 
 staging_controller = Blueprint('staging', __name__)
@@ -40,6 +40,28 @@ def list_staging():
     tree = _list_dir(staging_dir)
     return jsonify(tree)
 
+@staging_controller.route(
+    '/<path:path>',
+    methods=['GET'],
+    strict_slashes=False
+)
+def get_path(path):
+    """
+    Forwards a file form staging controller
+
+    Returns HTTP status code 400 if file was not found
+
+    :param path:
+    :return:
+    """
+    abs_path = os.path.join(staging_dir, path)
+    if os.path.isdir(abs_path):
+        return jsonify(os.listdir(abs_path))
+    elif os.path.isfile(abs_path):
+        return send_file(abs_path)
+    else:
+        abort(404)
+
 
 @staging_controller.route('', methods=['POST'], strict_slashes=False)
 def upload_to_staging():
@@ -76,3 +98,4 @@ def _upload_file(file):
 def _is_allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in allowed_extensions
+

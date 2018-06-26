@@ -1,5 +1,6 @@
 import io
 import os
+import shutil
 import unittest
 from pathlib import Path
 
@@ -22,6 +23,7 @@ class StagingControllerTest(unittest.TestCase):
         for file_name in os.listdir(object_path):
             self._remove_file_from_staging(file_name)
         self._remove_file_from_staging(test_file)
+        self._remove_dir_from_staging(test_object)
 
     def test_upload_single_file(self):
         file_path = os.path.join(self.resource_dir, 'objects',
@@ -60,6 +62,15 @@ class StagingControllerTest(unittest.TestCase):
         staged_files = [e for e in response_object if e['name'] in file_names]
         self.assertEqual(len(staged_files), len(file_names))
 
+    def test_get_file(self):
+        self._copy_object_to_staging('objects', test_object)
+        response = self.client.get(f'/staging/{test_object}/{test_file}')
+        self.assertEquals(response.status_code, 200)
+
+    def test_get_file_not_found(self):
+        response = self.client.get(f'/staging/{test_object}/{test_file}')
+        self.assertEquals(response.status_code, 404)
+
     def _upload_folder_to_staging(self, object_path):
         file_names = os.listdir(object_path)
         files = []
@@ -91,3 +102,13 @@ class StagingControllerTest(unittest.TestCase):
         file_path = os.path.join(self.staging_dir, file_name)
         if os.path.isfile(file_path):
             os.remove(file_path)
+
+    def _remove_dir_from_staging(self, dir_name):
+        dir_path = os.path.join(self.staging_dir, dir_name)
+        if os.path.isdir(dir_path):
+            shutil.rmtree(dir_path)
+
+    def _copy_object_to_staging(self, folder, filename):
+        source = os.path.join(self.resource_dir, folder, filename)
+        target = os.path.join(self.staging_dir, filename)
+        shutil.copytree(source, target)
