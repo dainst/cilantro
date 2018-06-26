@@ -41,7 +41,7 @@ angular
 
 		    return settings.loadingPromise
                 .then(() => {
-                    webservice.get(["ojs_url", 'getJournalInfo'])
+                    webservice.get(["ojs_url", 'journalInfo'])
                         .then((journalInfo) => {
                             console.log("journalInfo", journalInfo);
                             journal.setConstraints(journalInfo.data);

@@ -68,7 +68,7 @@
     "warnings":[]
   },
 
-  "getJournalInfo": {
+  "journalInfo": {
     "data": {
       "test": {
         "id": "2",
