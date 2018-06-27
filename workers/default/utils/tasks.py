@@ -19,7 +19,13 @@ class ForeachTask(BaseTask):
         work_path = self.get_work_path()
         group_tasks = []
         regex = re.compile(pattern)
-        files = [f for f in os.listdir(work_path) if regex.search(f)]
+        files = []
+
+        for f in _absolute_file_paths(work_path):
+            print(regex.search(f))
+            if regex.search(f):
+                files.append(f)
+
         for file in files:
             params = {
                 'job_id': self.job_id,
@@ -43,3 +49,9 @@ class CleanupWorkdirTask(BaseTask):
 
 
 CleanupWorkdirTask = celery_app.register_task(CleanupWorkdirTask())
+
+
+def _absolute_file_paths(directory):
+    for dirpath, _, filenames in os.walk(directory):
+        for f in filenames:
+            yield os.path.abspath(os.path.join(dirpath, f))
