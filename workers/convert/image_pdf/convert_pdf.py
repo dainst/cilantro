@@ -13,7 +13,7 @@ def convert_pdf_to_txt(source_file, output_dir):
         index = 0
         # Needed as pdftotext is not a Python list with .index() capability.
         for page in pdf:
-            output = open('%s%d.txt' % (output_dir, index), 'wb')
+            output = open(os.path.join(output_dir, f'{index}.txt'), 'wb')
             output.write(page.encode('utf-8'))
             output.close()
             index = index + 1
