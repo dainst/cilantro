@@ -510,6 +510,7 @@ angular
 
 	editables.listitem = function(list, selected, noneallowed) {
 		let obj = editables.base(selected, false, false);
+        list = list || [];
 		obj.type = 'listitem';
 		obj.noneallowed = (noneallowed === true);
 		obj.check =	function() {

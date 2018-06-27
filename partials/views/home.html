@@ -29,7 +29,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Select PDF file (or folder) from upload folder</div>
 			<div class="panel-body">
-				<select class="form-control" ng-model="journal.data.importFilePath">
+				<select class="form-control" ng-model="dataset.data.importFilePath">
 					<option ng-repeat="file in repository.list track by $index" value='{{file.path}}'>{{file.type==="directory" ? "[DIR]" : ""}}{{file.path}}</option>
 				</select>
 			</div>
@@ -74,12 +74,12 @@
 		<div class="panel panel-default" ng-show="protocols.isSelected()">
 			<div class="panel-heading">Issue Metadata</div>
 			<div class="panel-body">
-				<table class='journal-table table'>
+				<table class='dataset-table table'>
 					<thead></thead>
 					<tbody>
-					<tr ng-repeat="(id, field) in journal.data track by $index">
-						<td ng-show="journal.settings.hideOnHomepage.indexOf(id)">{{journal.descriptions[id]}}</td>
-						<td ng-show="journal.settings.hideOnHomepage.indexOf(id)">
+					<tr ng-repeat="(id, field) in dataset.data track by $index">
+						<td ng-show="dataset.settings.hideOnHomepage.indexOf(id)">{{labels.get("main", id)}}</td>
+						<td ng-show="dataset.settings.hideOnHomepage.indexOf(id)">
 							<span editable item="field" />
 						</td>
 					</tr>

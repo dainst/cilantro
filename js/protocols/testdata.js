@@ -2,8 +2,8 @@
 
 angular
 .module('module.protocols.testdata', [])
-.factory("testdata", ['protocolregistry', 'journal', 'documentsource',
-	function(protocolregistry, journal, documentsource) {
+.factory("testdata", ['protocolregistry', 'dataset', 'documentsource',
+	function(protocolregistry, dataset, documentsource) {
 
 
 	let journalCtrl = new protocolregistry.Protocol('testdata');
@@ -18,30 +18,30 @@ angular
 
 	journalCtrl.onInit = function() {
 
-		let a = new journal.Article({
+		let a = new dataset.Article({
 			zenonId: "000371801",
 			author: {firstname:'1peter', lastname: '1parker'},
 			pages: 1
 		});
 		a._.autoFetchFromZenon = true;
 
-		journal.articles.push(a);
-		journal.articles.push(new journal.Article({
+		dataset.articles.push(a);
+		dataset.articles.push(new dataset.Article({
 			title: "Something else",
 			author: {firstname:'2peter', lastname: '2parker'},
 			pages: 1
 		}));
-		journal.articles.push(new journal.Article({
+		dataset.articles.push(new dataset.Article({
 			title: "Geh, Schwurbel!",
 			author: {firstname:'3peter', lastname: '3parker'},
 			pages: 1
 		}));
-		journal.articles.push(new journal.Article({
+		dataset.articles.push(new dataset.Article({
 			title: "DER ARTIKEL",
 			author: {firstname:'4Piller', lastname: '4Mann'},
 			pages: 1
 		}));
-		journal.articles.push(new journal.Article({
+		dataset.articles.push(new dataset.Article({
 			title: "Alter, wie das Nervt",
 			author: {firstname:'5Piller', lastname: '5Mann'},
 			pages: 1
@@ -50,10 +50,10 @@ angular
 	};
 
 	journalCtrl.onSelect= function() {
-		journal.data.volume.value.value = Math.round(Math.random()*10000);
-		journal.data.year.value.value = Math.round(Math.random()*10000);
-		journal.data.number.value.value = Math.round(Math.random()*10000);
-        journal.data.allow_upload_without_file = true;
+		dataset.data.volume.value.value = Math.round(Math.random()*10000);
+		dataset.data.year.value.value = Math.round(Math.random()*10000);
+		dataset.data.number.value.value = Math.round(Math.random()*10000);
+        dataset.data.allow_upload_without_file = true;
 	}
 
 

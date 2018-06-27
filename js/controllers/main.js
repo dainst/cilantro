@@ -4,8 +4,8 @@ angular
 
 .module('controller.main', [])
 
-.controller('main',	['$scope', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'journal', 'repository', 'steps',
-	function ($scope, editables, webservice, settings, messenger, protocolregistry, documentsource, journal, repository, steps) {
+.controller('main',	['$scope', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'dataset', 'repository', 'steps',  'labels',
+	function ($scope, editables, webservice, settings, messenger, protocolregistry, documentsource, dataset, repository, steps, labels) {
 
 		/* debug */
 		$scope.cacheKiller = '?nd=' + Date.now();
@@ -13,8 +13,8 @@ angular
 		/* settings / version info */
 		$scope.settings = settings;
 
-		/* journal */
-		$scope.journal = journal;
+		/* dataset */
+		$scope.dataset = dataset;
 
 		/* backendData */
 		$scope.backendData = {}; //some backend specific data.. will be a far more complex object when there are different backends
@@ -24,6 +24,9 @@ angular
 
         /* steps */
         $scope.steps = steps;
+
+        /* labels */
+        $scope.labels = labels;
 
 		/* initialize */
         $scope.isLoading = true;
@@ -44,13 +47,14 @@ angular
                     webservice.get(["ojs_url", 'journalInfo'])
                         .then((journalInfo) => {
                             console.log("journalInfo", journalInfo);
-                            journal.setConstraints(journalInfo.data);
+                            dataset.setConstraints(journalInfo.data);
                             webservice.get('staging')
                                 .then((stagingFolder) => {
                                     console.log("stagingFolder", stagingFolder);
                                     $scope.repository.update(stagingFolder);
                                     $scope.protocols.selectLast();
                                     $scope.isLoading = false;
+
                                     refreshView();
                                 })
                                 .catch(failFatal);
@@ -66,7 +70,7 @@ angular
 			steps.isStarted = false;
 			messenger.content.stats = {};
 			documentsource.reset();
-			journal.reset();
+			dataset.reset();
 			$scope.init().then(function() {
                 messenger.alert('Restart Importer', false);
                 steps.change('home');
@@ -98,17 +102,17 @@ angular
                 }
                 console.log("select protocol " + id);
                 $scope.protocol = $scope.protocols.list[id];
-                journal.reset();
-                if (settings.devMode() && (journal.data.importFilePath === "")) {
+                dataset.reset();
+                if (settings.devMode() && (dataset.data.importFilePath === "")) {
                     let file = $scope.repository.getFirstFile();
-                    journal.data.importFilePath = file ? file.path : '';
+                    dataset.data.importFilePath = file ? file.path : '';
                 }
                 if ($scope.protocol && angular.isFunction($scope.protocol.onSelect)) {
                     $scope.protocol.onSelect()
                 }
             },
             start: function() {
-                if (!journal.data.allow_upload_without_file && !journal.data.importFilePath) {
+                if (!dataset.data.allow_upload_without_file && !dataset.data.importFilePath) {
                     messenger.alert("Please select a file or folder to upload!", true);
                     return false;
                 }

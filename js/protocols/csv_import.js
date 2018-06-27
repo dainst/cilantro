@@ -2,23 +2,23 @@ let mod = angular.module('module.protocols.csv_import', ['ui.bootstrap']);
 
 // @ todo this (and every protocol) should inherit from generic...
 
-mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregistry', 'documentsource', 'journal', 'messenger',
-	function($rootScope, $uibModal, editables, protocolregistry, documentsource, journal, messenger) {
+mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregistry', 'documentsource', 'dataset', 'messenger',
+	function($rootScope, $uibModal, editables, protocolregistry, documentsource, dataset, messenger) {
 
         let journalCtrl = new protocolregistry.Protocol('csv_import');
 
         journalCtrl.description = "Import and get metadata from a CSV-file";
 
 		journalCtrl.onSelect = function() {
-			journal.data.identification.select('year');
-			journal.data.auto_publish_issue.value.value = false;
-			journal.data.default_create_frontpage = true;
-			journal.data.number.mandatory = false;
-			journal.data.volume.mandatory = false;
+            dataset.data.identification.select('year');
+            dataset.data.auto_publish_issue.value.value = false;
+            dataset.data.default_create_frontpage = true;
+            dataset.data.number.mandatory = false;
+            dataset.data.volume.mandatory = false;
 		}
 
 		journalCtrl.onInit = function() {
-			documentsource.getDocuments(journal.data.importFilePath);
+			documentsource.getDocuments(dataset.data.importFilePath);
 		}
 
 		journalCtrl.onGotFile = function(fileName) {
@@ -39,8 +39,8 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 
 			modalInstance.result.then(function (filled_columns) {
 				journalCtrl.columns = filled_columns;
-				for (let i = 0, ids = Object.keys(journal.articles); i < ids.length; i++) {
-					$rootScope.$broadcast('thumbnaildataChanged', journal.articles[ids[i]]);
+				for (let i = 0, ids = Object.keys(dataset.articles); i < ids.length; i++) {
+					$rootScope.$broadcast('thumbnaildataChanged', dataset.articles[ids[i]]);
 				}
 				journalCtrl.ready = true;
 			}, function (a) {
@@ -55,7 +55,7 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 	}])
 .run(function(csv_import) {csv_import.register()});
 
-mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', function($scope, $uibModalInstance, journal) {
+mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', function($scope, $uibModalInstance, dataset) {
 
 	/* raw csv data */
 	$scope.raw_csv = "";
@@ -73,14 +73,12 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	$scope.cols_types = {}
 
 	/* available column types */
-	let cols_types = Object.keys(new journal.Article()).concat(["pageFrom", "pageTo"])
+	let cols_types = Object.keys(new dataset.Article()).concat(["pageFrom", "pageTo"])
 	for (let i = 0; i < cols_types.length; i++) {
 		$scope.cols_types[normalize(cols_types[i])] = cols_types[i];
 	}
 
 	//console.log($scope.cols_types)
-
-    $scope.col_type_lab
 
 	$scope.columns = {}
 
@@ -159,12 +157,12 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	}
 
     $scope.getLabel = function(key) {
-        if (!angular.isDefined(journal.articleDescriptions[key])) {
+        if (!angular.isDefined(dataset.articleDescriptions[key])) {
             return key;
         }
-        return (angular.isDefined(journal.articleDescriptions[key].description)) ?
-            journal.articleDescriptions[key].description :
-            journal.articleDescriptions[key].title;
+        return (angular.isDefined(dataset.articleDescriptions[key].description)) ?
+            dataset.articleDescriptions[key].description :
+            dataset.articleDescriptions[key].title;
     }
 
 	/* mighty functions */
@@ -192,7 +190,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 		let last_length = 0;
 		let numbersFieldFound = false;
 		let numberFields = ['pagefrom', 'pageto'];
-		let boolFields = ['createfrontpage', 'autopublish'];
+		let boolFields = ['create_frontpage', 'autopublish'];
 		let longTextFields = ['abstract', 'title'];
 		let areHeadlines = true;
 
@@ -316,12 +314,12 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 	}
 
 	function CSV2Articles() {
-		Object.keys(journal.settings.overviewColumns).map(function(key) {
-			journal.settings.overviewColumns[key].checked = false;
+		Object.keys(dataset.settings.overviewColumns).map(function(key) {
+            dataset.settings.overviewColumns[key].checked = false;
 		});
 
 		for (let r = ($scope.options.ignoreFirstRow ? 1 : 0); r < $scope.csv.length; r++) {
-			let article = new journal.Article();
+			let article = new dataset.Article();
 
 			for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
 				let col = $scope.columns[cols[i]].selected;
@@ -352,21 +350,21 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'journal', f
 						article._.autoFetchFromZenon = true; //!
 					}
 
-					journal.settings.overviewColumns[prop].checked = true;
+                    dataset.settings.overviewColumns[prop].checked = true;
 
 				} else if (col === "pagefrom") {
 					article.pages.value.startPdf = parseInt($scope.csv[r][cols[i]]);
-					journal.settings.overviewColumns.pages.checked = true;
+                    dataset.settings.overviewColumns.pages.checked = true;
 
 				} else if (col === "pageto") {
 					article.pages.value.endPdf = parseInt($scope.csv[r][cols[i]]);
-					journal.settings.overviewColumns.pages.checked = true;
+                    dataset.settings.overviewColumns.pages.checked = true;
 
 				}
 
 			}
 
-			journal.articles.push(article);
+            dataset.articles.push(article);
 		}
 	}
 

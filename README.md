@@ -69,7 +69,7 @@ There is no build process right now.
     - atom: settings->editor
 - names
     - for js-variables: camelCase 
-    - for members of datamodel (journal, article): under_score
+    - for members of datamodel (dataset, article): under_score
     - private functions with _ prefix
     - in css: snake-case 
     - filenames snake-case myController in my-controller.js

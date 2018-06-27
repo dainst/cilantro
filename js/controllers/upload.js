@@ -60,7 +60,7 @@ angular.module('controller.upload', ['ngFileUpload'])
 
 			if (typeof repository.repository !== "undefined") { // because this controller is also used in context fo csv dialogue
 				repository.update(response.data.repository);
-				journal.data.importFilePath = response.data.uploadedFiles[0];
+				dataset.data.importFilePath = response.data.uploadedFiles[0];
 			}
 
 			if (angular.isFunction(callback)) {

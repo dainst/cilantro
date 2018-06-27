@@ -20,15 +20,15 @@
 		<div class="col-lg-6">
 
 			<div class="panel panel-default">
-				<div class="panel-heading">Journal Metadata</div>
+				<div class="panel-heading">dataset Metadata</div>
 
-				<table class='journal-table table'>
+				<table class='dataset-table table'>
 
 					<thead></thead>
 					<tbody>
-                        <tr ng-repeat="(field, value) in journal.data track by $index">
-                            <td>{{journal.descriptions[field]}}</td>
-                            <td ng-model="journal.data[field]">
+                        <tr ng-repeat="(field, value) in dataset.data track by $index">
+                            <td>{{labels.get("main", field)}}</td>
+                            <td ng-model="dataset.data[field]">
                                 <span editable item="value" />
                             </td>
                         </tr>
@@ -47,9 +47,9 @@
 					<h2></h2>
 					<p>Status:</p>
 					<ul>
-						<li>Journal metadata: <span ng-show="journal.check()" class="badge badge-default alert-success">OK</span></li>
+						<li>Journal metadata: <span ng-show="dataset.check()" class="badge badge-default alert-success">OK</span></li>
 						<li>Articles ready to upload:
-							<span class="badge badge-default alert-success">{{journal.articleStats.data.confirmed}}</span>
+							<span class="badge badge-default alert-success">{{dataset.articleStats.data.confirmed}}</span>
 						</li>
 					</ul>
 				</div>

@@ -1,7 +1,7 @@
 angular
 .module('module.documentsource', ['module.messenger', 'module.webservice'])
-.factory('documentsource', ['$rootScope', 'settings', 'webservice', 'messenger', 'journal', 'editables','repository',
-    function($rootScope, settings, webservice, messenger, journal, editables,repository) {
+.factory('documentsource', ['$rootScope', 'settings', 'webservice', 'messenger', 'dataset', 'editables','repository',
+    function($rootScope, settings, webservice, messenger, dataset, editables,repository) {
 
     var folder = {};
 
@@ -87,12 +87,12 @@ angular
                             folder.files[this.url] = fileInfo;
 
                             let metadataLoaded = function () {
-                                journal.loadedFiles[this.url] = {
+                                dataset.loadedFiles[this.url] = {
                                     size: this.size,
                                     url: this.url,
                                     pagecontext: this.pagecontext
                                 };
-                                console.log("loadedFiles updated", journal.loadedFiles);
+                                console.log("loadedFiles updated", dataset.loadedFiles);
                                 messenger.alert('document nr ' + Object.keys(folder.files).length + ' loaded');
                                 $rootScope.$broadcast('gotFile', this.url);
                                 refreshView();
@@ -256,8 +256,8 @@ angular
             ctx.globalCompositeOperation = "destination-over";
             ctx.fillStyle = "#123456";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            journal.thumbnails[containerId] = canvas.toDataURL();
-            folder.stats.thumbnails = Object.keys(journal.thumbnails).length;
+            dataset.thumbnails[containerId] = canvas.toDataURL();
+            folder.stats.thumbnails = Object.keys(dataset.thumbnails).length;
             refreshView()
         });
 
@@ -265,8 +265,8 @@ angular
 
     folder.removeThumbnail = function(containerId) {
         console.log("thumbnail removed", containerId);
-        delete journal.thumbnails[containerId];
-        folder.stats.thumbnails = Object.keys(journal.thumbnails).length;
+        delete dataset.thumbnails[containerId];
+        folder.stats.thumbnails = Object.keys(dataset.thumbnails).length;
     }
 
     /**

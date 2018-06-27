@@ -10,14 +10,16 @@ angular
 	'idai.components',
 	'idai.templates',
 
+    'module.labels',
 	'module.documentsource',
-	'module.journal',
+	'module.dataset',
 	'module.protocolregistry',
 	'module.infobox',
 	'module.messenger',
 	'module.webservice',
 	'module.repository',
 	'module.steps',
+    'module.journal_issue',
 
 	'controller.main',
 

@@ -34,7 +34,7 @@ module.exports = {
     },
     start: {
         protocolSelect: element(by.model("protocols.current")),
-        fileSelect: element(by.model('journal.data.importFilePath')),
+        fileSelect: element(by.model('dataset.data.importFilePath')),
         startBtn: element(by.css('.row.toprow .btn-primary')),
     },
     upload: {

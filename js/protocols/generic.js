@@ -1,7 +1,7 @@
 angular
 .module("module.protocols.generic", [])
-.factory("generic", ['$rootScope', 'editables', 'protocolregistry', 'documentsource', 'journal', 'messenger',
-	function($rootScope, editables, protocolregistry, documentsource, journal, messenger) {
+.factory("generic", ['$rootScope', 'editables', 'protocolregistry', 'documentsource', 'dataset', 'messenger',
+	function($rootScope, editables, protocolregistry, documentsource, dataset, messenger) {
 
 	let journalCtrl = new protocolregistry.Protocol('generic');
 
@@ -9,15 +9,15 @@ angular
 
 
 	journalCtrl.onSelect = function() {
-		journal.data.identification.select('year');
-		journal.data.auto_publish_issue.value.value = false;
-		journal.data.default_create_frontpage = true;
-		journal.data.number.mandatory = false;
-		journal.data.volume.mandatory = false;
+		dataset.data.identification.select('year');
+		dataset.data.auto_publish_issue.value.value = false;
+		dataset.data.default_create_frontpage = true;
+		dataset.data.number.mandatory = false;
+		dataset.data.volume.mandatory = false;
 	}
 
 	journalCtrl.onInit = function() {
-		documentsource.getDocuments(journal.data.importFilePath);
+		documentsource.getDocuments(dataset.data.importFilePath);
 	}
 
 
@@ -27,7 +27,7 @@ angular
 
 		let file = documentsource.files[fileName];
 
-		let article = new journal.Article();
+		let article = new dataset.Article();
 		article.filepath.value.value = file.url;
 		article.title.value.value = !angular.isUndefined(file.meta.Title) ? file.meta.Title : '';
 		article.abstract.value.value = !angular.isUndefined(file.meta.Subject) ? file.meta.Subject : '';
@@ -43,7 +43,7 @@ angular
 			}
 		}
 
-		journal.articles.push(article);
+		dataset.articles.push(article);
 		documentsource.stats.analyzed += 1;
 		documentsource.updateThumbnail(article);
 

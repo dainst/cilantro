@@ -101,7 +101,7 @@ table.author_box td {
 }
 
 
-#journal-table > tr > td {
+#dataset-table > tr > td {
 	border: 1px solid silver
 	
 }
@@ -145,7 +145,7 @@ tfoot > tr > td {
 }
 
 
-table.journal-table td,
+table.dataset-table td,
 table.article-table td {
 	padding: 0px !important;
 	vertical-align: middle !important;
@@ -171,7 +171,7 @@ table.data-table > tbody > tr > td:last-child {
 	text-align: left
 }
 
-table.journal-table .alert,
+table.dataset-table .alert,
 table.split-table .alert,
 table.article-table .alert {
 	margin-bottom: 0.1em;

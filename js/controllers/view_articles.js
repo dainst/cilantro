@@ -5,17 +5,19 @@ angular
 
 .module('controller.view_articles', [])
 
-.controller('view_articles', ['$scope', '$http', '$sce', 'settings', 'webservice', 'editables', 'messenger', 'journal', 'steps',
-	function($scope, $http, $sce, settings, webservice, editables, messenger, journal, steps) {
+.controller('view_articles', ['$scope', '$http', '$sce', 'settings', 'webservice', 'editables', 'messenger', 'dataset', 'steps',
+	function($scope, $http, $sce, settings, webservice, editables, messenger, dataset, steps) {
 
 		const zenonEndpoint = $sce.trustAsResourceUrl('https://zenon.dainst.org/data/biblio/select');
+
+		console.log(dataset.get())
 
 		$scope.currentArticle = -1;
 
 		$scope.init = function() {
 			messenger.ok();
-			messenger.content.stats = journal.articleStats.data;
-			journal.articleStats.update();
+			messenger.content.stats = dataset.articleStats.data;
+			dataset.articleStats.update();
 			$scope.selectArticle(0);
 		}
 
@@ -24,25 +26,25 @@ angular
 		}
 
 		$scope.addArticle = function(b, select) {
-			let a = new journal.Article('Article ' +  journal.articles.length);
+			let a = new dataset.Article('Article ' +  dataset.articles.length);
 
 			if (!angular.isUndefined(b)) {
 				angular.extend(a, b);
 			}
-			journal.articles.push(a);
+			dataset.articles.push(a);
 			if (select) {
-				$scope.selectArticle(journal.articles.length -1);
+				$scope.selectArticle(dataset.articles.length -1);
 			}
 
-			journal.articleStats.update();
+			dataset.articleStats.update();
 
 		}
 
 		$scope.selectArticle = function(k) {
 			$scope.currentArticle = k;
-			if (journal.articles[$scope.currentArticle]._.autoFetchFromZenon && journal.articles[$scope.currentArticle].zenonId.value.value !== '') {
+			if (dataset.articles[$scope.currentArticle]._.autoFetchFromZenon && dataset.articles[$scope.currentArticle].zenonId.value.value !== '') {
 				$scope.autoFetchFromZenon()
-			} else if (!journal.articles[$scope.currentArticle]._.reportToZenon) {
+			} else if (!dataset.articles[$scope.currentArticle]._.reportToZenon) {
 				$scope.compareWithZenon();
 			}
 
@@ -50,13 +52,13 @@ angular
 		}
 
 		$scope.selectNextArticle = function() {
-			for (let i = $scope.currentArticle; i < journal.articles.length; i++) {
-				if (typeof journal.articles[i]._.confirmed === "undefined") {
+			for (let i = $scope.currentArticle; i < dataset.articles.length; i++) {
+				if (typeof dataset.articles[i]._.confirmed === "undefined") {
 					return $scope.selectArticle(i)
 				}
 			}
 			for (let i = 0; i < $scope.currentArticle; i++) {
-				if (typeof journal.articles[i]._.confirmed === "undefined") {
+				if (typeof dataset.articles[i]._.confirmed === "undefined") {
 					return $scope.selectArticle(i)
 				}
 			}
@@ -64,11 +66,11 @@ angular
 		}
 
 		$scope.isArticleSelected = function() {
-			return ($scope.currentArticle !== -1) && (journal.articles.length > 0)
+			return ($scope.currentArticle !== -1) && (dataset.articles.length > 0)
 		};
 
 		$scope.checkArticle = function() {
-			let article = journal.articles[$scope.currentArticle];
+			let article = dataset.articles[$scope.currentArticle];
 			let invalid = 0;
 			angular.forEach(article, function(property, id) {
 				if ((typeof property !== "undefined") && (typeof property.check === "function") && (property.check() !== false)) {
@@ -79,7 +81,7 @@ angular
 		}
 
 		$scope.confirmArticle = function() {
-			let article = journal.articles[$scope.currentArticle];
+			let article = dataset.articles[$scope.currentArticle];
 
 			if (article) {
 
@@ -87,14 +89,14 @@ angular
 				// prepare for uploading
 				/*delete article.thumbnail;
 				 article.pages.context = {offset: parseInt(article.pages.context.offset)}
-				 journal.articlesConfirmed.push(article);
+				 dataset.articlesConfirmed.push(article);
 				 */
 
-				//journal.articles.splice($scope.currentArticle, 1);
+				//dataset.articles.splice($scope.currentArticle, 1);
 			}
-			journal.articleStats.update();
+			dataset.articleStats.update();
 
-			if (journal.articleStats.data.undecided === 0){
+			if (dataset.articleStats.data.undecided === 0){
 				$scope.continue();
 			} else {
 				$scope.selectNextArticle();
@@ -106,11 +108,11 @@ angular
 			console.log('Delete Article ' + $scope.currentArticle);
 			$scope.resetZenon();
 
-			journal.articles[$scope.currentArticle]._.confirmed = false;
+			dataset.articles[$scope.currentArticle]._.confirmed = false;
 
-			journal.articleStats.update();
+			dataset.articleStats.update();
 
-			if (journal.articleStats.data.undecided === 0){
+			if (dataset.articleStats.data.undecided === 0){
 				$scope.continue();
 			} else {
 				$scope.selectNextArticle();
@@ -145,7 +147,7 @@ angular
 				'pages':		doc.physical ? doc.physical[0] : '',
 				'date':			doc.publishDate ? doc.publishDate[0] : '',
 				'format':		doc.format ? doc.format[0] : '',
-				'journal':		doc.container_title || doc.hierarchy_parent_title,
+				'dataset':		doc.container_title || doc.hierarchy_parent_title,
 				'id':			doc.id
 			};
 
@@ -164,16 +166,16 @@ angular
 
 		$scope.compareWithZenon = function(more) {
 
-            journal.articles[$scope.currentArticle]._.reportToZenon = false;
+            dataset.articles[$scope.currentArticle]._.reportToZenon = false;
 
-			if (($scope.currentArticle === -1) || (typeof journal.articles[$scope.currentArticle] === 'undefined')) {
+			if (($scope.currentArticle === -1) || (typeof dataset.articles[$scope.currentArticle] === 'undefined')) {
 				return;
 			}
 
 			let term;
 			if (!more) {
 				$scope.resetZenon();
-				term = journal.articles[$scope.currentArticle].title.value.value;
+				term = dataset.articles[$scope.currentArticle].title.value.value;
 			} else {
 				term = $scope.zenon.search
 			}
@@ -184,7 +186,7 @@ angular
 
 			console.log('Compare with Zenon; search for ' + term);
 
-			journal.articles[$scope.currentArticle].zenonId.value.value = '';
+			dataset.articles[$scope.currentArticle].zenonId.value.value = '';
 
 			$scope.zenon.selected = -1;
 
@@ -226,7 +228,7 @@ angular
 					method: 'JSONP',
 					url: zenonEndpoint,
 					params: {
-						q: 'id:' + journal.articles[$scope.currentArticle].zenonId.value.value,
+						q: 'id:' + dataset.articles[$scope.currentArticle].zenonId.value.value,
 						wt:	'json'
 					},
 					jsonpCallbackParam: 'json.wrf'
@@ -239,19 +241,19 @@ angular
 						$scope.zenon.results = $scope.zenon.results.concat(data.response.docs.map($scope.zenonMapDoc));
 						$scope.zenon.found = Number(data.response.numFound);
 						$scope.zenon.start = Number(data.responseHeader.params.start) + 10;
-						$scope.zenon.search = journal.articles[$scope.currentArticle].zenonId.value.value;
+						$scope.zenon.search = dataset.articles[$scope.currentArticle].zenonId.value.value;
 						$scope.zenon.searchId = true;
 						if ($scope.zenon.found === 1) {
 							$scope.adoptFromZenon(0);
 							messenger.alert('Data fetched from zenon');
 						}
-						journal.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
+						dataset.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
 
 					},
 					function(err) {
 						console.error(err);
 						messenger.alert('Could not connect to Zenon!', true);
-						journal.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
+						dataset.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
 					}
 				);
 		}
@@ -259,7 +261,7 @@ angular
 		$scope.selectFromZenon = function(index) {
 			console.log('select = ' + index, $scope.zenon.results[index]);
 			$scope.zenon.selected = ($scope.zenon.selected === index) ? -1 : index;
-			journal.articles[$scope.currentArticle].zenonId.value.value = ($scope.zenon.selected === -1) ? '' : $scope.zenon.results[index].id;
+			dataset.articles[$scope.currentArticle].zenonId.value.value = ($scope.zenon.selected === -1) ? '' : $scope.zenon.results[index].id;
 
 		}
 
@@ -281,7 +283,7 @@ angular
 				authors = authors.concat(doc.author2);
 			}
 
-			let article = journal.articles[$scope.currentArticle];
+			let article = dataset.articles[$scope.currentArticle];
 
 			article.title.set(doc.title);
 			// article.abstract.value.value = abstract; // @ TODO adopt abstract from zenon?
@@ -295,8 +297,8 @@ angular
 		};
 
 		$scope.markAsMissingZenon = function() {
-			journal.articles[$scope.currentArticle].zenonId.value.value = '(((new)))';
-			journal.articles[$scope.currentArticle]._.reportToZenon = true;
+			dataset.articles[$scope.currentArticle].zenonId.value.value = '(((new)))';
+			dataset.articles[$scope.currentArticle]._.reportToZenon = true;
 			//$scope.sendToZenon();
 		}
 

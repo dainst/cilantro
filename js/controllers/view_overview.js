@@ -9,29 +9,12 @@ angular
 
 .module('controller.view_overview', [])
 
-.controller('view_overview', ['$scope', 'settings', 'webservice', 'editables', 'messenger', 'journal', 'documentsource', 'steps',
-	function($scope, settings, webservice, editables, messenger, journal, documentsource, steps) {
+.controller('view_overview', ['$scope', 'settings', 'webservice', 'editables', 'messenger', 'dataset', 'documentsource', 'steps', 'labels',
+	function($scope, settings, webservice, editables, messenger, dataset, documentsource, steps, labels) {
 
 		messenger.content.stats = documentsource.stats;
 
-		const colStyles = {
-			order: 			{minWidth: '50px', maxWidth: '80px'},
-			author:			{minWidth: '400px'},
-			title:			{minWidth: '400px'},
-			pages:			{minWidth: '170px'},
-			abstract:		{minWidth: '400px'},
-			date_published:	{minWidth: '150px'},
-			auto_publish:  	{minWidth: '10px'},
-			filepath:		{minWidth: '150px'},
-			attached:		{minWidth: '400px'},
-			createFrontpage:{minWidth: '10px'},
-			zenonId:		{minWidth: '150px'},
-		}
-
-
-		$scope.getStyle = function(columnName) {
-			return (typeof colStyles[columnName] !== "undefined") ? colStyles[columnName] : {minWidth: '400px'};
-		}
+        $scope.overviewColumns = {};
 
 
 		/**
@@ -42,25 +25,36 @@ angular
 
 			console.log("Init View: Overview", $scope.protocol);
 
+            Object.keys(new dataset.getModel().SubObjectPrototype()).map(function(key) {
+                dataset.settings.overviewColumns[key] = {
+                    'checked': false,
+                    'title': labels.get("sub", key, true),
+                    'description': labels.get("sub", key),
+                    'label': labels.get("sub", key),
+                    'style': labels.getStyle("sub", key),
+                }
+            });
+
 			// adjust view
 			angular.forEach($scope.protocol.columns, function(col) {
-				journal.settings.overviewColumns[col].checked = true;
+				dataset.settings.overviewColumns[col].checked = true;
 			})
 
-		}
+		};
+
 
 		/* tools & buttons */
 
 
 		$scope.addArticle = function() {
-			let a = new journal.Article('Article ' +  journal.articles.length);
-			journal.articles.push(a);
-			journal.articleStats.update();
+			let a = new dataset.Article('Article ' +  dataset.articles.length);
+			dataset.articles.push(a);
+			dataset.articleStats.update();
 
 		}
 
 		$scope.continue = function() {
-			journal.cleanArticles();
+			dataset.cleanArticles();
 			steps.change('articles');
 		}
 
@@ -120,7 +114,7 @@ angular
 
 		/* delete */
 		$scope.removeArticle = function(article) {
-			//journal.deleteArticle(article)
+			//dataset.deleteArticle(article)
 			article._.confirmed = false;
 		}
 
@@ -177,7 +171,7 @@ angular
 
 			//console.log('order by ' + order + ' | ' + asc);
 
-			journal.articles = orderArticles(journal.articles, order, asc);
+			dataset.articles = orderArticles(dataset.articles, order, asc);
 		}
 
 

@@ -1,7 +1,7 @@
 angular
 .module('module.protocols.chiron_parted', [])
-.factory("chiron_parted", ['$rootScope', 'editables', 'protocolregistry', 'documentsource', 'journal',
-	function($rootScope, editables, protocolregistry, documentsource, journal) {
+.factory("chiron_parted", ['$rootScope', 'editables', 'protocolregistry', 'documentsource', 'dataset',
+	function($rootScope, editables, protocolregistry, documentsource, dataset) {
 
 	var journalCtrl = new protocolregistry.Protocol('chiron_parted');
 
@@ -9,15 +9,15 @@ angular
 
 
 	journalCtrl.onSelect = function() {
-		journal.data.identification = 'vol_year';
-		journal.data.ojs_journal_code = 'chiron';
-		journal.data.auto_publish_issue.value.value = true;
-		journal.data.default_create_frontpage = true;
-		delete journal.data.number;
+		dataset.data.identification = 'vol_year';
+		dataset.data.ojs_journal_code = 'chiron';
+		dataset.data.auto_publish_issue.value.value = true;
+		dataset.data.default_create_frontpage = true;
+		delete dataset.data.number;
 	}
 
 	journalCtrl.onInit = function() {
-		documentsource.getDocuments(journal.data.importFilePath);
+		documentsource.getDocuments(dataset.data.importFilePath);
 	}
 
 	journalCtrl.onGotFile = function(fileName) {
@@ -26,7 +26,7 @@ angular
 
 		var pdf = documentsource.files[fileName].pdf;
 
-		var article = new journal.Article();
+		var article = new dataset.Article();
 		 // special data for raw articles
 		article.filepath.value.value =  documentsource.files[fileName].url;
 		article._.tmp = [
@@ -38,7 +38,7 @@ angular
 			}
 		]
 
-		journal.articles.push(article);
+		dataset.articles.push(article);
 
 
 		function getPage(pdf, pageIdx) {
@@ -118,7 +118,7 @@ angular
 					article.pages.endPrint = parseInt(pageNr) + pdf.pdfInfo.numPages - pageIdx;
 					//article.pages.resetDesc();
 
-					article.order	= editables.number((journal.articles.length  + 1) * 10);
+					article.order	= editables.number((dataset.articles.length  + 1) * 10);
 
 					//article._.tmp = [];
 

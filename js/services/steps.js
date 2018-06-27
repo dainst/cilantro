@@ -2,7 +2,7 @@
 
 angular
 .module('module.steps', [])
-.factory("steps", ['documentsource', 'journal', 'messenger', function(documentsource, journal, messenger) {
+.factory("steps", ['documentsource', 'dataset', 'messenger', function(documentsource, dataset, messenger) {
 
     const cacheKiller = '?nd=' + Date.now();
 
@@ -40,7 +40,7 @@ angular
         "publish": {
             "template": "partials/views/finish.html",
             "title": "Publish",
-            "showIf": function() {return steps.isStarted && documentsource.ready && journal.isReadyToUpload()}
+            "showIf": function() {return steps.isStarted && documentsource.ready && dataset.isReadyToUpload()}
         },
         "fatal": {
             "template": "partials/views/fatal.html",

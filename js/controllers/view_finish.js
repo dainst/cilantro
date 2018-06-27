@@ -5,46 +5,43 @@ angular
 
 .module('controller.view_finish', [])
 
-.controller('view_finish', ['$scope', 'settings', 'webservice', 'editables', 'journal', 'messenger',
-	function($scope, settings, webservice, editables, journal, messenger) {
+.controller('view_finish', ['$scope', 'settings', 'webservice', 'editables', 'dataset', 'messenger',
+	function($scope, settings, webservice, editables, dataset, messenger) {
 
-		$scope.init = function() {
-			//
-		};
+		$scope.init = function() {};
 
-		$scope.xml = false;
 		$scope.done = false;
-		$scope.dainstMetadata = {};
 
-		$scope.renderXml = function() {
-            messenger.error("reportMissingToZenon is currently not implemented");
-		};
+		$scope.run = function() {
 
-		$scope.uploadToOjs = function() {
-			webservice.get('toOJS', journal.get(), function(response) {
-				console.log(response);
-				if (response.success) {
-					$scope.done = true;
-					$scope.reportMissingToZenon();
-				}
-			}, false, true);
-		};
+		    let params = dataset.get();
+            console.log(params);
 
-		$scope.makeOjsUrl = function(id) {
-			return window.settings.ojs_url + 'index.php/'+ journal.data.ojs_journal_code + '/article/view/' + id;
+			webservice.get('job/ingest_journal', 'post', params)
+                .then(function(res) {
+                    console.log("IT WORKED", res);
+
+                    $scope.done = true;
+                })
+                .catch(function(e) {
+                    console.error(e);
+                })
+
 		};
 
 		$scope.isReady = function() {
-			let articlesReady = $scope.journal.isReadyToUpload();
-			let journalReady = $scope.journal.check();
+			let articlesReady = $scope.dataset.isReadyToUpload();
+			let journalReady = $scope.dataset.check();
 			return articlesReady && journalReady && !$scope.done;
 		};
 
-		$scope.reportedToZenon = [];
-
 		$scope.reportMissingToZenon = function() {
 			messenger.error("reportMissingToZenon is currently not implemented");
-		}
+		};
+
+        $scope.renderXml = function() {
+            messenger.error("reportMissingToZenon is currently not implemented");
+        };
 
 	}
 ]);
