@@ -10,7 +10,7 @@ from workers.convert.image_pdf.convert_image_pdf import convert_pdf_to_tif
 class PdfToTifTest(unittest.TestCase):
     resource_dir = os.environ['RESOURCE_DIR']
     working_dir = os.environ['WORKING_DIR']
-    pdf_src = f'{resource_dir}/files/test.pdf'
+    pdf_src = f'{resource_dir}/files/test_small.pdf'
     pdf_path = f'{working_dir}/test.pdf'
     tif_path = '{}/{}.tif'
 
