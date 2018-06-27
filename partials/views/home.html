@@ -78,10 +78,8 @@
 					<thead></thead>
 					<tbody>
 					<tr ng-repeat="(id, field) in dataset.data track by $index">
-						<td ng-show="dataset.settings.hideOnHomepage.indexOf(id)">{{labels.get("main", id)}}</td>
-						<td ng-show="dataset.settings.hideOnHomepage.indexOf(id)">
-							<span editable item="field" />
-						</td>
+						<td ng-hide="labels.getIsHidden('main', id)">{{labels.get("main", id)}}</td>
+						<td ng-hide="labels.getIsHidden('main', id)"><span editable item="field" /></td>
 					</tr>
 					</tbody>
 					<tfoot></tfoot>

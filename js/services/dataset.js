@@ -1,7 +1,7 @@
 angular
 .module("module.dataset", [])
-.factory("dataset", ['editables', '$rootScope', 'settings', 'journalIssue',
-    function(editables, $rootScope, settings, journalIssue) {
+.factory("dataset", ['editables', '$rootScope', 'journalIssue',
+    function(editables, $rootScope, journalIssue) {
 
 	/**
 	 * Refactor Plans
@@ -22,7 +22,6 @@ angular
 			data: {}
 		},
         loadedFiles: {},        // files loaded into pdf.js
-		settings: {},			// UI settings for displaying this journal
 
 	}; // will be filled by journal.reset()
 
@@ -60,13 +59,7 @@ angular
 			}
 		};
 
-		/* settings (states of the views), editable by protocol */
 
-		/* editable fields in homepage */
-		dataset.settings.hideOnHomepage = ['importFilePath'];
-
-		/* switched on columns in the overview */
-		dataset.settings.overviewColumns = {};
 
 
 	};
@@ -130,9 +123,7 @@ angular
 
 	};
 
-	dataset.getModel = function() {
-	    return model;
-    };
+	dataset.getModelMeta = model.getMeta;
 
 	/* Sub-Object functions */
 	dataset.cleanArticles = function() {
@@ -156,7 +147,7 @@ angular
 
 
 	/* Article constructor function */
-	dataset.Article =  function(data) {
+	dataset.Article = function(data) {
 		data = data || {};
 		function guid() {
 			function s4() {

@@ -27,8 +27,8 @@
 					<thead></thead>
 					<tbody>
                         <tr ng-repeat="(field, value) in dataset.data track by $index">
-                            <td>{{labels.get("main", field)}}</td>
-                            <td ng-model="dataset.data[field]">
+                            <td ng-hide="labels.getIsHidden('main', field)">{{labels.get("main", field)}}</td>
+                            <td ng-hide="labels.getIsHidden('main', field)" ng-model="dataset.data[field]">
                                 <span editable item="value" />
                             </td>
                         </tr>

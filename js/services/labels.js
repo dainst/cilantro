@@ -1,11 +1,10 @@
 angular
     .module('module.labels', [])
     .factory("labels", ['dataset', function(dataset) {
-        let model = dataset.getModel();
 
         let labels = {
-            "main": model.mainObjectLabels,
-            "sub": model.subObjectLabels
+            "main": dataset.getModelMeta("main"),
+            "sub": dataset.getModelMeta("sub")
         };
 
         return {
@@ -40,6 +39,13 @@ angular
                         && angular.isDefined(labels[set][key].style)
                     ? labels[set][key].style
                     : {minWidth: '400px'};
+            },
+            getIsHidden: function(set, key) {
+                return angular.isDefined(labels[set])
+                && angular.isDefined(labels[set][key])
+                && angular.isDefined(labels[set][key].hide)
+                    ? !!labels[set][key].hide
+                    : false;
             }
         };
     }]);

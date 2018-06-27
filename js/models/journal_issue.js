@@ -77,7 +77,7 @@ angular
         console.log(journalCodes)
     }
 
-    // compare with https://github.com/pkp/ojs/blob/ojs-stable-2_4_8/plugins/importexport/native/NativeExportDom.inc.php#L32
+    // @see https://github.com/pkp/ojs/blob/ojs-stable-2_4_8/plugins/importexport/native/NativeExportDom.inc.php#L32
     const ojsIdentificationsCodes = {
         'num_vol_year_title':'num_vol_year_title',
         'num_vol_year':'num_vol_year',
@@ -88,7 +88,16 @@ angular
         'title':'title'
     };
 
-    const mainObjectLabels = {
+    /**
+     * object fields meta-data (such as labels etc.)
+     * refactor plans :
+     * looking for a more generic datamodel-model,
+     * the defintions of the fields wich are in the cintructir now,
+     * will be here as well..
+     * for for now we divide fieldMeta and fields...
+     */
+
+    const mainObjectMeta = {
         "volume": {
             description: "Volume",
             type: "meta"
@@ -119,7 +128,8 @@ angular
         },
         "importFilePath": {
             description: "File(s) to import",
-            type: "meta"
+            type: "meta",
+            hide: true,
         },
         "auto_publish_issue": {
             description: "Publish Issue after upload",
@@ -139,7 +149,7 @@ angular
         }
     };
 
-    const subObjectLabels = {
+    const subObjectMeta = {
         order: {
             title: '#',
             description: 'Order',
@@ -159,45 +169,61 @@ angular
         },
         abstract: {
             title: 'Abstract',
-            style: {minWidth: '400px'}
+            style: {minWidth: '400px'},
+            hide: true
         },
         date_published: {
             title: 'Date of Publishing',
-            style: {minWidth: '150px'}
+            style: {minWidth: '150px'},
+            hide: true
         },
         auto_publish: {
             description: 'Automatically publish?',
             title: '#',
-            style: {minWidth: '10px'}
+            style: {minWidth: '10px'},
+            hide: true
         },
         filepath: {
             title: 'Loaded File',
-            style: {minWidth: '150px'}
+            style: {minWidth: '150px'},
+            hide: true
         },
         attached: {
             title: 'Attached',
             description: 'Attached Files/Pages',
-            style: {minWidth: '400px'}
+            style: {minWidth: '400px'},
+            hide: true
         },
         create_frontpage: {
             description: 'Automatically create frontpage?',
             title: '#',
-            style: {minWidth: '10px'}
+            style: {minWidth: '10px'},
+            hide: true
         },
         zenonId: {
             title: 'Zenon-Id',
-            style: {minWidth: '150px'}
+            style: {minWidth: '150px'},
+            hide: true
         },
         language: {
-            title: 'Language'
+            title: 'Language',
+            hide: true
         }
     };
+
+    function getMeta(set) {
+        if (set === "sub") {
+            return subObjectMeta;
+        }
+        if (set === "main") {
+            return mainObjectMeta;
+        }
+    }
 
     return {
         SubObjectPrototype: SubObject,
         MainObjectPrototype: MainObject,
-        subObjectLabels: subObjectLabels,
-        mainObjectLabels: mainObjectLabels,
+        getMeta: getMeta,
         setConstraints: setConstraints
     }
 

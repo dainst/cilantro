@@ -25,9 +25,9 @@ angular
 
 			console.log("Init View: Overview", $scope.protocol);
 
-            Object.keys(new dataset.getModel().SubObjectPrototype()).map(function(key) {
-                dataset.settings.overviewColumns[key] = {
-                    'checked': false,
+            Object.keys(new dataset.Article()).map(function(key) {
+                $scope.overviewColumns[key] = {
+                    'checked': !labels.getIsHidden("sub", key),
                     'title': labels.get("sub", key, true),
                     'description': labels.get("sub", key),
                     'label': labels.get("sub", key),
@@ -35,10 +35,6 @@ angular
                 }
             });
 
-			// adjust view
-			angular.forEach($scope.protocol.columns, function(col) {
-				dataset.settings.overviewColumns[col].checked = true;
-			})
 
 		};
 
