@@ -16,9 +16,6 @@ angular
 		/* dataset */
 		$scope.dataset = dataset;
 
-		/* backendData */
-		$scope.backendData = {}; //some backend specific data.. will be a far more complex object when there are different backends
-
 		/* repository */
 		$scope.repository = repository;
 
@@ -55,7 +52,11 @@ angular
                                     $scope.protocols.selectLast();
                                     $scope.isLoading = false;
 
+
+                                    $scope.dataset.data.importFilePath = "a_journal/e2e-testing.pdf";
+
                                     refreshView();
+
                                 })
                                 .catch(failFatal);
                         })

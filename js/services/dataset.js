@@ -59,9 +59,6 @@ angular
 			}
 		};
 
-
-
-
 	};
 
 	/* validate */
@@ -103,23 +100,34 @@ angular
 	 * @param article  - optional - select only one article
 	 * @returns {{data: *, articles: Array}}
 	 */
-	dataset.get = function(article) {
+	dataset.get = function() {
 
-		function flatten(obj) {
-			let newObj = {};
-			angular.forEach(obj, function(value, key) {
-				newObj[key] = angular.isFunction(value.get) ? value.get() : value;
+
+		function flatten(obj, modelMeta) {
+			let newObj = {
+			    metadata: {},
+			    params: {},
+                files: []
+            };
+			angular.forEach(obj, function(editable, key) {
+			    let value = angular.isFunction(editable.get) ? editable.get() : editable;
+			    if (angular.isDefined(modelMeta[key]) && angular.isDefined(modelMeta[key].type) && angular.isDefined(value)) {
+                    newObj[modelMeta[key].type][key] = value;
+                }
+                if (angular.isFunction(editable.getFileData)) {
+                    newObj.files = newObj.files.concat(editable.getFileData());
+                }
 			});
 			return newObj;
 		}
 
-		return {
-            metadata: flatten(dataset.data),
-			parts: Object.keys(dataset.articles)
-				.filter(function(i) {return dataset.articles[i]._.confirmed === true})
-				.filter(function (i) {return (typeof this._ !== "undefined") ? (this._.id === dataset.articles[i]._.id) : true}.bind(article))
-				.map(function(i) {return flatten(dataset.articles[i])})
-		}
+		let returner = flatten(dataset.data, model.getMeta("main"));
+
+        returner.parts = Object.keys(dataset.articles)
+            .filter(function(i) {return dataset.articles[i]._.confirmed === true})
+            .map(function(i) {return flatten(dataset.articles[i], model.getMeta("sub"))});
+
+		return returner;
 
 	};
 

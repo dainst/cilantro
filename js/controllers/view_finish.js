@@ -14,10 +14,10 @@ angular
 
 		$scope.run = function() {
 
-		    let params = dataset.get();
-            console.log(params);
+		    let param = dataset.get();
+            console.log("POST PARAM", param);
 
-			webservice.get('job/ingest_journal', 'post', params)
+			webservice.get('job/ingest_journal', 'post', param)
                 .then(function(res) {
                     console.log("IT WORKED", res);
 

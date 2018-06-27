@@ -123,24 +123,21 @@ angular
 	}
 
 
-	/**
-	 * page editable
-	 * realpage = startPage - as printed
-	 * endpage = endPage - as printed
-	 *
-	 *
-	 * Pagecontext
-	 * @param d
-	 * @returns {{offset: number, maximum: (number|*)}}
-	 * @constructor
-	 */
 	editables.types.Pagecontext = function(d){
 		d = d || {offset:0, maximum: -1};
-		return {'offset': d.offset || 0, 'maximum': d.maximum || -1}
-	}
+		let context = {'offset': d.offset || 0, 'maximum': d.maximum || -1}
+		if (angular.isDefined(d.path)) {
+         context.path = d.path;
+        }
+		return context;
+	};
 	/**
-	 *
+     * page editable
+     * startPrint & endPrint - page numbers as printed
+     * startPdf & endPdf - real pdf page numbers
+     * showndesc - page numbers as printed in index
 	 * @returns {{type, value, mandatory, readonly, check, set, get, compare, watch, observer}}
+     * @constructor
 	 */
 	editables.page = function(initPage) {
 		var obj = editables.base();
@@ -196,11 +193,11 @@ angular
 				this.value.showndesc += parseInt(this.endPrint) ? '–' + parseInt(this.endPrint) : '';
 				manualDesc = false
 			}
-		}
+		};
 
 		obj.resetContext = function(d) {
 			obj.context = new editables.types.Pagecontext(d);
-		}
+		};
 
 		obj.get = function(){
 			return {
@@ -210,7 +207,14 @@ angular
 				startPrint: obj.startPrint,
 				endPrint: obj.endPrint
 			}
-		}
+		};
+
+		obj.getFileData = function() {
+            return angular.isDefined(obj.context.path) ? {
+                file: obj.context.path,
+                range: [obj.value.startPdf, obj.value.endPdf]
+            } : [];
+        };
 
 		/**
 		 * takes strings like 10-12
@@ -226,7 +230,7 @@ angular
 				}
 			}
 
-		}
+		};
 
 		obj.check =	function() {
 
@@ -493,20 +497,28 @@ angular
 	}
 	
 	editables.filelist = function(seed, mandatory) {
-		var obj = editables.base(seed, mandatory);
+		let obj = editables.base(seed, mandatory);
 		obj.type = 'filelist';
-		obj.check =	function() {return false}
+		obj.check =	function() {return false};
 		obj.value = seed || [];
-		obj.compare = function(second) {return 0}
+		obj.compare = function(second) {return 0};
 		obj.push = function(elem) {
 			// @ TODO check if elem is OK value for this
 			obj.value.push(elem);
-		}
+		};
 		obj.get = function(){
 			return this.value
-		}
+		};
+		obj.getFileData = function() {
+		  return obj.value.map(function(item) {
+		     return {
+		         file: item.file,
+                 range: [item.from, item.to]
+             }
+          });
+        };
 		return obj;
-	}
+	};
 
 	editables.listitem = function(list, selected, noneallowed) {
 		let obj = editables.base(selected, false, false);
@@ -533,7 +545,7 @@ angular
 		let obj = editables.listitem(list, selected, noneallowed);
 		obj.type = 'loadedfile';
 		return obj;
-	}
+	};
 
     editables.types.Date = function(year, month, day) {return {'day': day, 'month': month, 'year': year}};
 

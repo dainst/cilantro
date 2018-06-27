@@ -100,52 +100,52 @@ angular
     const mainObjectMeta = {
         "volume": {
             description: "Volume",
-            type: "meta"
+            type: "metadata"
         },
         "number": {
             description: "Number",
-            type: "meta"
+            type: "metadata"
         },
         "year": {
             description: "Year",
-            type: "meta"
+            type: "metadata"
         },
         "description": {
             description: "Description (e.g. '[PDFs teilweise verfügbar]')",
-            type: "meta"
+            type: "metadata"
         },
         "ojs_journal_code": {
             description: "OJS: Journal Code (e.g. 'chiron', 'aa', 'efb')",
-            type: "meta"
+            type: "metadata"
         },
         "ojs_user": {
             description: "OJS: user",
-            type: "meta"
+            type: "metadata"
         },
         "identification": {
             description: "OJS: issue identification",
-            type: "meta"
+            type: "metadata"
         },
         "importFilePath": {
             description: "File(s) to import",
-            type: "meta",
+            type: "metadata",
             hide: true,
         },
         "auto_publish_issue": {
             description: "Publish Issue after upload",
-            type: "param"
+            type: "params"
         },
         "default_publish_articles": {
             description: "Publish Articles by default",
-            type: "param"
+            type: "params"
         },
         "default_create_frontpage": {
             description: "Create Frontpage by default",
-            type: "param"
+            type: "params"
         },
         "allow_upload_without_file": {
             description: "Upload without selected file is allowed?",
-            type: "param"
+            type: "params"
         }
     };
 
@@ -157,31 +157,37 @@ angular
         },
         author: {
             title: 'Author',
-            style: {minWidth: '400px'}
+            style: {minWidth: '400px'},
+            type: "metadata"
         },
         title: {
             title: 'Title',
-            style: {minWidth: '400px'}
+            style: {minWidth: '400px'},
+            type: "metadata"
         },
         pages: {
             title: 'Range of Pages',
-            style: {minWidth: '170px'}
+            style: {minWidth: '170px'},
+            type: "metadata"
         },
         abstract: {
             title: 'Abstract',
             style: {minWidth: '400px'},
-            hide: true
+            hide: true,
+            type: "metadata"
         },
         date_published: {
             title: 'Date of Publishing',
             style: {minWidth: '150px'},
-            hide: true
+            hide: true,
+            type: "metadata"
         },
         auto_publish: {
             description: 'Automatically publish?',
             title: '#',
             style: {minWidth: '10px'},
-            hide: true
+            hide: true,
+            type: "params"
         },
         filepath: {
             title: 'Loaded File',
@@ -198,16 +204,19 @@ angular
             description: 'Automatically create frontpage?',
             title: '#',
             style: {minWidth: '10px'},
-            hide: true
+            hide: true,
+            type: "params"
         },
         zenonId: {
             title: 'Zenon-Id',
             style: {minWidth: '150px'},
-            hide: true
+            hide: true,
+            type: "metadata"
         },
         language: {
             title: 'Language',
-            hide: true
+            hide: true,
+            type: "metadata"
         }
     };
 

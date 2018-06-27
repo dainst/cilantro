@@ -64,7 +64,7 @@ angular
                                 pdf: pdf,
                                 filename: folder.dir[fileid].name,
                                 url: this.url,
-                                pagecontext: new editables.types.Pagecontext({maximum: pdf.pdfInfo.numPages})
+                                pagecontext: new editables.types.Pagecontext({maximum: pdf.pdfInfo.numPages, path: this.url})
                             };
 
                             var promise1 = pdf.getMetadata().then(function (meta) {
