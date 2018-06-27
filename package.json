@@ -15,6 +15,7 @@
     "start": "npm run server"
   },
   "dependencies": {
+    "ajv": "6.5.1",
     "angular": "1.6.7",
     "angular-ui-bootstrap": "2.5.6",
     "idai-components": "2.6.7",

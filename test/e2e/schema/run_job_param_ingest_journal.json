@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Cilantro Upload Param v1",
+  "definitions": {
+    "file_and_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "range": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2
+        }
+      },
+      "required": [
+        "file",
+        "range"
+      ]
+    },
+    "article_and_params": {
+      "type": "object",
+      "required": ["metadata", "create_frontpage", "files" ],
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "required": ["title", "author", "pages", "date_published", "language"],
+          "properties": {
+            "title": {"type": "string"},
+            "author": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/author"}
+            },
+            "pages": {"$ref": "#/definitions/pages"},
+            "date_published": {
+              "type": "string",
+              "pattern": "[0-9]{4}-[0-9]{0,2}-[0-9]{0,2}$"
+            },
+            "language": {
+              "type": "string",
+              "pattern": "^[a-z]{2}_[A-Z]{2}$"
+            },
+            "zenonId": {"type": "string"}
+          }
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {"$ref": "#/definitions/file_and_range"},
+              {"type": "string"}
+            ]
+          }
+        },
+        "auto_publish": {"type": "boolean"},
+        "create_frontpage": {"type": "boolean"}
+      }
+    },
+    "author": {
+      "type": "object",
+      "required": ["lastname"],
+      "additionalProperties": false,
+      "properties": {
+        "firstname": {"type": "string"},
+        "lastname": {"type": "string"}
+      }
+    },
+    "pages": {
+      "type": "object",
+      "required": ["startPrint", "endPrint", "showndesc"],
+      "additionalProperties": false,
+      "properties": {
+        "showndesc": {"type": "string"},
+        "startPrint": {"type": "number"},
+        "endPrint": {"type": "number"}
+      }
+    }
+  },
+  "type": "object",
+  "required": [
+    "metadata"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/file_and_range"
+          },
+          {
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/article_and_params"
+      }
+    },
+    "ojs_journal_code": {"type": "string"},
+    "ojs_user": {"type": "string"},
+    "auto_publish_issue": {"type": "boolean"},
+    "default_publish_articles": {"type": "boolean"},
+    "default_create_frontpage": {"type": "boolean"},
+    "allow_upload_without_file": {"type": "boolean"}
+  }
+}
