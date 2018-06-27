@@ -9,10 +9,11 @@ log = logging.getLogger(__name__)
 
 
 class TifToJpgTest(unittest.TestCase):
-
-    tif_path = 'test/resources/objects/some_tiffs/test.tif'
-    broken_tif_path = 'test/resources/objects/test_object/image1.tif'
-    jpg_path = 'test/resources/objects/some_tiffs/test.jpg'
+    resource_dir = os.environ['RESOURCE_DIR']
+    working_dir = os.environ['WORKING_DIR']
+    tif_path = f'{resource_dir}/files/test.tif'
+    broken_tif_path = f'{resource_dir}/files/broken.tif'
+    jpg_path = f'{working_dir}/test.jpg'
 
     def test_success(self):
         convert_tif_to_jpg(self.tif_path, self.jpg_path)
