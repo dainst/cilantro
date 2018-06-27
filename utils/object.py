@@ -1,7 +1,7 @@
 from datetime import datetime
-from io import BytesIO, StringIO
+from io import BytesIO
 import json
-from typing import List, Iterator
+from typing import List, Iterator, TextIO
 
 
 class Actor:
@@ -9,8 +9,8 @@ class Actor:
     Personal and legal entities in cilantro metadata.
     """
 
-    first_name: str
-    last_name: str
+    firstname: str
+    lastname: str
 
     def get_json(self):
         return json.dumps(self.__dict__, default=_to_serializable)
@@ -118,7 +118,7 @@ class Object:
         :return Iterator[BytesIO]:
         """
 
-    def write_metadata_file(self, name: str, file: StringIO):
+    def write_metadata_file(self, name: str, file: TextIO):
         """
         Add a metadata file to the object.
 
@@ -130,15 +130,14 @@ class Object:
         :return:
         """
 
-    def add_child(self, child):
+    def add_child(self):
         """
         Add a sub-object to this object.
 
         Creates a new part_XXXX folder under parts. Also creates the parts
         folder if it does not exist already.
 
-        :param Object child:
-        :return: None
+        :return: Object
         """
 
     def get_children(self):
