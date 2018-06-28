@@ -98,21 +98,23 @@ angular
 	/**
 	 * get journal data in uploadable form
 	 * @param article  - optional - select only one article
-	 * @returns {{data: *, articles: Array}}
+	 * @returns see test/e2e/schema/run_job_param.json
 	 */
 	dataset.get = function() {
-
 
 		function flatten(obj, modelMeta) {
 			let newObj = {
 			    metadata: {},
-			    params: {},
                 files: []
             };
 			angular.forEach(obj, function(editable, key) {
 			    let value = angular.isFunction(editable.get) ? editable.get() : editable;
-			    if (angular.isDefined(modelMeta[key]) && angular.isDefined(modelMeta[key].type) && angular.isDefined(value)) {
+			    let type = (angular.isDefined(modelMeta[key]) && angular.isDefined(modelMeta[key].type)) ? modelMeta[key].type  : false;
+			    if (type === "metadata") {
                     newObj[modelMeta[key].type][key] = value;
+				}
+                if (type === "param") {
+                    newObj[key] = value;
                 }
                 if (angular.isFunction(editable.getFileData)) {
                     newObj.files = newObj.files.concat(editable.getFileData());

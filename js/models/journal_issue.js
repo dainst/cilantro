@@ -133,19 +133,19 @@ angular
         },
         "auto_publish_issue": {
             description: "Publish Issue after upload",
-            type: "params"
+            type: "param"
         },
         "default_publish_articles": {
             description: "Publish Articles by default",
-            type: "params"
+            type: "param"
         },
         "default_create_frontpage": {
             description: "Create Frontpage by default",
-            type: "params"
+            type: "param"
         },
         "allow_upload_without_file": {
             description: "Upload without selected file is allowed?",
-            type: "params"
+            type: "param"
         }
     };
 
@@ -187,7 +187,7 @@ angular
             title: '#',
             style: {minWidth: '10px'},
             hide: true,
-            type: "params"
+            type: "param"
         },
         filepath: {
             title: 'Loaded File',
@@ -205,7 +205,7 @@ angular
             title: '#',
             style: {minWidth: '10px'},
             hide: true,
-            type: "params"
+            type: "param"
         },
         zenonId: {
             title: 'Zenon-Id',

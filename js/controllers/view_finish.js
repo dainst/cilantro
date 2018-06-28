@@ -20,12 +20,10 @@ angular
 			webservice.get('job/ingest_journal', 'post', param)
                 .then(function(res) {
                     console.log("IT WORKED", res);
+                    messenger.alert(res.message);
 
                     $scope.done = true;
-                })
-                .catch(function(e) {
-                    console.error(e);
-                })
+                }).catch(function() {});
 
 		};
 

@@ -84,12 +84,12 @@ angular
 			messenger.content.success = !isError;
 			messenger.content.debug = debug;
 			$rootScope.$broadcast('refreshView');
-		}
+		};
 
 
         messenger.error = function(msg) {
             messenger.alert(msg, 1, 1);
-        }
+        };
 
 		/**
 		 * reset status (except stats) to normal
@@ -101,10 +101,13 @@ angular
 			messenger.content.warnings = [];
 			messenger.content.debug = [];
 			$rootScope.$broadcast('refreshView');
-		}
+		};
 
+		messenger.warn = function(warning) {
+            messenger.content.warnings.push(warning);
+		};
 
 
 		return (messenger);
 	}]
-)
+);

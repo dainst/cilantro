@@ -201,11 +201,9 @@ angular
 
 		obj.get = function(){
 			return {
-				startPdf: obj.value.startPdf,
-				endPdf: obj.value.endPdf,
 				showndesc: obj.desc,
-				startPrint: obj.startPrint,
-				endPrint: obj.endPrint
+                startPrint: obj.startPrint,
+                endPrint: obj.endPrint
 			}
 		};
 

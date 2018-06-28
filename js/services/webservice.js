@@ -31,8 +31,16 @@ angular
                     }
                 },
                 function(err) {
-                    messenger.error(endpoint + ": " + err.status + " " + err.statusText);
-                    reject(endpoint + ": " + err.status + " " + err.statusText);
+                    if (angular.isDefined(err.data) && angular.isDefined(err.data.warnings)) {
+                        err.data.warnings.forEach(messenger.warn);
+                    }
+                    let errText = endpoint + ": " + err.status + " " + err.statusText;
+                    console.log(err);
+                    if (angular.isDefined(err.data) && angular.isDefined(err.data.message)) {
+                        errText = err.data.message;
+                    }
+                    messenger.error(errText);
+                    reject(errText);
                 }
             )
         })

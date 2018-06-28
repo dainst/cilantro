@@ -23,13 +23,13 @@ module.exports = function validateJsonParams(req, res, next) {
 
     if (valid) {
         console.log("OK");
-        res.status(200).json({"success": "true"});
+        res.status(200).json({"success": "true", "message": "Your upload have the correct format."});
     } else {
         ajv.errors.forEach(e => console.log(e.dataPath + " " + e.message));
         res.status(500).json({
             success: false,
             message: "Post param Validation failed",
-            warnings: ajv.errors.map(error => error.message)
+            warnings: ajv.errors.map(error => error.dataPath + " " + error.message)
         });
     }
 
