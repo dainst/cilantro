@@ -37,7 +37,11 @@ class AnnotateTask(BaseTask):
             text = file.read().replace('\n', '')
 
         # result = annotate(text, params)
-        result = "Disabled due to runtime"
+        result = {
+            "message": "Disabled due to runtime",
+            "params": params,
+            "text": text
+        }
         with open(output_file, 'w+') as file:
             json.dump(result, file)
 
