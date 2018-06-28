@@ -55,7 +55,7 @@ def get_path(path):
 
     Returns the file's content if it's a file
 
-    :param path:
+    :param str path: path to file
     :return:
     """
     abs_path = os.path.join(staging_dir, path)
