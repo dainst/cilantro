@@ -47,9 +47,13 @@ def list_staging():
 )
 def get_path(path):
     """
-    Forwards a file form staging controller
+    Retrieve a file from the staging folder or lists the contents of a subfolder
 
-    Returns HTTP status code 400 if file was not found
+    Returns HTTP status code 404 if file was not found
+
+    Return A JSON array containing all file names, it it's a direcotry
+
+    Returns the file's content if it's a file
 
     :param path:
     :return:
