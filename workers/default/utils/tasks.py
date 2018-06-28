@@ -22,7 +22,6 @@ class ForeachTask(BaseTask):
         files = []
 
         for f in _absolute_file_paths(work_path):
-            print(regex.search(f))
             if regex.search(f):
                 files.append(f)
 
