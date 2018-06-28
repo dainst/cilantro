@@ -22,7 +22,7 @@ def _list_dir(dir_path):
             tree.append({
                 "type": "directory",
                 "name": entry.name,
-                "content": _list_dir(os.path.join(dir_path, entry.name))
+                "contents": _list_dir(os.path.join(dir_path, entry.name))
             })
     return tree
 

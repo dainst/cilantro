@@ -1,5 +1,5 @@
 redis-data
-data
+/data
 .DS_Store
 .env
 test/integration/env.py

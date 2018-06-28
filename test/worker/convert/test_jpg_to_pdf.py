@@ -8,8 +8,8 @@ from workers.convert.image_pdf.convert_image_pdf import convert_jpg_to_pdf
 class Jpg2PdfTest(unittest.TestCase):
     resource_dir = os.environ['RESOURCE_DIR']
     working_dir = os.environ['WORKING_DIR']
-    jpg_0_src = f'{resource_dir}/objects/jpegs/0.jpg'
-    generated_file = f'{working_dir}/0.pdf'
+    jpg_0_src = f'{resource_dir}/files/test.jpg'
+    generated_file = f'{working_dir}/test.pdf'
 
     def test_success(self):
         convert_jpg_to_pdf(self.jpg_0_src, self.generated_file)
@@ -27,8 +27,8 @@ class Jpg2PdfTest(unittest.TestCase):
 class MergeConvertedPdfTest(unittest.TestCase):
     resource_dir = os.environ['RESOURCE_DIR']
     working_dir = os.environ['WORKING_DIR']
-    pdf_1 = f'{resource_dir}/objects/pdf/e2e-testing.pdf'
-    pdf_2 = f'{resource_dir}/objects/pdf/e2e-testing.pdf'
+    pdf_1 = f'{resource_dir}/files/test.pdf'
+    pdf_2 = f'{resource_dir}/files/test.pdf'
     generated_file = f'{working_dir}/merged.pdf'
 
     def test_success(self):

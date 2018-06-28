@@ -7,10 +7,11 @@ from workers.convert.image_pdf.convert_pdf import convert_pdf_to_txt
 
 class PdfToTxtTest(unittest.TestCase):
 
+    resource_dir = os.environ['RESOURCE_DIR']
     working_dir = os.environ['WORKING_DIR']
     txt_dir = os.path.join(working_dir, 'txt_from_pdf')
 
-    pdf_path = 'test/resources/objects/pdf/e2e-testing.pdf'
+    pdf_path = f'{resource_dir}/files/test.pdf'
     pdf_pages = 27
 
     def setUp(self):
