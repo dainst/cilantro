@@ -5,7 +5,7 @@ from lxml import etree
 log = logging.getLogger(__name__)
 
 
-def validate_xml(xml_file_path, schema_file_path=None):
+def validate_xml(xml_file_path, dtd_validation=False, schema_file_path=None):
     """
     Parses the given XML file. This throws syntax error if not well formed.
     When the additional schema parameter s given it also checks the XML file
@@ -16,7 +16,13 @@ def validate_xml(xml_file_path, schema_file_path=None):
     :raises etree.DocumentInvalid: if XML document does not adhere to XSD
     :return: None
     """
-    xml_doc = etree.parse(xml_file_path)
+
+    if dtd_validation:
+        parser = etree.XMLParser(dtd_validation=True, no_network=False)  # TODO
+    else:
+        parser = etree.XMLParser()
+
+    xml_doc = etree.parse(xml_file_path, parser)
     log.info("XML Syntax-Check OK!")
 
     if schema_file_path:
