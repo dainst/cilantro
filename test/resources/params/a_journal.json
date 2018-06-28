@@ -6,15 +6,15 @@
     {
       "file": "e2e-testing.pdf",
       "range": [
-        1,
-        20
+        2,
+        3
       ]
     },
     {
       "file": "e2e-testing.pdf",
       "range": [
-        21,
-        27
+        1,
+        2
       ]
     }
   ],
@@ -45,8 +45,8 @@
         ],
         "pages": {
           "showndesc": "1\u201320",
-          "startPrint": 1,
-          "endPrint": 20
+          "startPrint": 2,
+          "endPrint": 3
         },
         "date_published": "2018--",
         "language": "de_DE",
@@ -67,8 +67,8 @@
         ],
         "pages": {
           "showndesc": "21\u201327",
-          "startPrint": 21,
-          "endPrint": 27
+          "startPrint": 1,
+          "endPrint": 1
         },
         "date_published": "2018--",
         "language": "de_DE",

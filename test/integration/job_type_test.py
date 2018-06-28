@@ -9,7 +9,7 @@ from flask import json
 from run_service import app
 
 log = logging.getLogger(__name__)
-wait_time = 20000
+wait_time = 60000
 retry_time = 100
 
 
