@@ -61,7 +61,7 @@
 
 			    <br><span  ng-show="uploadedFiles.length > 0">Files:</span>
 				<ul>
-					<li ng-repeat="f in uploadedFiles track by $index">{{f}}</li>
+					<li ng-repeat="files in uploadedFiles track by $index">{{files.name}}</li>
 			    </ul>
 				<div ng-show="errorMsg" class="alert alert-danger" ng-bind-html="errorMsg | trustHtml"></div>
 				<div ng-show="warningsMsg.length >  0" ng-repeat="warning in warningsMsg track by $index" class="alert alert-warning">{{warning}}</div>

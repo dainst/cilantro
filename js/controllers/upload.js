@@ -1,7 +1,7 @@
 angular.module('controller.upload', ['ngFileUpload'])
 
-.controller('upload', ['$scope', 'Upload', '$timeout', 'settings', 'webservice', 'messenger', 'repository',
-	function ($scope, Upload, $timeout, settings, webservice, messenger, repository) {
+.controller('upload', ['$scope', '$rootScope','Upload', '$timeout', 'settings', 'webservice', 'messenger', 'repository',
+	function ($scope, $rootScope, Upload, $timeout, settings, webservice, messenger, repository) {
 
 
 		$scope.uploadedFiles = [];
@@ -38,10 +38,21 @@ angular.module('controller.upload', ['ngFileUpload'])
 
 		}).success(function(data, status, headers, config){
 			if (data.success){
-				console.log("Heureka!");
+				$scope.uploadedFiles = $scope.uploadedFiles.concat(files);
+				$scope.invalidFiles = false;
+				webservice.get('staging')
+                                .then((stagingFolder) => {
+                                    console.log("stagingFolder", stagingFolder);
+                                    $scope.repository.update(stagingFolder);
+                                    $rootScope.$broadcast('refreshView');
+                                })
 			}; 
 		}).error(function(data, status, headers, config){
-			console.log("An error occurred."); //get HTTP Status Code in here somehow
+			messenger.error("Upload failed.");
+      		$scope.progress = 0;
+      		console.log("Upload failed with Status ", status);
+      		console.log("Upload headers:", headers);
+
 		});
  
 	$scope.uploadCSV = function(files, callback) {
