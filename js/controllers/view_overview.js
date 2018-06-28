@@ -12,10 +12,7 @@ angular
 .controller('view_overview', ['$scope', 'settings', 'webservice', 'editables', 'messenger', 'dataset', 'documentsource', 'steps', 'labels',
 	function($scope, settings, webservice, editables, messenger, dataset, documentsource, steps, labels) {
 
-		messenger.content.stats = documentsource.stats;
-
         $scope.overviewColumns = {};
-
 
 		/**
 		 * initialization of overview view
@@ -45,8 +42,6 @@ angular
 		$scope.addArticle = function() {
 			let a = new dataset.Article('Article ' +  dataset.articles.length);
 			dataset.articles.push(a);
-			dataset.articleStats.update();
-
 		}
 
 		$scope.continue = function() {
@@ -63,6 +58,7 @@ angular
 
 		/* merging articles */
 		$scope.selectedToMerge = false;
+		let mergeMessage = {};
 
 		$scope.mergeArticle = function(article) {
 
@@ -73,7 +69,7 @@ angular
 			}
 
 			if (!$scope.selectedToMerge)  {
-				messenger.alert('Select another article to put it at the end of »' + article.title.get() + '«',1);
+                mergeMessage = messenger.push('Select another article to put it at the end of »' + article.title.get() + '«', "urgent", true);
 				$scope.selectedToMerge = article;
 			} else {
 				let article2 = article;
@@ -82,6 +78,8 @@ angular
 					mergeArticles(article, article2);
 				} else {
 				    console.log("cancelled merging");
+                    mergeMessage.text = "Merging Canceled";
+                    mergeMessage.type = "info";
                     $scope.selectedToMerge = false;
 				}
 			}
@@ -102,7 +100,8 @@ angular
 
 			$scope.removeArticle(attach);
 
-			messenger.alert('Articles Merged!');
+            mergeMessage.text = 'Articles Merged!';
+            mergeMessage.type = "success";
 			$scope.selectedToMerge = false;
 		}
 

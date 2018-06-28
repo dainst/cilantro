@@ -140,7 +140,7 @@ angular
 
 	journalCtrl.onGotAll = function() {
 		journalCtrl.ready = true;
-		messenger.alert('All documents loaded', false)
+		messenger.info('All documents loaded')
 	}
 
 	return (journalCtrl);

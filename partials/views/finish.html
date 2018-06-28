@@ -49,7 +49,7 @@
 					<ul>
 						<li>Journal metadata: <span ng-show="dataset.check()" class="badge badge-default alert-success">OK</span></li>
 						<li>Articles ready to upload:
-							<span class="badge badge-default alert-success">{{dataset.articleStats.data.confirmed}}</span>
+							<span class="badge badge-default alert-success">{{dataset.getStats().confirmed}}</span>
 						</li>
 					</ul>
 				</div>

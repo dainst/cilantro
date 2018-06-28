@@ -30,6 +30,13 @@ angular
 
 		$scope.init = function() {
 
+		    messenger.info("Info");
+            messenger.debug("debug");
+            messenger.warning("warning");
+            messenger.error("error");
+            messenger.success("succes");
+            messenger.push("urgent", "urgent", true);
+
 		    function failFatal(err) {
 		        console.error("fatal error", err);
                 $scope.isLoading = false;
@@ -69,11 +76,10 @@ angular
 		/* restart */
 		$scope.restart = function() {
 			steps.isStarted = false;
-			messenger.content.stats = {};
 			documentsource.reset();
 			dataset.reset();
 			$scope.init().then(function() {
-                messenger.alert('Restart Importer', false);
+                messenger.info('Restart Importer');
                 steps.change('home');
                 $scope.protocols.selectLast();
                 $scope.isLoading = false;
@@ -114,7 +120,7 @@ angular
             },
             start: function() {
                 if (!dataset.data.allow_upload_without_file && !dataset.data.importFilePath) {
-                    messenger.alert("Please select a file or folder to upload!", true);
+                    messenger.error("Please select a file or folder to upload!");
                     return false;
                 }
                 localStorage.setItem('protocol', $scope.protocol.id);
@@ -131,7 +137,7 @@ angular
 		/* ctrl */
 		$scope.start = function() {
             if (!$scope.protocols.isSelected()) {
-                messenger.alert("Please select an import protocol", true);
+                messenger.error("Please select an import protocol");
                 return;
             }
             steps.isStarted = $scope.protocols.start();

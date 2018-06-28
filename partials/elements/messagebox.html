@@ -1,0 +1,10 @@
+<div id="info-container" ng-mouseover="toggle(true)" ng-mouseout="toggle(false)"  ng-show="hasContent()">
+	<pre ng-hide="1">{{message}}</pre>
+	<div class="row">
+		<div class="col-md-12" ng-class="{'closed':!isOpen}">
+			<div class="alert main-message alert {{getClass(getMain().type)}}">{{getMain().text}}<span ng-show="hasContent()" class="badge badge-pill badge-default pull-right">{{messages.length}}</span></div>
+            <hr ng-show="isOpen">
+			<div ng-repeat="message in messages" class="alert {{getClass(message.type)}}" ng-show="isOpen">{{message.text}}</div>
+		</div>
+	</div>
+</div>

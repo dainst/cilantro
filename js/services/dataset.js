@@ -18,9 +18,6 @@ angular
 		data: {},				// metadata for the imported issue
 		articles: [],			// collection of articles to import
 		thumbnails: {},			// their thumbnails
-		articleStats: {			// statistics about the articles
-			data: {}
-		},
         loadedFiles: {},        // files loaded into pdf.js
 
 	}; // will be filled by journal.reset()
@@ -43,21 +40,7 @@ angular
 		 articles array in the digest give performance issues otherwise! */
 
 		/* statistical data */
-		dataset.articleStats.data = {
-			articles: 0,
-			undecided: 0,
-			confirmed: 0,
-			dismissed: 0
-		};
-		dataset.articleStats.data._isOk = function(k, v) {
-			if (k === 'undecided') {
-				return 0;
-			} else if (k === 'confirmed') {
-				return 1;
-			} else if (k === 'dismissed') {
-				return -1;
-			}
-		};
+
 
 	};
 
@@ -73,25 +56,31 @@ angular
 	};
 
 	/* stats */
-	dataset.articleStats.update = function() {
-		dataset.articleStats.data.articles = dataset.articles.length;
-		dataset.articleStats.data.undecided = 0;
-		dataset.articleStats.data.confirmed = 0;
-		dataset.articleStats.data.dismissed = 0;
-
-		for (let i = 0; i < dataset.articles.length; i++) {
-			if (typeof dataset.articles[i]._.confirmed === "undefined") {
-				dataset.articleStats.data.undecided += 1;
-			} else if (dataset.articles[i]._.confirmed === true) {
-				dataset.articleStats.data.confirmed += 1;
-			} else if (dataset.articles[i]._.confirmed === false) {
-				dataset.articleStats.data.dismissed += 1;
-			}
-		}
+	dataset.getStats = function() {
+		return dataset.articles
+			.reduce(
+				(acc, article) => {
+					if (typeof article._.confirmed === "undefined") {
+						acc.undecided++;
+					} else if (article._.confirmed === true) {
+						acc.confirmed++;
+					} else if (article._.confirmed === false) {
+						acc.dismissed++;
+					}
+					acc.articles++;
+					return acc;
+            	},
+            	{
+					undecided: 0,
+					confirmed: 0,
+					dismissed: 0,
+					articles: 0
+            	}
+            );
 	};
 
 	dataset.isReadyToUpload = function() {
-		return (dataset.articleStats.data.undecided === 0) && (dataset.articleStats.data.confirmed > 0)
+		return (dataset.getStats().undecided === 0) && (dataset.getStats().confirmed > 0)
 	};
 
 

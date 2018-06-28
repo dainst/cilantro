@@ -51,9 +51,7 @@ angular
 
         for (let fileid in folder.dir) {
 
-            console.log("URL", fileid);
             var url = settings.files_url + folder.dir[fileid].path;
-            console.log("URL is " + url);
 
             var promise = new Promise(
                 function documentPromiseResolve(resolve, fail) {
@@ -93,7 +91,7 @@ angular
                                     pagecontext: this.pagecontext
                                 };
                                 console.log("loadedFiles updated", dataset.loadedFiles);
-                                messenger.alert('document nr ' + Object.keys(folder.files).length + ' loaded');
+                                messenger.success('document nr ' + Object.keys(folder.files).length + ' loaded');
                                 $rootScope.$broadcast('gotFile', this.url);
                                 refreshView();
                                 resolve();
@@ -112,7 +110,7 @@ angular
                         ),
 
                         function onFailDocument(reason) {
-                            messenger.alert("get document " + url + " failed: " + reason, true);
+                            messenger.warning("get document " + url + " failed: " + reason, true);
                             resolve(); //!
                         }
                     )
@@ -138,26 +136,26 @@ angular
 
         if (filesObject.type === 'directory') {
 
-            messenger.alert('loading folder contents: ' + path);
+            messenger.info('loading folder contents: ' + path);
 
             folder.dir = repository.list[path].contents;
 
             console.log('got folder:' + path, folder);
 
             folder.stats.files = folder.dir.length;
-            messenger.alert('folder contents loaded');
+
+            messenger.info('folder contents loaded');
 
         } else {
             folder.dir = [filesObject];
-            console.log(folder.dir)
             folder.stats.files = 1;
         }
 
         requirePdfJs.then(function() {
-            messenger.alert('ready for loading files');
+            messenger.info('ready for loading files');
             loadFiles();
             Promise.all(loadFilePromises).then(function() {
-                messenger.alert("All Files loaded");
+                messenger.success("All Files loaded");
                 refreshView();
                 $rootScope.$broadcast('gotAll');
                 folder.ready = true;
@@ -217,7 +215,7 @@ angular
                 folder.createThumbnail(page, article._.id)
             },
             function updateThumbnailGotPageFail(page) {
-                messenger.alert("Page " + article.pages.value.startPdf + " not found", true);
+                messenger.error("Page " + article.pages.value.startPdf + " not found");
                 console.log('page not found', article.pages.value.startPdf, article._.id);
                 folder.removeThumbnail(article._.id)
             }

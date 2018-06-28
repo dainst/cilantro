@@ -54,7 +54,7 @@ angular
 
 	journalCtrl.onGotAll = function() {
 		journalCtrl.ready = true;
-		messenger.alert('All documents loaded', false)
+		messenger.success('All documents loaded')
 	}
 
 	return (journalCtrl);

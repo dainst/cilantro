@@ -14,12 +14,12 @@ angular
 	'module.documentsource',
 	'module.dataset',
 	'module.protocolregistry',
-	'module.infobox',
 	'module.messenger',
 	'module.webservice',
 	'module.repository',
 	'module.steps',
     'module.journal_issue',
+
 
 	'controller.main',
 
@@ -31,6 +31,8 @@ angular
 	'directive.editable',
 	'directive.multiselect',
     'directive.salviaNavbar',
+    'directive.messagebox',
+    'directive.stats',
 
 	'module.editables',
 

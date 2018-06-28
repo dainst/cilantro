@@ -32,7 +32,7 @@ angular
                 },
                 function(err) {
                     if (angular.isDefined(err.data) && angular.isDefined(err.data.warnings)) {
-                        err.data.warnings.forEach(messenger.warn);
+                        err.data.warnings.forEach(messenger.warning);
                     }
                     let errText = endpoint + ": " + err.status + " " + err.statusText;
                     console.log(err);

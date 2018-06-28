@@ -16,14 +16,12 @@ angular
 
 		$scope.init = function() {
 			messenger.ok();
-			messenger.content.stats = dataset.articleStats.data;
-			dataset.articleStats.update();
 			$scope.selectArticle(0);
-		}
+		};
 
 		$scope.continue = function() {
 			steps.change('publish');
-		}
+		};
 
 		$scope.addArticle = function(b, select) {
 			let a = new dataset.Article('Article ' +  dataset.articles.length);
@@ -35,8 +33,6 @@ angular
 			if (select) {
 				$scope.selectArticle(dataset.articles.length -1);
 			}
-
-			dataset.articleStats.update();
 
 		}
 
@@ -94,9 +90,8 @@ angular
 
 				//dataset.articles.splice($scope.currentArticle, 1);
 			}
-			dataset.articleStats.update();
 
-			if (dataset.articleStats.data.undecided === 0){
+			if (dataset.getStats().undecided === 0){
 				$scope.continue();
 			} else {
 				$scope.selectNextArticle();
@@ -110,9 +105,7 @@ angular
 
 			dataset.articles[$scope.currentArticle]._.confirmed = false;
 
-			dataset.articleStats.update();
-
-			if (dataset.articleStats.data.undecided === 0){
+			if (dataset.getStats().undecided === 0){
 				$scope.continue();
 			} else {
 				$scope.selectNextArticle();
@@ -215,7 +208,7 @@ angular
 					},
 					function(err) {
 						console.error(err);
-						messenger.alert('Could not connect to Zenon!', true);
+						messenger.error('Could not connect to Zenon!');
 					}
 				);
 
@@ -245,14 +238,14 @@ angular
 						$scope.zenon.searchId = true;
 						if ($scope.zenon.found === 1) {
 							$scope.adoptFromZenon(0);
-							messenger.alert('Data fetched from zenon');
+							messenger.info('Data fetched from zenon');
 						}
 						dataset.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
 
 					},
 					function(err) {
 						console.error(err);
-						messenger.alert('Could not connect to Zenon!', true);
+						messenger.error('Could not connect to Zenon!');
 						dataset.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
 					}
 				);

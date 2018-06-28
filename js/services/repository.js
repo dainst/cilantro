@@ -42,7 +42,7 @@ angular
 
 	repository.getFileInfo = function(path) {
 		if (angular.isUndefined(repository.list[path])) {
-            messenger.alert(path + ' is not found in repository', 1);
+            messenger.error(path + ' is not found in repository');
             return;
         }
 		return repository.list[path];
