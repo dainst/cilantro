@@ -21,7 +21,7 @@ class ForeachTask(BaseTask):
         regex = re.compile(pattern)
         files = []
 
-        for f in _absolute_file_paths(work_path):
+        for f in _recursive_file_list(work_path):
             if regex.search(f):
                 files.append(f)
 
@@ -50,7 +50,7 @@ class CleanupWorkdirTask(BaseTask):
 CleanupWorkdirTask = celery_app.register_task(CleanupWorkdirTask())
 
 
-def _absolute_file_paths(directory):
+def _recursive_file_list(directory):
     for dirpath, _, filenames in os.walk(directory):
         for f in filenames:
             yield os.path.abspath(os.path.join(dirpath, f))
