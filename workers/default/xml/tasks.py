@@ -18,9 +18,11 @@ class GenerateMarcXMLTask(BaseTask):
         xml_template_string = _read_file(self.get_param('xml_template_path'))
         generate_marc_xml(work_path, data, xml_template_string)
 
+        marc_schema_file = 'resources/MARC21slim.xsd'
+
         for article_dir in os.listdir(os.path.join(work_path, 'articles')):
             file_path = os.path.join(work_path, 'articles', article_dir, 'marc.xml')
-            validate_xml(file_path)
+            validate_xml(file_path, schema_file_path=marc_schema_file)
 
 
 class GenerateXMLTask(BaseTask):
@@ -33,7 +35,7 @@ class GenerateXMLTask(BaseTask):
 
         generated_xml_file = generate_xml(work_path, data, xml_template_string)
 
-        validate_xml(generated_xml_file)
+        validate_xml(generated_xml_file, dtd_validation=True)
 
 
 GenerateMarcXMLTask = celery_app.register_task(GenerateMarcXMLTask())
