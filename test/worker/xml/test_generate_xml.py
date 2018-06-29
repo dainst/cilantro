@@ -2,6 +2,7 @@ import unittest
 import os
 import json
 import logging
+import shutil
 
 from workers.default.xml.xml_generator import generate_xml
 from workers.default.xml.marc_xml_generator import generate_marc_xml
@@ -32,6 +33,8 @@ class GenerateXMLTest(unittest.TestCase):
             self.assertTrue(os.path.isfile(self.generated_filename1))
             self.assertTrue(os.path.isfile(self.generated_filename2))
 
+            shutil.rmtree(f'{self.working_dir}/articles')
+
         def test_generate_ojsxml(self):
             data_path = f'{self.resource_dir}/objects/pdf/data_json/data.json'
             with open(data_path) as json_object:
@@ -45,20 +48,8 @@ class GenerateXMLTest(unittest.TestCase):
 
             self.assertTrue(os.path.isfile(self.generated_filename3))
 
-        @classmethod
-        def tearDownClass(cls):
             try:
-                os.remove(cls.generated_filename1)
-                log.debug("Deleted file: " + cls.generated_filename1)
-            except FileNotFoundError as e:
-                log.error("File not found: " + e.filename)
-            try:
-                os.remove(cls.generated_filename2)
-                log.debug("Deleted file: " + cls.generated_filename2)
-            except FileNotFoundError as e:
-                log.error("File not found: " + e.filename)
-            try:
-                os.remove(cls.generated_filename3)
-                log.debug("Deleted file: " + cls.generated_filename3)
+                os.remove(self.generated_filename3)
+                log.debug("Deleted file: " + self.generated_filename3)
             except FileNotFoundError as e:
                 log.error("File not found: " + e.filename)
