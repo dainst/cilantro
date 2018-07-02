@@ -11,7 +11,6 @@ test_file = 'test.tif'
 
 
 class StagingControllerTest(unittest.TestCase):
-
     resource_dir = os.environ['RESOURCE_DIR']
     staging_dir = os.environ['STAGING_DIR']
 
@@ -33,6 +32,12 @@ class StagingControllerTest(unittest.TestCase):
             file = (open(file_path, 'rb'), test_file)
             response = self._upload_to_staging({'file': file})
             self.assertEqual(response.status_code, 200)
+            json = response.get_json()
+            found_file_in_response = False
+            for content in json['content']:
+                if content['name'] == file[1]:
+                    found_file_in_response = True
+            self.assertTrue(found_file_in_response)
             self._assert_file_in_staging(test_file)
         finally:
             if file:
@@ -49,6 +54,7 @@ class StagingControllerTest(unittest.TestCase):
     def test_upload_file_extension_not_allowed(self):
         response = self._upload_to_staging(
             {'file': (io.BytesIO(b'asdf'), 'foo.asdf')})
+        print(response.get_json())
         self.assertEqual(response.status_code, 415)
 
     def test_list_staging(self):
