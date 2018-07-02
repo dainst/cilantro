@@ -40,6 +40,7 @@ def list_staging():
     tree = _list_dir(staging_dir)
     return jsonify(tree)
 
+
 @staging_controller.route(
     '/<path:path>',
     methods=['GET'],
@@ -75,23 +76,41 @@ def upload_to_staging():
     The upload endpoint is able to handle single and multiple files provided
     under any key.
 
-    Returns HTTP status code 415 if one of the files' extension is not allowed.
+    Returns HTTP status code 200 if at least one file uploaded correctly
+
+    Returns HTTP status code X if all files failed and the last Error has code X
 
     Returns HTTP status code 400 if no files were provided.
 
-    :return: A JSON object indicating success (e.g. "{ 'success': true }")
+    :return: A JSON object with "content": The files and directories in the staging area. And with "warnings": The warnings if errors occured
     """
-
+    warnings = []
+    error_code = 200
+    file_count = 0
     if request.files:
         for key in request.files:
-            for file in request.files.getlist(key):
-                if _is_allowed_file(file.filename):
-                    _upload_file(file)
-                else:
-                    return jsonify({'success': False}), 415
-        return jsonify({'success': True})
 
-    return jsonify({'success': False}), 400
+            for file in request.files.getlist(key):
+                file_count = file_count + 1
+                if _is_allowed_file(file.filename):
+                    try:
+                        _upload_file(file)
+                    except Exception as e:
+                        warnings.append({"file_name": file.filename, "success": False, "warning": e.strerror,
+                                         "warning_code": type(e).__name__})
+                        error_code = e.type(e).__name__
+                else:
+                    warnings.append({"type": "file", "name": file.filename, "success": False,
+                                     "warning": f"File extension .{_get_file_extension(file.filename)} is not allowed.",
+                                     "warning_code": 415})
+                    error_code = 415
+
+        if len(warnings) != file_count:  # If at least one File was uploaded successfully return 200
+            error_code = 200
+
+        return jsonify({"content": _list_dir(staging_dir), "warnings": warnings}), error_code
+
+    return jsonify({"success": False, "error": "No files provided", "error_code": 400}), 400
 
 
 def _upload_file(file):
@@ -101,5 +120,8 @@ def _upload_file(file):
 
 def _is_allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in allowed_extensions
+           _get_file_extension(filename) in allowed_extensions
 
+
+def _get_file_extension(filename):
+    return filename.rsplit('.', 1)[1].lower()
