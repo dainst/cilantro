@@ -107,8 +107,10 @@ def upload_to_staging():
 
 
 def _upload_file(file):
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(staging_dir, filename))
+    path = os.path.join(staging_dir, file.filename)
+    if not os.path.exists(os.path.dirname(path)):
+        os.makedirs(os.path.dirname(path))
+    file.save(path)
 
 
 def _is_allowed_file(filename):
