@@ -54,7 +54,6 @@ class StagingControllerTest(unittest.TestCase):
     def test_upload_file_extension_not_allowed(self):
         response = self._upload_to_staging(
             {'file': (io.BytesIO(b'asdf'), 'foo.asdf')})
-        print(response.get_json())
         self.assertEqual(response.status_code, 415)
 
     def test_list_staging(self):
