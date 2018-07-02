@@ -76,16 +76,13 @@ def upload_to_staging():
     The upload endpoint is able to handle single and multiple files provided
     under any key.
 
-    Returns HTTP status code 200 if at least one file uploaded correctly
-
-    Returns HTTP status code X if all files failed and the last Error has code X
-
     Returns HTTP status code 400 if no files were provided.
+    Returns HTTP status code 200 else
 
-    :return: A JSON object with "content": The files and directories in the staging area. And with "warnings": The warnings if errors occured
+    :return: A JSON object with "content": The files and directories in the staging area.
+            and with "warnings": The warnings if errors occured
     """
     warnings = []
-    error_code = 200
     file_count = 0
     if request.files:
         for key in request.files:
@@ -98,17 +95,12 @@ def upload_to_staging():
                     except Exception as e:
                         warnings.append({"file_name": file.filename, "success": False, "warning": e.strerror,
                                          "warning_code": type(e).__name__})
-                        error_code = e.type(e).__name__
                 else:
                     warnings.append({"type": "file", "name": file.filename, "success": False,
                                      "warning": f"File extension .{_get_file_extension(file.filename)} is not allowed.",
                                      "warning_code": 415})
-                    error_code = 415
 
-        if len(warnings) != file_count:  # If at least one File was uploaded successfully return 200
-            error_code = 200
-
-        return jsonify({"content": _list_dir(staging_dir), "warnings": warnings}), error_code
+        return jsonify({"content": _list_dir(staging_dir), "warnings": warnings}), 200
 
     return jsonify({"content": _list_dir(staging_dir),
                     "warnings": [{"success": False, "warning": "No files provided", "warning_code": 400}]}), 400
