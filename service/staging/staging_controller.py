@@ -110,7 +110,8 @@ def upload_to_staging():
 
         return jsonify({"content": _list_dir(staging_dir), "warnings": warnings}), error_code
 
-    return jsonify({"success": False, "error": "No files provided", "error_code": 400}), 400
+    return jsonify({"content": _list_dir(staging_dir),
+                    "warnings": [{"success": False, "warning": "No files provided", "warning_code": 400}]}), 400
 
 
 def _upload_file(file):
