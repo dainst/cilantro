@@ -6,32 +6,32 @@
 
 
 h1 {
-	font-size: x-large;
-	font-weight: normal;
-	margin-bottom: 1px
+    font-size: x-large;
+    font-weight: normal;
+    margin-bottom: 1px
 }
 
 h2 {
-	font-size: large;
-	font-weight: normal;
-	margin-bottom: 1px
+    font-size: large;
+    font-weight: normal;
+    margin-bottom: 1px
 }
 
 /* tables */
 
 table {
-	margin: 0px;
-	width: 100%;
-	border-collapse: collapse;
-	margin-top: 0.5em;
-	margin-bottom: 0.5em
+    margin: 0px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em
 }
 
 table td {
-	border-collapse: collapse;
-	border: 1px solid silver;
-	text-align: center;
-	vertical-align: top;
+    border-collapse: collapse;
+    border: 1px solid silver;
+    text-align: center;
+    vertical-align: top;
 
 }
 
@@ -41,53 +41,53 @@ table td {
 /* tooltips */
 
 [data-tooltip] {
-	position: relative;
+    position: relative;
 }
 
 [data-tooltip]:hover:before { /**/
-	padding: 0.3em;
-	margin: 0em 0em 0em 0em;
-	content: attr(data-tooltip);
-	z-index: 2000;
-	position: absolute;
-	top: 90%;
-	color: black;
-	font-weight: normal;
-	font-size: small;
-	font-family: sans;
-	background: white;
-	box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
-	border: 1px solid rgba(0, 0, 0, 0.15);
-	border-radius: 3px;
-	white-space: normal;
-	display: block;
-	left: -100%;
+    padding: 0.3em;
+    margin: 0em 0em 0em 0em;
+    content: attr(data-tooltip);
+    z-index: 2000;
+    position: absolute;
+    top: 90%;
+    color: black;
+    font-weight: normal;
+    font-size: small;
+    font-family: sans;
+    background: white;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+    white-space: normal;
+    display: block;
+    left: -100%;
 }
 
 /* author_box */
 table.author_box {
-	margin: 0px;
-	padding: 0px;
-	height: 100%
+    margin: 0px;
+    padding: 0px;
+    height: 100%
 }
 
 table.author_box .author_firstname,
 table.author_box .author_lastname {
-	width: 47% !important;
-	text-align: center !important
+    width: 47% !important;
+    text-align: center !important
 }
 
 table.author_box td {
-	border: 0px !important;
+    border: 0px !important;
 }
 
 /* xmlfield */
 .CodeMirror {
-	min-height: 20px;
-	width: 100%;
-	background: rgba(0, 0, 0, 0.1);
-	border: 1px solid silver;
-	padding: 2px;
+    min-height: 20px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid silver;
+    padding: 2px;
 }
 
 
@@ -95,138 +95,138 @@ table.author_box td {
 /* -- */
 
 #main-container {
-	padding: 80px 20px 10px 20px;
-	overflow-x: hidden;
-	min-height: 600px;
+    padding: 80px 20px 10px 20px;
+    overflow-x: hidden;
+    min-height: 600px;
 }
 
 
 #dataset-table > tr > td {
-	border: 1px solid silver
-	
+    border: 1px solid silver
+
 }
 
 table table.editable-table > tbody > tr > td {
-	border: none;
-	padding: 0px 1px 1px 0px;
-	padding-bottom: 1px;
+    border: none;
+    padding: 0px 1px 1px 0px;
+    padding-bottom: 1px;
 }
 
 
-	
+
 table.editable-table > tbody > tr > td:last-child {
-	width: 1em;
-	vertical-align: middle;
-	border: none;
-	padding-left: 3px
+    width: 1em;
+    vertical-align: middle;
+    border: none;
+    padding-left: 3px
 }
 
 table.editable-table > tbody > tr > td:last-child .btn {
-	margin-top:  1px;
-	margin-bottom:  1px;
+    margin-top:  1px;
+    margin-bottom:  1px;
 }
 
 input.editable,
 textarea.editable,
 table.editable-table input {
-	width: 100%;
-	border: none;
-	background: #D9EDF7
+    width: 100%;
+    border: none;
+    background: #D9EDF7
 }
 
 textarea.editable {
-	resize: none;
-	height: 100%;
+    resize: none;
+    height: 100%;
 }
 
 thead > tr > td,
 tfoot > tr > td {
-	border: none !important
+    border: none !important
 }
 
 
 table.dataset-table td,
 table.article-table td {
-	padding: 0px !important;
-	vertical-align: middle !important;
+    padding: 0px !important;
+    vertical-align: middle !important;
 }
 
 table.authorlist {
-	margin: 0px
+    margin: 0px
 }
 
 table.data-table {
-	vertical-align: middle
+    vertical-align: middle
 }
 
 table.data-table > tbody > tr > td:first-child {
-	border: none;
-	vertical-align: middle;
-	text-align: left;
-	padding-right: 1em;
-	width: 10%;
+    border: none;
+    vertical-align: middle;
+    text-align: left;
+    padding-right: 1em;
+    width: 10%;
 }
 
 table.data-table > tbody > tr > td:last-child {
-	text-align: left
+    text-align: left
 }
 
 table.dataset-table .alert,
 table.split-table .alert,
 table.article-table .alert {
-	margin-bottom: 0.1em;
+    margin-bottom: 0.1em;
 }
 
 table.split-table > tbody > tr > td {
-	height: 200px;
+    height: 200px;
 }
 
 .thumbnail-container img,
 table.split-table > tbody > tr > td .thumbnail-container img {
-	width: 600px;
-	background-repeat: no-repeat;
-	background-color: rgba(0, 0, 0, 0.3);
-	margin-top: -100px;
+    width: 600px;
+    background-repeat: no-repeat;
+    background-color: rgba(0, 0, 0, 0.3);
+    margin-top: -100px;
 }
 
 .thumbnail-container {
-	height: 500px;
-	overflow: hidden;
-	margin-bottom: 0px;
+    height: 500px;
+    overflow: hidden;
+    margin-bottom: 0px;
 }
 
 table.split-table > tbody > tr > td .thumbnail-container {
-	height: 200px;
-	overflow: hidden;
-	margin-bottom: 0px;
-	cursor: pointer
+    height: 200px;
+    overflow: hidden;
+    margin-bottom: 0px;
+    cursor: pointer
 }
 
 table.split-table > tbody > tr > td .thumbnail-container.enlarged {
-	height: 90%;
-	width: auto;
-	box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
-	border: 1px solid rgba(0, 0, 0, 0.15);
-	margin-top: 60px;
-	position: fixed;
-	left: 10px;
-	top:0px;
-	z-index: 1042;
-	background: white;
+    height: 90%;
+    width: auto;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin-top: 60px;
+    position: fixed;
+    left: 10px;
+    top:0px;
+    z-index: 1042;
+    background: white;
 }
 table.split-table > tbody > tr > td .thumbnail-container.enlarged img {
-	margin-top: 0px;
+    margin-top: 0px;
 }
 
 
 table.split-table > tbody > tr > td .thumbnail-refresh {
-	display: none
+    display: none
 }
 
 table.split-table > tbody > tr > td:hover .thumbnail-refresh {
-	display: block;
-	position: absolute;
-	margin: 1px;
+    display: block;
+    position: absolute;
+    margin: 1px;
 }
 
 
@@ -236,19 +236,19 @@ table.split-table > tbody > tr > td hr {
 }
 
 table.super-table {
-	width: auto;
-	min-width: 100%
+    width: auto;
+    min-width: 100%
 }
 
 table.super-table thead td {
-	overflow: hidden
+    overflow: hidden
 }
 
 table.super-table tr.row-confirmed > td:first-child {
-	border-left: 3px solid #449d44;
+    border-left: 3px solid #449d44;
 }
 table.super-table tr.row-unconfirmed > td:first-child {
-	border-left: 3px solid #d9534f;
+    border-left: 3px solid #d9534f;
 }
 
 
@@ -258,42 +258,42 @@ table.super-table tr.row-unconfirmed > td:first-child {
 }
 
 table .alert {
-	padding: 0px;
-	margin: 0px;
+    padding: 0px;
+    margin: 0px;
 }
 
 .select-table > tbody > tr > td {
-	cursor: pointer
+    cursor: pointer
 }
 
 .xml-view {
-	width:100%; 
-	height: 100%; 
-	border: 1px solid silver; 
-	font-family:monospace; 
-	font-size: 12px; 
-	white-space: pre-wrap; 
-	margin-top: 1em
+    width:100%;
+    height: 100%;
+    border: 1px solid silver;
+    font-family:monospace;
+    font-size: 12px;
+    white-space: pre-wrap;
+    margin-top: 1em
 }
 
 /* hide login button in navbar */
 
 [ng-click="loginFunction();"] {
-	display:none
+    display:none
 }
 
 #password-box {
-	background-clip: padding-box !important;
-	background-color: #FFF !important;
-	border: 1px solid rgba(0, 0, 0, 0.15) !important;
-	box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176) !important;
-	font-size: 14px;
-	
-	padding: 1em;
-	position: fixed;
-	z-index: 1044;
-	right: 0em;
-	top: 50px;
+    background-clip: padding-box !important;
+    background-color: #FFF !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176) !important;
+    font-size: 14px;
+
+    padding: 1em;
+    position: fixed;
+    z-index: 1044;
+    right: 0em;
+    top: 50px;
 }
 
 .navbar-default {
@@ -301,9 +301,9 @@ table .alert {
 }
 
 .navbar .active {
-	color: #fff;
-	background-color: rgba(116,141,181,.9);
-	cursor: default
+    color: #fff;
+    background-color: rgba(116,141,181,.9);
+    cursor: default
 }
 
 .navbar .active:hover {
@@ -314,33 +314,33 @@ table .alert {
 /* loader */
 
 .loader {
-	background-position: center center;
-	background-repeat: no-repeat;
-	background-image: url('../img/loading.gif');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: url('../img/loading.gif');
 }
 
 #loader {
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	left: 0px;
-	background-color: white;
-	z-index: 10000;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: white;
+    z-index: 10000;
 }
 
 
 /* misc  */
 
 .toprow {
-	margin-bottom: 1em
+    margin-bottom: 1em
 }
 
 
 /*  upload */
 
 .dragOver {
-	 box-shadow: 0px 10px 5px #888888;
+     box-shadow: 0px 10px 5px #888888;
 }
 
 .progressbar {
@@ -361,7 +361,7 @@ table .alert {
 /* checkboxes */
 
 input.form-check-input {
-	display: none
+    display: none
 }
 
 input.form-check-input + label {
@@ -370,38 +370,38 @@ input.form-check-input + label {
     font-weight: normal;
     text-align: center;
     cursor: pointer;
-	color: black;
-	background-color: rgb(217, 237, 247);
-	border-color: #1f3150;
-	margin-bottom:0px;
+    color: black;
+    background-color: rgb(217, 237, 247);
+    border-color: #1f3150;
+    margin-bottom:0px;
 }
 
 input.form-check-input + label:before {
-	font-family: 'Glyphicons Halflings';
-	content: "\E157";
-	margin-top: 2px;
-	color: gray;
-	padding-right: 4px;
-	padding-left: 4px
+    font-family: 'Glyphicons Halflings';
+    content: "\E157";
+    margin-top: 2px;
+    color: gray;
+    padding-right: 4px;
+    padding-left: 4px
 
 }
 
 input.form-check-input:checked + label  {
-	background-color: rgb(217, 237, 247);
-	color:black
+    background-color: rgb(217, 237, 247);
+    color:black
 }
 
 input.form-check-input:checked + label:before {
-	content: "\E067";
-	color:black
+    content: "\E067";
+    color:black
 }
 
 .editable-select {
-	background-color:#D9EDF7;
-	border:none;
-	height:auto;
-	padding: 0;
-	border-radius: 0px
+    background-color:#D9EDF7;
+    border:none;
+    height:auto;
+    padding: 0;
+    border-radius: 0px
 
 }
 
@@ -409,25 +409,25 @@ input.form-check-input:checked + label:before {
 /* lang selector */
 
 .lang-selector input[type="radio"] {
-	display: none
+    display: none
 }
 
 .lang-selector input[type="text"],
 .lang-selector input[type="radio"] + label {
     cursor: pointer;
-	font-weight: normal;
-	margin-bottom:0px;
+    font-weight: normal;
+    margin-bottom:0px;
 }
 
 .lang-selector input[type="text"] {
-	background-color: rgb(217, 237, 247);
-	border: none;
-	width: 5.1em;
-	text-align: center
+    background-color: rgb(217, 237, 247);
+    border: none;
+    width: 5.1em;
+    text-align: center
 }
 
 .lang-selector input[type="radio"]:checked + label  {
-	font-weight: bold
+    font-weight: bold
 }
 
 
@@ -447,23 +447,23 @@ input.editable.date.year {
 
 /* info */
 #info-container {
-	position: fixed;
-	bottom: 0px;
-	right: 24%;
-	left: 24%;
-	z-index: 1040;
-	padding: 20px;
-	max-height: 100%;
-	overflow: auto;
+    position: fixed;
+    bottom: 0px;
+    right: 24%;
+    left: 24%;
+    z-index: 1040;
+    padding: 20px;
+    max-height: 100%;
+    overflow: auto;
 
-	background-color: #fff;
-	border: 1px solid rgba(0,0,0,.15);
-	box-shadow: 0 6px 12px rgba(0,0,0,.176);
-	font-size: 14px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.15);
+    box-shadow: 0 6px 12px rgba(0,0,0,.176);
+    font-size: 14px;
 
 }
 .alert {
-	white-space: pre-wrap;
+    white-space: pre-wrap;
 }
 
 .alert-debug {
@@ -484,48 +484,53 @@ input.editable.date.year {
 
 .closed .alert,
 .alert:last-child {
-	margin-bottom: 2px;
+    margin-bottom: 2px;
 }
 
 .main-message {
-	max-height: none;
+    max-height: none;
 }
 
 .closed .main-message {
-	max-height: 150px;
-	overflow: hidden
+    max-height: 150px;
+    overflow: hidden
 }
 
 .stats {
     display: inline-block;
-    max-width: 180px;
     vertical-align: middle;
     text-align: left;
 }
 
 .stats .stat {
-	width: 50%;
-	float: left;
-
-	white-space: nowrap;
+    width: 50%;
+    float: left;
+    white-space: nowrap;
 }
 
 .stats .stat .badge {
     margin-right: 4px;
 }
 
+.stats .stat-group {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 2px;
+    max-width: 180px;
+}
+
 @media (max-width:1138px) {
-	#info-container {
-		right: 12%;
-		left: 12%;
-	}
+    #info-container {
+        right: 12%;
+        left: 12%;
+    }
 }
 
 @media (max-width:991px) {
-	#info-container {
-		right: 0;
-		left: 0;
-	}
+    #info-container {
+        right: 0;
+        left: 0;
+    }
 }
 
 
@@ -542,19 +547,19 @@ input.editable.date.year {
 }
 
 .multiselect li input {
-	display: inline
+    display: inline
 }
 
 .multiselect li label:hover {
-	text-decoration: none;
-	color: #262626;
-	background-color: #f5f5f5;
+    text-decoration: none;
+    color: #262626;
+    background-color: #f5f5f5;
 }
 
 
 /* misc */
 .dev-warning {
-	background: red;
-	position: absolute !important;
-	left: 50%;
+    background: red;
+    position: absolute !important;
+    left: 50%;
 }

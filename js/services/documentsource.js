@@ -12,15 +12,16 @@ angular
             files: 0,
             analyzed: 0,
             loaded:  0,
-            thumbnails: 0,
-            _isOk: function(k, v) {
-                return v >= folder.stats.files ? 1 : -1;
-            }
+            thumbnails: 0
         };
         folder.ready = false;
     };
 
     folder.reset();
+
+    folder.getStats = () => folder.stats;
+
+    folder.isStatOk = (k, v) => (v >= folder.stats.files ? 1 : -1);
 
     var requirePdfJs = new Promise(function(resolve) {
         /**

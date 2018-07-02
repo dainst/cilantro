@@ -3,7 +3,7 @@
 <div ng-controller="view_articles" data-ng-init="init()">
 
 <div class="row toprow">
-	<div class="col-md-8">
+	<div class="col-md-4">
 		<div class="btn-group" uib-dropdown>
 			<button uib-dropdown-toggle class="btn btn-default">Select Article<span class="caret"></span></button>
 			<ul uib-dropdown-menu>
@@ -19,6 +19,9 @@
 		</span>
 
 	</div>
+    <div class="col-md-4 text-center">
+        <stats type="subobjects"></stats>
+    </div>
 	<div class="col-md-4 text-right">
 		<span class="btn-group">
 			<button
@@ -32,7 +35,6 @@
 					ng-click='confirmArticle()'
 					class='btn btn-success'
 			>Confirm<span class="glyphicon glyphicon-chevron-right"></span></button>
-			</button>
 		</span>
 	</div>
 </div>

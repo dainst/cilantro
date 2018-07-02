@@ -1,8 +1,11 @@
 <div class="stats">
-    <div ng-repeat="(key, stat) in getStats()" class="stat">
-        <span
-                class="badge badge-pill badge-default"
-                ng-class="{'alert-success': stats._isOk(key, stat) == 1, 'alert-danger': stats._isOk(key, stat) == -1}"
-        >{{stat}}</span>{{key}}
+    <div class="stat-group"><strong>{{type === "subobjects" ? "Articles" : "Documents"}}</strong></div>
+    <div class="stat-group">
+        <div ng-repeat="(stat, value) in getStats()" class="stat">
+            <span class="badge badge-pill badge-default"
+                  ng-class="{'alert-success': isStatOk(stat, value) == 1, 'alert-danger': isStatOk(stat, value) == -1}">
+                {{value}}
+            </span>{{getStatLabel(stat)}}
+        </div>
     </div>
 </div>

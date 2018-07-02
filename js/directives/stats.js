@@ -1,6 +1,6 @@
 angular
 .module('directive.stats', ['ng'] )
-.directive('stats', ['dataset', function(dataset) {
+.directive('stats', ['dataset', 'documentsource', function(dataset, documentsource) {
     return {
         restrict: 'E',
         scope: {
@@ -8,16 +8,17 @@ angular
         },
         templateUrl: 'partials/elements/stats.html',
         link: function(scope, elem, attrs) {
-            scope.getStats = dataset.getStats;
-            scope._isOk = function(k) {
-                if (k === 'undecided') {
-                    return 0;
-                } else if (k === 'confirmed') {
-                    return 1;
-                } else if (k === 'dismissed') {
-                    return -1;
-                }
-            };
+
+            scope.type = attrs.type;
+
+            const getObject = () => (attrs.type === "subobjects") ? dataset : documentsource;
+
+            scope.getStats = () => getObject().getStats();
+
+            scope.isStatOk = (stat, value) => getObject().isStatOk(stat, value);
+
+            scope.getStatLabel = (stat) => stat[0].toUpperCase() + stat.substr(1);
+
         }
     }
 }]);
