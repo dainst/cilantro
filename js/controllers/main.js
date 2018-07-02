@@ -30,13 +30,6 @@ angular
 
 		$scope.init = function() {
 
-		    messenger.info("Info");
-            messenger.debug("debug");
-            messenger.warning("warning");
-            messenger.error("error");
-            messenger.success("succes");
-            messenger.push("urgent", "urgent", true);
-
 		    function failFatal(err) {
 		        console.error("fatal error", err);
                 $scope.isLoading = false;
