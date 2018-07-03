@@ -15,7 +15,6 @@ env:
     - CONFIG_DIR=/config
     - UID=2000
 before_install:
-  - pip install -r doc/requirements.txt
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
@@ -26,6 +25,4 @@ before_install:
   - mkdir data/workspace
   - docker-compose build
   - docker-compose up -d
-script:
-  - bash test/exec_docker_test.sh
-  - bash doc/build-doc.sh
+script: bash test/exec_docker_test.sh
