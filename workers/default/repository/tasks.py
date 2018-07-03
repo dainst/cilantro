@@ -29,7 +29,7 @@ class RetrieveFromStagingTask(BaseTask):
     def execute_task(self):
         staging_path = os.path.join(staging_dir)
 
-        paths = self.get_param('paths')
+        paths = self.get_param('files')
         for path in paths:
             src = os.path.join(staging_path, path)
             dest = os.path.join(self.get_work_path())

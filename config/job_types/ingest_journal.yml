@@ -4,9 +4,15 @@ about:
   tags: [OJS, iDAI.publications/journals, publish, journal, pdf]
 
 params:
-  files_to_split: list
-  paths: list
+  files: list
+  parts: list
   metadata: dict
+  ojs_journal_code: string
+  ojs_user: string
+  auto_publish_issue: boolean
+  default_publish_articles: boolean
+  default_create_frontpage: boolean
+  allow_upload_without_file: boolean
 
 tasks:
   - retrieve_from_staging

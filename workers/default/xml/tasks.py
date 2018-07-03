@@ -20,8 +20,8 @@ class GenerateMarcXMLTask(BaseTask):
 
         marc_schema_file = 'resources/MARC21slim.xsd'
 
-        for article_dir in os.listdir(os.path.join(work_path, 'articles')):
-            file_path = os.path.join(work_path, 'articles', article_dir, 'marc.xml')
+        for article_dir in os.listdir(os.path.join(work_path, 'parts')):
+            file_path = os.path.join(work_path, 'parts', article_dir, 'marc.xml')
             validate_xml(file_path, schema_file_path=marc_schema_file)
 
 
