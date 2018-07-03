@@ -2,6 +2,11 @@ import os
 
 
 def get_all_file_paths_from_dir(dir_path):
+    """
+    Returns a list of the paths of all files in a given directory and it's sub-directories.
+    :param str dir_path: The directory to get the paths from
+    :return: list of the file paths.
+    """
     file_list = []
     for entry in os.scandir(dir_path):
         if entry.is_file():
