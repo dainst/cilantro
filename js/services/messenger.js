@@ -6,22 +6,17 @@ angular
 
         messenger.messages = [];
 
-        messenger.main = false;
-
-		messenger.Message = function(text, type) {
+		messenger.Message = function(text, type, main) {
 		  let msg = {};
 		  msg.text = text;
 		  msg.type = type || "info";
+		  msg.main = angular.isUndefined(main) ? false : main;
 		  msg.timestamp = Date.now();
 		  return msg;
         };
 
 		messenger.push = function(text, type, isMain) {
-		    const message = new messenger.Message(text, type);
-		    if (isMain) {
-                messenger.main = message;
-                console.log("NEWMAIN", message);
-            }
+		    const message = new messenger.Message(text, type, isMain);
             messenger.messages.unshift(message);
 		    return message;
         };
@@ -38,6 +33,8 @@ angular
             messenger.messages = [];
             messenger.main = false;
         };
+
+        messenger.getMainMessage = () => messenger.messages.filter(msg => msg.main)[0] || messenger.messages[0];
 
 		return (messenger);
 	}]

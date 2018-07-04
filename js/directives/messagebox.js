@@ -20,7 +20,8 @@ angular
             scope.hasContent = () => messenger.messages.length > 0;
             scope.isOpen = false;
             scope.toggle = (to) => {scope.isOpen = angular.isUndefined(to) ? to : !scope.isOpen};
-            scope.getMain = () => messenger.main;
+            scope.getMain = messenger.getMainMessage;
+            scope.clearLog = messenger.clear;
         }
     }
 }]);
