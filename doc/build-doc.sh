@@ -7,6 +7,7 @@ set -e
 # Switch to docu branch and pull in the sources from the master
 git config --replace-all remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
 git fetch
+git pull
 git checkout gh-pages
 git checkout master service test utils workers run_service.py doc
 git reset HEAD
