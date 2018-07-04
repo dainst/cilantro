@@ -2,26 +2,30 @@
 
 <div class="row">
     <div class="col-md-4">
-        <div class="btn-group">
-            <multiselect elements="overviewColumns">Display Columns</multiselect>
-            <span class="dropdown" uib-dropdown>
-                <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button">Order By<span class="caret"></span></button>
-                <ul class="dropdown-menu" uib-dropdown-menu>
-                    <li><a ng-click="updateOrder('filename', true)" href="#">filename</a></li>
-                    <li><a ng-click="updateOrder('author', true)" href="#">author</a></li>
-                    <li><a ng-click="updateOrder('title', true)" href="#">title</a></li>
-                    <li><a ng-click="updateOrder('page', true)" href="#">page</a></li>
-                    <li><a ng-click="updateOrder('filename', false)" href="#">filename desc</a></li>
-                    <li><a ng-click="updateOrder('author', false)" href="#">author desc</a></li>
-                    <li><a ng-click="updateOrder('title', false)" href="#">title desc</a></li>
-                    <li><a ng-click="updateOrder('page', false)" href="#">page desc</a></li>
-                    <li><a ng-click="updateOrder('order', true)" href="#">custom (#)</a></li>
-                </ul>
-            </span>
-        </div>
-        <span class="btn-group">
+        <multiselect elements="overviewColumns">Display Columns</multiselect>
+        <uib-dropdown class="btn-group">
+            <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button">Order By<span class="caret"></span></button>
+            <ul class="dropdown-menu" uib-dropdown-menu>
+                <li><a ng-click="updateOrder('filename', true)" href="#">filename</a></li>
+                <li><a ng-click="updateOrder('author', true)" href="#">author</a></li>
+                <li><a ng-click="updateOrder('title', true)" href="#">title</a></li>
+                <li><a ng-click="updateOrder('page', true)" href="#">page</a></li>
+                <li><a ng-click="updateOrder('filename', false)" href="#">filename desc</a></li>
+                <li><a ng-click="updateOrder('author', false)" href="#">author desc</a></li>
+                <li><a ng-click="updateOrder('title', false)" href="#">title desc</a></li>
+                <li><a ng-click="updateOrder('page', false)" href="#">page desc</a></li>
+                <li><a ng-click="updateOrder('order', true)" href="#">custom (#)</a></li>
+            </ul>
+        </uib-dropdown>
+
+        <uib-dropdown class="btn-group">
             <button class='btn btn-default' ng-click='addArticle()'>Add Article<span class="glyphicon glyphicon-plus-sign"></span></button>
-        </span>
+            <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button">Import Articles<span class="caret"></span></button>
+            <ul class="dropdown-menu" uib-dropdown-menu>
+                <li ng-repeat="importer in getImportMenu()"><a ng-click="runImporter(importer)" href="#">{{importer.description}}</a></li>
+            </ul>
+        </uib-dropdown>
+
     </div>
     <div class="col-md-4 text-center">
         <stats type="subobjects"></stats>
