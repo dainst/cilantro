@@ -1,14 +1,14 @@
 <div ng-controller="view_documents" data-ng-init="init()">
     <div class="row toprow">
         <div class="col-md-4">
-
-
         </div>
         <div class="col-md-4 text-center">
             <stats type="documents"></stats>
         </div>
         <div class="col-md-4 text-right">
-
+            <button id="proceed" class='btn btn-primary' ng-click='continue()' ng-show="isReady()">
+                Proceed<span class="glyphicon glyphicon-chevron-right"></span>
+            </button>
         </div>
     </div>
 

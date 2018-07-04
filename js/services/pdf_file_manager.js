@@ -159,9 +159,9 @@ angular
             loadFiles();
             Promise.all(loadFilePromises).then(function() {
                 messenger.success("All Files loaded");
-                refreshView();
                 file_handler_manager.gotAll("pdf");
                 pdf_file_manager.ready = true;
+                refreshView();
             })
         });
     };
