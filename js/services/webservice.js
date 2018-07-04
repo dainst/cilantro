@@ -1,7 +1,7 @@
 angular
 .module('module.webservice', [])
-.factory("webservice", ['$http', '$rootScope', 'settings', 'messenger', 'repository',
-	function($http, $rootScope, settings, messenger, repository) {
+.factory("webservice", ['$http', '$rootScope', 'settings', 'messenger', 'staging_dir',
+	function($http, $rootScope, settings, messenger, staging_dir) {
 
 	let webservice = {};
 

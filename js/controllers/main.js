@@ -4,8 +4,8 @@ angular
 
 .module('controller.main', [])
 
-.controller('main',	['$scope', 'editables', 'webservice', 'settings', 'messenger', 'protocolregistry', 'documentsource', 'dataset', 'repository', 'steps',  'labels',
-	function ($scope, editables, webservice, settings, messenger, protocolregistry, documentsource, dataset, repository, steps, labels) {
+.controller('main',	['$scope', 'editables', 'webservice', 'settings', 'messenger', 'file_handler_manager', 'pdf_file_manager', 'dataset', 'staging_dir', 'steps',  'labels',
+	function ($scope, editables, webservice, settings, messenger, file_handler_manager, pdf_file_manager, dataset, staging_dir, steps, labels) {
 
 		/* debug */
 		$scope.cacheKiller = '?nd=' + Date.now();
@@ -16,8 +16,8 @@ angular
 		/* dataset */
 		$scope.dataset = dataset;
 
-		/* repository */
-		$scope.repository = repository;
+		/* staging_dir */
+		$scope.staging_dir = staging_dir;
 
         /* steps */
         $scope.steps = steps;
@@ -48,12 +48,10 @@ angular
                             webservice.get('staging')
                                 .then((stagingFolder) => {
                                     console.log("stagingFolder", stagingFolder);
-                                    $scope.repository.update(stagingFolder);
-                                    $scope.protocols.selectLast();
+                                    $scope.staging_dir.update(stagingFolder);
                                     $scope.isLoading = false;
 
-
-                                    $scope.dataset.data.importFilePath = "a_journal/e2e-testing.pdf";
+                                    file_handler_manager.selectDefaultFileHandlers();
 
                                     refreshView();
 
@@ -69,71 +67,21 @@ angular
 		/* restart */
 		$scope.restart = function() {
 			steps.isStarted = false;
-			documentsource.reset();
+			pdf_file_manager.reset();
 			dataset.reset();
 			$scope.init().then(function() {
                 messenger.info('Restart Importer');
                 steps.change('home');
-                $scope.protocols.selectLast();
                 $scope.isLoading = false;
             });
 		};
 
-        /* protocols */ // @ TODO move to separate service
-        $scope.protocols = {
-            list: protocolregistry.protocols,
-            current: -1,
-            selectLast: function() {
-                try {
-                    let p = localStorage.getItem('protocol');
-                    $scope.protocols.select(p);
-                } catch (e) {
-                    $scope.protocols.select();
-                }
-            },
-            isSelected: function() {
-                return angular.isDefined($scope.protocol) && ($scope.protocol.id !== "none");
-            },
-            select: function(id) {
-                if (id) {
-                    $scope.protocols.current = id;
-                } else {
-                    id = $scope.protocols.current;
-                }
-                console.log("select protocol " + id);
-                $scope.protocol = $scope.protocols.list[id];
-                dataset.reset();
-                if (settings.devMode() && (dataset.data.importFilePath === "")) {
-                    let file = $scope.repository.getFirstFile();
-                    dataset.data.importFilePath = file ? file.path : '';
-                }
-                if ($scope.protocol && angular.isFunction($scope.protocol.onSelect)) {
-                    $scope.protocol.onSelect()
-                }
-            },
-            start: function() {
-                if (!dataset.data.allow_upload_without_file && !dataset.data.importFilePath) {
-                    messenger.error("Please select a file or folder to upload!");
-                    return false;
-                }
-                localStorage.setItem('protocol', $scope.protocol.id);
-                console.log("start protocol " + $scope.protocol.id);
-                steps.change($scope.protocol.startView || 'overview');
-                if (angular.isFunction($scope.protocol.onInit)) {
-                    $scope.protocol.onInit();
-                }
-                return true;
-            }
-        };
-        $scope.protocol = {};
 
 		/* ctrl */
 		$scope.start = function() {
-            if (!$scope.protocols.isSelected()) {
-                messenger.error("Please select an import protocol");
-                return;
-            }
-            steps.isStarted = $scope.protocols.start();
+            steps.change('documents');
+            steps.isStarted = true;
+            pdf_file_manager.getDocuments(dataset.data.importFilePath);
 		};
 
 		/* some pdf things happen outside angular and need this */
@@ -144,18 +92,7 @@ angular
         }
 		$scope.$on('refreshView', refreshView);
 
-		/* forward events to current protocol */
-		$scope.$on('gotFile', function($event, data) {
-			if (angular.isFunction($scope.protocol.onGotFile)) {
-				$scope.protocol.onGotFile(data)
-			}
-		});
 
-		$scope.$on('gotAll', function($event, data) {
-			if (angular.isFunction($scope.protocol.onGotAll)) {
-				$scope.protocol.onGotAll(data)
-			}
-		});
 
 	}
 ]);

@@ -61,7 +61,7 @@ angular
      *  meta information
      *
      *  this is a set of information, wich can be set when we select the backend and get the info from there
-     *  it should never be modified by protocol.
+     *  it should never be modified by fileHandler.
      *
      */
     let journalConstraints = {}; 	// information about available journals and their contraints

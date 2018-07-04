@@ -1,6 +1,6 @@
 /**
  * this will be the successor of journalmaster and stuff
- * it will have analyzer (protocol) (may be journal specific)
+ * it will have analyzer (fileHandler) (may be journal specific)
  * it will also have a datasource : folder or pdf
 
 
@@ -9,18 +9,16 @@ angular
 
 .module('controller.view_overview', [])
 
-.controller('view_overview', ['$scope', 'settings', 'webservice', 'editables', 'messenger', 'dataset', 'documentsource', 'steps', 'labels', 'protocolregistry',
-    function($scope, settings, webservice, editables, messenger, dataset, documentsource, steps, labels, protocolregistry) {
+.controller('view_overview', ['$scope', 'settings', 'messenger', 'dataset', 'pdf_file_manager', 'steps', 'labels',
+    function($scope, settings, messenger, dataset, pdf_file_manager, steps, labels) {
 
         $scope.overviewColumns = {};
 
         /**
          * initialization of overview view
-         * needs main controller to have set properly documentsource and protocol
+         * needs main controller to have set properly pdf_file_manager and fileHandler
          */
         $scope.init = function() {
-
-            console.log("Init View: Overview", $scope.protocol);
 
             Object.keys(new dataset.Article()).map(function(key) {
                 $scope.overviewColumns[key] = {
@@ -119,7 +117,7 @@ angular
             $scope.selectedThumb = (i === $scope.selectedThumb) ? -1 : i;
         };
         $scope.updateThumbnail = function(article) {
-            documentsource.updateThumbnail(article);
+            pdf_file_manager.updateThumbnail(article);
         };
 
         /* order */
@@ -168,12 +166,7 @@ angular
             dataset.articles = orderArticles(dataset.articles, order, asc);
         };
 
-        $scope.getFileInfo = documentsource.getFileInfo;
-
-        $scope.getImportMenu = function() {
-            console.log("P", protocolregistry.protocols);
-            return protocolregistry.protocols;
-        }
+        $scope.getFileInfo = pdf_file_manager.getFileInfo;
 
 
     }

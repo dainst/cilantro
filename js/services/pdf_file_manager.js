@@ -1,78 +1,78 @@
 angular
-.module('module.documentsource', ['module.messenger', 'module.webservice'])
-.factory('documentsource', ['$rootScope', 'settings', 'webservice', 'messenger', 'dataset', 'editables','repository',
-    function($rootScope, settings, webservice, messenger, dataset, editables,repository) {
+.module('module.pdf_file_manager', ['module.messenger', 'module.webservice'])
+.factory('pdf_file_manager', ['$rootScope', 'settings', 'webservice', 'messenger', 'dataset', 'editables','staging_dir', 'file_handler_manager',
+    function($rootScope, settings, webservice, messenger, dataset, editables, staging_dir, file_handler_manager) {
 
-    var folder = {};
+    const pdf_file_manager = {};
 
-    folder.reset = function() {
-        folder.dir = []; // filenames
-        folder.files  = {}; // pdf.js documents / index: filenames
-        folder.stats  = {
+    pdf_file_manager.reset = function() {
+        pdf_file_manager.dir = []; // filenames
+        pdf_file_manager.files  = {}; // pdf.js documents / index: filenames
+        pdf_file_manager.stats  = {
             files: 0,
             analyzed: 0,
             loaded:  0,
             thumbnails: 0
         };
-        folder.ready = false;
+        pdf_file_manager.ready = false;
     };
 
-    folder.reset();
+    pdf_file_manager.reset();
 
-    folder.getStats = () => folder.stats;
+    pdf_file_manager.getStats = () => pdf_file_manager.stats;
 
-    folder.isStatOk = (k, v) => (v >= folder.stats.files ? 1 : -1);
+    pdf_file_manager.isStatOk = (k, v) => (v >= pdf_file_manager.stats.files ? 1 : -1);
 
-    var requirePdfJs = new Promise(function(resolve) {
+    const requirePdfJs = new Promise(function(resolve) {
         /**
          * @ TODO include pdf.js (& require) with npm as well and replace this stuff
          */
         require.config({paths: {'pdfjs': 'inc/pdf.js'}});
         require(['pdfjs/display/api', 'pdfjs/display/global'], function(pdfjs_api, pdfjs_global) {
             console.log('2. required pdf.js');
-            folder.status  = 'pdf.js loaded';
+            pdf_file_manager.status  = 'pdf.js loaded';
 
-            folder.PDF = {
+            pdf_file_manager.PDF = {
                 "api": pdfjs_api,
                 "global": pdfjs_global,
                 "data": null,
                 'object': null
             };
 
-            folder.PDF.global.PDFJS.workerSrc = 'js/other/pdfjs_worker_loader.js';
+            pdf_file_manager.PDF.global.PDFJS.workerSrc = 'js/other/pdfjs_worker_loader.js';
 
             resolve();
         });
     });
 
-    var loadFilePromises = [];
+    const loadFilePromises = [];
 
-    var loadFiles = function() {
-        folder.ready = false;
+    const loadFiles = function() {
+        pdf_file_manager.ready = false;
 
-        for (let fileid in folder.dir) {
+        for (let fileid in pdf_file_manager.dir) {
 
-            var url = settings.files_url + folder.dir[fileid].path;
+            let url = settings.files_url + pdf_file_manager.dir[fileid].path;
 
-            var promise = new Promise(
+            let promise = new Promise(
                 function documentPromiseResolve(resolve, fail) {
 
-                    folder.PDF.api.getDocument(url).then(
+                    pdf_file_manager.PDF.api.getDocument(url).then(
                         function onGotDocument(pdf) {
-                            var fileInfo = {
+                            let fileInfo = {
                                 pdf: pdf,
-                                filename: folder.dir[fileid].name,
+                                filename: pdf_file_manager.dir[fileid].name,
                                 url: this.url,
                                 pagecontext: new editables.types.Pagecontext({maximum: pdf.pdfInfo.numPages, path: this.url})
                             };
 
-                            var promise1 = pdf.getMetadata().then(function (meta) {
+                            let promise1 = pdf.getMetadata().then(function (meta) {
                                 console.log(meta);
                                 this.meta = meta.info
                             }.bind(fileInfo));
-                            var promise2 = pdf.getDownloadInfo().then(function (dil) {
+                            let promise2 = pdf.getDownloadInfo().then(function (dil) {
                                 function fileSize(b) {
-                                    var u = 0, s = 1024;
+                                    let u = 0, s = 1024;
                                     while (b >= s || -b >= s) {
                                         b /= s;//
                                         u++;
@@ -83,7 +83,7 @@ angular
                                 this.size = fileSize(dil.length);
                             }.bind(fileInfo));
 
-                            folder.files[this.url] = fileInfo;
+                            pdf_file_manager.files[this.url] = fileInfo;
 
                             let metadataLoaded = function () {
                                 dataset.loadedFiles[this.url] = {
@@ -91,9 +91,9 @@ angular
                                     url: this.url,
                                     pagecontext: this.pagecontext
                                 };
-                                console.log("loadedFiles updated", dataset.loadedFiles);
-                                messenger.success('document nr ' + Object.keys(folder.files).length + ' loaded');
-                                $rootScope.$broadcast('gotFile', this.url);
+                                messenger.success('document nr ' + Object.keys(pdf_file_manager.files).length + ' loaded');
+                                pdf_file_manager.stats.loaded += 1;
+                                file_handler_manager.handleFile("pdf", this.url);
                                 refreshView();
                                 resolve();
                             }.bind(fileInfo);
@@ -105,8 +105,8 @@ angular
 
                         }.bind(
                             {
-                                filename: folder.dir[fileid].name,
-                                url: folder.dir[fileid].path
+                                filename: pdf_file_manager.dir[fileid].name,
+                                url: pdf_file_manager.dir[fileid].path
                             }
                         ),
 
@@ -124,32 +124,34 @@ angular
 
         }
 
-    }
+    };
 
-    folder.getDocuments = function(path) {
+    pdf_file_manager.getDocuments = function(path) {
         console.log("selected files to load", path);
 
         if (!path || path === "") {
             return;
         }
 
-        let filesObject = repository.getFileInfo(path);
+        pdf_file_manager.ready = false;
+
+        let filesObject = staging_dir.getFileInfo(path);
 
         if (filesObject.type === 'directory') {
 
-            messenger.info('loading folder contents: ' + path);
+            messenger.info('loading pdf_file_manager contents: ' + path);
 
-            folder.dir = repository.list[path].contents;
+            pdf_file_manager.dir = staging_dir.list[path].contents;
 
-            console.log('got folder:' + path, folder);
+            console.log('got pdf_file_manager:' + path, pdf_file_manager);
 
-            folder.stats.files = folder.dir.length;
+            pdf_file_manager.stats.files = pdf_file_manager.dir.length;
 
-            messenger.info('folder contents loaded');
+            messenger.info('pdf_file_manager contents loaded');
 
         } else {
-            folder.dir = [filesObject];
-            folder.stats.files = 1;
+            pdf_file_manager.dir = [filesObject];
+            pdf_file_manager.stats.files = 1;
         }
 
         requirePdfJs.then(function() {
@@ -158,8 +160,8 @@ angular
             Promise.all(loadFilePromises).then(function() {
                 messenger.success("All Files loaded");
                 refreshView();
-                $rootScope.$broadcast('gotAll');
-                folder.ready = true;
+                file_handler_manager.gotAll("pdf");
+                pdf_file_manager.ready = true;
             })
         });
     };
@@ -169,12 +171,12 @@ angular
      * @param article
      * @returns {*}
      */
-    folder.getFileInfo = function(article) {
+    pdf_file_manager.getFileInfo = function(article) {
 
         if (article.filepath.value.value === 'none') {
             return {}
         }
-        var file = folder.files[article.filepath.value.value];
+        let file = pdf_file_manager.files[article.filepath.value.value];
         if (angular.isUndefined(file)) {
             return {'alert': 'file not known'}
         }
@@ -185,7 +187,7 @@ angular
             'size': file.size
         }
 
-    }
+    };
 
 
     /**
@@ -195,12 +197,12 @@ angular
         if (article.pages.value.startPdf === 0) { // while creation
             return;
         }
-        if (!angular.isUndefined(folder.files[article.filepath.value.value])) {
-            article.pages.context = folder.files[article.filepath.value.value].pagecontext;
-            folder.updateThumbnail(article);
+        if (!angular.isUndefined(pdf_file_manager.files[article.filepath.value.value])) {
+            article.pages.context = pdf_file_manager.files[article.filepath.value.value].pagecontext;
+            pdf_file_manager.updateThumbnail(article);
         } else {
             article.pages.resetContext();
-            folder.removeThumbnail(article._.id);
+            pdf_file_manager.removeThumbnail(article._.id);
         }
     });
 
@@ -209,19 +211,19 @@ angular
      * call this from a button or something ...
      * @param article
      */
-    folder.updateThumbnail = function(article) {
+    pdf_file_manager.updateThumbnail = function(article) {
         console.log("recreate thumbnail for", article._.id, article.pages.value.startPdf, article.filepath.value.value);
-        folder.files[article.filepath.value.value].pdf.getPage(article.pages.value.startPdf).then(
+        pdf_file_manager.files[article.filepath.value.value].pdf.getPage(article.pages.value.startPdf).then(
             function updateThumbnailGotPageSuccess(page) {
-                folder.createThumbnail(page, article._.id)
+                pdf_file_manager.createThumbnail(page, article._.id)
             },
             function updateThumbnailGotPageFail(page) {
                 messenger.error("Page " + article.pages.value.startPdf + " not found");
                 console.log('page not found', article.pages.value.startPdf, article._.id);
-                folder.removeThumbnail(article._.id)
+                pdf_file_manager.removeThumbnail(article._.id)
             }
         );
-    }
+    };
 
 
     /**
@@ -229,17 +231,17 @@ angular
      * @param page
      * @param containerId
      */
-    folder.createThumbnail = function(page, containerId) {
-        var container = angular.element(document.querySelector('#thumbnail-container-' + containerId));
-        var img = container.find('img');
+    pdf_file_manager.createThumbnail = function(page, containerId) {
+        let container = angular.element(document.querySelector('#thumbnail-container-' + containerId));
+        let img = container.find('img');
 
-        var viewport = page.getViewport(1.5); // scale 1.5
-        var canvas = document.createElement('canvas');
-        var ctx = canvas.getContext('2d');
+        let viewport = page.getViewport(1.5); // scale 1.5
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
         canvas.height = viewport.height; // 626.16 * 1.5
         canvas.width = viewport.width; // 399.84 * 1.5
 
-        var renderContext = {
+        let renderContext = {
             canvasContext: ctx,
             viewport: viewport
         };
@@ -256,17 +258,17 @@ angular
             ctx.fillStyle = "#123456";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             dataset.thumbnails[containerId] = canvas.toDataURL();
-            folder.stats.thumbnails = Object.keys(dataset.thumbnails).length;
+            pdf_file_manager.stats.thumbnails = Object.keys(dataset.thumbnails).length;
             refreshView()
         });
 
-    }
+    };
 
-    folder.removeThumbnail = function(containerId) {
+    pdf_file_manager.removeThumbnail = function(containerId) {
         console.log("thumbnail removed", containerId);
         delete dataset.thumbnails[containerId];
-        folder.stats.thumbnails = Object.keys(dataset.thumbnails).length;
-    }
+        pdf_file_manager.stats.thumbnails = Object.keys(dataset.thumbnails).length;
+    };
 
     /**
      * since the pdf.js stuff is happening outside angular is is ansync we need this shit here
@@ -276,7 +278,7 @@ angular
         $rootScope.$broadcast('refreshView');
     }
 
-    return folder;
+    return pdf_file_manager;
 
 
 }]);

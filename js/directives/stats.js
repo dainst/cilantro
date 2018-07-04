@@ -1,6 +1,6 @@
 angular
 .module('directive.stats', ['ng'] )
-.directive('stats', ['dataset', 'documentsource', function(dataset, documentsource) {
+.directive('stats', ['dataset', 'pdf_file_manager', function(dataset, pdf_file_manager) {
     return {
         restrict: 'E',
         scope: {
@@ -11,7 +11,7 @@ angular
 
             scope.type = attrs.type;
 
-            const getObject = () => (attrs.type === "subobjects") ? dataset : documentsource;
+            const getObject = () => (attrs.type === "subobjects") ? dataset : pdf_file_manager;
 
             scope.getStats = () => getObject().getStats();
 

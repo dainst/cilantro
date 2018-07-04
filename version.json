@@ -1,6 +1,9 @@
 {
-  "version": "3.0",
+  "version": "4 pre-alpha",
   "history": {
+    "4 pre-alpha": [
+      "Use Cilantro as Backend"
+    ],
 	"3.0": [
 	  "Get back and forward in the workflow",
 	  "Undo deleted articles",

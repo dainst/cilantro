@@ -1,13 +1,14 @@
-let mod = angular.module('module.protocols.csv_import', ['ui.bootstrap']);
+let mod = angular.module('module.fileHandlers.csv_import', ['ui.bootstrap']);
 
-// @ todo this (and every protocol) should inherit from generic...
+// @ todo this (and every fileHandler) should inherit from generic...
 
-mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregistry', 'documentsource', 'dataset', 'messenger',
-	function($rootScope, $uibModal, editables, protocolregistry, documentsource, dataset, messenger) {
+mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'file_handler_manager', 'pdf_file_manager', 'dataset', 'messenger',
+	function($rootScope, $uibModal, editables, file_handler_manager, pdf_file_manager, dataset, messenger) {
 
-        let journalCtrl = new protocolregistry.Protocol('csv_import');
+        let journalCtrl = new file_handler_manager.FileHandler('csv_import');
 
-        journalCtrl.description = "Import and get metadata from a CSV-file";
+        journalCtrl.description = "Create Articles with metadata from a CSV-file";
+        journalCtrl.fileTypes = ["csv"];
 
 		journalCtrl.onSelect = function() {
             dataset.data.identification.select('year');
@@ -18,7 +19,7 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'protocolregi
 		}
 
 		journalCtrl.onInit = function() {
-			documentsource.getDocuments(dataset.data.importFilePath);
+			pdf_file_manager.getDocuments(dataset.data.importFilePath);
 		}
 
 		journalCtrl.onGotFile = function(fileName) {

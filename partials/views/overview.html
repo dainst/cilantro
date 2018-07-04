@@ -17,14 +17,9 @@
                 <li><a ng-click="updateOrder('order', true)" href="#">custom (#)</a></li>
             </ul>
         </uib-dropdown>
-
-        <uib-dropdown class="btn-group">
+        <span class="btn-group">
             <button class='btn btn-default' ng-click='addArticle()'>Add Article<span class="glyphicon glyphicon-plus-sign"></span></button>
-            <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button">Import Articles<span class="caret"></span></button>
-            <ul class="dropdown-menu" uib-dropdown-menu>
-                <li ng-repeat="importer in getImportMenu()"><a ng-click="runImporter(importer)" href="#">{{importer.description}}</a></li>
-            </ul>
-        </uib-dropdown>
+        </span>
 
     </div>
     <div class="col-md-4 text-center">

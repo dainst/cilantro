@@ -1,12 +1,12 @@
 // service wich works with the chiron pdfs
 
 angular
-.module('module.protocols.testdata', [])
-.factory("testdata", ['protocolregistry', 'dataset', 'documentsource',
-	function(protocolregistry, dataset, documentsource) {
+.module('module.fileHandlers.testdata', [])
+.factory("testdata", ['file_handler_manager', 'dataset', 'pdf_file_manager',
+	function(file_handler_manager, dataset, pdf_file_manager) {
 
 
-	let journalCtrl = new protocolregistry.Protocol('testdata');
+	let journalCtrl = new file_handler_manager.FileHandler('testdata');
 
 	journalCtrl.description = "Create some Testdata 3.0";
 
@@ -46,7 +46,7 @@ angular
 			author: {firstname:'5Piller', lastname: '5Mann'},
 			pages: 1
 		}));
-		documentsource.ready = true;
+		pdf_file_manager.ready = true;
 	};
 
 	journalCtrl.onSelect= function() {

@@ -556,6 +556,11 @@ input.editable.date.year {
     background-color: #f5f5f5;
 }
 
+.dropdown-menu .status {
+    width: 10px;
+    text-align: center;
+    display: inline-block;
+}
 
 /* misc */
 .dev-warning {

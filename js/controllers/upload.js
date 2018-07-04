@@ -1,7 +1,7 @@
 angular.module('controller.upload', ['ngFileUpload'])
 
-.controller('upload', ['$scope', '$rootScope','Upload', '$timeout', 'settings', 'webservice', 'messenger', 'repository',
-	function ($scope, $rootScope, Upload, $timeout, settings, webservice, messenger, repository) {
+.controller('upload', ['$scope', '$rootScope','Upload', '$timeout', 'settings', 'webservice', 'messenger', 'staging_dir',
+	function ($scope, $rootScope, Upload, $timeout, settings, webservice, messenger, staging_dir) {
 
 
 		$scope.uploadedFiles = [];
@@ -43,7 +43,7 @@ angular.module('controller.upload', ['ngFileUpload'])
 				webservice.get('staging')
                                 .then((stagingFolder) => {
                                     console.log("stagingFolder", stagingFolder);
-                                    $scope.repository.update(stagingFolder);
+                                    $scope.staging_dir.update(stagingFolder);
                                     $rootScope.$broadcast('refreshView');
                                 })
 			}; 

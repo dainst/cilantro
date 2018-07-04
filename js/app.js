@@ -11,12 +11,12 @@ angular
 	'idai.templates',
 
     'module.labels',
-	'module.documentsource',
+	'module.pdf_file_manager',
 	'module.dataset',
-	'module.protocolregistry',
+	'module.file_handler_manager',
 	'module.messenger',
 	'module.webservice',
-	'module.repository',
+	'module.staging_dir',
 	'module.steps',
     'module.journal_issue',
 
@@ -26,6 +26,7 @@ angular
 	'controller.view_overview',
 	'controller.view_articles',
 	'controller.view_finish',
+	'controller.view_documents',
 
 	'controller.upload',
 	'directive.editable',
@@ -36,10 +37,10 @@ angular
 
 	'module.editables',
 
-	'module.protocols.testdata',
-	'module.protocols.generic',
-	'module.protocols.chiron_parted',
-	'module.protocols.csv_import',
+	'module.fileHandlers.testdata',
+	'module.fileHandlers.generic',
+	'module.fileHandlers.chiron_parted',
+	'module.fileHandlers.csv_import',
 
     'module.settings'
 

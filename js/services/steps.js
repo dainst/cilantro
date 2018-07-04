@@ -2,7 +2,7 @@
 
 angular
 .module('module.steps', [])
-.factory("steps", ['documentsource', 'dataset', 'messenger', function(documentsource, dataset, messenger) {
+.factory("steps", ['pdf_file_manager', 'dataset', 'messenger', function(pdf_file_manager, dataset, messenger) {
 
     const cacheKiller = '?nd=' + Date.now();
 
@@ -25,22 +25,22 @@ angular
         "documents": {
             "template": "partials/views/documents.html",
             "title": "Documents",
-            "showIf": function() {return documentsource.ready}
+            "showIf": function() {return steps.isStarted}
         },
         "overview": {
             "template": "partials/views/overview.html",
             "title": "Overview",
-            "showIf": function() {return documentsource.ready}
+            "showIf": function() {return pdf_file_manager.ready}
         },
         "articles": {
             "template": "partials/views/articles.html",
             "title": "Articles",
-            "showIf": function() {return documentsource.ready}
+            "showIf": function() {return pdf_file_manager.ready}
         },
         "publish": {
             "template": "partials/views/finish.html",
             "title": "Publish",
-            "showIf": function() {return steps.isStarted && documentsource.ready && dataset.isReadyToUpload()}
+            "showIf": function() {return steps.isStarted && pdf_file_manager.ready && dataset.isReadyToUpload()}
         },
         "fatal": {
             "template": "partials/views/fatal.html",
