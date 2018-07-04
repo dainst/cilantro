@@ -48,5 +48,5 @@ touch _modules/.nojekyll
 # Push docu to docu-branch and go back to master
 git add -A
 git commit -m "Generated gh-pages for `git log master -1 --pretty=short --abbrev-commit`"
-git push https://${GITHUB_TOKEN}@github.com/rhenck/cilantro.git gh-pages -f  # TODO
+git push https://${GITHUB_TOKEN}@github.com/dainst/cilantro.git gh-pages -f  # TODO
 git checkout master
