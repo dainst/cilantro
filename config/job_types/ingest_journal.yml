@@ -18,7 +18,7 @@ tasks:
     xml_template_path: resources/ojs_template.xml
   - foreach: "\\.pdf$"
     do: convert.pdf_to_txt
-  - foreach: "_nlp.*txt$"
+  - foreach: ".*txt$"
     do: nlp.annotate
   - publish_to_repository
   - cleanup_workdir

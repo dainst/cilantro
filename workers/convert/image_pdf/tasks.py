@@ -50,7 +50,6 @@ class PdfToTxtTask(BaseTask):
     def execute_task(self):
         file = self.get_param('file')
         folder, _ = os.path.splitext(file)
-        folder += '_nlp'
         os.makedirs(folder)
         convert_pdf_to_txt(file, folder)
 
