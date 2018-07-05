@@ -20,6 +20,8 @@ To build a new image or to rebuild it run the build script
 Tag defaults to stable.
 
 You should use your own tag for developing, e.g. the name of your feature branch.
+You can append `--no-cache` option if you don't want to use your docker cache.
+This may avoid some unexpected behavior and may be considered if errors occur.
 
 New repositories are automatically created on dockerhub if your permissions are sufficient.
 Make sure to provide a description for them at dockerhub!
