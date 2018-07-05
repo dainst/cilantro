@@ -15,7 +15,7 @@ env:
     - CONFIG_DIR=/config
     - UID=2000
 before_install:
-  - pip install -r doc/requirements.txt
+  - pip3 install -r doc/requirements.txt
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
