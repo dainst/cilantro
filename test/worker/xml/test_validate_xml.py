@@ -17,10 +17,14 @@ class ValidateXMLTest(unittest.TestCase):
         xml_file = self.ojs_xml_file
         validate_xml(xml_file)
 
+    def test_validate_xml_with_DTD(self):
+        xml_file = self.ojs_xml_file
+        validate_xml(xml_file, dtd_validation=True)
+
     def test_validate_xml_with_schema(self):
         xml_file = self.marc_xml_file
         xml_schema_file = self.marc_schema_file
-        validate_xml(xml_file, xml_schema_file)
+        validate_xml(xml_file, schema_file_path=xml_schema_file)
 
     def test_validation_failed_by_syntax(self):
         xml_file = self.ojs_xml_file_faulty
@@ -29,4 +33,4 @@ class ValidateXMLTest(unittest.TestCase):
     def test_validation_failed_by_schema(self):
         xml_file = self.marc_xml_file_faulty
         xml_schema_file = self.marc_schema_file
-        self.assertRaises(etree.DocumentInvalid, validate_xml, xml_file, xml_schema_file)
+        self.assertRaises(etree.DocumentInvalid, validate_xml, xml_file, schema_file_path=xml_schema_file)
