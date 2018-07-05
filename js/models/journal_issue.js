@@ -74,7 +74,7 @@ angular
     function setConstraints(constraints) {
         journalConstraints = constraints;
         Object.keys(constraints).map(function(item){journalCodes[item] = item});
-        console.log(journalCodes)
+        console.log("Journals:", journalCodes);
     }
 
     // @see https://github.com/pkp/ojs/blob/ojs-stable-2_4_8/plugins/importexport/native/NativeExportDom.inc.php#L32

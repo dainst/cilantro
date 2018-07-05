@@ -1,7 +1,7 @@
 // to be: file_handler_registry
 angular
     .module("module.file_handler_manager", [])
-    .factory("file_handler_manager", [function() {
+    .factory("file_handler_manager", ['pdf_file_manager', function(pdf_file_manager) {
 
         let file_handler_manager = {};
         file_handler_manager.fileHandlers = {};
@@ -44,21 +44,24 @@ angular
             file_handler_manager.selected['csv'] = 'csv_import';
         };
 
-        file_handler_manager.handleFile = function(fileType, data) {
+        file_handler_manager.handleFile = function(fileType, filePath) {
             let fileHandler = file_handler_manager.getFileHandler(fileType);
             if (angular.isFunction(fileHandler.onGotFile)) {
-                fileHandler.onGotFile(data)
+                fileHandler.onGotFile(filePath)
             }
         };
 
-        file_handler_manager.selectFileHandler = function(fileType, handler) {
-            file_handler_manager.selected[fileType] = handler.id || false;
-        };
+        file_handler_manager.selectFileHandler = (fileType, handler) => file_handler_manager.selected[fileType] = handler.id || false;
 
-        file_handler_manager.gotAll = function(fileType, data) {
-            let fileHandler = file_handler_manager.getFileHandler(fileType);
-            if (angular.isFunction(fileHandler.onGotAll)) {
-                fileHandler.onGotAll(data)
+        const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi;
+
+        file_handler_manager.determineFileType = (filePath) => filePath.match(fileExtensionPattern)[0].substr(1);
+
+        file_handler_manager.loadFile = function(filePath, fileType) {
+            fileType = fileType || file_handler_manager.determineFileType(filePath);
+            console.log("FILETYPE:", fileType);
+            if (fileType === "pdf") {
+                pdf_file_manager.getDocuments(filePath).then(() => file_handler_manager.handleFile(fileType, filePath));
             }
         };
 

@@ -77,11 +77,10 @@ angular
 		};
 
 
-		/* ctrl */
+		/* start */
 		$scope.start = function() {
             steps.change('documents');
             steps.isStarted = true;
-            pdf_file_manager.getDocuments(dataset.data.importFilePath);
 		};
 
 		/* some pdf things happen outside angular and need this */

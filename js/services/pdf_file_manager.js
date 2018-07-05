@@ -1,7 +1,7 @@
 angular
 .module('module.pdf_file_manager', ['module.messenger', 'module.webservice'])
-.factory('pdf_file_manager', ['$rootScope', 'settings', 'webservice', 'messenger', 'dataset', 'editables','staging_dir', 'file_handler_manager',
-    function($rootScope, settings, webservice, messenger, dataset, editables, staging_dir, file_handler_manager) {
+.factory('pdf_file_manager', ['$rootScope', 'settings', 'webservice', 'messenger', 'dataset', 'editables','staging_dir',
+    function($rootScope, settings, webservice, messenger, dataset, editables, staging_dir) {
 
     const pdf_file_manager = {};
 
@@ -93,7 +93,6 @@ angular
                                 };
                                 messenger.success('document nr ' + Object.keys(pdf_file_manager.files).length + ' loaded');
                                 pdf_file_manager.stats.loaded += 1;
-                                file_handler_manager.handleFile("pdf", this.url);
                                 refreshView();
                                 resolve();
                             }.bind(fileInfo);
@@ -127,7 +126,7 @@ angular
     };
 
     pdf_file_manager.getDocuments = function(path) {
-        console.log("selected files to load", path);
+        console.log("Load File: ", path);
 
         if (!path || path === "") {
             return;
@@ -138,32 +137,27 @@ angular
         let filesObject = staging_dir.getFileInfo(path);
 
         if (filesObject.type === 'directory') {
-
-            messenger.info('loading pdf_file_manager contents: ' + path);
-
+            messenger.info('loading directory contents: ' + path);
             pdf_file_manager.dir = staging_dir.list[path].contents;
-
-            console.log('got pdf_file_manager:' + path, pdf_file_manager);
-
             pdf_file_manager.stats.files = pdf_file_manager.dir.length;
-
-            messenger.info('pdf_file_manager contents loaded');
-
         } else {
             pdf_file_manager.dir = [filesObject];
             pdf_file_manager.stats.files = 1;
         }
 
-        requirePdfJs.then(function() {
-            messenger.info('ready for loading files');
-            loadFiles();
-            Promise.all(loadFilePromises).then(function() {
-                messenger.success("All Files loaded");
-                file_handler_manager.gotAll("pdf");
-                pdf_file_manager.ready = true;
-                refreshView();
-            })
+        return new Promise((resolve, reject) => {
+            requirePdfJs.then(function() {
+                messenger.info('ready for loading files');
+                loadFiles();
+                Promise.all(loadFilePromises).then(function() {
+                    messenger.success("All Files loaded");
+                    pdf_file_manager.ready = true;
+                    refreshView();
+                    resolve();
+                }).catch(reject);
+            });
         });
+
     };
 
     /**

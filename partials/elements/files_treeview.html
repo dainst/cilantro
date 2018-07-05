@@ -1,0 +1,12 @@
+<ul class="tree-view">
+    <li ng-repeat="branch in tree">
+        <span class="leaf">{{branch.name}}</span>
+        <span ng-if="branch.type === 'file'">
+            <a href="#" ng-click="loadFile(branch.path)">load</a>
+        </span>
+        <span ng-if="branch.type === 'directory'">
+            <a href="#" ng-click="toggle(branch.path)">toggle</a>
+            <files-treeview tree="branch.contents" ng-show="isOpen(branch.path)"></files-treeview>
+        </span>
+    </li>
+</ul>

@@ -33,6 +33,7 @@ angular
 	'directive.multiselect',
     'directive.salviaNavbar',
     'directive.messagebox',
+    'directive.filesTreeview',
     'directive.stats',
 
 	'module.editables',

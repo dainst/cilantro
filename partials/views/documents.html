@@ -16,12 +16,9 @@
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">Select PDF file (or folder) from upload folder</div>
+                <div class="panel-heading">Load Files from Staging Area</div>
                 <div class="panel-body btn-group">
-                    <select class="btn btn-default" ng-model="filesListSelected">
-                        <option ng-repeat="file in staging_dir.list track by $index" value='{{file.path}}'>{{file.type==="directory" ? "[DIR]" : ""}}{{file.path}}</option>
-                    </select>
-                    <button class="btn btn-primary" ng-click="loadFiles()">Load</button>
+                    <files-treeview tree="staging_dir.tree"></files-treeview>
                 </div>
             </div>
 
