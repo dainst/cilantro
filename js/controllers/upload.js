@@ -6,7 +6,6 @@ angular.module('controller.upload', ['ngFileUpload'])
 
 		$scope.uploadedFiles = [];
 
-
 		$scope.dropFile = function(f)  {
 			console.log(f);
 		};
@@ -29,6 +28,8 @@ angular.module('controller.upload', ['ngFileUpload'])
 			return;
 		}
 
+
+		//working with ngFileUpload directive
 		Upload.upload({
 			url: 'http://localhost:5000/staging',
 			method: 'POST',
@@ -38,6 +39,7 @@ angular.module('controller.upload', ['ngFileUpload'])
 
 		}).success(function(data, status, headers, config){
 			if (data.success){
+				$scope.progress = 0;
 				$scope.uploadedFiles = $scope.uploadedFiles.concat(files);
 				$scope.invalidFiles = false;
 				webservice.get('staging')
@@ -53,6 +55,8 @@ angular.module('controller.upload', ['ngFileUpload'])
       		console.log("Upload failed with Status ", status);
       		console.log("Upload headers:", headers);
 
+		}).progress(function(event){
+			$scope.progress = Math.min(100, parseInt(100.0 * event.loaded / event.total));
 		});
  
 	$scope.uploadCSV = function(files, callback) {
