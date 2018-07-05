@@ -37,8 +37,7 @@ rm -R _static
 mv -fv doc/_build/html/* ./
 
 # Remove non-docu files
-rm -rf config service test utils workers run_service.py doc _sources __pycache__ data
-sudo rm -rf redis-data
+sudo rm -rf config service test utils workers run_service.py doc _sources __pycache__ data redis-data
 
 # Add files for bypassing jekyll in github pages
 touch .nojekyll
