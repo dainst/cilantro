@@ -9,7 +9,7 @@ RUN apt-get -y install \
     libtiff-dev \
     libpoppler-cpp-dev \
     pkg-config \
-    python-dev \
+    python3-dev \
     libmagickwand-dev \
     ghostscript
 
