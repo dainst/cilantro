@@ -5,23 +5,28 @@ angular.module('controller.upload', ['ngFileUpload'])
 
 
 		$scope.uploadedFiles = [];
+		$scope.uploadedFoldersAndFiles = [];
+
+		function updateUploadedFoldersAndFiles(files){
+			let folders = [];
+			files.forEach(function(file){
+				if (file.path){
+					let folderName = file.path.split('/',1)[0];
+					if (!folders.includes(folderName)){
+						folders.push(folderName);
+						$scope.uploadedFoldersAndFiles.push("[DIR] " + folderName);
+					}
+				} else {
+					$scope.uploadedFoldersAndFiles.push(file.name);
+				}
+			});
+		}
 
 		$scope.dropFile = function(f)  {
 			console.log(f);
 		};
 
 		$scope.uploadFiles = function(files, uploadTask, callback) {
-
-		//folder upload: saving relative path of file and adding it to meta data, for rebuilding directory structure
-		var paths = [];
-		for (let i = 0; i < files.length; i++) {
-			if (files[i].path){
-				paths.push(files[i].path);
-			} else {
-				paths.push("undefined");
-			}
-			console.log(paths);
-		}
 
 		if (!files || !files.length) {
 			$scope.invalidFiles = true;
@@ -41,7 +46,9 @@ angular.module('controller.upload', ['ngFileUpload'])
 			if (data.success){
 				$scope.progress = 0;
 				$scope.uploadedFiles = $scope.uploadedFiles.concat(files);
+				updateUploadedFoldersAndFiles(files);
 				$scope.invalidFiles = false;
+				console.log("files", files);
 				webservice.get('staging')
                                 .then((stagingFolder) => {
                                     console.log("stagingFolder", stagingFolder);
