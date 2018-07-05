@@ -18,7 +18,7 @@ if [ -z "${nocache}" ]
 fi
 cd ${name}
 rm Pipfile.lock
-pipenv install
+pipenv lock
 docker image build -t ${name}:${tag} . --build-arg GITHUB_ACCESS_TOKEN=${token} ${nocache}
 docker tag ${name}:${tag} dainst/${name}:${tag}
 docker push dainst/${name}:${tag}
