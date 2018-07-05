@@ -44,12 +44,21 @@ angular
             file_handler_manager.selected['csv'] = 'csv_import';
         };
 
-        file_handler_manager.handleFile = function(fileType, filePath) {
+        file_handler_manager.handleFile = function(filePath, fileType) {
+            fileType = fileType || file_handler_manager.determineFileType(filePath);
             let fileHandler = file_handler_manager.getFileHandler(fileType);
             if (fileHandler && angular.isFunction(fileHandler.onGotFile)) {
                 fileHandler.onGotFile(filePath)
             } else {
                 console.log("No File Handler for " + fileType);
+            }
+        };
+
+        file_handler_manager.handleFileTree = function(tree) {
+            if (tree.type === 'directory') {
+                tree.contents.forEach(file_handler_manager.handleFileTree);
+            } else {
+                file_handler_manager.handleFile(tree.path);
             }
         };
 
@@ -59,27 +68,29 @@ angular
 
         file_handler_manager.determineFileType = (filePath) => filePath.match(fileExtRegEx) ? filePath.match(fileExtRegEx)[0].substr(1) : '';
 
-        file_handler_manager.loadFile = function(filePath, fileType) {
-            fileType = fileType || file_handler_manager.determineFileType(filePath);
+        file_handler_manager.loadFile = function(file) {
+            let fileType = file_handler_manager.determineFileType(file.path);
             if (fileType === "pdf") {
-                pdf_file_manager.getDocuments(filePath).then(() => file_handler_manager.handleFile(fileType, filePath));
+                pdf_file_manager.loadFiles(file).then(() => file_handler_manager.handleFile(file.path, 'pdf'));
             } else {
-                file_handler_manager.handleFile(fileType, filePath);
+                file_handler_manager.handleFile(file, fileType);
             }
         };
 
-        file_handler_manager.isFileLoaded = function(filePath, fileType) {
-            fileType = fileType || file_handler_manager.determineFileType(filePath);
-            if (fileType === "pdf") {
-                return pdf_file_manager.isLoaded(filePath);
-            } else {
-                //other_file_manager.isLoaded(filePath);
-                return false;
-            }
-        };
+        // what if there anre not only pdfs in the dir? it's unnice..
+        file_handler_manager.loadTree = tree => pdf_file_manager.loadFiles(tree).then(() => file_handler_manager.handleFileTree(tree));
 
-        file_handler_manager.loadDir = function(dirPath) {
-            console.log("Load directory " + dirPath);
+        file_handler_manager.isLoaded = function(file) {
+            if (file.type === 'directory') {
+                return file.contents.map(file_handler_manager.isLoaded).reduce((v, w) => v && w, true);
+            }
+            const fileType = file_handler_manager.determineFileType(file.path);
+            if (fileType === "pdf") {
+                return pdf_file_manager.isLoaded(file.path);
+            }
+            //other_file_manager.isLoaded(file.path);
+            return false;
+
         };
 
         return (file_handler_manager);

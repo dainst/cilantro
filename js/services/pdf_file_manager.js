@@ -6,7 +6,6 @@ angular
     const pdf_file_manager = {};
 
     pdf_file_manager.reset = function() {
-        pdf_file_manager.dir = []; // filenames
         pdf_file_manager.files  = {}; // pdf.js documents / index: filenames
         pdf_file_manager.stats  = {
             files: 0,
@@ -45,14 +44,16 @@ angular
         });
     });
 
-    const loadFilePromises = [];
 
-    const loadFiles = function() {
+
+    const loadFiles = function(filesToLoad) {
         pdf_file_manager.ready = false;
 
-        for (let fileid in pdf_file_manager.dir) {
+        const loadFilePromises = [];
 
-            let url = settings.files_url + pdf_file_manager.dir[fileid].path;
+        for (let fileid in filesToLoad) {
+
+            let url = settings.files_url + filesToLoad[fileid].path;
 
             let promise = new Promise(
                 function documentPromiseResolve(resolve, fail) {
@@ -61,7 +62,7 @@ angular
                         function onGotDocument(pdf) {
                             let fileInfo = {
                                 pdf: pdf,
-                                filename: pdf_file_manager.dir[fileid].name,
+                                filename: filesToLoad[fileid].name,
                                 url: this.url,
                                 pagecontext: new editables.types.Pagecontext({maximum: pdf.pdfInfo.numPages, path: this.url})
                             };
@@ -91,7 +92,7 @@ angular
                                     url: this.url,
                                     pagecontext: this.pagecontext
                                 };
-                                messenger.success('document nr ' + Object.keys(pdf_file_manager.files).length + ' loaded');
+                                messenger.success('document: ' + this.url + ' loaded');
                                 pdf_file_manager.stats.loaded += 1;
                                 refreshView();
                                 resolve();
@@ -104,8 +105,8 @@ angular
 
                         }.bind(
                             {
-                                filename: pdf_file_manager.dir[fileid].name,
-                                url: pdf_file_manager.dir[fileid].path
+                                filename: filesToLoad[fileid].name,
+                                url: filesToLoad[fileid].path
                             }
                         ),
 
@@ -116,40 +117,26 @@ angular
                     )
                 }
             );
-
-
             loadFilePromises.push(promise);
-            //console.log('promises collected: ' + loadFilePromises.length);
-
         }
-
+        return loadFilePromises;
     };
 
-    pdf_file_manager.getDocuments = function(path) {
-        console.log("Load File: ", path);
-
-        if (!path || path === "") {
-            return;
-        }
+    pdf_file_manager.loadFiles = function(file) {
+        console.log("Load File: ", file);
 
         pdf_file_manager.ready = false;
 
-        let filesObject = staging_dir.getFileInfo(path);
+        //let filesObject = staging_dir.getFileInfo(path);
 
-        if (filesObject.type === 'directory') {
-            messenger.info('loading directory contents: ' + path);
-            pdf_file_manager.dir = staging_dir.list[path].contents;
-            pdf_file_manager.stats.files = pdf_file_manager.dir.length;
-        } else {
-            pdf_file_manager.dir = [filesObject];
-            pdf_file_manager.stats.files = 1;
-        }
+        let filesToLoad = (file.type === 'directory') ? file.contents : [file];
+
+        pdf_file_manager.stats.files += filesToLoad.length;
 
         return new Promise((resolve, reject) => {
             requirePdfJs.then(function() {
                 messenger.info('ready for loading files');
-                loadFiles();
-                Promise.all(loadFilePromises).then(function() {
+                Promise.all(loadFiles(filesToLoad)).then(function() {
                     messenger.success("All Files loaded");
                     pdf_file_manager.ready = true;
                     refreshView();
