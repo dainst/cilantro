@@ -18,6 +18,8 @@ angular
                 scope.isOpen = path => angular.isDefined(openStates[path]) && openStates[path];
                 scope.toggle = path => openStates[path] = !openStates[path];
                 scope.loadFile = file_handler_manager.loadFile;
+                scope.loadDir = file_handler_manager.loadDir;
+                scope.isLoaded = file_handler_manager.isFileLoaded;
             }
         }
     }]);

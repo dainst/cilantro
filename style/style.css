@@ -562,6 +562,14 @@ input.editable.date.year {
     display: inline-block;
 }
 
+/* file tree view */
+.tree-view .branch.loaded {
+    color: green
+}
+
+
+
+
 /* misc */
 .dev-warning {
     background: red;

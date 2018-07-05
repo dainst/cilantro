@@ -183,6 +183,7 @@ angular
 
     };
 
+    pdf_file_manager.isLoaded = (filePath) => angular.isDefined(pdf_file_manager.files[filePath]);
 
     /**
      * trigger trumbnail recreation (on page or filepath change)

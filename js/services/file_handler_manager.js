@@ -46,23 +46,40 @@ angular
 
         file_handler_manager.handleFile = function(fileType, filePath) {
             let fileHandler = file_handler_manager.getFileHandler(fileType);
-            if (angular.isFunction(fileHandler.onGotFile)) {
+            if (fileHandler && angular.isFunction(fileHandler.onGotFile)) {
                 fileHandler.onGotFile(filePath)
+            } else {
+                console.log("No File Handler for " + fileType);
             }
         };
 
         file_handler_manager.selectFileHandler = (fileType, handler) => file_handler_manager.selected[fileType] = handler.id || false;
 
-        const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi;
+        const fileExtRegEx = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi;
 
-        file_handler_manager.determineFileType = (filePath) => filePath.match(fileExtensionPattern)[0].substr(1);
+        file_handler_manager.determineFileType = (filePath) => filePath.match(fileExtRegEx) ? filePath.match(fileExtRegEx)[0].substr(1) : '';
 
         file_handler_manager.loadFile = function(filePath, fileType) {
             fileType = fileType || file_handler_manager.determineFileType(filePath);
-            console.log("FILETYPE:", fileType);
             if (fileType === "pdf") {
                 pdf_file_manager.getDocuments(filePath).then(() => file_handler_manager.handleFile(fileType, filePath));
+            } else {
+                file_handler_manager.handleFile(fileType, filePath);
             }
+        };
+
+        file_handler_manager.isFileLoaded = function(filePath, fileType) {
+            fileType = fileType || file_handler_manager.determineFileType(filePath);
+            if (fileType === "pdf") {
+                return pdf_file_manager.isLoaded(filePath);
+            } else {
+                //other_file_manager.isLoaded(filePath);
+                return false;
+            }
+        };
+
+        file_handler_manager.loadDir = function(dirPath) {
+            console.log("Load directory " + dirPath);
         };
 
         return (file_handler_manager);

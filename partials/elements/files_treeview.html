@@ -1,8 +1,8 @@
 <ul class="tree-view">
     <li ng-repeat="branch in tree">
-        <span class="leaf">{{branch.name}}</span>
+        <span class="branch" ng-class="{'loaded': isLoaded(branch.path)}">{{branch.name}}</span>
         <span ng-if="branch.type === 'file'">
-            <a href="#" ng-click="loadFile(branch.path)">load</a>
+            <a href="#" ng-click="loadFile(branch.path)" ng-show="!isLoaded(branch.path)">load</a>
         </span>
         <span ng-if="branch.type === 'directory'">
             <a href="#" ng-click="toggle(branch.path)">toggle</a>

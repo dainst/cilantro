@@ -17,7 +17,6 @@ angular
         $scope.selectFileHandler = file_handler_manager.selectFileHandler;
         $scope.staging_dir = staging_dir;
         $scope.filesListSelected = null;
-        $scope.loadFiles = () => pdf_file_manager.getDocuments($scope.filesListSelected);
         $scope.isReady = () => pdf_file_manager.ready;
         $scope.continue = () => steps.change('overview');
 
