@@ -1,7 +1,7 @@
 angular
 .module('module.webservice', [])
-.factory("webservice", ['$http', '$rootScope', 'settings', 'messenger', 'staging_dir',
-	function($http, $rootScope, settings, messenger, staging_dir) {
+.factory("webservice", ['$http', '$rootScope', 'settings', 'messenger',
+	function($http, $rootScope, settings, messenger) {
 
 	let webservice = {};
 
@@ -25,8 +25,10 @@ angular
                     console.log("response", response);
                     if (response.data.success === false) {
                         messenger.error(response.message);
+                        $rootScope.$broadcast('refreshView');
                         reject(response.message);
                     } else {
+                        $rootScope.$broadcast('refreshView');
                         resolve(response.data);
                     }
                 },
@@ -40,6 +42,7 @@ angular
                         errText = err.data.message;
                     }
                     messenger.error(errText);
+                    $rootScope.$broadcast('refreshView');
                     reject(errText);
                 }
             )

@@ -1,10 +1,3 @@
-/**
- * this will be the successor of journalmaster and stuff
- * it will have analyzer (fileHandler) (may be journal specific)
- * it will also have a datasource : folder or pdf
-
-
-*/
 angular
 
 .module('controller.view_overview', [])
@@ -12,15 +5,12 @@ angular
 .controller('view_overview', ['$scope', 'settings', 'messenger', 'dataset', 'pdf_file_manager', 'steps', 'labels',
     function($scope, settings, messenger, dataset, pdf_file_manager, steps, labels) {
 
+        $scope.dataset = dataset;
+
         $scope.overviewColumns = {};
 
-        /**
-         * initialization of overview view
-         * needs main controller to have set properly pdf_file_manager and fileHandler
-         */
         $scope.init = function() {
-
-            Object.keys(new dataset.Article()).map(function(key) {
+            Object.keys(new dataset.Article()).forEach(key => {
                 $scope.overviewColumns[key] = {
                     'checked': !labels.getIsHidden("sub", key),
                     'title': labels.get("sub", key, true),
@@ -29,13 +19,9 @@ angular
                     'style': labels.getStyle("sub", key),
                 }
             });
-
-
         };
 
-
         /* tools & buttons */
-
 
         $scope.addArticle = function() {
             let a = new dataset.Article('Article ' +  dataset.articles.length);

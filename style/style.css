@@ -567,7 +567,9 @@ input.editable.date.year {
     color: green
 }
 
-
+.tree-view .branch.error {
+    color: red
+}
 
 
 /* misc */

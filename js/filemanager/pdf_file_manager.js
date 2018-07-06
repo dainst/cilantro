@@ -1,31 +1,12 @@
 angular
 .module('module.pdf_file_manager', ['module.messenger', 'module.webservice'])
-.factory('pdf_file_manager', ['$rootScope', 'settings', 'webservice', 'messenger', 'dataset', 'editables','staging_dir',
-    function($rootScope, settings, webservice, messenger, dataset, editables, staging_dir) {
+.factory('pdf_file_manager', ['$rootScope', 'settings', 'webservice', 'messenger', 'dataset', 'editables', 'file_manager',
+    function($rootScope, settings, webservice, messenger, dataset, editables, file_manager) {
 
     const pdf_file_manager = {};
 
-    pdf_file_manager.reset = function() {
-        pdf_file_manager.files  = {}; // pdf.js documents / index: filenames
-        pdf_file_manager.stats  = {
-            files: 0,
-            analyzed: 0,
-            loaded:  0,
-            thumbnails: 0
-        };
-        pdf_file_manager.ready = false;
-    };
-
-    pdf_file_manager.reset();
-
-    pdf_file_manager.getStats = () => pdf_file_manager.stats;
-
-    pdf_file_manager.isStatOk = (k, v) => (v >= pdf_file_manager.stats.files ? 1 : -1);
-
     const requirePdfJs = new Promise(function(resolve) {
-        /**
-         * @ TODO include pdf.js (& require) with npm as well and replace this stuff
-         */
+        // include pdf.js (& require) with npm as well and replace this stuff
         require.config({paths: {'pdfjs': 'inc/pdf.js'}});
         require(['pdfjs/display/api', 'pdfjs/display/global'], function(pdfjs_api, pdfjs_global) {
             console.log('2. required pdf.js');
@@ -39,12 +20,9 @@ angular
             };
 
             pdf_file_manager.PDF.global.PDFJS.workerSrc = 'js/other/pdfjs_worker_loader.js';
-
             resolve();
         });
     });
-
-
 
     const loadFiles = function(filesToLoad) {
         pdf_file_manager.ready = false;
@@ -67,11 +45,11 @@ angular
                                 pagecontext: new editables.types.Pagecontext({maximum: pdf.pdfInfo.numPages, path: this.url})
                             };
 
-                            let promise1 = pdf.getMetadata().then(function (meta) {
+                            let promise1 = pdf.getMetadata().then(function(meta) {
                                 console.log(meta);
                                 this.meta = meta.info
                             }.bind(fileInfo));
-                            let promise2 = pdf.getDownloadInfo().then(function (dil) {
+                            let promise2 = pdf.getDownloadInfo().then(function(dil) {
                                 function fileSize(b) {
                                     let u = 0, s = 1024;
                                     while (b >= s || -b >= s) {
@@ -84,7 +62,7 @@ angular
                                 this.size = fileSize(dil.length);
                             }.bind(fileInfo));
 
-                            pdf_file_manager.files[this.url] = fileInfo;
+                            file_manager.loadedFiles[this.url] = fileInfo;
 
                             let metadataLoaded = function () {
                                 dataset.loadedFiles[this.url] = {
@@ -93,14 +71,14 @@ angular
                                     pagecontext: this.pagecontext
                                 };
                                 messenger.success('document: ' + this.url + ' loaded');
-                                pdf_file_manager.stats.loaded += 1;
+                                file_manager.stats.loaded += 1;
                                 refreshView();
                                 resolve();
                             }.bind(fileInfo);
 
 
                             Promise.all([promise1, promise2]).then(metadataLoaded, metadataLoaded);
-                            // if metadata could not be loaded, it's no reason not to continue... but we should at least try it
+                            // if metadata could not be loaded, it's no reason not to continue, therefore we don't fail
 
 
                         }.bind(
@@ -123,24 +101,22 @@ angular
     };
 
     pdf_file_manager.loadFiles = function(file) {
+        //  TODO make recursive!
         console.log("Load File: ", file);
 
-        pdf_file_manager.ready = false;
-
-        //let filesObject = staging_dir.getFileInfo(path);
-
-        let filesToLoad = (file.type === 'directory') ? file.contents : [file];
-
-        pdf_file_manager.stats.files += filesToLoad.length;
+        const filesToLoad = (file.type === 'directory') ? file.contents : [file];
+        file_manager.ready = false;
+        file_manager.stats.files += filesToLoad.length;
 
         return new Promise((resolve, reject) => {
             requirePdfJs.then(function() {
-                messenger.info('ready for loading files');
                 Promise.all(loadFiles(filesToLoad)).then(function() {
-                    messenger.success("All Files loaded");
-                    pdf_file_manager.ready = true;
+                    if (filesToLoad.length > 1) {
+                        messenger.success("All Files loaded");
+                    }
+                    file_manager.ready = true;
                     refreshView();
-                    resolve();
+                    resolve(filesToLoad);
                 }).catch(reject);
             });
         });
@@ -170,8 +146,6 @@ angular
 
     };
 
-    pdf_file_manager.isLoaded = (filePath) => angular.isDefined(pdf_file_manager.files[filePath]);
-
     /**
      * trigger trumbnail recreation (on page or filepath change)
      */
@@ -195,7 +169,7 @@ angular
      */
     pdf_file_manager.updateThumbnail = function(article) {
         console.log("recreate thumbnail for", article._.id, article.pages.value.startPdf, article.filepath.value.value);
-        pdf_file_manager.files[article.filepath.value.value].pdf.getPage(article.pages.value.startPdf).then(
+        file_manager.loadedFiles[article.filepath.value.value].pdf.getPage(article.pages.value.startPdf).then(
             function updateThumbnailGotPageSuccess(page) {
                 pdf_file_manager.createThumbnail(page, article._.id)
             },
@@ -240,7 +214,7 @@ angular
             ctx.fillStyle = "#123456";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             dataset.thumbnails[containerId] = canvas.toDataURL();
-            pdf_file_manager.stats.thumbnails = Object.keys(dataset.thumbnails).length;
+            file_manager.stats.thumbnails = Object.keys(dataset.thumbnails).length;
             refreshView()
         });
 
@@ -249,7 +223,7 @@ angular
     pdf_file_manager.removeThumbnail = function(containerId) {
         console.log("thumbnail removed", containerId);
         delete dataset.thumbnails[containerId];
-        pdf_file_manager.stats.thumbnails = Object.keys(dataset.thumbnails).length;
+        file_manager.stats.thumbnails = Object.keys(dataset.thumbnails).length;
     };
 
     /**

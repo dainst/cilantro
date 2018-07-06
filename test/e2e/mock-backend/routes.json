@@ -6,6 +6,10 @@
     },
     {
       "type": "file",
+      "name": "kapott.csv"
+    },
+    {
+      "type": "file",
       "name": "e2e-testing.pdf"
     },
     {

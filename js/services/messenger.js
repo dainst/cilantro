@@ -1,6 +1,6 @@
 angular
 	.module('module.messenger', [])
-	.factory("messenger", ["$rootScope", "settings", function($rootScope, settings) {
+	.factory("messenger", [function() {
 
 	    const messenger = {};
 

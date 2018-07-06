@@ -1,16 +1,52 @@
 // to be: file_handler_registry
 angular
     .module("module.file_manager", [])
-    .factory("file_manager", [function() {
+    .factory("file_manager", ['webservice', function(webservice) {
 
-        let file_manager = {};
+        const fileExtRegEx = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi;
+
+        const file_manager = {};
         file_manager.fileHandlers = {};
         file_manager.selected = {};
 
         file_manager.loadedFiles = {};
+        file_manager.stats = {};
+        file_manager.ready = false;
 
         file_manager.reset = function() {
+            file_manager.ready = false;
             file_manager.loadedFiles = {};
+            file_manager.stats  = {
+                files: 0,
+                analyzed: 0,
+                loaded:  0,
+                thumbnails: 0
+            };
+        };
+
+        file_manager.getStats = () => file_manager.stats;
+
+        file_manager.isStatOk = (k, v) => (v >= file_manager.stats.files ? 1 : -1);
+
+        file_manager.getFileStatus = (file) => (file.type === 'directory')
+            ? file.contents.map(file_manager.getFileStatus).reduce((v, w) => v && w, true)
+            : file_manager.loadedFiles[file.path] && true;
+
+        file_manager.mimeTypeFromExtension = (file) =>
+            file.path.match(fileExtRegEx) ? file.path.match(fileExtRegEx)[0].substr(1) : '';
+
+        file_manager.determineFileType = (file) =>
+            file.type === "directory" ? "directory" : file_manager.mimeTypeFromExtension(file);
+
+        file_manager.getFileHandler = (fileType) =>
+            file_manager.fileHandlers[fileType][file_manager.selected[fileType]] || null;
+
+        file_manager.setFileHandler = (fileType, handler) => file_manager.selected[fileType] = handler.id || false;
+
+        file_manager.selectDefaultFileHandlers = () => {
+            file_manager.selected['directory'] = 'generic';
+            file_manager.selected['pdf'] = 'generic';
+            file_manager.selected['csv'] = 'csv_import';
         };
 
         /* fileHandler prototype */
@@ -24,14 +60,13 @@ angular
                 fileTypes: [],
                 description: 'no description for ' + id,
                 register: function() {
-                    file_manager.register(this);
+                    file_manager.registerHandler(this);
                 },
-                onGotFile: false,
-                onGotAll: false
+                handleFile: () => {},
             }
         };
 
-        file_manager.register = function(fileHandler) {
+        file_manager.registerHandler = function(fileHandler) {
             fileHandler.fileTypes.forEach((fileType) => {
                 if (angular.isUndefined(file_manager.fileHandlers[fileType])) {
                     file_manager.fileHandlers[fileType] = {};
@@ -43,57 +78,34 @@ angular
             });
         };
 
-        file_manager.getFileHandler = (fileType) => file_manager.fileHandlers[fileType][file_manager.selected[fileType]] || null;
-
-        file_manager.selectDefaultFileHandlers = () => {
-            file_manager.selected['pdf'] = 'generic';
-            file_manager.selected['csv'] = 'csv_import';
-        };
-
-        file_manager.handleFile = function(filePath, fileType) {
-            fileType = fileType || file_manager.determineFileType(filePath);
-            let fileHandler = file_manager.getFileHandler(fileType);
-            if (fileHandler && angular.isFunction(fileHandler.onGotFile)) {
-                fileHandler.onGotFile(filePath)
+        file_manager.handleFile = function(file) {
+            const fileType = file_manager.determineFileType(file);
+            const fileHandler = file_manager.getFileHandler(fileType);
+            if (fileHandler) {
+                fileHandler.handleFile(file)
             } else {
-                console.log("No File Handler for " + fileType);
+                console.log("No File Handler for ", file);
             }
         };
-
-        file_manager.handleFileTree = function(tree) {
-            if (tree.type === 'directory') {
-                tree.contents.forEach(file_manager.handleFileTree);
-            } else {
-                file_manager.handleFile(tree.path);
-            }
-        };
-
-        file_manager.selectFileHandler = (fileType, handler) => file_manager.selected[fileType] = handler.id || false;
-
-        const fileExtRegEx = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi;
-
-        file_manager.determineFileType = (filePath) => filePath.match(fileExtRegEx) ? filePath.match(fileExtRegEx)[0].substr(1) : '';
 
         file_manager.loadFile = function(file) {
-            let fileType = file_manager.determineFileType(file.path);
+            const fileType = file_manager.determineFileType(file);
             file_manager.handleFile(file, fileType);
         };
 
-        // what if there are not only pdfs in the dir? it's unnice..
-        file_manager.loadTree = tree => pdf_file_manager.loadFiles(tree).then(() => file_manager.handleFileTree(tree));
-
-        file_manager.isLoaded = function(file) {
-            if (file.type === 'directory') {
-                return file.contents.map(file_manager.isLoaded).reduce((v, w) => v && w, true);
-            }
-            const fileType = file_manager.determineFileType(file.path);
-            if (fileType === "pdf") {
-                return pdf_file_manager.isLoaded(file.path);
-            }
-            //other_file_manager.isLoaded(file.path);
-            return false;
-
-        };
+        file_manager.loadFileContents = (file) =>
+            file.type === "directory"
+                ? file.contents.forEach(file_manager.loadFileContents)
+                : webservice
+                    .get(['files_url', file.path])
+                    .then(fileContent => {
+                        file_manager.loadedFiles[file.path] = fileContent;
+                        return [fileContent]
+                    })
+                    .catch(err => {
+                        file_manager.loadedFiles[file.path] = false;
+                        return[]
+                    });
 
         return (file_manager);
     }]);

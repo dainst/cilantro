@@ -11,7 +11,7 @@
 
 </head>
 
-	<body ng-controller="main" data-ng-init="init()">
+	<body ng-controller="main" data-ng-init="initApp()">
 
 		<div id='loader' class='loader' ng-if="isLoading"></div>
 
@@ -50,13 +50,15 @@
 		<script src="js/services/labels.js"></script>
 		<script src="js/services/dataset.js"></script>
 		<script src="js/services/messenger.js"></script>
-		<script src="js/services/file_handler_manager.js"></script>
+		<script src="js/services/file_manager.js"></script>
 		<script src="js/services/webservice.js"></script>
-		<script src="js/services/pdf_file_manager.js"></script>
 		<script src="js/services/staging_dir.js"></script>
 		<script src="js/services/steps.js"></script>
 
+		<script src="js/filemanager/pdf_file_manager.js"></script>
+
 		<script src="js/controllers/main.js"></script>
+		<script src="js/controllers/view_home.js"></script>
 		<script src="js/controllers/view_overview.js"></script>
 		<script src="js/controllers/view_articles.js"></script>
 		<script src="js/controllers/view_finish.js"></script>
@@ -75,12 +77,14 @@
 
 		<script src="js/app.js"></script>
 
-		<!-- load import protocols -->
+		<!-- load file handlers -->
 
-		<script src="js/protocols/generic.js"></script>
-		<script src="js/protocols/testdata.js"></script>
-		<script src="js/protocols/chiron_parted.js"></script>
-		<script src="js/protocols/csv_import.js"></script>
+		<script src="js/filehandler/default_pdf_handler.js"></script>
+		<script src="js/filehandler/empty_pdf_handler.js"></script>
+		<script src="js/filehandler/testdata.js"></script>
+		<script src="js/filehandler/chiron_parted.js"></script>
+		<script src="js/filehandler/csv_import.js"></script>
+		<script src="js/controllers/csv_import_window.js"></script>
 
 		<!-- load require.js for non-angular modules -->
 

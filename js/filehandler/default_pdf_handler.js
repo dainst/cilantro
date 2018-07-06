@@ -1,6 +1,6 @@
 angular
-.module("module.fileHandlers.generic", [])
-.factory("generic", ['$rootScope', 'editables', 'file_manager', 'pdf_file_manager', 'dataset',
+.module("module.fileHandlers.defaultPdfHandler", [])
+.factory("defaultPdfHandler", ['$rootScope', 'editables', 'file_manager', 'pdf_file_manager', 'dataset',
     function($rootScope, editables, file_manager, pdf_file_manager, dataset) {
 
     let defaultPdfHandler = new file_manager.FileHandler('generic');
@@ -39,4 +39,4 @@ angular
 
     return (defaultPdfHandler);
 }])
-.run(function(generic) {generic.register()});
+.run(function(defaultPdfHandler) {defaultPdfHandler.register()});

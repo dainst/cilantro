@@ -2,11 +2,11 @@
 
 angular
 .module('module.fileHandlers.testdata', [])
-.factory("testdata", ['file_handler_manager', 'dataset', 'pdf_file_manager',
-	function(file_handler_manager, dataset, pdf_file_manager) {
+.factory("testdata", ['file_manager', 'dataset',
+	function(file_manager, dataset) {
 
 
-	let journalCtrl = new file_handler_manager.FileHandler('testdata');
+	let journalCtrl = new file_manager.FileHandler('testdata');
 
 	journalCtrl.description = "Create some Testdata 3.0";
 

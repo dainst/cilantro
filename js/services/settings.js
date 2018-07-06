@@ -4,7 +4,7 @@ angular
 	
 	let settings = {};
 
-    settings.loadingPromise = new Promise(function(resolve, reject) {
+    settings.load = new Promise(function(resolve, reject) {
         $http.get('settings.json')
             .then(function(response) {
                 settings = angular.extend(settings, response.data);

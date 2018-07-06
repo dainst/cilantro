@@ -10,7 +10,7 @@ angular
 
 		const zenonEndpoint = $sce.trustAsResourceUrl('https://zenon.dainst.org/data/biblio/select');
 
-		console.log(dataset.get())
+        $scope.dataset = dataset;
 
 		$scope.currentArticle = -1;
 
@@ -34,7 +34,7 @@ angular
 				$scope.selectArticle(dataset.articles.length -1);
 			}
 
-		}
+		};
 
 		$scope.selectArticle = function(k) {
 			$scope.currentArticle = k;
@@ -45,7 +45,7 @@ angular
 			}
 
 
-		}
+		};
 
 		$scope.selectNextArticle = function() {
 			for (let i = $scope.currentArticle; i < dataset.articles.length; i++) {
@@ -59,7 +59,7 @@ angular
 				}
 			}
 			$scope.currentArticle = -1;
-		}
+		};
 
 		$scope.isArticleSelected = function() {
 			return ($scope.currentArticle !== -1) && (dataset.articles.length > 0)
@@ -74,7 +74,7 @@ angular
 				}
 			});
 			return (invalid === 0);
-		}
+		};
 
 		$scope.confirmArticle = function() {
 			let article = dataset.articles[$scope.currentArticle];
@@ -97,7 +97,7 @@ angular
 				$scope.selectNextArticle();
 			}
 
-		}
+		};
 
 		$scope.dismissArticle = function() {
 			console.log('Delete Article ' + $scope.currentArticle);
@@ -110,7 +110,7 @@ angular
 			} else {
 				$scope.selectNextArticle();
 			}
-		}
+		};
 
 
 
@@ -144,7 +144,7 @@ angular
 				'id':			doc.id
 			};
 
-		}
+		};
 
 		$scope.resetZenon = function() {
 			$scope.zenon = {
@@ -155,7 +155,7 @@ angular
 				selected: 0,
 				searchId: false
 			};
-		}
+		};
 
 		$scope.compareWithZenon = function(more) {
 
@@ -249,14 +249,14 @@ angular
 						dataset.articles[$scope.currentArticle]._.autoFetchFromZenon = false;
 					}
 				);
-		}
+		};
 
 		$scope.selectFromZenon = function(index) {
 			console.log('select = ' + index, $scope.zenon.results[index]);
 			$scope.zenon.selected = ($scope.zenon.selected === index) ? -1 : index;
 			dataset.articles[$scope.currentArticle].zenonId.value.value = ($scope.zenon.selected === -1) ? '' : $scope.zenon.results[index].id;
 
-		}
+		};
 
 		$scope.adoptFromZenon = function(index) {
 
@@ -293,7 +293,7 @@ angular
 			dataset.articles[$scope.currentArticle].zenonId.value.value = '(((new)))';
 			dataset.articles[$scope.currentArticle]._.reportToZenon = true;
 			//$scope.sendToZenon();
-		}
+		};
 
 
 

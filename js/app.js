@@ -13,16 +13,16 @@ angular
     'module.labels',
 	'module.pdf_file_manager',
 	'module.dataset',
-	'module.file_handler_manager',
+	'module.file_manager',
 	'module.messenger',
 	'module.webservice',
 	'module.staging_dir',
 	'module.steps',
     'module.journal_issue',
 
-
 	'controller.main',
 
+	'controller.view_home',
 	'controller.view_overview',
 	'controller.view_articles',
 	'controller.view_finish',
@@ -39,9 +39,11 @@ angular
 	'module.editables',
 
 	'module.fileHandlers.testdata',
-	'module.fileHandlers.generic',
+	'module.fileHandlers.defaultPdfHandler',
+	'module.fileHandlers.emptyPdfHandler',
 	'module.fileHandlers.chiron_parted',
 	'module.fileHandlers.csv_import',
+	'controller.csv_import_window',
 
     'module.settings'
 
