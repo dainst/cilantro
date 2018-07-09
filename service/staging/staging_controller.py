@@ -1,7 +1,8 @@
 import os
 
 from flask import Blueprint, jsonify, request, send_file, abort
-from werkzeug.utils import secure_filename
+import logging.config
+
 
 staging_controller = Blueprint('staging', __name__)
 
@@ -83,6 +84,8 @@ def upload_to_staging():
     :return: A JSON object with format : {"result": {uploaded_file_name: {"result":,"error": {"code":,"message":} } }
 
     """
+
+    logging.getLogger(__name__).debug(f"Uploading {len(request.files)} files")
     results = {}
     if request.files:
         for key in request.files:
@@ -99,6 +102,8 @@ def upload_to_staging():
                                                                "code": "upload_failed"
                                                            }
                                                        }
+
+                        logging.getLogger(__name__).debug(f"Error during upload from {file.filename} : {str(e)}")
                 else:
                     results[f"{file.filename}"] = \
                         {"success": False,
@@ -107,6 +112,9 @@ def upload_to_staging():
                                    }
 
                          }
+
+                    logging.getLogger(__name__).debug(
+                        f"Error during upload from {file.filename} : File extension .{_get_file_extension(file.filename)} is not allowed.")
         return jsonify({"result": results}), 200
     return "No files provided", 400
 
