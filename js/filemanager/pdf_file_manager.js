@@ -70,7 +70,7 @@ angular
                                     url: this.url,
                                     pagecontext: this.pagecontext
                                 };
-                                messenger.success('document: ' + this.url + ' loaded');
+                                messenger.info('document: ' + this.url + ' loaded');
                                 file_manager.stats.loaded += 1;
                                 refreshView();
                                 resolve();

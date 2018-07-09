@@ -46,7 +46,6 @@ describe('documents page', () => {
             .then(e.documents.fileHandlerArea.element(by.css(".file-handler-pdf-empty > label")).click)
             .then(e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click)
             .then(message.waitForMessage)
-            .then(browser.sleep(15000))
             .then(message.getStats)
 
             .then(stats => {
@@ -71,8 +70,9 @@ describe('documents page', () => {
     it('should load all files of a directory', () => {
         browser.get(browser.baseUrl)
             .then(e.start.startBtn.click)
-            .then(e.documents.treeViewItemsTopLevel.get(3).element(by.css('.load')).click)
+            .then(e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click)
             .then(message.waitForMessage)
+            .then(browser.sleep(500))
             .then(message.getStats)
             .then(stats => {
                 expect(stats.Analyzed).toEqual(3);
@@ -93,7 +93,6 @@ describe('documents page', () => {
             .then(e.csv.takeData.click)
             .then(e.csv.ignoreFirstRow.click)
             .then(e.csv.confirm.click)
-            .then(browser.sleep(5000))
 
 
         // TODO proceed and look if there actually a 2 thumbnails and articles
