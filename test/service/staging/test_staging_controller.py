@@ -34,8 +34,13 @@ class StagingControllerTest(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             json = response.get_json()
             found_file_in_response = False
+<<<<<<< HEAD
             for key in json['result']:
                 if key == file[1]:
+=======
+            for content in json['content']:
+                if content['name'] == file[1]:
+>>>>>>> 0448e218146d74ddceac7689cdf3b8b5188d09d9
                     found_file_in_response = True
             self.assertTrue(found_file_in_response)
             self._assert_file_in_staging(test_file)
@@ -57,8 +62,24 @@ class StagingControllerTest(unittest.TestCase):
         response = self._upload_to_staging(
             {'file': (io.BytesIO(b'asdf'), 'foo.asdf')})
         json = response.get_json()
+<<<<<<< HEAD
         self.assertEqual(json["result"]['foo.asdf']["error"]["code"], "extension_not_allowed")
         self.assertEqual(response.status_code, 200)
+=======
+        self.assertEqual(json["warnings"][0]["warning_code"], 415)
+        self.assertEqual(response.status_code, 200)
+
+    def test_list_staging(self):
+        object_path = os.path.join(self.resource_dir, 'objects', test_object)
+        file_names = os.listdir(object_path)
+        self._upload_folder_to_staging(object_path)
+
+        response = self.client.get('/staging')
+        response_object = response.get_json()
+        self.assertGreaterEqual(len(response_object), len(file_names))
+        staged_files = [e for e in response_object if e['name'] in file_names]
+        self.assertEqual(len(staged_files), len(file_names))
+>>>>>>> 0448e218146d74ddceac7689cdf3b8b5188d09d9
 
     def test_get_file(self):
         self._copy_object_to_staging('objects', test_object)
