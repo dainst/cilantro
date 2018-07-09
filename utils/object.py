@@ -1,12 +1,54 @@
+import inspect
 import os
 from datetime import datetime
 from io import BytesIO
 import json
-from typing import List, Iterator, TextIO
+from collections import namedtuple
+from typing import List, Iterator, TextIO, BinaryIO
 from distutils.dir_util import copy_tree
 
 
-class Actor:
+class SerializableClass(object):
+
+    @classmethod
+    def from_dict(cls, json_dict):
+        """
+        Creates an object of the given Class from a dictionary and fills the attributes accordingly.
+        :param json_dict: The dictionary that represents the object from the class.
+        :return: cls: The generated object
+        """
+        for key, value in json_dict.items():
+            if type(value) is dict:
+                key_class = inspect.getmembers(cls)[0][1][key]
+                if SerializableClass().__class__ in inspect.getmro(key_class):
+                    json_dict[key] = key_class.from_dict(json_dict[key])
+
+        obj = object.__new__(cls)
+        obj.__dict__ = json_dict
+        return obj
+
+    @classmethod
+    def namedtuple_from_dict(cls, json_dict):
+        """
+        Creates a tuple<cls> object from a dictionary and fills the attributes accordingly.
+            Works exactly as an object from the Class cls, but is NOT an instance of it.
+            Has less incompatibility issues as from_dict()
+        :param json_dict: The dictionary that represents the object from the class.
+        :return: tuple<cls>: The generated object
+        """
+        for key, value in json_dict.items():
+            if type(value) is dict:
+                key_class = inspect.getmembers(cls)[0][1][key]
+                if SerializableClass().__class__ in inspect.getmro(key_class):
+                    json_dict[key] = key_class.from_dict(json_dict[key])
+        obj = namedtuple(cls.__name__, json_dict.keys())(*json_dict.values())
+        return obj
+
+    def get_json(self):
+        return json.dumps(self.__dict__, default=_to_serializable)
+
+
+class Actor(SerializableClass):
     """
     Personal and legal entities in cilantro metadata.
     """
@@ -14,11 +56,8 @@ class Actor:
     firstname: str
     lastname: str
 
-    def get_json(self):
-        return json.dumps(self.__dict__, default=_to_serializable)
 
-
-class ObjectMetadata:
+class ObjectMetadata(SerializableClass):
     """
     Basic metadata that can be recorded for every cilantro object
     """
@@ -34,9 +73,6 @@ class ObjectMetadata:
     issue_year: int
     issue_no: str
     issue_volume: str
-
-    def get_json(self):
-        return json.dumps(self.__dict__, default=_to_serializable)
 
 
 def _to_serializable(val):
@@ -70,16 +106,17 @@ class Object:
 
     def __init__(self, path):
         """
-        Create an empty cilantro object that lives in path.
+        Create an empty cilantro object that lives in path or finds one.
 
         Creates a data folder and an empty meta.json.
         :param str path: the Path where the object lives.
         """
         self.path = path
         self.metadata = ObjectMetadata()
-
-        os.makedirs(self.path)
-        open(os.path.join(self.path, 'meta.json'), 'a').close()
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+        if not os.path.exists(os.path.join(self.path, 'meta.json')):
+            open(os.path.join(self.path, 'meta.json'), 'a', encoding="utf-8").close()
 
     @staticmethod
     def read(path):
@@ -92,13 +129,28 @@ class Object:
         :param str path: The path to the root folder of the existing object
         :return Object:
         """
+        if not os.path.exists(path):
+            raise Exception(f'{path} does not exist.')
+
+        obj = Object(path)
+        meta_stream = 0
+        try:
+            meta_stream = open(os.path.join(obj.path, 'meta.json'), 'r', encoding="utf-8")
+            obj.metadata = ObjectMetadata().from_dict(json.load(meta_stream))
+        except ValueError:
+            obj.metadata = ObjectMetadata()
+        finally:
+            meta_stream.close()
+        return obj
 
     def write(self):
         """
-        Write the current object state to the file system.
+        Write the current object metadata state to the file system.
 
         :return: None
         """
+        with open(os.path.join(self.path, 'meta.json'), 'w', encoding="utf-8") as stream:
+            stream.write(self.metadata.get_json())
 
     def add_file(self, file_name: str, representation: str, file: BytesIO):
         """
@@ -107,12 +159,14 @@ class Object:
         A new representation is created if it does not already exist.
 
         :param str file_name: how the generated file should be named
-        :param str representation:
-        :param BytesIO file:
+        :param str representation: The file format of the input.
+        :param BytesIO file: The input stream
         :return: None
         """
-        with open(os.path.join(self._get_representation_dir(representation), file_name), 'w+'):
-            file.write()
+        if not os.path.exists(self._get_representation_dir(representation)):
+            os.makedirs(self._get_representation_dir(representation))
+        with open(os.path.join(self._get_representation_dir(representation), file_name), 'wb+') as stream:
+            stream.write(file.read())
 
     def list_representations(self) -> List[str]:
         """
@@ -120,16 +174,24 @@ class Object:
 
         :return List[str]:
         """
-        return os.listdir(self._get_representation_dir())
+        if not os.path.exists(self._get_data_dir()):
+            return []
+        return os.listdir(self._get_data_dir())
 
-    def get_representation(self, represensation: str) -> Iterator[BytesIO]:
+    def get_representation(self, representation: str) -> Iterator[BytesIO]:
         """
         Get all files that correspond to a given representation.
 
-        :param str represensation:
+        :param str representation:
         :return Iterator[BytesIO]:
         """
-        return iter([BytesIO(path) for path in os.listdir(self._get_representation_dir(represensation))])
+        representations = []
+        path = self._get_representation_dir(representation)
+        for filename in os.listdir(path):
+            if not os.path.isdir(os.path.join(path, filename)):
+                with open(os.path.join(path, filename), 'rb') as file:
+                    representations.append(BytesIO(file.read()))
+        return iter(representations)
 
     def write_metadata_file(self, name: str, read_stream: TextIO):
         """
@@ -139,8 +201,7 @@ class Object:
         otherwise the existing file is overwritten.
 
         :param read_stream:
-        :param name:
-        :return:
+        :param name: the filename to be written in
         """
         with open(os.path.join(self.path, name), 'w+') as file:
             file.write(read_stream.read())
@@ -169,8 +230,9 @@ class Object:
         """
         sub_objects = []
         if os.path.isdir(self._get_part_dir()):
-            for d in [d for d in os.listdir(self._get_part_dir()) if os.path.isdir(d)]:
-                if self._is_part_dir(d):
+            for d in [d for d in os.listdir(self._get_part_dir()) if
+                      os.path.isdir(os.path.join(self._get_part_dir(), d))]:
+                if self._is_part_dir_format(d):
                     sub_objects.append(Object.read(os.path.join(self._get_part_dir(), d)))
         return iter(sub_objects)
 
@@ -184,8 +246,8 @@ class Object:
         copy_tree(self.path, path)
 
     @staticmethod
-    def _is_part_dir(dir_name):
-        return 'part' in dir_name
+    def _is_part_dir_format(dir_name):
+        return 'part_' in dir_name
 
     def _get_part_dir(self):
         return os.path.join(self.path, 'parts')
