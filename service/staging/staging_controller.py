@@ -80,31 +80,35 @@ def upload_to_staging():
     Returns HTTP status code 400 if no files were provided.
     Returns HTTP status code 200 else
 
-    :return: A JSON object with "content": The files and directories in the staging area.
-            and with "warnings": The warnings if errors occured
+    :return: A JSON object with format : {"result": {uploaded_file_name: {"result":,"error": {"code":,"message":} } }
+
     """
-    warnings = []
-    file_count = 0
+    results = {}
     if request.files:
         for key in request.files:
-
             for file in request.files.getlist(key):
-                file_count = file_count + 1
+                results[f"{file.filename}"] = {"success": True}
                 if _is_allowed_file(file.filename):
                     try:
                         _upload_file(file)
                     except Exception as e:
-                        warnings.append({"file_name": file.filename, "success": False, "warning": e.strerror,
-                                         "warning_code": type(e).__name__})
+                        results[f"{file.filename}"] = {"success": False,
+                                                       "error":
+                                                           {
+                                                               "message": "An unknown error occurred.",
+                                                               "code": "upload_failed"
+                                                           }
+                                                       }
                 else:
-                    warnings.append({"type": "file", "name": file.filename, "success": False,
-                                     "warning": f"File extension .{_get_file_extension(file.filename)} is not allowed.",
-                                     "warning_code": 415})
+                    results[f"{file.filename}"] = \
+                        {"success": False,
+                         "error": {"message": f"File extension .{_get_file_extension(file.filename)} is not allowed.",
+                                   "code": "extension_not_allowed"
+                                   }
 
-        return jsonify({"content": _list_dir(staging_dir), "warnings": warnings}), 200
-
-    return jsonify({"content": _list_dir(staging_dir),
-                    "warnings": [{"success": False, "warning": "No files provided", "warning_code": 400}]}), 400
+                         }
+        return jsonify({"result": results}), 200
+    return "No files provided", 400
 
 
 def _upload_file(file):

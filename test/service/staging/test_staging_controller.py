@@ -34,8 +34,8 @@ class StagingControllerTest(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             json = response.get_json()
             found_file_in_response = False
-            for content in json['content']:
-                if content['name'] == file[1]:
+            for key in json['result']:
+                if key == file[1]:
                     found_file_in_response = True
             self.assertTrue(found_file_in_response)
             self._assert_file_in_staging(test_file)
@@ -57,7 +57,7 @@ class StagingControllerTest(unittest.TestCase):
         response = self._upload_to_staging(
             {'file': (io.BytesIO(b'asdf'), 'foo.asdf')})
         json = response.get_json()
-        self.assertEqual(json["warnings"][0]["warning_code"], 415)
+        self.assertEqual(json["result"]['foo.asdf']["error"]["code"], "extension_not_allowed")
         self.assertEqual(response.status_code, 200)
 
     def test_get_file(self):
