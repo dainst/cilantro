@@ -1,6 +1,13 @@
 fs = require('fs');
 process = require('process');
 
+const HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
+
+const reporter = new HtmlScreenshotReporter({
+    dest: 'test/e2e/screenshots',
+    filename: 'my-report.html'
+});
+
 exports.config = {
     chromeDriver : '../../node_modules/chromedriver/lib/chromedriver/chromedriver' + (process.platform === 'win32' ? '.exe' : ''),
     baseUrl: require('./util/readSettings').get('importer_url'),
@@ -32,5 +39,11 @@ exports.config = {
             exclude: []
         }
     ],
-    onPrepare: function() {}
+
+    beforeLaunch: () => new Promise(resolve => reporter.beforeLaunch(resolve)),
+
+    onPrepare: () => jasmine.getEnv().addReporter(reporter),
+
+    afterLaunch: exitCode => new Promise(resolve => reporter.afterLaunch(resolve.bind(this, exitCode)))
+
 };
