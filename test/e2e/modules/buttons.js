@@ -60,13 +60,6 @@ var Buttons = function() {
     };
 
 
-    this.takeCsvData = function() {
-        return elements.csv.takeData.click;
-    };
-
-    this.confirmCsv = function() {
-        return elements.csv.confirm.click;
-    };
 
 };
 

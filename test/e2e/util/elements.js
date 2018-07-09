@@ -1,6 +1,7 @@
 module.exports = {
 
     loader: element(by.css("#loader")),
+    modal: element(by.css('.modal-dialog')),
 
     article: {
         deleteBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
@@ -14,6 +15,7 @@ module.exports = {
         takeData: element(by.css('button[ng-click="parse()"]')),
         ignoreFirstRow: element(by.model('options.ignoreFirstRow')),
         confirm: element(by.css('button[ng-click="ok()"]')),
+        csvTextField: element(by.id('raw_csv')),
     },
     login: {
         passwordInput: element(by.css('h1 input[type="password"]')),
@@ -33,9 +35,14 @@ module.exports = {
         confirmBtn: element(by.css('.btn-danger')),
     },
     start: {
-        protocolSelect: element(by.model("protocols.current")),
-        fileSelect: element(by.model('dataset.data.importFilePath')),
         startBtn: element(by.css('.row.toprow .btn-primary')),
+    },
+    documents: {
+        treeViewItems: element.all(by.css('#staging-dir files-treeview > .tree-view > li')),
+        treeViewItemsTopLevel: element.all(by.css('#staging-dir > files-treeview > .tree-view > li')),
+        toggleBranchBtn: element(by.css('#staging-dir > files-treeview .toggle')),
+        proceedBtn: element(by.css('#proceed')),
+        fileHandlerArea: element(by.css('#file-handler-selection'))
     },
     upload: {
         fileUploadArea: element(by.id('fileDropArea')),
@@ -53,6 +60,9 @@ module.exports = {
         restart: element(by.id('step-restart')),
         publish: element(by.id('step-publish')),
         toggle: element(by.css('.navbar-toggle'))
+    },
+    stats: {
+        all: element.all(by.css('.stats .stat'))
     }
 
 };

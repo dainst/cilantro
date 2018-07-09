@@ -11,6 +11,8 @@ var Checks = function() {
         return expect(elements.article.entry.count()).toEqual(expected);
     };
 
+
+
 };
 
 module.exports = new Checks();

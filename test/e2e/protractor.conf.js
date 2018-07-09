@@ -6,7 +6,7 @@ exports.config = {
     baseUrl: require('./util/readSettings').get('importer_url'),
     suites: {
        util: './util/delays.js',
-       tests: 'specs/*.spec.js'
+       tests: 'specs/documents.spec.js'
     },
     directConnect: true,
     exclude: [],
@@ -28,7 +28,7 @@ exports.config = {
             package: 'protractor-console-plugin',
             failOnWarning: false,
             failOnError: false,
-            logWarnings: true,
+            logWarnings: false,
             exclude: []
         }
     ],

@@ -18,18 +18,6 @@ let Actions = function() {
             .then(elements.navbar[button].click)
             .then(toggleNavbar)
     };
-    
-    
-    this.login = function(success = true) {
-        let correctPassword = 'e2e-test-password';
-        let password = (success === false) ? correctPassword + "wrong": correctPassword;
-        elements.login.passwordInput.sendKeys(password);
-        elements.login.submitPassword.click();
-    };
-
-    this.clearLoginField = function(){
-      elements.login.passwordInput.clear();
-    };
 
     this.uploadFile = function(file = '../ressources/e2e-testing.pdf') {
         browser.setFileDetector(new remote.FileDetector());
@@ -45,6 +33,8 @@ let Actions = function() {
             browser.driver.switchTo().window(handles[0]);
         });
     };
+
+    this.waitForModal = () => browser.wait(EC.presenceOf(elements.modal, 5000));
 
 };
 

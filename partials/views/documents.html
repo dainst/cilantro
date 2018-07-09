@@ -17,7 +17,7 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading">Load Files from Staging Area</div>
-                <div class="panel-body btn-group">
+                <div class="panel-body btn-group" id="staging-dir">
                     <files-treeview tree="staging_dir.tree"></files-treeview>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                     ngf-allow-dir="true"
                     ngf-include-dir="true"
                     ngf-drop-available="dropAvailable"
-                    id="fileDropArea">
+                    id="upload-area">
 
                 <div class="panel-heading">Upload PDF file</div>
                 <div class="panel-body">
@@ -59,12 +59,12 @@
 
 
         <div class="col-md-6">
-            <div class="panel panel-default">
+            <div class="panel panel-default" id="file-handler-selection">
                 <div class="panel-heading">What to do with newly loaded Files</div>
                 <div class="panel-body">
                     <div ng-repeat="(fileType, handlerList) in fileHandlers">
                         <h4>{{fileType}}</h4>
-                        <div ng-repeat="handler in handlerList">
+                        <div ng-repeat="handler in handlerList" class="file-hanlder file-handler-{{fileType}}-{{handler.id}}">
                             <label ng-click="selectFileHandler(fileType, handler)">
                                 <input type="radio" name="select_handler_for_{{fileType}}" ng-checked="handler.id === getSelectedFileHandler(fileType).id">
                                 {{handler.description}}
