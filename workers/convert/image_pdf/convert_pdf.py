@@ -4,6 +4,8 @@ import logging
 import pdftotext
 import PyPDF2
 
+from utils.object import Object
+
 
 def convert_pdf_to_txt(source_file, output_dir):
     logging.getLogger(__name__).debug(f"Creating txt files from {source_file} "
@@ -47,37 +49,30 @@ def pdf_merge(file_paths, output_path):
             input_stream.close()
 
 
-def cut_pdf(parts, source, target):
+def create_object_from_pdf(parts, source, target):
     """
-    Make cuts out of multiple pdf files
+    Make cuts out of multiple pdf files and returns a Cilantro Object
 
-    :param list parts: List of Dictionaries with keys 'file' and
-        'range'. Lists the different Files that need to be cut.
+    :param list parts: list of the parts
     :param string source: The working directory where we find the
         different files to be cut
     :param string target: The directory where the created files go
     """
-    pdf_new = PyPDF2.PdfFileWriter()
+
+    obj = Object(target)
     for nr, part in enumerate(parts):
-        input_str = f"{source}/{part['file']}"
-        input_stream = open(input_str, "rb")
+        child = obj.add_child()
+        child.set_metadata_from_dict(part['metadata'])
+        files = part['files']
+        for file in files:
+            input_str = os.path.join(source, file['file'])
+            input_stream = open(input_str, 'rb')
 
-        pdf = PyPDF2.PdfFileReader(input_stream)
-        if pdf.flattenedPages is None:
-            pdf.getNumPages()  # make the file page based
-        start_end = part['range']
-        for index in range(start_end[0] - 1, start_end[1]):
-            pdf_new.addPage(pdf.getPage(index))
-
-        output_str = _set_output(part, nr)
-
-        file_name = os.path.join(target, output_str)
-        with open(file_name, "wb") as output_stream:
-            pdf_new.write(output_stream)
-
-
-def _set_output(part, nr):
-    name = f"{part['file']}.{nr}.pdf"
-    output = name.replace('/', '-').replace(' ', '-')
-
-    return output
+            pdf = PyPDF2.PdfFileReader(input_stream)
+            if pdf.flattenedPages is None:
+                pdf.getNumPages()  # make the file page based
+            start_end = file['range']
+            new_pdf = PyPDF2.PdfFileWriter()
+            for index in range(start_end[0] - 1, start_end[1]):
+                new_pdf.addPage(pdf.getPage(index))
+            child.add_file(file['file'], 'pdf', new_pdf)

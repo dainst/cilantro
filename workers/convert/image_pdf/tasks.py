@@ -6,7 +6,7 @@ from workers.base_task import BaseTask
 
 from workers.convert.image_pdf.convert_image import convert_tif_to_jpg
 from workers.convert.image_pdf.convert_pdf import convert_pdf_to_txt, \
-    pdf_merge, cut_pdf
+    pdf_merge, create_object_from_pdf
 from workers.convert.image_pdf.convert_image_pdf import convert_pdf_to_tif, \
     convert_jpg_to_pdf
 
@@ -17,7 +17,7 @@ class SplitPdfTask(BaseTask):
 
     def execute_task(self):
         work_path = self.get_work_path()
-        cut_pdf(self.get_param('parts'), work_path, work_path)
+        create_object_from_pdf(self.get_param('parts'), work_path, work_path)
 
 
 class JpgToPdfTask(BaseTask):

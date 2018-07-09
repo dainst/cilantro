@@ -8,6 +8,10 @@ from typing import List, Iterator, TextIO, BinaryIO
 from distutils.dir_util import copy_tree
 
 
+class PathDoesNotExist(Exception):
+    pass
+
+
 class SerializableClass(object):
 
     @classmethod
@@ -70,9 +74,10 @@ class ObjectMetadata(SerializableClass):
     creator: Actor
     created: datetime
 
-    issue_year: int
-    issue_no: str
-    issue_volume: str
+    year: int
+    number: str
+    volume: str
+    identification: str
 
 
 def _to_serializable(val):
@@ -112,11 +117,16 @@ class Object:
         :param str path: the Path where the object lives.
         """
         self.path = path
-        self.metadata = ObjectMetadata()
+
         if not os.path.exists(self.path):
             os.makedirs(self.path)
-        if not os.path.exists(os.path.join(self.path, 'meta.json')):
+        if os.path.exists(os.path.join(self.path, 'meta.json')):
+            with open(os.path.join(self.path, 'meta.json'), 'r', encoding="utf-8") as data:
+                self.metadata = ObjectMetadata.from_dict(json.load(data))
+        else:
             open(os.path.join(self.path, 'meta.json'), 'a', encoding="utf-8").close()
+            self.metadata = ObjectMetadata()
+
 
     @staticmethod
     def read(path):
@@ -205,6 +215,10 @@ class Object:
         """
         with open(os.path.join(self.path, name), 'w+') as file:
             file.write(read_stream.read())
+
+    def set_metadata_from_dict(self, d):
+        self.metadata = ObjectMetadata.from_dict(d)
+        self.write()
 
     def add_child(self):
         """

@@ -3,7 +3,7 @@ import os
 import unittest
 import logging
 
-from workers.convert.image_pdf.convert_pdf import cut_pdf
+from workers.convert.image_pdf.convert_pdf import create_object_from_pdf
 
 log = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class CutPdfTest(unittest.TestCase):
 
     def test_success(self):
         params = [{"file": "test.pdf", "range": [1, 20]}, {"file": "test.pdf", "range": [21, 27]}]
-        cut_pdf(params, self.source_path, self.target_path)
+        create_object_from_pdf(params, self.source_path, self.target_path)
         for file_generated in self.files_generated:
             self.assertTrue(os.path.isfile(file_generated))
 
