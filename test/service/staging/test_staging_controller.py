@@ -73,7 +73,7 @@ class StagingControllerTest(unittest.TestCase):
     def _upload_folder_to_staging(self, object_path):
         files = []
         file_paths = []
-        for root, dirs, file_names in os.walk(object_path):
+        for root, _, file_names in os.walk(object_path):
             for file in file_names:
                 file_paths.append(os.path.join(root, file))
         try:
