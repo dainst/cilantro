@@ -29,4 +29,4 @@ before_install:
   - docker-compose up -d
 script:
   - bash test/exec_docker_test.sh
-  - bash doc/build-doc.sh
+  # - bash doc/build-doc.sh
