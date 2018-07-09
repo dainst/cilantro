@@ -1,0 +1,9 @@
+sphinx
+flask
+celery
+Pillow
+lxml
+pyyaml
+flask_cors
+wand
+pdftotext
