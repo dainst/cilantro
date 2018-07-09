@@ -4,6 +4,9 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
 
         /* raw csv data */
         $scope.raw_csv = file;
+
+        console.warn("File info:", file);
+
         /* csv as array of arrays */
         $scope.csv = [];
 
