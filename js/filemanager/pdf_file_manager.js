@@ -133,7 +133,7 @@ angular
         if (article.filepath.value.value === 'none') {
             return {}
         }
-        let file = pdf_file_manager.files[article.filepath.value.value];
+        let file = file_manager.loadedFiles[article.filepath.value.value];
         if (angular.isUndefined(file)) {
             return {'alert': 'file not known'}
         }
@@ -153,8 +153,11 @@ angular
         if (article.pages.value.startPdf === 0) { // while creation
             return;
         }
-        if (!angular.isUndefined(pdf_file_manager.files[article.filepath.value.value])) {
-            article.pages.context = pdf_file_manager.files[article.filepath.value.value].pagecontext;
+        if (angular.isUndefined(article.filepath)) {
+            return;
+        }
+        if (!angular.isUndefined(file_manager.loadedFiles[article.filepath.value.value])) {
+            article.pages.context = file_manager.loadedFiles[article.filepath.value.value].pagecontext;
             pdf_file_manager.updateThumbnail(article);
         } else {
             article.pages.resetContext();
