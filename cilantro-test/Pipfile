@@ -15,6 +15,7 @@ Wand = "*"
 jinja2 = "*"
 lxml = "*"
 flask-cors = "*"
+pyocr = "*"
 
 [dev-packages]
 
