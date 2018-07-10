@@ -127,17 +127,16 @@ def _expand_task_def(task_def):
 
 def _create_signature(task_def, params=None):
     if task_def['type'] == 'foreach':
-        return _create_foreach_signature(task_def)
+        return _create_foreach_signature(task_def, params)
     if task_def['type'] == 'if':
         return _create_if_signature(task_def, params)
     return _create_signature_for_task(task_def, params)
 
 
-def _create_foreach_signature(task_def):
-    kwargs = {
-        'pattern': task_def['pattern'],
-        'subtasks': task_def['do']
-    }
+def _create_foreach_signature(task_def, params):
+    kwargs = params.copy()
+    kwargs['pattern'] = task_def['pattern']
+    kwargs['subtasks'] = task_def['do']
     return celery_app.signature('foreach', kwargs=kwargs, immutable=True)
 
 
