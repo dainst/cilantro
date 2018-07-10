@@ -3,6 +3,7 @@ import shutil
 import time
 import unittest
 import logging
+from json import JSONDecodeError
 from pathlib import Path
 
 from flask import json
@@ -93,7 +94,12 @@ class JobTypeTest(unittest.TestCase):
             data=json.dumps(data),
             content_type='application/json'
         )
-        return json.loads(response.get_data(as_text=True))
+        try:
+            data = json.loads(response.get_data(as_text=True))
+        except JSONDecodeError:
+            data = ""
+        finally:
+            return data, response.status_code
 
     def stage_resource(self, folder, path):
         source = os.path.join(self.resource_dir, folder, path)
