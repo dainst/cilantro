@@ -3,7 +3,7 @@ const action = require('../modules/actions');
 const message = require('../modules/messages');
 const input = require('../modules/inputs');
 
-fdescribe('csv import dialogue', () => {
+describe('csv import dialogue', () => {
 
     beforeEach(done =>
         browser.get(browser.baseUrl)
