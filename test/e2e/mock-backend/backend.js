@@ -13,7 +13,7 @@ server.use(bodyParser.json());
 server.use(middleWares);
 server.use('/job', validateJsonParams);
 
-server.use('/files', express.static(path.join(__dirname, '/../ressources'), {etag: false}));
+server.use('/files', express.static(path.join(__dirname, '/../ressources'), {etag: false, maxage: 0}));
 
 server.use(router);
 server.listen(port, () => {
