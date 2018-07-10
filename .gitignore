@@ -3,6 +3,7 @@ redis-data
 .DS_Store
 .env
 test/integration/env.py
+/config/users.yml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
