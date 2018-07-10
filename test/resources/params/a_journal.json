@@ -80,5 +80,11 @@
         "zenonId": ""
       }
     ]
+  },
+  "nlp_params": {
+    "lang": "de",
+    "operations": [
+        "NER"
+    ]
   }
 }
