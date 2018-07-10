@@ -15,6 +15,7 @@ env:
     - CONFIG_DIR=/config
     - UID=2000
 before_install:
+  - cp config/users.yml-default config/users.yml
   - sudo apt-get install -y python3-dev libpoppler-cpp-dev
   - pip3 install -r doc/requirements.txt
   - sudo rm /usr/local/bin/docker-compose
