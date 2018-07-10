@@ -44,6 +44,8 @@ exports.config = {
 
     onPrepare: () => jasmine.getEnv().addReporter(reporter),
 
-    afterLaunch: exitCode => new Promise(resolve => reporter.afterLaunch(resolve.bind(this, exitCode)))
+    afterLaunch: exitCode => new Promise(resolve => reporter.afterLaunch(resolve.bind(this, exitCode))),
+
+    promisesDelay: 0
 
 };
