@@ -27,19 +27,18 @@
                 but you selected <strong>{{options.delimiter}}</strong>. Please make sure, that this is correct before continue.
             </div>
 
-            <a ng-click="toggleParseOptions()" href="#">More Options</a>
+            <a ng-click="toggleParseOptions()" href="#" id="csv-more-options">More Options</a>
             <div ng-show="state.parseOptions">
                 <form class="form-inline">
                     <div class="form-group input-group-sm">
-
                         Author Delimiter
-                        <select class="form-control" ng-model="options.authorsDelimiter">
+                        <select class="form-control" ng-model="options.authorsDelimiter" id="csv-author-delimiter">
                             <option ng-repeat="(key, val) in delimiters" value="{{val}}">{{key}}</option>
                         </select>
                         Name Formats
-                        <select class="form-control" ng-model="options.authorFormat">
+                        <select class="form-control" ng-model="options.authorFormat" id="csv-author-format">
                             <option value="0">FirstName SecondName LastName</option>
-                            <option value="1">Lastname, FirstName SecondName</option>
+                            <option value="1">LastName, FirstName SecondName</option>
                         </select>
                     </div>
                 </form>
@@ -85,7 +84,7 @@
 
 
             </form>
-            <div class="alert alert-warning" ng-show="state.unequalFieldsWarning">Your detected Columns have unequal lengths.</div>
+            <div class="alert alert-warning" ng-show="state.unequalFieldsWarning" id="csv-deviant-columns-warning">Your detected Columns have unequal lengths.</div>
             <div style="text-align:right">
                 <button class="btn btn-success" type="button" ng-click="ok()">OK</button>
             </div>

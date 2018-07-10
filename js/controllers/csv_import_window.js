@@ -130,7 +130,8 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
             for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
                 let col = $scope.columns[cols[i]];
                 col.length = col.values.length;
-                equal_length = (last_length === 0) || (last_length === col.length);
+                console.log(">>>>", equal_length, col.length);
+                equal_length = equal_length && ((last_length === 0) || (last_length === col.length));
                 last_length = col.length;
 
 
