@@ -4,6 +4,16 @@ Cilantro is a task runner designed to manage long running distributed jobs that
 operate on file system objects. It is written in Python (3.6+) and uses
 [Celery](http://docs.celeryproject.org/) and [Flask](http://flask.pocoo.org/).
 
+## Documentation
+
+The documentation is automatically generated when a commit is pushed to the
+master branch.
+The documentation files are held on the special branch `gh-pages`.
+
+The generated HTML can be viewed via the following URL:
+
+    https://dainst.github.io/cilantro/
+
 ## Install
 
 * Copy the `.env-default` file to `.env` and modify it. In most cases only
