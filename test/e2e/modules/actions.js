@@ -34,6 +34,12 @@ let Actions = function() {
         });
     };
 
+    this.getRecognizedCSVColumnTypes = () => new Promise((resolve, reject) =>
+        elements.csv.importTableColumns
+            .then(columns => Promise.all(columns.map(column => column.getAttribute("value")))
+                .then(resolve).catch(reject)));
+
+
     this.waitForModal = () => browser.wait(EC.presenceOf(elements.modal, 5000));
 
 };
