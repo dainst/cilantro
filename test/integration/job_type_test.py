@@ -3,6 +3,8 @@ import shutil
 import time
 import unittest
 import logging
+from base64 import b64encode
+
 from json import JSONDecodeError
 from pathlib import Path
 
@@ -89,10 +91,12 @@ class JobTypeTest(unittest.TestCase):
         return data['status']
 
     def post_job(self, job_type, data):
+        b64_user = b64encode(b"admin:s3cr3t").decode('utf-8')
         response = self.client.post(
             f'/job/{job_type}',
             data=json.dumps(data),
-            content_type='application/json'
+            content_type='application/json',
+            headers={"Authorization": f"Basic {b64_user}"}
         )
         try:
             data = json.loads(response.get_data(as_text=True))

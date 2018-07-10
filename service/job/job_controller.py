@@ -4,6 +4,7 @@ from flask import Blueprint, url_for, jsonify, request, g
 
 from utils.celery_client import celery_app
 from service.job.job_config import JobConfig
+from service.user.user_service import auth
 
 
 def get_job_config():
@@ -22,6 +23,7 @@ job_controller = Blueprint('job', __name__)
 
 
 @job_controller.route('/<job_type>', methods=['POST'])
+@auth.login_required
 def job_create(job_type):
     """
     Creates a job of the specified job type.
