@@ -19,6 +19,9 @@ The generated HTML can be viewed via the following URL:
 * Copy the `.env-default` file to `.env` and modify it. In most cases only
   `UID` has to be adjusted. The UID / GID of the current user can be read with
   `id -u` / `id -g` on UNIX systems.
+  
+* Copy `config/users.yml-default` to `config/users.yml`. This file stores the
+  user information and credentials for all available users.
 
 * Install docker (Community Edition)
 
