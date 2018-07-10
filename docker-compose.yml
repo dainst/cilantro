@@ -38,7 +38,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:dev
+    image: dainst/cilantro-default-worker:stable
     volumes:
       - .:/app
       - ./data:/data
@@ -56,7 +56,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:stable
+    image: dainst/cilantro-convert-worker:dev
     volumes:
       - .:/app
       - ./data:/data
