@@ -10,6 +10,7 @@ pillow = "*"
 PyPDF2 = "*"
 pdftotext = "*"
 Wand = "*"
+pyocr = "*"
 
 [dev-packages]
 

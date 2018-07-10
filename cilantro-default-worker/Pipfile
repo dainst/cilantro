@@ -8,7 +8,6 @@ watchdog = "*"
 celery = {extras = ["redis"]}
 jinja2 = "*"
 lxml = "*"
-pyocr = "*"
 
 [dev-packages]
 
