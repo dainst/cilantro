@@ -1,31 +1,32 @@
 import os
+import shutil
 import unittest
-from pathlib import Path
 
 from workers.convert.image_pdf.convert_pdf import convert_pdf_to_txt
 
 
 class PdfToTxtTest(unittest.TestCase):
+
     resource_dir = os.environ['RESOURCE_DIR']
     working_dir = os.environ['WORKING_DIR']
+    txt_dir = os.path.join(working_dir, 'txt_from_pdf')
+
     pdf_path = f'{resource_dir}/files/test.pdf'
-    txt_path = '{}/{}.txt'
+    pdf_pages = 27
+
+    def setUp(self):
+        os.makedirs(self.txt_dir)
 
     def tearDown(self):
-        for i in range(0, 27):
-            try:
-                os.remove(self.txt_path.format(self.working_dir, i))
-            except FileNotFoundError:
-                pass
+        shutil.rmtree(self.txt_dir)
 
     def test_success(self):
-        convert_pdf_to_txt(self.pdf_path, self.working_dir)
-        txt_0_path = self.txt_path.format(self.working_dir, 0)
-        self.assertTrue(Path(txt_0_path).is_file())
-        stat = os.stat(txt_0_path)
-        self.assertGreater(stat.st_size, 0)
-        try:
-            file = open(txt_0_path, 'r')
-            self.assertIn("TECHNISCHE UNIVERSITÄT CAROLO-WILHELMINA ZU BRAUNSCHWEIG", file.read())
-        finally:
-            file.close()
+        convert_pdf_to_txt(self.pdf_path, self.txt_dir)
+
+        for page in range(1, self.pdf_pages + 1):
+            file = os.path.join(self.txt_dir, f'page.{page}.txt')
+            if not os.path.isfile(file):
+                raise Exception(f"File {file} does not exist or is a directory")
+
+        with open(os.path.join(self.txt_dir, 'page.1.txt')) as f:
+            self.assertIn("TECHNISCHE UNIVERSITÄT CAROLO-WILHELMINA", f.read())

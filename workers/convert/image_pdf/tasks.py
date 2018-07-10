@@ -49,7 +49,9 @@ class PdfToTxtTask(BaseTask):
 
     def execute_task(self):
         file = self.get_param('file')
-        convert_pdf_to_txt(file, self.get_work_path())
+        folder, _ = os.path.splitext(file)
+        os.makedirs(folder)
+        convert_pdf_to_txt(file, folder)
 
 
 class PdfToTifTask(BaseTask):
