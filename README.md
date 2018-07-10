@@ -24,6 +24,9 @@ The generated HTML can be viewed via the following URL:
   user information and credentials for all available users. In order for the
   tests to be successful it must contain the user `test_user`. This user has
   to be removed in production environments.
+  
+  Passwords have to be encrypted with
+  [bcrypt](https://en.wikipedia.org/wiki/Bcrypt).
 
 * Install docker (Community Edition)
 
