@@ -92,7 +92,7 @@ services:
 
   test:
     user: ${UID}
-    image: dainst/cilantro-test:stable
+    image: dainst/cilantro-test:multi-user
     volumes:
       - .:/app
       - ./data:/data
