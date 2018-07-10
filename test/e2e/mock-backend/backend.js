@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 const jsonServer = require('json-server');
 const bodyParser = require('body-parser');
-const fakeRest = require('./fake-rest');
 const validateJsonParams = require('./validate-json-params');
 const server = jsonServer.create();
 const router = jsonServer.router('routes.json');
@@ -12,10 +11,9 @@ const port = 3333;
 server.use(bodyParser.urlencoded({extended: false}));
 server.use(bodyParser.json());
 server.use(middleWares);
-//server.use(fakeRest);
 server.use('/job', validateJsonParams);
 
-server.use('/files', express.static(path.join(__dirname, '/../ressources')));
+server.use('/files', express.static(path.join(__dirname, '/../ressources'), {etag: false}));
 
 server.use(router);
 server.listen(port, () => {
