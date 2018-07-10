@@ -1,5 +1,5 @@
 // use higher values to slow down tests for debugging
-var promisesDelay = 150;
+var promisesDelay = 0;
 
 
 function delayPromises(milliseconds) {

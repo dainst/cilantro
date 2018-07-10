@@ -20,8 +20,8 @@ module.exports = {
         delimiterSelect: element(by.id('csv-import-delimiter')),
         authorDelimiter: element(by.id('csv-author-delimiter')),
         authorFormat: element(by.id('csv-author-format')),
-        authorFormat: element(by.id('csv-author-format')),
         deviantColumnsWarning: element(by.id('csv-deviant-columns-warning')),
+        delimiterWarning: element(by.id('csv-delimiter-warning')),
     },
     login: {
         passwordInput: element(by.css('h1 input[type="password"]')),
