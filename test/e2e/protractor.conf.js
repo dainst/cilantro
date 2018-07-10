@@ -13,7 +13,7 @@ exports.config = {
     baseUrl: require('./util/readSettings').get('importer_url'),
     suites: {
        util: './util/delays.js',
-       tests: 'specs/documents.spec.js'
+       tests: 'specs/csv_import.spec.js'
     },
     directConnect: true,
     exclude: [],

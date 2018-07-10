@@ -15,7 +15,10 @@ module.exports = {
         takeData: element(by.css('button[ng-click="parse()"]')),
         ignoreFirstRow: element(by.model('options.ignoreFirstRow')),
         confirm: element(by.css('button[ng-click="ok()"]')),
-        csvTextField: element(by.id('raw_csv')),
+        textField: element(by.id('raw_csv')),
+        importTableColumns: element.all(by.css('#csv-import-table > thead > tr > td')),
+        delimiterSelect: element(by.id('csv-import-delimiter')),
+        delimiterWarning: element(by.id('csv-delimiter-warning')),
     },
     login: {
         passwordInput: element(by.css('h1 input[type="password"]')),

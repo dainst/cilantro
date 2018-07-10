@@ -462,8 +462,15 @@ input.editable.date.year {
     font-size: 14px;
 
 }
-.alert {
+
+#info-container .alert {
     white-space: pre-wrap;
+}
+
+#csv-delimiter-warning strong {
+    font-weight: bold;
+    padding: 0 2px;
+    background: rgba(0,0,0, 0.2);
 }
 
 .alert-debug {

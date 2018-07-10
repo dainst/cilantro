@@ -84,12 +84,12 @@ describe('documents page', () => {
         // TODO proceed and look if there actually a thumbnail and a article
     });
 
-    fit('should open the csv import dialogue after loading a csv file', () => {
+    it('should open the csv import dialogue after loading a csv file', () => {
         browser.get(browser.baseUrl)
             .then(e.start.startBtn.click)
             .then(e.documents.treeViewItemsTopLevel.get(0).element(by.css('.load')).click)
             .then(action.waitForModal)
-            .then(expect(e.csv.csvTextField.getAttribute('value')).not.toEqual(""))
+            .then(expect(e.csv.textField.getAttribute('value')).not.toEqual(""))
             .then(e.csv.takeData.click)
             .then(e.csv.ignoreFirstRow.click)
             .then(e.csv.confirm.click)

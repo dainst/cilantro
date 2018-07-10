@@ -3,9 +3,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
     function($scope, $uibModalInstance, dataset, file, labels) {
 
         /* raw csv data */
-        $scope.raw_csv = file;
-
-        console.warn("File info:", file);
+        $scope.raw_csv = "";
 
         /* csv as array of arrays */
         $scope.csv = [];
@@ -21,18 +19,17 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
         $scope.cols_types = {};
 
         /* available column types */
-        let cols_types = Object.keys(new dataset.Article()).concat(["pageFrom", "pageTo"])
+        let cols_types = Object.keys(new dataset.Article()).concat(["pageFrom", "pageTo"]);
         for (let i = 0; i < cols_types.length; i++) {
             $scope.cols_types[normalize(cols_types[i])] = cols_types[i];
         }
-
-        //console.log($scope.cols_types)
 
         $scope.columns = {};
 
         /* parse options */
         $scope.options = {
             delimiter: ',',
+            guessedDelimiter: ',',
             authorsDelimiter: ';',
             ignoreFirstRow: false,
             authorFormat: '0',
@@ -40,41 +37,37 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
         };
 
         $scope.delimiters = {
-            ',': 		',',
             ';': 		';',
             '|': 		'\u007C',
             ':': 		'\u003A',
-            '{tab}': 	'\u0009'
-        }
-
-        /* controls */
-        $scope.ok = function() {
-            CSV2Articles();
-            $uibModalInstance.close();
-        }
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
+            '{tab}': 	'\u0009',
+            ',': 		','
         };
 
-        $scope.parse = function () {
+        /* controls */
+        $scope.ok = () => {
+            CSV2Articles();
+            $uibModalInstance.close();
+        };
+
+        $scope.cancel = () => $uibModalInstance.dismiss('cancel');
+
+        $scope.parse = () => {
             $scope.csv = CSVToArray($scope.raw_csv, $scope.options.delimiter);
             analyzeCSV();
             $scope.state.tab= 'csv';
-        }
+        };
 
-        $scope.clickTab = function(tab) {
+        $scope.clickTab = tab => {
             if (tab === 'csv' && $scope.csv.length === 0) {
                 return;
             }
             $scope.state.tab = tab;
-        }
+        };
 
-        $scope.toggleParseOptions = function() {
-            $scope.state.parseOptions = !$scope.state.parseOptions
-        }
+        $scope.toggleParseOptions = () => $scope.state.parseOptions = !$scope.state.parseOptions;
 
-        $scope.selectField = function(field, columnId) {
+        $scope.selectField = (field, columnId) => {
             console.log(field);
             if (field === '_dismiss') {
                 return;
@@ -85,24 +78,23 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
                     col.selected = '';
                 }
             }
-        }
+        };
 
-        $scope.hasZenonId = function() {
+        $scope.hasZenonId = () => {
             for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
                 if ($scope.columns[cols[i]].selected === "zenonid") {
                     return true
                 }
             }
             return false
-        }
+        };
 
 
-        $scope.onGotCsv = function(r) {
-            $scope.raw_csv = r.data.csv;
-            $scope.options.delimiter = guessDelimiter(r.data.csv);
-            console.log(guessDelimiter(r.data.csv));
-            $scope.state.tab = 'raw';
-        }
+        $scope.guessDelimiter = () => {
+            $scope.options.guessedDelimiter = guessDelimiter($scope.raw_csv);
+            $scope.options.delimiter = $scope.options.guessedDelimiter;
+            console.log("guessed delimiter: ", $scope.options.delimiter);
+        };
 
         $scope.getLabel = (key) => labels.get("sub", key);
 
@@ -110,8 +102,8 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
 
         function analyzeCSV() {
             // order by cols
-            let columns = {}
-            $scope.columns = {}
+            let columns = {};
+            $scope.columns = {};
 
             for (let i = 0; i < $scope.csv.length; i++) {
                 if (i === $scope.csv.length - 1 && $scope.csv[i].length === 1 && $scope.csv[i][0] === '') {
@@ -310,7 +302,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
                         }
                     }.bind({strData: strData})
                 )
-                .reduce(function(a,b){return a.count > b.count ? a : b})
+                .reduce((a, b) => a.count > b.count ? a : b)
                 .char
         }
 
@@ -318,6 +310,10 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
             return term.toLowerCase().replace(/[^a-z]/g, '');
         }
 
+
+        /* LOAD MODAL WITH DATA */
+        $scope.raw_csv = file;
+        $scope.guessDelimiter();
 
 
 }]);
