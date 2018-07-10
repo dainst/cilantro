@@ -1,9 +1,8 @@
-from flask import Blueprint, jsoninfy
+from flask import Blueprint, jsonify
 from flask_httpauth import HTTPBasicAuth
+from service.user.user_service import auth
 
-auth = HTTPBasicAuth()
-
-user_controller = Blueprint('staging', __name__)
+user_controller = Blueprint('user', __name__)
 
 
 @user_controller.route('/<user_name>', methods=['GET'])
@@ -17,9 +16,9 @@ def get_user(user_name):
 
     :return: JSON object representing the user
     """
-    if auth.username == user_name:
+    if auth.username() == user_name:
         user = {"user_name": user_name}
-        body = {"success": True, user: user}
-        return jsoninfy(body)
+        body = {"success": True, "user": user}
+        return jsonify(body)
     else:
-        return jsoninfy({"success": False}), 403
+        return jsonify({"success": False}), 403
