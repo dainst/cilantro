@@ -21,7 +21,9 @@ The generated HTML can be viewed via the following URL:
   `id -u` / `id -g` on UNIX systems.
   
 * Copy `config/users.yml-default` to `config/users.yml`. This file stores the
-  user information and credentials for all available users.
+  user information and credentials for all available users. In order for the
+  tests to be successful it must contain the user `test_user`. This user has
+  to be removed in production environments.
 
 * Install docker (Community Edition)
 
