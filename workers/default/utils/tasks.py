@@ -26,10 +26,10 @@ class ForeachTask(BaseTask):
                 files.append(f)
 
         for file in files:
-            params = {
-                'job_id': self.job_id,
-                'file': os.path.join(work_path, file)
-            }
+            params = self.params.copy()
+            params['job_id'] = self.job_id
+            params['file'] = os.path.join(work_path, file)
+
             chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
         raise self.replace(group(group_tasks))
