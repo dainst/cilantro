@@ -1,2 +1,2 @@
-admin:
-  password: s3cr3t
+test_user:
+  password: test_password

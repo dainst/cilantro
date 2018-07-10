@@ -91,7 +91,7 @@ class JobTypeTest(unittest.TestCase):
         return data['status']
 
     def post_job(self, job_type, data):
-        b64_user = b64encode(b"admin:s3cr3t").decode('utf-8')
+        b64_user = b64encode(b"test_user:test_password").decode('utf-8')
         response = self.client.post(
             f'/job/{job_type}',
             data=json.dumps(data),
