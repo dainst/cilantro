@@ -1,7 +1,5 @@
 const e = require("../util/elements");
 const action = require('../modules/actions');
-const message = require('../modules/messages');
-const input = require('../modules/inputs');
 
 describe('csv import dialogue', () => {
 
