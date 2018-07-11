@@ -11,7 +11,8 @@ staging_dir = os.environ['STAGING_DIR']
 
 def _copy_path(src, dest):
     """
-    Recursively copies and flattens the given paths
+    Recursively copy and flatten the given paths.
+
     :param str src:
     :param str dest:
     """

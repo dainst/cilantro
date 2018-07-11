@@ -17,6 +17,8 @@ class JobTypeTest(unittest.TestCase):
 
     def test_job_types_list_length(self):
         """
+        Test the length of the job type list.
+
         Checks if the length of the element list of what the API returns is
         the same than the number of files in the directory on disk.
 
@@ -32,6 +34,8 @@ class JobTypeTest(unittest.TestCase):
 
     def test_first_job_types_exists(self):
         """
+        Test if the first job type exists.
+
         Checks if the first filename from the job type directory is present
         in the JSON returned by the API.
 
@@ -49,7 +53,7 @@ class JobTypeTest(unittest.TestCase):
 
     def test_job_type_detail(self):
         """
-        Compares job file content with API return value as YAML.
+        Compare job file content with API return value as YAML.
 
         Checks if the file contents of the first file found in the job type
         directory is the same as what is served by the API when called with that
