@@ -8,6 +8,8 @@ watchdog = "*"
 celery = {extras = ["redis"]}
 flask = "*"
 flask-cors = "*"
+Flask-HTTPAuth = "*"
+bcrypt = "*"
 
 [dev-packages]
 
