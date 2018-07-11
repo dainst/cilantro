@@ -20,9 +20,9 @@ def convert_pdf_to_txt(source_file, output_dir):
             index += 1
 
 
-def pdf_merge(file_paths, output_path):
+def merge_pdf(file_paths, output_path):
     """
-    Create a single pdf from multiple ones merged together
+    Create a single pdf from multiple ones merged together.
 
     :param generator file_paths: list of paths to the pdf files to be
         merged in order
@@ -50,7 +50,7 @@ def pdf_merge(file_paths, output_path):
 
 def cut_pdf(files, source, target):
     """
-    Make cuts out of multiple pdf files
+    Make cuts out of multiple pdf files.
 
     :param list files: List of Dictionaries with keys 'file' and
         'range'. Lists the different Files that need to be cut.

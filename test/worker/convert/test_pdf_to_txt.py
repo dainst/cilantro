@@ -1,24 +1,17 @@
 import os
-import shutil
-import unittest
 
+from test.worker.convert.convert_test import ConvertTest
 from workers.convert.image_pdf.convert_pdf import convert_pdf_to_txt
 
 
-class PdfToTxtTest(unittest.TestCase):
-
-    resource_dir = os.environ['RESOURCE_DIR']
-    working_dir = os.environ['WORKING_DIR']
-    txt_dir = os.path.join(working_dir, 'txt_from_pdf')
-
-    pdf_path = f'{resource_dir}/files/test.pdf'
-    pdf_pages = 27
+class PdfToTxtTest(ConvertTest):
 
     def setUp(self):
-        os.makedirs(self.txt_dir)
-
-    def tearDown(self):
-        shutil.rmtree(self.txt_dir)
+        super().setUp()
+        self.txt_dir = os.path.join(self.working_dir, 'txt_from_pdf')
+        self.pdf_path = f'{self.resource_dir}/files/test.pdf'
+        self.pdf_pages = 27
+        os.makedirs(self.txt_dir, exist_ok=True)
 
     def test_success(self):
         convert_pdf_to_txt(self.pdf_path, self.txt_dir)

@@ -32,7 +32,7 @@ def _list_dir(dir_path):
 @auth.login_required
 def list_staging():
     """
-    Lists files and directories in the staging area.
+    List files and directories in the staging area.
 
     Returns a complete recursive folder hierarchy.
 
@@ -75,7 +75,7 @@ def get_path(path):
 @auth.login_required
 def upload_to_staging():
     """
-    Uploads files to the staging area.
+    Upload files to the staging area.
 
     The upload endpoint is able to handle single and multiple files provided
     under any key.

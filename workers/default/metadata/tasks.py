@@ -4,7 +4,7 @@ from workers.base_task import BaseTask
 
 class WriteMetadataTask(BaseTask):
     """
-    Writes a metadata object provided as a dict param to disk
+    Write a metadata object provided as a dict param to disk.
 
     Does nothing instead of creating a JSON file with an empty object if
     metadata param is empty.

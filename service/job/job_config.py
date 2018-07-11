@@ -21,7 +21,8 @@ class RequestParameterException(Exception):
 
 def generate_chain(tasks_def, params=None):
     """
-    Create a celery task chain
+    Create a celery task chain.
+
     :param list tasks_def: A list of (expanded) task definition objects
     :param dict params: Additional params that are made available to all tasks
     :return Chain: Celery task chain
@@ -39,7 +40,8 @@ def generate_chain(tasks_def, params=None):
 
 def _extract_job_type(file_name):
     """
-    Strips the extension from the file_name
+    Strip the extension from the file_name.
+
     :param str file_name:
     :return str:
     """
@@ -71,11 +73,13 @@ def _validate_job_config(job_config, job_type):
 
 def _expand_tasks_def(tasks_def):
     """
-    Expands a list of task definitions given in the YAML config by creating
-    task definition objects for every task in the list.
+    Expand a list of task definitions given in the YAML config.
+
+    This creates task definition objects for every task in the list.
 
     In YAML tasks defintions can be abbreviated and this method ensures that
     a unified API exists for evaluating task definitions.
+
     :param list tasks_def: A list of task defintions to be expanded
     :return list: The list of expanded task defintion objects
     """
@@ -89,8 +93,11 @@ def _expand_tasks_def(tasks_def):
 
 def _expand_task_def(task_def):
     """
-    Expand a single task definition. Recursively calls _expand_tasks_def in
-    order to expand complex task trees that can be defined with foreach and if.
+    Expand a single task definition.
+
+    Recursively calls _expand_tasks_def in order to expand complex task trees
+    that can be defined with foreach and if.
+
     :param object task_def: Task definition, may be a string or a dict
     :return dict: Task definition as dictionary
     """
@@ -165,8 +172,10 @@ def _create_signature_for_task(task_def, params=None):
 
 def _init_default_params(params):
     """
-    Reads the params attribute of the job config and sets default values
-    based on the types given in the config
+    Read the params attribute of the job config and set default values.
+
+    Default values are based on the types given in the config.
+
     :param dict params:
     :return dict:
     """
@@ -190,7 +199,8 @@ def _init_default_params(params):
 
 def _validate_request_params(default_params, request_params):
     """
-    Validates and merges the request parameters
+    Validate and merge the request parameters.
+
     :param dict default_params:
     :param dict request_params:
     :return dict: default params overridden with request params
@@ -219,8 +229,10 @@ def _validate_request_params(default_params, request_params):
 
 class JobConfig:
     """
-    Handles job config parsing and job chain creation based on
-    the YAML job_type definition found in the config directory.
+    Handle job config parsing and job chain creation.
+
+    Chains are created based on the YAML job_type definition found in the
+    config directory.
 
     Parameters for tasks can be set in three different places:
     1. Default values are generated based on the data type configured in the
@@ -233,7 +245,7 @@ class JobConfig:
 
     def __init__(self):
         """
-        Initializes the config and triggers the parsing of the YAML files.
+        Initialize the config and triggers the parsing of the YAML files.
         """
         self.logger = logging.getLogger(__name__)
         self._config_dir = os.environ['CONFIG_DIR']
@@ -242,7 +254,8 @@ class JobConfig:
 
     def generate_job(self, job_type, user, request_params=None):
         """
-        Generates a celery job chain
+        Generate a celery job chain.
+
         :param str job_type: The name of the config file that defines the job
         :param dict request_params: Additional parameters that overwrite the
             default parameters

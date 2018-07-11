@@ -15,10 +15,7 @@ class RepositoryControllerTest(unittest.TestCase):
     repository_dir = os.environ['REPOSITORY_DIR']
 
     def setUp(self):
-        try:
-            os.makedirs(self.repository_dir)
-        except OSError:
-            pass
+        os.makedirs(self.repository_dir, exist_ok=True)
 
         self._copy_object_to_repository('objects', test_object)
 
