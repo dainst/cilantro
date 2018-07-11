@@ -94,9 +94,13 @@ def upload_to_staging():
     return jsonify({'success': False}), 400
 
 
+# TODO handle .DS_Store and other hidden files
 def _upload_file(file):
-    filename = secure_filename(file.filename)
-    file.save(os.path.join(staging_dir, filename))
+    path, filename = os.path.split(file.filename)
+    folders = list(map(lambda f: secure_filename(f), path.split("/")))
+    full_path = os.path.join(staging_dir, *folders)
+    os.makedirs(full_path, exist_ok=True)
+    file.save(os.path.join(full_path, secure_filename(filename)))
 
 
 def _is_allowed_file(filename):
