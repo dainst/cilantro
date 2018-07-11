@@ -1,7 +1,7 @@
 import unittest
 
 from run_service import app
-from test.service.user.user_utils import get_auth_header
+from test.service.user.user_utils import get_auth_header, test_user
 
 test_object = 'some_tiffs'
 test_file = 'test.tif'
@@ -28,7 +28,7 @@ class UserControllerTest(unittest.TestCase):
     def test_get_user_wrong_password(self):
         response = self.client.get(
             f'/user/test_user',
-            headers=get_auth_header("test_looser", "test_spassword")
+            headers=get_auth_header(test_user, "test_spassword")
         )
         self.assertEqual(401, response.status_code)
 
