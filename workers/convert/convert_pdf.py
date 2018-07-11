@@ -4,19 +4,20 @@ import logging
 import pdftotext
 import PyPDF2
 
+log = logging.getLogger(__name__)
+
 
 def convert_pdf_to_txt(source_file, output_dir):
-    logging.getLogger(__name__).debug(f"Creating txt files from {source_file} "
-                                      f"to {output_dir}")
+    log.debug(f"Creating txt files from {source_file} to {output_dir}")
     with open(source_file, "rb") as input_stream:
         pdf = pdftotext.PDF(input_stream)
-        index = 0
+        index = 1
         # Needed as pdftotext is not a Python list with .index() capability.
         for page in pdf:
-            output = open(os.path.join(output_dir, f'{index}.txt'), 'wb')
-            output.write(page.encode('utf-8'))
-            output.close()
-            index = index + 1
+            with open(os.path.join(output_dir, f'page.{index}.txt'), 'w+b') as f:
+                f.write(page.encode('utf-8'))
+                f.close()
+            index += 1
 
 
 def pdf_merge(file_paths, output_path):
