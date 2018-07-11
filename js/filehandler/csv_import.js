@@ -1,7 +1,7 @@
 let mod = angular.module('module.fileHandlers.csv_import', ['ui.bootstrap']);
 
-mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'file_manager', 'dataset', 'messenger',
-    function($rootScope, $uibModal, editables, file_manager, dataset, messenger) {
+mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'file_manager', 'dataset',
+    function($rootScope, $uibModal, editables, file_manager, dataset) {
 
         const csvHandler = new file_manager.FileHandler('csv_import');
 
@@ -24,13 +24,12 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'file_manager
             });
 
             modalInstance.result.then(function(filled_columns) {
-                csvHandler.columns = filled_columns;
                 for (let i = 0, ids = Object.keys(dataset.articles); i < ids.length; i++) {
                     $rootScope.$broadcast('thumbnaildataChanged', dataset.articles[ids[i]]);
                 }
-                csvHandler.ready = true;
+                file_manager.ready = true;
             }, function(a) {
-                csvHandler.ready = true;
+                file_manager.ready = true;
             });
 
         }
