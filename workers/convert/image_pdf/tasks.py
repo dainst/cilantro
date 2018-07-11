@@ -6,7 +6,7 @@ from workers.base_task import BaseTask
 
 from workers.convert.image_pdf.convert_image import convert_tif_to_jpg
 from workers.convert.image_pdf.convert_pdf import convert_pdf_to_txt, \
-    pdf_merge, cut_pdf
+    merge_pdf, cut_pdf
 from workers.convert.image_pdf.convert_image_pdf import convert_pdf_to_tif, \
     convert_jpg_to_pdf
 
@@ -69,7 +69,7 @@ class MergeConvertedPdf(BaseTask):
     def execute_task(self):
         work_path = self.get_work_path()
         files = _list_files(work_path, '.converted.pdf')
-        pdf_merge(files, work_path + '/merged.pdf')
+        merge_pdf(files, work_path + '/merged.pdf')
         # TODO incorporate JSON data for the filename and metadatas.
 
 

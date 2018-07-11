@@ -39,6 +39,14 @@ class JobTypeTest(unittest.TestCase):
         app.testing = True
         self.client = app.test_client()
 
+    def tearDown(self):
+        try:
+            shutil.rmtree(self.staging_dir)
+            shutil.rmtree(self.working_dir)
+            shutil.rmtree(self.repository_dir)
+        except OSError:
+            pass
+
     def assert_file_in_repository(self, object_id, file_path):
         waited = 0
         file = Path(os.path.join(self.repository_dir, object_id, file_path))
