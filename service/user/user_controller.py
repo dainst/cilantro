@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify
-from flask_httpauth import HTTPBasicAuth
 from service.user.user_service import auth
 
 user_controller = Blueprint('user', __name__)
