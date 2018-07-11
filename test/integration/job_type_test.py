@@ -3,14 +3,13 @@ import shutil
 import time
 import unittest
 import logging
-from base64 import b64encode
 
 from json import JSONDecodeError
 from pathlib import Path
 
 from flask import json
 from run_service import app
-from test.service.user.user_utils import get_auth_header
+from test.service.user.user_utils import get_auth_header, test_user
 
 log = logging.getLogger(__name__)
 wait_time = 120000
@@ -107,14 +106,14 @@ class JobTypeTest(unittest.TestCase):
 
     def stage_resource(self, folder, path):
         source = os.path.join(self.resource_dir, folder, path)
-        target = os.path.join(self.staging_dir, path)
+        target = os.path.join(self.staging_dir, test_user, path)
         try:
             shutil.copytree(source, target)
         except FileExistsError:
             pass
 
     def unstage_resource(self, path):
-        source = os.path.join(self.staging_dir, path)
+        source = os.path.join(self.staging_dir, test_user, path)
         try:
             shutil.rmtree(source)
         except FileNotFoundError:

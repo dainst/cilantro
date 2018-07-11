@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 from run_service import app
-from test.service.user.user_utils import get_auth_header
+from test.service.user.user_utils import get_auth_header, test_user
 
 test_object = 'some_tiffs'
 test_file = 'test.tif'
@@ -97,22 +97,22 @@ class StagingControllerTest(unittest.TestCase):
         )
 
     def _assert_file_in_staging(self, file_name):
-        file = Path(os.path.join(self.staging_dir, file_name))
+        file = Path(os.path.join(self.staging_dir, test_user, file_name))
         if not file.is_file():
             raise AssertionError(f"File '{file_name}' was not present in the "
                                  f"staging folder")
 
     def _remove_file_from_staging(self, file_name):
-        file_path = os.path.join(self.staging_dir, file_name)
+        file_path = os.path.join(self.staging_dir, test_user, file_name)
         if os.path.isfile(file_path):
             os.remove(file_path)
 
     def _remove_dir_from_staging(self, dir_name):
-        dir_path = os.path.join(self.staging_dir, dir_name)
+        dir_path = os.path.join(self.staging_dir, test_user, dir_name)
         if os.path.isdir(dir_path):
             shutil.rmtree(dir_path)
 
     def _copy_object_to_staging(self, folder, filename):
         source = os.path.join(self.resource_dir, folder, filename)
-        target = os.path.join(self.staging_dir, filename)
+        target = os.path.join(self.staging_dir, test_user, filename)
         shutil.copytree(source, target)

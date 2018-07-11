@@ -39,7 +39,7 @@ def list_staging():
     :return: JSON array containing objects for files and folders
     """
 
-    tree = _list_dir(staging_dir)
+    tree = _list_dir(os.path.join(staging_dir, auth.username()))
     return jsonify(tree)
 
 
@@ -62,7 +62,7 @@ def get_path(path):
     :param str path: path to file
     :return:
     """
-    abs_path = os.path.join(staging_dir, path)
+    abs_path = os.path.join(staging_dir, auth.username(), path)
     if os.path.isdir(abs_path):
         return jsonify(os.listdir(abs_path))
     elif os.path.isfile(abs_path):
@@ -91,7 +91,7 @@ def upload_to_staging():
         for key in request.files:
             for file in request.files.getlist(key):
                 if _is_allowed_file(file.filename):
-                    _upload_file(file)
+                    _upload_file(file, auth.username())
                 else:
                     return jsonify({'success': False}), 415
         return jsonify({'success': True})
@@ -99,9 +99,12 @@ def upload_to_staging():
     return jsonify({'success': False}), 400
 
 
-def _upload_file(file):
+def _upload_file(file, username):
     filename = secure_filename(file.filename)
-    file.save(os.path.join(staging_dir, filename))
+    user_dir = os.path.join(staging_dir, username)
+    if not os.path.exists(user_dir):
+        os.makedirs(user_dir)
+    file.save(os.path.join(user_dir, filename))
 
 
 def _is_allowed_file(filename):
