@@ -34,6 +34,8 @@ def job_create(job_type):
     Parameters can be provided as JSON objects as part of the request body
     and must match the parameters defined in the corresponding job config YAML.
 
+    Valid user credential have to be given via HTTP basic authentication.
+
     :param str job_type:
     :return: A JSON object containing the status, the job id and the task ids
         of every subtask in the chain
