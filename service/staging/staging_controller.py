@@ -102,8 +102,7 @@ def upload_to_staging():
 def _upload_file(file, username):
     filename = secure_filename(file.filename)
     user_dir = os.path.join(staging_dir, username)
-    if not os.path.exists(user_dir):
-        os.makedirs(user_dir)
+    os.makedirs(user_dir, exist_ok=True)
     file.save(os.path.join(user_dir, filename))
 
 
