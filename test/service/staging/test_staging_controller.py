@@ -67,12 +67,12 @@ class StagingControllerTest(unittest.TestCase):
         self._copy_object_to_staging('objects', test_object)
         response = self.client.get(f'/staging/{test_object}/{test_file}',
                                    headers=get_auth_header())
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_file_not_found(self):
         response = self.client.get(f'/staging/{test_object}/{test_file}',
                                    headers=get_auth_header())
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def _upload_folder_to_staging(self, object_path):
         file_names = os.listdir(object_path)
