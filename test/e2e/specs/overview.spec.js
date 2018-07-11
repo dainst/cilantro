@@ -5,19 +5,16 @@ const ot = require('../modules/overview_table');
 
 describe('overview page', () => {
 
-    beforeEach(done =>
-        browser.get(browser.baseUrl)
-            .then(e.start.startBtn.click)
-            .then(e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click)
-            .then(message.waitForMessage)
-            .then(e.documents.proceedBtn.click)
-            .then(done)
+    /**
+     * to test thumbnail generationw e need to check similarity of images (and not just compare bytecode)
+     * because pdf.js does create slightly different result ins different environments
+     */
+
+    it('show the first page of loaded Document as thumbnail', done =>
+        ot.goToOverview()
+            .then(ot.compareThumbnailWithImage(0, "doc1_p1.png")
+                .then(xx => {expect(xx).toBeLessThan(1500); done()}))
     );
-
-    // chrome only!
-    const thumbStartTestDoc1P1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA3wAAATuCAYAAACWHSHkAAAABHNCSVQICA";
-
-    it('should display a thumbnail', () => expect(ot.getThumbnailBinaryStart(0)).toEqual(thumbStartTestDoc1P1));
 
     xit('should display another thumbnail if page changes', () => {
 

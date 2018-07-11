@@ -14,7 +14,7 @@ server.use(bodyParser.json());
 server.use(middleWares);
 server.use('/job', validateJsonParams);
 
-server.use('/files', express.static(path.join(__dirname, '/../ressources')));
+server.use('/files', express.static(path.join(__dirname, '/../ressources/staging')));
 server.use('/files/broken_file.csv', missingFile);
 
 server.use(router);
