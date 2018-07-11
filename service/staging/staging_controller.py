@@ -2,6 +2,7 @@ import os
 
 from flask import Blueprint, jsonify, request, send_file, abort
 from werkzeug.utils import secure_filename
+from service.user.user_service import auth
 
 staging_controller = Blueprint('staging', __name__)
 
@@ -28,6 +29,7 @@ def _list_dir(dir_path):
 
 
 @staging_controller.route('', methods=['GET'], strict_slashes=False)
+@auth.login_required
 def list_staging():
     """
     Lists files and directories in the staging area.
@@ -45,6 +47,7 @@ def list_staging():
     methods=['GET'],
     strict_slashes=False
 )
+@auth.login_required
 def get_path(path):
     """
     Retrieve a file from the staging folder or lists the contents of a subfolder
@@ -68,6 +71,7 @@ def get_path(path):
 
 
 @staging_controller.route('', methods=['POST'], strict_slashes=False)
+@auth.login_required
 def upload_to_staging():
     """
     Uploads files to the staging area.
