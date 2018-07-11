@@ -12,7 +12,8 @@ RUN apt-get -y install \
     python-dev \
     libmagickwand-dev \
     ghostscript \
-    tesseract-ocr
+    tesseract-ocr \
+    tesseract-ocr-deu
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true

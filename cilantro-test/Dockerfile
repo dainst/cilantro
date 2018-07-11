@@ -12,7 +12,9 @@ RUN apt-get -y install \
     python3-dev \
     libmagickwand-dev \
     ghostscript \
-    tesseract-ocr
+    tesseract-ocr \
+    tesseract-ocr-deu
+
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV LC_ALL C.UTF-8
