@@ -20,7 +20,7 @@ def convert_pdf_to_txt(source_file, output_dir):
             index += 1
 
 
-def pdf_merge(file_paths, output_path):
+def merge_pdf(file_paths, output_path):
     """
     Create a single pdf from multiple ones merged together
 
