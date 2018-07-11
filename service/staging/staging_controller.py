@@ -94,7 +94,6 @@ def upload_to_staging():
     return jsonify({'success': False}), 400
 
 
-# TODO handle .DS_Store and other hidden files
 def _upload_file(file):
     path, filename = os.path.split(file.filename)
     folders = list(map(lambda f: secure_filename(f), path.split("/")))
