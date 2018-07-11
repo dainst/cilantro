@@ -7,3 +7,4 @@ pyyaml
 flask_cors
 wand
 pdftotext
+bcrypt
