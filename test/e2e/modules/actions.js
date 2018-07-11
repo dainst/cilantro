@@ -1,11 +1,11 @@
-let elements = require("../util/elements");
+const elements = require("../util/elements");
 
-let path = require('path');
-let remote = require('../../../node_modules/selenium-webdriver/remote');
+const path = require('path');
+const remote = require('../../../node_modules/selenium-webdriver/remote');
 
-let EC = protractor.ExpectedConditions;
+const EC = protractor.ExpectedConditions;
 
-let Actions = function() {
+const Actions = function() {
 
     function toggleNavbar() {
         return browser.wait(EC.visibilityOf(elements.navbar.toggle), 10)

@@ -3,40 +3,6 @@ module.exports = {
     loader: element(by.css("#loader")),
     modal: element(by.css('.modal-dialog')),
 
-    article: {
-        deleteBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
-        addBtn: element(by.css('button[ng-click="addArticle()"]')),
-        entry: element.all(by.css('tr[article="true"][class="ng-scope"]')),
-        confirmBtn: element(by.css('.btn-success')),
-        dismissBtn: element(by.css('.btn-danger')),
-        displayColumn: element.all(by.css('button[ng-click="toggleList()"]')),
-    },
-    csv: {
-        takeData: element(by.css('button[ng-click="parse()"]')),
-        ignoreFirstRow: element(by.model('options.ignoreFirstRow')),
-        confirm: element(by.css('button[ng-click="ok()"]')),
-        textField: element(by.id('raw_csv')),
-        importTableColumns: element.all(by.css('#csv-import-table > thead > tr > td > select')),
-        delimiterSelect: element(by.id('csv-import-delimiter')),
-        authorDelimiter: element(by.id('csv-author-delimiter')),
-        authorFormat: element(by.id('csv-author-format')),
-        deviantColumnsWarning: element(by.id('csv-deviant-columns-warning')),
-        delimiterWarning: element(by.id('csv-delimiter-warning')),
-    },
-    login: {
-        passwordInput: element(by.css('h1 input[type="password"]')),
-        submitPassword: element(by.id('submit')),
-    },
-    message: {
-        main: element(by.css('#info-container .alert.main-message')),
-    },
-    publish: {
-        proceedBtn: element(by.id('proceed')),
-        uploadBtn: element.all(by.id('upload')),
-        input: element.all(by.css('input.editable')),
-        select: element.all(by.css('select.editable-select')),
-        finalBtn: element(by.css('button[ng-click="uploadToOjs()"]')),
-    },
     restart: {
         confirmBtn: element(by.css('.btn-danger')),
     },
@@ -50,6 +16,43 @@ module.exports = {
         proceedBtn: element(by.css('#proceed')),
         fileHandlerArea: element(by.css('#file-handler-selection'))
     },
+    overview: {
+        table: element(by.css('.super-table')),
+        tableHeadColumns: element.all(by.css('.super-table > thead > tr > td')),
+        tableRows: element.all(by.css('.super-table > tbody > tr')),
+        displayColumn: element.all(by.css('button[ng-click="toggleList()"]')),
+    },
+    article: {
+        deleteBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
+        addBtn: element(by.css('button[ng-click="addArticle()"]')),
+        entry: element.all(by.css('tr[article="true"][class="ng-scope"]')),
+        confirmBtn: element(by.css('.btn-success')),
+        dismissBtn: element(by.css('.btn-danger')),
+
+    },
+    csv: {
+        takeData: element(by.css('button[ng-click="parse()"]')),
+        ignoreFirstRow: element(by.model('options.ignoreFirstRow')),
+        confirm: element(by.css('button[ng-click="ok()"]')),
+        textField: element(by.id('raw_csv')),
+        importTableColumns: element.all(by.css('#csv-import-table > thead > tr > td > select')),
+        delimiterSelect: element(by.id('csv-import-delimiter')),
+        authorDelimiter: element(by.id('csv-author-delimiter')),
+        authorFormat: element(by.id('csv-author-format')),
+        deviantColumnsWarning: element(by.id('csv-deviant-columns-warning')),
+        delimiterWarning: element(by.id('csv-delimiter-warning')),
+    },
+    message: {
+        main: element(by.css('#info-container .alert.main-message')),
+    },
+    publish: {
+        proceedBtn: element(by.id('proceed')),
+        uploadBtn: element.all(by.id('upload')),
+        input: element.all(by.css('input.editable')),
+        select: element.all(by.css('select.editable-select')),
+        finalBtn: element(by.css('button[ng-click="uploadToOjs()"]')),
+    },
+
     upload: {
         fileUploadArea: element(by.id('fileDropArea')),
         fileUploadBtn: element(by.id('uploadFileSelect')),
