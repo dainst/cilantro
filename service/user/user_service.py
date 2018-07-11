@@ -7,7 +7,7 @@ auth = HTTPBasicAuth()
 
 _users_config = os.path.join(os.environ['CONFIG_DIR'], "users.yml")
 _users_file = open(_users_config, 'r', encoding="utf-8")
-users = yaml.load(_users_file)
+users = yaml.safe_load(_users_file)
 
 
 @auth.verify_password
