@@ -12,7 +12,10 @@ tasks:
   - retrieve_from_staging
   - write_metadata
   - convert.split_pdf
-  - tiff_to_text
+  - foreach: ".*\\.pdf$"
+    do: convert.pdf_to_tif
+  - task: convert.tif_to_txt
+    file: 2.tif
   - task: generate_marc_xml
     xml_template_path: resources/marc_template.xml
   - task: generate_xml
