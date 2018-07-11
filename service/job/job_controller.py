@@ -39,7 +39,8 @@ def job_create(job_type):
         of every subtask in the chain
     """
     params = request.get_json(force=True, silent=True)
-    job = get_job_config().generate_job(job_type, params)
+    user = auth.username()
+    job = get_job_config().generate_job(job_type, user, params)
     task = job.run()
     logger = logging.getLogger(__name__)
     logger.info(f"created job with id: {task.id}")
