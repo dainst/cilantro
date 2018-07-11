@@ -36,8 +36,6 @@ describe('documents page', () => {
                 expect(stats.Files).toEqual(1);
                 expect(stats.Thumbnails).toEqual(1);
             })
-            //.then(e.documents.proceedBtn.click)
-            // TODO proceed and look if there actually a thumbnail and a article
     });
 
     it('should should load pdf file and NOT create a document if selected so', () => {
@@ -47,16 +45,14 @@ describe('documents page', () => {
             .then(e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click)
             .then(message.waitForMessage)
             .then(message.getStats)
-
             .then(stats => {
                 expect(stats.Analyzed).toEqual(0);
                 expect(stats.Loaded).toEqual(1);
                 expect(stats.Files).toEqual(1);
                 expect(stats.Thumbnails).toEqual(0);
             })
-
-        //.then(e.documents.proceedBtn.click)
-        // TODO proceed and look if there actually a no thumbnail or article
+            .then(e.documents.proceedBtn.click)
+            .then(expect(e.overview.tableRows.count()).toEqual(0))
     });
 
     it('should handle a broken file without big drama', () => {
@@ -80,8 +76,8 @@ describe('documents page', () => {
                 expect(stats.Files).toEqual(3);
                 expect(stats.Thumbnails).toEqual(3);
             })
-        //.then(e.documents.proceedBtn.click)
-        // TODO proceed and look if there actually a thumbnail and a article
+            .then(e.documents.proceedBtn.click)
+            .then(expect(e.overview.tableRows.count()).toEqual(3))
     });
 
     it('should open the csv import dialogue after loading a csv file', () => {
@@ -93,10 +89,8 @@ describe('documents page', () => {
             .then(e.csv.takeData.click)
             .then(e.csv.ignoreFirstRow.click)
             .then(e.csv.confirm.click)
-
-
-
-        // TODO proceed and look if there actually a 2 thumbnails and articles
+            .then(e.documents.proceedBtn.click)
+            .then(expect(e.overview.tableRows.count()).toEqual(2))
 
     });
 
