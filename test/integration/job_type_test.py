@@ -29,23 +29,17 @@ class JobTypeTest(unittest.TestCase):
     repository_dir = os.environ['REPOSITORY_DIR']
 
     def setUp(self):
-        try:
-            os.makedirs(self.staging_dir)
-            os.makedirs(self.working_dir)
-            os.makedirs(self.repository_dir)
-        except OSError:
-            pass
+        os.makedirs(self.staging_dir, exist_ok=True)
+        os.makedirs(self.working_dir, exist_ok=True)
+        os.makedirs(self.repository_dir, exist_ok=True)
 
         app.testing = True
         self.client = app.test_client()
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.staging_dir)
-            shutil.rmtree(self.working_dir)
-            shutil.rmtree(self.repository_dir)
-        except OSError:
-            pass
+        shutil.rmtree(self.staging_dir, ignore_errors=True)
+        shutil.rmtree(self.working_dir, ignore_errors=True)
+        shutil.rmtree(self.repository_dir, ignore_errors=True)
 
     def assert_file_in_repository(self, object_id, file_path):
         waited = 0

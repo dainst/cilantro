@@ -47,8 +47,7 @@ class PublishToRepositoryTask(BaseTask):
     def execute_task(self):
         work_path = self.get_work_path()
         repository_path = os.path.join(repository_dir, self.job_id)
-        if os.path.exists(repository_path):
-            shutil.rmtree(repository_path)
+        shutil.rmtree(repository_path, ignore_errors=True)
         shutil.copytree(work_path, repository_path)
 
 

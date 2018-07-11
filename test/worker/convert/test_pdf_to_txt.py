@@ -11,7 +11,7 @@ class PdfToTxtTest(ConvertTest):
         self.txt_dir = os.path.join(self.working_dir, 'txt_from_pdf')
         self.pdf_path = f'{self.resource_dir}/files/test.pdf'
         self.pdf_pages = 27
-        os.makedirs(self.txt_dir)
+        os.makedirs(self.txt_dir, exist_ok=True)
 
     def test_success(self):
         convert_pdf_to_txt(self.pdf_path, self.txt_dir)

@@ -105,8 +105,7 @@ class StagingControllerTest(unittest.TestCase):
 
     def _remove_dir_from_staging(self, dir_name):
         dir_path = os.path.join(self.staging_dir, dir_name)
-        if os.path.isdir(dir_path):
-            shutil.rmtree(dir_path)
+        shutil.rmtree(dir_path, ignore_errors=True)
 
     def _copy_object_to_staging(self, folder, filename):
         source = os.path.join(self.resource_dir, folder, filename)
