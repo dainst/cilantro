@@ -16,6 +16,8 @@ jinja2 = "*"
 lxml = "*"
 flask-cors = "*"
 pyocr = "*"
+Flask-HTTPAuth = "*"
+bcrypt = "*"
 
 [dev-packages]
 
