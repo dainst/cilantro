@@ -75,6 +75,9 @@ def upload_to_staging():
     The upload endpoint is able to handle single and multiple files provided
     under any key.
 
+    If the names of the given files contain folders these are created in the
+    staging area if they are not already present.
+
     Returns HTTP status code 415 if one of the files' extension is not allowed.
 
     Returns HTTP status code 400 if no files were provided.
