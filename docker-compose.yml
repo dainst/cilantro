@@ -19,7 +19,7 @@ services:
       - "6379:6379"
 
   service:
-    image: dainst/cilantro-service:stable
+    image: dainst/cilantro-service:multi-user
     ports:
       - "5000:5000"
     volumes:
