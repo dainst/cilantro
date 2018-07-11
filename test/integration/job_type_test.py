@@ -10,6 +10,7 @@ from pathlib import Path
 
 from flask import json
 from run_service import app
+from test.service.user.user_utils import get_auth_header
 
 log = logging.getLogger(__name__)
 wait_time = 120000
@@ -91,12 +92,11 @@ class JobTypeTest(unittest.TestCase):
         return data['status']
 
     def post_job(self, job_type, data):
-        b64_user = b64encode(b"test_user:test_password").decode('utf-8')
         response = self.client.post(
             f'/job/{job_type}',
             data=json.dumps(data),
             content_type='application/json',
-            headers={"Authorization": f"Basic {b64_user}"}
+            headers=get_auth_header()
         )
         try:
             data = json.loads(response.get_data(as_text=True))
