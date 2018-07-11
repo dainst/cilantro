@@ -9,10 +9,6 @@ from workers.convert.convert_image import convert_tif_to_jpg
 from workers.convert.convert_pdf import convert_pdf_to_txt, pdf_merge, cut_pdf
 from workers.convert.tiff_to_text import tif_to_txt
 
-# celery_app.autodiscover_tasks([  # TODO remove if not necessary
-#     'workers.convert.image_pdf',
-# ], force=True)
-
 
 class SplitPdfTask(BaseTask):
     name = "convert.split_pdf"
@@ -74,13 +70,9 @@ class TextFromTiffTask(BaseTask):
     name = "convert.tif_to_txt"
 
     def execute_task(self):
-        work_path = self.get_work_path()
         file_name = self.get_param("file")
-        if file_name is None:
-            raise Exception('NO FILE')
-        _, extension = os.path.splitext(file_name)
-        new_file_name = file_name.replace(extension, '.converted.txt')
-        tif_to_txt(file_name, os.path.join(work_path, new_file_name))
+        file = os.path.join(self.get_work_path(), file_name)
+        tif_to_txt(file, os.path.join(self.get_work_path(), file_name + '.converted.txt'))
 
 
 def _list_files(directory, extension):
