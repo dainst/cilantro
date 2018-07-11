@@ -22,19 +22,15 @@ def _assert_wait_time(waited):
 
 
 class JobTypeTest(unittest.TestCase):
-
     resource_dir = os.environ['RESOURCE_DIR']
     staging_dir = os.environ['STAGING_DIR']
     working_dir = os.environ['WORKING_DIR']
     repository_dir = os.environ['REPOSITORY_DIR']
 
     def setUp(self):
-        try:
-            os.makedirs(self.staging_dir)
-            os.makedirs(self.working_dir)
-            os.makedirs(self.repository_dir)
-        except OSError:
-            pass
+        os.makedirs(self.staging_dir, exist_ok=True)
+        os.makedirs(self.working_dir, exist_ok=True)
+        os.makedirs(self.repository_dir, exist_ok=True)
 
         app.testing = True
         self.client = app.test_client()
