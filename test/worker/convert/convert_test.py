@@ -16,13 +16,8 @@ class ConvertTest(unittest.TestCase):
     working_dir = "test_data"
 
     def setUp(self):
-        try:
-            os.makedirs(self.working_dir)
-        except OSError:
-            pass
+        os.makedirs(self.working_dir, exist_ok=True)
+
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.working_dir)
-        except OSError:
-            pass
+        shutil.rmtree(self.working_dir, ignore_errors=True)
