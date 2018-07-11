@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 from run_service import app
+from test.service.user.user_utils import get_auth_header
 
 test_object = 'some_tiffs'
 test_file = 'test.tif'
@@ -56,7 +57,7 @@ class StagingControllerTest(unittest.TestCase):
         file_names = os.listdir(object_path)
         self._upload_folder_to_staging(object_path)
 
-        response = self.client.get('/staging')
+        response = self.client.get('/staging', headers=get_auth_header())
         response_object = response.get_json()
         self.assertGreaterEqual(len(response_object), len(file_names))
         staged_files = [e for e in response_object if e['name'] in file_names]
@@ -64,11 +65,13 @@ class StagingControllerTest(unittest.TestCase):
 
     def test_get_file(self):
         self._copy_object_to_staging('objects', test_object)
-        response = self.client.get(f'/staging/{test_object}/{test_file}')
+        response = self.client.get(f'/staging/{test_object}/{test_file}',
+                                   headers=get_auth_header())
         self.assertEquals(response.status_code, 200)
 
     def test_get_file_not_found(self):
-        response = self.client.get(f'/staging/{test_object}/{test_file}')
+        response = self.client.get(f'/staging/{test_object}/{test_file}',
+                                   headers=get_auth_header())
         self.assertEquals(response.status_code, 404)
 
     def _upload_folder_to_staging(self, object_path):
@@ -89,7 +92,8 @@ class StagingControllerTest(unittest.TestCase):
         return self.client.post(
             '/staging',
             content_type='multipart/form-data',
-            data=data
+            data=data,
+            headers=get_auth_header()
         )
 
     def _assert_file_in_staging(self, file_name):

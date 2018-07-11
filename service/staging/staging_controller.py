@@ -42,6 +42,7 @@ def list_staging():
     tree = _list_dir(staging_dir)
     return jsonify(tree)
 
+
 @staging_controller.route(
     '/<path:path>',
     methods=['GET'],
