@@ -99,7 +99,7 @@ def upload_to_staging():
 
 def _upload_file(file):
     path, filename = os.path.split(file.filename)
-    folders = list(map(lambda f: secure_filename(f), path.split("/")))
+    folders = list(map(secure_filename, path.split("/")))
     full_path = os.path.join(staging_dir, *folders)
     os.makedirs(full_path, exist_ok=True)
     file.save(os.path.join(full_path, secure_filename(filename)))
@@ -108,4 +108,3 @@ def _upload_file(file):
 def _is_allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in allowed_extensions
-
