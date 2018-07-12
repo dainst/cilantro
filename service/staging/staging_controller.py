@@ -102,7 +102,7 @@ def upload_to_staging():
                                                            }
                                                        }
 
-                        logging.getLogger(__name__).debug(f"Error during upload from {file.filename} : {str(e)}")
+                        logging.getLogger(__name__).error(f"Error during upload from {file.filename} : {str(e)}")
                 else:
                     results[f"{file.filename}"] = \
                         {"success": False,
@@ -111,7 +111,7 @@ def upload_to_staging():
                                    }
                          }
 
-                    logging.getLogger(__name__).debug(
+                    logging.getLogger(__name__).error(
                         f"Error during upload from {file.filename} : File extension ."
                         f"{_get_file_extension(file.filename)} is not allowed.")
         return jsonify({"result": results}), 200
