@@ -74,10 +74,8 @@ def upload_to_staging():
     """
     Uploads files to the staging area.
     If the name of a posted file contains a directory-structure in it, represented structure will be created.
-    
     The upload endpoint is able to handle single and multiple files provided
     under any key.
-    
     Returns HTTP status code 400 if no files were provided.
     Returns HTTP status code 200 else
 
