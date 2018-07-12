@@ -68,7 +68,7 @@ class CreateObjectTask(BaseTask):
     def _add_files(obj, files):
         pdf_files = []
         for file in files:
-            suffix = Path(src).suffix
+            suffix = Path(file['file']).suffix
             if suffix == 'pdf':
                 pdf_files.append(file)
             src = os.path.join(staging_dir, file['file'])
