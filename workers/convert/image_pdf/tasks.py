@@ -3,10 +3,11 @@ import os
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask
 
+from utils.object import Object
 
 from workers.convert.image_pdf.convert_image import convert_tif_to_jpg
 from workers.convert.image_pdf.convert_pdf import convert_pdf_to_txt, \
-    pdf_merge, create_object_from_pdf
+    pdf_merge, add_split_pdf_to_object
 from workers.convert.image_pdf.convert_image_pdf import convert_pdf_to_tif, \
     convert_jpg_to_pdf
 
@@ -16,8 +17,19 @@ class SplitPdfTask(BaseTask):
     name = "convert.split_pdf"
 
     def execute_task(self):
-        work_path = self.get_work_path()
-        create_object_from_pdf(self.get_param('parts'), work_path, work_path)
+        obj = Object(self.get_work_path())
+        work_path = os.environ['STAGING_DIR']
+        add_split_pdf_to_object(self.get_param('files'), work_path, obj)
+
+        self._execute_for_childs(obj, self.get_param('parts'))
+
+    def _execute_for_childs(self, obj: Object, parts):
+        for part in parts:
+            child = obj.add_child()
+            work_path = os.environ['STAGING_DIR']
+            add_split_pdf_to_object(part['files'], work_path, child)
+            if 'parts' in part:
+                self._execute_for_childs(child, part['parts'])
 
 
 class JpgToPdfTask(BaseTask):

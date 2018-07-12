@@ -15,7 +15,7 @@ params:
   allow_upload_without_file: boolean
 
 tasks:
-  - retrieve_from_staging
+  - retrieve_object_data_from_staging
   - write_metadata
   - convert.split_pdf
   - task: generate_marc_xml

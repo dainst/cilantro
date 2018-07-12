@@ -23,6 +23,10 @@ class PdfToTifTest(unittest.TestCase):
                 os.remove(self.tif_path.format(self.working_dir, i))
             except FileNotFoundError:
                 pass
+        try:
+            os.remove(self.pdf_path)
+        except FileNotFoundError:
+            pass
 
     def test_success(self):
         convert_pdf_to_tif(self.pdf_path, self.working_dir)

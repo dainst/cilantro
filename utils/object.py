@@ -122,7 +122,11 @@ class Object:
             os.makedirs(self.path)
         if os.path.exists(os.path.join(self.path, 'meta.json')):
             with open(os.path.join(self.path, 'meta.json'), 'r', encoding="utf-8") as data:
-                self.metadata = ObjectMetadata.from_dict(json.load(data))
+
+                try:
+                    self.metadata = ObjectMetadata.from_dict(json.load(data))
+                except ValueError:
+                    self.metadata = ObjectMetadata()
         else:
             open(os.path.join(self.path, 'meta.json'), 'a', encoding="utf-8").close()
             self.metadata = ObjectMetadata()
@@ -140,17 +144,12 @@ class Object:
         :return Object:
         """
         if not os.path.exists(path):
-            raise Exception(f'{path} does not exist.')
+            raise PathDoesNotExist(f'{path} does not exist.')
 
         obj = Object(path)
-        meta_stream = 0
-        try:
-            meta_stream = open(os.path.join(obj.path, 'meta.json'), 'r', encoding="utf-8")
-            obj.metadata = ObjectMetadata().from_dict(json.load(meta_stream))
-        except ValueError:
-            obj.metadata = ObjectMetadata()
-        finally:
-            meta_stream.close()
+
+        with open(os.path.join(obj.path, 'meta.json'), 'r', encoding="utf-8") as data:
+            obj.metadata = ObjectMetadata.from_dict(json.load(data))
         return obj
 
     def write(self):

@@ -3,36 +3,39 @@ import os
 import unittest
 import logging
 
-from workers.convert.image_pdf.convert_pdf import create_object_from_pdf
+from workers.convert.image_pdf.convert_pdf import add_split_pdf_to_object
+from utils.object import Object
 
 log = logging.getLogger(__name__)
 
 
 class CutPdfTest(unittest.TestCase):
     resource_dir = os.environ['RESOURCE_DIR']
-    working_dir = os.environ['WORKING_DIR']
-    pdf_src = f'{resource_dir}/files/test.pdf'
-    files_generated = [
-        f'{working_dir}/test.pdf',
-        f'{working_dir}/test.pdf.0.pdf',
-        f'{working_dir}/test.pdf.1.pdf'
+    working_dir = os.path.join(os.environ['WORKING_DIR'], 'cut_test')
+    pdf_src = f'{resource_dir}/objects/pdf/e2e-testing.pdf'
+    files_generwork_pathated = [
+        f'{working_dir}/e2e-testing.pdf',
+        f'{working_dir}/data/pdf/merged.pdf'
     ]
     source_path = working_dir
     target_path = source_path
 
     def setUp(self):
+        if not os.path.exists(self.working_dir):
+            os.makedirs(self.working_dir)
         shutil.copy(self.pdf_src, self.files_generated[0])
 
     def test_success(self):
-        params = [{"file": "test.pdf", "range": [1, 20]}, {"file": "test.pdf", "range": [21, 27]}]
-        create_object_from_pdf(params, self.source_path, self.target_path)
+        params = [{"file": "e2e-testing.pdf", "range": [1, 20]},
+                  {"file": "e2e-testing.pdf", "range": [21, 27]}]
+        obj = Object(self.target_path)
+        add_split_pdf_to_object(params, self.source_path, obj)
         for file_generated in self.files_generated:
             self.assertTrue(os.path.isfile(file_generated))
 
     def tearDown(self):
-        for file_generated in self.files_generated:
-            try:
-                os.remove(file_generated)
-                log.debug("Deleted file: " + file_generated)
-            except FileNotFoundError as e:
-                log.error("File not found: " + e.filename)
+        try:
+            shutil.rmtree(self.working_dir)
+            log.debug("Deleted file: " + self.working_dir)
+        except FileNotFoundError as e:
+            log.error("File not found: " + e.filename)

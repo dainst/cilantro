@@ -9,10 +9,10 @@
   },
   "files": [
     {
-      "file": "e2e-testing.pdf"
+      "file": "a_journal/e2e-testing.pdf"
     },
     {
-      "file": "e2e-testing_2.pdf"
+      "file": "a_journal/e2e-testing.pdf"
     }
   ],
   "parts": [
@@ -37,14 +37,14 @@
       },
       "files": [
         {
-          "file": "e2e-testing.pdf",
+          "file": "a_journal/e2e-testing.pdf",
           "range": [
             1,
             20
           ]
         },
         {
-          "file": "e2e-testing_2.pdf",
+          "file": "a_journal/e2e-testing.pdf",
           "range": [
             1
           ]
@@ -73,14 +73,14 @@
       },
       "files": [
         {
-          "file": "e2e-testing.pdf",
+          "file": "a_journal/e2e-testing.pdf",
           "range": [
             21,
             62
           ]
         },
         {
-          "file": "e2e-testing_2.pdf",
+          "file": "a_journal/e2e-testing.pdf",
           "range": [
             2
           ]

@@ -2,6 +2,8 @@ import os
 import logging
 
 import pdftotext
+from io import BytesIO
+
 import PyPDF2
 
 from utils.object import Object
@@ -49,30 +51,37 @@ def pdf_merge(file_paths, output_path):
             input_stream.close()
 
 
-def create_object_from_pdf(parts, source, target):
+def add_split_pdf_to_object(files, source, obj: Object):
     """
-    Make cuts out of multiple pdf files and returns a Cilantro Object
+    Make cuts out of multiple pdf files and add it to a cilantro object
 
-    :param list parts: list of the parts
+    :param list files: list of the pdf files
     :param string source: The working directory where we find the
         different files to be cut
-    :param string target: The directory where the created files go
+    :param string obj: The object where the created files go
     """
 
-    obj = Object(target)
-    for nr, part in enumerate(parts):
-        child = obj.add_child()
-        child.set_metadata_from_dict(part['metadata'])
-        files = part['files']
-        for file in files:
-            input_str = os.path.join(source, file['file'])
-            input_stream = open(input_str, 'rb')
+    new_pdf = PyPDF2.PdfFileWriter()
+    for file in files:
+        input_str = os.path.join(source, file['file'])
+        input_stream = open(input_str, 'rb')
 
-            pdf = PyPDF2.PdfFileReader(input_stream)
-            if pdf.flattenedPages is None:
-                pdf.getNumPages()  # make the file page based
+        pdf = PyPDF2.PdfFileReader(input_stream)
+        if pdf.flattenedPages is None:
+            pdf.getNumPages()  # make the file page based
+
+        if 'range' in file:
             start_end = file['range']
-            new_pdf = PyPDF2.PdfFileWriter()
-            for index in range(start_end[0] - 1, start_end[1]):
+            for index in range(start_end[0] - 1, start_end[-1]):
+                try:
+                    new_pdf.addPage(pdf.getPage(index))
+                except IndexError:
+                    break
+        else:
+            for index in range(pdf.getNumPages()):
                 new_pdf.addPage(pdf.getPage(index))
-            child.add_file(file['file'], 'pdf', new_pdf)
+
+    stream = BytesIO()
+    new_pdf.write(stream)
+    obj.add_file('merged.pdf', 'pdf', stream)
+    stream.close()

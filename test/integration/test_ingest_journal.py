@@ -8,7 +8,6 @@ class IngestJournalTest(JobTypeTest):
 
         params = self.load_params_from_file('params', 'a_journal.json')
         data = self.post_job('ingest_journal', params)
-
         job_id = data['job_id']
         self.assertEqual('Accepted', data['status'])
         self.assert_status(job_id, 'SUCCESS')
