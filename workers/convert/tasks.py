@@ -7,7 +7,7 @@ from workers.convert.convert_image_pdf import \
     convert_pdf_to_tif, convert_jpg_to_pdf
 from workers.convert.convert_image import convert_tif_to_jpg
 from workers.convert.convert_pdf import convert_pdf_to_txt, pdf_merge, cut_pdf
-from workers.convert.tiff_to_text import tif_to_txt
+from workers.convert.tif_to_txt import tif_to_txt
 
 
 class SplitPdfTask(BaseTask):
@@ -66,7 +66,7 @@ class MergeConvertedPdf(BaseTask):
         # TODO incorporate JSON data for the filename and metadatas.
 
 
-class TextFromTiffTask(BaseTask):
+class TxtFromTifTask(BaseTask):
     name = "convert.tif_to_txt"
 
     def execute_task(self):
@@ -86,4 +86,4 @@ MergeConvertedPdf = celery_app.register_task(MergeConvertedPdf())
 TifToJpgTask = celery_app.register_task(TifToJpgTask())
 PdfToTifTask = celery_app.register_task(PdfToTifTask())
 PdfToTxtTask = celery_app.register_task(PdfToTxtTask())
-TextFromTiffTask = celery_app.register_task(TextFromTiffTask())
+TxtFromTifTask = celery_app.register_task(TxtFromTifTask())

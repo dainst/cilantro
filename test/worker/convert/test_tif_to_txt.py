@@ -1,18 +1,18 @@
 import unittest
 import os
 
-from workers.convert.tiff_to_text import tif_to_txt
+from workers.convert.tif_to_txt import tif_to_txt
 
 
-class GenerateTextFromTiff(unittest.TestCase):
+class GenerateTextFromTif(unittest.TestCase):
 
     def test_tif_to_txt(self):
         resource_dir = os.environ['RESOURCE_DIR']
         working_dir = os.environ['WORKING_DIR']
-        tiff_path = f'{resource_dir}/files/test.tif'
+        tif_path = f'{resource_dir}/files/test.tif'
         target_file_path = f'{working_dir}/test.converted.jpg'
 
-        tif_to_txt(tiff_path, target_file_path)
+        tif_to_txt(tif_path, target_file_path)
 
         self.assertTrue(os.path.isfile(os.path.join(working_dir, target_file_path)))
 
@@ -27,10 +27,10 @@ class GenerateTextFromTiff(unittest.TestCase):
     def test_tif_to_txt_wrong_language(self):
         resource_dir = os.environ['RESOURCE_DIR']
         working_dir = os.environ['WORKING_DIR']
-        tiff_path = f'{resource_dir}/files/test.tif'
+        tif_path = f'{resource_dir}/files/test.tif'
         target_file_path = f'{working_dir}/test.converted.jpg'
 
-        tif_to_txt(tiff_path, target_file_path, language='deu')
+        tif_to_txt(tif_path, target_file_path, language='deu')
 
         self.assertTrue(os.path.isfile(os.path.join(working_dir, target_file_path)))
 
