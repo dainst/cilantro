@@ -1,9 +1,10 @@
 import os
 
 
-def get_all_file_paths_from_dir(dir_path):
+def get_all_file_paths_from_dir(dir_path: str):
     """
     Returns a list of the paths of all files in a given directory and it's sub-directories.
+
     :param str dir_path: The directory to get the paths from
     :return: list of the file paths.
     """
@@ -16,10 +17,11 @@ def get_all_file_paths_from_dir(dir_path):
     return file_list
 
 
-def list_dir(dir_path):
+def list_dir(dir_path: str):
     """
     Creates and returns a dictionnary tree that represents the directory file structure.
-    :param dir_path: the path to the directory that needs to be serialized
+
+    :param str dir_path: the path to the directory that needs to be serialized
     :return: The dictionnary structure of the directory
     """
     tree = []
