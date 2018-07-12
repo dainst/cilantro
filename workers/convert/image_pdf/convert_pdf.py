@@ -14,10 +14,10 @@ def convert_pdf_to_txt(source_file, output_dir):
                                       f"to {output_dir}")
     with open(source_file, "rb") as input_stream:
         pdf = pdftotext.PDF(input_stream)
-        index = 0
+        index = 1
         # Needed as pdftotext is not a Python list with .index() capability.
         for page in pdf:
-            output = open(os.path.join(output_dir, f'{index}.txt'), 'wb')
+            output = open(os.path.join(output_dir, f'page.{index}.txt'), 'wb')
             output.write(page.encode('utf-8'))
             output.close()
             index = index + 1

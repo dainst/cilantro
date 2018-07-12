@@ -20,7 +20,7 @@ class GenerateXMLTest(unittest.TestCase):
         generated_filename3 = f'{working_dir}/ojs_import.xml'
 
         def test_generate_marcxml(self):
-            data_path = f'{self.resource_dir}/objects/pdf/data_json/data.json'
+            data_path = f'{self.resource_dir}/objects/params/a_journal.json'
             with open(data_path) as json_object:
                 data = json.load(json_object)
 

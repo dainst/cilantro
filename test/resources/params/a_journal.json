@@ -9,10 +9,10 @@
   },
   "files": [
     {
-      "file": "e2e-testing.pdf"
+      "file": "a_journal/e2e-testing.pdf"
     },
     {
-      "file": "e2e-testing_2.pdf"
+      "file": "a_journal/e2e-testing.pdf"
     }
   ],
   "parts": [
@@ -28,8 +28,8 @@
         ],
         "pages": {
           "showndesc": "1\u201320",
-          "startPrint": 2,
-          "endPrint": 3
+          "startPrint": 1,
+          "endPrint": 20
         },
         "date_published": "2018--",
         "language": "de_DE",
@@ -37,14 +37,14 @@
       },
       "files": [
         {
-          "file": "e2e-testing.pdf",
+          "file": "a_journal/e2e-testing.pdf",
           "range": [
             1,
             20
           ]
         },
         {
-          "file": "e2e-testing_2.pdf",
+          "file": "a_journal/e2e-testing.pdf",
           "range": [
             1
           ]
@@ -64,8 +64,8 @@
         ],
         "pages": {
           "showndesc": "21\u201327",
-          "startPrint": 1,
-          "endPrint": 1
+          "startPrint": 21,
+          "endPrint": 27
         },
         "date_published": "2018--",
         "language": "de_DE",
@@ -73,14 +73,14 @@
       },
       "files": [
         {
-          "file": "e2e-testing.pdf",
+          "file": "a_journal/e2e-testing.pdf",
           "range": [
             21,
             62
           ]
         },
         {
-          "file": "e2e-testing_2.pdf",
+          "file": "a_journal/e2e-testing.pdf",
           "range": [
             2
           ]
@@ -95,7 +95,7 @@
     "operations": [
         "NER"
     ]
-  }
+  },
   "ojs_journal_code": "aa",
   "ojs_user": "ojs_user",
   "auto_publish_issue": false,

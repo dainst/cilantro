@@ -10,7 +10,7 @@ params:
   auto_publish_issue: boolean
 
 tasks:
-  - retrieve_from_staging
+  - retrieve_object_data_from_staging
   - split_pdf
   - foreach: "article_*"
     do:

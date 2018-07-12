@@ -7,6 +7,7 @@ from workers.default.metadata.loader import load_metadata
 from workers.default.xml.xml_generator import generate_xml
 from workers.default.xml.marc_xml_generator import generate_marc_xml
 from workers.default.xml.xml_validator import validate_xml
+from utils.object import Object
 
 
 class GenerateMarcXMLTask(BaseTask):
@@ -14,9 +15,9 @@ class GenerateMarcXMLTask(BaseTask):
 
     def execute_task(self):
         work_path = self.get_work_path()
-        data = load_metadata(work_path)
+        obj = Object.read(work_path)
         xml_template_string = _read_file(self.get_param('xml_template_path'))
-        generate_marc_xml(work_path, data, xml_template_string)
+        generate_marc_xml(obj, xml_template_string)
 
         marc_schema_file = 'resources/MARC21slim.xsd'
 

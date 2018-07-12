@@ -1,20 +1,23 @@
 import os
 
 from workers.default.xml.xml_generator import generate_xml
+from utils.object import Object
 
 
-def generate_marc_xml(work_path, data, template):
+def generate_marc_xml(obj: Object, template):
     """
     Merges article data with the journal data, then calls the
     generic generate_xml function for all articles.
-    :param str work_path: Path to put the generated XML
-    :param dict data: Journal metadata
+    :param Object obj: the object on which to generate the xml
     :param str template: Marc-XML template
     :return: None
     """
-    for article in data['articles']:
-        generate_xml(work_path,
-                     {**data['data'], **article},
+    generate_xml(obj.path,
+                 obj.metadata.get_json(),
+                 template,
+                 "marc.xml")
+    for part in obj.get_children():
+        generate_xml(part.path,
+                     part.metadata.get_json(),
                      template,
-                     os.path.join('articles', article['title'].replace(' ', '_')),
                      "marc.xml")

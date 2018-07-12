@@ -16,7 +16,7 @@ params:
   nlp_params: dict
 
 tasks:
-  - retrieve_from_staging
+  - retrieve_object_data_from_staging
   - write_metadata
   - convert.split_pdf
   - task: generate_marc_xml
