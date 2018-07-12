@@ -42,6 +42,8 @@ const Actions = function() {
 
     this.waitForModal = () => browser.wait(EC.presenceOf(elements.modal, 5000));
 
+    this.scrollTo = element => browser.executeScript('arguments[0].scrollIntoView()', element.getWebElement());
+
 };
 
 module.exports = new Actions();

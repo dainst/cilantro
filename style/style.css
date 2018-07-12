@@ -251,6 +251,13 @@ table.super-table tr.row-unconfirmed > td:first-child {
     border-left: 3px solid #d9534f;
 }
 
+table.super-table td .row {
+    margin: 0px;
+}
+
+table.super-table td .row > div {
+    padding: 0px;
+}
 
 
 .alert {
