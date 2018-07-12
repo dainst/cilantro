@@ -67,7 +67,7 @@ describe('overview page', () => {
             });
     });
 
-    fit('add and remove authors', () => {
+    it('add and remove authors', () => {
         let titleCell;
         ot.goToOverview()
             .then(() => ot.getCell(0, "Author"))
