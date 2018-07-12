@@ -35,7 +35,7 @@ describe('overview page', () => {
 
     });
 
-    it('complain on missing title', () => {
+    it('should complain on missing title', () => {
         let titleCell;
         ot.goToOverview()
             .then(() => ot.getCell(0, "Title"))
@@ -51,7 +51,7 @@ describe('overview page', () => {
             });
     });
 
-    it('complain on missing surname (but not on missing first name)', () => {
+    it('should complain on missing surname (but not on missing first name)', () => {
         let titleCell;
         ot.goToOverview()
             .then(() => ot.getCell(0, "Author"))
@@ -67,7 +67,7 @@ describe('overview page', () => {
             });
     });
 
-    it('add and remove authors', () => {
+    it('should add and remove authors', () => {
         let titleCell;
         ot.goToOverview()
             .then(() => ot.getCell(0, "Author"))
@@ -82,7 +82,8 @@ describe('overview page', () => {
             .then(input => input[1].click())
             .then(input => {
                 expect(titleCell.all(by.css('input')).count()).toEqual(2);
-                expect(titleCell.element(by.css('.alert.alert-warning')).isDisplayed()).toBeTruthy();
+                expect(titleCell.element(by.css('.alert.alert-warning')).isDisplayed()).toBeFalsy();
             })
     });
+
 });
