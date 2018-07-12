@@ -146,9 +146,9 @@ class Object:
             raise PathDoesNotExist(f'{path} does not exist.')
 
         obj = Object(path)
-
-        with open(os.path.join(obj.path, 'meta.json'), 'r', encoding="utf-8") as data:
-            obj.metadata = ObjectMetadata.from_dict(json.load(data))
+        #
+        # with open(os.path.join(obj.path, 'meta.json'), 'r', encoding="utf-8") as data:
+        #     obj.metadata = ObjectMetadata.from_dict(json.load(data))
         return obj
 
     def write(self):
@@ -231,8 +231,13 @@ class Object:
             os.makedirs(self._get_part_dir())
             return Object(os.path.join(self._get_part_dir(), 'part_0001'))
 
-        part_name = f"part_{str(len(os.listdir(self._get_part_dir()))+1).zfill(4)}"
-        return Object(os.path.join(self._get_part_dir(), part_name))
+        return Object(os.path.join(self._get_part_dir(),
+                                   self._get_part_dir_for_index(len(os.listdir(self._get_part_dir())) + 1)))
+
+    def get_child(self, index: int):
+        part_name = self._get_part_dir_for_index(index)
+        path = os.path.join(self._get_part_dir(), part_name)
+        return Object.read(path)
 
     def get_children(self):
         """
@@ -260,6 +265,10 @@ class Object:
     @staticmethod
     def _is_part_dir_format(dir_name):
         return 'part_' in dir_name
+
+    def _get_part_dir_for_index(self, index: int):
+        part_name = f"part_{str(index.zfill(4))}"
+        return part_name
 
     def _get_part_dir(self):
         return os.path.join(self.path, 'parts')

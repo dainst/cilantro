@@ -17,7 +17,6 @@ def generate_xml(work_path, data, template_string,
     :param str target_filename: self explanatory...
     :return str: Path to generated XML file
     """
-    print('data : ' + data)
     template = Template(template_string, trim_blocks=True, lstrip_blocks=True)
     filled_template = template.render(data)
     _write_xml_to_file(filled_template, work_path,

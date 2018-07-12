@@ -12,7 +12,6 @@
         <datafield tag="245" ind1="1" ind2="0">
             <subfield code="a">{{title}}</subfield>
             <subfield code="b"></subfield>
-            <subfield code="c">{{author_list}}</subfield>
             <subfield code="c">
                 {%- for author_item in author -%}
                     {{author_item['firstname']}} {{author_item['lastname']}}{%- if not loop.last %}, {% endif %}

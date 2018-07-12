@@ -55,7 +55,7 @@ def add_split_pdf_to_object(files, source, obj: Object):
     """
     Make cuts out of multiple pdf files and add it to a cilantro object
 
-    :param list files: list of the pdf files
+    :param list files: list of the pdf files as dic {'file':,'range':[start,end]}
     :param string source: The working directory where we find the
         different files to be cut
     :param string obj: The object where the created files go

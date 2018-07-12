@@ -1,5 +1,3 @@
-import os
-
 from workers.default.xml.xml_generator import generate_xml
 from utils.object import Object
 
@@ -12,12 +10,10 @@ def generate_marc_xml(obj: Object, template):
     :param str template: Marc-XML template
     :return: None
     """
-    generate_xml(obj.path,
-                 obj.metadata.get_json(),
-                 template,
-                 "marc.xml")
+
     for part in obj.get_children():
+        data = {**part.metadata.__dict__, **obj.metadata.__dict__}
         generate_xml(part.path,
-                     part.metadata.get_json(),
+                     data,
                      template,
                      "marc.xml")

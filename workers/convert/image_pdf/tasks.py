@@ -25,7 +25,7 @@ class SplitPdfTask(BaseTask):
 
     def _execute_for_childs(self, obj: Object, parts):
         for part in parts:
-            child = obj.add_child()
+            child = obj.get_child(parts.index(part) + 1)
             work_path = os.environ['STAGING_DIR']
             add_split_pdf_to_object(part['files'], work_path, child)
             if 'parts' in part:
