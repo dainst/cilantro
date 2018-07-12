@@ -12,16 +12,19 @@ setup_logging()
 
 
 @celery.signals.setup_logging.connect
-def on_celery_setup_logging(**_):  # underscore is a throwaway-variable, to avoid code style warning for unused variable
+def on_celery_setup_logging(**_):
+    # underscore is a throwaway-variable, to avoid code style warning for
+    # unused variable
     """
-    Enables manual logging configuration, independent of celery.
+    Enable manual logging configuration, independent of celery.
     """
     pass
 
 
 class BaseTask(Task):
     """
-    This is the abstract base class for all tasks in cilantro.
+    Abstract base class for all tasks in cilantro.
+
     It provides parameter handling and utility methods for accessing
     the file system.
 
@@ -53,6 +56,8 @@ class BaseTask(Task):
     @abstractmethod
     def execute_task(self):
         """
+        Execute the task.
+
         This method has to be implemented by all subclassed tasks and includes
         the actual implementation logic of the specific task.
         :return:

@@ -12,7 +12,7 @@ job_types_dir = os.path.join(config_dir, 'job_types')
 @job_type_controller.route('', methods=['GET'])
 def get_job_types():
     """
-    Returns a JSON list of available job types and their meta information.
+    Return a JSON list of available job types and their meta information.
 
     :return str: JSON list of objecta containing the type names and
                  the about information from the file

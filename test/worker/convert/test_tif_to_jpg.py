@@ -1,19 +1,20 @@
 import os
-import unittest
 import logging
 from pathlib import Path
 
+from test.worker.convert.convert_test import ConvertTest
 from workers.convert.image_pdf.convert_image import convert_tif_to_jpg
 
 log = logging.getLogger(__name__)
 
 
-class TifToJpgTest(unittest.TestCase):
-    resource_dir = os.environ['RESOURCE_DIR']
-    working_dir = os.environ['WORKING_DIR']
-    tif_path = f'{resource_dir}/files/test.tif'
-    broken_tif_path = f'{resource_dir}/files/broken.tif'
-    jpg_path = f'{working_dir}/test.jpg'
+class TifToJpgTest(ConvertTest):
+
+    def setUp(self):
+        super().setUp()
+        self.tif_path = f'{self.resource_dir}/files/test.tif'
+        self.broken_tif_path = f'{self.resource_dir}/files/broken.tif'
+        self.jpg_path = f'{self.working_dir}/test.jpg'
 
     def test_success(self):
         convert_tif_to_jpg(self.tif_path, self.jpg_path)
@@ -23,11 +24,3 @@ class TifToJpgTest(unittest.TestCase):
 
     def test_error(self):
         self.assertRaises(OSError, convert_tif_to_jpg, self.broken_tif_path, self.jpg_path)
-
-    @classmethod
-    def tearDownClass(cls):
-        try:
-            os.remove(cls.jpg_path)
-            log.debug("Deleted file: " + cls.jpg_path)
-        except FileNotFoundError as e:
-            log.error("File not found: " + e.filename)

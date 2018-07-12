@@ -15,10 +15,7 @@ class RepositoryControllerTest(unittest.TestCase):
     repository_dir = os.environ['REPOSITORY_DIR']
 
     def setUp(self):
-        try:
-            os.makedirs(self.repository_dir)
-        except OSError:
-            pass
+        os.makedirs(self.repository_dir, exist_ok=True)
 
         self._copy_object_to_repository('objects', test_object)
 
@@ -49,8 +46,8 @@ class RepositoryControllerTest(unittest.TestCase):
 
     def test_get_file(self):
         response = self.client.get(f'/repository/{test_object}/{test_file}')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_file_not_found(self):
         response = self.client.get(f'/repository/{test_object}/not_{test_file}')
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)

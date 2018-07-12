@@ -19,12 +19,17 @@ class ForeachTask(BaseTask):
         work_path = self.get_work_path()
         group_tasks = []
         regex = re.compile(pattern)
-        files = [f for f in os.listdir(work_path) if regex.search(f)]
+        files = []
+
+        for f in _recursive_file_list(work_path):
+            if regex.search(f):
+                files.append(f)
+
         for file in files:
-            params = {
-                'job_id': self.job_id,
-                'file': os.path.join(work_path, file)
-            }
+            params = self.params.copy()
+            params['job_id'] = self.job_id
+            params['file'] = os.path.join(work_path, file)
+
             chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
         raise self.replace(group(group_tasks))
@@ -43,3 +48,9 @@ class CleanupWorkdirTask(BaseTask):
 
 
 CleanupWorkdirTask = celery_app.register_task(CleanupWorkdirTask())
+
+
+def _recursive_file_list(directory):
+    for dirpath, _, filenames in os.walk(directory):
+        for f in filenames:
+            yield os.path.abspath(os.path.join(dirpath, f))
