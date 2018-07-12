@@ -13,7 +13,7 @@ class CutPdfTest(unittest.TestCase):
     resource_dir = os.environ['RESOURCE_DIR']
     working_dir = os.path.join(os.environ['WORKING_DIR'], 'cut_test')
     pdf_src = f'{resource_dir}/objects/pdf/e2e-testing.pdf'
-    files_generwork_pathated = [
+    files_generated = [
         f'{working_dir}/e2e-testing.pdf',
         f'{working_dir}/data/pdf/merged.pdf'
     ]
