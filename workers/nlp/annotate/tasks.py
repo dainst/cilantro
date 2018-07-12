@@ -20,20 +20,16 @@ class AnnotateTask(BaseTask):
     name = "nlp.annotate"
 
     def execute_task(self):
-        work_path = self.get_work_path()
-        json_path = os.path.join(work_path, 'nlp_params.json')
-        text_path = os.path.join(work_path, 'nlp_text.txt')
+        params = self.get_param('nlp_params')
+        text_file = self.get_param('file')
+        _, extension = os.path.splitext(text_file)
+        output_file = text_file.replace(extension, '.json')
 
-        with open(json_path) as data_object:
-            try:
-                params = json.load(data_object)
-            except json.decoder.JSONDecodeError:
-                params = {}
-        with open(text_path, 'r') as file:
+        with open(text_file, 'r') as file:
             text = file.read().replace('\n', '')
 
         result = annotate(text, params)
-        with open(os.path.join(work_path, 'annotations.json'), 'w') as file:
+        with open(output_file, 'w+') as file:
             json.dump(result, file)
 
 

@@ -65,11 +65,11 @@ class StagingControllerTest(unittest.TestCase):
     def test_get_file(self):
         self._copy_object_to_staging('objects', test_object)
         response = self.client.get(f'/staging/{test_object}/{test_file}')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_file_not_found(self):
         response = self.client.get(f'/staging/{test_object}/{test_file}')
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def _upload_folder_to_staging(self, object_path):
         file_names = os.listdir(object_path)
@@ -105,8 +105,7 @@ class StagingControllerTest(unittest.TestCase):
 
     def _remove_dir_from_staging(self, dir_name):
         dir_path = os.path.join(self.staging_dir, dir_name)
-        if os.path.isdir(dir_path):
-            shutil.rmtree(dir_path)
+        shutil.rmtree(dir_path, ignore_errors=True)
 
     def _copy_object_to_staging(self, folder, filename):
         source = os.path.join(self.resource_dir, folder, filename)

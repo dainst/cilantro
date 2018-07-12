@@ -15,6 +15,8 @@ env:
     - CONFIG_DIR=/config
     - UID=2000
 before_install:
+  - sudo apt-get install -y python3-dev libpoppler-cpp-dev
+  - pip3 install -r doc/requirements.txt
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
@@ -25,4 +27,13 @@ before_install:
   - mkdir data/workspace
   - docker-compose build
   - docker-compose up -d
-script: bash test/exec_docker_test.sh
+script:
+  - bash test/exec_docker_test.sh
+  - bash doc/build-doc.sh
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: doc/_build/html
+  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  on:
+    branch: master

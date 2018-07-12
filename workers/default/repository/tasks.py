@@ -12,7 +12,8 @@ staging_dir = os.environ['STAGING_DIR']
 
 def _copy_path(src, dest):
     """
-    Recursively copies and flattens the given paths
+    Recursively copy and flatten the given paths.
+
     :param str src:
     :param str dest:
     """
@@ -88,8 +89,7 @@ class PublishToRepositoryTask(BaseTask):
     def execute_task(self):
         work_path = self.get_work_path()
         repository_path = os.path.join(repository_dir, self.job_id)
-        if os.path.exists(repository_path):
-            shutil.rmtree(repository_path)
+        shutil.rmtree(repository_path, ignore_errors=True)
         shutil.copytree(work_path, repository_path)
 
 

@@ -24,7 +24,7 @@ job_controller = Blueprint('job', __name__)
 @job_controller.route('/<job_type>', methods=['POST'])
 def job_create(job_type):
     """
-    Creates a job of the specified job type.
+    Create a job of the specified job type.
 
     A task chain is constructed as defined in the corresponding job type
     definition YAML file and executed.
@@ -57,7 +57,7 @@ def job_create(job_type):
 @job_controller.route('/<job_id>', methods=['GET'])
 def job_status(job_id):
     """
-    Returns the status information for a job.
+    Return the status information for a job.
 
     :param str job_id:
     :return: A JSON object containing the status (e.g. "{ 'status': 'PENDING' }"
