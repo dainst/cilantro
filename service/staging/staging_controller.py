@@ -111,7 +111,6 @@ def upload_to_staging():
                          "error": {"message": f"File extension .{_get_file_extension(file.filename)} is not allowed.",
                                    "code": "extension_not_allowed"
                                    }
-
                          }
 
                     logging.getLogger(__name__).debug(
