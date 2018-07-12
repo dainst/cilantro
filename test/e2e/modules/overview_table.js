@@ -21,15 +21,13 @@ const OverviewTable = function() {
             .then(columns => Promise.all(columns.map(column => column.getText()))
                 .then(resolve).catch(reject)));
 
-    this.getVisibleColumnNames = () => new Promise((resolve, reject) =>
-            this.getAvailableColumnNames()
-                .then(columnNames => columnNames.filter(colName => colName !== ""))
-                .then(resolve).catch(reject));
+    this.getVisibleColumnNames = () =>
+        this.getAvailableColumnNames()
+            .then(columnNames => columnNames.filter(colName => colName !== ""));
 
-    this.getCell = (rowNr, colLabel) => new Promise((resolve, reject) =>
-        this.getVisibleColumnNames()
-            .then(columnNames => e.overview.tableRows.get(rowNr).all(by.css("td")).get(columnNames.indexOf(colLabel)))
-            .then(resolve).catch(reject));
+    this.getCell = (rowNr, colLabel) =>
+        this.getAvailableColumnNames()
+            .then(columnNames => e.overview.tableRows.get(rowNr).all(by.xpath("./td")).get(columnNames.indexOf(colLabel)));
 
     this.getThumbnailDataUri = rowNr =>
         this.getCell(rowNr, "Preview")
