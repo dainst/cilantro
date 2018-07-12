@@ -23,7 +23,7 @@ def verify_password(username, password):
     :param str password:
     :return Boolean:
     """
-    if username in users:
+    if username in _users:
         hashed_password = _users.get(username)['password'].encode('utf-8')
         return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
     return False
