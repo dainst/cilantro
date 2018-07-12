@@ -1,13 +1,13 @@
 angular
 .module("module.dataset", [])
-.factory("dataset", ['editables', '$rootScope', 'journalIssue',
-    function(editables, $rootScope, journalIssue) {
+.factory("dataset", ['editables', '$rootScope', 'journalIssue', 'file_manager',
+    function(editables, $rootScope, journalIssue, fileManager) {
 
     /**
      * Refactor Plans
-     * - put UI.settings in different object maybe (it's here to get resetted with teh journal object in any case, but...)
      * - make different models work
      * - rename things from Article to SubObject
+     * - remove dataset.loadedFiles and dataset dependency from pdf_file_manager
      */
 
     const model = journalIssue;
@@ -38,10 +38,6 @@ angular
         dataset.thumbnails = {};
         /* they are not part of the article obj since they are very large and iterating over the
          articles array in the digest give performance issues otherwise! */
-
-        /* statistical data */
-
-
     };
 
     /* validate */
@@ -87,7 +83,6 @@ angular
 
     /**
      * get journal data in uploadable form
-     * @param article  - optional - select only one article
      * @returns see test/e2e/schema/run_job_param.json
      */
     dataset.get = function() {
@@ -145,38 +140,57 @@ angular
         dataset.articles.splice(i, 1);
     };
 
+    function guid() {
+        const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    }
 
     /* Article constructor function */
     dataset.Article = function(data) {
         data = data || {};
-        function guid() {
-            function s4() {
-                return Math.floor((1 + Math.random()) * 0x10000)
-                    .toString(16)
-                    .substring(1);
-            }
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-        }
 
-        articlePrototype = new model.SubObjectPrototype(data, dataset.data, dataset);
-        Object.defineProperty(articlePrototype, '_', {enumerable: false, configurable: false, value: {}});
+        const subObject = new model.SubObjectPrototype(data, dataset.data, dataset);
 
-        articlePrototype._.id = guid();
+        // "private" data
+        Object.defineProperty(subObject, '_', {enumerable: false, configurable: false, value: {}});
 
-        function thumbnailDataObserver() {
-            $rootScope.$broadcast('thumbnaildataChanged', articlePrototype)
-        }
+        subObject._.id = guid();
 
-        articlePrototype.filepath.watch(thumbnailDataObserver);
-        articlePrototype.pages.watch(thumbnailDataObserver);
+        subObject._.gatherThumbnailRelevantData = () => {
+            let set = {};
+            Object.keys(model.getMeta("sub"))
+                .filter(k => angular.isDefined(model.getMeta("sub")[k]["thumbnailParam"]))
+                .forEach(k => {
+                    set[model.getMeta("sub")[k]["thumbnailParam"]] = subObject[k].get()
+                });
+            return set;
+        };
 
-        return (articlePrototype);
+        subObject._.getThumbnail = () => angular.isDefined(dataset.thumbnails[subObject._.id])
+            ? dataset.thumbnails[subObject._.id]
+            : ' '; // angular bug. empty string does not work.
+
+        subObject._.createThumbnail = () => {
+            fileManager.createThumbnail(subObject._.gatherThumbnailRelevantData())
+                .then(thumbnail => {
+                    dataset.thumbnails[subObject._.id] = thumbnail;
+                    $rootScope.$broadcast('refreshView');
+                })
+                .catch(err => {
+                    delete dataset.thumbnails[subObject._.id];
+                    $rootScope.$broadcast('refreshView');
+                });
+        };
+
+        Object.keys(model.getMeta("sub"))
+            .filter(k => angular.isDefined(model.getMeta("sub")[k]["thumbnailParam"]))
+            .forEach(k => subObject[k].watch(subObject._.createThumbnail));
+
+        return subObject;
     };
 
-    /* all function above could me generalized to work with different models */
-
+    // TODO - how is this geralizable?!
     dataset.setConstraints  = model.setConstraints;
-
 
     dataset.reset();
 

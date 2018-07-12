@@ -64,5 +64,6 @@ angular
         };
 
 		$scope.$on('refreshView', $scope.refreshView);
+		window.refresh = $scope.refreshView;
 	}
 ]);

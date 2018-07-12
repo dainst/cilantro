@@ -10,6 +10,8 @@ angular
 
     defaultPdfHandler.handleFile = file => pdf_file_manager.loadFiles(file).then(files => files.forEach(file2Articles));
 
+    defaultPdfHandler.createThumbnail = pdf_file_manager.createThumbnail;
+
     function file2Articles(file) {
 
         const fileInfo = file_manager.loadedFiles[file.path];
@@ -31,7 +33,8 @@ angular
 
         dataset.articles.push(article);
         file_manager.stats.analyzed += 1;
-        pdf_file_manager.updateThumbnail(article);
+        console.log(article);
+        article._.createThumbnail();
 
         console.log("found title: " + fileInfo.meta.Title);
 

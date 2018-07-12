@@ -10,6 +10,8 @@ angular
 
     emptyPdfHandler.handleFile = file => pdf_file_manager.loadFiles(file).then(files => files.forEach(file2Articles));
 
+    emptyPdfHandler.createThumbnail = pdf_file_manager.createThumbnail;
+
     function file2Articles(file) {
         file_manager.stats.analyzed += 1;
     }

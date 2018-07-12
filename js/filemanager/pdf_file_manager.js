@@ -123,11 +123,7 @@ angular
 
     };
 
-    /**
-     *
-     * @param article
-     * @returns {*}
-     */
+    // depricated?!
     pdf_file_manager.getFileInfo = function(article) {
 
         if (article.filepath.value.value === 'none') {
@@ -146,87 +142,39 @@ angular
 
     };
 
-    /**
-     * trigger trumbnail recreation (on page or filepath change)
-     */
-    $rootScope.$on('thumbnaildataChanged', function($event, article) {
-        if (article.pages.value.startPdf === 0) { // while creation
-            return;
-        }
-        if (angular.isUndefined(article.filepath)) {
-            return;
-        }
-        if (!angular.isUndefined(file_manager.loadedFiles[article.filepath.value.value])) {
-            article.pages.context = file_manager.loadedFiles[article.filepath.value.value].pagecontext;
-            pdf_file_manager.updateThumbnail(article);
-        } else {
-            article.pages.resetContext();
-            pdf_file_manager.removeThumbnail(article._.id);
-        }
-    });
+    function renderThumbnail(page) {
+        return new Promise((resolve, reject) => {
+            const viewport = page.getViewport(1.5); // scale 1.5
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.height = viewport.height; // 626.16 * 1.5
+            canvas.width = viewport.width; // 399.84 * 1.5
 
+            let renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
 
-    /**
-     * call this from a button or something ...
-     * @param article
-     */
-    pdf_file_manager.updateThumbnail = function(article) {
-        console.log("recreate thumbnail for", article._.id, article.pages.value.startPdf, article.filepath.value.value);
-        file_manager.loadedFiles[article.filepath.value.value].pdf.getPage(article.pages.value.startPdf).then(
-            function updateThumbnailGotPageSuccess(page) {
-                pdf_file_manager.createThumbnail(page, article._.id)
-            },
-            function updateThumbnailGotPageFail(page) {
-                messenger.error("Page " + article.pages.value.startPdf + " not found");
-                console.log('page not found', article.pages.value.startPdf, article._.id);
-                pdf_file_manager.removeThumbnail(article._.id)
-            }
+            page.render(renderContext).then(function(){
+                console.log("thumbnail created");
+                ctx.globalCompositeOperation = "destination-over";
+                ctx.fillStyle = "#123456";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                file_manager.stats.thumbnails += 1;
+                resolve(canvas.toDataURL());
+            });
+        });
+    }
+
+    pdf_file_manager.createThumbnail = function(params) {
+        console.log("create thumbnail", params);
+        return new Promise((resolve, reject) =>
+            file_manager.loadedFiles[params.filePath].pdf
+                .getPage(params.pages.range[0])
+                .then(page => renderThumbnail(page)
+                    .then(resolve))
+                .catch(reject)
         );
-    };
-
-
-    /**
-     * ... or this from inside a getPage promise
-     * @param page
-     * @param containerId
-     */
-    pdf_file_manager.createThumbnail = function(page, containerId) {
-        let container = angular.element(document.querySelector('#thumbnail-container-' + containerId));
-        let img = container.find('img');
-
-        let viewport = page.getViewport(1.5); // scale 1.5
-        let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
-        canvas.height = viewport.height; // 626.16 * 1.5
-        canvas.width = viewport.width; // 399.84 * 1.5
-
-        let renderContext = {
-            canvasContext: ctx,
-            viewport: viewport
-        };
-
-        container.addClass('loader');
-        img.unbind('load');
-        img.on("load", function() {
-            container.removeClass('loader');
-        });
-
-        page.render(renderContext).then(function(){
-            console.log("thumbnail created");
-            ctx.globalCompositeOperation = "destination-over";
-            ctx.fillStyle = "#123456";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            dataset.thumbnails[containerId] = canvas.toDataURL();
-            file_manager.stats.thumbnails = Object.keys(dataset.thumbnails).length;
-            refreshView()
-        });
-
-    };
-
-    pdf_file_manager.removeThumbnail = function(containerId) {
-        console.log("thumbnail removed", containerId);
-        delete dataset.thumbnails[containerId];
-        file_manager.stats.thumbnails = Object.keys(dataset.thumbnails).length;
     };
 
     /**

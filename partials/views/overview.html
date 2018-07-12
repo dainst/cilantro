@@ -55,10 +55,10 @@
 
                         <div ng-show="!article.pages.check() && (article.filepath.value.value != 'none')">
                             <div class="thumbnail-refresh" ng-show="article.pages.check() == false">
-                                <button class='btn btn-default' ng-click="updateThumbnail(article)">Reload thumbnail<span class="glyphicon glyphicon-refresh"></span></button>
+                                <button class='btn btn-default' ng-click="article._.createThumbnail()">Reload thumbnail<span class="glyphicon glyphicon-refresh"></span></button>
                             </div>
                             <div id="thumbnail-container-{{article._.id}}" class="thumbnail-container" ng-class="{'enlarged': article._.id==selectedThumb}" ng-click="selectThumb(article._.id)">
-                                <img data-ng-src="{{!angular.isUndefined(dataset.thumbnails[article._.id]) ? dataset.thumbnails[article._.id] : ''}}" />
+                                <img ng-src="{{article._.getThumbnail()}}" />
                             </div>
                         </div>
                         <div ng-show="article.pages.check() || (article.filepath.value.value == 'none')">

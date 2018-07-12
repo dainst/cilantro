@@ -102,9 +102,9 @@ angular
         $scope.selectThumb = function(i) {
             $scope.selectedThumb = (i === $scope.selectedThumb) ? -1 : i;
         };
-        $scope.updateThumbnail = function(article) {
-            pdf_file_manager.updateThumbnail(article);
-        };
+        // $scope.updateThumbnail = function(article) {
+        //     pdf_file_manager.updateThumbnail(article);
+        // };
 
         /* order */
         $scope.updateOrder = function(order, asc, article) {

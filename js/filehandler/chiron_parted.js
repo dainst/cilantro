@@ -10,6 +10,8 @@ angular
 
     chironPartedHandler.handleFile = file => pdf_file_manager.loadFiles(file).then(files => files.forEach(file2Articles));
 
+    chironPartedHandler.createThumbnail = pdf_file_manager.createThumbnail;
+
     function file2Articles(fileO) {
 
         const file = file_manager.loadedFiles[fileO.path];

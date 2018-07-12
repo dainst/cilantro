@@ -168,7 +168,8 @@ angular
         pages: {
             title: 'Range of Pages',
             style: {minWidth: '170px'},
-            type: "metadata"
+            type: "metadata",
+            thumbnailParam: "pages"
         },
         abstract: {
             title: 'Abstract',
@@ -192,7 +193,8 @@ angular
         filepath: {
             title: 'Loaded File',
             style: {minWidth: '150px'},
-            hide: true
+            hide: true,
+            thumbnailParam: "filePath"
         },
         attached: {
             title: 'Attached',

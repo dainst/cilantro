@@ -32,13 +32,14 @@ angular
             ? file.contents.map(file_manager.getFileStatus).reduce((v, w) => v && w, true)
             : file_manager.loadedFiles[file.path] && true;
 
-        file_manager.mimeTypeFromExtension = (file) =>
-            file.path.match(fileExtRegEx) ? file.path.match(fileExtRegEx)[0].substr(1) : '';
+        file_manager.mimeTypeFromExtension = (filePath) =>
+            filePath.match(fileExtRegEx) ? filePath.match(fileExtRegEx)[0].substr(1) : '';
 
         file_manager.determineFileType = (file) =>
-            file.type === "directory" ? "directory" : file_manager.mimeTypeFromExtension(file);
+            file.type === "directory" ? "directory" : file_manager.mimeTypeFromExtension(file.path);
 
         file_manager.getFileHandler = (fileType) =>
+            file_manager.fileHandlers[fileType] &&
             file_manager.fileHandlers[fileType][file_manager.selected[fileType]] || null;
 
         file_manager.setFileHandler = (fileType, handler) => file_manager.selected[fileType] = handler.id || false;
@@ -59,10 +60,9 @@ angular
                 id: id,
                 fileTypes: [],
                 description: 'no description for ' + id,
-                register: function() {
-                    file_manager.registerHandler(this);
-                },
+                register: function() {file_manager.registerHandler(this)},
                 handleFile: () => {},
+                createThumbnail: false
             }
         };
 
@@ -82,9 +82,23 @@ angular
             const fileType = file_manager.determineFileType(file);
             const fileHandler = file_manager.getFileHandler(fileType);
             if (fileHandler) {
-                fileHandler.handleFile(file)
+                fileHandler.handleFile(file);
             } else {
                 console.log("No File Handler for ", file);
+            }
+        };
+
+        file_manager.createThumbnail = function(params) {
+            if (angular.isUndefined(params["filePath"]) && file_manager.loadedFiles[params["filePath"]]) {
+                return console.log("could not create thumbnail:", params);
+            }
+            const fileType = file_manager.mimeTypeFromExtension(params["filePath"]);
+            const fileHandler = file_manager.getFileHandler(fileType);
+            if (fileHandler && angular.isFunction(fileHandler.createThumbnail)) {
+                return fileHandler.createThumbnail(params)
+            } else {
+                console.log("No Thumbnail creating File Handler for ", file);
+                return false;
             }
         };
 

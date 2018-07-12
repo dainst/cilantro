@@ -38,7 +38,6 @@ angular
 
 	'module.editables',
 
-	'module.fileHandlers.testdata',
 	'module.fileHandlers.defaultPdfHandler',
 	'module.fileHandlers.emptyPdfHandler',
 	'module.fileHandlers.chiron_parted',

@@ -16,7 +16,7 @@ const ImageComparer = function() {
     function compare(imgs) {
         const diff = new PNG({width: imgs[0].width, height: imgs[0].height});
         const diffC = pixelmatch(imgs[0].data, imgs[1].data, diff.data, imgs[0].width, imgs[0].height, {threshold: 0.2});
-        diff.pack().pipe(fs.createWriteStream(outPath+'diff.png'));
+        diff.pack().pipe(fs.createWriteStream(outPath+'diff.png')); // @TODO a name wich makes sense
         return diffC;
     }
 
