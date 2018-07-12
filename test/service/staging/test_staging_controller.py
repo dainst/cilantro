@@ -85,7 +85,7 @@ class StagingControllerTest(unittest.TestCase):
         finally:
             for file in files:
                 file[0].close()
-
+        
     def _upload_to_staging(self, data):
         return self.client.post(
             '/staging',
