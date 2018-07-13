@@ -44,6 +44,10 @@ const Actions = function() {
 
     this.scrollTo = element => browser.executeScript('arguments[0].scrollIntoView()', element.getWebElement());
 
+    this.switchToNewTab = () => new Promise((resolve, reject) =>
+        browser.getAllWindowHandles()
+            .then(handles => {browser.switchTo().window(handles[1]).then(resolve).catch(reject)}));
+
 };
 
 module.exports = new Actions();

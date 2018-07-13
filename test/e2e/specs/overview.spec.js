@@ -97,5 +97,14 @@ describe('overview page', () => {
         expect(ot.getRowTitle(1)).toEqual(titleDoc1);
     });
 
+    it('should open pdf in other tab on btn click', () => {
+        ot.goToOverview(2);
+        ot.getRowButton(0, 'open').click();
+        action.switchToNewTab().then(() => {
+            browser.ignoreSynchronization = true;
+            expect(browser.getCurrentUrl()).toMatch(/\/files\/e2e-testing\.pdf/);
+            browser.ignoreSynchronization = false;
+        })
+    });
 
 });
