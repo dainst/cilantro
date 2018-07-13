@@ -113,6 +113,17 @@ describe('overview page', () => {
         ot.getRowButton(1, 'merge').click();
         browser.switchTo().alert().accept();
         expect(e.overview.tableRows.count()).toEqual(2);
+        // TODO test if merged filed gets displayed correctly
+    });
+
+    it('should add and delete an article', () => {
+        ot.goToOverview(2);
+        e.overview.addBtn.click();
+        expect(e.overview.tableRows.count()).toEqual(2);
+        ot.getRowButton(0, 'remove').click();
+        expect(e.overview.tableRows.count()).toEqual(1);
+        ot.getRowButton(0, 'remove').click();
+        expect(e.overview.tableRows.count()).toEqual(0);
     });
 
 });

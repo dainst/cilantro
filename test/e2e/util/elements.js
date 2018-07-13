@@ -21,6 +21,7 @@ module.exports = {
         tableHeadColumns: element.all(by.css('.super-table > thead > tr > td')),
         tableRows: element.all(by.css('.super-table > tbody > tr')),
         displayColumn: element.all(by.css('button[ng-click="toggleList()"]')),
+        addBtn: element(by.css('button[ng-click="addArticle()"]')),
     },
     article: {
         deleteBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
