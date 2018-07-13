@@ -47,22 +47,31 @@ describe('csv import dialogue', () => {
         });
     });
 
-    xit('support different author delimiters', () => {
+    it('support different author delimiters', () => {
         e.csv.textField.clear().sendKeys("Author\nPeter Lustig|Donald Duck");
         e.csv.delimiterSelect.element(by.css("[value=',']")).click();
         e.csv.moreOptions.click();
-        e.csv.authorDelimiter.element("[value='|']\"");
+        e.csv.authorDelimiter.element(by.css("[value='|']")).click();
         e.csv.takeData.click();
-        // TODO import and count authors in article
+        e.csv.confirm.click();
+        e.documents.proceedBtn.click();
+        expect(e.overview.table.all(by.css('.authorlist tbody tr')).count()).toEqual(2);
     });
 
-    xit('support different author formats', () => {
+    it('support different author formats', () => {
         e.csv.textField.clear().sendKeys("Author\nLustig,Peter;Duck, Donald");
-        e.csv.delimiterSelect.element(by.css("[value='1']")).click();
+        e.csv.delimiterSelect.element(by.css("[value='|']")).click();
         e.csv.moreOptions.click();
-        e.csv.authorFormat.element("");
+        e.csv.authorFormat.element(by.css("[value='1']")).click();
         e.csv.takeData.click();
-        // TODO import and count authors in article
+        e.csv.confirm.click();
+        e.documents.proceedBtn.click();
+        const authorbox = e.overview.table.all(by.css('.authorlist tbody tr'));
+        expect(authorbox.count()).toEqual(2);
+        expect(authorbox.all(by.model('author.lastname')).last().getAttribute("value")).toEqual("Duck");
+        expect(authorbox.all(by.model('author.firstname')).last().getAttribute("value")).toEqual("Donald");
+        expect(authorbox.all(by.model('author.lastname')).first().getAttribute("value")).toEqual("Lustig");
+        expect(authorbox.all(by.model('author.firstname')).first().getAttribute("value")).toEqual("Peter");
     });
 
     it('warn, if column widths are deviant', () => {
