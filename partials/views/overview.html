@@ -47,7 +47,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="article in dataset.articles | orderBy:'article.order.value.value'" ng-show="article._.confirmed !== false" ng-class="{'row-confirmed': article._.confirmed === true}" article="true" >
+                <tr ng-repeat="article in dataset.articles | orderBy:'article.order.value.value'" ng-if="article._.confirmed !== false" ng-class="{'row-confirmed': article._.confirmed === true}" article="true" >
                     <td style="width:600px">
 
                         <div ng-show="!article.pages.check() && (article.filepath.value.value != 'none')">

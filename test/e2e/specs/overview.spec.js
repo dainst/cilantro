@@ -104,7 +104,15 @@ describe('overview page', () => {
             browser.ignoreSynchronization = true;
             expect(browser.getCurrentUrl()).toMatch(/\/files\/e2e-testing\.pdf/);
             browser.ignoreSynchronization = false;
-        })
+        });
+    });
+
+    it('should merge two documents on btn click', () => {
+        ot.goToOverview(3);
+        ot.getRowButton(0, 'merge').click();
+        ot.getRowButton(1, 'merge').click();
+        browser.switchTo().alert().accept();
+        expect(e.overview.tableRows.count()).toEqual(2);
     });
 
 });
