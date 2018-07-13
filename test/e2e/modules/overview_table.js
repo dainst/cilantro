@@ -10,9 +10,9 @@ const imageComparer = require("../util/image_comparer");
 
 const OverviewTable = function() {
 
-    this.goToOverview = () => browser.get(browser.baseUrl)
+    this.goToOverview = (docNr) => browser.get(browser.baseUrl)
         .then(e.start.startBtn.click)
-        .then(e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click)
+        .then(e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click)
         .then(message.waitForMessage)
         .then(e.documents.proceedBtn.click);
 

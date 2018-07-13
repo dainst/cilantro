@@ -11,7 +11,7 @@ describe('overview page', () => {
      */
 
     it('should show the first page of loaded Document as thumbnail', done => {
-        ot.goToOverview()
+        ot.goToOverview(2)
             .then(() => ot.compareThumbnailWithImage(0, "doc1_p1.png"))
             .then(difference => {
                 expect(difference).toBeLessThan(1500);
@@ -20,7 +20,7 @@ describe('overview page', () => {
     });
 
     it('should update thumbnail if page changes', done => {
-        ot.goToOverview()
+        ot.goToOverview(2)
             .then(() => ot.getCell(0, "Range of Pages"))
             .then(cell => cell.all(by.css('input')))
             .then(input => input[0].sendKeys("3"))
@@ -32,12 +32,12 @@ describe('overview page', () => {
     });
 
     xit('should update if document changes', () => {
-
+        // TODO
     });
 
     it('should complain on missing title', () => {
         let titleCell;
-        ot.goToOverview()
+        ot.goToOverview(2)
             .then(() => ot.getCell(0, "Title"))
             .then(cell => {
                 titleCell = cell;
@@ -53,7 +53,7 @@ describe('overview page', () => {
 
     it('should complain on missing surname (but not on missing first name)', () => {
         let titleCell;
-        ot.goToOverview()
+        ot.goToOverview(2)
             .then(() => ot.getCell(0, "Author"))
             .then(cell => {
                 titleCell = cell;
@@ -69,7 +69,7 @@ describe('overview page', () => {
 
     it('should add and remove authors', () => {
         let titleCell;
-        ot.goToOverview()
+        ot.goToOverview(2)
             .then(() => ot.getCell(0, "Author"))
             .then(cell => {titleCell = cell; return titleCell})
             .then(cell => cell.all(by.css('.btn')))
@@ -89,7 +89,7 @@ describe('overview page', () => {
     it('should update table row order on click', () => {
         const titleDoc1 = "PII: 0003-9969(92)90087-O";
         const titleDoc2 = "UNITED";
-        ot.goToOverview();
+        ot.goToOverview(3);
         expect(ot.getRowTitle(0)).toEqual(titleDoc1);
         expect(ot.getRowTitle(1)).toEqual(titleDoc2);
         ot.getRowButton(0, 'down').click();
