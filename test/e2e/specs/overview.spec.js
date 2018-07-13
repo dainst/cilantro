@@ -86,4 +86,16 @@ describe('overview page', () => {
             })
     });
 
+    it('should update table row order on click', () => {
+        const titleDoc1 = "PII: 0003-9969(92)90087-O";
+        const titleDoc2 = "UNITED";
+        ot.goToOverview();
+        expect(ot.getRowTitle(0)).toEqual(titleDoc1);
+        expect(ot.getRowTitle(1)).toEqual(titleDoc2);
+        ot.getRowButton(0, 'down').click();
+        expect(ot.getRowTitle(0)).toEqual(titleDoc2);
+        expect(ot.getRowTitle(1)).toEqual(titleDoc1);
+    });
+
+
 });

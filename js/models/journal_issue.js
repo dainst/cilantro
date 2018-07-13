@@ -152,24 +152,28 @@ angular
     const subObjectMeta = {
         order: {
             title: '#',
-            description: 'Order',
-            style: {minWidth: '50px', maxWidth: '80px'}
+            description: 'Custom Order',
+            style: {minWidth: '50px', maxWidth: '80px'},
+            sortByAllowed: true
         },
         author: {
             title: 'Author',
             style: {minWidth: '400px'},
-            type: "metadata"
+            type: "metadata",
+            sortByAllowed: true
         },
         title: {
             title: 'Title',
             style: {minWidth: '400px'},
-            type: "metadata"
+            type: "metadata",
+            sortByAllowed: true
         },
         pages: {
             title: 'Range of Pages',
             style: {minWidth: '170px'},
             type: "metadata",
-            thumbnailParam: "pages"
+            thumbnailParam: "pages",
+            sortByAllowed: true
         },
         abstract: {
             title: 'Abstract',
@@ -194,7 +198,8 @@ angular
             title: 'Loaded File',
             style: {minWidth: '150px'},
             hide: true,
-            thumbnailParam: "filePath"
+            thumbnailParam: "filePath",
+            sortByAllowed: true
         },
         attached: {
             title: 'Attached',

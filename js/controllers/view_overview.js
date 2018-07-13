@@ -2,12 +2,14 @@ angular
 
 .module('controller.view_overview', [])
 
-.controller('view_overview', ['$scope', 'settings', 'messenger', 'dataset', 'pdf_file_manager', 'steps', 'labels',
-    function($scope, settings, messenger, dataset, pdf_file_manager, steps, labels) {
+.controller('view_overview', ['$scope', 'settings', 'messenger', 'dataset', 'steps', 'labels',
+    function($scope, settings, messenger, dataset, steps, labels) {
 
         $scope.dataset = dataset;
 
         $scope.overviewColumns = {};
+
+        $scope.labels = labels;
 
         $scope.init = function() {
             Object.keys(new dataset.Article()).forEach(key => {
@@ -89,71 +91,24 @@ angular
             $scope.selectedToMerge = false;
         }
 
-
         /* delete */
         $scope.removeArticle = function(article) {
             //dataset.deleteArticle(article)
             article._.confirmed = false;
         };
 
-
         /* thumbnail enlargement */
         $scope.selectedThumb = -1;
-        $scope.selectThumb = function(i) {
-            $scope.selectedThumb = (i === $scope.selectedThumb) ? -1 : i;
+        $scope.selectThumb = i => {$scope.selectedThumb = (i === $scope.selectedThumb) ? -1 : i};
+
+        /* sort */
+        $scope.updateOrder = (orderBy, asc) => {dataset.sortSubObjects(orderBy, asc)};
+
+        $scope.moveArticle = (article, up) => {
+            angular.forEach(dataset.articles, (a, i) => {a.order.value.value = (i + 1)  * 10});
+            article.order.value.value += up ? - 15 : 15;
+            dataset.sortSubObjects('order');
         };
-        // $scope.updateThumbnail = function(article) {
-        //     pdf_file_manager.updateThumbnail(article);
-        // };
-
-        /* order */
-        $scope.updateOrder = function(order, asc, article) {
-
-            if (!order || (order === '')) {
-                return console.log('no order given');
-            }
-
-            asc = ((typeof asc !== "undefined") && asc) ? 1 : -1;
-
-            function orderArticles(obj, order_by, asc) {
-
-                obj.sort(function(a, b) {
-                    //console.log('ORDER BY ' + order_by + '(asc=' + asc + ')');
-                    if (typeof a[order_by] === "object") {
-                        return asc * a[order_by].compare(b[order_by]);
-                    }
-
-                    return (asc * a[order_by].localeCompare(b[order_by]));
-                });
-
-                angular.forEach(obj, function(a, i) {
-                    a.order.value.value = (i + 1)  * 10;
-                });
-
-                return obj;
-            }
-
-            if (order === 'up') {
-                console.log ('up');
-                article.order.value.value -= 15;
-                order = 'order';
-                asc = 1;
-            }
-
-            if (order === 'down') {
-                console.log ('down');
-                article.order.value.value += 15;
-                order = 'order';
-                asc = 1;
-            }
-
-            //console.log('order by ' + order + ' | ' + asc);
-
-            dataset.articles = orderArticles(dataset.articles, order, asc);
-        };
-
-        $scope.getFileInfo = pdf_file_manager.getFileInfo;
-
 
     }
 ]);

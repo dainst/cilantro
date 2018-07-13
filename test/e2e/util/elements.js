@@ -41,6 +41,7 @@ module.exports = {
         authorFormat: element(by.id('csv-author-format')),
         deviantColumnsWarning: element(by.id('csv-deviant-columns-warning')),
         delimiterWarning: element(by.id('csv-delimiter-warning')),
+        moreOptions: element(by.id('csv-more-options'))
     },
     message: {
         main: element(by.css('#info-container .alert.main-message')),

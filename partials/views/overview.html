@@ -4,17 +4,14 @@
     <div class="col-md-4">
         <multiselect elements="overviewColumns">Display Columns</multiselect>
         <uib-dropdown class="btn-group">
-            <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button">Order By<span class="caret"></span></button>
+            <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button">Sort By<span class="caret"></span></button>
             <ul class="dropdown-menu" uib-dropdown-menu>
-                <li><a ng-click="updateOrder('filename', true)" href="#">filename</a></li>
-                <li><a ng-click="updateOrder('author', true)" href="#">author</a></li>
-                <li><a ng-click="updateOrder('title', true)" href="#">title</a></li>
-                <li><a ng-click="updateOrder('page', true)" href="#">page</a></li>
-                <li><a ng-click="updateOrder('filename', false)" href="#">filename desc</a></li>
-                <li><a ng-click="updateOrder('author', false)" href="#">author desc</a></li>
-                <li><a ng-click="updateOrder('title', false)" href="#">title desc</a></li>
-                <li><a ng-click="updateOrder('page', false)" href="#">page desc</a></li>
-                <li><a ng-click="updateOrder('order', true)" href="#">custom (#)</a></li>
+                <li ng-repeat="sortField in dataset.getSortOptionsForSubObjects()">
+                    <a href="#" ng-click="updateOrder(sortField, true)">{{labels.get("sub", sortField, false)}}</a>
+                </li>
+                <li ng-repeat="sortField in dataset.getSortOptionsForSubObjects()">
+                    <a href="#" ng-click="updateOrder(sortField, false)">{{labels.get("sub", sortField, false)}} (descending)</a>
+                </li>
             </ul>
         </uib-dropdown>
         <span class="btn-group">
@@ -67,20 +64,14 @@
                     </td>
                     <td ng-repeat="(name, column) in overviewColumns" ng-show="column.checked">
                         <span editable item="article[name]"></span>
-
                     </td>
                     <td>
-                        <span class="btn btn-default btn-xs" ng-show="$index>0" ng-click="updateOrder('up', true, article)" data-tooltip="move above"><span class="glyphicon glyphicon-triangle-top"></span></span>
-
-                        <span class="btn btn-default btn-xs" ng-click="removeArticle(article)" data-tooltip="delete article"><span class="glyphicon glyphicon-minus-sign"></span></span>
-                        <span class="btn btn-default btn-xs" ng-click="openDocument(article)" data-tooltip="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
-
-                        <span class="btn btn-xs" ng-class="{'btn-default': (!selectedToMerge), 'btn-danger': (selectedToMerge)}" ng-click="mergeArticle(article)" data-tooltip="merge articles"><span class="glyphicon glyphicon-compressed"></span></span>
-
+                        <span class="btn btn-default btn-xs so-btn-up" ng-show="$index>0" ng-click="moveArticle(article, true)" data-tooltip="move above"><span class="glyphicon glyphicon-triangle-top"></span></span>
+                        <span class="btn btn-default btn-xs so-btn-remove" ng-click="removeArticle(article)" data-tooltip="delete article"><span class="glyphicon glyphicon-minus-sign"></span></span>
+                        <span class="btn btn-default btn-xs so-btn-open" ng-click="openDocument(article)" data-tooltip="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
+                        <span class="btn btn-xs so-btn-merge" ng-class="{'btn-default': (!selectedToMerge), 'btn-danger': (selectedToMerge)}" ng-click="mergeArticle(article)" data-tooltip="merge articles"><span class="glyphicon glyphicon-compressed"></span></span>
                         <!-- <span class="btn btn-default btn-xs" ng-repeat="button in master.article_buttons" ng-click="button.function(article)" data-tooltip="{{button.tooltip}}">{{button.caption}}<span class="glyphicon {{button.glyphicon}}"></span></span> -->
-
-                        <span class="btn btn-default btn-xs" ng-show="$index<dataset.articles.length-1" ng-click="updateOrder('down', true, article)" data-tooltip="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
-
+                        <span class="btn btn-default btn-xs so-btn-down" ng-show="$index<dataset.articles.length-1" ng-click="moveArticle(article, false)" data-tooltip="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
                     </td>
                 </tr>
             </tbody>

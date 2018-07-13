@@ -16,7 +16,7 @@ angular
             check: 		function() {return (this.mandatory && (angular.isUndefined(this.value.value) || (this.value.value === ''))) ? 'This  field is mandatory' : false},
             set:		function(value) {this.value.value = value},
             get:		function(){return this.value.value},
-            compare:	function(that){return 0},
+            compare:	function(that) {return this.value.value.localeCompare(that.value.value)},
             watch:		function(observer){this.observer = observer; return this},
             observer:	false
         }

@@ -12,7 +12,7 @@ const OverviewTable = function() {
 
     this.goToOverview = () => browser.get(browser.baseUrl)
         .then(e.start.startBtn.click)
-        .then(e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click)
+        .then(e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click)
         .then(message.waitForMessage)
         .then(e.documents.proceedBtn.click);
 
@@ -37,6 +37,12 @@ const OverviewTable = function() {
         this.getThumbnailDataUri(rowNr)
             .then(data => imageComparer.compareDataWithFile(data, imageName))
             .then(resolve).catch(reject));
+
+    this.getRowButton = (rowNr, button) =>
+        e.overview.tableRows.get(rowNr).all(by.xpath("./td")).last().element(by.css(".btn.so-btn-" + button));
+
+    this.getRowTitle = (rowNr) =>
+        this.getCell(rowNr, "Title").then(cell => cell.element(by.css('input')).getAttribute("value"));
 };
 
 module.exports = new OverviewTable();

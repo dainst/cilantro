@@ -129,6 +129,7 @@ angular
         });
     };
 
+    // depicated?
     dataset.deleteArticle = function(article) {
         // the price for using an array for articles...
         for (let i = 0; i < dataset.articles.length; i++) {
@@ -187,6 +188,25 @@ angular
             .forEach(k => subObject[k].watch(subObject._.createThumbnail));
 
         return subObject;
+    };
+
+    dataset.getSortOptionsForSubObjects = () => Object.keys(model.getMeta("sub"))
+        .filter(k => angular.isDefined(model.getMeta("sub")[k].sortByAllowed) && model.getMeta("sub")[k].sortByAllowed);
+
+    dataset.sortSubObjects = (sortBy, ascending) => {
+        ascending = (!angular.isDefined(ascending) || ascending) ? 1 : -1;
+
+        if (!sortBy || angular.isUndefined(model.getMeta("sub")[sortBy])) {
+            console.log('Can not sort by ' + sortBy + " (" + ascending + ")");
+            return;
+        }
+
+        console.log("sort by " + sortBy + " (" + ascending + ")");
+
+        dataset.articles.sort((a, b) => (typeof a[sortBy] === "object")
+            ? ascending * a[sortBy].compare(b[sortBy])
+            : (ascending * a[sortBy].localeCompare(b[sortBy])));
+
     };
 
     // TODO - how is this geralizable?!
