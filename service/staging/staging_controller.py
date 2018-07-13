@@ -1,7 +1,7 @@
 import os
 
 from flask import Blueprint, jsonify, request, send_file, abort
-import logging.config
+import logging
 
 
 staging_controller = Blueprint('staging', __name__)
