@@ -22,6 +22,9 @@ module.exports = {
         tableRows: element.all(by.css('.super-table > tbody > tr')),
         displayColumn: element.all(by.css('button[ng-click="toggleList()"]')),
         addBtn: element(by.css('button[ng-click="addArticle()"]')),
+        columnsDropdown: element(by.css('[elements="overviewColumns"]')),
+        columnsDropdownBtn: element(by.css('[elements="overviewColumns"] > span > button')),
+        columnsDropdownList: element.all(by.css('[elements="overviewColumns"] .dropdown-menu > li > label > input'))
     },
     article: {
         deleteBtn: element(by.css('span[ng-click="removeArticle(article)"]')),

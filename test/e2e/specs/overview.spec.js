@@ -31,8 +31,18 @@ describe('overview page', () => {
             });
     });
 
-    xit('should update if document changes', () => {
-        // TODO
+    it('should update thumbnail if document changes', done => {
+        ot.goToOverview(3);
+        e.overview.columnsDropdownBtn.click();
+        e.overview.columnsDropdown.element(by.cssContainingText("label", "Loaded File")).click();
+        e.overview.columnsDropdownBtn.click();
+        ot.getCell(0, "Loaded File").then(cell => {
+            cell.all(by.css('select option')).get(2).click();
+            ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
+                expect(difference).toBeLessThan(1500);
+                done()
+            });
+        });
     });
 
     it('should complain on missing title', () => {
@@ -108,22 +118,31 @@ describe('overview page', () => {
     });
 
     it('should merge two documents on btn click', () => {
+        const testDocFileName = "test-directory/pdf2.pdf";
         ot.goToOverview(3);
         ot.getRowButton(0, 'merge').click();
         ot.getRowButton(1, 'merge').click();
         browser.switchTo().alert().accept();
         expect(e.overview.tableRows.count()).toEqual(2);
-        // TODO test if merged filed gets displayed correctly
+        e.overview.columnsDropdownBtn.click();
+        e.overview.columnsDropdown.element(by.cssContainingText("label", "Attached Files/Pages")).click();
+        e.overview.columnsDropdownBtn.click();
+        ot.getCell(0, "Attached").then(cell => {
+            expect(cell.all(by.css('td')).first().getText()).toEqual(testDocFileName);
+        });
     });
 
-    it('should add and delete an article', () => {
+    it('hide and show columns', () => {
         ot.goToOverview(2);
-        e.overview.addBtn.click();
-        expect(e.overview.tableRows.count()).toEqual(2);
-        ot.getRowButton(0, 'remove').click();
-        expect(e.overview.tableRows.count()).toEqual(1);
-        ot.getRowButton(0, 'remove').click();
-        expect(e.overview.tableRows.count()).toEqual(0);
+        ot.getVisibleColumnNames().then(columns => {
+            expect(columns.indexOf("Title")).not.toEqual(-1);
+        });
+        e.overview.columnsDropdownBtn.click();
+        e.overview.columnsDropdownList.get(0).click();
+        e.overview.columnsDropdownBtn.click();
+        ot.getVisibleColumnNames().then(columns => {
+            expect(columns.indexOf("Title")).toEqual(-1);
+        });
     });
 
 });
