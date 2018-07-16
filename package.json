@@ -1,6 +1,6 @@
 {
-  "name": "ojs-importer",
-  "version": "3.0.0",
+  "name": "alvia",
+  "version": "4.0.0",
   "repository": {
     "type": "git",
     "url": "http://github.com/dainst/ojs-importer.git"
