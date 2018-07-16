@@ -9,7 +9,11 @@
   },
   "files": [
     {
-      "file": "pdf/e2e-testing.pdf"
+      "file": "pdf/e2e-testing.pdf",
+      "range": [
+        1,
+        5
+      ]
     }
   ],
   "parts": [
