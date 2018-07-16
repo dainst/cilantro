@@ -3,7 +3,6 @@ import os
 from utils.celery_client import celery_app
 
 from workers.base_task import BaseTask
-from workers.default.metadata.loader import load_metadata
 from workers.default.xml.xml_generator import generate_xml
 from workers.default.xml.marc_xml_generator import generate_marc_xml
 from workers.default.xml.xml_validator import validate_xml
@@ -15,7 +14,7 @@ class GenerateMarcXMLTask(BaseTask):
 
     def execute_task(self):
         work_path = self.get_work_path()
-        obj = Object.read(work_path)
+        obj = Object(work_path)
         xml_template_string = _read_file(self.get_param('xml_template_path'))
         generate_marc_xml(obj, xml_template_string)
 
@@ -31,11 +30,20 @@ class GenerateXMLTask(BaseTask):
 
     def execute_task(self):
         work_path = self.get_work_path()
-        data = load_metadata(work_path)
+        obj = Object(work_path)
+        articles_meta = []
+        for part in obj.get_children():
+            articles_meta.append(part.metadata.get_dict())
+
+        data = {'data': {
+            **obj.metadata.get_dict(),
+            'auto_publish_issue': self.get_param('auto_publish_issue'),
+            'default_create_frontpage': self.get_param('default_create_frontpage'),
+        },
+            'articles': articles_meta}
+
         xml_template_string = _read_file(self.get_param('xml_template_path'))
-
-        generated_xml_file = generate_xml(work_path, data, xml_template_string)
-
+        generated_xml_file = generate_xml(obj.path, data, xml_template_string)
         validate_xml(generated_xml_file, dtd_validation=True)
 
 

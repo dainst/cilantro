@@ -8,7 +8,7 @@ from utils.object import Object
 
 from workers.convert.image_pdf.convert_image import convert_tif_to_jpg
 from workers.convert.image_pdf.convert_pdf import convert_pdf_to_txt, \
-    pdf_merge, add_split_pdf_to_object
+    pdf_merge, split_pdf_in_object
 from workers.convert.image_pdf.convert_image_pdf import convert_pdf_to_tif, \
     convert_jpg_to_pdf
 
@@ -22,23 +22,23 @@ class SplitPdfTask(BaseTask):
         self._add_files(obj, self.get_param('files'))
         parts = self.get_param('parts')
         for part in parts:
-            self._execute_for_child(obj.get_child(parts.index(part)), part)
+            self._execute_for_child(obj.get_child(parts.index(part) + 1), part)
 
     def _execute_for_child(self, obj, part):
         self._add_files(obj, part['files'])
         if 'parts' in part:
             parts = part['parts']
             for subpart in parts:
-                self._execute_for_child(obj.get_child(parts.index(subpart)), subpart)
+                self._execute_for_child(obj.get_child(parts.index(subpart) + 1), subpart)
 
     def _add_files(self, obj, files):
         pdf_files = []
         for file in files:
-            suffix = Path(file['file']).suffix
+            suffix = (file['file']).split('.')[-1]
             if suffix == 'pdf':
                 pdf_files.append(file)
         if len(pdf_files) > 0:
-            add_split_pdf_to_object(pdf_files, os.environ['STAGING_DIR'], obj)
+            split_pdf_in_object(pdf_files, obj)
 
 
 class JpgToPdfTask(BaseTask):
@@ -70,7 +70,7 @@ class PdfToTxtTask(BaseTask):
 
     def execute_task(self):
         file = self.get_param('file')
-        convert_pdf_to_txt(file, self.get_work_path())
+        convert_pdf_to_txt(file, os.path.join(os.path.dirname(os.path.dirname(file)), 'txt'))
 
 
 class PdfToTifTask(BaseTask):

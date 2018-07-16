@@ -9,10 +9,7 @@
   },
   "files": [
     {
-      "file": "a_journal/e2e-testing.pdf"
-    },
-    {
-      "file": "a_journal/e2e-testing.pdf"
+      "file": "pdf/e2e-testing.pdf"
     }
   ],
   "parts": [
@@ -29,7 +26,7 @@
         "pages": {
           "showndesc": "1\u201320",
           "startPrint": 1,
-          "endPrint": 20
+          "endPrint": 2
         },
         "date_published": "2018--",
         "language": "de_DE",
@@ -37,16 +34,10 @@
       },
       "files": [
         {
-          "file": "a_journal/e2e-testing.pdf",
+          "file": "pdf/e2e-testing.pdf",
           "range": [
             1,
-            20
-          ]
-        },
-        {
-          "file": "a_journal/e2e-testing.pdf",
-          "range": [
-            1
+            2
           ]
         }
       ],
@@ -65,7 +56,7 @@
         "pages": {
           "showndesc": "21\u201327",
           "startPrint": 21,
-          "endPrint": 27
+          "endPrint": 23
         },
         "date_published": "2018--",
         "language": "de_DE",
@@ -73,16 +64,10 @@
       },
       "files": [
         {
-          "file": "a_journal/e2e-testing.pdf",
+          "file": "pdf/e2e-testing.pdf",
           "range": [
             21,
-            62
-          ]
-        },
-        {
-          "file": "a_journal/e2e-testing.pdf",
-          "range": [
-            2
+            23
           ]
         }
       ],

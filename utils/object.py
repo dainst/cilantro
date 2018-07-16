@@ -4,7 +4,7 @@ from datetime import datetime
 from io import BytesIO
 import json
 from collections import namedtuple
-from typing import List, Iterator, TextIO, BinaryIO
+from typing import List, Iterator, TextIO
 from distutils.dir_util import copy_tree
 
 
@@ -49,7 +49,27 @@ class SerializableClass(object):
         return obj
 
     def get_json(self):
-        return json.dumps(self.__dict__, default=_to_serializable)
+        return json.dumps(self.get_dict(), default=_to_serializable)
+
+    def get_dict(self):
+        d = {}
+        for key, value in self.__dict__.items():
+            if SerializableClass().__class__ in inspect.getmro(value.__class__):
+                d[key] = value.get_dict()
+            else:
+                d[key] = value
+
+        return d
+
+
+class PagesInfo(SerializableClass):
+    """
+    page print info.
+    """
+
+    showndesc: str
+    startPrint: str
+    endPrint: str
 
 
 class Actor(SerializableClass):
@@ -73,6 +93,8 @@ class ObjectMetadata(SerializableClass):
     type: str
     creator: Actor
     created: datetime
+
+    pages: PagesInfo
 
     year: int
     number: str
@@ -113,7 +135,6 @@ class Object:
         """
         Create an empty cilantro object that lives in path or finds one.
 
-        Creates a data folder and an empty meta.json.
         :param str path: the Path where the object lives.
         """
         self.path = path
@@ -130,26 +151,6 @@ class Object:
         else:
             open(os.path.join(self.path, 'meta.json'), 'a', encoding="utf-8").close()
             self.metadata = ObjectMetadata()
-
-    @staticmethod
-    def read(path):
-        """
-        Read an already existent cilantro object.
-
-        This validates the `meta.json` and populates the metadata attribute with
-        its contents.
-
-        :param str path: The path to the root folder of the existing object
-        :return Object:
-        """
-        if not os.path.exists(path):
-            raise PathDoesNotExist(f'{path} does not exist.')
-
-        obj = Object(path)
-        #
-        # with open(os.path.join(obj.path, 'meta.json'), 'r', encoding="utf-8") as data:
-        #     obj.metadata = ObjectMetadata.from_dict(json.load(data))
-        return obj
 
     def write(self):
         """
@@ -171,9 +172,9 @@ class Object:
         :param BytesIO file: The input stream
         :return: None
         """
-        if not os.path.exists(self._get_representation_dir(representation)):
-            os.makedirs(self._get_representation_dir(representation))
-        with open(os.path.join(self._get_representation_dir(representation), file_name), 'wb+') as stream:
+        if not os.path.exists(self.get_representation_dir(representation)):
+            os.makedirs(self.get_representation_dir(representation))
+        with open(os.path.join(self.get_representation_dir(representation), file_name), 'wb+') as stream:
             stream.write(file.read())
 
     def list_representations(self) -> List[str]:
@@ -194,7 +195,7 @@ class Object:
         :return Iterator[BytesIO]:
         """
         representations = []
-        path = self._get_representation_dir(representation)
+        path = self.get_representation_dir(representation)
         for filename in os.listdir(path):
             if not os.path.isdir(os.path.join(path, filename)):
                 with open(os.path.join(path, filename), 'rb') as file:
@@ -237,7 +238,7 @@ class Object:
     def get_child(self, index: int):
         part_name = self._get_part_dir_for_index(index)
         path = os.path.join(self._get_part_dir(), part_name)
-        return Object.read(path)
+        return Object(path)
 
     def get_children(self):
         """
@@ -250,7 +251,7 @@ class Object:
             for d in [d for d in os.listdir(self._get_part_dir()) if
                       os.path.isdir(os.path.join(self._get_part_dir(), d))]:
                 if self._is_part_dir_format(d):
-                    sub_objects.append(Object.read(os.path.join(self._get_part_dir(), d)))
+                    sub_objects.append(Object(os.path.join(self._get_part_dir(), d)))
         return iter(sub_objects)
 
     def copy(self, path):
@@ -266,8 +267,9 @@ class Object:
     def _is_part_dir_format(dir_name):
         return 'part_' in dir_name
 
-    def _get_part_dir_for_index(self, index: int):
-        part_name = f"part_{str(index.zfill(4))}"
+    @staticmethod
+    def _get_part_dir_for_index(index: int):
+        part_name = f"part_{str(index).zfill(4)}"
         return part_name
 
     def _get_part_dir(self):
@@ -276,5 +278,5 @@ class Object:
     def _get_data_dir(self):
         return os.path.join(self.path, 'data')
 
-    def _get_representation_dir(self, representation: str):
+    def get_representation_dir(self, representation: str):
         return os.path.join(self._get_data_dir(), representation)

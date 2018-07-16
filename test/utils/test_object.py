@@ -40,7 +40,7 @@ class ObjectTest(unittest.TestCase):
 
     def test_read(self):
         _copy_test_object()
-        obj = Object.read(test_object_working_path)
+        obj = Object(test_object_working_path)
         self.assertIsInstance(obj.metadata, ObjectMetadata)
         self.assertEqual(obj.metadata.creator.firstname, "Peter")
 
@@ -69,7 +69,7 @@ class ObjectTest(unittest.TestCase):
 
     def test_list_representations(self):
         _copy_test_object()
-        obj = Object.read(test_object_working_path)
+        obj = Object(test_object_working_path)
         representations = obj.list_representations()
 
         self.assertEqual(len(representations), 2)
@@ -77,7 +77,7 @@ class ObjectTest(unittest.TestCase):
 
     def test_get_representation(self):
         _copy_test_object()
-        obj = Object.read(test_object_working_path)
+        obj = Object(test_object_working_path)
 
         files = obj.get_representation('pdf')
         file = files.__next__()
@@ -114,7 +114,7 @@ class ObjectTest(unittest.TestCase):
 
     def test_get_children(self):
         _copy_test_object()
-        obj = Object.read(test_object_working_path)
+        obj = Object(test_object_working_path)
         children = obj.get_children()
         subobj = children.__next__()
         file = subobj.get_representation('jpg').__next__()
@@ -127,7 +127,7 @@ class ObjectTest(unittest.TestCase):
 
     def test_copy(self):
         _copy_test_object()
-        obj = Object.read(test_object_working_path)
+        obj = Object(test_object_working_path)
         obj.copy(copy_working_path)
 
         comparison = dircmp(test_object_working_path, copy_working_path)

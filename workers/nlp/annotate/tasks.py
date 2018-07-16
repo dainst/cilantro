@@ -23,14 +23,19 @@ class AnnotateTask(BaseTask):
         params = self.get_param('nlp_params')
         text_file = self.get_param('file')
         _, extension = os.path.splitext(text_file)
-        output_file = text_file.replace(extension, '.json')
+        output_file = os.path.join(
+            os.path.dirname(os.path.dirname(text_file)),
+            'nlp',
+            os.path.basename(text_file).replace(extension, '.json'))
 
         with open(text_file, 'r') as file:
             text = file.read().replace('\n', '')
-
-        result = annotate(text, params)
-        with open(output_file, 'w+') as file:
-            json.dump(result, file)
+        if text:
+            result = annotate(text, params)
+            if not os.path.isdir(os.path.dirname(output_file)):
+                os.makedirs(os.path.dirname(output_file))
+            with open(output_file, 'w+') as file:
+                json.dump(result, file)
 
 
 AnnotateTask = celery_app.register_task(AnnotateTask())

@@ -17,6 +17,8 @@ def convert_pdf_to_txt(source_file, output_dir):
         index = 1
         # Needed as pdftotext is not a Python list with .index() capability.
         for page in pdf:
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
             output = open(os.path.join(output_dir, f'page.{index}.txt'), 'wb')
             output.write(page.encode('utf-8'))
             output.close()
@@ -51,9 +53,9 @@ def pdf_merge(file_paths, output_path):
             input_stream.close()
 
 
-def add_split_pdf_to_object(files, source, obj: Object):
+def split_pdf_in_object(files, obj: Object):
     """
-    Make cuts out of multiple pdf files and add it to a cilantro object
+    Takes the pdf files in an Object and split/merges them into one
 
     :param list files: list of the pdf files as dic {'file':,'range':[start,end]}
     :param string source: The working directory where we find the
@@ -63,9 +65,8 @@ def add_split_pdf_to_object(files, source, obj: Object):
 
     new_pdf = PyPDF2.PdfFileWriter()
     for file in files:
-        input_str = os.path.join(source, file['file'])
+        input_str = os.path.join(obj.get_representation_dir('pdf'), os.path.basename(file['file']))
         input_stream = open(input_str, 'rb')
-
         pdf = PyPDF2.PdfFileReader(input_stream)
         if pdf.flattenedPages is None:
             pdf.getNumPages()  # make the file page based
@@ -83,5 +84,11 @@ def add_split_pdf_to_object(files, source, obj: Object):
 
     stream = BytesIO()
     new_pdf.write(stream)
+    stream.seek(0)
     obj.add_file('merged.pdf', 'pdf', stream)
     stream.close()
+
+    for file in files:
+        file_path = os.path.join(obj.get_representation_dir('pdf'), os.path.basename(file['file']))
+        if os.path.isfile(file_path):
+            os.remove(file_path)
