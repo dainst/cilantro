@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask
@@ -18,18 +19,26 @@ class SplitPdfTask(BaseTask):
 
     def execute_task(self):
         obj = Object(self.get_work_path())
-        work_path = os.environ['STAGING_DIR']
-        add_split_pdf_to_object(self.get_param('files'), work_path, obj)
-
-        self._execute_for_childs(obj, self.get_param('parts'))
-
-    def _execute_for_childs(self, obj: Object, parts):
+        self._add_files(obj, self.get_param('files'))
+        parts = self.get_param('parts')
         for part in parts:
-            child = obj.get_child(parts.index(part) + 1)
-            work_path = os.environ['STAGING_DIR']
-            add_split_pdf_to_object(part['files'], work_path, child)
-            if 'parts' in part:
-                self._execute_for_childs(child, part['parts'])
+            self._execute_for_child(obj.get_child(parts.index(part)), part)
+
+    def _execute_for_child(self, obj, part):
+        self._add_files(obj, part['files'])
+        if 'parts' in part:
+            parts = part['parts']
+            for subpart in parts:
+                self._execute_for_child(obj.get_child(parts.index(subpart)), subpart)
+
+    def _add_files(self, obj, files):
+        pdf_files = []
+        for file in files:
+            suffix = Path(file['file']).suffix
+            if suffix == 'pdf':
+                pdf_files.append(file)
+        if len(pdf_files) > 0:
+            add_split_pdf_to_object(pdf_files, os.environ['STAGING_DIR'], obj)
 
 
 class JpgToPdfTask(BaseTask):
