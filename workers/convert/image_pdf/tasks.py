@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask
@@ -25,20 +24,18 @@ class SplitPdfTask(BaseTask):
             self._execute_for_child(obj.get_child(parts.index(part) + 1), part)
 
     def _execute_for_child(self, obj, part):
-        self._add_files(obj, part['files'])
-        if 'parts' in part:
-            parts = part['parts']
-            for subpart in parts:
-                self._execute_for_child(obj.get_child(parts.index(subpart) + 1), subpart)
-
-    def _add_files(self, obj, files):
         pdf_files = []
-        for file in files:
+        for file in part['files']:
             suffix = (file['file']).split('.')[-1]
             if suffix == 'pdf':
                 pdf_files.append(file)
         if len(pdf_files) > 0:
             split_pdf_in_object(pdf_files, obj)
+
+        if 'parts' in part:
+            parts = part['parts']
+            for subpart in parts:
+                self._execute_for_child(obj.get_child(parts.index(subpart) + 1), subpart)
 
 
 class JpgToPdfTask(BaseTask):

@@ -22,7 +22,7 @@ class SerializableClass(object):
         :return: cls: The generated object
         """
         for key, value in json_dict.items():
-            if type(value) is dict:
+            if isinstance(value, dict):
                 key_class = inspect.getmembers(cls)[0][1][key]
                 if SerializableClass().__class__ in inspect.getmro(key_class):
                     json_dict[key] = key_class.from_dict(json_dict[key])
