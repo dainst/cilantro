@@ -26,7 +26,7 @@ angular
         /* tools & buttons */
 
         $scope.addArticle = function() {
-            let a = new dataset.Article('Article ' +  dataset.articles.length);
+            const a = new dataset.Article({title: 'Article ' + (dataset.articles.length+1)});
             dataset.articles.push(a);
         };
 

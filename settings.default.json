@@ -1,5 +1,7 @@
 {
-  "files_url":      "http://localhost/ ##staging_folder##",
+  "files_url":    "http://localhost/ ##staging_folder##",
   "server_url":   "http://localhost/importer/ ##backend##",
   "ojs_url":      "http:// ##ojs2 installation ##/plugins/generic/ojs-cilantro-plugin/api/",
+  "zenon_url":    "https://zenon.dainst.org/api/v1/search",
+  "importer_url": "http://localhost:9082"
 }

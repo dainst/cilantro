@@ -6,7 +6,8 @@ angular
                 restrict: 'E',
                 templateUrl: 'partials/elements/zenon.html',
                 scope: {
-                    search: '=', // {term: "", id: ""}
+                    search: '<', // {term: "", id: ""}
+                    result: '='
                 },
                 link: function (scope, element, attrs) {
                     
@@ -52,7 +53,7 @@ angular
                             .then(response => {
                                     console.log('success', response);
                                     const data = response.data;
-                                    scope.results = scope.results.concat(data.records);
+                                    scope.results = scope.results.concat(data.records || []);
                                     scope.found = parseInt(data.resultCount);
                                     //scope.start = parseInt(data.responseHeader.params.start) + 10;
                                     if (scope.found === 1) {
@@ -69,6 +70,7 @@ angular
 
                     scope.select = index => {
                         scope.selected = (scope.selected === index) ? -1 : index;
+                        scope.result = scope.results[scope.selected];
                         // dataset.articles[scope.currentArticle].zenonId.value.value =
                         //     (scope.selectedResult === -1) ? '' : scope.results.results[index].id; TODO
 
@@ -85,48 +87,9 @@ angular
                         Summary: record.summary && record.summary[0]
                     });
 
-
-                    
-                    
+                    scope.lookUpInZenon = (id) => {window.open("https://zenon.dainst.org/Record/" + id)};
 
 
-
-                    scope.adoptFromZenon = function (index) {
-
-                        index = index || scope.selectedResult;
-
-                        let doc = scope.results.results[index];
-
-                        //console.log(doc);
-
-                        let authors = [];
-
-                        if (doc.author) {
-                            authors.push(doc.author);
-                        }
-
-                        if (doc.author2 && angular.isArray(doc.author2)) {
-                            authors = authors.concat(doc.author2);
-                        }
-
-                        let article = dataset.articles[scope.currentArticle];
-
-                        article.title.set(doc.title);
-                        // article.abstract.value.value = abstract; // @ TODO adopt abstract from zenon?
-                        article.author.setAuthors(authors, 1);
-                        article.pages.set(doc.pages.replace('.', ''));
-                        article.date_published.set(doc.date);
-                        //article.language = editables.language('de_DE', false); // @ TODO adopt language from zenon?
-
-
-                        //scope.resetZenon();
-                    };
-
-                    scope.markAsMissingZenon = function () {
-                        dataset.articles[scope.currentArticle].zenonId.value.value = '(((new)))';
-                        dataset.articles[scope.currentArticle]._.reportToZenon = true;
-                        //scope.sendToZenon();
-                    };
                 }
             }
         }

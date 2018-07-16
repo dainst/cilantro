@@ -3,5 +3,6 @@
     "server_url":   "http://localhost:3333/",
     "importer_url": "http://localhost:9082",
     "ojs_url":      "http://localhost:3333/",
+    "zenon_url":    "http://localhost:3333/zenon",
     "test":         true
 }

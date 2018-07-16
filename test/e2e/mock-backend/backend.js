@@ -3,6 +3,7 @@ const path = require('path');
 const jsonServer = require('json-server');
 const bodyParser = require('body-parser');
 const validateJsonParams = require('./validate-json-params');
+const fakeZenon = require('./fake_zenon');
 const missingFile = require('./missing_file');
 const server = jsonServer.create();
 const router = jsonServer.router('routes.json');
@@ -13,6 +14,7 @@ server.use(bodyParser.urlencoded({extended: false}));
 server.use(bodyParser.json());
 server.use(middleWares);
 server.use('/job', validateJsonParams);
+server.use('/zenon', fakeZenon);
 
 server.use('/files', express.static(path.join(__dirname, '/../ressources/staging')));
 server.use('/files/broken_file.csv', missingFile);

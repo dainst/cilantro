@@ -1,135 +1,95 @@
-<!-- chiron specific template -->
-
 <div ng-controller="view_articles" data-ng-init="init()">
 
-<div class="row toprow">
-	<div class="col-md-4">
-		<div class="btn-group" uib-dropdown>
-			<button uib-dropdown-toggle class="btn btn-default">Select Article<span class="caret"></span></button>
-			<ul uib-dropdown-menu>
-    			<li ng-repeat="article in dataset.articles track by $index">
-					<a href='#'
-					   ng-class="{'btn-primary': $index == currentArticle, 'btn-success': article._.confirmed === true, 'btn-danger': article._.confirmed === false}"
-					   ng-click="selectArticle($index)">{{article.author.value[0].lastname}} - {{article.title.get()}}</a>
-				</li>
-    		</ul>
-		</div>
-		<span class="btn-group">
-		    <button class='btn btn-default' ng-click='addArticle()'>Add Article<span class="glyphicon glyphicon-plus-sign"></span></button>
-		</span>
+    <div class="row toprow">
+        <div class="col-md-4">
+            <div class="btn-group" uib-dropdown>
+                <button uib-dropdown-toggle class="btn btn-default">Select Article<span class="caret"></span></button>
+                <ul uib-dropdown-menu>
+                    <li ng-repeat="article in dataset.articles track by $index">
+                        <a href='#'
+                           ng-class="{'btn-primary': $index == currentArticle, 'btn-success': article._.confirmed === true, 'btn-danger': article._.confirmed === false}"
+                           ng-click="selectArticle($index)">{{article.author.value[0].lastname}} - {{article.title.get()}}</a>
+                    </li>
+                </ul>
+            </div>
+            <span class="btn-group">
+                <button class='btn btn-default' ng-click='addArticle()'>Add Article<span class="glyphicon glyphicon-plus-sign"></span></button>
+            </span>
 
-	</div>
-    <div class="col-md-4 text-center">
-        <stats type="subobjects"></stats>
+        </div>
+        <div class="col-md-4 text-center">
+            <stats type="subobjects"></stats>
+        </div>
+        <div class="col-md-4 text-right">
+            <span class="btn-group" ng-if="isArticleSelected()">
+                <button
+                        ng-if="zenonResult.id"
+                        class='btn btn-default' ng-click='adoptFromZenon()'
+                        data-tooltip="Continue with the data from Zenon instead of the one you got from the investigation of the table of contents"
+                    >Take Zenon Data<span class="glyphicon glyphicon-import"></span>
+                </button>
+                <button
+                        ng-if="!zenonResult.id"
+                        ng-click='markAsMissingZenon()'
+                        ng-class="['btn', 'btn-default', {'active': (dataset.articles[currentArticle]._.reportToZenon)}]"
+                    >Mark as missing in Zenon<span class="glyphicon glyphicon-flag"></span>
+                </button>
+                <button
+                        ng-click='dismissArticle()'
+                        class='btn btn-danger'
+                        ng-disabled="dataset.articles[currentArticle]._.confirmed === false"
+                    >{{dataset.articles[currentArticle]._.confirmed === false ? "Dismissed" : "Dismiss"}}
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <button
+                        ng-if="checkArticle()"
+                        ng-click='confirmArticle()'
+                        class='btn btn-success'
+                    >Confirm<span class="glyphicon glyphicon-chevron-right"></span>
+                </button>
+            </span>
+        </div>
     </div>
-	<div class="col-md-4 text-right">
-		<span class="btn-group">
-			<button
-					ng-if="isArticleSelected()"
-					ng-click='dismissArticle()'
-					class='btn btn-danger'
-					ng-disabled="dataset.articles[currentArticle]._.confirmed === false"
-			>{{dataset.articles[currentArticle]._.confirmed === false ? "Dismissed" : "Dismiss"}}<span class="glyphicon glyphicon-remove"></span></button>
-			<button
-					ng-if="isArticleSelected() && checkArticle()"
-					ng-click='confirmArticle()'
-					class='btn btn-success'
-			>Confirm<span class="glyphicon glyphicon-chevron-right"></span></button>
-		</span>
-	</div>
-</div>
 
 
-<div class="row">
+    <div class="row">
 
-	<div class="col-lg-6">
-		<div class="panel panel-default"
-			 ng-class="{'panel-success':(dataset.articles[currentArticle]._.confirmed === true),'panel-danger':(dataset.articles[currentArticle]._.confirmed === false)}"
-			 ng-show="(currentArticle > -1) && (dataset.articles.length > 0)">
-			<div class="panel-heading">Article</div>
+        <div class="col-lg-6">
+            <div class="panel panel-default"
+                 ng-class="{'panel-success':(dataset.articles[currentArticle]._.confirmed === true),'panel-danger':(dataset.articles[currentArticle]._.confirmed === false)}"
+                 ng-show="(currentArticle > -1) && (dataset.articles.length > 0)">
+                <div class="panel-heading">Article</div>
 
-			<table class='table article-table'>
-				<thead></thead>
-				<tbody>
-					<tr ng-if="currentArticle > -1" ng-repeat="(property, item) in dataset.articles[currentArticle] track by $index">
-						<td>{{labels.get("sub", property)}}</td>
-						<td><span editable item="dataset.articles[currentArticle][property]" /></td>
-					</tr>
-				</tbody>
-				<tfoot></tfoot>
-			</table>
-		</div>
+                <table class='table article-table'>
+                    <thead></thead>
+                    <tbody>
+                        <tr ng-if="currentArticle > -1" ng-repeat="(property, item) in dataset.articles[currentArticle] track by $index">
+                            <td>{{labels.get("sub", property)}}</td>
+                            <td><span editable item="dataset.articles[currentArticle][property]" /></td>
+                        </tr>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
 
-		<div class="panel panel-default" ng-show="dataset.thumbnails[dataset.articles[currentArticle]._.id]">
-			<div class="panel-heading">First Page</div>
-			<div class="panel-body">
-				<div class="thumbnail-container">
-					<img data-ng-src='{{dataset.thumbnails[dataset.articles[currentArticle]._.id]}}'>
-				</div>
-			</div>
-		</div>
-	</div>
+            <div class="panel panel-default" ng-show="dataset.thumbnails[dataset.articles[currentArticle]._.id]">
+                <div class="panel-heading">First Page</div>
+                <div class="panel-body">
+                    <div class="thumbnail-container">
+                        <img data-ng-src='{{dataset.thumbnails[dataset.articles[currentArticle]._.id]}}'>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-	<div class="col-lg-6">
+        <div class="col-lg-6" ng-slhow="isArticleSelected()">
+            <div class="panel panel-default">
+                <div class="panel-heading">Compare with Zenon</div>
+                <div class="panel-body">
+                    <zenon search="getSearchObject()" result="zenonResult"></zenon>
+                </div>
+            </div>
+        </div>
 
-		<div ng-show="(currentArticle > -1) && (dataset.articles.length > 0)" class="panel panel-default">
-			<div class="panel-heading" ng-show="!zenon.searchId">Search results in Zenon for Article Title "{{dataset.articles[currentArticle].title.get()}}"</div>
-			<div class="panel-heading" ng-show="zenon.searchId">Search results in Zenon for ID "{{dataset.articles[currentArticle].zenonId.value.value}}"</div>
-
-			<div class="panel-body">
-
-				<p ng-if='(zenon.selected < 0) && (dataset.articles[currentArticle].zenonId != "(((new)))")' class='alert alert alert-warning'  data-tooltip="Click in the results table to select one. Change title and hit New Search if there are no results.">No corresponding entry in in Zenon selected!</p>
-
-				<span class="btn-group">
-					<button ng-if="isArticleSelected()" class='btn btn-default' ng-click='compareWithZenon()'>New Search<span class="glyphicon glyphicon-search"></span></button>
-					<button ng-if="isArticleSelected() && (zenon.selected > -1)" class='btn btn-default' ng-click='adoptFromZenon()' data-tooltip="Continue with the data from Zenon instead of the one you got from the investigation of the table of contents">Take Zenon Data<span class="glyphicon glyphicon-import"></span></button>
-					<button ng-if="isArticleSelected() && (zenon.selected == -1)" ng-click='markAsMissingZenon()' ng-class="['btn', 'btn-default', {'active': (dataset.articles[currentArticle].zenonId == '(((new)))')}]">Mark as missing in Zenon  <span class="glyphicon glyphicon-flag"></span></button>
-				</span>
-
-
-				<div style="overflow-x:auto; padding-left: 1px;">
-					<table class="table select-table">
-						<thead>
-							<tr>
-								<td ng-repeat="(field, value) in zenon.results[0]" ng-show="field != 'id'">{{field}}</td>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="doc in zenon.results track by $index" ng-click='selectFromZenon($index)' ng-class="{'active': (zenon.selected == $index)}">
-								<td ng-repeat="(field, value) in doc" ng-show="field != 'id'" >{{value}}</td>
-								<!-- <td>
-									<span class='btn btn-default btn-xs' ng-class="{'btn-primary': ($index == zenon.selected)}" ng-click='selectFromZenon($index)'>
-										<span class='glyphicon glyphicon-ok-sign'></span>
-									</span>
-								</td> -->
-							</tr>
-						</tbody>
-						<tfoot>
-							<tr>
-								<td colspan="8">
-									<p ng-show="zenon.results.length > 0">{{zenon.results.length}} of {{zenon.found}} results</p>
-								</td>
-							</tr>
-							<tr ng-show="zenon.start < zenon.found">
-								<td colspan="7">
-									<span class='btn btn-default btn-xs' ng-click='compareWithZenon(true)' data-tooltip='more results'><span class='glyphicon glyphicon-plus-sign'></span></span>
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-</div>
-
-
-
-
-
-
-
+    </div>
 </div>
