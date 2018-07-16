@@ -1,0 +1,30 @@
+{
+  "numFound": 2,
+  "docs": [
+    {
+      "author": "J. P. Morgen",
+      "author2": "McKinsey",
+      "title": "Was kostet die Welt?",
+      "description": "Eine Abrechnung.",
+      "id": "000",
+      "container_title": "Schmonzetten",
+      "hierarchy_parent_title": "Montetten",
+      "publishDate": "2018",
+      "physical": "2,3",
+      "format": "whatever"
+    },
+    {
+      "author": "George W. Bush",
+      "author2": "Fukuyama",
+      "title": "The End of History as we know it",
+      "description": "I'm depending on your helping hand\nTo rule the entire continent\nIt's cool I am the president",
+      "id": "001",
+      "container_title": "Schmonzetten",
+      "hierarchy_parent_title": "Montetten",
+      "publishDate": "2018",
+      "physical": "S. 100-200",
+      "format": "whatever"
+    }
+
+  ]
+}
