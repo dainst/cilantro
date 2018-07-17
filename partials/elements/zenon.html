@@ -15,43 +15,40 @@
         </span>
     </span>
 
-    <div ng-show="results.length">
-        <div>{{results.length}} results</div>
+    <br>
+    <div>{{found}} results</div>
 
-        <div class="loader" ng-show="searchTimeout">
-
-            Loading
-        </div>
-
-        <div style="overflow-x:auto; padding-left: 1px;" >
-            <table class="table select-table">
-                <thead>
-                    <tr>
-                        <td ng-repeat="(field, value) in displayRecord({})">{{field}}</td>
-                        <td>&nbsp;</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="doc in results track by $index" ng-click='select($index)' ng-class="{'active': (selected == $index)}">
-                        <td ng-repeat="(field, value) in displayRecord(doc)">{{value}}</td>
-                        <td>
-                            <span
-                                    class="btn btn-default btn-xs so-btn-open"
-                                    ng-click="lookUpInZenon(doc.id)"
-                                    title="See this Record in Zenon"
-                                ><span class="glyphicon glyphicon-eye-open"></span>
-                            </span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div style="text-align:center">
-            <span class='btn btn-default btn-xs' ng-click='compareWithZenon(true)' data-tooltip='more results'>
-                <span class='glyphicon glyphicon-plus-sign'></span>
-            </span>
-        </div>
+    <div style="overflow-x:auto; padding-left: 1px;" ng-show="results.length">
+        <table class="table select-table">
+            <thead>
+                <tr>
+                    <td ng-repeat="(field, value) in displayRecord({})">{{field}}</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="doc in results track by $index" ng-click='select($index)' ng-class="{'active': (selected == $index)}">
+                    <td ng-repeat="(field, value) in displayRecord(doc)" >
+                        <div class="table-cell-content" ng-style="estimateWidth(value)">{{value}}</div>
+                    </td>
+                    <td>
+                        <span
+                                class="btn btn-default btn-xs so-btn-open"
+                                ng-click="lookUpInZenon(doc.id)"
+                                title="See this Record in Zenon"
+                            ><span class="glyphicon glyphicon-eye-open"></span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+
+    <div style="text-align:center" ng-show="results.length">
+        <span class='btn btn-default btn-xs' ng-click='doSearch(true)' data-tooltip='more results' ng-if="found > page * 10">
+            <span class='glyphicon glyphicon-plus-sign'></span>
+        </span>
+    </div>
+
 
 </div>

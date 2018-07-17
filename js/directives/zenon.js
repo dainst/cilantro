@@ -14,9 +14,9 @@ angular
                     const zenonEndpoint = $sce.trustAsResourceUrl(settings.zenon_url);
 
                     scope.results = [];
-                    scope.selectedResult = -1;
+                    scope.selected = -1;
                     scope.found = 0;
-                    scope.start = 0;
+                    scope.page = 0;
                     scope.searchTimeout = false;
 
                     scope.$watchCollection("search", (oldValue, newValue, scope) => {
@@ -30,31 +30,31 @@ angular
                     scope.resetResults = () => {
                         scope.results = [];
                         scope.found = 0;
-                        scope.start = 0;
+                        scope.page = 0;
                         scope.selected = -1;
                     };
 
                     scope.doSearch = function(more) {
 
-                        scope.resetResults();
+                        if (!more) scope.resetResults();
                         scope.searchTimeout = false;
 
                         //dataset.articles[scope.currentArticle]._.reportToZenon = false; // @ TODO
 
                         if (!scope.search || !scope.search.term) return;
 
+                        if (more) scope.page++;
+
                         console.log('Zenon search for term: ' + scope.search.term);
 
                         //dataset.articles[scope.currentArticle].zenonId.value.value = ''; // @ TODO
-
-                        scope.selectedResult = -1;
 
                         $http({
                             method: 'GET',
                             url: zenonEndpoint,
                             params: {
                                 lookfor: scope.search.term,
-                                page: 1,
+                                page: scope.page,
                                 limit: 10,
                                 type: "Title",
                                 sort: "relevence",
@@ -71,7 +71,7 @@ angular
                                     scope.found = parseInt(data.resultCount);
                                     //scope.start = parseInt(data.responseHeader.params.start) + 10;
                                     if (scope.found === 1) {
-                                        //scope.selectFromZenon(0); // @ TODO
+                                        scope.select(0);
                                     }
                                 },
                                 err => {
@@ -110,8 +110,17 @@ angular
 
                     });
 
-                    scope.lookUpInZenon = (id) => {window.open("https://zenon.dainst.org/Record/" + id)};
+                    scope.lookUpInZenon = id => {window.open("https://zenon.dainst.org/Record/" + id)};
 
+                    const smallLetters = "iIíìl|.:,;1-()'\"°^j ".split("");
+
+                    scope.estimateWidth = content => ({minWidth: Math.min(25, content && content.split("/n")[0].split("")
+                        .reduce((sum, char) => sum + ((smallLetters.indexOf(char) > 0) ? 0.1 : 0.9), 0)) + "em"});
+
+                    console.log("Alpha", scope.estimateWidth("Alpha"));
+                    console.log("Beta", scope.estimateWidth("Beta"));
+                    console.log("Gamma", scope.estimateWidth("Gamma"));
+                    console.log("XX", smallLetters.indexOf("j"));
 
                 }
             }

@@ -81,16 +81,6 @@ table.author_box td {
     border: 0px !important;
 }
 
-/* xmlfield */
-.CodeMirror {
-    min-height: 20px;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.1);
-    border: 1px solid silver;
-    padding: 2px;
-}
-
-
 
 /* -- */
 
@@ -108,10 +98,8 @@ table.author_box td {
 
 table table.editable-table > tbody > tr > td {
     border: none;
-    padding: 0px 1px 1px 0px;
-    padding-bottom: 1px;
+    padding: 0 1px 1px 0;
 }
-
 
 
 table.editable-table > tbody > tr > td:last-child {
@@ -270,7 +258,22 @@ table .alert {
 }
 
 .select-table > tbody > tr > td {
-    cursor: pointer
+    cursor: pointer;
+    padding: 0;
+}
+
+.select-table > tbody > tr > td:last-child {
+    width: 1em;
+    vertical-align: middle;
+    border: none;
+    padding-left: 3px
+}
+
+.select-table td .table-cell-content {
+    max-height: 100px;
+    width: 100%;
+    overflow-y: auto;
+    padding: 10px;
 }
 
 .xml-view {
