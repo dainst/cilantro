@@ -1,7 +1,7 @@
 angular
     .module('directive.zenon', [])
-    .directive("zenon", ['$http', '$sce', 'messenger', 'settings',
-        function($http, $sce, messenger, settings) {
+    .directive("zenon", ['$http', '$sce', '$timeout', 'messenger', 'settings',
+        function($http, $sce, $timeout, messenger, settings) {
             return {
                 restrict: 'E',
                 templateUrl: 'partials/elements/zenon.html',
@@ -10,29 +10,40 @@ angular
                     result: '='
                 },
                 link: function (scope, element, attrs) {
-                    
+
+                    const zenonEndpoint = $sce.trustAsResourceUrl(settings.zenon_url);
+
                     scope.results = [];
                     scope.selectedResult = -1;
                     scope.found = 0;
                     scope.start = 0;
+                    scope.searchTimeout = false;
 
-                    const zenonEndpoint = $sce.trustAsResourceUrl(settings.zenon_url);
+                    scope.$watchCollection("search", (oldValue, newValue, scope) => {
+                        scope.resetResults(scope.search);
+                        if (!scope.searchTimeout) {
+                            scope.searchTimeout = true;
+                            $timeout(scope.doSearch, 1000)
+                        }
+                    });
 
-                    scope.resetZenon = search => {
+                    scope.resetResults = () => {
                         scope.results = [];
                         scope.found = 0;
                         scope.start = 0;
-                        scope.search = search || {};
                         scope.selected = -1;
                     };
 
                     scope.doSearch = function(more) {
 
-                        scope.resetZenon(scope.search);
+                        scope.resetResults();
+                        scope.searchTimeout = false;
 
                         //dataset.articles[scope.currentArticle]._.reportToZenon = false; // @ TODO
-                        
-                        console.log('Zenon search for term:' + scope.search.term);
+
+                        if (!scope.search || !scope.search.term) return;
+
+                        console.log('Zenon search for term: ' + scope.search.term);
 
                         //dataset.articles[scope.currentArticle].zenonId.value.value = ''; // @ TODO
 
@@ -47,7 +58,10 @@ angular
                                 limit: 10,
                                 type: "Title",
                                 sort: "relevence",
-                                "field[]": ['id', 'title', 'authors', 'summary', 'formats', 'series', 'languages', 'urls', 'subjects'],
+                                "field[]": ['id', 'title', 'authors', 'summary', 'formats', 'series', 'languages', 'urls',
+                                    'subjects', 'physicalDescriptions', 'placesOfPublication', 'cleanIsbn', 'cleanDoi',
+                                    'cleanIssn', 'containerStartPage', 'containerEndPage', 'publicationDates'
+                                ],
                             }
                         })
                             .then(response => {
@@ -61,6 +75,7 @@ angular
                                     }
                                 },
                                 err => {
+                                    scope.resetResults();
                                     console.error(err);
                                     messenger.error('Could not connect to Zenon!');
                                 }
@@ -79,12 +94,20 @@ angular
                     scope.displayRecord = record => ({
                         Id: record.id && record.id,
                         Title: record.title && record.title,
-                        Authors: record.authors && record.authors.primary && Object.keys(record.authors.primary).join("; "),
+                        Authors: record.authors && Object.keys(record.authors.primary || [])
+                            .concat(Object.keys(record.authors.secondary || []))
+                            .concat(Object.keys(record.authors.corporate || []))
+                            .join("; "),
                         Format: record.formats && record.formats.join("; "),
                         Languages: record.languages && record.languages.join("; "),
                         Series: record.series && record.series.map(series => series.name + " " + series.number).join("; "),
                         Subjects: record.subjects && record.subjects.map(subject => subject[0]).join("; "),
-                        Summary: record.summary && record.summary[0]
+                        Summary: record.summary && record.summary[0],
+                        Urls: record.urls && record.urls.map(url => "<a href='" + url.url + " target='_blank'>" + url.desc + "</a>").join("<br>"),
+                        PhysicalDescription: record.physicalDescriptions && record.physicalDescriptions.join("; "),
+                        Places: record.placesOfPublication && record.placesOfPublication.map(place => place.replace(" :", "")).join("; "),
+                        ISBN: record && record.cleanIsbn,
+
                     });
 
                     scope.lookUpInZenon = (id) => {window.open("https://zenon.dainst.org/Record/" + id)};

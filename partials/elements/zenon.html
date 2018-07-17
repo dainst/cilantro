@@ -18,6 +18,11 @@
     <div ng-show="results.length">
         <div>{{results.length}} results</div>
 
+        <div class="loader" ng-show="searchTimeout">
+
+            Loading
+        </div>
+
         <div style="overflow-x:auto; padding-left: 1px;" >
             <table class="table select-table">
                 <thead>

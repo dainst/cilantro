@@ -5,7 +5,6 @@ angular
 .controller('view_articles', ['$scope', 'messenger', 'dataset', 'steps', 'labels',
     function($scope, messenger, dataset, steps, labels) {
 
-
         $scope.dataset = dataset;
 
         $scope.labels = labels;
@@ -13,6 +12,14 @@ angular
         $scope.currentArticle = -1;
 
         $scope.zenonResult = {};
+
+        $scope.searchObject = {};
+
+        function updateSearchObject() {
+            $scope.searchObject = {
+                term: ($scope.currentArticle === -1) ? "" : dataset.articles[$scope.currentArticle].title.value.value
+            };
+        }
 
         $scope.init = () => {
             messenger.ok();
@@ -34,6 +41,9 @@ angular
             if (k === -1) return;
             
             $scope.currentArticle = k;
+
+            updateSearchObject();
+
             // if (dataset.articles[$scope.currentArticle]._.autoFetchFromZenon && dataset.articles[$scope.currentArticle].zenonId.value.value !== '') {
             //     $scope.autoFetchFromZenon()
             // } else if (!dataset.articles[$scope.currentArticle]._.reportToZenon) {
@@ -98,12 +108,7 @@ angular
             }
         };
 
-        $scope.getSearchObject = () => ($scope.currentArticle === -1)
-            ? {}
-            : {
-                id: dataset.articles[$scope.currentArticle].zenonId.value.value,
-                term: dataset.articles[$scope.currentArticle].title.value.value
-            };
+
 
         $scope.openFullFile = url => {window.open(url)};
 
