@@ -45,7 +45,7 @@ class StagingControllerTest(unittest.TestCase):
 
     def test_upload_multiple_files(self):
         object_path = os.path.join(self.resource_dir, 'objects', test_object)
-        response = self._upload_folder_to_staging(object_path)
+        response = self._upload_folder_to_staging(test_object)
         self.assertEqual(response.status_code, 200)
         self._assert_file_in_staging(os.path.join(test_object, test_file))
         for file_name in os.listdir(object_path):
@@ -60,6 +60,16 @@ class StagingControllerTest(unittest.TestCase):
         self.assertEqual(json["result"]['foo.asdf']["error"]["code"], "extension_not_allowed")
         self.assertEqual(response.status_code, 200)
 
+    def test_list_staging(self):
+        object_path = os.path.join(self.resource_dir, 'objects', test_object)
+        file_names = os.listdir(object_path)
+        self._upload_folder_to_staging(test_object)
+
+        response = self.client.get('/staging')
+        response_object = response.get_json()
+        self.assertEqual(response_object[0]['name'], 'some_tiffs')
+        contents = response_object[0]['contents']
+        self.assertEqual(len(contents), len(file_names))
 
     def test_get_file(self):
         self._copy_object_to_staging('objects', test_object)
@@ -70,7 +80,8 @@ class StagingControllerTest(unittest.TestCase):
         response = self.client.get(f'/staging/{test_object}/{test_file}')
         self.assertEqual(response.status_code, 404)
 
-    def _upload_folder_to_staging(self, object_path):
+    def _upload_folder_to_staging(self, obj):
+        object_path = os.path.join(self.resource_dir, 'objects', obj)
         files = []
         file_paths = []
         for root, _, file_names in os.walk(object_path):
@@ -93,10 +104,10 @@ class StagingControllerTest(unittest.TestCase):
             data=data
         )
 
-    def _assert_file_in_staging(self, file_name):
-        file = Path(os.path.join(self.staging_dir, file_name))
+    def _assert_file_in_staging(self, file_path):
+        file = Path(os.path.join(self.staging_dir, file_path))
         if not file.is_file():
-            raise AssertionError(f"File '{file_name}' was not present in the "
+            raise AssertionError(f"File '{file_path}' was not present in the "
                                  f"staging folder")
 
     def _remove_file_from_staging(self, file_name):
