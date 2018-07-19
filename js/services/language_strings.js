@@ -8,6 +8,7 @@ angular
 
         const ls = {};
 
+        // http://www.loc.gov/standards/iso639-2/php/code_list.php
         const code639_1 = {
             "ar":	"Arabic",
             "eu":	"Basque",
@@ -43,6 +44,7 @@ angular
             "cy":	"Welsh"
         };
 
+        // https://www.iso.org/obp/ui/#search
         const code3166 = {
             "IQ": "Iraq",
             "ES": "Spain",
@@ -77,6 +79,8 @@ angular
             "VN": "Vietnam",
             "GB": "United Kingdom",
         };
+
+        // https://pkp.sfu.ca/wiki/index.php?title=Translating_OxS#OJS_Languages
 
         ls.getName639_1 = code => code639_1[code];
 
