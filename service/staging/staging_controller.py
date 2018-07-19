@@ -54,7 +54,7 @@ def list_staging():
 @auth.login_required
 def get_path(path):
     """
-    Retrieve a file from the staging folder or lists the contents of a subfolder
+    Retrieve a file or folder content from the staging folder.
 
     Returns HTTP status code 404 if file was not found
 
@@ -78,7 +78,7 @@ def get_path(path):
 @auth.login_required
 def upload_to_staging():
     """
-    Uploads files to the staging area.
+    Upload files to the staging area.
 
     If the names of the given files contain folders these are created in the
     staging area if they are not already present.

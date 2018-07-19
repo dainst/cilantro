@@ -13,7 +13,7 @@ with open(_users_config, 'r', encoding="utf-8") as _users_file:
 @auth.verify_password
 def verify_password(username, password):
     """
-    Verifies if the given password is valid for the given user.
+    Verify if the given password is valid for the given user.
 
     Checks against the bcrypt hashed password stored in the users config.
 
