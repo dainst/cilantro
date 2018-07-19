@@ -25,6 +25,7 @@ angular
             "gl":	"Galician",
             "de":	"German",
             "el":	"Greek",
+            "en":   "English",
             "id":	"Indonesian",
             "it":	"Italian",
             "ja":	"Japanese",
@@ -44,7 +45,7 @@ angular
             "cy":	"Welsh"
         };
 
-        // https://www.iso.org/obp/ui/#search
+        // https://www.iso.org/publication/PUB500001.html
         const code3166 = {
             "IQ": "Iraq",
             "ES": "Spain",
@@ -78,6 +79,7 @@ angular
             "UA": "Ukraine",
             "VN": "Vietnam",
             "GB": "United Kingdom",
+            "US": "United States of America"
         };
 
         // https://pkp.sfu.ca/wiki/index.php?title=Translating_OxS#OJS_Languages

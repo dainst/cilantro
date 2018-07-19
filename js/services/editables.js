@@ -1,7 +1,14 @@
 angular
 .module('module.editables', [])
 .factory("editables", ['language_strings', function(languageStrings) {
-    
+
+    /**
+     * refactor plans
+     * - use constructors instead of factories
+     * - use different files for types
+     * - ES6 syntax
+     */
+
     const editables = {};
     editables.types = {}; // constructors for useful subtypes
     
@@ -285,38 +292,33 @@ angular
      *
      * @param seed - inital value for the first language
      * @param mandatory
-     * @param locales - list of available languages- editable will use A COPY of that
+     * @param locales - list of available languages
      * @returns {{type, value, mandatory, readonly, check, set, get, compare, watch, observer}}
      */
     editables.language = function(seed, mandatory, locales) {
-        var obj = new editables.Base(seed, mandatory);
+        const obj = new editables.Base(seed, mandatory);
         obj.type = 'language';
 
-
         if (angular.isArray(locales) && locales.length >  1) {
-            obj.locales = angular.copy(locales);
+            obj.locales = locales;
         } else {
             obj.locales = angular.copy(editables.defaultLocales);
         }
-
-        obj.check =	function() {
-            //obj.value.value = obj.value.value.toLowerCase();
-            if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value === '')) {
+        obj.check =	() => {
+            if (this.mandatory && !angular.isUndefined(obj.value.value) && (obj.value.value === '')) {
                 return 'This field is mandatory'
             }
-            if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(this.value.value))  {
+            if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(obj.value.value))  {
                 return 'seems not to be proper language code'
             }
-
             return false;
+        };
 
-        }
-        obj.compare = function(second) {
-            return (this.value.value.localeCompare(second.value.value));
-        }
+        obj.getLanguageName = (code) => languageStrings.getName(code.split("_")[0]);
+
         return obj;
 
-    }
+    };
 
     /**
      *
@@ -470,29 +472,7 @@ angular
         obj.set(seed);
         return obj;
     }
-    
-    
-    editables.language = function(seed, mandatory) {
-        var obj = new editables.Base(seed, mandatory);
-        obj.type = 'language';
-        obj.check =	function() {
-            //obj.value.value = obj.value.value.toLowerCase();
-            if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value === '')) {
-                return 'This field is mandatory'
-            }
-            if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(this.value.value))  {
-                return 'Seems not to be proper language code'
-            }
 
-            return false;
-            
-        }
-        obj.compare = function(second) {
-            return (this.value.value.localeCompare(second.value.value));
-        }
-        return obj;
-        
-    }
     
     editables.filelist = function(seed, mandatory) {
         let obj = new editables.Base(seed, mandatory);
@@ -520,23 +500,19 @@ angular
 
     editables.listitem = function(list, selected, noneallowed) {
         let obj = new editables.Base(selected, false, false);
-        list = list || [];
+        list = list || {};
+        obj.list = list;
         obj.type = 'listitem';
         obj.noneallowed = (noneallowed === true);
-        obj.check =	function() {
-            if (!obj.value.value && !obj.noneallowed) {
-                return "This field is mandatory"
-            }
-            return false;
-        }
-        obj.select = function(selected) {
-            this.value = {value: selected && selected in list ? selected : (obj.noneallowed ? 'none' : Object.keys(list)[0])}
-        }
+        obj.select = selected => {
+            obj.value = {value: selected && selected in obj.list
+                ? selected
+                : (obj.noneallowed || !Object.keys(obj.list).length ? 'none' : Object.keys(obj.list)[0])}
+        };
         obj.select(selected);
-        obj.compare = function(second) {return 0}
-        obj.list = list;
+        obj.get = () => obj.value.value;
         return obj;
-    }
+    };
     
     editables.loadedfile = function(list, selected, noneallowed) {
         noneallowed = noneallowed || false;

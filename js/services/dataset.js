@@ -8,40 +8,28 @@ angular
      * - make different models work
      * - rename things from Article to SubObject
      * - remove dataset.loadedFiles and dataset dependency from pdf_file_manager
+     * - genreralize the setConstraints function
      */
 
     const model = journalIssue;
 
     /* base construction */
+    const dataset = {};
 
-    let dataset = {
-        data: {},				// metadata for the imported issue
-        articles: [],			// collection of articles to import
-        thumbnails: {},			// their thumbnails
-        loadedFiles: {},        // files loaded into pdf.js
-
-    }; // will be filled by journal.reset()
-
-    /* default data */
-    dataset.reset = function() {
+    dataset.reset = () => {
         console.log('reset dataset');
-
-        /* the journal metadata */
-        dataset.data = new model.MainObjectPrototype();
-
-        /* list of defined articles */
-        dataset.articles = [];
-
-        /* list of loaded files for the file selector editable */
-        dataset.loadedFiles = {};
-
-        dataset.thumbnails = {};
-        /* they are not part of the article obj since they are very large and iterating over the
-         articles array in the digest give performance issues otherwise! */
+        dataset.data = new model.MainObjectPrototype(dataset);  // metadata for the imported issue (mainObject)
+        dataset.articles = [];                                  // collection of articles to import
+        dataset.loadedFiles = {};                               // files loaded into pdf.js
+        dataset.thumbnails = {}; // their thumbnails they are not part of subObjects/articles due to performance reasons
     };
 
+    dataset.setConstraints  = model.setConstraints;
+
+    dataset.getModelMeta = model.getMeta;
+
     /* validate */
-    dataset.check = function () {
+    dataset.check = () => {
         let invalid = 0;
         angular.forEach(dataset.data, function(property) {
             if (angular.isObject(property) && (property.check() !== false)) {
@@ -52,34 +40,29 @@ angular
     };
 
     /* stats */
-    dataset.getStats = function() {
-        return dataset.articles
-            .reduce(
-                (acc, article) => {
-                    if (typeof article._.confirmed === "undefined") {
-                        acc.undecided++;
-                    } else if (article._.confirmed === true) {
-                        acc.confirmed++;
-                    } else if (article._.confirmed === false) {
-                        acc.dismissed++;
-                    }
-                    acc.articles++;
-                    return acc;
-                },
-                {
-                    articles: 0,
-                    confirmed: 0,
-                    undecided: 0,
-                    dismissed: 0
-
-                }
-            );
-    };
+    dataset.getStats = () => dataset.articles.reduce(
+        (acc, article) => {
+            if (typeof article._.confirmed === "undefined") {
+                acc.undecided++;
+            } else if (article._.confirmed === true) {
+                acc.confirmed++;
+            } else if (article._.confirmed === false) {
+                acc.dismissed++;
+            }
+            acc.articles++;
+            return acc;
+        },
+        {
+            articles: 0,
+            confirmed: 0,
+            undecided: 0,
+            dismissed: 0
+        }
+    );
 
     dataset.isStatOk = (k, v) => (k === 'dismissed') ? -1 : ((k === 'confirmed') ? 1 : 0);
 
     dataset.isReadyToUpload = () => (dataset.getStats().undecided === 0) && (dataset.getStats().confirmed > 0);
-
 
     /**
      * get journal data in uploadable form
@@ -111,14 +94,13 @@ angular
         let returner = flatten(dataset.data, model.getMeta("main"));
 
         returner.parts = Object.keys(dataset.articles)
-            .filter(function(i) {return dataset.articles[i]._.confirmed === true})
-            .map(function(i) {return flatten(dataset.articles[i], model.getMeta("sub"))});
+            .filter(i => dataset.articles[i]._.confirmed === true)
+            .map(i => flatten(dataset.articles[i], model.getMeta("sub")));
 
         return returner;
 
     };
 
-    dataset.getModelMeta = model.getMeta;
 
     /* Sub-Object functions */
     dataset.cleanArticles = function() {
@@ -127,18 +109,6 @@ angular
                 article._ = {};
             }
         });
-    };
-
-    // depicated?
-    dataset.deleteArticle = function(article) {
-        // the price for using an array for articles...
-        for (let i = 0; i < dataset.articles.length; i++) {
-            if (article === dataset.articles[i]) {
-                break;
-            }
-        }
-        dataset.undoDeleteArticle = dataset.articles[i];
-        dataset.articles.splice(i, 1);
     };
 
     function guid() {
@@ -156,6 +126,8 @@ angular
         Object.defineProperty(subObject, '_', {enumerable: false, configurable: false, value: {}});
 
         subObject._.id = guid();
+
+        subObject._.parent = dataset.data;
 
         subObject._.gatherThumbnailRelevantData = () => {
             let set = {};
@@ -209,6 +181,7 @@ angular
 
     };
 
+    /* mapping */
     // maps the data of on subObject on another OF A DIFFERENT KIND. which field shall be mapped onto which field is
     // defined in teh TARGET object model. the datatypes (= types of editables) must be the same.
     // targetObject is of the current model (!)
@@ -241,8 +214,6 @@ angular
         return targetObject;
     };
 
-    // TODO - how is this geralizable?!
-    dataset.setConstraints  = model.setConstraints;
 
     dataset.reset();
 

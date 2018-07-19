@@ -1,12 +1,15 @@
 angular
 .module("module.journal_issue", [])
-.factory("journalIssue", ['editables', '$rootScope', 'settings', function(editables, $rootScope, settings) {
+.factory("journalIssue", ['editables', 'settings', function(editables, settings) {
+    /*
+     * refactor plans :
+     * looking for a more generic datamodel-model,
+     * the defintions of the fields wich are in the constructor now,
+     * will be here as well..
+     * for for now we divide fieldMeta and fields...
+     */
 
-    let locales = ['de_DE', 'en_US', 'fr_FR', 'it_IT', 'es_ES'];
-    /* locales list is part of journal, since some journals might be limited to some locale or
-    might have extra ones */
-
-    function MainObject() {
+    function MainObject(dataset) {
         return {
             "volume":                   new editables.Base(''),
             "year":                     editables.number(2018),
@@ -14,7 +17,8 @@ angular
             "description":              new editables.Base('[PDFs teilweise verfügbar]', false),
             "importFilePath":           "",
             "identification":           editables.listitem(ojsIdentificationsCodes, 'vol_year', false),
-            "ojs_journal_code":         editables.listitem(journalCodes, false, false).watch(journalCodeChangedObserver),
+            "ojs_journal_code":         editables.listitem(journalCodes, false, false)
+                .watch(() => journalCodeObserver(dataset.data)),
             "ojs_user":                 "ojs_user",
             "auto_publish_issue":       editables.checkbox(false),
             "default_publish_articles": true,
@@ -43,41 +47,12 @@ angular
         };
     }
 
-    function journalCodeChangedObserver() {
-        /**
-         * this gets triggered when a journal is chosen, since we hopefully know wich locales this journal supports,
-         * we replace locales with the journal specific.
-         * it has to be done like the following, not just replace the array, since we would have a new instance
-         * and the integrity of the editables using locales would break!
-         * @type {number}
-         */
-        locales.length = 0;
-        dataset.getConstraint(dataset.data.ojs_journal_code.get(), 'locales').forEach(function(loc) {
-            locales.push(loc);
-        });
-    }
 
-    /**
-     *  meta information
-     *
-     *  this is a set of information, wich can be set when we select the backend and get the info from there
-     *  it should never be modified by fileHandler.
-     *
-     */
-    let journalConstraints = {}; 	// information about available journals and their contraints
+    /* constraints */
+    const locales = ['de_DE', 'en_US', 'fr_FR', 'it_IT', 'es_ES'];
+    // some journals might be limited to some locales or might have extra ones
+    let journalConstraints = {}; 	// information about available journals and their constraints
     let journalCodes = {};			// list of journals. must be a separate thing, otherwise time problem
-    let getConstraint = function(journalCode, constraint) {
-        if ((typeof journalConstraints[journalCode] !== "undefined") && (typeof journalConstraints[journalCode][constraint] !== "undefined")) {
-            return journalConstraints[journalCode][constraint];
-        }
-    };
-    function setConstraints(constraints) {
-        journalConstraints = constraints;
-        Object.keys(constraints).map(function(item){journalCodes[item] = item});
-        console.log("Journals:", journalCodes);
-    }
-
-    // @see https://github.com/pkp/ojs/blob/ojs-stable-2_4_8/plugins/importexport/native/NativeExportDom.inc.php#L32
     const ojsIdentificationsCodes = {
         'num_vol_year_title':'num_vol_year_title',
         'num_vol_year':'num_vol_year',
@@ -87,16 +62,33 @@ angular
         'vol':'vol',
         'title':'title'
     };
+    // @see https://github.com/pkp/ojs/blob/ojs-stable-2_4_8/plugins/importexport/native/NativeExportDom.inc.php#L32
 
-    /**
-     * object fields meta-data (such as labels etc.)
-     * refactor plans :
-     * looking for a more generic datamodel-model,
-     * the defintions of the fields wich are in the cintructir now,
-     * will be here as well..
-     * for for now we divide fieldMeta and fields...
-     */
+    function journalCodeObserver(mainObject) {
+        // this gets triggered when a journal is chosen
+        locales.length = 0;
+        const journalCode = mainObject.ojs_journal_code.get();
+        if (journalCode && journalConstraints[journalCode])
+            journalConstraints[journalCode].locales.forEach(loc => {locales.push(loc)});
+    }
 
+
+    let getConstraint = function(journalCode, constraint) {
+        if ((typeof journalConstraints[journalCode] !== "undefined") && (typeof journalConstraints[journalCode][constraint] !== "undefined")) {
+            return journalConstraints[journalCode][constraint];
+        }
+    };
+    function setConstraints(constraints) {
+        journalConstraints = constraints;
+        Object.keys(constraints).forEach(item => {journalCodes[item] = item});
+        console.log("Journals:", journalCodes);
+    }
+
+
+
+
+
+    /* object fields meta-data (such as labels etc.) */
     const mainObjectMeta = {
         "volume": {
             description: "Volume",

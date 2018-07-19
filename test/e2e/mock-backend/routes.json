@@ -83,6 +83,12 @@
           "es_ES",
           "fr_FR"
         ]
+      },
+      "testzweo": {
+        "id": "3",
+        "locales": [
+          "en_US"
+        ]
       }
     }
   }

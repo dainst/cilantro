@@ -11,7 +11,7 @@
 					type="number"
 					class='editable text-right'
 					ng-model='item.value.startPdf'
-					ng-change='item.observer ? item.observer() : ""'
+					ng-change='item.observer ? item.observer(item) : ""'
 					min="1"
 					max="{{item.context.maximum > -1 ? item.context.maximum : 1000}}"
 			/>
@@ -22,7 +22,7 @@
 					type="number"
 					class='editable text-left'
 					ng-model='item.value.endPdf'
-					ng-change='item.observer ? item.observer() : ""'
+					ng-change='item.observer ? item.observer(item) : ""'
 					min="{{item.value.startPdf}}"
 					max="{{item.context.maximum > -1 ? item.context.maximum : 1000}}"
 			/>
@@ -36,7 +36,7 @@
 				<input
 						type="number"
 						class='editable text-right'
-						ng-change='item.observer ? item.observer() : ""'
+						ng-change='item.observer ? item.observer(item) : ""'
 						ng-model='item.startPrint'
 						min="1"
 				/>
@@ -47,7 +47,7 @@
 						type="number"
 						class='editable text-left'
 						ng-model='item.endPrint'
-						ng-change='item.observer ? item.observer() : ""'
+						ng-change='item.observer ? item.observer(item) : ""'
 						min="1"
 				/>
 			</div>

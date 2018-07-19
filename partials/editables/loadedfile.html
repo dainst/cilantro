@@ -2,7 +2,7 @@
 
 	<div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning'>{{warning}}</div>
 
-	<select class="form-control editable-select" ng-model="item.value.value" ng-change="item.observer ? item.observer() : ''">
+	<select class="form-control editable-select" ng-model="item.value.value" ng-change="item.observer ? item.observer(item) : ''">
 		<option ng-repeat="file in item.list track by $index" value='{{file.url}}'>{{file.url}}</option>
 	</select>
 
@@ -20,7 +20,7 @@
 					type="number"
 					class='editable'
 					ng-model='item.list[item.value.value].pagecontext.offset'
-					ng-change='item.observer ? item.observer() : ""'
+					ng-change='item.observer ? item.observer(item) : ""'
 			/>
 		</div>
 	</div>
