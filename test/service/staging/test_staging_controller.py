@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 from run_service import app
+from test.service.user.user_utils import get_auth_header, test_user
 
 test_object = 'some_tiffs'
 test_file = 'test.tif'
@@ -65,7 +66,7 @@ class StagingControllerTest(unittest.TestCase):
         file_names = os.listdir(object_path)
         self._upload_folder_to_staging(test_object)
 
-        response = self.client.get('/staging')
+        response = self.client.get('/staging', headers=get_auth_header())
         response_object = response.get_json()
         self.assertEqual(response_object[0]['name'], 'some_tiffs')
         contents = response_object[0]['contents']
@@ -73,11 +74,13 @@ class StagingControllerTest(unittest.TestCase):
 
     def test_get_file(self):
         self._copy_object_to_staging('objects', test_object)
-        response = self.client.get(f'/staging/{test_object}/{test_file}')
+        response = self.client.get(f'/staging/{test_object}/{test_file}',
+                                   headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
 
     def test_get_file_not_found(self):
-        response = self.client.get(f'/staging/{test_object}/{test_file}')
+        response = self.client.get(f'/staging/{test_object}/{test_file}',
+                                   headers=get_auth_header())
         self.assertEqual(response.status_code, 404)
 
     def _upload_folder_to_staging(self, obj):
@@ -101,25 +104,26 @@ class StagingControllerTest(unittest.TestCase):
         return self.client.post(
             '/staging',
             content_type='multipart/form-data',
-            data=data
+            data=data,
+            headers=get_auth_header()
         )
 
     def _assert_file_in_staging(self, file_path):
-        file = Path(os.path.join(self.staging_dir, file_path))
+        file = Path(os.path.join(self.staging_dir, test_user, file_path))
         if not file.is_file():
             raise AssertionError(f"File '{file_path}' was not present in the "
                                  f"staging folder")
 
     def _remove_file_from_staging(self, file_name):
-        file_path = os.path.join(self.staging_dir, file_name)
+        file_path = os.path.join(self.staging_dir, test_user, file_name)
         if os.path.isfile(file_path):
             os.remove(file_path)
 
     def _remove_dir_from_staging(self, dir_name):
-        dir_path = os.path.join(self.staging_dir, dir_name)
+        dir_path = os.path.join(self.staging_dir, test_user, dir_name)
         shutil.rmtree(dir_path, ignore_errors=True)
 
     def _copy_object_to_staging(self, folder, filename):
         source = os.path.join(self.resource_dir, folder, filename)
-        target = os.path.join(self.staging_dir, filename)
+        target = os.path.join(self.staging_dir, test_user, filename)
         shutil.copytree(source, target)

@@ -4,6 +4,7 @@ from flask import Blueprint, url_for, jsonify, request, g
 
 from utils.celery_client import celery_app
 from service.job.job_config import JobConfig
+from service.user.user_service import auth
 
 
 def get_job_config():
@@ -22,6 +23,7 @@ job_controller = Blueprint('job', __name__)
 
 
 @job_controller.route('/<job_type>', methods=['POST'])
+@auth.login_required
 def job_create(job_type):
     """
     Create a job of the specified job type.
@@ -32,12 +34,15 @@ def job_create(job_type):
     Parameters can be provided as JSON objects as part of the request body
     and must match the parameters defined in the corresponding job config YAML.
 
+    Valid user credential have to be given via HTTP basic authentication.
+
     :param str job_type:
     :return: A JSON object containing the status, the job id and the task ids
         of every subtask in the chain
     """
     params = request.get_json(force=True, silent=True)
-    job = get_job_config().generate_job(job_type, params)
+    user = auth.username()
+    job = get_job_config().generate_job(job_type, user, params)
     task = job.run()
     logger = logging.getLogger(__name__)
     logger.info(f"created job with id: {task.id}")

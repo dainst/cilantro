@@ -13,7 +13,7 @@ class JobConfigTest(unittest.TestCase):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_valid"
 
         job_config = JobConfig()
-        job1 = job_config.generate_job("job1").chain
+        job1 = job_config.generate_job("job1", "test_user").chain
         self.assertTrue(
             isinstance(job1, Signature),
             f"job1 is an instance of '{type(job1)}, expected 'Signature'"
@@ -33,7 +33,7 @@ class JobConfigTest(unittest.TestCase):
 
         self.assertEqual('publish', tasks[2]['task'])
 
-        job2 = job_config.generate_job("job2").chain
+        job2 = job_config.generate_job("job2", "test_user").chain
         self.assertTrue(
             isinstance(job2, Signature),
             f"job2 is an instance of '{type(job1)}', expected 'Signature'"
@@ -50,7 +50,7 @@ class JobConfigTest(unittest.TestCase):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_valid"
         job_config = JobConfig()
         self.assertRaises(UnknownJobTypeException, job_config.generate_job,
-                          "job3")
+                          "job3", "test_user")
 
     def test_invalid_yaml(self):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_invalid_yaml"
@@ -69,7 +69,7 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job = job_config.generate_job("job1").chain
+        job = job_config.generate_job("job1", "test_user").chain
 
         tasks = job.tasks
 
@@ -93,7 +93,8 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job = job_config.generate_job("job1", {"do_task2": True}).chain
+        job = job_config.generate_job("job1", "test_user", {"do_task2": True})\
+            .chain
 
         tasks = job.tasks
         self.assertEqual(3, len(tasks))
@@ -107,7 +108,8 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job = job_config.generate_job("job1", {"do_task2": False}).chain
+        job = job_config.generate_job("job1", "test_user", {"do_task2": False})\
+            .chain
 
         tasks = job.tasks
         self.assertEqual(2, len(tasks))
@@ -120,7 +122,7 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job = job_config.generate_job("job1").chain
+        job = job_config.generate_job("job1", "test_user").chain
 
         tasks = job.tasks
         self.assertEqual(2, len(tasks))
@@ -133,7 +135,8 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job = job_config.generate_job("job2", {"do_task2": True}).chain
+        job = job_config.generate_job("job2", "test_user", {"do_task2": True})\
+            .chain
 
         tasks = job.tasks
         self.assertEqual(4, len(tasks))
@@ -148,7 +151,8 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job = job_config.generate_job("job2", {"do_task2": False}).chain
+        job = job_config.generate_job("job2", "test_user", {"do_task2": False})\
+            .chain
 
         tasks = job.tasks
         self.assertEqual(3, len(tasks))
@@ -162,7 +166,7 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job = job_config.generate_job("job2").chain
+        job = job_config.generate_job("job2", "test_user").chain
 
         tasks = job.tasks
         self.assertEqual(3, len(tasks))
@@ -176,7 +180,7 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job = job_config.generate_job("job3", {"skip_task2": True}).chain
+        job = job_config.generate_job("job3", "test_user", {"skip_task2": True}).chain
 
         tasks = job.tasks
         self.assertEqual(2, len(tasks))
@@ -189,7 +193,7 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job = job_config.generate_job("job3", {"skip_task2": False}).chain
+        job = job_config.generate_job("job3", "test_user", {"skip_task2": False}).chain
 
         tasks = job.tasks
         self.assertEqual(3, len(tasks))
@@ -203,7 +207,7 @@ class JobConfigTest(unittest.TestCase):
 
         job_config = JobConfig()
 
-        job = job_config.generate_job("job3").chain
+        job = job_config.generate_job("job3", "test_user").chain
 
         tasks = job.tasks
         self.assertEqual(3, len(tasks))
@@ -218,7 +222,7 @@ class JobConfigTest(unittest.TestCase):
         job_config = JobConfig()
 
         with self.assertRaises(RequestParameterException):
-            job_config.generate_job("job1", {"skip_task2": True})
+            job_config.generate_job("job1", "test_user", {"skip_task2": True})
 
     def test_invalid_request_param_type(self):
         os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
@@ -226,4 +230,4 @@ class JobConfigTest(unittest.TestCase):
         job_config = JobConfig()
 
         with self.assertRaises(RequestParameterException):
-            job_config.generate_job("job1", {"do_task2": "foo"})
+            job_config.generate_job("job1", "test_user", {"do_task2": "foo"})

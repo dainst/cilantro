@@ -1,9 +1,9 @@
 import os
+import logging
 
 from flask import Blueprint, jsonify, request, send_file, abort
 from werkzeug.utils import secure_filename
-import logging
-
+from service.user.user_service import auth
 
 staging_controller = Blueprint('staging', __name__)
 
@@ -32,6 +32,7 @@ def _list_dir(dir_path):
 
 
 @staging_controller.route('', methods=['GET'], strict_slashes=False)
+@auth.login_required
 def list_staging():
     """
     List files and directories in the staging area.
@@ -41,7 +42,7 @@ def list_staging():
     :return: JSON array containing objects for files and folders
     """
 
-    tree = _list_dir(staging_dir)
+    tree = _list_dir(os.path.join(staging_dir, auth.username()))
     return jsonify(tree)
 
 
@@ -50,9 +51,10 @@ def list_staging():
     methods=['GET'],
     strict_slashes=False
 )
+@auth.login_required
 def get_path(path):
     """
-    Retrieve a file from the staging folder or lists the contents of a subfolder
+    Retrieve a file or folder content from the staging folder.
 
     Returns HTTP status code 404 if file was not found
 
@@ -63,7 +65,7 @@ def get_path(path):
     :param str path: path to file
     :return:
     """
-    abs_path = os.path.join(staging_dir, path)
+    abs_path = os.path.join(staging_dir, auth.username(), path)
     if os.path.isdir(abs_path):
         return jsonify(os.listdir(abs_path))
     elif os.path.isfile(abs_path):
@@ -73,9 +75,10 @@ def get_path(path):
 
 
 @staging_controller.route('', methods=['POST'], strict_slashes=False)
+@auth.login_required
 def upload_to_staging():
     """
-    Uploads files to the staging area.
+    Upload files to the staging area.
 
     If the names of the given files contain folders these are created in the
     staging area if they are not already present.
@@ -110,15 +113,15 @@ def upload_to_staging():
     if request.files:
         for key in request.files:
             for file in request.files.getlist(key):
-                results[file.filename] = _process_file(file)
+                results[file.filename] = _process_file(file, auth.username())
         return jsonify({"result": results}), 200
     return "No files provided", 400
 
 
-def _process_file(file):
+def _process_file(file, username):
     if _is_allowed_file(file.filename):
         try:
-            _upload_file(file)
+            _upload_file(file, username)
             return {"success": True}
         except Exception as e:
             return _generate_error_result(
@@ -127,7 +130,6 @@ def _process_file(file):
                 "An unknown error occurred.",
                 e
             )
-
     else:
         return _generate_error_result(
             file,
@@ -151,10 +153,10 @@ def _generate_error_result(file, code, message, e=None):
     }
 
 
-def _upload_file(file):
+def _upload_file(file, username):
     path, filename = os.path.split(file.filename)
     folders = list(map(secure_filename, path.split("/")))
-    full_path = os.path.join(staging_dir, *folders)
+    full_path = os.path.join(staging_dir, username, *folders)
     os.makedirs(full_path, exist_ok=True)
     file.save(os.path.join(full_path, secure_filename(filename)))
 

@@ -31,8 +31,9 @@ class RetrieveFromStagingTask(BaseTask):
         staging_path = os.path.join(staging_dir)
 
         paths = self.get_param('paths')
+        user = self.get_param('user')
         for path in paths:
-            src = os.path.join(staging_path, path)
+            src = os.path.join(staging_path, user, path)
             dest = os.path.join(self.get_work_path())
             _copy_path(src, dest)
 
