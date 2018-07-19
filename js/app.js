@@ -19,6 +19,8 @@ angular
     'module.staging_dir',
     'module.steps',
     'module.journal_issue',
+    'module.zenon_importer',
+    'module.language_strings',
 
     'controller.main',
 

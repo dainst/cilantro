@@ -1,31 +1,30 @@
 angular
 .module('module.editables', [])
-.factory("editables", [function() {
+.factory("editables", ['language_strings', function(languageStrings) {
     
-    var editables = {};
+    const editables = {};
     editables.types = {}; // constructors for useful subtypes
-
     
-    
-    editables.base = function(seed, mandatory, readonly) { 
-        return {
-            type: 		'editable',
-            value: 		angular.isObject(seed) ? seed : {value: seed},
-            mandatory: 	angular.isUndefined(mandatory) ? true : mandatory,
-            readonly: 	angular.isUndefined(readonly) ? false : readonly,
-            check: 		function() {return (this.mandatory && (angular.isUndefined(this.value.value) || (this.value.value === ''))) ? 'This  field is mandatory' : false},
-            set:		function(value) {this.value.value = value},
-            get:		function(){return this.value.value},
-            compare:	function(that) {return this.value.value.localeCompare(that.value.value)},
-            watch:		function(observer){this.observer = observer; return this},
-            observer:	false
-        }
-    }
+    editables.Base = function(seed, mandatory, readonly) { 
+        this.type =	        'editable';
+        this.value =        angular.isObject(seed) ? seed : {value: seed};
+        this.mandatory =    angular.isUndefined(mandatory) ? true : mandatory;
+        this.readonly = 	angular.isUndefined(readonly) ? false : readonly;
+        this.check = 		() => 
+            (this.mandatory && (angular.isUndefined(this.value.value) || (this.value.value === ''))) 
+                ? 'This  field is mandatory' 
+                : false;
+        this.set =          value => this.value.value = value;
+        this.get =		    () => this.value.value;
+        this.compare =  	that => this.value.value.localeCompare(that.value.value);
+        this.watch =		(observer) => {this.observer = observer; return this};
+        this.observer =	    false;
+    };
 
     editables.types.Author = function(first, second) {return {'firstname': first, 'lastname': second}};
     
     editables.authorlist = function(seed, format) {
-        var obj = editables.base();
+        var obj = new editables.Base();
         obj.type = 'authorlist';
             
         if (!angular.isArray(seed) || seed.length === 0) {
@@ -140,7 +139,7 @@ angular
      * @constructor
      */
     editables.page = function(initPage) {
-        var obj = editables.base();
+        var obj = new editables.Base();
         obj.type = 'page';
         obj.seed = initPage;
         obj.value = {
@@ -269,7 +268,7 @@ angular
     
     
     editables.text = function(seed, mandatory) {
-        var obj = editables.base(seed, mandatory);
+        var obj = new editables.Base(seed, mandatory);
         obj.type = 'text';
         
         obj.compare = function(second) {
@@ -290,7 +289,7 @@ angular
      * @returns {{type, value, mandatory, readonly, check, set, get, compare, watch, observer}}
      */
     editables.language = function(seed, mandatory, locales) {
-        var obj = editables.base(seed, mandatory);
+        var obj = new editables.Base(seed, mandatory);
         obj.type = 'language';
 
 
@@ -328,7 +327,7 @@ angular
      */
     editables.multilingualtext = function(seed, mandatory, locales) {
 
-        var obj = editables.base('', mandatory);
+        var obj = new editables.Base('', mandatory);
         obj.type = 'multilingualtext';
 
         obj.locales = (angular.isArray(locales) && locales.length >  1) ? locales : editables.defaultLocales;
@@ -436,7 +435,7 @@ angular
     }
     
     editables.number = function(seed, mandatory) {
-        let obj = editables.base(parseInt(seed), mandatory);
+        let obj = new editables.Base(parseInt(seed), mandatory);
         obj.type = 'number';
         obj.check =	function() {
             if ((obj.value.value.toString() !== parseInt(obj.value.value).toString()) && (this.value.value !== '')) {
@@ -457,7 +456,7 @@ angular
     }
     
     editables.checkbox = function(seed, mandatory) {
-        var obj = editables.base(seed, mandatory);
+        var obj = new editables.Base(seed, mandatory);
         obj.type = 'checkbox';
         obj.check =	function() {
             return false;
@@ -474,7 +473,7 @@ angular
     
     
     editables.language = function(seed, mandatory) {
-        var obj = editables.base(seed, mandatory);
+        var obj = new editables.Base(seed, mandatory);
         obj.type = 'language';
         obj.check =	function() {
             //obj.value.value = obj.value.value.toLowerCase();
@@ -496,7 +495,7 @@ angular
     }
     
     editables.filelist = function(seed, mandatory) {
-        let obj = editables.base(seed, mandatory);
+        let obj = new editables.Base(seed, mandatory);
         obj.type = 'filelist';
         obj.check =	function() {return false};
         obj.value = seed || [];
@@ -520,7 +519,7 @@ angular
     };
 
     editables.listitem = function(list, selected, noneallowed) {
-        let obj = editables.base(selected, false, false);
+        let obj = new editables.Base(selected, false, false);
         list = list || [];
         obj.type = 'listitem';
         obj.noneallowed = (noneallowed === true);
@@ -550,7 +549,7 @@ angular
 
     editables.date = function(year, month, day, mandatory) {
         let seed = new editables.types.Date(year, month, day);
-        let obj = editables.base(seed, mandatory);
+        let obj = new editables.Base(seed, mandatory);
         obj.type = 'date';
 
         function toJsDate(date) {

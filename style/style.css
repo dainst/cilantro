@@ -262,6 +262,10 @@ table .alert {
     padding: 0;
 }
 
+
+.select-table > tbody > tr.active > td:last-child {
+    background: none;
+}
 .select-table > tbody > tr > td:last-child {
     width: 1em;
     vertical-align: middle;

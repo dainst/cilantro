@@ -8,10 +8,10 @@ angular
 
     function MainObject() {
         return {
-            "volume":                   editables.base(''),
+            "volume":                   new editables.Base(''),
             "year":                     editables.number(2018),
-            "number":                   editables.base(''),
-            "description":              editables.base('[PDFs teilweise verfügbar]', false),
+            "number":                   new editables.Base(''),
+            "description":              new editables.Base('[PDFs teilweise verfügbar]', false),
             "importFilePath":           "",
             "identification":           editables.listitem(ojsIdentificationsCodes, 'vol_year', false),
             "ojs_journal_code":         editables.listitem(journalCodes, false, false).watch(journalCodeChangedObserver),
@@ -28,7 +28,7 @@ angular
         mainObject = mainObject || {};
         dataset = dataset || {};
         return {
-            'title':			editables.base(subObjectData.title, true),
+            'title':			new editables.Base(subObjectData.title, true),
             'abstract':			editables.text(subObjectData.abstract, false),
             'author':			editables.authorlist(subObjectData.author),
             'pages':			editables.page(subObjectData.pages),
@@ -39,7 +39,7 @@ angular
             'attached':			editables.filelist(),
             'order':			editables.number(0, false),
             'create_frontpage':	editables.checkbox(mainObject.create_frontpage === true),
-            'zenonId':			editables.base(subObjectData.zenonId, false)
+            'zenonId':			new editables.Base(subObjectData.zenonId, false)
         };
     }
 
@@ -160,13 +160,19 @@ angular
             title: 'Author',
             style: {minWidth: '400px'},
             type: "metadata",
-            sortByAllowed: true
+            sortByAllowed: true,
+            mappings: {
+                zenon: "authors"
+            }
         },
         title: {
             title: 'Title',
             style: {minWidth: '400px'},
             type: "metadata",
-            sortByAllowed: true
+            sortByAllowed: true,
+            mappings: {
+                zenon: "title"
+            }
         },
         pages: {
             title: 'Range of Pages',
@@ -179,7 +185,10 @@ angular
             title: 'Abstract',
             style: {minWidth: '400px'},
             hide: true,
-            type: "metadata"
+            type: "metadata",
+            mappings: {
+                zenon: "summary"
+            }
         },
         date_published: {
             title: 'Date of Publishing',
@@ -218,7 +227,10 @@ angular
             title: 'Zenon-Id',
             style: {minWidth: '150px'},
             hide: true,
-            type: "metadata"
+            type: "metadata",
+            mappings: {
+                zenon: "id"
+            }
         },
         language: {
             title: 'Language',

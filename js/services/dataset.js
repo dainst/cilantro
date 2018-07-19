@@ -201,12 +201,44 @@ angular
             return;
         }
 
-        console.log("sort by " + sortBy + " (" + ascending + ")");
+        console.log("Sort by " + sortBy + " (" + ascending + ")");
 
         dataset.articles.sort((a, b) => (typeof a[sortBy] === "object")
             ? ascending * a[sortBy].compare(b[sortBy])
             : (ascending * a[sortBy].localeCompare(b[sortBy])));
 
+    };
+
+    // maps the data of on subObject on another OF A DIFFERENT KIND. which field shall be mapped onto which field is
+    // defined in teh TARGET object model. the datatypes (= types of editables) must be the same.
+    // targetObject is of the current model (!)
+    // if targetObject is not provided a new SubObject will be generated
+    dataset.mapSubObject = (mapName, sourceObject, targetObject) => {
+        const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
+
+        console.log("mapping of " + mapName, sourceObject, targetObject);
+        targetObject = targetObject || new dataset.Article();
+        const report = Object.keys(model.getMeta("sub")).map(fieldName => {
+            const field = model.getMeta("sub")[fieldName];
+            if (!field.mappings || !field.mappings[mapName])
+                return true;
+            const fieldNameInSource = field.mappings[mapName];
+            const sourceValue = sourceObject[fieldNameInSource];
+            console.log("maps " + fieldNameInSource + " to " + fieldName, sourceValue, targetObject[fieldName]);
+            if (getType(sourceValue) !== getType(targetObject[fieldName]))
+                return "type mismatch: " + getType(sourceValue) + " != " +  getType(targetObject[fieldName]);
+            if (!sourceValue instanceof editables.Base || !targetObject[fieldName] instanceof editables.Base) {
+                targetObject[fieldName] = sourceObject[fieldNameInSource];
+                return true;
+            }
+            if (sourceValue.type !== targetObject[fieldName].type)
+                return "editable type mismatch: " + sourceValue.type + " != " + targetObject[fieldName].type;
+            targetObject[fieldName].set(sourceObject[fieldNameInSource].get());
+            return true;
+        });
+        const success = report.reduce((x, y) => x && y && (y === true), true);
+        console.log("mapping of " + mapName + " finished" + (success ? " succesfully" : ""), report, targetObject);
+        return targetObject;
     };
 
     // TODO - how is this geralizable?!
