@@ -1,4 +1,5 @@
 import os
+import logging
 
 from flask import Blueprint, jsonify, request, send_file, abort
 from werkzeug.utils import secure_filename
@@ -9,6 +10,8 @@ staging_controller = Blueprint('staging', __name__)
 staging_dir = os.environ['STAGING_DIR']
 
 allowed_extensions = ['xml', 'pdf', 'tif', 'tiff', 'json']
+
+logger = logging.getLogger(__name__)
 
 
 def _list_dir(dir_path):
@@ -75,7 +78,10 @@ def get_path(path):
 @auth.login_required
 def upload_to_staging():
     """
-    Upload files to the staging area.
+    Uploads files to the staging area.
+
+    If the names of the given files contain folders these are created in the
+    staging area if they are not already present.
 
     The upload endpoint is able to handle single and multiple files provided
     under any key.
@@ -83,30 +89,82 @@ def upload_to_staging():
     Returns HTTP status code 415 if one of the files' extension is not allowed.
 
     Returns HTTP status code 400 if no files were provided.
+    Returns HTTP status code 200 else
 
-    :return: A JSON object indicating success (e.g. "{ 'success': true }")
+    :return: A JSON object with format:
+
+        {
+            "result": {
+                <uploaded_file_name>: {
+                    "success": <boolean>,
+                    "error": {
+                        "code": <string>,
+                        "message": <string>
+                    }
+                }
+            }
+        }
+
     """
+
+    logger.debug(f"Uploading {len(request.files)} files")
+    results = {}
 
     if request.files:
         for key in request.files:
             for file in request.files.getlist(key):
-                if _is_allowed_file(file.filename):
-                    _upload_file(file, auth.username())
-                else:
-                    return jsonify({'success': False}), 415
-        return jsonify({'success': True})
-
-    return jsonify({'success': False}), 400
+                results[file.filename] = _process_file(file)
+        return jsonify({"result": results}), 200
+    return "No files provided", 400
 
 
-def _upload_file(file, username):
-    filename = secure_filename(file.filename)
-    user_dir = os.path.join(staging_dir, username)
-    os.makedirs(user_dir, exist_ok=True)
-    file.save(os.path.join(user_dir, filename))
+def _process_file(file):
+    if _is_allowed_file(file.filename):
+        try:
+            _upload_file(file)
+            return {"success": True}
+        except Exception as e:
+            return _generate_error_result(
+                file,
+                "upload_failed",
+                "An unknown error occurred.",
+                e
+            )
+    else:
+        return _generate_error_result(
+            file,
+            "extension_not_allowed",
+            f"File extension .{_get_file_extension(file.filename)}"
+            f" is not allowed."
+        )
+    return result
+
+
+def _generate_error_result(file, code, message, e=None):
+    logger.error(f"Error during upload of {file.filename}. {message}.")
+    if e:
+        logger.error(f" Cause: {str(e)}")
+    return {
+        "success": False,
+        "error": {
+            "code": code,
+            "message": message
+        }
+    }
+
+
+def _upload_file(file):
+    path, filename = os.path.split(file.filename)
+    folders = list(map(secure_filename, path.split("/")))
+    full_path = os.path.join(staging_dir, *folders)
+    os.makedirs(full_path, exist_ok=True)
+    file.save(os.path.join(full_path, secure_filename(filename)))
 
 
 def _is_allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in allowed_extensions
+           _get_file_extension(filename) in allowed_extensions
 
+
+def _get_file_extension(filename):
+    return filename.rsplit('.', 1)[1].lower()

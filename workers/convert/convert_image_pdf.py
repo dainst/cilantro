@@ -17,7 +17,10 @@ def convert_pdf_to_tif(source_file, output_dir):
         with WandImage(filename=source_file, resolution=200) as img:
             pages = len(img.sequence)
             for i in range(pages):
-                WandImage(img.sequence[i]).save(filename=output_dir + f"/{i}.tif")
+                with WandImage(img.sequence[i]) as page_img:
+                    page_img.type = 'truecolor'
+                    page_img.save(filename=output_dir + f"/{i}.tif")
+
     except Exception as e:
         raise e
 

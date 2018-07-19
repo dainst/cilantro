@@ -3,7 +3,7 @@ import os
 import logging
 
 from test.worker.convert.convert_test import ConvertTest
-from workers.convert.image_pdf.convert_pdf import cut_pdf
+from workers.convert.convert_pdf import cut_pdf
 
 log = logging.getLogger(__name__)
 

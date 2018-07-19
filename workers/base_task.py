@@ -51,7 +51,7 @@ class BaseTask(Task):
             return self.params[key]
         except KeyError:
             raise KeyError(f"Mandatory parameter {key} is missing"
-                           f"for {self.__class__.__name__}")
+                           f" for {self.__class__.__name__}")
 
     @abstractmethod
     def execute_task(self):
