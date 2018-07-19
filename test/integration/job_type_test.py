@@ -22,7 +22,6 @@ def _assert_wait_time(waited):
 
 
 class JobTypeTest(unittest.TestCase):
-
     resource_dir = os.environ['RESOURCE_DIR']
     staging_dir = os.environ['STAGING_DIR']
     working_dir = os.environ['WORKING_DIR']

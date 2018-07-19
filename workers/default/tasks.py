@@ -6,4 +6,3 @@ celery_app.autodiscover_tasks([
     'workers.default.xml',
     'workers.default.metadata'
 ], force=True)
-
