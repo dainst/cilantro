@@ -113,15 +113,15 @@ def upload_to_staging():
     if request.files:
         for key in request.files:
             for file in request.files.getlist(key):
-                results[file.filename] = _process_file(file)
+                results[file.filename] = _process_file(file, auth.username())
         return jsonify({"result": results}), 200
     return "No files provided", 400
 
 
-def _process_file(file):
+def _process_file(file, username):
     if _is_allowed_file(file.filename):
         try:
-            _upload_file(file)
+            _upload_file(file, username)
             return {"success": True}
         except Exception as e:
             return _generate_error_result(
@@ -153,10 +153,10 @@ def _generate_error_result(file, code, message, e=None):
     }
 
 
-def _upload_file(file):
+def _upload_file(file, username):
     path, filename = os.path.split(file.filename)
     folders = list(map(secure_filename, path.split("/")))
-    full_path = os.path.join(staging_dir, *folders)
+    full_path = os.path.join(staging_dir, username, *folders)
     os.makedirs(full_path, exist_ok=True)
     file.save(os.path.join(full_path, secure_filename(filename)))
 
