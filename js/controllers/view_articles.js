@@ -45,6 +45,9 @@ angular
 
             updateSearchObject();
 
+            if (dataset.articles[$scope.currentArticle]._.confirmed)
+                dataset.articles[$scope.currentArticle]._.confirmed = undefined;
+
             // if (dataset.articles[$scope.currentArticle]._.autoFetchFromZenon && dataset.articles[$scope.currentArticle].zenonId.value.value !== '') {
             //     $scope.autoFetchFromZenon()
             // } else if (!dataset.articles[$scope.currentArticle]._.reportToZenon) {
@@ -81,14 +84,13 @@ angular
             return (invalid === 0);
         };
 
-        $scope.confirmArticle = function() {
-            let article = dataset.articles[$scope.currentArticle];
+        $scope.confirmArticle = () => {
+            console.log('Confirm Article ' + $scope.currentArticle);
+            if (angular.isUndefined(dataset.articles[$scope.currentArticle])) return;
 
-            if (article) {
-                article._.confirmed = true;
-            }
+            dataset.articles[$scope.currentArticle]._.confirmed = true;
 
-            if (dataset.getStats().undecided === 0){
+            if ((dataset.getStats().undecided === 0) && dataset.getStats().confirmed) {
                 $scope.continue();
             } else {
                 $scope.selectNextUnconfirmedArticle();
@@ -96,17 +98,24 @@ angular
 
         };
 
-        $scope.dismissArticle = function() {
-            console.log('Delete Article ' + $scope.currentArticle);
-            $scope.resetZenon();
+        $scope.dismissArticle = () => {
+            console.log('Dismiss Article ' + $scope.currentArticle);
+            if (angular.isUndefined(dataset.articles[$scope.currentArticle])) return;
 
             dataset.articles[$scope.currentArticle]._.confirmed = false;
 
-            if (dataset.getStats().undecided === 0){
+            if ((dataset.getStats().undecided === 0) && dataset.getStats().confirmed) {
                 $scope.continue();
             } else {
                 $scope.selectNextUnconfirmedArticle();
             }
+        };
+
+        $scope.undeleteArticle = () => {
+            console.log('Undelete Article ' + $scope.currentArticle);
+            if (angular.isUndefined(dataset.articles[$scope.currentArticle])) return;
+
+            dataset.articles[$scope.currentArticle]._.confirmed = undefined;
         };
 
         $scope.openFullFile = url => {window.open(url)};

@@ -540,6 +540,13 @@ input.editable.date.year {
     max-width: 180px;
 }
 
+
+.btn-label {
+    cursor: default;
+    background: #dddddd
+}
+
+
 @media (max-width:1138px) {
     #info-container {
         right: 12%;
