@@ -183,9 +183,11 @@ class Object:
 
         :return List[str]:
         """
-        if not os.path.exists(self._get_data_dir()):
-            return []
-        return os.listdir(self._get_data_dir())
+        representations = []
+        if os.path.exists(self._get_data_dir()):
+            representations = os.listdir(self._get_data_dir())
+            representations.sort()
+        return representations
 
     def get_representation(self, representation: str) -> Iterator[BytesIO]:
         """
