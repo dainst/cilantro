@@ -186,7 +186,10 @@ angular
             title: 'Date of Publishing',
             style: {minWidth: '150px'},
             hide: true,
-            type: "metadata"
+            type: "metadata",
+            mappings: {
+                zenon: "publicationDates"
+            }
         },
         auto_publish: {
             description: 'Automatically publish?',

@@ -40,6 +40,9 @@ angular
                         case "languages":
                             setOfEditables[rowName] = editables.language(rowValue[0]);
                             break;
+                        case "publicationDates":
+                            setOfEditables[rowName] = editables.date(rowValue[0]);
+                            break;
                     }
 
                 });

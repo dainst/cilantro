@@ -97,8 +97,8 @@ angular
                     };
 
                     scope.displayRecord = record => ({
-                        Id: record.id && record.id,
-                        Title: record.title && record.title,
+                        Id: record.id,
+                        Title: record.title,
                         Authors: record.authors && Object.keys(record.authors.primary || [])
                             .concat(Object.keys(record.authors.secondary || []))
                             .concat(Object.keys(record.authors.corporate || []))
@@ -111,8 +111,8 @@ angular
                         Urls: record.urls && record.urls.map(url => "<a href='" + url.url + " target='_blank'>" + url.desc + "</a>").join("<br>"),
                         PhysicalDescription: record.physicalDescriptions && record.physicalDescriptions.join("; "),
                         Places: record.placesOfPublication && record.placesOfPublication.map(place => place.replace(" :", "")).join("; "),
-                        ISBN: record && record.cleanIsbn,
-
+                        ISBN: record.cleanIsbn,
+                        Year: record.publicationDates && record.publicationDates.join("; ")
                     });
 
                     scope.lookUpInZenon = id => {window.open("https://zenon.dainst.org/Record/" + id)};
