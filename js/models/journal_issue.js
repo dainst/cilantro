@@ -171,7 +171,10 @@ angular
             style: {minWidth: '170px'},
             type: "metadata",
             thumbnailParam: "pages",
-            sortByAllowed: true
+            sortByAllowed: true,
+            mappings: {
+                zenon: "physicalDescriptions"
+            }
         },
         abstract: {
             title: 'Abstract',

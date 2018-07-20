@@ -128,7 +128,6 @@ angular
         return obj;
     }
 
-
     editables.types.Pagecontext = function(d){
         d = d || {offset:0, maximum: -1};
         let context = {'offset': d.offset || 0, 'maximum': d.maximum || -1}
@@ -137,6 +136,7 @@ angular
         }
         return context;
     };
+
     /**
      * page editable
      * startPrint & endPrint - page numbers as printed
@@ -145,15 +145,16 @@ angular
      * @returns {{type, value, mandatory, readonly, check, set, get, compare, watch, observer}}
      * @constructor
      */
-    editables.page = function(initPage) {
-        var obj = new editables.Base();
+    editables.page = function(seed) {
+        const obj = new editables.Base(seed);
+        let manualDesc = false;
         obj.type = 'page';
-        obj.seed = initPage;
         obj.value = {
             startPdf: '',
             endPdf: '',
             showndesc: '', // manually set page description
-        }
+        };
+
         obj.context = new editables.types.Pagecontext();
 
         Object.defineProperty(obj, 'startPrint', {
@@ -173,11 +174,6 @@ angular
             }
         });
 
-        obj.startPrint = initPage || 1;
-        obj.endPrint = initPage || 1;
-
-        var manualDesc = false;
-
         Object.defineProperty(obj, 'desc', {
             get: function() {
                 if (!manualDesc) {
@@ -190,55 +186,65 @@ angular
             }
         });
 
-        obj.resetDesc = function(w) {
+        obj.resetDesc = w => {
             if (typeof w !== "undefined" && w) {
-                this.value.showndesc = w;
+                obj.value.showndesc = w;
                 manualDesc = true;
             } else {
-                this.value.showndesc = parseInt(this.startPrint);
-                this.value.showndesc += parseInt(this.endPrint) ? '–' + parseInt(this.endPrint) : '';
+                obj.value.showndesc = parseInt(obj.startPrint);
+                obj.value.showndesc += parseInt(obj.endPrint) ? '–' + parseInt(obj.endPrint) : '';
                 manualDesc = false
             }
         };
 
-        obj.resetContext = function(d) {
-            obj.context = new editables.types.Pagecontext(d);
-        };
+        obj.resetContext = d => obj.context = new editables.types.Pagecontext(d);
 
-        obj.get = function(){
-            return {
-                showndesc: obj.desc,
-                startPrint: obj.startPrint,
-                endPrint: obj.endPrint,
-                range: [obj.value.startPdf, obj.value.endPdf]
-            }
-        };
+        obj.get = () => ({
+            showndesc: obj.desc,
+            startPrint: obj.startPrint,
+            endPrint: obj.endPrint,
+            range: [obj.value.startPdf, obj.value.endPdf]
+        });
 
-        obj.getFileData = function() {
-            return angular.isDefined(obj.context.path) ? {
+        obj.getFileData = () => angular.isDefined(obj.context.path)
+            ? {
                 file: obj.context.path,
                 range: [obj.value.startPdf, obj.value.endPdf]
-            } : [];
-        };
+              }
+            : [];
 
-        /**
-         * takes strings like 10-12
-         */
-        obj.set = function(seed) {
+        obj.set = seed => {
             obj.seed = seed;
             obj.resetDesc(seed);
-            let pages = seed.match(/(\d{1,3})\s?[\-\u2013\u2212]?\s?(\d{1,3})?/);
-            if (pages && pages.length > 1) {
-                obj.startPrint = Number(pages[1]);
-                if (typeof pages[2] !== "undefined") {
-                    obj.endPrint = Number(pages[2]);
-                }
+
+            // seed is undefined
+            if (angular.isUndefined(seed)) {
+                obj.startPrint = 1;
+                obj.endPrint = 1;
+                return;
             }
 
+            //seed is object
+            if (angular.isObject(seed)) {
+                if (angular.isDefined(seed.startPrint)) obj.startPrint = seed.startPrint;
+                if (angular.isDefined(seed.endPrint)) obj.endPrint = seed.endPrint;
+                if (angular.isDefined(seed.showndesc)) obj.showndesc = seed.showndesc;
+                return;
+            }
+
+            //seed is string like 12-14
+            if (angular.isString(seed)) {
+                const pages = seed.match(/(\d{1,3})\s?[\-\u2013\u2212]?\s?(\d{1,3})?/);
+                if (pages && pages.length > 1) {
+                    obj.startPrint = Number(pages[1]);
+                    if (angular.isDefined(pages[2])) {
+                        obj.endPrint = Number(pages[2]);
+                    }
+                }
+            }
         };
 
-        obj.check =	function() {
-
+        obj.check =	() => {
             if (!obj.value.startPdf) {
                 return "Start Page Missing!";
             }
@@ -251,7 +257,6 @@ angular
             if (obj.value.endPdf && (parseInt(obj.value.endPdf) < parseInt(obj.value.startPdf))) {
                 return "End page is impossible!";
             }
-
             if (obj.endPdf < 1) {
                 return "End page is impossible!"
             }
@@ -261,17 +266,14 @@ angular
             if (obj.context.maximum !== -1 && obj.value.endPdf > obj.context.maximum) {
                 return "End Page exceeds maximum"
             }
-
-
             return false;
-        }
+        };
 
-        obj.compare = function(second) {
-            return (this.value.startPdf > second.value.startPdf) ? 1 : -1;
-        }
+        obj.compare = second => (this.value.startPdf > second.value.startPdf) ? 1 : -1;
 
+        obj.set(seed);
         return obj;
-    }
+    };
     
     
     editables.text = function(seed, mandatory) {
@@ -339,6 +341,7 @@ angular
 
         obj.getLanguageName = (code) => languageStrings.getName(code.split("_")[0]);
 
+        obj.set(seed);
         return obj;
 
     };

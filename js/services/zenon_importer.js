@@ -43,6 +43,9 @@ angular
                         case "publicationDates":
                             setOfEditables[rowName] = editables.date(rowValue[0]);
                             break;
+                        case "physicalDescriptions":
+                            setOfEditables[rowName] = editables.page(rowValue[0] || "");
+                            break;
                     }
 
                 });
