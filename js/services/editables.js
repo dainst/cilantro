@@ -226,7 +226,6 @@ angular
 
             //seed is object
             if (angular.isObject(seed)) {
-                console.log("HALARM", seed);
                 if (angular.isDefined(seed.startPrint)) obj.startPrint = seed.startPrint;
                 if (angular.isDefined(seed.endPrint)) obj.endPrint = seed.endPrint;
                 if (angular.isDefined(seed.showndesc)) obj.desc = seed.showndesc;
