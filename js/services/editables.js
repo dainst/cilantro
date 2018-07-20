@@ -308,6 +308,8 @@ angular
 
         obj.set = value => {
 
+            if (angular.isUndefined(value)) value = "";
+
             if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(value))  {
                 if (languageStrings.getCode639_1(value)) {
                     // try to work with english language names like "English"
@@ -329,6 +331,7 @@ angular
                 return false;
             }
             if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(obj.value.value))  {
+                console.log("!!" + obj.value.value + "!!");
                 return 'seems not to be proper language code';
             }
             return false;
