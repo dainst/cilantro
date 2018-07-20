@@ -254,6 +254,7 @@ class Object:
                       os.path.isdir(os.path.join(self._get_part_dir(), d))]:
                 if self._is_part_dir_format(d):
                     sub_objects.append(Object(os.path.join(self._get_part_dir(), d)))
+        sub_objects.sort(key=lambda obj: obj.path)
         return iter(sub_objects)
 
     def copy(self, path):
