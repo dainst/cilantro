@@ -82,20 +82,17 @@ angular
             "US": "United States of America"
         };
 
-        // https://pkp.sfu.ca/wiki/index.php?title=Translating_OxS#OJS_Languages
+        const getPropertyName = (object, value) => (Object.values(object).indexOf(value) > -1)
+            ? Object.keys(object)[Object.values(object).indexOf(value)]
+            : false;
 
         ls.getName639_1 = code => code639_1[code];
 
         ls.getName3166 = code => code3166[code];
 
-        ls.getCode639_1 = name => code639_1.indexOf(name) !== -1 ? code639_1[code639_1.indexOf(name)] : false;
+        ls.getCode639_1 = name => getPropertyName(code639_1, name);
 
-        ls.getCode3166 = name => code3166.indexOf(name) !== -1 ? code3166[code639_1.indexOf(name)] : false;
-
-        ls.getCodeOJS = name => ls.getCode639_1(name) + '_' + ls.getCode3166(name);
-
-        ls.getNameOJS = (code639_1, code3166) => (ls.getName639_1(code639_1) && ls.getName639_1(code639_1))
-            + (ls.getName3166(code3166) && (' (' + ls.getName3166(code3166) + ")"));
+        ls.getCode3166 = name => getPropertyName(code3166, name);
 
         ls.getName = code => {
             if (code.match(/^[a-z][a-z]_[A-Z][A-Z]$/)) return ls.getNameOJS(...code.split("_"));
@@ -103,6 +100,13 @@ angular
             if (code.match(/^[A-Z][A-Z]$/)) return ls.getName3166(code);
             return false;
         };
+
+        // https://pkp.sfu.ca/wiki/index.php?title=Translating_OxS#OJS_Languages
+
+        ls.getCodeOJS = name => ls.getCode639_1(name) + '_' + ls.getCode3166(name);
+
+        ls.getNameOJS = (code639_1, code3166) => (ls.getName639_1(code639_1) && ls.getName639_1(code639_1))
+            + (ls.getName3166(code3166) && (' (' + ls.getName3166(code3166) + ")"));
 
         return ls;
     }

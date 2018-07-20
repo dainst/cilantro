@@ -227,7 +227,10 @@ angular
         language: {
             title: 'Language',
             hide: true,
-            type: "metadata"
+            type: "metadata",
+            mappings: {
+                zenon: "languages"
+            }
         }
     };
 

@@ -37,10 +37,11 @@ angular
                         case "id":
                             setOfEditables[rowName] = new editables.Base(rowValue);
                             break;
-
-
-                        default: return setOfEditables[rowName] = new editables.Base("gnarf");
+                        case "languages":
+                            setOfEditables[rowName] = editables.language(rowValue[0]);
+                            break;
                     }
+
                 });
                 return setOfEditables;
             };

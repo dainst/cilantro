@@ -1,14 +1,19 @@
 <div class="lang-selector">
-	<span ng-repeat="locale in item.locales">
-		<input
-			type="radio"
-			class='lang'
-			ng-model='item.value.value'
-			value='{{locale}}'
-			id='{{locale}}_{{id}}'>
-		<label for="{{locale}}_{{id}}">{{item.getLanguageName(locale)}}</label>
-	</span>
-	<input type='text' class='lang' ng-model='item.value.value'>
-	<div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning' style='display:inline-block; padding-top: 0px; padding-bottom: 0px; margin: 0px;'>{{warning}}</div>
-	<a href='https://pkp.sfu.ca/wiki/index.php?title=Translating_OxS#OJS_Languages' target='_blank'>info</a>
+    <span ng-repeat="locale in item.locales">
+        <input
+            type="radio"
+            class='lang'
+            ng-model='item.value.value'
+            value='{{locale}}'
+            id='{{locale}}_{{id}}'>
+        <label for="{{locale}}_{{id}}">{{item.getLanguageName(locale)}}</label>
+    </span>
+    <input type='text' class='lang' ng-model='item.value.value'>
+    <div
+            ng-show="(warning = item.check()) && (warning !== false)"
+            class='alert alert-warning'
+            style='display:inline-block; padding-top: 0px; padding-bottom: 0px; margin: 0px;'
+        >{{warning}}
+    </div>
+    <a href='https://pkp.sfu.ca/wiki/index.php?title=Translating_OxS#OJS_Languages' target='_blank'>info</a>
 </div>

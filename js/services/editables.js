@@ -290,7 +290,8 @@ angular
 
     /**
      *
-     * @param seed - inital value for the first language
+     * @param seed - inital value for the first language. can be an locale code (langauge + country)
+     * or an english language string like "English"
      * @param mandatory
      * @param locales - list of available languages
      * @returns {{type, value, mandatory, readonly, check, set, get, compare, watch, observer}}
@@ -304,12 +305,31 @@ angular
         } else {
             obj.locales = angular.copy(editables.defaultLocales);
         }
+
+        obj.set = value => {
+
+            if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(value))  {
+                if (languageStrings.getCode639_1(value)) {
+                    // try to work with english language names like "English"
+                    const applicableLocales = obj.locales
+                        .filter(locale => new RegExp("^" + languageStrings.getCode639_1(value) + "_[A-Z][A-Z]$").test(locale));
+                    if (applicableLocales.length) value = applicableLocales[0];
+                }
+            }
+
+            obj.value.value = value;
+        };
+
+
         obj.check =	() => {
             if (this.mandatory && !angular.isUndefined(obj.value.value) && (obj.value.value === '')) {
-                return 'This field is mandatory'
+                return 'This field is mandatory';
+            }
+            if (!this.mandatory && !angular.isUndefined(obj.value.value) && (obj.value.value === '')) {
+                return false;
             }
             if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(obj.value.value))  {
-                return 'seems not to be proper language code'
+                return 'seems not to be proper language code';
             }
             return false;
         };
@@ -321,7 +341,7 @@ angular
     };
 
     /**
-     *
+     * UNDER DEVELOPMENT, NOT USED RIGHT NOW
      * @param seed - inital value for the first language
      * @param mandatory
      * @param locales - list of available languages- editable will use A COPY of that
