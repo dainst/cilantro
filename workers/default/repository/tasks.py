@@ -33,8 +33,9 @@ class RetrieveFromStagingTask(BaseTask):
         staging_path = os.path.join(staging_dir)
 
         paths = self.get_param('paths')
+        user = self.get_param('user')
         for path in paths:
-            src = os.path.join(staging_path, path)
+            src = os.path.join(staging_path, user, path)
             dest = os.path.join(self.get_work_path())
             _copy_path(src, dest)
 
@@ -46,27 +47,28 @@ class CreateObjectTask(BaseTask):
     name = "create_object"
 
     def execute_task(self):
+        user = self.get_param('user')
         obj = Object(self.get_work_path())
         obj.set_metadata_from_dict(self.get_param('metadata'))
         files = self.get_param('files')
-        self._add_files(obj, files)
-        self._execute_for_parts(obj, self.get_param('parts'))
+        self._add_files(obj, files, user)
+        self._execute_for_parts(obj, self.get_param('parts'), user)
 
-    def _execute_for_parts(self, obj, parts):
+    def _execute_for_parts(self, obj, parts, user):
         for part in parts:
             child = obj.add_child()
             child.set_metadata_from_dict(part['metadata'])
 
             if 'files' in part:
-                self._add_files(child, part['files'])
+                self._add_files(child, part['files'], user)
 
             if 'parts' in part:
-                self._execute_for_parts(child, part['parts'])
+                self._execute_for_parts(child, part['parts'], user)
 
     @staticmethod
-    def _add_files(obj, files):
+    def _add_files(obj, files, user):
         for file in files:
-            src = os.path.join(staging_dir, file['file'])
+            src = os.path.join(staging_dir, user, file['file'])
             with open(src, 'rb') as stream:
                 obj.add_file(os.path.basename(file['file']), Path(src).suffix.split('.')[-1], stream)
 

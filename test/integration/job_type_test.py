@@ -3,10 +3,13 @@ import shutil
 import time
 import unittest
 import logging
+
+from json import JSONDecodeError
 from pathlib import Path
 
 from flask import json
 from run_service import app
+from test.service.user.user_utils import get_auth_header, test_user
 
 log = logging.getLogger(__name__)
 wait_time = 120000
@@ -22,7 +25,6 @@ def _assert_wait_time(waited):
 
 
 class JobTypeTest(unittest.TestCase):
-
     resource_dir = os.environ['RESOURCE_DIR']
     staging_dir = os.environ['STAGING_DIR']
     working_dir = os.environ['WORKING_DIR']
@@ -93,20 +95,25 @@ class JobTypeTest(unittest.TestCase):
         response = self.client.post(
             f'/job/{job_type}',
             data=json.dumps(data),
-            content_type='application/json'
+            content_type='application/json',
+            headers=get_auth_header()
         )
-        return json.loads(response.get_data(as_text=True))
+        try:
+            data = json.loads(response.get_data(as_text=True))
+        except JSONDecodeError:
+            data = ""
+        return data, response.status_code
 
     def stage_resource(self, folder, path):
         source = os.path.join(self.resource_dir, folder, path)
-        target = os.path.join(self.staging_dir, path)
+        target = os.path.join(self.staging_dir, test_user, path)
         try:
             shutil.copytree(source, target)
         except FileExistsError:
             pass
 
     def unstage_resource(self, path):
-        source = os.path.join(self.staging_dir, path)
+        source = os.path.join(self.staging_dir, test_user, path)
         try:
             shutil.rmtree(source)
         except FileNotFoundError:

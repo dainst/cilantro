@@ -1,6 +1,6 @@
 import os
 
-from workers.convert.image_pdf.convert_pdf import pdf_merge
+from workers.convert.convert_pdf import pdf_merge
 from test.worker.convert.convert_test import ConvertTest
 
 

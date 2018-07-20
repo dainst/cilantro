@@ -2,9 +2,9 @@ import os
 import logging
 
 from test.worker.convert.convert_test import ConvertTest
-from workers.convert.image_pdf.convert_pdf import split_pdf_in_object
-from utils.object import Object
 
+from workers.convert.convert_pdf import split_pdf_in_object
+from utils.object import Object
 
 log = logging.getLogger(__name__)
 

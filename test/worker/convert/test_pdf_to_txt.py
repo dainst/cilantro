@@ -1,7 +1,7 @@
 import os
 
 from test.worker.convert.convert_test import ConvertTest
-from workers.convert.image_pdf.convert_pdf import convert_pdf_to_txt
+from workers.convert.convert_pdf import convert_pdf_to_txt
 
 
 class PdfToTxtTest(ConvertTest):

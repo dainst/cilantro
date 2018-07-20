@@ -6,7 +6,8 @@ class IngestBookTest(JobTypeTest):
     def test_success(self):
         self.stage_resource('objects', 'some_tiffs')
 
-        data = self.post_job('ingest_book', {'paths': ['some_tiffs']})
+        data, status_code = self.post_job('ingest_book', {'paths': ['some_tiffs']})
+        self.assertEquals(status_code, 202)
         job_id = data['job_id']
         self.assertEqual('Accepted', data['status'])
         self.assert_job_successful(data['task_ids'])
