@@ -1,0 +1,18 @@
+{
+  "title": "Ein kleines Musterdokument mit zweizeiligem Titel",
+  "abstract": "Bachelorarbeit",
+  "author": [
+    {
+      "firstname": "Erich ",
+      "lastname": "Mustermann"
+    }
+  ],
+  "pages": {
+    "showndesc": "1\u201320",
+    "startPrint": 1,
+    "endPrint": 2
+  },
+  "date_published": "2018--",
+  "language": "de_DE",
+  "zenonId": ""
+}

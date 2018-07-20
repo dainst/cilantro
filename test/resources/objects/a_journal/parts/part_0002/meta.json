@@ -1,0 +1,17 @@
+{
+  "title": "Titel 2",
+  "author": [
+    {
+      "firstname": "Autor",
+      "lastname": "Dererste"
+    }
+  ],
+  "pages": {
+    "showndesc": "21\u201327",
+    "startPrint": 21,
+    "endPrint": 23
+  },
+  "date_published": "2018--",
+  "language": "de_DE",
+  "zenonId": ""
+}
