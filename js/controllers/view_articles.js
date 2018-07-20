@@ -31,9 +31,10 @@ angular
         };
 
         $scope.addArticle = function() {
-            const a = new dataset.Article({title: 'Article ' + (dataset.articles.length+1)});
-            dataset.articles.push(a);
+            const subObject = new dataset.Article({title: 'Article ' + (dataset.articles.length+1)});
+            dataset.articles.push(subObject);
             $scope.selectArticle(dataset.articles.length -1);
+            return subObject;
         };
 
         $scope.selectArticle = function(k) {
@@ -112,6 +113,10 @@ angular
 
         $scope.adoptFromZenon = () => {
             dataset.mapSubObject("zenon", zenonImporter.convert($scope.zenonResult), dataset.articles[$scope.currentArticle]);
+        };
+
+        $scope.newFromZenon = () => {
+            dataset.mapSubObject("zenon", zenonImporter.convert($scope.zenonResult), $scope.addArticle());
         };
 
         $scope.markAsMissingZenon = () => {
