@@ -38,7 +38,7 @@ angular
                                 $scope.isLoading = false;
                                 file_manager.reset();
                                 file_manager.selectDefaultFileHandlers();
-steps.change("articles");
+
                                 $scope.refreshView();
 
                             })
