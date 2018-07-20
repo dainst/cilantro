@@ -483,22 +483,17 @@ angular
     }
     
     editables.checkbox = function(seed, mandatory) {
-        var obj = new editables.Base(seed, mandatory);
+        const obj = new editables.Base(seed, mandatory);
         obj.type = 'checkbox';
-        obj.check =	function() {
-            return false;
-        }
-        obj.compare = function(second) {
-            return (this.value.value === second.value.value) ? 0 : 1;
-        }
-        obj.set = function(value) {
-            this.value.value = ([false, 'false', 0, '0', NaN, '', undefined, null].indexOf(value) === -1);
-        }
+        obj.check =	() => false;
+        obj.compare = second => (this.value.value === second.value.value) ? 0 : 1;
+        obj.set = value => {
+            obj.value.value = ([false, 'false', 0, '0', NaN, '', undefined, null].indexOf(value) === -1);
+        };
         obj.set(seed);
         return obj;
-    }
+    };
 
-    
     editables.filelist = function(seed, mandatory) {
         let obj = new editables.Base(seed, mandatory);
         obj.type = 'filelist';
