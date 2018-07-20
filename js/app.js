@@ -38,6 +38,7 @@ angular
     'directive.filesTreeview',
     'directive.stats',
     'directive.zenon',
+    'directive.autoheight',
 
     'module.editables',
 
