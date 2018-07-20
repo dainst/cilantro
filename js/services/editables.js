@@ -277,15 +277,14 @@ angular
     
     
     editables.text = function(seed, mandatory) {
-        var obj = new editables.Base(seed, mandatory);
+        const obj = new editables.Base(seed, mandatory);
         obj.type = 'text';
         
-        obj.compare = function(second) {
-            return (this.value.value.localeCompare(second.value.value));
-        }
-        
+        obj.compare = second =>  this.value.value.localeCompare(second.value.value);
+
+        obj.set(seed);
         return obj;
-    }
+    };
 
 
     editables.defaultLocales = ['de_DE', 'en_US', 'fr_FR', 'it_IT', 'es_ES'];
