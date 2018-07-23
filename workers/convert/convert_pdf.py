@@ -53,19 +53,17 @@ def pdf_merge(file_paths, output_path):
             input_stream.close()
 
 
-def split_pdf_in_object(files, obj: Object):
+def split_pdf(files, path: str):
     """
-    Takes the pdf files in an Object and split/merges them into one
+    Takes the pdf files from files and split/merges them into one. they need to be in the given path
 
     :param list files: list of the pdf files as dic {'file':,'range':[start,end]}
-    :param string source: The working directory where we find the
-        different files to be cut
-    :param string obj: The object where the created files go
+    :param string path: The path where the used files lie the created file go
     """
 
     new_pdf = PyPDF2.PdfFileWriter()
     for file in files:
-        input_str = os.path.join(obj.get_representation_dir('pdf'), os.path.basename(file['file']))
+        input_str = os.path.join(path, os.path.basename(file['file']))
         input_stream = open(input_str, 'rb')
         pdf = PyPDF2.PdfFileReader(input_stream)
         if pdf.flattenedPages is None:
@@ -82,13 +80,10 @@ def split_pdf_in_object(files, obj: Object):
             for index in range(pdf.getNumPages()):
                 new_pdf.addPage(pdf.getPage(index))
 
-    stream = BytesIO()
-    new_pdf.write(stream)
-    stream.seek(0)
-    obj.add_file('merged.pdf', 'pdf', stream)
-    stream.close()
+    with open(os.path.join(path, 'merged.pdf'), 'wb+') as stream:
+        new_pdf.write(stream)
 
     for file in files:
-        file_path = os.path.join(obj.get_representation_dir('pdf'), os.path.basename(file['file']))
+        file_path = os.path.join(path, os.path.basename(file['file']))
         if os.path.isfile(file_path):
             os.remove(file_path)
