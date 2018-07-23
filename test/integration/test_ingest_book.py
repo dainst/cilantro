@@ -12,7 +12,6 @@ class IngestBookTest(JobTypeTest):
         self.assertEqual('Accepted', data['status'])
         self.assert_job_successful(data['task_ids'])
         self.assert_file_in_repository(job_id, 'test.jpg')
-        self.assert_file_in_repository(job_id, 'test.converted.pdf')
         self.assert_file_in_repository(job_id, 'merged.pdf')
 
         self.unstage_resource('some_tiffs')

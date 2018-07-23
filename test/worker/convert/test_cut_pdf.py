@@ -3,7 +3,7 @@ import logging
 
 from test.worker.convert.convert_test import ConvertTest
 
-from workers.convert.convert_pdf import split_pdf
+from workers.convert.convert_pdf import split_merge_pdf
 from utils.object import Object
 
 log = logging.getLogger(__name__)
@@ -22,5 +22,5 @@ class CutPdfTest(ConvertTest):
         stream = open(self.pdf_src, 'rb')
         obj.add_file('e2e-testing.pdf', 'pdf', stream)
         stream.close()
-        split_pdf(params, obj.get_representation_dir('pdf'))
+        split_merge_pdf(params, obj.get_representation_dir('pdf'))
         self.assertTrue(os.path.isfile(self.file_generated))

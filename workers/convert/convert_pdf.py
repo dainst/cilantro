@@ -25,40 +25,14 @@ def convert_pdf_to_txt(source_file, output_dir):
             index = index + 1
 
 
-def merge_pdf(file_paths, output_path):
-    """
-    Create a single pdf from multiple ones merged together
-
-    :param generator file_paths: list of paths to the pdf files to be
-        merged in order
-    :param str output_path: path for the generated pdf file
-    """
-    if not file_paths:
-        raise Exception('No files given to merge.')
-    input_streams = []
-    pdf_new = PyPDF2.PdfFileWriter()
-    try:
-        for file in file_paths:
-
-            input_stream = open(file, "rb")
-            input_streams.append(input_stream)
-            pdf = PyPDF2.PdfFileReader(input_stream)
-
-            for index in range(pdf.getNumPages()):
-                pdf_new.addPage(pdf.getPage(index))
-        with open(output_path, "wb") as output_stream:
-            pdf_new.write(output_stream)
-    finally:
-        for input_stream in input_streams:
-            input_stream.close()
-
-
-def split_pdf(files, path: str):
+def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
     """
     Takes the pdf files from files and split/merges them into one. they need to be in the given path
 
     :param list files: list of the pdf files as dic {'file':,'range':[start,end]}
     :param string path: The path where the used files lie the created file go
+    :param string filename: name of the generated pdf file.
+    :param bool remove_old: if True, removes the files used for the split/merge.
     """
 
     new_pdf = PyPDF2.PdfFileWriter()
@@ -80,10 +54,10 @@ def split_pdf(files, path: str):
             for index in range(pdf.getNumPages()):
                 new_pdf.addPage(pdf.getPage(index))
 
-    with open(os.path.join(path, 'merged.pdf'), 'wb+') as stream:
+    with open(os.path.join(path, filename), 'wb+') as stream:
         new_pdf.write(stream)
-
-    for file in files:
-        file_path = os.path.join(path, os.path.basename(file['file']))
-        if os.path.isfile(file_path):
-            os.remove(file_path)
+    if remove_old:
+        for file in files:
+            file_path = os.path.join(path, os.path.basename(file['file']))
+            if os.path.isfile(file_path):
+                os.remove(file_path)

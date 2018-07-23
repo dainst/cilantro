@@ -6,8 +6,7 @@ from workers.base_task import BaseTask
 from utils.object import Object
 
 from workers.convert.convert_image import convert_tif_to_jpg
-from workers.convert.convert_pdf import convert_pdf_to_txt, \
-    merge_pdf, split_pdf
+from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf
 from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
     convert_jpg_to_pdf
 from workers.convert.tif_to_txt import tif_to_txt
@@ -38,7 +37,7 @@ class SplitPdfTask(BaseTask):
             if suffix == 'pdf':
                 pdf_files.append(file)
         if len(pdf_files) > 0:
-            split_pdf(pdf_files, obj.get_representation_dir('pdf'))
+            split_merge_pdf(pdf_files, obj.get_representation_dir('pdf'))
 
 
 class JpgToPdfTask(BaseTask):
@@ -84,8 +83,9 @@ class MergeConvertedPdf(BaseTask):
 
     def execute_task(self):
         work_path = self.get_work_path()
-        files = _list_files(work_path, '.converted.pdf')
-        merge_pdf(files, work_path + '/merged.pdf')
+        files = [{'file': os.path.basename(f)} for f in _list_files(work_path, '.converted.pdf')]
+        print(files)
+        split_merge_pdf(files, work_path)
         # TODO incorporate JSON data for the filename and metadatas.
 
 
