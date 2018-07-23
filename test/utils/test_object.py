@@ -36,7 +36,7 @@ class ObjectTest(unittest.TestCase):
         obj = Object(test_object_working_path)
 
         self.assertIsInstance(obj.metadata, ObjectMetadata)
-        self.assertEqual(obj.metadata.get_json(), '{}')
+        self.assertEqual(obj.metadata.to_json(), '{}')
 
     def test_read(self):
         _copy_test_object()

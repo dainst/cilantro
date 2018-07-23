@@ -13,7 +13,7 @@ def generate_marc_xml(obj: Object, template, target_filename='marc.xml'):
     """
 
     for part in obj.get_children():
-        data = {**part.metadata.get_dict(), **obj.metadata.get_dict()}
+        data = {**part.metadata.to_dict(), **obj.metadata.to_dict()}
         generate_xml(part.path,
                      data,
                      template,

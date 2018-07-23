@@ -33,10 +33,10 @@ class GenerateXMLTask(BaseTask):
         obj = Object(work_path)
         articles_meta = []
         for part in obj.get_children():
-            articles_meta.append(part.metadata.get_dict())
+            articles_meta.append(part.metadata.to_dict())
 
         data = {'data': {
-            **obj.metadata.get_dict(),
+            **obj.metadata.to_dict(),
             'auto_publish_issue': self.get_param('auto_publish_issue'),
             'default_create_frontpage': self.get_param('default_create_frontpage'),
         },
