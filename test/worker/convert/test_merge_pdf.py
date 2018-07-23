@@ -1,6 +1,6 @@
 import os
 
-from workers.convert.convert_pdf import pdf_merge
+from workers.convert.convert_pdf import merge_pdf
 from test.worker.convert.convert_test import ConvertTest
 
 
@@ -13,7 +13,7 @@ class MergePdfTest(ConvertTest):
         self.generated_file = f'{self.working_dir}/merged.pdf'
 
     def test_success(self):
-        pdf_merge([self.pdf_1, self.pdf_2], self.generated_file)
+        merge_pdf([self.pdf_1, self.pdf_2], self.generated_file)
         self.assertTrue(os.path.isfile(self.generated_file))
         stat = os.stat(self.generated_file)
         self.assertGreater(stat.st_size, 0)

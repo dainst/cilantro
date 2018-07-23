@@ -12,6 +12,6 @@ tasks:
     do: convert.tif_to_jpg
   - foreach: "\\.(jpg|jpeg|JPG|JPEG)$"
     do: convert.jpg_to_pdf
-  - convert.pdf_merge_converted
+  - convert.merge_converted_pdf
   - publish_to_repository
   - cleanup_workdir
