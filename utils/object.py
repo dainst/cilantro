@@ -178,10 +178,10 @@ class Object:
             return Object(os.path.join(self._get_part_dir(), 'part_0001'))
 
         return Object(os.path.join(self._get_part_dir(),
-                                   self._get_part_dir_for_index(len(os.listdir(self._get_part_dir())) + 1)))
+                                   _get_part_dir_for_index(len(os.listdir(self._get_part_dir())) + 1)))
 
     def get_child(self, index: int):
-        part_name = self._get_part_dir_for_index(index)
+        part_name = _get_part_dir_for_index(index)
         path = os.path.join(self._get_part_dir(), part_name)
         return Object(path)
 
@@ -195,7 +195,7 @@ class Object:
         if os.path.isdir(self._get_part_dir()):
             for d in [d for d in os.listdir(self._get_part_dir()) if
                       os.path.isdir(os.path.join(self._get_part_dir(), d))]:
-                if self._is_part_dir_format(d):
+                if _is_part_dir_format(d):
                     sub_objects.append(Object(os.path.join(self._get_part_dir(), d)))
         sub_objects.sort(key=lambda obj: obj.path)
         return iter(sub_objects)
@@ -209,15 +209,6 @@ class Object:
         """
         copy_tree(self.path, path)
 
-    @staticmethod
-    def _is_part_dir_format(dir_name):
-        return 'part_' in dir_name
-
-    @staticmethod
-    def _get_part_dir_for_index(index: int):
-        part_name = f"part_{str(index).zfill(4)}"
-        return part_name
-
     def _get_part_dir(self):
         return os.path.join(self.path, 'parts')
 
@@ -226,3 +217,12 @@ class Object:
 
     def get_representation_dir(self, representation: str):
         return os.path.join(self._get_data_dir(), representation)
+
+
+def _is_part_dir_format(dir_name):
+    return 'part_' in dir_name
+
+
+def _get_part_dir_for_index(index: int):
+    part_name = f"part_{str(index).zfill(4)}"
+    return part_name

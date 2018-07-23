@@ -17,27 +17,27 @@ class SplitPdfTask(BaseTask):
 
     def execute_task(self):
         obj = Object(self.get_work_path())
-        self._split_pdf_for_object(obj, self.get_param('files'))
+        _split_pdf_for_object(obj, self.get_param('files'))
         parts = self.get_param('parts')
         for part in parts:
             self._execute_for_child(obj.get_child(parts.index(part) + 1), part)
 
     def _execute_for_child(self, obj, part):
-        self._split_pdf_for_object(obj, part['files'])
+        _split_pdf_for_object(obj, part['files'])
         if 'parts' in part:
             parts = part['parts']
             for subpart in parts:
                 self._execute_for_child(obj.get_child(parts.index(subpart) + 1), subpart)
 
-    @staticmethod
-    def _split_pdf_for_object(obj, files):
-        pdf_files = []
-        for file in files:
-            suffix = (file['file']).split('.')[-1]
-            if suffix == 'pdf':
-                pdf_files.append(file)
-        if len(pdf_files) > 0:
-            split_merge_pdf(pdf_files, obj.get_representation_dir('pdf'))
+
+def _split_pdf_for_object(obj, files):
+    pdf_files = []
+    for file in files:
+        suffix = (file['file']).split('.')[-1]
+        if suffix == 'pdf':
+            pdf_files.append(file)
+    if len(pdf_files) > 0:
+        split_merge_pdf(pdf_files, obj.get_representation_dir('pdf'))
 
 
 class JpgToPdfTask(BaseTask):
