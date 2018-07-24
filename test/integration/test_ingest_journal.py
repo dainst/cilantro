@@ -12,7 +12,7 @@ class IngestJournalTest(JobTypeTest):
         self.assertEquals(status_code, 202)
         job_id = data['job_id']
         self.assertEqual('Accepted', data['status'])
-        self.assert_status(job_id, 'SUCCESS')
+        self.assert_status(job_id, 'SUCCESS', 120000)
 
         files_generated = [
             'e2e-testing.pdf.0.pdf',

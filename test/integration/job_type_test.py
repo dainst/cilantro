@@ -12,11 +12,11 @@ from run_service import app
 from test.service.user.user_utils import get_auth_header, test_user
 
 log = logging.getLogger(__name__)
-wait_time = 120000
+default_wait_time = 10000
 retry_time = 100
 
 
-def _assert_wait_time(waited):
+def _assert_wait_time(waited, wait_time):
     if waited > wait_time:
         raise TimeoutError()
     else:
@@ -43,7 +43,8 @@ class JobTypeTest(unittest.TestCase):
         shutil.rmtree(self.working_dir, ignore_errors=True)
         shutil.rmtree(self.repository_dir, ignore_errors=True)
 
-    def assert_file_in_repository(self, object_id, file_path):
+    def assert_file_in_repository(self, object_id, file_path,
+                                  wait_time=default_wait_time):
         waited = 0
         file = Path(os.path.join(self.repository_dir, object_id, file_path))
         while not file.is_file():
@@ -55,7 +56,7 @@ class JobTypeTest(unittest.TestCase):
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
 
-    def assert_job_successful(self, task_ids):
+    def assert_job_successful(self, task_ids, wait_time=default_wait_time):
         waited = 0
         success = False
         while not success:
@@ -69,17 +70,18 @@ class JobTypeTest(unittest.TestCase):
                     success = False
                     continue
             try:
-                waited = _assert_wait_time(waited)
+                waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
                 raise AssertionError("experienced timeout while waiting for"
                                      "SUCCESS status")
 
-    def assert_status(self, job_id, expected_status):
+    def assert_status(self, job_id, expected_status,
+                      wait_time=default_wait_time):
         waited = 0
         status = self.get_status(job_id)
         while status != expected_status:
             try:
-                waited = _assert_wait_time(waited)
+                waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
                 raise AssertionError(f"experienced timeout while waiting for "
                                      f"status '{expected_status}', last status "
