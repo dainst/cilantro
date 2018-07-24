@@ -10,38 +10,41 @@ class PathDoesNotExist(Exception):
 class SerializableClass(object):
 
     @classmethod
-    def from_dict(cls, json_dict):
+    def from_dict(cls, dic):
         """
-        Creates an object of the given Class from a dictionary and fills the attributes accordingly.
-        :param json_dict: The dictionary that represents the object from the class.
+        Creates an object of the given Class from a dictionary.
+
+        Fills the attributes accordingly.
+
+        :param dic: The dictionary that represents the object from the class.
         :return: cls: The generated object
         """
-        for key, value in json_dict.items():
+        for key, value in dic.items():
             if isinstance(value, dict):
-                key_class = inspect.getmembers(cls)[0][1][key]
-                if SerializableClass().__class__ in inspect.getmro(key_class):
-                    json_dict[key] = key_class.from_dict(json_dict[key])
+                dic[key] = cls._create_subobject(key, value)
 
         obj = object.__new__(cls)
-        obj.__dict__ = json_dict
+        obj.__dict__ = dic
         return obj
 
     @classmethod
-    def namedtuple_from_dict(cls, json_dict):
+    def _create_subobject(cls, key, value):
+        key_class = inspect.getmembers(cls)[0][1][key]
+        if SerializableClass().__class__ in inspect.getmro(key_class):
+            return key_class.from_dict(value)
+        else:
+            return value
+
+    def to_named_tuple(self):
         """
-        Creates a tuple<cls> object from a dictionary and fills the attributes accordingly.
-            Works exactly as an object from the Class cls, but is NOT an instance of it.
-            Has less incompatibility issues as from_dict()
-        :param json_dict: The dictionary that represents the object from the class.
-        :return: tuple<cls>: The generated object
+        Creates a tuple<cls> object.
+
+        Works exactly as an object from the Class cls, but is NOT an instance of
+        it and has less incompatibility issues than a simple dict.
+        :return: tuple<cls>: The generated named tuple
         """
-        for key, value in json_dict.items():
-            if isinstance(value, dict):
-                key_class = inspect.getmembers(cls)[0][1][key]
-                if SerializableClass().__class__ in inspect.getmro(key_class):
-                    json_dict[key] = key_class.from_dict(json_dict[key])
-        obj = namedtuple(cls.__name__, json_dict.keys())(*json_dict.values())
-        return obj
+        dic = self.to_dict()
+        return namedtuple(self.__class__.__name__, dic.keys())(*dic.values())
 
     def to_json(self):
         return json.dumps(self.to_dict(), default=_to_serializable)
