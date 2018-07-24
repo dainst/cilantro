@@ -137,6 +137,17 @@ class Object:
             self.add_stream(os.path.basename(src), representation,
                             BytesIO(stream.read()))
 
+    def add_files(self, representation: str, files: str):
+        """
+        Add a list of files to a representation of the object.
+
+        :param str representation: The file format of the input.
+        :param list[str] files: The paths to the source files
+        :return: None
+        """
+        for file in files:
+            self.add_file(representation, file)
+
     def list_representations(self) -> List[str]:
         """
         List the representations that the object offers.
