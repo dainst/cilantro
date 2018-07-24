@@ -11,38 +11,6 @@ working_dir = os.environ['WORKING_DIR']
 staging_dir = os.environ['STAGING_DIR']
 
 
-def _copy_path(src, dest):
-    """
-    Recursively copy and flatten the given paths.
-
-    :param str src:
-    :param str dest:
-    """
-    if os.path.isdir(src):
-        for path in os.listdir(src):
-            _copy_path(os.path.join(src, path), dest)
-    else:
-        shutil.copy2(src, dest)
-
-
-class RetrieveFromStagingTask(BaseTask):
-
-    name = "retrieve_from_staging"
-
-    def execute_task(self):
-        staging_path = os.path.join(staging_dir)
-
-        paths = self.get_param('paths')
-        user = self.get_param('user')
-        for path in paths:
-            src = os.path.join(staging_path, user, path)
-            dest = os.path.join(self.get_work_path())
-            _copy_path(src, dest)
-
-
-RetrieveFromStagingTask = celery_app.register_task(RetrieveFromStagingTask())
-
-
 class CreateObjectTask(BaseTask):
     name = "create_object"
 
@@ -52,7 +20,8 @@ class CreateObjectTask(BaseTask):
         obj.set_metadata_from_dict(self.get_param('metadata'))
         files = self.get_param('files')
         self._add_files(obj, files, user)
-        self._execute_for_parts(obj, self.get_param('parts'), user)
+        if 'parts' in self.params:
+            self._execute_for_parts(obj, self.get_param('parts'), user)
 
     def _execute_for_parts(self, obj, parts, user):
         for part in parts:

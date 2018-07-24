@@ -4,10 +4,11 @@ about:
   tags: [repository, book, monography, image, tiff]
 
 params:
-  paths: list
+  files: list
+  metadata: dict
 
 tasks:
-  - retrieve_from_staging
+  - create_object
   - foreach: "\\.(tif|tiff|TIF|TIFF)$"
     do: convert.tif_to_jpg
   - foreach: "\\.(jpg|jpeg|JPG|JPEG)$"
