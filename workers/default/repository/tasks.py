@@ -69,8 +69,8 @@ class CreateObjectTask(BaseTask):
     def _add_files(obj, files, user):
         for file in files:
             src = os.path.join(staging_dir, user, file['file'])
-            with open(src, 'rb') as stream:
-                obj.add_file(os.path.basename(file['file']), Path(src).suffix.split('.')[-1], stream)
+            representation = Path(src).suffix.split('.')[-1].lower()
+            obj.add_file(representation, src)
 
 
 CreateObjectTask = celery_app.register_task(CreateObjectTask())

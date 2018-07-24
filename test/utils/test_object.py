@@ -53,19 +53,28 @@ class ObjectTest(unittest.TestCase):
         meta_path = os.path.join(test_object_working_path, 'meta.json')
         self.assertTrue(os.path.isfile(meta_path))
 
-    def test_add_file(self):
+    def test_add_stream(self):
         obj = Object(test_object_working_path)
         obj.metadata.title = "A test object"
         stream = open(test_file_path, 'rb')
-        obj.add_file(os.path.basename(test_file_path), 'jpg', BytesIO(stream.read()))
+        obj.add_stream(os.path.basename(test_file_path), 'jpg',
+                       BytesIO(stream.read()))
         obj.write()
         stream.close()
 
         expected_file_path = os.path.join(test_object_working_path, 'data',
                                           'jpg', test_file_name)
         self.assertTrue(os.path.isfile(expected_file_path))
-        meta_path = os.path.join(test_object_working_path, 'meta.json')
-        self.assertTrue(os.path.isfile(meta_path))
+
+    def test_add_file(self):
+        obj = Object(test_object_working_path)
+        obj.metadata.title = "A test object"
+        obj.add_file('jpg', test_file_path)
+        obj.write()
+
+        expected_file_path = os.path.join(test_object_working_path, 'data',
+                                          'jpg', test_file_name)
+        self.assertTrue(os.path.isfile(expected_file_path))
 
     def test_list_representations(self):
         _copy_test_object()
@@ -100,8 +109,7 @@ class ObjectTest(unittest.TestCase):
         obj = Object(test_object_working_path)
         subobj = obj.add_child()
         subobj.metadata.title = "A test object"
-        with open(test_file_path, 'rb') as file:
-            subobj.add_file(os.path.basename(test_file_path), 'jpg', file)
+        subobj.add_file('jpg', test_file_path)
         obj.write()
 
         expected_file_path = os.path.join(test_object_working_path, 'parts',

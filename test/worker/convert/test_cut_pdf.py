@@ -20,7 +20,7 @@ class CutPdfTest(ConvertTest):
                   {"file": "e2e-testing.pdf", "range": [21, 27]}]
         obj = Object(self.working_dir)
         stream = open(self.pdf_src, 'rb')
-        obj.add_file('e2e-testing.pdf', 'pdf', stream)
+        obj.add_stream('e2e-testing.pdf', 'pdf', stream)
         stream.close()
         split_merge_pdf(params, obj.get_representation_dir('pdf'))
         self.assertTrue(os.path.isfile(self.file_generated))

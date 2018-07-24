@@ -104,9 +104,9 @@ class Object:
         with open(os.path.join(self.path, 'meta.json'), 'w', encoding="utf-8") as stream:
             stream.write(self.metadata.to_json())
 
-    def add_file(self, file_name: str, representation: str, file: BytesIO):
+    def add_stream(self, file_name: str, representation: str, file: BytesIO):
         """
-        Add a file to a representation of the object.
+        Add a stream to a representation of the object.
 
         A new representation is created if it does not already exist.
 
@@ -119,6 +119,23 @@ class Object:
             os.makedirs(self.get_representation_dir(representation))
         with open(os.path.join(self.get_representation_dir(representation), file_name), 'wb+') as stream:
             stream.write(file.read())
+
+    def add_file(self, representation: str, src: str):
+        """
+        Add a file to a representation of the object.
+
+        This acts as a convenience wrapper around `add_stream()` and handles
+        opening and reading the file.
+
+        The generated file has the same name as the source file.
+
+        :param str representation: The file format of the input.
+        :param str src: The path to the source file
+        :return: None
+        """
+        with open(src, 'rb') as stream:
+            self.add_stream(os.path.basename(src), representation,
+                            BytesIO(stream.read()))
 
     def list_representations(self) -> List[str]:
         """
