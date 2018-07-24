@@ -2,11 +2,8 @@ import os
 import logging
 
 import pdftotext
-from io import BytesIO
 
 import PyPDF2
-
-from utils.object import Object
 
 
 def convert_pdf_to_txt(source_file, output_dir):
