@@ -117,7 +117,7 @@ angular
 
                     scope.lookUpInZenon = id => {window.open("https://zenon.dainst.org/Record/" + id)};
 
-                    const smallLetters = "iIíìl|.:,;1-()'\"°^j ".split("");
+                    const smallLetters = "iIíìl|.:,;1-()'\"°^j !".split("");
 
                     scope.estimateWidth = content => ({minWidth: Math.min(25, content && content.split("/n")[0].split("")
                         .reduce((sum, char) => sum + ((smallLetters.indexOf(char) > 0) ? 0.1 : 0.9), 0)) + "em"});
