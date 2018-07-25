@@ -3,7 +3,7 @@ const action = require('../modules/actions');
 const message = require('../modules/messages');
 const so = require('../modules/subobject');
 
-fdescribe('subobject view', () => {
+describe('subobject view', () => {
 
     describe('base editable', () => {
         it('should complain on missing title', () => {
@@ -82,6 +82,80 @@ fdescribe('subobject view', () => {
                 expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
             });
         });
+    });
+
+    describe('Range of Pages', () => {
+        it('should complain if starting page is missing', () => {
+            so.goToSubObject(2);
+            so.getRowContent("Range of Pages").then(cell => {
+                const startPage = cell.all(by.css("input")).get(0);
+                const endPage = cell.all(by.css("input")).get(1);
+                startPage.clear();
+                expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
+            });
+        });
+
+        it('should update index-representation of page numbers if page boundaries change, as long as it it not entered manually', () => {
+            so.goToSubObject(2);
+            so.getRowContent("Range of Pages").then(cell => {
+                const startPage = cell.all(by.css("input")).get(0);
+                const endPage = cell.all(by.css("input")).get(1);
+                const indexRep = cell.all(by.css("input")).last();
+                startPage.clear().sendKeys("3");
+                endPage.clear().sendKeys("9");
+                expect(indexRep.getAttribute("value")).toEqual("3–9");
+                indexRep.sendKeys("xxx");
+                startPage.clear().sendKeys("4");
+                expect(indexRep.getAttribute("value")).toEqual("3–9xxx");
+            });
+        });
+
+        it('should update index-representation of page numbers if file offset was changed', () => {
+            so.goToSubObject(2);
+            so.getRowContent("Loaded File").then(loadedFileCell => {
+                const docOffset = loadedFileCell.all(by.css("input")).last();
+                so.getRowContent("Range of Pages").then(cell => {
+                    const startPage = cell.all(by.css("input")).get(0);
+                    const endPage = cell.all(by.css("input")).get(1);
+                    const indexRep = cell.all(by.css("input")).last();
+                    docOffset.clear().sendKeys(3);
+                    startPage.clear().sendKeys("3");
+                    endPage.clear().sendKeys("9");
+                    expect(indexRep.getAttribute("value")).toEqual("6–12");
+                });
+            });
+        });
+
+        it('should allow page boundaries change as printed in index if document offset is set', () => {
+            so.goToSubObject(2);
+            so.getRowContent("Loaded File").then(loadedFileCell => {
+                const docOffset = loadedFileCell.all(by.css("input")).last();
+                so.getRowContent("Range of Pages").then(cell => {
+                    const startPage = cell.all(by.css("input")).get(0);
+                    const startPagePrinted = cell.all(by.css("input")).get(2);
+                    docOffset.clear().sendKeys(3);
+                    startPagePrinted.clear().sendKeys("4");
+                    expect(startPage.getAttribute("value")).toEqual("1");
+                    startPage.clear().sendKeys("2");
+                    expect(startPagePrinted.getAttribute("value")).toEqual("5");
+                });
+            });
+        });
+
+        it('should complain about impossible page boundaries', () => {
+            so.goToSubObject(2);
+            so.getRowContent("Loaded File").then(loadedFileCell => {
+                const docOffset = loadedFileCell.all(by.css("input")).last();
+                so.getRowContent("Range of Pages").then(cell => {
+                    const startPage = cell.all(by.css("input")).get(0);
+                    const endPagePrinted = cell.all(by.css("input")).get(3);
+                    docOffset.clear().sendKeys(5);
+                    endPagePrinted.clear().sendKeys("33");
+                    expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
+                });
+            });
+        });
+
     });
 
 
