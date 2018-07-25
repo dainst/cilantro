@@ -24,15 +24,17 @@ module.exports = {
         addBtn: element(by.css('button[ng-click="addArticle()"]')),
         columnsDropdown: element(by.css('[elements="overviewColumns"]')),
         columnsDropdownBtn: element(by.css('[elements="overviewColumns"] > span > button')),
-        columnsDropdownList: element.all(by.css('[elements="overviewColumns"] .dropdown-menu > li > label > input'))
+        columnsDropdownList: element.all(by.css('[elements="overviewColumns"] .dropdown-menu > li > label > input')),
+        proceedBtn: element(by.css('#proceed')),
     },
-    article: {
+    subobject: {
         deleteBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
         addBtn: element(by.css('button[ng-click="addArticle()"]')),
         entry: element.all(by.css('tr[article="true"][class="ng-scope"]')),
         confirmBtn: element(by.css('.btn-success')),
         dismissBtn: element(by.css('.btn-danger')),
-
+        table: element(by.css('.article-table')),
+        tableRows: element.all(by.css('.article-table tr')),
     },
     csv: {
         takeData: element(by.css('button[ng-click="parse()"]')),
