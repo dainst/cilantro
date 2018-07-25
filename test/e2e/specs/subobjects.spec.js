@@ -147,7 +147,6 @@ describe('subobject view', () => {
             so.getRowContent("Loaded File").then(loadedFileCell => {
                 const docOffset = loadedFileCell.all(by.css("input")).last();
                 so.getRowContent("Range of Pages").then(cell => {
-                    const startPage = cell.all(by.css("input")).get(0);
                     const endPagePrinted = cell.all(by.css("input")).get(3);
                     docOffset.clear().sendKeys(5);
                     endPagePrinted.clear().sendKeys("33");
@@ -156,7 +155,31 @@ describe('subobject view', () => {
             });
         });
 
+
+        xit('should change page boundaries if a file with different offset is chosen', () => {
+            so.goToSubObject(3);
+            so.getRowContent("Loaded File").then(loadedFileCell => {
+                const docOffset = loadedFileCell.all(by.css("input")).last();
+                so.getRowContent("Range of Pages").then(cell => {
+                    const startPagePrinted = cell.all(by.css("input")).get(2);
+                    const startPage = cell.all(by.css("input")).get(0);
+                    const endPage = cell.all(by.css("input")).get(1);
+                    const indexRep = cell.all(by.css("input")).last();
+
+                    docOffset.clear().sendKeys(1);
+                    startPage.clear().sendKeys(1);
+                    endPage.clear().sendKeys(2);
+                    expect(indexRep.getAttribute("value")).toEqual("2–3");
+
+                    loadedFileCell.element(by.css('[value="test-directory/pdf3.pdf"]')).click();
+
+                    expect(indexRep.getAttribute("value")).toEqual("1–2");
+                });
+            });
+        });
+
     });
+
 
 
 });
