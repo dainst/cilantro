@@ -12,13 +12,13 @@ from workers.convert.tif_to_txt import tif_to_txt
 
 class SplitPdfTask(BaseTask):
     """
-    Splits multiple pdfs from the working dir.
+    Split multiple pdfs from the working dir.
 
     TaskParams:
     -list files_to_split: list of the files as dictionnaries {'file': file_name, 'range': [start, end]}
 
     Preconditions:
-    -files in files_to_split need to exist in the working dir.
+    -files from files_to_split in the working dir.
 
     Creates:
     -for each article:
@@ -33,13 +33,13 @@ class SplitPdfTask(BaseTask):
 
 class JpgToPdfTask(BaseTask):
     """
-    Creates a one paged pdf with a jpg.
+    Create a one paged pdf with a jpg.
 
     TaskParams:
     -str file: jpg file to be turned into pdf
 
     Preconditions:
-    -file need to exist in the working dir.
+    -file in the working dir.
 
     Creates:
     -file_name.converted.pdf in the working dir.
@@ -57,13 +57,13 @@ class JpgToPdfTask(BaseTask):
 
 class TifToJpgTask(BaseTask):
     """
-    Creates a jpg file from a tif.
+    Create a jpg file from a tif.
 
     TaskParams:
     -str file: tif file to be turned into jpg
 
     Preconditions:
-    -file need to exist in the working dir.
+    -file in the working dir.
 
     Creates:
     -file_name.jpg in the working dir.
@@ -79,13 +79,13 @@ class TifToJpgTask(BaseTask):
 
 class PdfToTxtTask(BaseTask):
     """
-    Creates a txt file for every page in a pdf.
+    Create a txt file for every page in a pdf.
 
     TaskParams:
     -str file: pdf file to be turned into txt files
 
     Preconditions:
-    -file need to exist in the working dir.
+    -file in the working dir.
 
     Creates:
     -for each page in file:
@@ -100,13 +100,13 @@ class PdfToTxtTask(BaseTask):
 
 class PdfToTifTask(BaseTask):
     """
-    Creates a tif file for every page of a pdf.
+    Create a tif file for every page of a pdf.
 
     TaskParams:
     -str file: pdf file to be turned into tif files
 
     Preconditions:
-    -file need to exist in the working dir.
+    -file in the working dir.
 
     Creates:
     -for each page in file:
@@ -121,7 +121,7 @@ class PdfToTifTask(BaseTask):
 
 class MergeConvertedPdf(BaseTask):
     """
-    Takes all the .converted.pdf files in the workspace and merge them into one.
+    Take all the .converted.pdf files in the workspace and merge them into one.
 
     TaskParams:
 
@@ -141,13 +141,13 @@ class MergeConvertedPdf(BaseTask):
 
 class TxtFromTifTask(BaseTask):
     """
-    Creates a txt file from a tif.
+    Create a txt file from a tif.
 
     TaskParams:
     -str file: tif file to be turned into txt
 
     Preconditions:
-    -file need to exist in the working dir.
+    -file in the working dir.
 
     Creates:
     -file_name.converted.txt
