@@ -30,7 +30,7 @@ app.register_blueprint(user_controller, url_prefix="/user")
 @app.errorhandler(ApiError)
 def handle_api_error(error):
     """
-    Handles custom ApiErrors raised in controllers.
+    Handle custom ApiErrors raised in controllers.
 
     This makes sure that a response object following a common JSON syntax
     is returned.
@@ -46,7 +46,7 @@ def handle_api_error(error):
 @app.errorhandler(HTTPException)
 def handle_http_exception(error):
     """
-    Handles exceptions raised by flask internally.
+    Handle exceptions raised by flask internally.
 
     This makes sure that a response object following a common JSON syntax
     is returned.
