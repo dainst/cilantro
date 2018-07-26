@@ -2,8 +2,10 @@ import logging
 
 from flask import Blueprint, url_for, jsonify, request, g
 
+from service.errors import ApiError
 from utils.celery_client import celery_app
-from service.job.job_config import JobConfig
+from service.job.job_config import JobConfig, UnknownJobTypeException, \
+    RequestParameterException
 from service.user.user_service import auth
 
 
@@ -40,9 +42,14 @@ def job_create(job_type):
     :return: A JSON object containing the status, the job id and the task ids
         of every subtask in the chain
     """
-    params = request.get_json(force=True, silent=True)
+    params = request.get_json(force=True)
     user = auth.username()
-    job = get_job_config().generate_job(job_type, user, params)
+    try:
+        job = get_job_config().generate_job(job_type, user, params)
+    except UnknownJobTypeException as e:
+        raise ApiError("unknown_job_type", str(e), 404)
+    except RequestParameterException as e:
+        raise ApiError("invalid_job_params", str(e))
     task = job.run()
     logger = logging.getLogger(__name__)
     logger.info(f"created job with id: {task.id}")
