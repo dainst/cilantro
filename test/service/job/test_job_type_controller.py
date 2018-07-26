@@ -9,7 +9,7 @@ config_dir = os.environ['CONFIG_DIR']
 job_types_dir = os.path.join(config_dir, 'job_types')
 
 
-class JobTypeTest(unittest.TestCase):
+class JobTypeControllerTest(unittest.TestCase):
 
     def setUp(self):
         app.testing = True

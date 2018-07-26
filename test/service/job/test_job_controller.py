@@ -4,7 +4,7 @@ from run_service import app
 from test.service.user.user_utils import get_auth_header
 
 
-class JobTest(unittest.TestCase):
+class JobControllerTest(unittest.TestCase):
 
     def setUp(self):
         app.testing = True
