@@ -250,7 +250,7 @@ class JobConfig:
         Initialize the config and triggers the parsing of the YAML files.
         """
         self.logger = logging.getLogger(__name__)
-        self._config_dir = os.environ['CONFIG_DIR']
+        self._config_dir = _config_dir
         self.job_types = {}
         self._parse_job_config()
 
