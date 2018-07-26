@@ -12,7 +12,7 @@ angular
     const editables = {};
     editables.types = {}; // constructors for useful subtypes
     
-    editables.Base = function(seed, mandatory, readonly) { 
+    editables.Base = function(seed, mandatory, readonly) {
         this.type =	        'editable';
         this.value =        angular.isObject(seed) ? seed : {value: seed};
         this.mandatory =    angular.isUndefined(mandatory) ? true : mandatory;
@@ -24,8 +24,10 @@ angular
         this.set =          value => this.value.value = value;
         this.get =		    () => this.value.value;
         this.compare =  	that => this.value.value.localeCompare(that.value.value);
-        this.watch =		(observer) => {this.observer = observer; return this};
-        this.observer =	    false;
+
+        const observers =   [];
+        this.watch =		observer => {if (angular.isFunction(observer)) observers.push(observer);};
+        this.observer =	    param => observers.forEach(observer => observer(param || this));
     };
 
     editables.types.Author = function(first, second) {return {'firstname': first, 'lastname': second}};
