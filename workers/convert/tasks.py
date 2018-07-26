@@ -152,7 +152,7 @@ class MergeConvertedPdf(BaseTask):
     Creates:
     -merged.pdf in the working dir
     """
-    name = "convert.pdf_merge_converted"
+    name = "convert.merge_converted_pdf"
 
     def execute_task(self):
         work_path = self.get_work_path()
