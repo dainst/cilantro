@@ -180,6 +180,4 @@ describe('subobject view', () => {
 
     });
 
-
-
 });

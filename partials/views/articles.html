@@ -105,19 +105,19 @@
                     <div class="pull-right" style="margin-left:1em">
                         <span class="btn-group">
                             <button
-                                    ng-if="zenonResult.id"
+                                    ng-show="zenonResult.id"
                                     class='btn btn-default' ng-click='newFromZenon()'
                                     data-tooltip="Create a new Article with this Zenon-record"
                             >New Article<span class="glyphicon glyphicon-file"></span>
                             </button>
                             <button
-                                    ng-if="zenonResult.id && isArticleSelected()"
+                                    ng-show="zenonResult.id && isArticleSelected()"
                                     class='btn btn-default' ng-click='adoptFromZenon()'
                                     data-tooltip="Continue with the data from Zenon instead of the one you got from the investigation of the table of contents"
                             >Take Zenon Data<span class="glyphicon glyphicon-import"></span>
                             </button>
                             <button
-                                    ng-if="!zenonResult.id && isArticleSelected()"
+                                    ng-show="!zenonResult.id && isArticleSelected()"
                                     ng-click='markAsMissingZenon()'
                                     ng-class="['btn', 'btn-default', {'active': (dataset.articles[currentArticle]._.reportToZenon)}]"
                             >Mark as missing in Zenon<span class="glyphicon glyphicon-flag"></span>

@@ -67,8 +67,13 @@ module.exports = {
     },
     zenon: {
         markMissing: element(by.css('button[ng-click="markAsMissingZenon()"]')),
-        reportMissing: element(by.css('button[ng-click="reportMissingToZenon()"]')),
+        adopt: element(by.css('button[ng-click="adoptFromZenon()"]')),
+        newArticle: element(by.css('button[ng-click="newFromZenon()"]')),
         downloadLink: element(by.css('a.downloadLink')),
+        searchBox: element(by.css('#zenon-search')),
+        submit: element(by.css('#zenon-submit')),
+        resultCount: element(by.css('#zenon-result-count')),
+        resultRows: element.all(by.css('#zenon-results table tbody tr')),
     },
     navbar: {
         overview: element(by.id('step-overview')),

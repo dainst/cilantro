@@ -5,20 +5,22 @@
                 class="form-control"
                 placeholder="Search for..."
                 ng-model="search.term"
+                id="zenon-search"
         >
         <span class="input-group-btn">
             <button
                     class='btn btn-default'
                     ng-click='doSearch()'
+                    id="zenon-submit"
                 >Search<span class="glyphicon glyphicon-search"></span>
             </button>
         </span>
     </span>
 
     <br>
-    <div>{{found}} results</div>
+    <div><span id="zenon-result-count">{{found}}</span> results</div>
 
-    <div style="overflow-x:auto; padding-left: 1px;" ng-show="results.length">
+    <div id="zenon-results" style="overflow-x:auto; padding-left: 1px;" ng-show="results.length">
         <table class="table select-table">
             <thead>
                 <tr>
