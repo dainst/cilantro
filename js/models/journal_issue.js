@@ -4,9 +4,11 @@ angular
     /*
      * refactor plans :
      * looking for a more generic datamodel-model,
-     * the defintions of the fields wich are in the constructor now,
+     * the defintions of the fields which are in the constructor now,
      * will be here as well..
      * for for now we divide fieldMeta and fields...
+     *
+     * also convert MainOject and SubObject from factories into constructors
      */
 
     function MainObject(dataset) {
@@ -31,7 +33,7 @@ angular
         subObjectData = subObjectData || {};
         mainObject = mainObject || {};
         dataset = dataset || {};
-        return {
+        const subObject = {
             'title':			new editables.Base(subObjectData.title, true),
             'abstract':			editables.text(subObjectData.abstract, false),
             'author':			editables.authorlist(subObjectData.author),
@@ -39,12 +41,14 @@ angular
             'date_published':	editables.date(subObjectData.date_published),
             'language':			editables.language('de_DE', false, locales),
             'auto_publish':		editables.checkbox(mainObject.default_publish_articles === true),
-            'filepath':			editables.loadedfile(dataset.loadedFiles, false, mainObject.allow_upload_without_file),
+            'filepath':			editables.loadedfile(dataset.loadedFiles, false, mainObject.allow_upload_without_file)
+                .watch(() => loadedFileObserver(subObject)),
             'attached':			editables.filelist(),
             'order':			editables.number(0, false),
-            'create_frontpage':	editables.checkbox(mainObject.create_frontpage === true),
+            'create_frontpage':	editables.checkbox(mainObject.default_create_frontpage === true),
             'zenonId':			new editables.Base(subObjectData.zenonId, false)
         };
+        return subObject;
     }
 
 
@@ -72,20 +76,20 @@ angular
             journalConstraints[journalCode].locales.forEach(loc => {locales.push(loc)});
     }
 
-
-    let getConstraint = function(journalCode, constraint) {
-        if ((typeof journalConstraints[journalCode] !== "undefined") && (typeof journalConstraints[journalCode][constraint] !== "undefined")) {
-            return journalConstraints[journalCode][constraint];
-        }
-    };
     function setConstraints(constraints) {
         journalConstraints = constraints;
         Object.keys(constraints).forEach(item => {journalCodes[item] = item});
         console.log("Journals:", journalCodes);
     }
 
-
-
+    function loadedFileObserver(subObject) {
+        if (angular.isDefined(subObject.filepath.list[subObject.filepath.get()]) &&
+            angular.isDefined(subObject.filepath.list[subObject.filepath.get()].pagecontext)) {
+            subObject.pages.context = subObject.filepath.list[subObject.filepath.get()].pagecontext;
+            return;
+        }
+        subObject.pages.context = new editables.types.Pagecontext();
+    }
 
 
     /* object fields meta-data (such as labels etc.) */

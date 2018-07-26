@@ -26,8 +26,8 @@ angular
         this.compare =  	that => this.value.value.localeCompare(that.value.value);
 
         const observers =   [];
-        this.watch =		observer => {if (angular.isFunction(observer)) observers.push(observer);};
-        this.observer =	    param => observers.forEach(observer => observer(param || this));
+        this.watch =		observer => {if (angular.isFunction(observer)) observers.push(observer); return this};
+        this.observer =	    param => observers.forEach(observer => observer(param));
     };
 
     editables.types.Author = function(first, second) {return {'firstname': first, 'lastname': second}};
@@ -520,6 +520,7 @@ angular
         return obj;
     };
 
+    // TODO use not 'none' as false value but null or sth
     editables.listitem = function(list, selected, noneallowed) {
         let obj = new editables.Base(selected, false, false);
         list = list || {};
