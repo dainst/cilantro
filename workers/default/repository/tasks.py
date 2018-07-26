@@ -24,7 +24,19 @@ def _copy_path(src, dest):
 
 
 class RetrieveFromStagingTask(BaseTask):
+    """
+    Copy the given dir-trees from users staging to the workpath.
 
+    TaskParams:
+    -list paths: all the paths to be copied
+    -str user: User Id
+
+    Preconditions:
+    -dirs at given paths in the users staging dir.
+
+    Creates:
+    -a copy of the dirs at path in the working dir.
+    """
     name = "retrieve_from_staging"
 
     def execute_task(self):
@@ -42,7 +54,16 @@ RetrieveFromStagingTask = celery_app.register_task(RetrieveFromStagingTask())
 
 
 class PublishToRepositoryTask(BaseTask):
+    """
+    Copy the given dir-trees from work dir to the repository.
 
+    TaskParams:
+
+    Preconditions:
+
+    Creates:
+    -a copy of the work dir in the repository.
+    """
     name = "publish_to_repository"
 
     def execute_task(self):

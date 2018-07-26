@@ -11,6 +11,19 @@ from workers.convert.tif_to_txt import tif_to_txt
 
 
 class SplitPdfTask(BaseTask):
+    """
+    Split multiple pdfs from the working dir.
+
+    TaskParams:
+    -list files_to_split: list of the files as dictionnaries {'file': file_name, 'range': [start, end]}
+
+    Preconditions:
+    -files from files_to_split in the working dir.
+
+    Creates:
+    -for each article:
+        -file_name.article_nr.pdf in the working dir.
+    """
     name = "convert.split_pdf"
 
     def execute_task(self):
@@ -19,6 +32,18 @@ class SplitPdfTask(BaseTask):
 
 
 class JpgToPdfTask(BaseTask):
+    """
+    Create a one paged pdf with a jpg.
+
+    TaskParams:
+    -str file: jpg file to be turned into pdf
+
+    Preconditions:
+    -file in the working dir.
+
+    Creates:
+    -file_name.converted.pdf in the working dir.
+    """
     name = "convert.jpg_to_pdf"
 
     def execute_task(self):
@@ -31,6 +56,18 @@ class JpgToPdfTask(BaseTask):
 
 
 class TifToJpgTask(BaseTask):
+    """
+    Create a jpg file from a tif.
+
+    TaskParams:
+    -str file: tif file to be turned into jpg
+
+    Preconditions:
+    -file in the working dir.
+
+    Creates:
+    -file_name.jpg in the working dir.
+    """
     name = "convert.tif_to_jpg"
 
     def execute_task(self):
@@ -41,6 +78,19 @@ class TifToJpgTask(BaseTask):
 
 
 class PdfToTxtTask(BaseTask):
+    """
+    Create a txt file for every page in a pdf.
+
+    TaskParams:
+    -str file: pdf file to be turned into txt files
+
+    Preconditions:
+    -file in the working dir.
+
+    Creates:
+    -for each page in file:
+        -page.index.txt
+    """
     name = "convert.pdf_to_txt"
 
     def execute_task(self):
@@ -49,6 +99,19 @@ class PdfToTxtTask(BaseTask):
 
 
 class PdfToTifTask(BaseTask):
+    """
+    Create a tif file for every page of a pdf.
+
+    TaskParams:
+    -str file: pdf file to be turned into tif files
+
+    Preconditions:
+    -file in the working dir.
+
+    Creates:
+    -for each page in file:
+        -index.tif
+    """
     name = "convert.pdf_to_tif"
 
     def execute_task(self):
@@ -57,6 +120,16 @@ class PdfToTifTask(BaseTask):
 
 
 class MergeConvertedPdf(BaseTask):
+    """
+    Take all the .converted.pdf files in the workspace and merge them into one.
+
+    TaskParams:
+
+    Preconditions:
+
+    Creates:
+    -merged.pdf in the working dir
+    """
     name = "convert.pdf_merge_converted"
 
     def execute_task(self):
@@ -67,6 +140,18 @@ class MergeConvertedPdf(BaseTask):
 
 
 class TxtFromTifTask(BaseTask):
+    """
+    Create a txt file from a tif.
+
+    TaskParams:
+    -str file: tif file to be turned into txt
+
+    Preconditions:
+    -file in the working dir.
+
+    Creates:
+    -file_name.converted.txt
+    """
     name = "convert.tif_to_txt"
 
     def execute_task(self):
