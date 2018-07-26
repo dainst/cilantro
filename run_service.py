@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 
 from utils.setup_logging import setup_logging
@@ -9,6 +9,7 @@ from service.job.job_type_controller import job_type_controller
 from service.staging.staging_controller import staging_controller
 from service.repository.repository_controller import repository_controller
 from service.user.user_controller import user_controller
+from service.errors import ApiError
 
 setup_logging()
 
@@ -21,3 +22,10 @@ app.register_blueprint(job_type_controller, url_prefix="/job_types")
 app.register_blueprint(staging_controller, url_prefix="/staging")
 app.register_blueprint(repository_controller, url_prefix="/repository")
 app.register_blueprint(user_controller, url_prefix="/user")
+
+
+@app.errorhandler(ApiError)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response

@@ -1,7 +1,9 @@
 import os
 import yaml
 
-from flask import Blueprint, jsonify, abort
+from flask import Blueprint, jsonify
+
+from service.errors import ApiError
 
 job_type_controller = Blueprint('job_types', __name__)
 
@@ -41,4 +43,4 @@ def get_job_type_detail(job_type):
         with open(os.path.join(job_types_dir, job_type) + '.yml', 'r') as f:
             return jsonify(yaml.safe_load(f.read()))
     except FileNotFoundError:
-        abort(404)
+        raise ApiError("Job type not found", 404)

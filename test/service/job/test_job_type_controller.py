@@ -67,3 +67,10 @@ class JobTypeTest(unittest.TestCase):
         response_text = self.client.get('/job_types/' + first_job_type_file.rsplit('.', 1)[0]).get_data(as_text=True)
 
         self.assertEqual(yaml.safe_load(first_job_type_file_content), yaml.safe_load(str(response_text)))
+
+    def test_invalid_job_type(self):
+        response = self.client.get('/job_types/foobarbaz')
+        self.assertEqual(404, response.status_code)
+
+        response_json = response.get_json()
+        self.assertFalse(response_json['success'])
