@@ -13,7 +13,7 @@ class PathDoesNotExist(Exception):
 
 class PagesInfo(SerializableClass):
     """
-    page print info.
+    Printing and visualisation information for the document.
     """
 
     showndesc: str

@@ -84,9 +84,7 @@ class MergeConvertedPdf(BaseTask):
     def execute_task(self):
         work_path = self.get_work_path()
         files = [{'file': os.path.basename(f)} for f in _list_files(work_path, '.converted.pdf')]
-        print(files)
         split_merge_pdf(files, work_path)
-        # TODO incorporate JSON data for the filename and metadatas.
 
 
 class TxtFromTifTask(BaseTask):

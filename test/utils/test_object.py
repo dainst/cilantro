@@ -1,6 +1,7 @@
 import os
 import shutil
 import unittest
+import logging
 from filecmp import dircmp
 from io import BytesIO
 
@@ -18,6 +19,8 @@ test_metadata_file_name = 'marc.xml'
 test_metadata_file_path = os.path.join(resource_dir, 'files', test_metadata_file_name)
 copy_working_path = os.path.join(working_dir, 'a_copy')
 
+log = logging.getLogger(__name__)
+
 
 def _copy_test_object():
     shutil.copytree(test_object_resource_path, test_object_working_path)
@@ -29,8 +32,8 @@ class ObjectTest(unittest.TestCase):
         try:
             shutil.rmtree(test_object_working_path)
             shutil.rmtree(copy_working_path)
-        except FileNotFoundError:
-            pass
+        except FileNotFoundError as error:
+            log.debug(error)
 
     def test_init(self):
         obj = Object(test_object_working_path)
