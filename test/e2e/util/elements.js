@@ -28,9 +28,9 @@ module.exports = {
         proceedBtn: element(by.css('#proceed')),
     },
     subobject: {
-        deleteBtn: element(by.css('span[ng-click="removeArticle(article)"]')),
-        addBtn: element(by.css('button[ng-click="addArticle()"]')),
-        entry: element.all(by.css('tr[article="true"][class="ng-scope"]')),
+        addBtn: element(by.css('#subobjects-new')),
+        select: element.all(by.css('#subobjects-select ul li a')),
+        trash: element.all(by.css('#subobjects-trash ul li a')),
         confirmBtn: element(by.css('.btn-success')),
         dismissBtn: element(by.css('.btn-danger')),
         table: element(by.css('.article-table')),

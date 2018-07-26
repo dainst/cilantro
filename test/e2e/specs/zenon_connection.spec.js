@@ -47,15 +47,27 @@ describe('subobject view', () => {
             });
         });
 
-        fit('should adopt data from zenon into current article', () => {
+        it('should adopt data from zenon into current article', () => {
             so.goToSubObject(2);
             e.zenon.searchBox.clear().sendKeys("Equus");
-            browser.sleep(500);
             a.scrollTo(e.zenon.loadMore).then(() => {
                 e.zenon.loadMore.click();
                 expect(e.zenon.resultRows.count()).toEqual(20);
             });
+        });
 
+        it('should create new data from zenon', () => {
+            so.goToSubObject(2);
+            e.zenon.searchBox.clear().sendKeys("magister Equitum");
+            e.zenon.resultRows.first().click();
+            e.zenon.newArticle.click();
+
+            expect(e.subobject.select.count()).toEqual(2);
+
+            so.getRowContent("Title").then(cell => {
+                const input = cell.element(by.css("input"));
+                expect(input.getAttribute("value")).toEqual("The missing magister equitum.");
+            });
         });
 
 

@@ -2,7 +2,7 @@
 
     <div class="row toprow">
         <div class="col-md-4">
-            <div class="btn-group" uib-dropdown>
+            <div class="btn-group" uib-dropdown id="subobjects-select">
                 <button uib-dropdown-toggle class="btn btn-default">Select Article<span class="caret"></span></button>
                 <ul uib-dropdown-menu>
                     <li ng-repeat="article in dataset.articles track by $index">
@@ -15,7 +15,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="btn-group" uib-dropdown>
+            <div class="btn-group" uib-dropdown id="subobjects-trash">
                 <button uib-dropdown-toggle class="btn btn-default">Trash<span class="caret"></span></button>
                 <ul uib-dropdown-menu>
                     <li ng-repeat="article in dataset.articles track by $index">
@@ -29,7 +29,7 @@
                 </ul>
             </div>
             <span class="btn-group">
-                <button class='btn btn-default' ng-click='addArticle()'>New Article<span class="glyphicon glyphicon-plus-sign"></span></button>
+                <button class='btn btn-default subobjects-new' ng-click='addArticle()'>New Article<span class="glyphicon glyphicon-plus-sign"></span></button>
             </span>
 
 
