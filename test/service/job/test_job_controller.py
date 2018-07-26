@@ -23,7 +23,6 @@ class JobControllerTest(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
 
         response_json = response.get_json()
-        print(f"RESPONSE: {response_json}")
         self.assertFalse(response_json['success'])
         self.assertEqual(response_json['error']['code'], "bad_request")
 
