@@ -51,3 +51,7 @@ class RepositoryControllerTest(unittest.TestCase):
     def test_get_file_not_found(self):
         response = self.client.get(f'/repository/{test_object}/not_{test_file}')
         self.assertEqual(response.status_code, 404)
+
+        response_json = response.get_json()
+        self.assertFalse(response_json['success'])
+        self.assertEqual(response_json['error']['code'], "file_not_found")
