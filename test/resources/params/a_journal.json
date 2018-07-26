@@ -1,40 +1,24 @@
 {
-  "paths": [
-    "a_journal"
-  ],
-  "files_to_split": [
-    {
-      "file": "e2e-testing.pdf",
-      "range": [
-        2,
-        3
-      ]
-    },
-    {
-      "file": "e2e-testing.pdf",
-      "range": [
-        1,
-        2
-      ]
-    }
-  ],
   "metadata": {
-    "data": {
       "volume": "",
       "year": 2018,
       "number": "",
       "description": "[PDFs teilweise verf\u00fcgbar]",
       "importFilePath": "e2e-testing.pdf",
-      "identification": "year",
-      "ojs_journal_code": "aa",
-      "ojs_user": "ojs_user",
-      "auto_publish_issue": false,
-      "default_publish_articles": true,
-      "default_create_frontpage": true,
-      "allow_upload_without_file": false
-    },
-    "articles": [
-      {
+    "identification": "year"
+  },
+  "files": [
+    {
+      "file": "pdf/e2e-testing.pdf",
+      "range": [
+        1,
+        5
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "metadata": {
         "title": "Ein kleines Musterdokument mit zweizeiligem Titel",
         "abstract": "Bachelorarbeit",
         "author": [
@@ -45,19 +29,27 @@
         ],
         "pages": {
           "showndesc": "1\u201320",
-          "startPrint": 2,
-          "endPrint": 3
+          "startPrint": 1,
+          "endPrint": 2
         },
         "date_published": "2018--",
         "language": "de_DE",
-        "auto_publish": true,
-        "filepath": "e2e-testing.pdf",
-        "attached": [],
-        "order": 0,
-        "createFrontpage": false,
         "zenonId": ""
       },
-      {
+      "files": [
+        {
+          "file": "pdf/e2e-testing.pdf",
+          "range": [
+            1,
+            2
+          ]
+        }
+      ],
+      "auto_publish": true,
+      "create_frontpage": false
+    },
+    {
+      "metadata": {
         "title": "Titel 2",
         "author": [
           {
@@ -67,24 +59,36 @@
         ],
         "pages": {
           "showndesc": "21\u201327",
-          "startPrint": 1,
-          "endPrint": 1
+          "startPrint": 21,
+          "endPrint": 23
         },
         "date_published": "2018--",
         "language": "de_DE",
-        "auto_publish": true,
-        "filepath": "e2e-testing.pdf",
-        "attached": [],
-        "order": 0,
-        "createFrontpage": false,
         "zenonId": ""
-      }
-    ]
-  },
+      },
+      "files": [
+        {
+          "file": "pdf/e2e-testing.pdf",
+          "range": [
+            21,
+            23
+          ]
+        }
+      ],
+      "auto_publish": true,
+      "create_frontpage": false
+    }
+  ],
   "nlp_params": {
     "lang": "de",
     "operations": [
         "NER"
     ]
-  }
+  },
+  "ojs_journal_code": "aa",
+  "ojs_user": "ojs_user",
+  "auto_publish_issue": false,
+  "default_publish_articles": true,
+  "default_create_frontpage": true,
+  "allow_upload_without_file": false
 }

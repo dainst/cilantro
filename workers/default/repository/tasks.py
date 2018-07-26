@@ -1,56 +1,48 @@
 import os
 import shutil
+from pathlib import Path
 
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask
+from utils.object import Object
 
 repository_dir = os.environ['REPOSITORY_DIR']
 working_dir = os.environ['WORKING_DIR']
 staging_dir = os.environ['STAGING_DIR']
 
 
-def _copy_path(src, dest):
-    """
-    Recursively copy and flatten the given paths.
-
-    :param str src:
-    :param str dest:
-    """
-    if os.path.isdir(src):
-        for path in os.listdir(src):
-            _copy_path(os.path.join(src, path), dest)
-    else:
-        shutil.copy2(src, dest)
-
-
-class RetrieveFromStagingTask(BaseTask):
-    """
-    Copy the given dir-trees from users staging to the workpath.
-
-    TaskParams:
-    -list paths: all the paths to be copied
-    -str user: User Id
-
-    Preconditions:
-    -dirs at given paths in the users staging dir.
-
-    Creates:
-    -a copy of the dirs at path in the working dir.
-    """
-    name = "retrieve_from_staging"
+class CreateObjectTask(BaseTask):
+    name = "create_object"
 
     def execute_task(self):
-        staging_path = os.path.join(staging_dir)
-
-        paths = self.get_param('paths')
         user = self.get_param('user')
-        for path in paths:
-            src = os.path.join(staging_path, user, path)
-            dest = os.path.join(self.get_work_path())
-            _copy_path(src, dest)
+        obj = Object(self.get_work_path())
+        obj.set_metadata_from_dict(self.get_param('metadata'))
+        files = self.get_param('files')
+        self._add_files(obj, files, user)
+        if 'parts' in self.params:
+            self._execute_for_parts(obj, self.get_param('parts'), user)
+
+    def _execute_for_parts(self, obj, parts, user):
+        for part in parts:
+            child = obj.add_child()
+            child.set_metadata_from_dict(part['metadata'])
+
+            if 'files' in part:
+                self._add_files(child, part['files'], user)
+
+            if 'parts' in part:
+                self._execute_for_parts(child, part['parts'], user)
+
+    @staticmethod
+    def _add_files(obj, files, user):
+        for file in files:
+            src = os.path.join(staging_dir, user, file['file'])
+            representation = Path(src).suffix.split('.')[-1].lower()[:3]
+            obj.add_file(representation, src)
 
 
-RetrieveFromStagingTask = celery_app.register_task(RetrieveFromStagingTask())
+CreateObjectTask = celery_app.register_task(CreateObjectTask())
 
 
 class PublishToRepositoryTask(BaseTask):

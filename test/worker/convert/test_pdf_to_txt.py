@@ -18,8 +18,7 @@ class PdfToTxtTest(ConvertTest):
 
         for page in range(1, self.pdf_pages + 1):
             file = os.path.join(self.txt_dir, f'page.{page}.txt')
-            if not os.path.isfile(file):
-                raise Exception(f"File {file} does not exist or is a directory")
+            self.assertTrue(os.path.isfile(file))
 
         with open(os.path.join(self.txt_dir, 'page.1.txt')) as f:
             self.assertIn("TECHNISCHE UNIVERSITÄT CAROLO-WILHELMINA", f.read())

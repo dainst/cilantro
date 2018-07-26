@@ -1,32 +1,26 @@
-import shutil
 import os
 import logging
 
 from test.worker.convert.convert_test import ConvertTest
-from workers.convert.convert_pdf import cut_pdf
+
+from workers.convert.convert_pdf import split_merge_pdf
+from utils.object import Object
 
 log = logging.getLogger(__name__)
 
 
 class CutPdfTest(ConvertTest):
-
-    def setUp(self):
-        super().setUp()
-
-        self.pdf_src = f'{self.resource_dir}/files/test.pdf'
-        self.files_generated = [
-            f'{self.working_dir}/test.pdf',
-            f'{self.working_dir}/test.pdf.0.pdf',
-            f'{self.working_dir}/test.pdf.1.pdf'
-        ]
-
-        shutil.copy(self.pdf_src, self.files_generated[0])
+    resource_dir = os.environ['RESOURCE_DIR']
+    working_dir = os.path.join(os.environ['WORKING_DIR'], 'cut_test')
+    pdf_src = f'{resource_dir}/objects/pdf/e2e-testing.pdf'
+    file_generated = f'{working_dir}/data/pdf/merged.pdf'
 
     def test_success(self):
-        params = [
-            {"file": "test.pdf", "range": [1, 20]},
-            {"file": "test.pdf", "range": [21, 27]}
-        ]
-        cut_pdf(params, self.working_dir, self.working_dir)
-        for file_generated in self.files_generated:
-            self.assertTrue(os.path.isfile(file_generated))
+        params = [{"file": "e2e-testing.pdf", "range": [1, 20]},
+                  {"file": "e2e-testing.pdf", "range": [21, 27]}]
+        obj = Object(self.working_dir)
+        stream = open(self.pdf_src, 'rb')
+        obj.add_stream('e2e-testing.pdf', 'pdf', stream)
+        stream.close()
+        split_merge_pdf(params, obj.get_representation_dir('pdf'))
+        self.assertTrue(os.path.isfile(self.file_generated))

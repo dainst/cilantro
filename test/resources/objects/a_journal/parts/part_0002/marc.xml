@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim">
+    <record>
+
+        <leader>nab a22 a 4500</leader>
+        <controlfield tag="008">160120s2015 gw 000 ger d</controlfield>
+
+        <datafield tag="100" ind1="1" ind2=" ">
+            <subfield code="a">Autor Dererste</subfield>
+        </datafield>
+
+        <datafield tag="245" ind1="1" ind2="0">
+            <subfield code="a">Titel 2</subfield>
+            <subfield code="b"></subfield>
+            <subfield code="c">Autor Dererste</subfield>
+        </datafield>
+
+        <datafield tag="260" ind1=" " ind2=" ">
+            <subfield code="a">München :</subfield>
+            <subfield code="b">Beck,</subfield>
+            <subfield code="c">2018</subfield>
+        </datafield>
+
+        <datafield tag="300" ind1=" " ind2=" ">
+            <subfield code="a">21-27</subfield>
+        </datafield>
+
+        <datafield tag="504" ind1=" " ind2=" ">
+            <subfield code="a">includes bibliographical references.</subfield>
+        </datafield>
+
+        <datafield tag="590" ind1=" " ind2=" ">
+            <subfield code="a">arom</subfield>
+        </datafield>
+
+        <datafield tag="590" ind1=" " ind2=" ">
+            <subfield code="a">#loadchiron</subfield>
+        </datafield>
+
+        <datafield tag="LKR" ind1=" " ind2=" ">
+            <subfield code="a">ANA</subfield>
+            <subfield code="b">(manuell: ID des Bandes)</subfield>
+            <subfield code="l">DAI01</subfield>
+            <subfield code="n">Chiron. Mitteilungen der Kommission für Alte Geschichte und Epigraphik des Deutschen
+                Archäologischen Instituts, 2018
+            </subfield>
+            <subfield code="m">Titel 2</subfield>
+        </datafield>
+
+    </record>
+</collection>
