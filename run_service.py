@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
+import re
+
 from flask import Flask, jsonify
 from flask_cors import CORS
+from werkzeug.exceptions import HTTPException
 
 from utils.setup_logging import setup_logging
 from service.front_controller import front_controller
@@ -25,7 +28,44 @@ app.register_blueprint(user_controller, url_prefix="/user")
 
 
 @app.errorhandler(ApiError)
-def handle_invalid_usage(error):
+def handle_api_error(error):
+    """
+    Handles custom ApiErrors raised in controllers.
+
+    This makes sure that a response object following a common JSON syntax
+    is returned.
+
+    :param ApiError error:
+    :return dict: the response object
+    """
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
+
+
+@app.errorhandler(HTTPException)
+def handle_http_exception(error):
+    """
+    Handles exceptions raised by flask internally.
+
+    This makes sure that a response object following a common JSON syntax
+    is returned.
+
+    :param error:
+    :return:
+    """
+    dic = {
+        "success": False,
+        "error": {
+            "code": _to_snake_case(type(error).__name__),
+            "message": str(error)
+        }
+    }
+    response = jsonify(dic)
+    response.status_code = error.code
+    return response
+
+
+def _to_snake_case(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()

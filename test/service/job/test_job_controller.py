@@ -22,6 +22,11 @@ class JobTest(unittest.TestCase):
                                     headers=get_auth_header())
         self.assertEqual(response.status_code, 400)
 
+        response_json = response.get_json()
+        print(f"RESPONSE: {response_json}")
+        self.assertFalse(response_json['success'])
+        self.assertEqual(response_json['error']['code'], "bad_request")
+
     def test_create_job_unknown_param(self):
         response = self.client.post('/job/ingest_journal', data='{"asd": true}',
                                     headers=get_auth_header())
