@@ -156,7 +156,7 @@ describe('subobject view', () => {
         });
 
 
-        xit('should change page boundaries if a file with different offset is chosen', () => {
+        it('should change page boundaries if a file with different offset is chosen', () => {
             so.goToSubObject(3);
             so.getRowContent("Loaded File").then(loadedFileCell => {
                 const docOffset = loadedFileCell.all(by.css("input")).last();
