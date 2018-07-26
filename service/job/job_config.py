@@ -241,9 +241,11 @@ class JobConfig:
        config.
     3. Additional parameters that override the values derived from the job
        config can be set when creating a job chain.
+
+    :param str _config_dir: path to the configuration directory.
     """
 
-    def __init__(self):
+    def __init__(self, _config_dir=os.environ['CONFIG_DIR']):
         """
         Initialize the config and triggers the parsing of the YAML files.
         """
