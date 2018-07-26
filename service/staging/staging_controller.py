@@ -3,6 +3,8 @@ import logging
 
 from flask import Blueprint, jsonify, request, send_file, abort
 from werkzeug.utils import secure_filename
+
+from service.errors import ApiError
 from service.user.user_service import auth
 
 staging_controller = Blueprint('staging', __name__)
@@ -71,7 +73,8 @@ def get_path(path):
     elif os.path.isfile(abs_path):
         return send_file(abs_path)
     else:
-        abort(404)
+        raise ApiError("file_not_found",
+                       f"No resource was found under the path {path}", 404)
 
 
 @staging_controller.route('', methods=['POST'], strict_slashes=False)
@@ -115,7 +118,8 @@ def upload_to_staging():
             for file in request.files.getlist(key):
                 results[file.filename] = _process_file(file, auth.username())
         return jsonify({"result": results}), 200
-    return "No files provided", 400
+    raise ApiError("no_files_provided",
+                   f"The request did not contain any files")
 
 
 def _process_file(file, username):
@@ -137,7 +141,6 @@ def _process_file(file, username):
             f"File extension .{_get_file_extension(file.filename)}"
             f" is not allowed."
         )
-    return result
 
 
 def _generate_error_result(file, code, message, e=None):

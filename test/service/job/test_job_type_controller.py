@@ -9,7 +9,7 @@ config_dir = os.environ['CONFIG_DIR']
 job_types_dir = os.path.join(config_dir, 'job_types')
 
 
-class JobTypeTest(unittest.TestCase):
+class JobTypeControllerTest(unittest.TestCase):
 
     def setUp(self):
         app.testing = True
@@ -67,3 +67,11 @@ class JobTypeTest(unittest.TestCase):
         response_text = self.client.get('/job_types/' + first_job_type_file.rsplit('.', 1)[0]).get_data(as_text=True)
 
         self.assertEqual(yaml.safe_load(first_job_type_file_content), yaml.safe_load(str(response_text)))
+
+    def test_invalid_job_type(self):
+        response = self.client.get('/job_types/foobarbaz')
+        self.assertEqual(404, response.status_code)
+
+        response_json = response.get_json()
+        self.assertFalse(response_json['success'])
+        self.assertEqual(response_json['error']['code'], "job_type_not_found")

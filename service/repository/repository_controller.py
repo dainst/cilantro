@@ -2,6 +2,7 @@ import os
 
 from flask import Blueprint, jsonify, send_file, abort
 
+from service.errors import ApiError
 
 repository_controller = Blueprint('repository', __name__)
 
@@ -25,4 +26,5 @@ def get_path(path):
     elif os.path.isfile(abs_path):
         return send_file(abs_path)
     else:
-        abort(404)
+        raise ApiError("file_not_found",
+                       f"No resource was found under the path {path}", 404)
