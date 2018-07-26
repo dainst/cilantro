@@ -42,7 +42,9 @@ def job_create(job_type):
     :return: A JSON object containing the status, the job id and the task ids
         of every subtask in the chain
     """
-    params = request.get_json(force=True)
+    params = {}
+    if request.data:
+        params = request.get_json(force=True)
     user = auth.username()
     try:
         job = get_job_config().generate_job(job_type, user, params)
