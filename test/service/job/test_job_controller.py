@@ -1,5 +1,6 @@
-import os
 import unittest
+
+from unittest.mock import patch
 
 from run_service import app
 from test.service.user.user_utils import get_auth_header
@@ -10,7 +11,11 @@ class JobControllerTest(unittest.TestCase):
     def setUp(self):
         app.testing = True
         self.client = app.test_client()
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_valid"
+        self.env = patch.dict('os.environ', {'CONFIG_DIR': "test/resources/configs/config_valid"})
+        self.env.start()
+
+    def tearDown(self):
+        self.env.stop()
 
     def test_create_job_success(self):
         response = self.client.post('/job/job1',
