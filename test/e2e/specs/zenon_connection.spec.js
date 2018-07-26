@@ -1,5 +1,5 @@
 const e = require("../util/elements");
-const action = require('../modules/actions');
+const a = require('../modules/actions');
 const message = require('../modules/messages');
 const so = require('../modules/subobject');
 
@@ -46,5 +46,18 @@ describe('subobject view', () => {
                 expect(input.getAttribute("value")).toEqual("Ridley");
             });
         });
+
+        fit('should adopt data from zenon into current article', () => {
+            so.goToSubObject(2);
+            e.zenon.searchBox.clear().sendKeys("Equus");
+            browser.sleep(500);
+            a.scrollTo(e.zenon.loadMore).then(() => {
+                e.zenon.loadMore.click();
+                expect(e.zenon.resultRows.count()).toEqual(20);
+            });
+
+        });
+
+
     });
 });

@@ -47,7 +47,12 @@
     </div>
 
     <div style="text-align:center" ng-show="results.length">
-        <span class='btn btn-default btn-xs' ng-click='doSearch(true)' data-tooltip='more results' ng-if="found > page * 10">
+        <span
+                id="zenon-load-more"
+                class='btn btn-default btn-xs'
+                ng-click='doSearch(true)'
+                title='more results'
+                ng-show="found > page * 10">
             <span class='glyphicon glyphicon-plus-sign'></span>
         </span>
     </div>

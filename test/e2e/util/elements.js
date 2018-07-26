@@ -69,11 +69,11 @@ module.exports = {
         markMissing: element(by.css('button[ng-click="markAsMissingZenon()"]')),
         adopt: element(by.css('button[ng-click="adoptFromZenon()"]')),
         newArticle: element(by.css('button[ng-click="newFromZenon()"]')),
-        downloadLink: element(by.css('a.downloadLink')),
         searchBox: element(by.css('#zenon-search')),
         submit: element(by.css('#zenon-submit')),
         resultCount: element(by.css('#zenon-result-count')),
         resultRows: element.all(by.css('#zenon-results table tbody tr')),
+        loadMore: element(by.css('#zenon-load-more')),
     },
     navbar: {
         overview: element(by.id('step-overview')),
