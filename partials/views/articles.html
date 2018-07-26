@@ -29,7 +29,7 @@
                 </ul>
             </div>
             <span class="btn-group">
-                <button class='btn btn-default subobjects-new' ng-click='addArticle()'>New Article<span class="glyphicon glyphicon-plus-sign"></span></button>
+                <button class='btn btn-default' id="subobjects-new" ng-click='addArticle()'>New Article<span class="glyphicon glyphicon-plus-sign"></span></button>
             </span>
 
 
@@ -40,24 +40,24 @@
         <div class="col-md-4 text-right">
             <span class="btn-group">
                 <button
-                        ng-if="isArticleSelected()"
+                        ng-show="isArticleSelected()"
                         class="btn btn-label"
                 >This Article:
                 </button>
                 <button
-                        ng-if="isArticleSelected() && dataset.articles[currentArticle]._.confirmed !== false"
+                        ng-show="isArticleSelected() && dataset.articles[currentArticle]._.confirmed !== false"
                         ng-click='dismissArticle()'
                         class='btn btn-danger'
                 >Dismiss<span class="glyphicon glyphicon-remove"></span>
                 </button>
                 <button
-                        ng-if="isArticleSelected() && dataset.articles[currentArticle]._.confirmed === false"
+                        ng-show="isArticleSelected() && dataset.articles[currentArticle]._.confirmed === false"
                         ng-click='undeleteArticle()'
                         class='btn btn-default'
                 >Undelete<span class="glyphicon glyphicon-remove"></span>
                 </button>
                 <button
-                        ng-if="checkArticle() && isArticleSelected() && dataset.articles[currentArticle]._.confirmed !== false"
+                        ng-show="checkArticle() && isArticleSelected() && dataset.articles[currentArticle]._.confirmed !== false"
                         ng-click='confirmArticle()'
                         class='btn btn-success'
                 >Confirm<span class="glyphicon glyphicon-chevron-right"></span>
