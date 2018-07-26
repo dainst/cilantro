@@ -245,12 +245,15 @@ class JobConfig:
     :param str _config_dir: path to the configuration directory.
     """
 
-    def __init__(self, _config_dir=os.environ['CONFIG_DIR']):
+    def __init__(self, _config_dir=None):
         """
         Initialize the config and triggers the parsing of the YAML files.
         """
         self.logger = logging.getLogger(__name__)
-        self._config_dir = _config_dir
+        if _config_dir:
+            self._config_dir = _config_dir
+        else:
+            self._config_dir = os.environ['CONFIG_DIR']
         self.job_types = {}
         self._parse_job_config()
 
