@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from run_service import app
@@ -9,16 +10,17 @@ class JobControllerTest(unittest.TestCase):
     def setUp(self):
         app.testing = True
         self.client = app.test_client()
+        os.environ['CONFIG_DIR'] = "test/resources/configs/config_valid"
 
     def test_create_job_success(self):
-        response = self.client.post('/job/ingest_journal',
+        response = self.client.post('/job/job1',
                                     headers=get_auth_header())
         self.assertEqual(response.status_code, 202)
         response_json = response.get_json()
         self.assertEqual(response_json['status'], 'Accepted')
 
     def test_create_job_invalid_json(self):
-        response = self.client.post('/job/ingest_journal', data="jkhsadfj,';",
+        response = self.client.post('/job/job1', data="jkhsadfj,';",
                                     headers=get_auth_header())
         self.assertEqual(response.status_code, 400)
 
@@ -27,7 +29,7 @@ class JobControllerTest(unittest.TestCase):
         self.assertEqual(response_json['error']['code'], "bad_request")
 
     def test_create_job_unknown_param(self):
-        response = self.client.post('/job/ingest_journal', data='{"asd": true}',
+        response = self.client.post('/job/job1', data='{"asd": true}',
                                     headers=get_auth_header())
         self.assertEqual(response.status_code, 400)
 
@@ -36,8 +38,8 @@ class JobControllerTest(unittest.TestCase):
         self.assertEqual(response_json['error']['code'], "invalid_job_params")
 
     def test_create_job_invalid_params(self):
-        response = self.client.post('/job/ingest_journal',
-                                    data='{"split_files": true}',
+        response = self.client.post('/job/job1',
+                                    data='{"do_task2": "blabla"}',
                                     headers=get_auth_header())
         self.assertEqual(response.status_code, 400)
 
