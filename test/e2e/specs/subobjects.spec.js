@@ -54,9 +54,9 @@ describe('subobject view', () => {
         so.getRowContent("Title").then(cell => {
             const input = cell.element(by.css("input"));
             input.clear();
-            expect(e.subobject.confirmBtn.isDisplayed()).toBeTruthy();
-            input.sendKeys("shit");
             expect(e.subobject.confirmBtn.isDisplayed()).toBeFalsy();
+            input.sendKeys("shit");
+            expect(e.subobject.confirmBtn.isDisplayed()).toBeTruthy();
         });
     });
 
