@@ -10,6 +10,19 @@ from utils.object import Object
 
 
 class GenerateMarcXMLTask(BaseTask):
+    """
+    Generate a Marc XML for every article based on a data.json file and validate them.
+
+    TaskParams:
+    -str xml_template_path: path to the xml template
+
+    Preconditions:
+    -data.json in the working dir
+
+    Creates:
+    -for each article:
+        -marc.xml in articles/article_dir
+    """
     name = "generate_marc_xml"
 
     def execute_task(self):
@@ -26,6 +39,18 @@ class GenerateMarcXMLTask(BaseTask):
 
 
 class GenerateXMLTask(BaseTask):
+    """
+    Generate an XML based on a data.json file and validate it.
+
+    TaskParams:
+    -str xml_template_path: path to the xml template
+
+    Preconditions:
+    -data.json in the working dir
+
+    Creates:
+    -ojs_import.xml
+    """
     name = "generate_xml"
 
     def execute_task(self):

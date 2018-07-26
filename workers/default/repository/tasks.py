@@ -46,7 +46,16 @@ CreateObjectTask = celery_app.register_task(CreateObjectTask())
 
 
 class PublishToRepositoryTask(BaseTask):
+    """
+    Copy the given dir-trees from work dir to the repository.
 
+    TaskParams:
+
+    Preconditions:
+
+    Creates:
+    -a copy of the work dir in the repository.
+    """
     name = "publish_to_repository"
 
     def execute_task(self):
