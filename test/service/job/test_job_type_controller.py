@@ -74,3 +74,4 @@ class JobTypeTest(unittest.TestCase):
 
         response_json = response.get_json()
         self.assertFalse(response_json['success'])
+        self.assertEqual(response_json['error']['code'], "job_type_not_found")

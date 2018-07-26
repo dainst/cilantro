@@ -43,4 +43,8 @@ def get_job_type_detail(job_type):
         with open(os.path.join(job_types_dir, job_type) + '.yml', 'r') as f:
             return jsonify(yaml.safe_load(f.read()))
     except FileNotFoundError:
-        raise ApiError("Job type not found", 404)
+        raise ApiError(
+            "job_type_not_found",
+            f"No definition for given job type '{job_type}' found",
+            404
+        )
