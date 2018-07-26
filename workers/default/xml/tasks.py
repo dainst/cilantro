@@ -11,13 +11,13 @@ from workers.default.xml.xml_validator import validate_xml
 
 class GenerateMarcXMLTask(BaseTask):
     """
-    Generates a Marc XML for every article based on a data.json file and validates them.
+    Generate a Marc XML for every article based on a data.json file and validate them.
 
     TaskParams:
     -str xml_template_path: path to the xml template
 
     Preconditions:
-    -data.json needs to exist in the working dir
+    -data.json in the working dir
 
     Creates:
     -for each article:
@@ -40,13 +40,13 @@ class GenerateMarcXMLTask(BaseTask):
 
 class GenerateXMLTask(BaseTask):
     """
-    Generates an XML based on a data.json file and validates it.
+    Generate an XML based on a data.json file and validate it.
 
     TaskParams:
     -str xml_template_path: path to the xml template
 
     Preconditions:
-    -data.json needs to exist in the working dir
+    -data.json in the working dir
 
     Creates:
     -ojs_import.xml

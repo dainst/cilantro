@@ -32,7 +32,7 @@ class RetrieveFromStagingTask(BaseTask):
     -str user: User Id
 
     Preconditions:
-    -dirs at paths need to exist in the users staging dir.
+    -dirs at given paths in the users staging dir.
 
     Creates:
     -a copy of the dirs at path in the working dir.

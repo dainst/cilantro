@@ -11,11 +11,11 @@ from workers.base_task import BaseTask
 
 class ForeachTask(BaseTask):
     """
-    Run a task for every file of a given pattern.
+    Run a task list for every file of a given pattern.
 
     TaskParams:
     -str pattern: Regex string to find the files.
-    -list subtasks: list of tasks to run that will get the found files as parameter.
+    -list subtasks: list of tasks to be run.
 
     Preconditions:
 
@@ -51,7 +51,7 @@ ForeachTask = celery_app.register_task(ForeachTask())
 
 class CleanupWorkdirTask(BaseTask):
     """
-    Remove the complete content of the working dir
+    Remove the complete content of the working dir.
 
     TaskParams:
 
