@@ -10,9 +10,7 @@ from service.job.job_config import JobConfig, ConfigParseException,\
 class JobConfigTest(unittest.TestCase):
 
     def test_valid(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_valid"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_valid")
         job1 = job_config.generate_job("job1", "test_user").chain
         self.assertTrue(
             isinstance(job1, Signature),
@@ -47,27 +45,21 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('average', tasks[1]['kwargs']['quality'])
 
     def test_unknown_job_type(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_valid"
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_valid")
         self.assertRaises(UnknownJobTypeException, job_config.generate_job,
                           "job3", "test_user")
 
     def test_invalid_yaml(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_invalid_yaml"
-        self.assertRaises(ConfigParseException, JobConfig)
+        self.assertRaises(ConfigParseException, JobConfig("test/resources/configs/config_invalid_yaml"))
 
     def test_invalid_definition(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_invalid_def"
-        self.assertRaises(ConfigParseException, JobConfig)
+        self.assertRaises(ConfigParseException, JobConfig("test/resources/configs/config_invalid_def"))
 
     def test_invalid_params(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_invalid_param"
-        self.assertRaises(ConfigParseException, JobConfig)
+        self.assertRaises(ConfigParseException, JobConfig("test/resources/configs/config_invalid_param"))
 
     def test_config_param_in_task(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_params"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_params")
 
         job = job_config.generate_job("job1", "test_user").chain
 
@@ -77,9 +69,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertIn('do_task2', tasks[1].kwargs)
 
     def test_request_param_in_task(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_params"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_params")
 
         job = job_config.generate_job("job1", {'do_task2': True}).chain
 
@@ -89,9 +79,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertIn('do_task2', tasks[1].kwargs)
 
     def test_if_param_true(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         job = job_config.generate_job("job1", "test_user", {"do_task2": True})\
             .chain
@@ -104,9 +92,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task3', tasks[2]['task'])
 
     def test_if_param_false(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         job = job_config.generate_job("job1", "test_user", {"do_task2": False})\
             .chain
@@ -118,9 +104,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task3', tasks[1]['task'])
 
     def test_if_param_not_set(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         job = job_config.generate_job("job1", "test_user").chain
 
@@ -131,9 +115,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task3', tasks[1]['task'])
 
     def test_if_else_param_true(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         job = job_config.generate_job("job2", "test_user", {"do_task2": True})\
             .chain
@@ -147,9 +129,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task5', tasks[3]['task'])
 
     def test_if_else_param_false(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         job = job_config.generate_job("job2", "test_user", {"do_task2": False})\
             .chain
@@ -162,9 +142,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task5', tasks[2]['task'])
 
     def test_if_else_param_not_set(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         job = job_config.generate_job("job2", "test_user").chain
 
@@ -176,9 +154,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task5', tasks[2]['task'])
 
     def test_if_not_param_true(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         job = job_config.generate_job("job3", "test_user", {"skip_task2": True}).chain
 
@@ -189,9 +165,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task3', tasks[1]['task'])
 
     def test_if_not_param_false(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         job = job_config.generate_job("job3", "test_user", {"skip_task2": False}).chain
 
@@ -203,9 +177,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task3', tasks[2]['task'])
 
     def test_if_not_param_not_set(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         job = job_config.generate_job("job3", "test_user").chain
 
@@ -217,17 +189,13 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('task3', tasks[2]['task'])
 
     def test_invalid_request_param(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         with self.assertRaises(RequestParameterException):
             job_config.generate_job("job1", "test_user", {"skip_task2": True})
 
     def test_invalid_request_param_type(self):
-        os.environ['CONFIG_DIR'] = "test/resources/configs/config_if"
-
-        job_config = JobConfig()
+        job_config = JobConfig("test/resources/configs/config_if")
 
         with self.assertRaises(RequestParameterException):
             job_config.generate_job("job1", "test_user", {"do_task2": "foo"})
