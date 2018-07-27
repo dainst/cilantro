@@ -1,7 +1,7 @@
 angular
     .module('directive.zenon', [])
-    .directive("zenon", ['$http', '$sce', '$timeout', 'messenger', 'settings',
-        function($http, $sce, $timeout, messenger, settings) {
+    .directive("zenon", ['$timeout', '$rootScope', 'zenon_importer',
+        function($timeout, $rootScope, zenonImporter) {
             return {
                 restrict: 'E',
                 templateUrl: 'partials/elements/zenon.html',
@@ -10,8 +10,6 @@ angular
                     result: '='
                 },
                 link: function (scope, element, attrs) {
-
-                    const zenonEndpoint = $sce.trustAsResourceUrl(settings.zenon_url);
 
                     scope.results = [];
                     scope.selected = -1;
@@ -34,58 +32,31 @@ angular
                         scope.selected = -1;
                     };
 
-                    function createRequestParams() {
-                        const isId = term => !!term.match(/^\w?\w?\d{9}$/);
-                        const request = {};
-                        request.method = 'GET';
-                        request.params = {};
-
-                        if (!scope.search.id && !isId(scope.search.term)) {
-                            request.url = zenonEndpoint + 'search';
-                            request.params.lookfor = scope.search.term;
-                            request.params.page = scope.page;
-                            request.params.limit = 10;
-                            request.params.type = "Title";
-                            request.params.sort = "relevence";
-                        } else {
-                            console.log("zenon search for id ", scope.search);
-                            request.url = zenonEndpoint + 'record';
-                            request.params.id = scope.search.id || scope.search.term
-                        }
-                        request.params["field[]"] = ['id', 'title', 'authors', 'summary', 'formats', 'series',
-                            'languages', 'urls', 'subjects', 'physicalDescriptions', 'placesOfPublication', 'cleanIsbn',
-                            'cleanDoi', 'cleanIssn', 'containerStartPage', 'containerEndPage', 'publicationDates'
-                        ];
-                        return request;
-                    }
 
                     scope.doSearch = function(more) {
 
                         if (!more) scope.resetResults();
                         scope.searchTimeout = false;
-                        //dataset.articles[scope.currentArticle]._.reportToZenon = false; // @ TODO
                         if (!scope.search || !scope.search.term) return;
                         if (more) scope.page++;
                         console.log('Zenon search for term: ', scope.search);
-                        //dataset.articles[scope.currentArticle].zenonId.value.value = ''; // @ TODO
 
-                        $http(createRequestParams()).then(
-                            response => {
-                                console.log('success', response);
-                                const data = response.data;
+                        zenonImporter.get(scope.search.term, scope.search.id, scope.page).then(
+                            data => {
                                 scope.results = scope.results.concat(data.records || []);
                                 scope.found = parseInt(data.resultCount);
-                                //scope.start = parseInt(data.responseHeader.params.start) + 10;
                                 if (scope.found === 1) {
                                     scope.select(0);
                                 }
+                                $rootScope.$broadcast('refreshView');
                             },
                             err => {
                                 scope.resetResults();
-                                console.error(err);
-                                messenger.error('Could not connect to Zenon!');
+                                $rootScope.$broadcast('refreshView');
                             }
                         );
+
+
                     };
 
                     scope.select = index => {
