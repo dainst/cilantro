@@ -15,6 +15,12 @@ angular
 
         $scope.searchObject = {};
 
+        $scope.$watch('zenonResult', (newValue, oldValue, scope) => {
+            if (!scope.isArticleSelected()) return;
+            if (!newValue.id) return;
+            dataset.articles[scope.currentArticle].zenonId.set(newValue.id);
+        });
+
         function updateSearchObject() {
             $scope.searchObject = {
                 term: ($scope.currentArticle === -1) ? "" : dataset.articles[$scope.currentArticle].title.value.value

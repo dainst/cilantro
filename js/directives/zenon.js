@@ -17,7 +17,7 @@ angular
                     scope.page = 0;
                     scope.searchTimeout = false;
 
-                    scope.$watchCollection("search", (oldValue, newValue, scope) => {
+                    scope.$watchCollection("search", (newValue, oldValue, scope) => {
                         scope.resetResults(scope.search);
                         if (!scope.searchTimeout) {
                             scope.searchTimeout = true;
@@ -62,9 +62,6 @@ angular
                     scope.select = index => {
                         scope.selected = (scope.selected === index) ? -1 : index;
                         scope.result = (scope.selected >= 0) ? scope.results[scope.selected] : null;
-                        // dataset.articles[scope.currentArticle].zenonId.value.value =
-                        //     (scope.selectedResult === -1) ? '' : scope.results.results[index].id; TODO
-
                     };
 
                     scope.displayRecord = record => ({
