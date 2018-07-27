@@ -72,6 +72,9 @@ class Object:
     """
 
     INITIAL_REPRESENTATION = "origin"
+    PART_PREFIX = "part_"
+    PARTS_DIR = "parts"
+    DATA_DIR = "data"
 
     path: str
     metadata: ObjectMetadata
@@ -205,15 +208,13 @@ class Object:
         """
         if not os.path.exists(self._get_part_dir()):
             os.makedirs(self._get_part_dir())
-            return Object(os.path.join(self._get_part_dir(), 'part_0001'))
-
-        return Object(os.path.join(self._get_part_dir(),
-                                   _get_part_dir_for_index(len(os.listdir(self._get_part_dir())) + 1)))
+            path = os.path.join(self._get_part_dir(), f"{self.PART_PREFIX}0001")
+            return Object(path)
+        part_no = len(os.listdir(self._get_part_dir())) + 1
+        return self.get_child(part_no)
 
     def get_child(self, index: int):
-        part_name = _get_part_dir_for_index(index)
-        path = os.path.join(self._get_part_dir(), part_name)
-        return Object(path)
+        return Object(self._get_part_dir_for_index(index))
 
     def get_children(self):
         """
@@ -240,19 +241,18 @@ class Object:
         copy_tree(self.path, path)
 
     def _get_part_dir(self):
-        return os.path.join(self.path, 'parts')
+        return os.path.join(self.path, self.PARTS_DIR)
 
     def _get_data_dir(self):
-        return os.path.join(self.path, 'data')
+        return os.path.join(self.path, self.DATA_DIR)
+
+    def _get_part_dir_for_index(self, index: int):
+        part_name = f"{Object.PART_PREFIX}{str(index).zfill(4)}"
+        return os.path.join(self._get_part_dir(), part_name)
 
     def get_representation_dir(self, representation: str):
         return os.path.join(self._get_data_dir(), representation)
 
 
 def _is_part_dir_format(dir_name):
-    return 'part_' in dir_name
-
-
-def _get_part_dir_for_index(index: int):
-    part_name = f"part_{str(index).zfill(4)}"
-    return part_name
+    return Object.PART_PREFIX in dir_name
