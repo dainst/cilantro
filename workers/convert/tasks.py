@@ -57,7 +57,8 @@ def _split_pdf_for_object(obj, files):
         if suffix == 'pdf':
             pdf_files.append(file)
     if len(pdf_files) > 0:
-        split_merge_pdf(pdf_files, obj.get_representation_dir('pdf'))
+        rep_dir = obj.get_representation_dir(Object.INITIAL_REPRESENTATION)
+        split_merge_pdf(pdf_files, rep_dir)
 
 
 class JpgToPdfTask(BaseTask):

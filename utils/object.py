@@ -71,6 +71,8 @@ class Object:
     simplifies the management of cilantro objects.
     """
 
+    INITIAL_REPRESENTATION = "origin"
+
     path: str
     metadata: ObjectMetadata
 
