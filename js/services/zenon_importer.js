@@ -42,7 +42,7 @@ angular
                     },
                     err => {
                         console.error(err);
-                        messenger.error('Could not connect to Zenon!');
+                        messenger.error('No Result from Zenon!');
                         reject(err);
                     }
                 );

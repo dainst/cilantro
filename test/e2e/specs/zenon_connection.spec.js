@@ -70,6 +70,35 @@ describe('subobject view', () => {
             });
         });
 
+        it('should automaticcaly fetch data from zenon if list of Ids is provided', () => {
+            browser.get(browser.baseUrl);
+            e.start.startBtn.click();
+            e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
+            a.waitForModal();
+            e.csv.takeData.click();
+            e.csv.autoFetchFromZenon.click();
+            e.csv.confirm.click();
+            e.documents.proceedBtn.click();
+            e.overview.proceedBtn.click();
+            so.getRowContent("Title").then(cell => {
+                const input = cell.element(by.css("input"));
+                expect(input.getAttribute("value")).toEqual("Equus : the horse in the Roman World ");
+            });
+        });
+
+        it('just should a row which Ids is unknown', () => {
+            browser.get(browser.baseUrl);
+            e.start.startBtn.click();
+            e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
+            a.waitForModal();
+            e.csv.textField.sendKeys("\n000000000");
+            e.csv.takeData.click();
+            e.csv.autoFetchFromZenon.click();
+            e.csv.confirm.click();
+            e.documents.proceedBtn.click();
+            e.overview.proceedBtn.click();
+            expect(e.subobject.select.count()).toEqual(2);
+        });
 
     });
 });

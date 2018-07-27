@@ -29,7 +29,12 @@
           "name": "pdf3.pdf"
         }
       ]
+    },
+    {
+      "type": "file",
+      "name": "zenon_id_list.csv"
     }
+
   ],
 
   "checkStart": {

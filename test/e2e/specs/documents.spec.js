@@ -1,27 +1,21 @@
 const e = require("../util/elements");
-const action = require('../modules/actions');
+const a = require('../modules/actions');
 const message = require('../modules/messages');
- //const check = require('../modules/checks');
-// const select = require('../modules/selectors');
- //const button = require('../modules/buttons');
-
- const input = require('../modules/inputs');
-//// const EC = protractor.ExpectedConditions;
 
 describe('documents page', () => {
 
     it('should show tree of staging dir', () => {
         browser.get(browser.baseUrl)
             .then(e.start.startBtn.click)
-            .then(expect(e.documents.treeViewItemsTopLevel.count()).toEqual(4))
-            .then(expect(e.documents.treeViewItems.count()).toEqual(7));
+            .then(expect(e.documents.treeViewItemsTopLevel.count()).toEqual(5))
+            .then(expect(e.documents.treeViewItems.count()).toEqual(8));
     });
 
     it('should toggle sub-directories', () => {
         browser.get(browser.baseUrl)
             .then(e.start.startBtn.click)
             .then(e.documents.toggleBranchBtn.click)
-            .then(expect(e.documents.treeViewItemsTopLevel.last().all(by.css("li")).count()).toEqual(3));
+            .then(expect(e.documents.treeViewItemsTopLevel.get(3).all(by.css("li")).count()).toEqual(3));
     });
 
     it('should should load pdf file and create a document if selected so', () => {
@@ -84,7 +78,7 @@ describe('documents page', () => {
         browser.get(browser.baseUrl)
             .then(e.start.startBtn.click)
             .then(e.documents.treeViewItemsTopLevel.get(0).element(by.css('.load')).click)
-            .then(action.waitForModal)
+            .then(a.waitForModal)
             .then(expect(e.csv.textField.getAttribute('value')).not.toEqual(""))
             .then(e.csv.takeData.click)
             .then(e.csv.ignoreFirstRow.click)

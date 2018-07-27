@@ -1,5 +1,5 @@
 const e = require("../util/elements");
-const action = require('../modules/actions');
+const a = require('../modules/actions');
 const message = require('../modules/messages');
 const ot = require('../modules/overview_table');
 
@@ -38,6 +38,7 @@ describe('overview page', () => {
         e.overview.columnsDropdownBtn.click();
         ot.getCell(0, "Loaded File").then(cell => {
             cell.all(by.css('select option')).get(2).click();
+            browser.sleep(500);
             ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
                 expect(difference).toBeLessThan(1500);
                 done()
@@ -110,7 +111,7 @@ describe('overview page', () => {
     it('should open pdf in other tab on btn click', () => {
         ot.goToOverview(2);
         ot.getRowButton(0, 'open').click();
-        action.switchToNewTab().then(() => {
+        a.switchToNewTab().then(() => {
             browser.ignoreSynchronization = true;
             expect(browser.getCurrentUrl()).toMatch(/\/files\/e2e-testing\.pdf/);
             browser.ignoreSynchronization = false;

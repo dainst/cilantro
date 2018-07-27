@@ -48,11 +48,6 @@ angular
             if (dataset.articles[$scope.currentArticle]._.confirmed)
                 dataset.articles[$scope.currentArticle]._.confirmed = undefined;
 
-            // if (dataset.articles[$scope.currentArticle]._.autoFetchFromZenon && dataset.articles[$scope.currentArticle].zenonId.value.value !== '') {
-            //     $scope.autoFetchFromZenon()
-            // } else if (!dataset.articles[$scope.currentArticle]._.reportToZenon) {
-            //     $scope.compareWithZenon();
-            // }
         };
 
         $scope.selectNextUnconfirmedArticle = function() {

@@ -50,7 +50,8 @@ module.exports = {
         authorFormat: element(by.id('csv-author-format')),
         deviantColumnsWarning: element(by.id('csv-deviant-columns-warning')),
         delimiterWarning: element(by.id('csv-delimiter-warning')),
-        moreOptions: element(by.id('csv-more-options'))
+        moreOptions: element(by.id('csv-more-options')),
+        autoFetchFromZenon: element(by.id('csv-autofetch')),
     },
     message: {
         main: element(by.css('#info-container .alert.main-message')),

@@ -1,6 +1,6 @@
 angular.module('controller.csv_import_window', ['ui.bootstrap']);
-mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', 'file', 'labels',
-    function($scope, $uibModalInstance, dataset, file, labels) {
+mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', 'file', 'labels', 'zenon_importer', 'messenger',
+    function($scope, $uibModalInstance, dataset, file, labels, zenonImporter, messenger) {
 
         /* raw csv data */
         $scope.raw_csv = "";
@@ -46,8 +46,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
 
         /* controls */
         $scope.ok = () => {
-            CSV2Articles();
-            $uibModalInstance.close();
+            CSV2Articles().then($uibModalInstance.close);
         };
 
         $scope.cancel = () => $uibModalInstance.dismiss('cancel');
@@ -130,7 +129,6 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
             for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
                 let col = $scope.columns[cols[i]];
                 col.length = col.values.length;
-                console.log(">>>>", equal_length, col.length);
                 equal_length = equal_length && ((last_length === 0) || (last_length === col.length));
                 last_length = col.length;
 
@@ -152,8 +150,8 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
                     continue;
                 }
 
-                // 3. big numbers = zenonIds
-                let areIds = col.values.reduce(function(agg, v){let vv = Number(v); return agg && angular.isNumber(vv) && !isNaN(vv) && (vv > 9999)}, true);
+                // 3. ZenonIds
+                let areIds = col.values.reduce((agg, v) => !!v.match(/^\w?\w?\d{9}$/) && agg, true);
                 if (areIds) {
                     $scope.columns[cols[i]].selected = 'zenonid';
                     continue;
@@ -175,7 +173,7 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
                     continue;
                 }
 
-                // 6. filepath
+                // 6. language
                 let areLangs = col.values.reduce(function(agg, v){return agg && v.match(/^[a-z][a-z]_[A-Z][A-Z]$/)}, true);
                 if (areLangs) {
                     $scope.columns[cols[i]].selected = 'language';
@@ -247,23 +245,57 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
             return (arrData);
         }
 
+        function getColumnId(field) {
+            return Object.keys($scope.columns).filter(v => $scope.columns[v].selected === field).pop();
+        }
+
         function CSV2Articles() {
 
-            for (let r = ($scope.options.ignoreFirstRow ? 1 : 0); r < $scope.csv.length; r++) {
-                let article = new dataset.Article();
+            function fetchArticleFromZenon(id) {
+                return new Promise((resolve, reject) =>
+                    zenonImporter.get(false, id)
+                        .then(
+                            data => {
+                                if (data.status !== "OK" || !data.records.length) resolve(null);
+                                resolve(dataset.mapSubObject("zenon", zenonImporter.convert(data.records[0])));
+                            },
+                            err => {
+                                messenger.warning("Record with id >>" + id + "<< could not fetched from zenon");
+                                resolve(null);
+                            }
+                        )
+                );
+            }
+
+            function newArticle() {
+                return new Promise((resolve, reject) => {
+                    resolve(new dataset.Article());
+                })
+            }
+
+            function getArticleBase(row) {
+                const zenonColumnId = getColumnId("zenonid");
+                console.log("!!",zenonColumnId,angular.isDefined(zenonColumnId) , $scope.csv[row][zenonColumnId]);
+                return ($scope.options.autoFetchFromZenon && angular.isDefined(zenonColumnId) && $scope.csv[row][zenonColumnId])
+                    ? fetchArticleFromZenon($scope.csv[row][zenonColumnId])
+                    : newArticle();
+            }
+
+            function fillArticleWithRow(r, article) {
+
+                if (!article) return;
 
                 for (let i = 0, cols = Object.keys($scope.columns); i < cols.length; i++) {
-                    let col = $scope.columns[cols[i]].selected;
-                    let prop = $scope.cols_types[col];
+                    const col = $scope.columns[cols[i]].selected;
+                    const prop = $scope.cols_types[col];
 
-                    if (typeof $scope.csv[r][cols[i]]  === "undefined") {
-                        return;
-                    }
+                    if (angular.isUndefined($scope.csv[r][cols[i]])) return;
 
                     if (!angular.isUndefined(article[prop])) {
-                        //console.log($scope.csv[r][cols[i]]);
+
                         if (col === 'author') {
-                            article[prop].set($scope.csv[r][cols[i]].split($scope.options.authorsDelimiter),  Number($scope.options.authorFormat));
+                            article[prop].set($scope.csv[r][cols[i]].split($scope.options.authorsDelimiter), Number($scope.options.authorFormat));
+
                         } else if (col === "pages") {
                             let pages = $scope.csv[r][cols[i]].match(/^(\d{1,3})\s?[\-\u2013\u2212]?\s?(\d{1,3})?$/);
                             if (pages === null) {
@@ -273,12 +305,9 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
                             if (typeof pages[2] !== "undefined") {
                                 article.pages.value.endPdf = parseInt(pages[2]);
                             }
+
                         } else {
                             article[prop].set($scope.csv[r][cols[i]]);
-                        }
-
-                        if (col === 'zenonid' && $scope.options.autoFetchFromZenon) {
-                            article._.autoFetchFromZenon = true; //!
                         }
 
                     } else if (col === "pagefrom") {
@@ -289,10 +318,18 @@ mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', '
                     }
 
                 }
-
                 dataset.articles.push(article);
             }
+
+            const articlePromises = [];
+            for (let r = ($scope.options.ignoreFirstRow ? 1 : 0); r < $scope.csv.length; r++) {
+                const articlePromise = getArticleBase(r);
+                articlePromise.then(article => fillArticleWithRow(r, article));
+                articlePromises.push(articlePromise);
+            }
+            return Promise.all(articlePromises);
         }
+
 
         function guessDelimiter(strData) {
             return Object.keys($scope.delimiters)
