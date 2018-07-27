@@ -1,30 +1,571 @@
 {
-  "numFound": 2,
-  "docs": [
-    {
-      "author": "J. P. Morgen",
-      "author2": "McKinsey",
-      "title": "Was kostet die Welt?",
-      "description": "Eine Abrechnung.",
-      "id": "000",
-      "container_title": "Schmonzetten",
-      "hierarchy_parent_title": "Montetten",
-      "publishDate": "2018",
-      "physical": "2,3",
-      "format": "whatever"
+  "search": {
+    "Equus": {
+      "resultCount": 49,
+      "records": [
+        {
+          "id": "000006323",
+          "title": "Equus : the horse in the Roman World ",
+          "authors": {
+            "primary": {
+              "Hyland, Ann.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Book"
+          ],
+          "series": [],
+          "languages": [
+            "English"
+          ],
+          "urls": [],
+          "subjects": [
+            [
+              "Verkehrswesen"
+            ]
+          ],
+          "physicalDescriptions": [
+            "XII, 285 S. : 7 Ill. u. Kt. ; 31 Taf."
+          ],
+          "placesOfPublication": [
+            "London :"
+          ],
+          "cleanIsbn": "0713462604",
+          "publicationDates": [
+            "1990"
+          ]
+        },
+        {
+          "id": "001061722",
+          "title": "Equus \"indoeuropeanus\"?",
+          "authors": {
+            "primary": {
+              "Vans\u00e9veren, S.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Book"
+          ],
+          "series": [],
+          "languages": [],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "45-53 : Abb. Taf."
+          ],
+          "placesOfPublication": [
+            "Treignes :"
+          ],
+          "publicationDates": [
+            "2007"
+          ]
+        },
+        {
+          "id": "001061732",
+          "title": "Equus romanus : Les chevaux sous la R\u00e9publique et l'Empire romain.",
+          "authors": {
+            "primary": {
+              "Bozet, Nathalie": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Book"
+          ],
+          "series": [],
+          "languages": [],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "149-160 : Abb. Taf."
+          ],
+          "placesOfPublication": [
+            "Treignes :"
+          ],
+          "publicationDates": [
+            "2007"
+          ]
+        },
+        {
+          "id": "001500703",
+          "title": "Victor Equus : il cavallo da corsa nella Grecia antica ",
+          "authors": {
+            "primary": {
+              "Sestili, Antonio.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Book"
+          ],
+          "series": [],
+          "languages": [
+            "Italian"
+          ],
+          "urls": [],
+          "subjects": [
+            [
+              "Horses in literature."
+            ]
+          ],
+          "physicalDescriptions": [
+            "216 p. : ill. ; 24 cm."
+          ],
+          "placesOfPublication": [
+            "Roma :"
+          ],
+          "cleanIsbn": "8853437219",
+          "publicationDates": [
+            "2012"
+          ]
+        },
+        {
+          "id": "001369427",
+          "title": "Bellator equus ",
+          "authors": {
+            "primary": {
+              "Sestili, Antonio.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Book"
+          ],
+          "series": [
+            {
+              "name": "A10 ;",
+              "number": "592"
+            }
+          ],
+          "languages": [
+            "Italian"
+          ],
+          "urls": [],
+          "subjects": [
+            [
+              "Greek literature",
+              "History and criticism."
+            ],
+            [
+              "War horses in literature."
+            ],
+            [
+              "Chariots in literature."
+            ],
+            [
+              "War horses",
+              "Greece",
+              "History."
+            ]
+          ],
+          "physicalDescriptions": [
+            "v. <1> : ill. (some col.), maps (some col.) ; 24 cm."
+          ],
+          "placesOfPublication": [
+            "Roma :"
+          ],
+          "cleanIsbn": "8854833126",
+          "publicationDates": [
+            "2010"
+          ]
+        },
+        {
+          "id": "000410313",
+          "title": "October equus.",
+          "authors": {
+            "primary": {
+              "Radke, G.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Article"
+          ],
+          "series": [],
+          "languages": [],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "343-351."
+          ],
+          "placesOfPublication": [],
+          "publicationDates": [
+            "1990"
+          ]
+        },
+        {
+          "id": "001369426",
+          "title": "Venator equus : il cavallo da caccia nel mondo antico ",
+          "authors": {
+            "primary": {
+              "Sestili, Antonio.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Book"
+          ],
+          "series": [],
+          "languages": [
+            "Italian"
+          ],
+          "urls": [
+            {
+              "url": "http:\/\/www.loc.gov\/catdir\/toc\/casalini09\/11961880.pdf",
+              "desc": "Table of contents only"
+            }
+          ],
+          "subjects": [
+            [
+              "Hunting in literature."
+            ],
+            [
+              "Horses in literature."
+            ],
+            [
+              "Classical literature",
+              "History and criticism."
+            ]
+          ],
+          "physicalDescriptions": [
+            "155 p. : ill. (some col.) ; 24 cm."
+          ],
+          "placesOfPublication": [
+            "Roma :"
+          ],
+          "cleanIsbn": "8854838659",
+          "publicationDates": [
+            "2011"
+          ]
+        },
+        {
+          "id": "001327627",
+          "title": "Ex oriente equus... : A brief history of horses between the Early Bronze Age and the Middle Ages.",
+          "authors": {
+            "primary": {
+              "Bartosiewicz, L\u00e1szl\u00f3": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Book Chapter"
+          ],
+          "series": [],
+          "languages": [
+            "English"
+          ],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "p. 127-136 : ill."
+          ],
+          "placesOfPublication": [],
+          "publicationDates": [
+            "2011"
+          ]
+        },
+        {
+          "id": "001480327",
+          "title": "On the asiatic wild asses (equus hemionus & equus kiang) and theit vernacular names.",
+          "authors": {
+            "primary": {
+              "Parpola, Asko": []
+            },
+            "secondary": {
+              "Janhunen, J": []
+            },
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Article"
+          ],
+          "series": [],
+          "languages": [
+            "Russian"
+          ],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "423-466 : ill. ; 24 cm."
+          ],
+          "placesOfPublication": [
+            "Sankt-Petersburg :"
+          ],
+          "publicationDates": [
+            "2010"
+          ]
+        },
+        {
+          "id": "000515283",
+          "title": "The Equus October ritual reconsidered.",
+          "authors": {
+            "primary": {
+              "Devereux, G.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Article"
+          ],
+          "series": [],
+          "languages": [],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "297-301."
+          ],
+          "placesOfPublication": [],
+          "publicationDates": [
+            "1970"
+          ]
+        }
+      ],
+      "status": "OK"
     },
-    {
-      "author": "George W. Bush",
-      "author2": "Fukuyama",
-      "title": "The End of History as we know it",
-      "description": "I'm depending on your helping hand\nTo rule the entire continent\nIt's cool I am the president",
-      "id": "001",
-      "container_title": "Schmonzetten",
-      "hierarchy_parent_title": "Montetten",
-      "publishDate": "2018",
-      "physical": "S. 100-200",
-      "format": "whatever"
+    "magister Equitum": {
+      "resultCount": 5,
+      "records": [
+        {
+          "id": "001175390",
+          "title": "The missing magister equitum.",
+          "authors": {
+            "primary": {
+              "Ridley, Ronald T., 1940-": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Serial"
+          ],
+          "series": [],
+          "languages": [
+            "English"
+          ],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "157-160."
+          ],
+          "placesOfPublication": [],
+          "publicationDates": [
+            "1997"
+          ]
+        },
+        {
+          "id": "000545884",
+          "title": "The fate of the magister equitum Marcellus.",
+          "authors": {
+            "primary": {
+              "Woods, D.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Article"
+          ],
+          "series": [],
+          "languages": [],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "266-268."
+          ],
+          "placesOfPublication": [],
+          "publicationDates": [
+            "1995"
+          ]
+        },
+        {
+          "id": "001242719",
+          "title": "L. Tarquinius magister equitum (458 a. C.).",
+          "authors": {
+            "primary": {
+              "Mart\u00ednez-Pinna Nieto, Jorge.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Serial"
+          ],
+          "series": [],
+          "languages": [
+            "German"
+          ],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "385-391."
+          ],
+          "placesOfPublication": [],
+          "publicationDates": [
+            "2011"
+          ]
+        },
+        {
+          "id": "000468908",
+          "title": "Hat Caesar den Octavian zum Magister equitum designiert? -.",
+          "authors": {
+            "primary": {
+              "Gesche, H.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Article"
+          ],
+          "series": [],
+          "languages": [],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "468-478."
+          ],
+          "placesOfPublication": [],
+          "publicationDates": [
+            "1973"
+          ]
+        },
+        {
+          "id": "000323747",
+          "title": "La mission du magister equitum Ursicin en Gaule, 355 - 357, d'apr\u00e8s Ammien Marcellin.",
+          "authors": {
+            "primary": {
+              "Fr\u00e9zouls, E.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Book"
+          ],
+          "series": [],
+          "languages": [],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "673-688."
+          ],
+          "placesOfPublication": [],
+          "publicationDates": []
+        }
+      ],
+      "status": "OK"
+    },
+    "Searchresult Impossible": {
+      "resultCount": 0,
+      "status": "OK"
     }
+  },
 
-  ]
+  "record": {
+    "000006323": {
+      "resultCount": 1,
+      "records": [
+        {
+          "id": "000006323",
+          "title": "Equus : the horse in the Roman World ",
+          "authors": {
+            "primary": {
+              "Hyland, Ann.": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Book"
+          ],
+          "series": [],
+          "languages": [
+            "English"
+          ],
+          "urls": [],
+          "subjects": [
+            [
+              "Verkehrswesen"
+            ]
+          ],
+          "physicalDescriptions": [
+            "XII, 285 S. : 7 Ill. u. Kt. ; 31 Taf."
+          ],
+          "placesOfPublication": [
+            "London :"
+          ],
+          "cleanIsbn": "0713462604",
+          "publicationDates": [
+            "1990"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "001175390": {
+      "resultCount": 1,
+      "records": [
+        {
+          "id": "001175390",
+          "title": "The missing magister equitum.",
+          "authors": {
+            "primary": {
+              "Ridley, Ronald T., 1940-": []
+            },
+            "secondary": [],
+            "corporate": []
+          },
+          "summary": [],
+          "formats": [
+            "Serial"
+          ],
+          "series": [],
+          "languages": [
+            "English"
+          ],
+          "urls": [],
+          "subjects": [],
+          "physicalDescriptions": [
+            "157-160."
+          ],
+          "placesOfPublication": [],
+          "publicationDates": [
+            "1997"
+          ]
+        }
+      ],
+      "status": "OK"
+    },
+    "000000000": {
+      "status": "ERROR",
+      "statusMessage": "Error loading record"
+    }
+  }
 }

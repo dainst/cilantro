@@ -4,7 +4,7 @@ const message = require('../modules/messages');
 const so = require('../modules/subobject');
 
 describe('subobject view', () => {
-    xdescribe('zenon connection', () => {
+    describe('zenon connection', () => {
         it('should show search results', () => {
             so.goToSubObject(2);
             e.zenon.searchBox.clear().sendKeys("Searchresult Impossible");

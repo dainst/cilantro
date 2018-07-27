@@ -14,7 +14,7 @@ server.use(bodyParser.urlencoded({extended: false}));
 server.use(bodyParser.json());
 server.use(middleWares);
 server.use('/job', validateJsonParams);
-server.use('/zenon', fakeZenon);
+server.use('/zenon/:endpoint', fakeZenon);
 
 server.use('/files', express.static(path.join(__dirname, '/../ressources/staging')));
 server.use('/files/broken_file.csv', missingFile);

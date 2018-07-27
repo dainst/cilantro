@@ -18,7 +18,7 @@ describe('documents page', () => {
             .then(expect(e.documents.treeViewItemsTopLevel.get(3).all(by.css("li")).count()).toEqual(3));
     });
 
-    it('should should load pdf file and create a document if selected so', () => {
+    it('should load pdf file and create a document if selected so', () => {
         browser.get(browser.baseUrl)
             .then(e.start.startBtn.click)
             .then(e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click)
@@ -32,7 +32,7 @@ describe('documents page', () => {
             })
     });
 
-    it('should should load pdf file and NOT create a document if selected so', () => {
+    it('should load pdf file and NOT create a document if selected so', () => {
         browser.get(browser.baseUrl)
             .then(e.start.startBtn.click)
             .then(e.documents.fileHandlerArea.element(by.css(".file-handler-pdf-empty > label")).click)
