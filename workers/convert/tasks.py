@@ -30,17 +30,24 @@ class SplitPdfTask(BaseTask):
 
     def execute_task(self):
         obj = Object(self.get_work_path())
-        _split_pdf_for_object(obj, self.get_param('files'))
+        rel_files = _extract_basename(self.get_param('files'))
+        _split_pdf_for_object(obj, rel_files)
         parts = self.get_param('parts')
         for part in parts:
             self._execute_for_child(obj.get_child(parts.index(part) + 1), part)
 
     def _execute_for_child(self, obj, part):
-        _split_pdf_for_object(obj, part['files'])
+        _split_pdf_for_object(obj, _extract_basename(part['files']))
         if 'parts' in part:
             parts = part['parts']
             for subpart in parts:
                 self._execute_for_child(obj.get_child(parts.index(subpart) + 1), subpart)
+
+
+def _extract_basename(files):
+    for file in files:
+        file['file'] = os.path.basename(file['file'])
+    return files
 
 
 def _split_pdf_for_object(obj, files):

@@ -24,11 +24,11 @@ def convert_pdf_to_txt(source_file, output_dir):
 
 def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
     """
-    Takes the pdf files from files and split/merges them into one.
+    Creates a PDF file by combining sections of other PDFs.
 
-    File paths have to relative to the path given in the parameters.
+    File paths are relative to the path given in the parameters.
 
-    :param list files: list of the pdf files as dict in the format:
+    :param list files: list of the source pdf files as dict in the format:
         {'file': relative_path, 'range': [start, end]}
     :param string path: The path where the used files lie the created file go
     :param string filename: name of the generated pdf file.
@@ -37,7 +37,7 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
 
     new_pdf = PyPDF2.PdfFileWriter()
     for file in files:
-        input_str = os.path.join(path, os.path.basename(file['file']))
+        input_str = os.path.join(path, file['file'])
         input_stream = open(input_str, 'rb')
         pdf = PyPDF2.PdfFileReader(input_stream)
         if pdf.flattenedPages is None:
