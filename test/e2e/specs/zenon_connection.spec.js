@@ -82,7 +82,10 @@ describe('subobject view', () => {
             e.overview.proceedBtn.click();
             so.getRowContent("Title").then(cell => {
                 const input = cell.element(by.css("input"));
-                expect(input.getAttribute("value")).toEqual("Equus : the horse in the Roman World ");
+                const title1 = "The missing magister equitum.";
+                const title2  = "Equus : the horse in the Roman World ";
+                // because order may vary, ansynchornous speed stuff
+                expect([title1, title2]).toContain(input.getAttribute("value"));
             });
         });
 
