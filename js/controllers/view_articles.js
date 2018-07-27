@@ -17,7 +17,7 @@ angular
 
         $scope.$watch('zenonResult', (newValue, oldValue, scope) => {
             if (!scope.isArticleSelected()) return;
-            if (!newValue.id) return;
+            if (!newValue || !newValue.id) return;
             dataset.articles[scope.currentArticle].zenonId.set(newValue.id);
         });
 
