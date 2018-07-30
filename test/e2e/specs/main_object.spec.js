@@ -4,7 +4,7 @@ const message = require('../modules/messages');
 const mo = require('../modules/mainobject');
 const so = require('../modules/subobject');
 
-fdescribe('mainobject view', () => {
+describe('mainobject view', () => {
     describe('editables', () => {
         it("number editable should be limited to numbers", () => {
             browser.get(browser.baseUrl);
