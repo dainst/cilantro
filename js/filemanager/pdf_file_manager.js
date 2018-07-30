@@ -9,7 +9,7 @@ angular
         // include pdf.js (& require) with npm as well and replace this stuff
         require.config({paths: {'pdfjs': 'inc/pdf.js'}});
         require(['pdfjs/display/api', 'pdfjs/display/global'], function(pdfjs_api, pdfjs_global) {
-            console.log('2. required pdf.js');
+            console.log('required pdf.js');
             pdf_file_manager.status  = 'pdf.js loaded';
 
             pdf_file_manager.PDF = {
@@ -31,12 +31,19 @@ angular
 
         for (let fileid in filesToLoad) {
 
-            let url = settings.files_url + filesToLoad[fileid].path;
+            const reqestParams = {url: settings.files_url + filesToLoad[fileid].path};
 
-            let promise = new Promise(
+            if (angular.isDefined(settings.server_user) && angular.isDefined(settings.server_pass)) {
+                reqestParams.httpHeaders = {
+                    "Authorization": "Basic " + window.btoa(settings.server_user + ":" + settings.server_pass)
+                };
+                reqestParams.withCredentials = true;
+            }
+
+            const promise = new Promise(
                 function documentPromiseResolve(resolve, fail) {
 
-                    pdf_file_manager.PDF.api.getDocument(url).then(
+                    pdf_file_manager.PDF.api.getDocument(reqestParams).then(
                         function onGotDocument(pdf) {
                             let fileInfo = {
                                 pdf: pdf,
@@ -64,7 +71,7 @@ angular
 
                             file_manager.loadedFiles[this.url] = fileInfo;
 
-                            let metadataLoaded = function () {
+                            const metadataLoaded = function() {
                                 dataset.loadedFiles[this.url] = {
                                     size: this.size,
                                     url: this.url,
@@ -89,7 +96,7 @@ angular
                         ),
 
                         function onFailDocument(reason) {
-                            messenger.warning("get document " + url + " failed: " + reason, true);
+                            messenger.warning("get document " + reqestParams.url + " failed: " + reason, true);
                             resolve(); //!
                         }
                     )
