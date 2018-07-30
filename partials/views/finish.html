@@ -22,22 +22,8 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">dataset Metadata</div>
 
-				<table class='dataset-table table'>
-
-					<thead></thead>
-					<tbody>
-                        <tr ng-repeat="(id, value) in dataset.data track by $index">
-							<td ng-hide="labels.getIsHidden('main', id)" title="{{labels.get('main', id, false)}}">{{labels.get("main", id, true)}}</td>
-                            <td ng-hide="labels.getIsHidden('main', id)" ng-model="dataset.data[id]">
-                                <span editable item="value" />
-                            </td>
-                        </tr>
-					</tbody>
-					<tfoot></tfoot>
-				</table>
+				<main-object></main-object>
 			</div>
-
-
 		</div>
 
 		<div class="col-lg-6">

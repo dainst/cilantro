@@ -39,6 +39,7 @@ angular
     'directive.stats',
     'directive.zenon',
     'directive.autoheight',
+    'directive.mainObject',
 
     'module.editables',
 
