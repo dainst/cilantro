@@ -95,52 +95,57 @@ angular
     /* object fields meta-data (such as labels etc.) */
     const mainObjectMeta = {
         "volume": {
-            description: "Volume",
+            title: "Volume",
+            description: "Volume typically refers to the number of years the publication has been circulated",
             type: "metadata"
         },
         "number": {
-            description: "Number",
+            title: "Number",
+            description: "refers to how many times that periodical has been published during that year",
             type: "metadata"
         },
         "year": {
-            description: "Year",
+            title: "Year",
+            description: "Issue Year",
             type: "metadata"
         },
         "description": {
-            description: "Description (e.g. '[PDFs teilweise verfügbar]')",
+            title: "Description",
+            description: "e.g. '[PDFs teilweise verfügbar]'",
             type: "metadata"
         },
         "ojs_journal_code": {
-            description: "OJS: Journal Code (e.g. 'chiron', 'aa', 'efb')",
+            title: "OJS: Journal Code",
+            description:  "e. g. 'chiron', 'aa', 'efb'",
             type: "metadata"
         },
         "ojs_user": {
-            description: "OJS: user",
+            title: "OJS: user",
             type: "metadata"
         },
         "identification": {
-            description: "OJS: issue identification",
+            title: "OJS: issue identification",
             type: "metadata"
         },
         "importFilePath": {
-            description: "File(s) to import",
+            title: "File(s) to import",
             type: "metadata",
             hide: true,
         },
         "auto_publish_issue": {
-            description: "Publish Issue after upload",
+            title: "Publish Issue after upload",
             type: "param"
         },
         "default_publish_articles": {
-            description: "Publish Articles by default",
+            title: "Publish Articles by default",
             type: "param"
         },
         "default_create_frontpage": {
-            description: "Create Frontpage by default",
+            title: "Create Frontpage by default",
             type: "param"
         },
         "allow_upload_without_file": {
-            description: "Upload without selected file is allowed?",
+            title: "Upload without selected file is allowed?",
             type: "param"
         }
     };
