@@ -6,7 +6,6 @@ angular
             templateUrl: 'partials/elements/main_object.html',
             scope: {},
             link: function (scope, element, attrs) {
-                console.log("CHAALOOOOOO");
                 scope.dataset = dataset;
                 scope.labels = labels;
             }
