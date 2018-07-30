@@ -17,7 +17,6 @@ params:
 
 tasks:
   - create_object
-  - convert.split_pdf
   - foreach: ".*\\.pdf$"
     do: convert.pdf_to_tif
   - task: convert.tif_to_txt

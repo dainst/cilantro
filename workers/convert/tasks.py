@@ -2,63 +2,11 @@ import os
 
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask
-
-from utils.object import Object
-
 from workers.convert.convert_image import convert_tif_to_jpg
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf
 from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
     convert_jpg_to_pdf
 from workers.convert.tif_to_txt import tif_to_txt
-
-
-class SplitPdfTask(BaseTask):
-    """
-    Split multiple pdfs from the working dir.
-
-    TaskParams:
-    -list files_to_split: list of the files as dictionnaries {'file': file_name, 'range': [start, end]}
-
-    Preconditions:
-    -files from files_to_split in the working dir.
-
-    Creates:
-    -for each article:
-        -file_name.article_nr.pdf in the working dir.
-    """
-    name = "convert.split_pdf"
-
-    def execute_task(self):
-        obj = Object(self.get_work_path())
-        rel_files = _extract_basename(self.get_param('files'))
-        _split_pdf_for_object(obj, rel_files)
-        parts = self.get_param('parts')
-        for part in parts:
-            self._execute_for_child(obj.get_child(parts.index(part) + 1), part)
-
-    def _execute_for_child(self, obj, part):
-        _split_pdf_for_object(obj, _extract_basename(part['files']))
-        if 'parts' in part:
-            parts = part['parts']
-            for subpart in parts:
-                self._execute_for_child(obj.get_child(parts.index(subpart) + 1), subpart)
-
-
-def _extract_basename(files):
-    for file in files:
-        file['file'] = os.path.basename(file['file'])
-    return files
-
-
-def _split_pdf_for_object(obj, files):
-    pdf_files = []
-    for file in files:
-        suffix = (file['file']).split('.')[-1]
-        if suffix == 'pdf':
-            pdf_files.append(file)
-    if len(pdf_files) > 0:
-        rep_dir = obj.get_representation_dir(Object.INITIAL_REPRESENTATION)
-        split_merge_pdf(pdf_files, rep_dir)
 
 
 class JpgToPdfTask(BaseTask):
@@ -164,7 +112,7 @@ class MergeConvertedPdf(BaseTask):
 
     def execute_task(self):
         work_path = self.get_work_path()
-        files = [{'file': os.path.basename(f)} for f in _list_files(work_path, '.converted.pdf')]
+        files = [{'file': os.path.join(work_path, f)} for f in _list_files(work_path, '.converted.pdf')]
         split_merge_pdf(files, work_path)
 
 
@@ -194,7 +142,6 @@ def _list_files(directory, extension):
             if f.endswith(extension))
 
 
-SplitPdfTask = celery_app.register_task(SplitPdfTask())
 JpgToPdfTask = celery_app.register_task(JpgToPdfTask())
 MergeConvertedPdf = celery_app.register_task(MergeConvertedPdf())
 TifToJpgTask = celery_app.register_task(TifToJpgTask())
