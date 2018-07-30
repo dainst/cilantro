@@ -39,7 +39,7 @@ angular
             'author':			editables.authorlist(subObjectData.author),
             'pages':			editables.page(subObjectData.pages),
             'date_published':	editables.date(subObjectData.date_published),
-            'language':			editables.language('de_DE', false, locales),
+            'language':			editables.language(null, false, locales),
             'auto_publish':		editables.checkbox(mainObject.default_publish_articles === true),
             'filepath':			editables.loadedfile(dataset.loadedFiles, false, mainObject.allow_upload_without_file)
                 .watch(() => loadedFileObserver(subObject)),
