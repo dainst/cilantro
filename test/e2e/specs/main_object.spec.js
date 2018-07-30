@@ -14,22 +14,29 @@ describe('mainobject view', () => {
             });
         });
 
-        // TODO: make 1 test out of those two
-        it("should load some journal data codes from ojs cilantro plugin api", () => {
+        fit("should load some journal data codes from ojs cilantro plugin api", () => {
             browser.get(browser.baseUrl);
             mo.getRowContent("OJS: Journal Code")
                 .then(cell => {
                     cell.all(by.css("option")).get(1).click();
                     e.home.startBtn.click();
-                    e.documents.treeViewItemsTopLevel.get(2).all(by.css('.load')).first().click();
-                    message.waitForMessage();
-                    e.documents.proceedBtn.click();
-                    e.overview.proceedBtn.click();
+                    a.clickNavbarButton("articles");
+                    e.subobject.add.click();
                     so.getRowContent("Language").then(cell => {
                         expect(cell.all(by.css("label")).get(0).getText()).toBe("English");
                         expect(cell.all(by.css("label")).get(1).getText()).toBe("German");
                         expect(cell.all(by.css("label")).get(2).getText()).toBe("Russian");
                     });
+                    a.restart();
+                    cell.all(by.css("option")).get(1).click();
+                    e.home.startBtn.click();
+                    a.clickNavbarButton("articles");
+                    e.subobject.add.click();
+                    so.getRowContent("Language").then(cell => {
+                        expect(cell.all(by.css("label")).get(0).getText()).toBe("English");
+                        expect(cell.all(by.css("label")).count()).toEqual(1);
+                    });
+
                 });
 
         });

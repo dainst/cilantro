@@ -19,6 +19,12 @@ const Actions = function() {
             .then(toggleNavbar)
     };
 
+    this.restart = () => {
+        this.clickNavbarButton("restart");
+        //browser.wait(EC.visibilityOf(elements.restart.confirmBtn));
+        return elements.restart.confirmBtn.click();
+    };
+
     this.uploadFile = function(file = '../ressources/e2e-testing.pdf') {
         browser.setFileDetector(new remote.FileDetector());
         let absolutePath = path.resolve(__dirname, file);
