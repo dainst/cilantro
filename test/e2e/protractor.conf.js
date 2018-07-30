@@ -46,6 +46,6 @@ exports.config = {
 
     afterLaunch: exitCode => new Promise(resolve => reporter.afterLaunch(resolve.bind(this, exitCode))),
 
-    promisesDelay: 0
+    promisesDelay: 150
 
 };

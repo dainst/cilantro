@@ -520,20 +520,27 @@ angular
         return obj;
     };
 
-    // TODO use not 'none' as false value but null or sth
     editables.listitem = function(list, selected, noneallowed) {
         let obj = new editables.Base(selected, false, false);
         list = list || {};
         obj.list = list;
         obj.type = 'listitem';
         obj.noneallowed = (noneallowed === true);
-        obj.select = selected => {
-            obj.value = {value: selected && selected in obj.list
-                ? selected
-                : (obj.noneallowed || !Object.keys(obj.list).length ? 'none' : Object.keys(obj.list)[0])}
+        const select = selected => {
+            if (selected && selected in obj.list) return selected;
+            if (noneallowed) return false;
+            if (Object.keys(obj.list).length) return Object.keys(obj.list)[0];
+            return false;
+        };
+        obj.select = selected => {obj.value.value = select(selected)};
+        obj.check = () => {
+            if (!obj.noneallowed && !obj.value.value) {
+                return "This field is mandatory";
+            }
+            return false;
         };
         obj.select(selected);
-        obj.get = () => obj.value.value;
+        obj.get = () => obj.value.value ? obj.value.value : 'none';
         return obj;
     };
     

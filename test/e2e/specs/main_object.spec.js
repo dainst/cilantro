@@ -9,44 +9,47 @@ describe('mainobject view', () => {
         it("number editable should be limited to numbers", () => {
             browser.get(browser.baseUrl);
             mo.getRowContent("Year").then(cell => {
-                cell.element("input").clear.sendKeys("abc");
+                cell.element(by.css("input")).clear().sendKeys("abc");
                 expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
             });
         });
 
-        it("should load some journal data codes from ojc cilantro plugin api", () => {
-            browser.get(browser.baseUrl);
-            mo.getRowContent("OJS: Journal Code")
-                .then(cell => cell.all(by.css("option")).first().click)
-                .then(e.home.startBtn.click)
-                .then(e.documents.treeViewItemsTopLevel.get(2).all(by.css('.load')).first().click)
-                .then(message.waitForMessage)
-                .then(e.documents.proceedBtn.click)
-                .then(e.overview.proceedBtn.click)
-                .then(() => so.getRowContent("Language"))
-                .then(cell => {
-                    expect(cell.all(by.css("label")).get(0).getText()).toBe("German");
-                    expect(cell.all(by.css("label")).get(1).getText()).toBe("English");
-                    expect(cell.all(by.css("label")).get(2).getText()).toBe("French");
-                    expect(cell.all(by.css("label")).get(3).getText()).toBe("Italian");
-                    expect(cell.all(by.css("label")).get(4).getText()).toBe("Spanish");
-                });
-        });
-
         // TODO: make 1 test out of those two
-        it("should load some journal data codes from ojc cilantro plugin api (2)", () => {
+        it("should load some journal data codes from ojs cilantro plugin api", () => {
             browser.get(browser.baseUrl);
             mo.getRowContent("OJS: Journal Code")
-                .then(cell => cell.all(by.css("option")).first().click)
-                .then(e.home.startBtn.click)
-                .then(e.documents.treeViewItemsTopLevel.get(2).all(by.css('.load')).first().click)
-                .then(message.waitForMessage)
-                .then(e.documents.proceedBtn.click)
-                .then(e.overview.proceedBtn.click)
-                .then(() => so.getRowContent("Language"))
                 .then(cell => {
-                    expect(cell.all(by.css("label")).get(0).getText()).toBe("English");
+                    cell.all(by.css("option")).get(1).click();
+                    e.home.startBtn.click();
+                    e.documents.treeViewItemsTopLevel.get(2).all(by.css('.load')).first().click();
+                    message.waitForMessage();
+                    e.documents.proceedBtn.click();
+                    e.overview.proceedBtn.click();
+                    so.getRowContent("Language").then(cell => {
+                        expect(cell.all(by.css("label")).get(0).getText()).toBe("English");
+                        expect(cell.all(by.css("label")).get(1).getText()).toBe("German");
+                        expect(cell.all(by.css("label")).get(2).getText()).toBe("Russian");
+                    });
                 });
+
+        });
+        it("should load some journal data codes from ojs cilantro plugin api", () => {
+            browser.get(browser.baseUrl);
+            mo.getRowContent("OJS: Journal Code")
+                .then(cell => {
+                    cell.all(by.css("option")).get(2).click();
+                    browser.sleep(1500);
+                    e.home.startBtn.click();
+                    e.documents.treeViewItemsTopLevel.get(2).all(by.css('.load')).first().click();
+                    message.waitForMessage();
+                    e.documents.proceedBtn.click();
+                    e.overview.proceedBtn.click();
+                    so.getRowContent("Language").then(cell => {
+                        expect(cell.all(by.css("label")).get(0).getText()).toBe("English");
+                        expect(cell.all(by.css("label")).count()).toEqual(1);
+                    });
+                });
+
         });
 
 
