@@ -5,7 +5,7 @@ var EC = protractor.ExpectedConditions;
 var Buttons = function() {
 
     this.startImport = function() {
-        return elements.start.startBtn.click;
+        return elements.home.startBtn.click;
     };
 
     this.proceed = function() {

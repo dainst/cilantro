@@ -6,8 +6,12 @@ module.exports = {
     restart: {
         confirmBtn: element(by.css('.btn-danger')),
     },
-    start: {
+    home: {
         startBtn: element(by.css('.row.toprow .btn-primary')),
+    },
+    mainobject: {
+        table: element(by.css('.dataset-table')),
+        tableRows: element.all(by.css('.dataset-table tr')),
     },
     documents: {
         treeViewItems: element.all(by.css('#staging-dir files-treeview > .tree-view > li')),

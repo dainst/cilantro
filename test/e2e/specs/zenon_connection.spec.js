@@ -72,7 +72,7 @@ describe('subobject view', () => {
 
         it('should automaticcaly fetch data from zenon if list of Ids is provided', () => {
             browser.get(browser.baseUrl);
-            e.start.startBtn.click();
+            e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
             a.waitForModal();
             e.csv.takeData.click();
@@ -91,7 +91,7 @@ describe('subobject view', () => {
 
         it('just should a row which Ids is unknown', () => {
             browser.get(browser.baseUrl);
-            e.start.startBtn.click();
+            e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
             a.waitForModal();
             e.csv.textField.sendKeys("\n000000000");

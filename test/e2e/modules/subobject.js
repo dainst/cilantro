@@ -5,7 +5,7 @@ const EC = protractor.ExpectedConditions;
 const subobject = function() {
 
     this.goToSubObject = docNr => browser.get(browser.baseUrl)
-        .then(e.start.startBtn.click)
+        .then(e.home.startBtn.click)
         .then(e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click)
         .then(message.waitForMessage)
         .then(e.documents.proceedBtn.click)
