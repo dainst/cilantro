@@ -15,6 +15,7 @@ module.exports = {
     },
     documents: {
         treeViewItems: element.all(by.css('#staging-dir files-treeview > .tree-view > li')),
+        treeViewItemsNames: element.all(by.css('#staging-dir > files-treeview > .tree-view > li > .branch')),
         treeViewItemsTopLevel: element.all(by.css('#staging-dir > files-treeview > .tree-view > li')),
         toggleBranchBtn: element(by.css('#staging-dir > files-treeview .toggle')),
         proceedBtn: element(by.css('#proceed')),
@@ -72,6 +73,8 @@ module.exports = {
         fileUploadArea: element(by.id('fileDropArea')),
         fileUploadBtn: element(by.id('uploadFileSelect')),
         fileElem: element(by.css('input[type="file"]')),
+
+        progressbar: element(by.css('#upload-area .progressbar'))
     },
     zenon: {
         markMissing: element(by.css('button[ng-click="markAsMissingZenon()"]')),
