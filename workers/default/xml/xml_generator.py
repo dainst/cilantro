@@ -19,7 +19,8 @@ def generate_xml(work_path, data, template_string, target_path='',
     :return str: Path to generated XML file
     """
     template = Template(template_string, trim_blocks=True, lstrip_blocks=True)
-    filled_template = template.render(data)
+    # work path is needed here, to build the file paths
+    filled_template = template.render(**data, **{'work_path': work_path})
     _write_xml_to_file(filled_template, os.path.join(work_path, target_path),
                        target_filename)
     return os.path.join(work_path, target_path, target_filename)
