@@ -14,7 +14,7 @@ describe('mainobject view', () => {
             });
         });
 
-        fit("should load some journal data codes from ojs cilantro plugin api", () => {
+        it("should load some journal data codes from ojs cilantro plugin api", () => {
             browser.get(browser.baseUrl);
             mo.getRowContent("OJS: Journal Code")
                 .then(cell => {
