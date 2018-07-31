@@ -2,15 +2,11 @@
 
 	<div class="row toprow" >
 		<div class="col-md-8">
-			<span class="btn-group">
-				<button ng-show="isReady()" class='btn btn-default' ng-click='renderXml()'>Preview transport XML<span class="glyphicon glyphicon-view"></span></button>
-				<button ng-show="isReady()" class='btn btn-default' ng-click='reportMissingToZenon()'>Preview Reports to Zenon<span class="glyphicon glyphicon-view"></span></button>
-			</span>
 		</div>
 		<div class="col-md-4 text-right">
 			<span class="btn-group">
 				<button ng-if="done" class='btn btn-success' ng-click='restart()'>Next Import<span class="glyphicon glyphicon-chevron-right"></span></button>
-				<button id="upload" ng-if="!done && isReady()" class='btn btn-primary' ng-click='run()'>Upload<span class="glyphicon glyphicon-chevron-right"></span></button>
+				<button id="run-job" ng-if="!done && isReady()" class='btn btn-primary' ng-click='run()'>Run Job<span class="glyphicon glyphicon-chevron-right"></span></button>
 			</span>
 		</div>
 	</div>

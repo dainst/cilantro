@@ -32,13 +32,5 @@ angular
             return articlesReady && journalReady && !$scope.done;
         };
 
-        $scope.reportMissingToZenon = function() {
-            messenger.error("reportMissingToZenon is currently not implemented");
-        };
-
-        $scope.renderXml = function() {
-            messenger.error("reportMissingToZenon is currently not implemented");
-        };
-
     }
 ]);
