@@ -1,12 +1,11 @@
-"""Module for publishing documents in OJS."""
-
-import requests
 import logging
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError
 
 log = logging.getLogger(__name__)
 
 
-def publish_to_ojs(import_xml_file_path, server='ojs', port='80'):
+def publish_to_ojs(import_xml_file_path, journalcode, server='ojs', port='80'):
     """
     Publish the documents referenced in the passed XML via OJS-Import-Plugin.
 
@@ -19,6 +18,7 @@ def publish_to_ojs(import_xml_file_path, server='ojs', port='80'):
     The Import-Plugin needs authentication which is (for now) hard-coded.
 
     :param str import_xml_file_path: OJS-Import-XML
+    :param str journalcode: Name of the journal that will be imported to
     :param server: OJS server address
     :param port: OJS server port
     :return: Tuple of return code and text of the POST request to OJS
@@ -29,11 +29,19 @@ def publish_to_ojs(import_xml_file_path, server='ojs', port='80'):
     headers = {'Content-Type': 'application/xml',
                'ojsAuthorization': 'YWRtaW4=:cGFzc3dvcmQ='}
 
-    r = requests.post('http://' + server + ':' + port +
-                      '/ojs/plugins/generic/ojs-cilantro-plugin/api/ \
-                      import/test',
+    request = Request('http://' + server + ':' + port +
+                      '/ojs/plugins/generic/ojs-cilantro-plugin/api/import/' +
+                      journalcode,
                       headers=headers,
                       data=import_data.encode(encoding='utf-8'))
 
-    log.debug(r.text)
-    return r.status_code, r.text
+    try:
+        response = urlopen(request)
+    except HTTPError as e:
+        log.error(e.read().decode('utf-8'))
+        raise
+    response_code = response.getcode()
+    response_text = response.read().decode('utf-8')
+    log.debug(response_text)
+
+    return response_code, response_text

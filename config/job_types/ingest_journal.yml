@@ -8,6 +8,7 @@ params:
   paths: list
   metadata: dict
   nlp_params: dict
+  frontmatter_ids: list
 
 tasks:
   - retrieve_from_staging
@@ -25,5 +26,7 @@ tasks:
     do: convert.pdf_to_txt
   - foreach: ".*txt$"
     do: nlp.annotate
+  - publish_to_ojs
+  - generate_frontmatter
   - publish_to_repository
   - cleanup_workdir
