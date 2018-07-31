@@ -34,14 +34,13 @@ angular
                     }
                 },
                 err => {
-                    if (angular.isDefined(err.data) && angular.isDefined(err.data.warnings)) {
-                        err.data.warnings.forEach(messenger.warning);
-                    }
-                    let errText = endpoint + ": " + err.status + " " + err.statusText;
                     console.log(err);
-                    if (angular.isDefined(err.data) && angular.isDefined(err.data.message)) {
-                        errText = err.data.message;
+                    let errText = endpoint + ": " + err.status + " " + err.statusText;
+                    if (angular.isDefined(err.data) && (err.data !== null)) {
+                        if (angular.isDefined(err.data.warnings)) err.data.warnings.forEach(messenger.warning);
+                        if (angular.isDefined(err.data.message)) errText = err.data.message;
                     }
+                    if (err.status === -1) errText = "No Backend Found!";
                     messenger.error(errText);
                     $rootScope.$broadcast('refreshView');
                     reject(errText);
