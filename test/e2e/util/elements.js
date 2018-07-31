@@ -60,13 +60,13 @@ module.exports = {
     },
     message: {
         main: element(by.css('#info-container .alert.main-message')),
+        clear: element(by.css('#info-container a')),
     },
     publish: {
         proceedBtn: element(by.id('proceed')),
-        uploadBtn: element.all(by.id('upload')),
+        uploadBtn: element(by.css('#run-job')),
         input: element.all(by.css('input.editable')),
         select: element.all(by.css('select.editable-select')),
-        finalBtn: element(by.css('button[ng-click="uploadToOjs()"]')),
     },
 
     upload: {

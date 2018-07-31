@@ -13,8 +13,11 @@ const Messages = function() {
                 .catch(reject)
             ));
 
-    this.waitForMessage = () => {
-        return browser.wait(EC.visibilityOf(elements.message.main), 5000);
+    this.waitForMessage = () => browser.wait(EC.visibilityOf(elements.message.main), 5000);
+
+    this.clearMessages = () => {
+        browser.actions().mouseMove(elements.message.main).perform();
+        elements.message.clear.click();
     }
 
 };

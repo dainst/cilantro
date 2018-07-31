@@ -7,16 +7,16 @@ const EC = protractor.ExpectedConditions;
 
 const Actions = function() {
 
-    function toggleNavbar() {
+    this.toggleNavbar = function() {
         return browser.wait(EC.visibilityOf(elements.navbar.toggle), 10)
             .then(elements.navbar.toggle.click)
             .catch(function(){/*Navbar expanded. Doing nothing*/});
-    }
+    };
 
     this.clickNavbarButton = function(button) {
-        return toggleNavbar()
+        return this.toggleNavbar()
             .then(elements.navbar[button].click)
-            .then(toggleNavbar)
+            .then(this.toggleNavbar)
     };
 
     this.restart = () => {

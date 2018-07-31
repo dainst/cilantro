@@ -205,7 +205,6 @@ angular
             showndesc: obj.desc,
             startPrint: obj.startPrint,
             endPrint: obj.endPrint,
-            range: [obj.value.startPdf, obj.value.endPdf]
         });
 
         obj.getFileData = () => angular.isDefined(obj.context.path)
