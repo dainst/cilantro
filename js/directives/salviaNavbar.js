@@ -8,7 +8,7 @@ angular
             scope.settings = settings;
             scope.views = steps.views;
             scope.changeView = steps.change;
-            scope.currentView = steps.current;
+            scope.getCurrentView = () => steps.current;
         }
     }
 }]);
