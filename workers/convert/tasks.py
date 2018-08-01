@@ -35,6 +35,12 @@ def _list_files(directory, extension):
             if f.endswith(extension))
 
 
+def _get_target_file(file, target_dir, target_extension):
+    _, extension = os.path.splitext(file)
+    new_name = os.path.basename(file).replace(extension, f".{target_extension}")
+    return os.path.join(target_dir, new_name)
+
+
 class SplitPdfTask(BaseTask):
     """
     Split multiple pdfs from the working dir.
@@ -119,12 +125,6 @@ class ConvertTask(BaseTask):
         :return None:
         """
         raise NotImplementedError("Process file method not implemented")
-
-
-def _get_target_file(file, target_dir, target_extension):
-    _, extension = os.path.splitext(file)
-    new_name = os.path.basename(file).replace(extension, f".{target_extension}")
-    return os.path.join(target_dir, new_name)
 
 
 class JpgToPdfTask(ConvertTask):
