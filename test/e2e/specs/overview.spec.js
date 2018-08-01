@@ -30,14 +30,14 @@ describe('overview page', () => {
             });
     });
 
-    xit('should update thumbnail if document changes', done => { // TODO fix
+    it('should update thumbnail if document changes', done => {
         ot.goToOverview(3);
         e.overview.columnsDropdownBtn.click();
         e.overview.columnsDropdown.element(by.cssContainingText("label", "Loaded File")).click();
         e.overview.columnsDropdownBtn.click();
         ot.getCell(0, "Loaded File").then(cell => {
             cell.all(by.css('select option')).get(2).click();
-            browser.sleep(500);
+            browser.sleep(1000);
             ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
                 expect(difference).toBeLessThan(1500);
                 done()
