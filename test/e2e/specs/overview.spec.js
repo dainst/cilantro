@@ -30,14 +30,18 @@ describe('overview page', () => {
             });
     });
 
-    it('should update thumbnail if document changes', done => {
+    fit('should update thumbnail if document changes', done => {
         ot.goToOverview(3);
         e.overview.columnsDropdownBtn.click();
         e.overview.columnsDropdown.element(by.cssContainingText("label", "Loaded File")).click();
         e.overview.columnsDropdownBtn.click();
         ot.getCell(0, "Loaded File").then(cell => {
             cell.all(by.css('select option')).get(2).click();
-            browser.sleep(1000);
+            e.overview.columnsDropdownBtn.click();
+            e.overview.columnsDropdownList.get(0).click();
+            e.overview.columnsDropdownList.get(2).click();
+            e.overview.columnsDropdownBtn.click();
+            browser.sleep(1500);
             ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
                 expect(difference).toBeLessThan(1500);
                 done()
