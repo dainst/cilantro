@@ -13,6 +13,28 @@ from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
 from workers.convert.tif_to_txt import tif_to_txt
 
 
+def _extract_basename(files):
+    for file in files:
+        file['file'] = os.path.basename(file['file'])
+    return files
+
+
+def _split_pdf_for_object(obj, files):
+    pdf_files = []
+    for file in files:
+        suffix = (file['file']).split('.')[-1]
+        if suffix == 'pdf':
+            pdf_files.append(file)
+    if len(pdf_files) > 0:
+        rep_dir = obj.get_representation_dir(Object.INITIAL_REPRESENTATION)
+        split_merge_pdf(pdf_files, rep_dir)
+
+
+def _list_files(directory, extension):
+    return (directory + "/" + f for f in os.listdir(directory)
+            if f.endswith(extension))
+
+
 class SplitPdfTask(BaseTask):
     """
     Split multiple pdfs from the working dir.
@@ -44,23 +66,6 @@ class SplitPdfTask(BaseTask):
             parts = part['parts']
             for subpart in parts:
                 self._execute_for_child(obj.get_child(parts.index(subpart) + 1), subpart)
-
-
-def _extract_basename(files):
-    for file in files:
-        file['file'] = os.path.basename(file['file'])
-    return files
-
-
-def _split_pdf_for_object(obj, files):
-    pdf_files = []
-    for file in files:
-        suffix = (file['file']).split('.')[-1]
-        if suffix == 'pdf':
-            pdf_files.append(file)
-    if len(pdf_files) > 0:
-        rep_dir = obj.get_representation_dir(Object.INITIAL_REPRESENTATION)
-        split_merge_pdf(pdf_files, rep_dir)
 
 
 class MergeConvertedPdfTask(BaseTask):
@@ -222,11 +227,6 @@ class TxtToTifTask(ConvertTask):
 
     def process_file(self, file, target_dir):
         tif_to_txt(file, _get_target_file(file, target_dir, 'txt'))
-
-
-def _list_files(directory, extension):
-    return (directory + "/" + f for f in os.listdir(directory)
-            if f.endswith(extension))
 
 
 SplitPdfTask = celery_app.register_task(SplitPdfTask())
