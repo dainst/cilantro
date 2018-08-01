@@ -173,16 +173,13 @@ angular
         });
     }
 
-    pdf_file_manager.createThumbnail = function(params) {
-        console.log("create thumbnail", params);
-        return new Promise((resolve, reject) =>
-            file_manager.loadedFiles[params.filePath].pdf
-                .getPage(params.pages.range[0])
-                .then(page => renderThumbnail(page)
-                    .then(resolve))
-                .catch(reject)
+    pdf_file_manager.createThumbnail = params => new Promise((resolve, reject) =>
+        file_manager.loadedFiles[params.filePath].pdf
+            .getPage(params.pages.startPrint)
+            .then(page => renderThumbnail(page)
+                .then(resolve))
+            .catch(reject)
         );
-    };
 
     /**
      * since the pdf.js stuff is happening outside angular is is ansync we need this shit here
