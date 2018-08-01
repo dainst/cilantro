@@ -106,13 +106,13 @@ class JpgToPdfTask(ConvertTask):
     -file in the representation
 
     Creates:
-    -file_name.converted.pdf in the working dir.
+    -<file_name>.pdf in the working dir.
     """
     name = "convert.jpg_to_pdf"
 
     def process_file(self, file, target_dir):
         _, extension = os.path.splitext(file)
-        new_name = os.path.basename(file).replace(extension, '.converted.pdf')
+        new_name = os.path.basename(file).replace(extension, '.pdf')
         target_file = os.path.join(target_dir, new_name)
         convert_jpg_to_pdf(file, target_file)
 
@@ -200,7 +200,7 @@ class MergeConvertedPdfTask(BaseTask):
         rep = self.get_param('representation')
         rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, rep)
         files = [{'file': os.path.basename(f)}
-                 for f in _list_files(rep_dir, '.converted.pdf')]
+                 for f in _list_files(rep_dir, '.pdf')]
         split_merge_pdf(files, rep_dir)
 
 
