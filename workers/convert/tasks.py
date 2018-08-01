@@ -13,37 +13,6 @@ from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
 from workers.convert.tif_to_txt import tif_to_txt
 
 
-class ConvertTask(BaseTask):
-    """
-    Abstract base class for conversion tasks.
-
-    Subclasses have to override the process_file method that holds the
-    actual conversion logic.
-    """
-
-    def execute_task(self):
-        file = self.get_param('file')
-        target_rep = self.get_param('target')
-        target_dir = os.path.join(self.get_work_path(),
-                                  Object.DATA_DIR, target_rep)
-        os.makedirs(target_dir, exist_ok=True)
-        self.process_file(file, target_dir)
-
-    @abstractmethod
-    def process_file(self, file, target_dir):
-        """
-        Process a single file.
-
-        This method has to be implemented by all subclassed tasks and includes
-        the actual implementation logic of the specific task.
-
-        :param str file: The path to the file that should be processed
-        :param str target_dir: The path of the target directory
-        :return None:
-        """
-        raise NotImplementedError("Process file method not implemented")
-
-
 class SplitPdfTask(BaseTask):
     """
     Split multiple pdfs from the working dir.
@@ -94,6 +63,65 @@ def _split_pdf_for_object(obj, files):
         split_merge_pdf(pdf_files, rep_dir)
 
 
+class MergeConvertedPdfTask(BaseTask):
+    """
+    Merge all pdf files in a representation into one.
+
+    TaskParams:
+    -representation: The name of the representation
+
+    Preconditions:
+
+    Creates:
+    -merged.pdf in the given representation
+    """
+    name = "convert.merge_converted_pdf"
+
+    def execute_task(self):
+        rep = self.get_param('representation')
+        rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, rep)
+        files = [{'file': os.path.basename(f)}
+                 for f in _list_files(rep_dir, '.pdf')]
+        split_merge_pdf(files, rep_dir)
+
+
+class ConvertTask(BaseTask):
+    """
+    Abstract base class for conversion tasks.
+
+    Subclasses have to override the process_file method that holds the
+    actual conversion logic.
+    """
+
+    def execute_task(self):
+        file = self.get_param('file')
+        target_rep = self.get_param('target')
+        target_dir = os.path.join(self.get_work_path(),
+                                  Object.DATA_DIR, target_rep)
+        os.makedirs(target_dir, exist_ok=True)
+        self.process_file(file, target_dir)
+
+    @abstractmethod
+    def process_file(self, file, target_dir):
+        """
+        Process a single file.
+
+        This method has to be implemented by all subclassed tasks and includes
+        the actual implementation logic of the specific task.
+
+        :param str file: The path to the file that should be processed
+        :param str target_dir: The path of the target directory
+        :return None:
+        """
+        raise NotImplementedError("Process file method not implemented")
+
+
+def _get_target_file(file, target_dir, target_extension):
+    _, extension = os.path.splitext(file)
+    new_name = os.path.basename(file).replace(extension, f".{target_extension}")
+    return os.path.join(target_dir, new_name)
+
+
 class JpgToPdfTask(ConvertTask):
     """
     Create a one paged pdf with a jpg.
@@ -111,10 +139,7 @@ class JpgToPdfTask(ConvertTask):
     name = "convert.jpg_to_pdf"
 
     def process_file(self, file, target_dir):
-        _, extension = os.path.splitext(file)
-        new_name = os.path.basename(file).replace(extension, '.pdf')
-        target_file = os.path.join(target_dir, new_name)
-        convert_jpg_to_pdf(file, target_file)
+        convert_jpg_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
 
 
 class TifToJpgTask(ConvertTask):
@@ -134,10 +159,7 @@ class TifToJpgTask(ConvertTask):
     name = "convert.tif_to_jpg"
 
     def process_file(self, file, target_dir):
-        _, extension = os.path.splitext(file)
-        new_name = os.path.basename(file).replace(extension, '.jpg')
-        target_file = os.path.join(target_dir, new_name)
-        convert_tif_to_jpg(file, target_file)
+        convert_tif_to_jpg(file, _get_target_file(file, target_dir, 'jpg'))
 
 
 class PdfToTxtTask(ConvertTask):
@@ -182,28 +204,6 @@ class PdfToTifTask(ConvertTask):
         convert_pdf_to_tif(file, target_dir)
 
 
-class MergeConvertedPdfTask(BaseTask):
-    """
-    Merge all pdf files in a representation into one.
-
-    TaskParams:
-    -representation: The name of the representation
-
-    Preconditions:
-
-    Creates:
-    -merged.pdf in the given representation
-    """
-    name = "convert.merge_converted_pdf"
-
-    def execute_task(self):
-        rep = self.get_param('representation')
-        rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, rep)
-        files = [{'file': os.path.basename(f)}
-                 for f in _list_files(rep_dir, '.pdf')]
-        split_merge_pdf(files, rep_dir)
-
-
 class TxtToTifTask(ConvertTask):
     """
     Do OCR on a tif file and save the results as txt.
@@ -221,10 +221,7 @@ class TxtToTifTask(ConvertTask):
     name = "convert.tif_to_txt"
 
     def process_file(self, file, target_dir):
-        _, extension = os.path.splitext(file)
-        new_name = os.path.basename(file).replace(extension, '.txt')
-        target_file = os.path.join(target_dir, new_name)
-        tif_to_txt(file, target_file)
+        tif_to_txt(file, _get_target_file(file, target_dir, 'txt'))
 
 
 def _list_files(directory, extension):
