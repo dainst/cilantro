@@ -2,97 +2,97 @@
 <html lang="en" ng-app="pimport">
 <head>
 
-	<meta charset="utf-8">
-	<title>iDAI.publications/importer</title>
-	<link href="favicon.ico" rel="Shortcut Icon">
+    <meta charset="utf-8">
+    <title>iDAI.publications/importer</title>
+    <link type='image/x-icon' href='favicon.ico' rel='icon' />
 
-	<link rel="stylesheet" href="node_modules/idai-components/dist/css/idai-components.min.css">
-	<link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="node_modules/idai-components/dist/css/idai-components.min.css">
+    <link rel="stylesheet" href="style/style.css">
 
 </head>
 
-	<body ng-controller="main" data-ng-init="initApp()">
+    <body ng-controller="main" data-ng-init="initApp()">
 
-		<div id='loader' class='loader' ng-if="isLoading"></div>
+        <div id='loader' class='loader' ng-if="isLoading"></div>
 
-       	<idai-navbar
-       		hide-register-button="true"
-       		hide-contact-button="true"
-       		hide-login-button="true"
-       		hide-search-form="true"
-			hide-language-switcher="true"
-			project-id="publications"
-			login-function=""
-			logout-function=""
-			user-object='{"username": false}'>
-			<salvia-navbar></salvia-navbar>
-		</idai-navbar>
+        <idai-navbar
+            hide-register-button="true"
+            hide-contact-button="true"
+            hide-login-button="true"
+            hide-search-form="true"
+            hide-language-switcher="true"
+            project-id="publications"
+            login-function=""
+            logout-function=""
+            user-object='{"username": false}'>
+            <salvia-navbar></salvia-navbar>
+        </idai-navbar>
 
-		<div id='main-container' class="container-fluid">
-			<messagebox></messagebox>
-			<ng-include src="steps.getTemplate()"></ng-include>
-		</div>
+        <div id='main-container' class="container-fluid">
+            <messagebox></messagebox>
+            <ng-include src="steps.getTemplate()"></ng-include>
+        </div>
 
-		<idai-footer institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
+        <idai-footer institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
 
-		<!-- load angular, bootstrap, idai-components -->
+        <!-- load angular, bootstrap, idai-components -->
 
-		<script src="node_modules/angular/angular.min.js"></script>
-		<script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
-		<script src="node_modules/idai-components/dist/idai-components.min.js"></script>
+        <script src="node_modules/angular/angular.min.js"></script>
+        <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+        <script src="node_modules/idai-components/dist/idai-components.min.js"></script>
 
-		<!--  load 3party angular moduls -->
+        <!--  load 3party angular moduls -->
 
-		<script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+        <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
-		<!-- load salvia app -->
+        <!-- load salvia app -->
     
-		<script src="js/services/labels.js"></script>
-		<script src="js/services/dataset.js"></script>
-		<script src="js/services/messenger.js"></script>
-		<script src="js/services/file_manager.js"></script>
-		<script src="js/services/webservice.js"></script>
-		<script src="js/services/staging_dir.js"></script>
-		<script src="js/services/steps.js"></script>
-		<script src="js/services/zenon_importer.js"></script>
-		<script src="js/services/language_strings.js"></script>
+        <script src="js/services/labels.js"></script>
+        <script src="js/services/dataset.js"></script>
+        <script src="js/services/messenger.js"></script>
+        <script src="js/services/file_manager.js"></script>
+        <script src="js/services/webservice.js"></script>
+        <script src="js/services/staging_dir.js"></script>
+        <script src="js/services/steps.js"></script>
+        <script src="js/services/zenon_importer.js"></script>
+        <script src="js/services/language_strings.js"></script>
 
-		<script src="js/filemanager/pdf_file_manager.js"></script>
+        <script src="js/filemanager/pdf_file_manager.js"></script>
 
-		<script src="js/controllers/main.js"></script>
-		<script src="js/controllers/view_home.js"></script>
-		<script src="js/controllers/view_overview.js"></script>
-		<script src="js/controllers/view_articles.js"></script>
-		<script src="js/controllers/view_finish.js"></script>
-		<script src="js/controllers/view_documents.js"></script>
-		<script src="js/controllers/upload.js"></script>
-		<script src="js/directives/editable.js"></script>
-		<script src="js/directives/multiselect.js"></script>
-		<script src="js/directives/salviaNavbar.js"></script>
-		<script src="js/directives/messagebox.js"></script>
-		<script src="js/directives/files_treeview.js"></script>
-		<script src="js/directives/stats.js"></script>
-		<script src="js/directives/zenon.js"></script>
-		<script src="js/services/editables.js"></script>
-		<script src="js/services/settings.js"></script>
-		<script src="js/directives/autoheight.js"></script>
-		<script src="js/directives/main_object.js"></script>
+        <script src="js/controllers/main.js"></script>
+        <script src="js/controllers/view_home.js"></script>
+        <script src="js/controllers/view_overview.js"></script>
+        <script src="js/controllers/view_articles.js"></script>
+        <script src="js/controllers/view_finish.js"></script>
+        <script src="js/controllers/view_documents.js"></script>
+        <script src="js/controllers/upload.js"></script>
+        <script src="js/directives/editable.js"></script>
+        <script src="js/directives/multiselect.js"></script>
+        <script src="js/directives/salviaNavbar.js"></script>
+        <script src="js/directives/messagebox.js"></script>
+        <script src="js/directives/files_treeview.js"></script>
+        <script src="js/directives/stats.js"></script>
+        <script src="js/directives/zenon.js"></script>
+        <script src="js/services/editables.js"></script>
+        <script src="js/services/settings.js"></script>
+        <script src="js/directives/autoheight.js"></script>
+        <script src="js/directives/main_object.js"></script>
 
-		<script src="js/models/journal_issue.js"></script>
+        <script src="js/models/journal_issue.js"></script>
 
-		<script src="js/app.js"></script>
+        <script src="js/app.js"></script>
 
-		<!-- load file handlers -->
+        <!-- load file handlers -->
 
-		<script src="js/filehandler/default_pdf_handler.js"></script>
-		<script src="js/filehandler/empty_pdf_handler.js"></script>
-		<script src="js/filehandler/chiron_parted.js"></script>
-		<script src="js/filehandler/csv_import.js"></script>
-		<script src="js/controllers/csv_import_window.js"></script>
+        <script src="js/filehandler/default_pdf_handler.js"></script>
+        <script src="js/filehandler/empty_pdf_handler.js"></script>
+        <script src="js/filehandler/chiron_parted.js"></script>
+        <script src="js/filehandler/csv_import.js"></script>
+        <script src="js/controllers/csv_import_window.js"></script>
 
-		<!-- load require.js for non-angular modules -->
+        <!-- load require.js for non-angular modules -->
 
-		<script src="inc/require.js"></script>
+        <script src="inc/require.js"></script>
 
-	</body>
+    </body>
 </html>

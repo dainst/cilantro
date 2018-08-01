@@ -13,7 +13,7 @@ gulp.task('server', function() {
             baseDir: '.',
             middleware: [
                 // rewrite for AngularJS HTML5 mode, redirect all non-file urls to index.html (copied from arache)
-                modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg|\\.gif|\\.json|\\.woff2|\\.woff|\\.ttf$ /index.html [L]'])
+                modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg|\\.gif|\\.json|\\.woff2|\\.woff|\\.ttf|\\.ico$ /index.html [L]'])
             ]
         },
         port: 9082,
@@ -41,7 +41,7 @@ gulp.task('server-e2e-test', function() {
             middleware: [
                 // rewrite for AngularJS HTML5 mode, redirect all non-file urls to index.html (copied from arache)
                 modRewrite(['settings.json$ settings.test.json [L]']),
-                modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg|\\.gif|\\.json|\\.woff2|\\.woff|\\.ttf$ /index.html [L]'])
+                modRewrite(['!\\.html|\\.js|\\.svg|\\.css|\\.png|\\.jpg|\\.gif|\\.json|\\.woff2|\\.woff|\\.ttf|\\.ico$ /index.html [L]'])
             ]
         },
         port: 9082,
