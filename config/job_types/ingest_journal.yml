@@ -4,15 +4,20 @@ about:
   tags: [OJS, iDAI.publications/journals, publish, journal, pdf]
 
 params:
-  files_to_split: list
-  paths: list
+  files: list
+  parts: list
   metadata: dict
+  ojs_journal_code: string
+  ojs_user: string
+  auto_publish_issue: boolean
+  default_publish_articles: boolean
+  default_create_frontpage: boolean
+  allow_upload_without_file: boolean
   nlp_params: dict
   frontmatter_ids: list
 
 tasks:
-  - retrieve_from_staging
-  - write_metadata
+  - create_object
   - convert.split_pdf
   - foreach: ".*\\.pdf$"
     do: convert.pdf_to_tif
@@ -24,7 +29,7 @@ tasks:
     xml_template_path: resources/ojs_template.xml
   - foreach: "\\.pdf$"
     do: convert.pdf_to_txt
-  - foreach: ".*txt$"
+  - foreach: "\\.*txt$"
     do: nlp.annotate
   - publish_to_ojs
   - generate_frontmatter

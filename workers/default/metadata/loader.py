@@ -1,8 +1,7 @@
 import json
 import os
 
-
-_json_file = 'data.json'
+_json_file = 'meta.json'
 
 
 def load_metadata(path):

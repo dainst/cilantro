@@ -58,8 +58,17 @@ class StagingControllerTest(unittest.TestCase):
         response = self._upload_to_staging(
             {'file': (io.BytesIO(b'asdf'), 'foo.asdf')})
         json = response.get_json()
-        self.assertEqual(json["result"]['foo.asdf']["error"]["code"], "extension_not_allowed")
+        self.assertEqual(json["result"]['foo.asdf']["error"]["code"],
+                         "extension_not_allowed")
         self.assertEqual(response.status_code, 200)
+
+    def test_upload_file_no_files_provided(self):
+        response = self._upload_to_staging({})
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.get_json()
+        self.assertFalse(response_json['success'])
+        self.assertEqual(response_json['error']['code'], "no_files_provided")
 
     def test_list_staging(self):
         object_path = os.path.join(self.resource_dir, 'objects', test_object)
@@ -83,6 +92,10 @@ class StagingControllerTest(unittest.TestCase):
                                    headers=get_auth_header())
         self.assertEqual(response.status_code, 404)
 
+        response_json = response.get_json()
+        self.assertFalse(response_json['success'])
+        self.assertEqual(response_json['error']['code'], "file_not_found")
+
     def _upload_folder_to_staging(self, obj):
         object_path = os.path.join(self.resource_dir, 'objects', obj)
         files = []
@@ -93,7 +106,8 @@ class StagingControllerTest(unittest.TestCase):
         try:
             for path in file_paths:
                 if os.path.isfile(path):
-                    file = (open(path, 'rb'), os.path.relpath(path, os.path.dirname(object_path)))
+                    relpath = os.path.relpath(path,os.path.dirname(object_path))
+                    file = (open(path, 'rb'), relpath)
                     files.append(file)
             return self._upload_to_staging({'files': files})
         finally:
