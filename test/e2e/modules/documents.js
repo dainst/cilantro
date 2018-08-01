@@ -1,4 +1,4 @@
-const e = require("../util/elements");
+const e = require("./elements");
 const EC = protractor.ExpectedConditions;
 
 const DocumentsPage = function() {

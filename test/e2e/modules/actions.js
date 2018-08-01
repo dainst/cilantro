@@ -1,4 +1,4 @@
-const elements = require("../util/elements");
+const elements = require("./elements");
 
 const path = require('path');
 const remote = require('../../../node_modules/selenium-webdriver/remote');
@@ -25,7 +25,7 @@ const Actions = function() {
         return elements.restart.confirmBtn.click();
     };
 
-    this.uploadFile = function(file = '../ressources/staging/e2e-testing.pdf') {
+    this.uploadFile = function(file = '../resources/staging/e2e-testing.pdf') {
         browser.setFileDetector(new remote.FileDetector());
         let absolutePath = path.resolve(__dirname, file);
         browser.wait(EC.presenceOf(elements.upload.fileElem));

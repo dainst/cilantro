@@ -1,4 +1,4 @@
-const zenonFakeData = require('../ressources/zenon/fakedata.json');
+const zenonFakeData = require('../resources/zenon/fakedata.json');
 
 module.exports = function fakeZenon(req, res, next) {
     const url = req.url.split("/");

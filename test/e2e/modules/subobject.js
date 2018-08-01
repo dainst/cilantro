@@ -1,4 +1,4 @@
-const e = require("../util/elements");
+const e = require("./elements");
 const message = require('../modules/messages');
 const EC = protractor.ExpectedConditions;
 

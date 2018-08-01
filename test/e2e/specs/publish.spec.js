@@ -1,4 +1,4 @@
-const e = require("../util/elements");
+const e = require("../modules/elements");
 const a = require('../modules/actions');
 const so = require('../modules/subobject');
 const mo = require('../modules/mainobject');

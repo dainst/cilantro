@@ -3,7 +3,7 @@ const PNG = require('pngjs').PNG;
 const pixelmatch = require('pixelmatch');
 const path = require('path');
 const dataUriToBuffer = require('data-uri-to-buffer');
-const imgPath = path.join(__dirname,'/../ressources/images/');
+const imgPath = path.join(__dirname,'/../resources/images/');
 const outPath = path.join(__dirname,'/../screenshots/');
 
 const ImageComparer = function() {

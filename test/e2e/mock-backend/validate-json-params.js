@@ -13,7 +13,7 @@ module.exports = function validateJsonParams(req, res, next) {
     const jobType = url[1];
     console.log("Validate POST param for: " + jobType);
 
-    const file = path.resolve('../schema/run_job_param_' + jobType + '.json');
+    const file = path.resolve('../resources/schema/run_job_param_' + jobType + '.json');
     if (!fs.existsSync(file)) {
         console.log("Schema-File does not exist: " + file);
         next();
