@@ -14,11 +14,11 @@ class IngestBookTest(JobTypeTest):
         self.assert_job_successful(data['task_ids'])
 
         files_generated = [
-            'data/origin/test.jpg',
-            'data/origin/test2.jpg',
-            'data/origin/test3.jpg',
-            'data/origin/test4.jpg',
-            'data/origin/merged.pdf',
+            'data/jpg/test.jpg',
+            'data/jpg/test2.jpg',
+            'data/jpg/test3.jpg',
+            'data/jpg/test4.jpg',
+            'data/pdf/merged.pdf',
             'meta.json'
         ]
         for file in files_generated:

@@ -14,6 +14,10 @@ class IngestJournalTest(JobTypeTest):
         self.assert_status(job_id, 'SUCCESS', 120000)
 
         files_generated = [
+            'data/origin/merged.pdf',
+            'data/tif/0.tif',
+            'data/txt/0.txt',
+            'data/txt/0.json',
             'parts/part_0001/data/origin/merged.pdf',
             'parts/part_0001/meta.json',
             'parts/part_0001/marc.xml',
