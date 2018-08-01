@@ -1,21 +1,21 @@
-let mod = angular.module('module.fileHandlers.csv_import', ['ui.bootstrap']);
+const mod = angular.module('module.fileHandlers.csvImport', ['ui.bootstrap']);
 
-mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'file_manager', 'dataset',
-    function($rootScope, $uibModal, editables, file_manager, dataset) {
+mod.factory("csvImport", ['$rootScope', '$uibModal', 'editables', 'fileManager', 'dataset',
+    function($rootScope, $uibModal, editables, fileManager, dataset) {
 
-        const csvHandler = new file_manager.FileHandler('csv_import');
+        const csvHandler = new fileManager.FileHandler('csv_import');
 
         csvHandler.description = "Create Articles with metadata from a CSV-file";
         csvHandler.fileTypes = ["csv"];
 
-        csvHandler.handleFile = file => file_manager.loadFileContents(file).then(files => files.forEach(csvImport));
+        csvHandler.handleFile = file => fileManager.loadFileContents(file).then(files => files.forEach(csvImport));
 
         function csvImport(file) {
 
             const modalInstance = $uibModal.open({
                 animation: true,
-                templateUrl: 'partials/modals/csv-import.html',
-                controller: "csv_import_window",
+                templateUrl: 'partials/modals/csv_import.html',
+                controller: "csvImportWindow",
                 controllerAs: '$ctrl',
                 size: 'lg',
                 backdrop: 'static',
@@ -27,9 +27,9 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'file_manager
                 for (let i = 0, ids = Object.keys(dataset.articles); i < ids.length; i++) {
                     $rootScope.$broadcast('thumbnaildataChanged', dataset.articles[ids[i]]);
                 }
-                file_manager.ready = true;
+                fileManager.ready = true;
             }, function(a) {
-                file_manager.ready = true;
+                fileManager.ready = true;
             });
 
         }
@@ -37,5 +37,5 @@ mod.factory("csv_import", ['$rootScope', '$uibModal', 'editables', 'file_manager
         return csvHandler
 
     }])
-.run(function(csv_import) {csv_import.register()});
+.run(function(csvImport) {csvImport.register()});
 

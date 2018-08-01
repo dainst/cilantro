@@ -1,7 +1,6 @@
-// to be: file_handler_registry
 angular
-    .module("module.file_manager", [])
-    .factory("file_manager", ['webservice', function(webservice) {
+    .module("module.fileManager", [])
+    .factory("fileManager", ['webservice', function(webservice) {
 
         const fileExtRegEx = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi;
 

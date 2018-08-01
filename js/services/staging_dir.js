@@ -1,6 +1,6 @@
 angular
-.module("module.staging_dir", [])
-.factory("staging_dir", ["messenger", function(messenger) {
+.module("module.stagingDir", [])
+.factory("stagingDir", ["messenger", function(messenger) {
 
 	let staging_dir = {};
 	staging_dir.list = {};

@@ -1,26 +1,31 @@
+/**
+ * this file is just kept as an example for highly specialized file handler
+ * although it's not sure, that it will be used ever again or is still working at all
+ */
+
 angular
-.module('module.fileHandlers.chiron_parted', [])
-.factory("chiron_parted", ['$rootScope', 'editables', 'file_manager', 'pdf_file_manager', 'dataset',
-    function($rootScope, editables, file_manager, pdf_file_manager, dataset) {
+.module('module.fileHandlers.chironParted', [])
+.factory("chironParted", ['$rootScope', 'editables', 'fileManager', 'pdfFileManager', 'dataset',
+    function($rootScope, editables, fileManager, pdfFileManager, dataset) {
 
-    const chironPartedHandler = new file_manager.FileHandler('chiron_parted');
+    const chironPartedHandler = new fileManager.FileHandler('chiron_parted');
 
-    chironPartedHandler.description = "Specialized File handler for Chiron Documents";
+    chironPartedHandler.description = "Specialized File handler for Chiron Documents (not supported currently)";
     chironPartedHandler.fileTypes = ["pdf"];
 
-    chironPartedHandler.handleFile = file => pdf_file_manager.loadFiles(file).then(files => files.forEach(file2Articles));
+    chironPartedHandler.handleFile = file => pdfFileManager.loadFiles(file).then(files => files.forEach(file2Articles));
 
-    chironPartedHandler.createThumbnail = pdf_file_manager.createThumbnail;
+    chironPartedHandler.createThumbnail = pdfFileManager.createThumbnail;
 
     function file2Articles(fileO) {
 
-        const file = file_manager.loadedFiles[fileO.path];
+        const file = fileManager.loadedFiles[fileO.path];
 
-        const pdf = pdf_file_manager.files[fileName].pdf;
+        const pdf = pdfFileManager.files[fileName].pdf;
 
         const article = new dataset.Article();
          // special data for raw articles
-        article.filepath.value.value =  pdf_file_manager.files[fileName].url;
+        article.filepath.value.value =  pdfFileManager.files[fileName].url;
         article._.tmp = [
             {
                 fontName: '',
@@ -104,8 +109,8 @@ angular
                     article.title 	= editables.text(title.trim());
                     article.author 	= editables.authorlist(caseCorrection(author).split("–"));
 
-                    file_manager.loadedFiles[fileName].pagecontext.offset = - pageIdx + parseInt(pageNr);
-                    article.pages.context = file_manager.loadedFiles[fileName].pagecontext;
+                    fileManager.loadedFiles[fileName].pagecontext.offset = - pageIdx + parseInt(pageNr);
+                    article.pages.context = fileManager.loadedFiles[fileName].pagecontext;
                     article.pages.startPrint = parseInt(pageNr);
                     article.pages.endPrint = parseInt(pageNr) + pdf.pdfInfo.numPages - pageIdx;
                     //article.pages.resetDesc();
@@ -114,14 +119,14 @@ angular
 
                     //article._.tmp = [];
 
-                    file_manager.stats.analyzed += 1
+                    fileManager.stats.analyzed += 1
                 }); //getTextContent
 
                 /* refresh */
                 $rootScope.$broadcast('refreshView');
 
                 /* thumbnail */
-                pdf_file_manager.createThumbnail(page,  article._.id)
+                pdfFileManager.createThumbnail(page,  article._.id)
 
 
             }); // getPage
@@ -137,4 +142,4 @@ angular
 
     return (chironPartedHandler);
 }])
-.run(function(chiron_parted) {chiron_parted.register()});
+.run(function(chironParted) {chironParted.register()});

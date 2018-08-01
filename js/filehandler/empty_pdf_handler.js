@@ -1,19 +1,19 @@
 angular
 .module("module.fileHandlers.emptyPdfHandler", [])
-.factory("emptyPdfHandler", ['$rootScope', 'editables', 'file_manager', 'pdf_file_manager',
-    function($rootScope, editables, file_manager, pdf_file_manager) {
+.factory("emptyPdfHandler", ['$rootScope', 'editables', 'fileManager', 'pdfFileManager',
+    function($rootScope, editables, fileManager, pdfFileManager) {
 
-    let emptyPdfHandler = new file_manager.FileHandler('empty');
+    let emptyPdfHandler = new fileManager.FileHandler('empty');
 
     emptyPdfHandler.description = "Do nothing, just load";
     emptyPdfHandler.fileTypes = ["pdf", "directory"];
 
-    emptyPdfHandler.handleFile = file => pdf_file_manager.loadFiles(file).then(files => files.forEach(file2Articles));
+    emptyPdfHandler.handleFile = file => pdfFileManager.loadFiles(file).then(files => files.forEach(file2Articles));
 
-    emptyPdfHandler.createThumbnail = pdf_file_manager.createThumbnail;
+    emptyPdfHandler.createThumbnail = pdfFileManager.createThumbnail;
 
     function file2Articles(file) {
-        file_manager.stats.analyzed += 1;
+        fileManager.stats.analyzed += 1;
     }
 
     return (emptyPdfHandler);

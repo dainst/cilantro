@@ -1,6 +1,6 @@
 angular
     .module('directive.zenon', [])
-    .directive("zenon", ['$timeout', '$rootScope', 'zenon_importer',
+    .directive("zenon", ['$timeout', '$rootScope', 'zenonImporter',
         function($timeout, $rootScope, zenonImporter) {
             return {
                 restrict: 'E',

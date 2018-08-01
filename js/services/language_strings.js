@@ -2,9 +2,9 @@
 
 angular
 
-    .module('module.language_strings', [])
+    .module('module.languageStrings', [])
 
-    .factory('language_strings', [function() {
+    .factory('languageStrings', [function() {
 
         const ls = {};
 

@@ -1,5 +1,5 @@
 angular
-.module("module.journal_issue", [])
+.module("module.journalIssue", [])
 .factory("journalIssue", ['editables', 'settings', function(editables, settings) {
     /*
      * refactor plans :

@@ -2,7 +2,7 @@
 
 angular
 .module('module.steps', [])
-.factory("steps", ['file_manager', 'dataset', 'messenger', function(file_manager, dataset, messenger) {
+.factory("steps", ['fileManager', 'dataset', 'messenger', function(fileManager, dataset, messenger) {
 
     const cacheKiller = '?nd=' + Date.now();
 
@@ -33,14 +33,14 @@ angular
             "showIf": function() {return steps.isStarted}
         },
         "articles": {
-            "template": "partials/views/articles.html",
+            "template": "partials/views/subobjects.html",
             "title": "Articles",
             "showIf": function() {return steps.isStarted}
         },
         "publish": {
             "template": "partials/views/finish.html",
             "title": "Publish",
-            "showIf": function() {return steps.isStarted && file_manager.ready && dataset.isReadyToUpload()}
+            "showIf": function() {return steps.isStarted && fileManager.ready && dataset.isReadyToUpload()}
         },
         "fatal": {
             "template": "partials/views/fatal.html",

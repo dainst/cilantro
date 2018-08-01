@@ -4,8 +4,8 @@ angular
 
 .module('controller.main', [])
 
-.controller('main',	['$scope', 'webservice', 'settings', 'messenger', 'file_manager', 'dataset', 'staging_dir', 'steps',
-	function ($scope, webservice, settings, messenger, file_manager, dataset, staging_dir, steps) {
+.controller('main',	['$scope', 'webservice', 'settings', 'messenger', 'fileManager', 'dataset', 'stagingDir', 'steps',
+	function ($scope, webservice, settings, messenger, fileManager, dataset, stagingDir, steps) {
 
 		$scope.cacheKiller = '?nd=' + Date.now();
 
@@ -34,10 +34,10 @@ angular
                         webservice.get('staging')
                             .then((stagingFolder) => {
                                 console.log("stagingFolder", stagingFolder);
-                                staging_dir.update(stagingFolder);
+                                stagingDir.update(stagingFolder);
                                 $scope.isLoading = false;
-                                file_manager.reset();
-                                file_manager.selectDefaultFileHandlers();
+                                fileManager.reset();
+                                fileManager.selectDefaultFileHandlers();
 
                                 $scope.refreshView();
 

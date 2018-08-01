@@ -1,11 +1,8 @@
-/**
- * Created by pfranck on 20.04.17.
- */
 angular
 
-.module('controller.view_finish', [])
+.module('controller.viewFinish', [])
 
-.controller('view_finish', ['$scope', 'webservice', 'dataset', 'messenger', 'labels',
+.controller('viewFinish', ['$scope', 'webservice', 'dataset', 'messenger', 'labels',
     function($scope, webservice, dataset, messenger, labels) {
 
         $scope.dataset = dataset;

@@ -4,7 +4,7 @@ angular
 
     .module('directive.filesTreeview', [])
 
-    .directive('filesTreeview', ['file_manager', function(file_manager) {
+    .directive('filesTreeview', ['fileManager', function(fileManager) {
         return {
             restrict: 'E',
             templateUrl: 'partials/elements/files_treeview.html',
@@ -17,13 +17,13 @@ angular
                 const openStates = {};
                 scope.isOpen = path => angular.isDefined(openStates[path]) && openStates[path];
                 scope.toggle = path => openStates[path] = !openStates[path];
-                scope.handleFile = file_manager.handleFile;
+                scope.handleFile = fileManager.handleFile;
                 scope.getClass = file => {
-                    if (file_manager.getFileStatus(file) === true) return 'loaded';
-                    if (file_manager.getFileStatus(file) === false) return 'error';
+                    if (fileManager.getFileStatus(file) === true) return 'loaded';
+                    if (fileManager.getFileStatus(file) === false) return 'error';
                     return "";
                 };
-                scope.ssss = file_manager.getFileStatus;
+                scope.ssss = fileManager.getFileStatus;
             }
         }
     }]);

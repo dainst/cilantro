@@ -1,8 +1,8 @@
 angular
 
-.module('controller.view_articles', [])
+.module('controller.viewSubObjects', [])
 
-.controller('view_articles', ['$scope', 'messenger', 'dataset', 'steps', 'labels', 'zenon_importer',
+.controller('viewSubObjects', ['$scope', 'messenger', 'dataset', 'steps', 'labels', 'zenonImporter',
     function($scope, messenger, dataset, steps, labels, zenonImporter) {
 
         $scope.dataset = dataset;

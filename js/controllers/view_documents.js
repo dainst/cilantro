@@ -1,16 +1,16 @@
 angular
 
-.module('controller.view_documents', [])
+.module('controller.viewDocuments', [])
 
-.controller('view_documents', ['$scope', 'file_manager', 'staging_dir', 'steps',
-    function($scope, file_manager, staging_dir, steps) {
+.controller('viewDocuments', ['$scope', 'fileManager', 'stagingDir', 'steps',
+    function($scope, fileManager, stagingDir, steps) {
 
-        $scope.fileHandlers = file_manager.fileHandlers;
-        $scope.getSelectedFileHandler = file_manager.getFileHandler;
-        $scope.selectFileHandler = file_manager.setFileHandler;
-        $scope.staging_dir = staging_dir;
+        $scope.fileHandlers = fileManager.fileHandlers;
+        $scope.getSelectedFileHandler = fileManager.getFileHandler;
+        $scope.selectFileHandler = fileManager.setFileHandler;
+        $scope.stagingDir = stagingDir;
         $scope.filesListSelected = null;
-        $scope.isReady = () => file_manager.ready;
+        $scope.isReady = () => fileManager.ready;
         $scope.continue = () => steps.change('overview');
     }
 ]);

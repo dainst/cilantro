@@ -1,8 +1,8 @@
 angular
 
-.module('controller.view_overview', [])
+.module('controller.viewOverview', [])
 
-.controller('view_overview', ['$scope', 'settings', 'messenger', 'dataset', 'steps', 'labels',
+.controller('viewOverview', ['$scope', 'settings', 'messenger', 'dataset', 'steps', 'labels',
     function($scope, settings, messenger, dataset, steps, labels) {
 
         $scope.dataset = dataset;

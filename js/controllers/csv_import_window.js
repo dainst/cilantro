@@ -1,5 +1,5 @@
-angular.module('controller.csv_import_window', ['ui.bootstrap']);
-mod.controller('csv_import_window', ['$scope', '$uibModalInstance', 'dataset', 'file', 'labels', 'zenon_importer', 'messenger',
+angular.module('controller.csvImportWindow', ['ui.bootstrap']);
+mod.controller('csvImportWindow', ['$scope', '$uibModalInstance', 'dataset', 'file', 'labels', 'zenonImporter', 'messenger',
     function($scope, $uibModalInstance, dataset, file, labels, zenonImporter, messenger) {
 
         /* raw csv data */

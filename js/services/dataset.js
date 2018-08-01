@@ -1,13 +1,13 @@
 angular
 .module("module.dataset", [])
-.factory("dataset", ['editables', '$rootScope', 'journalIssue', 'file_manager',
+.factory("dataset", ['editables', '$rootScope', 'journalIssue', 'fileManager',
     function(editables, $rootScope, journalIssue, fileManager) {
 
     /**
      * Refactor Plans
      * - make different models work
      * - rename things from Article to SubObject
-     * - remove dataset.loadedFiles and dataset dependency from pdf_file_manager
+     * - remove dataset.loadedFiles and dataset dependency from pdfFileManager
      * - genreralize the setConstraints function
      */
 

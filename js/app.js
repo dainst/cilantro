@@ -11,25 +11,28 @@ angular
     'idai.templates',
 
     'module.labels',
-    'module.pdf_file_manager',
+    'module.pdfFileManager',
     'module.dataset',
-    'module.file_manager',
+    'module.fileManager',
     'module.messenger',
     'module.webservice',
-    'module.staging_dir',
+    'module.stagingDir',
     'module.steps',
-    'module.journal_issue',
-    'module.zenon_importer',
-    'module.language_strings',
+    'module.journalIssue',
+    'module.zenonImporter',
+    'module.languageStrings',
+    'module.editables',
+    'module.settings',
 
     'controller.main',
 
-    'controller.view_home',
-    'controller.view_overview',
-    'controller.view_articles',
-    'controller.view_finish',
-    'controller.view_documents',
+    'controller.viewHome',
+    'controller.viewOverview',
+    'controller.viewSubObjects',
+    'controller.viewFinish',
+    'controller.viewDocuments',
 
+    'controller.csvImportWindow',
     'controller.upload',
     'directive.editable',
     'directive.multiselect',
@@ -41,16 +44,10 @@ angular
     'directive.autoheight',
     'directive.mainObject',
 
-    'module.editables',
-
     'module.fileHandlers.defaultPdfHandler',
     'module.fileHandlers.emptyPdfHandler',
-    'module.fileHandlers.chiron_parted',
-    'module.fileHandlers.csv_import',
-    'controller.csv_import_window',
-
-    'module.settings'
-
+    'module.fileHandlers.chironParted',
+    'module.fileHandlers.csvImport',
 ])
 
 .constant('componentsSettings', {

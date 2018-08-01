@@ -1,8 +1,8 @@
 angular
 
-    .module('module.zenon_importer', [])
+    .module('module.zenonImporter', [])
 
-    .factory('zenon_importer', ['$sce', '$http', 'dataset', 'editables', 'settings', 'messenger',
+    .factory('zenonImporter', ['$sce', '$http', 'dataset', 'editables', 'settings', 'messenger',
         function($sce, $http, dataset, editables, settings, messenger) {
 
             const zenonEndpoint = $sce.trustAsResourceUrl(settings.zenon_url);

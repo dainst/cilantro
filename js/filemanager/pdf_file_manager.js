@@ -1,31 +1,31 @@
 angular
-.module('module.pdf_file_manager', ['module.messenger', 'module.webservice'])
-.factory('pdf_file_manager', ['$rootScope', 'settings', 'webservice', 'messenger', 'dataset', 'editables', 'file_manager',
-    function($rootScope, settings, webservice, messenger, dataset, editables, file_manager) {
+.module('module.pdfFileManager', ['module.messenger', 'module.webservice'])
+.factory('pdfFileManager', ['$rootScope', 'settings', 'webservice', 'messenger', 'dataset', 'editables', 'fileManager',
+    function($rootScope, settings, webservice, messenger, dataset, editables, fileManager) {
 
-    const pdf_file_manager = {};
+    const pdfFileManager = {};
 
     const requirePdfJs = new Promise(function(resolve) {
         // include pdf.js (& require) with npm as well and replace this stuff
         require.config({paths: {'pdfjs': 'inc/pdf.js'}});
         require(['pdfjs/display/api', 'pdfjs/display/global'], function(pdfjs_api, pdfjs_global) {
             console.log('required pdf.js');
-            pdf_file_manager.status  = 'pdf.js loaded';
+            pdfFileManager.status  = 'pdf.js loaded';
 
-            pdf_file_manager.PDF = {
+            pdfFileManager.PDF = {
                 "api": pdfjs_api,
                 "global": pdfjs_global,
                 "data": null,
                 'object': null
             };
 
-            pdf_file_manager.PDF.global.PDFJS.workerSrc = 'js/other/pdfjs_worker_loader.js';
+            pdfFileManager.PDF.global.PDFJS.workerSrc = 'js/other/pdfjs_worker_loader.js';
             resolve();
         });
     });
 
     const loadFiles = function(filesToLoad) {
-        pdf_file_manager.ready = false;
+        pdfFileManager.ready = false;
 
         const loadFilePromises = [];
 
@@ -43,7 +43,7 @@ angular
             const promise = new Promise(
                 function documentPromiseResolve(resolve, fail) {
 
-                    pdf_file_manager.PDF.api.getDocument(reqestParams).then(
+                    pdfFileManager.PDF.api.getDocument(reqestParams).then(
                         function onGotDocument(pdf) {
                             let fileInfo = {
                                 pdf: pdf,
@@ -69,7 +69,7 @@ angular
                                 this.size = fileSize(dil.length);
                             }.bind(fileInfo));
 
-                            file_manager.loadedFiles[this.url] = fileInfo;
+                            fileManager.loadedFiles[this.url] = fileInfo;
 
                             const metadataLoaded = function() {
                                 dataset.loadedFiles[this.url] = {
@@ -78,7 +78,7 @@ angular
                                     pagecontext: this.pagecontext
                                 };
                                 messenger.info('document: ' + this.url + ' loaded');
-                                file_manager.stats.loaded += 1;
+                                fileManager.stats.loaded += 1;
                                 refreshView();
                                 resolve();
                             }.bind(fileInfo);
@@ -107,13 +107,13 @@ angular
         return loadFilePromises;
     };
 
-    pdf_file_manager.loadFiles = function(file) {
+    pdfFileManager.loadFiles = function(file) {
         //  TODO make recursive!
         console.log("Load File: ", file);
 
         const filesToLoad = (file.type === 'directory') ? file.contents : [file];
-        file_manager.ready = false;
-        file_manager.stats.files += filesToLoad.length;
+        fileManager.ready = false;
+        fileManager.stats.files += filesToLoad.length;
 
         return new Promise((resolve, reject) => {
             requirePdfJs.then(function() {
@@ -121,7 +121,7 @@ angular
                     if (filesToLoad.length > 1) {
                         messenger.success("All Files loaded");
                     }
-                    file_manager.ready = true;
+                    fileManager.ready = true;
                     refreshView();
                     resolve(filesToLoad);
                 }).catch(reject);
@@ -131,12 +131,12 @@ angular
     };
 
     // depricated?!
-    pdf_file_manager.getFileInfo = function(article) {
+    pdfFileManager.getFileInfo = function(article) {
 
         if (article.filepath.value.value === 'none') {
             return {}
         }
-        let file = file_manager.loadedFiles[article.filepath.value.value];
+        let file = fileManager.loadedFiles[article.filepath.value.value];
         if (angular.isUndefined(file)) {
             return {'alert': 'file not known'}
         }
@@ -167,14 +167,14 @@ angular
                 ctx.globalCompositeOperation = "destination-over";
                 ctx.fillStyle = "#123456";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                file_manager.stats.thumbnails += 1;
+                fileManager.stats.thumbnails += 1;
                 resolve(canvas.toDataURL());
             });
         });
     }
 
-    pdf_file_manager.createThumbnail = params => new Promise((resolve, reject) =>
-        file_manager.loadedFiles[params.filePath].pdf
+    pdfFileManager.createThumbnail = params => new Promise((resolve, reject) =>
+        fileManager.loadedFiles[params.filePath].pdf
             .getPage(params.pages.startPrint)
             .then(page => renderThumbnail(page)
                 .then(resolve))
@@ -189,7 +189,7 @@ angular
         $rootScope.$broadcast('refreshView');
     }
 
-    return pdf_file_manager;
+    return pdfFileManager;
 
 
 }]);

@@ -1,6 +1,6 @@
 angular
 .module('directive.multiselect', ['ng'] )
-.directive('multiselect' , ['$log', function ($log) {
+.directive('multiselect' , [function () {
 	return {
 		restrict: 'E',
 		transclude: true,

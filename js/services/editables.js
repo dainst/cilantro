@@ -1,6 +1,6 @@
 angular
 .module('module.editables', [])
-.factory("editables", ['language_strings', function(languageStrings) {
+.factory("editables", ['languageStrings', function(languageStrings) {
 
     /**
      * refactor plans
