@@ -16,6 +16,9 @@ from workers.convert.tif_to_txt import tif_to_txt
 class ConvertTask(BaseTask):
     """
     Abstract base class for conversion tasks.
+
+    Subclasses have to override the process_file method that holds the
+    actual conversion logic.
     """
 
     def execute_task(self):
@@ -46,14 +49,15 @@ class SplitPdfTask(BaseTask):
     Split multiple pdfs from the working dir.
 
     TaskParams:
-    -list files_to_split: list of the files as dictionnaries {'file': file_name, 'range': [start, end]}
+    -list files_to_split: list of the files as dictionnaries
+        {'file': file_name, 'range': [start, end]}
 
     Preconditions:
     -files from files_to_split in the working dir.
 
     Creates:
     -for each article:
-        -file_name.article_nr.pdf in the working dir.
+        -<file_name>.<article_no>.pdf in the working dir.
     """
     name = "convert.split_pdf"
 
@@ -95,10 +99,11 @@ class JpgToPdfTask(ConvertTask):
     Create a one paged pdf with a jpg.
 
     TaskParams:
-    -str file: jpg file to be turned into pdf
+    -str file: Path to a jpg file that should be converted to pdf
+    -str target: Name of the representation the created file will be added to
 
     Preconditions:
-    -file in the working dir.
+    -file in the representation
 
     Creates:
     -file_name.converted.pdf in the working dir.
@@ -117,13 +122,14 @@ class TifToJpgTask(ConvertTask):
     Create a jpg file from a tif.
 
     TaskParams:
-    -str file: tif file to be turned into jpg
+    -str file: Path to the tif file
+    -str target: Name of the representation the created file will be added to
 
     Preconditions:
-    -file in the working dir.
+    -file in the representation
 
     Creates:
-    -file_name.jpg in the working dir.
+    -<file_name>.jpg in the working dir
     """
     name = "convert.tif_to_jpg"
 
@@ -136,17 +142,18 @@ class TifToJpgTask(ConvertTask):
 
 class PdfToTxtTask(ConvertTask):
     """
-    Create a txt file for every page in a pdf.
+    Extract text from a pdf and create a txt file for every page.
 
     TaskParams:
-    -str file: pdf file to be turned into txt files
+    -str file: Path to the pdf file
+    -str target: Name of the representation the created file will be added to
 
     Preconditions:
-    -file in the working dir.
+    -file in the representation
 
     Creates:
     -for each page in file:
-        -page.index.txt
+        -page.<page_no>.txt
     """
     name = "convert.pdf_to_txt"
 
@@ -159,14 +166,15 @@ class PdfToTifTask(ConvertTask):
     Create a tif file for every page of a pdf.
 
     TaskParams:
-    -str file: pdf file to be turned into tif files
+    -str file: The path to the pdf file
+    -str target: Name of the representation the created files will be added to
 
     Preconditions:
-    -file in the working dir.
+    -file in the representation
 
     Creates:
     -for each page in file:
-        -index.tif
+        -<page_no>.tif
     """
     name = "convert.pdf_to_tif"
 
@@ -176,20 +184,21 @@ class PdfToTifTask(ConvertTask):
 
 class MergeConvertedPdfTask(BaseTask):
     """
-    Take all the .converted.pdf files in the workspace and merge them into one.
+    Merge all pdf files in a representation into one.
 
     TaskParams:
+    -representation: The name of the representation
 
     Preconditions:
 
     Creates:
-    -merged.pdf in the working dir
+    -merged.pdf in the given representation
     """
     name = "convert.merge_converted_pdf"
 
     def execute_task(self):
         rep = self.get_param('representation')
-        rep_dir = os.path.join(self.get_work_path(),  Object.DATA_DIR, rep)
+        rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, rep)
         files = [{'file': os.path.basename(f)}
                  for f in _list_files(rep_dir, '.converted.pdf')]
         split_merge_pdf(files, rep_dir)
@@ -197,16 +206,17 @@ class MergeConvertedPdfTask(BaseTask):
 
 class TxtToTifTask(ConvertTask):
     """
-    Create a txt file from a tif.
+    Do OCR on a tif file and save the results as txt.
 
     TaskParams:
-    -str file: tif file to be turned into txt
+    -str file: The path of the tif file
+    -str target: Name of the representation the created file will be added to
 
     Preconditions:
-    -file in the working dir.
+    -file in the representation
 
     Creates:
-    -file_name.converted.txt
+    -<file_name>.txt
     """
     name = "convert.tif_to_txt"
 
