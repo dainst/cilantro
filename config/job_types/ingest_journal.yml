@@ -18,17 +18,21 @@ params:
 tasks:
   - create_object
   - convert.split_pdf
-  - foreach: ".*\\.pdf$"
+  - foreach: origin
+    pattern: ".*\\.pdf$"
     do: convert.pdf_to_tif
-  - task: convert.tif_to_txt
-    file: 2.tif
+    foreach: origin
+    pattern: ".*\\.tif"
+    do: convert.tif_to_txt
   - task: generate_marc_xml
     xml_template_path: resources/marc_template.xml
   - task: generate_xml
     xml_template_path: resources/ojs_template.xml
-  - foreach: "\\.pdf$"
+  - foreach: origin
+    pattern: "\\.pdf$"
     do: convert.pdf_to_txt
-  - foreach: "\\.*txt$"
+  - foreach: origin
+    pattern: "\\.*txt$"
     do: nlp.annotate
   - publish_to_repository
   - cleanup_workdir

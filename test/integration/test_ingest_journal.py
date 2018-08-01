@@ -20,7 +20,6 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0002/data/origin/merged.pdf',
             'parts/part_0002/meta.json',
             'parts/part_0002/marc.xml',
-            'parts/part_0002/data/nlp/page.1.json',
             'meta.json',
             'ojs_import.xml'
         ]

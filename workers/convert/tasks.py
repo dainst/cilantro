@@ -125,7 +125,8 @@ class PdfToTxtTask(BaseTask):
 
     def execute_task(self):
         file = self.get_param('file')
-        convert_pdf_to_txt(file, os.path.join(os.path.dirname(os.path.dirname(file)), 'txt'))
+        target_dir = os.path.join(os.path.dirname(file))
+        convert_pdf_to_txt(file, target_dir)
 
 
 class PdfToTifTask(BaseTask):
@@ -146,7 +147,8 @@ class PdfToTifTask(BaseTask):
 
     def execute_task(self):
         file = self.get_param('file')
-        convert_pdf_to_tif(file, self.get_work_path())
+        target_dir = os.path.join(os.path.dirname(os.path.dirname(file)))
+        convert_pdf_to_tif(file, target_dir)
 
 
 class MergeConvertedPdfTask(BaseTask):
@@ -163,9 +165,9 @@ class MergeConvertedPdfTask(BaseTask):
     name = "convert.merge_converted_pdf"
 
     def execute_task(self):
-        work_path = self.get_work_path()
-        files = [{'file': os.path.basename(f)} for f in _list_files(work_path, '.converted.pdf')]
-        split_merge_pdf(files, work_path)
+        rep_path = os.path.join(self.get_work_path(), 'data', 'origin')
+        files = [{'file': os.path.basename(f)} for f in _list_files(rep_path, '.converted.pdf')]
+        split_merge_pdf(files, rep_path)
 
 
 class TxtToTifTask(BaseTask):
@@ -184,9 +186,10 @@ class TxtToTifTask(BaseTask):
     name = "convert.tif_to_txt"
 
     def execute_task(self):
-        file_name = self.get_param("file")
-        file = os.path.join(self.get_work_path(), file_name)
-        tif_to_txt(file, os.path.join(self.get_work_path(), file_name + '.converted.txt'))
+        file = self.get_param("file")
+        target_dir = os.path.join(os.path.dirname(os.path.dirname(file)))
+        file_name = os.path.basename(file)
+        tif_to_txt(file, os.path.join(target_dir, file_name + '.converted.txt'))
 
 
 def _list_files(directory, extension):

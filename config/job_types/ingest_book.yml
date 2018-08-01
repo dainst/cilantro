@@ -9,9 +9,11 @@ params:
 
 tasks:
   - create_object
-  - foreach: "\\.(tif|tiff|TIF|TIFF)$"
+  - foreach: origin
+    pattern: "\\.(tif|tiff|TIF|TIFF)$"
     do: convert.tif_to_jpg
-  - foreach: "\\.(jpg|jpeg|JPG|JPEG)$"
+  - foreach: origin
+    pattern: "\\.(jpg|jpeg|JPG|JPEG)$"
     do: convert.jpg_to_pdf
   - convert.merge_converted_pdf
   - publish_to_repository

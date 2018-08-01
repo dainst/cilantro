@@ -18,7 +18,7 @@ class IngestBookTest(JobTypeTest):
             'data/origin/test2.jpg',
             'data/origin/test3.jpg',
             'data/origin/test4.jpg',
-            'merged.pdf',
+            'data/origin/merged.pdf',
             'meta.json'
         ]
         for file in files_generated:

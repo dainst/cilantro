@@ -25,7 +25,7 @@ class JobConfigTest(unittest.TestCase):
 
         self.assertEqual('foreach', tasks[1]['task'])
         kwargs = tasks[1]['kwargs']
-        self.assertEqual('*.tif', kwargs['pattern'])
+        self.assertEqual('tif', kwargs['representation'])
         self.assertEqual('convert', kwargs['subtasks'][0]['name'])
         self.assertEqual('high', kwargs['subtasks'][0]['params']['quality'])
 

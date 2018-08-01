@@ -3,7 +3,7 @@ params:
 
 tasks:
   - retrieve
-  - foreach: "*.tif"
+  - foreach: "tif"
     do:
       task: convert
       quality: high
