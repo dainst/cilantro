@@ -37,7 +37,6 @@ class ForeachTask(BaseTask):
 
         for f in _recursive_file_list(rep_path):
             if regex.search(os.path.basename(f)):
-                print(f"file: {f}")
                 files.append(f)
 
         for file in files:
