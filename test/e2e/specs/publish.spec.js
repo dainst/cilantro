@@ -21,34 +21,28 @@ describe('publish page', () => {
     it ("should not allow start job if mainobject data is no valid", () => {
         so.goToSubObject(2);
         e.subobject.confirmBtn.click();
-        mo.getRowContent("Volume").then(cell => {
-            cell.element(by.css("input")).sendKeys("2018");
-        });
-        mo.getRowContent("Number").then(cell => {
-            cell.element(by.css("input")).sendKeys("18");
-        });
-        mo.getRowContent("OJS: Journal Code").then(cell => {
-            cell.all(by.css("option")).get(2).click();
-        });
-        expect(e.publish.uploadBtn.isDisplayed()).toBeTruthy();
+        Promise.all([mo.getRowContent("Volume"), mo.getRowContent("Number"), mo.getRowContent("OJS: Journal Code")])
+            .then(cells => {
+                cells[0].element(by.css("input")).sendKeys("2018");
+                cells[1].element(by.css("input")).sendKeys("18");
+                cells[2].all(by.css("option")).get(2).click();
+                expect(e.publish.uploadBtn.isDisplayed()).toBeTruthy();
+            });
     });
 
     it ("should start job if everything is okay", () => {
         so.goToSubObject(2);
         e.subobject.confirmBtn.click();
-        mo.getRowContent("Volume").then(cell => {
-            cell.element(by.css("input")).sendKeys("2018");
-        });
-        mo.getRowContent("Number").then(cell => {
-            cell.element(by.css("input")).sendKeys("18");
-        });
-        mo.getRowContent("OJS: Journal Code").then(cell => {
-            cell.all(by.css("option")).get(2).click();
-        });
-        message.clearMessages();
-        e.publish.uploadBtn.click();
-        e.publish.uploadBtn.click(); // it needs two clicks, reason unknown atm
-        expect(message.getClassOfMain()).toEqual("success");
+        Promise.all([mo.getRowContent("Volume"), mo.getRowContent("Number"), mo.getRowContent("OJS: Journal Code")])
+            .then(cells => {
+                cells[0].element(by.css("input")).sendKeys("2018");
+                cells[1].element(by.css("input")).sendKeys("18");
+                cells[2].all(by.css("option")).get(2).click();
+                message.clearMessages();
+                e.publish.uploadBtn.click();
+                e.publish.uploadBtn.click(); // it needs two clicks, reason unknown atm
+                expect(message.getClassOfMain()).toEqual("success");
+            });
     });
 
 });
