@@ -3,7 +3,6 @@ const a = require('../modules/actions');
 const so = require('../modules/subobject');
 const mo = require('../modules/mainobject');
 const message = require('../modules/messages');
-const EC = protractor.ExpectedConditions;
 
 
 describe('publish page', () => {

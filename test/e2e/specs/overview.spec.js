@@ -1,6 +1,5 @@
 const e = require("../modules/elements");
 const a = require('../modules/actions');
-const message = require('../modules/messages');
 const ot = require('../modules/overview_table');
 
 describe('overview page', () => {

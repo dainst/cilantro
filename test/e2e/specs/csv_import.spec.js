@@ -1,5 +1,5 @@
 const e = require("../modules/elements");
-const action = require('../modules/actions');
+const a = require('../modules/actions');
 const ot = require('../modules/overview_table');
 
 describe('csv import dialogue', () => {
@@ -8,7 +8,7 @@ describe('csv import dialogue', () => {
         browser.get(browser.baseUrl)
             .then(e.home.startBtn.click)
             .then(e.documents.treeViewItemsTopLevel.get(0).element(by.css('.load')).click)
-            .then(action.waitForModal)
+            .then(a.waitForModal)
             .then(done)
     );
 
@@ -32,7 +32,7 @@ describe('csv import dialogue', () => {
     it('try to identify columns correctly by there content', () => {
         e.csv.textField.clear().sendKeys("Titel,3-5\nAnderer Titel,15-16");
         e.csv.takeData.click();
-        action.getRecognizedCSVColumnTypes().then(columns => {
+        a.getRecognizedCSVColumnTypes().then(columns => {
            expect(columns[0]).toEqual("author");
            expect(columns[1]).toEqual("pages");
         });
@@ -41,7 +41,7 @@ describe('csv import dialogue', () => {
     it('try to identify columns correctly by there headline', () => {
         e.csv.textField.clear().sendKeys("Title,author\nUbik,Philipp k. Dick\nPattern recognition,William Gibson");
         e.csv.takeData.click();
-        action.getRecognizedCSVColumnTypes().then(columns => {
+        a.getRecognizedCSVColumnTypes().then(columns => {
             expect(columns[0]).toEqual("title");
             expect(columns[1]).toEqual("author");
         });

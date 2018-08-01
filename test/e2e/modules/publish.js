@@ -1,6 +1,5 @@
 const e = require("./elements");
 const message = require('../modules/messages');
-const EC = protractor.ExpectedConditions;
 
 const Publish = function() {
 

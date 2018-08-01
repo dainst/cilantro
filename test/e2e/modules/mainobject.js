@@ -1,9 +1,6 @@
 const e = require("./elements");
-const message = require('../modules/messages');
-const EC = protractor.ExpectedConditions;
 
-const mainobject = function() {
-
+const Mainobject = function() {
 
     this.getRowTitles = () => new Promise((resolve, reject) =>
         e.mainobject.tableRows
@@ -16,4 +13,4 @@ const mainobject = function() {
             .then(resolve).catch(reject));
 };
 
-module.exports = new mainobject();
+module.exports = new Mainobject();

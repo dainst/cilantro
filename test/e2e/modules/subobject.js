@@ -1,8 +1,7 @@
 const e = require("./elements");
 const message = require('../modules/messages');
-const EC = protractor.ExpectedConditions;
 
-const subobject = function() {
+const Subobject = function() {
 
     this.goToSubObject = docNr => browser.get(browser.baseUrl)
         .then(e.home.startBtn.click)
@@ -22,4 +21,4 @@ const subobject = function() {
                 .then(resolve).catch(reject));
 };
 
-module.exports = new subobject();
+module.exports = new Subobject();

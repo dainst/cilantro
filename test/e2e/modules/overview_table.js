@@ -1,12 +1,6 @@
 const e = require("./elements");
 const message = require('../modules/messages');
-
-// let path = require('path');
-// let remote = require('../../../node_modules/selenium-webdriver/remote');
-const EC = protractor.ExpectedConditions;
-
 const imageComparer = require("../util/image_comparer");
-
 
 const OverviewTable = function() {
 

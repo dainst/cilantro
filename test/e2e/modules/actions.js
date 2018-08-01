@@ -1,8 +1,6 @@
 const elements = require("./elements");
-
 const path = require('path');
 const remote = require('../../../node_modules/selenium-webdriver/remote');
-
 const EC = protractor.ExpectedConditions;
 
 const Actions = function() {

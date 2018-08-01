@@ -1,6 +1,3 @@
-const e = require("../modules/elements");
-const action = require('../modules/actions');
-const message = require('../modules/messages');
 const so = require('../modules/subobject');
 
 describe('subobject view', () => {
@@ -89,7 +86,6 @@ describe('subobject view', () => {
             so.goToSubObject(2);
             so.getRowContent("Range of Pages").then(cell => {
                 const startPage = cell.all(by.css("input")).get(0);
-                const endPage = cell.all(by.css("input")).get(1);
                 startPage.clear();
                 expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
             });
@@ -161,7 +157,6 @@ describe('subobject view', () => {
             so.getRowContent("Loaded File").then(loadedFileCell => {
                 const docOffset = loadedFileCell.all(by.css("input")).last();
                 so.getRowContent("Range of Pages").then(cell => {
-                    const startPagePrinted = cell.all(by.css("input")).get(2);
                     const startPage = cell.all(by.css("input")).get(0);
                     const endPage = cell.all(by.css("input")).get(1);
                     const indexRep = cell.all(by.css("input")).last();
