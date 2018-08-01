@@ -3,7 +3,7 @@ const path = require('path');
 const jsonServer = require('json-server');
 const bodyParser = require('body-parser');
 
-const validateJsonParams = require('./validate-json-params');
+const validateJsonParams = require('./validate_json_params');
 const fakeZenon = require('./fake_zenon');
 const fakeStaging = require('./fake_staging');
 
