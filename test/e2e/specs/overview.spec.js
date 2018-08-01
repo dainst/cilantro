@@ -30,7 +30,7 @@ describe('overview page', () => {
             });
     });
 
-    fit('should update thumbnail if document changes', done => {
+    it('should update thumbnail if document changes', done => {
         ot.goToOverview(3);
         e.overview.columnsDropdownBtn.click();
         e.overview.columnsDropdown.element(by.cssContainingText("label", "Loaded File")).click();
