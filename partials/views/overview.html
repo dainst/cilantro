@@ -47,7 +47,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="article in dataset.articles | orderBy:'article.order.value.value'" ng-if="article._.confirmed !== false" ng-class="{'row-confirmed': article._.confirmed === true}" article="true" >
+                <tr ng-repeat="article in dataset.subobjects | orderBy:'article.order.value.value'" ng-if="article._.confirmed !== false" ng-class="{'row-confirmed': article._.confirmed === true}" article="true" >
                     <td style="width:600px">
 
                         <div ng-show="!article.pages.check() && (article.filepath.value.value != 'none')">
@@ -71,7 +71,7 @@
                         <span class="btn btn-default btn-xs so-btn-open" ng-click="openDocument(article)" title="open file externally"><span class="glyphicon glyphicon-eye-open"></span></span>
                         <span class="btn btn-xs so-btn-merge" ng-class="{'btn-default': (!selectedToMerge), 'btn-danger': (selectedToMerge)}" ng-click="mergeArticle(article)" title="merge articles"><span class="glyphicon glyphicon-compressed"></span></span>
                         <!-- <span class="btn btn-default btn-xs" ng-repeat="button in master.article_buttons" ng-click="button.function(article)" title="{{button.tooltip}}">{{button.caption}}<span class="glyphicon {{button.glyphicon}}"></span></span> -->
-                        <span class="btn btn-default btn-xs so-btn-down" ng-show="$index<dataset.articles.length-1" ng-click="moveArticle(article, false)" title="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
+                        <span class="btn btn-default btn-xs so-btn-down" ng-show="$index<dataset.subobjects.length-1" ng-click="moveArticle(article, false)" title="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
                     </td>
                 </tr>
             </tbody>

@@ -17,12 +17,12 @@ angular
 
         $scope.$watch('zenonResult', (newValue, oldValue, scope) => {
             if (!scope.isArticleSelected()) return;
-            dataset.articles[scope.currentArticle].zenonId.set((!newValue || !newValue.id) ? "" : newValue.id);
+            dataset.subobjects[scope.currentArticle].zenonId.set((!newValue || !newValue.id) ? "" : newValue.id);
         });
 
         function updateSearchObject() {
             $scope.searchObject = {
-                term: ($scope.currentArticle === -1) ? "" : dataset.articles[$scope.currentArticle].title.value.value
+                term: ($scope.currentArticle === -1) ? "" : dataset.subobjects[$scope.currentArticle].title.value.value
             };
         }
 
@@ -36,33 +36,33 @@ angular
         };
 
         $scope.addArticle = function() {
-            const subObject = new dataset.Article({title: 'Article ' + (dataset.articles.length+1)});
-            dataset.articles.push(subObject);
-            $scope.selectArticle(dataset.articles.length -1);
+            const subObject = new dataset.Subobject({title: 'Article ' + (dataset.subobjects.length+1)});
+            dataset.subobjects.push(subObject);
+            $scope.selectArticle(dataset.subobjects.length -1);
             return subObject;
         };
 
         $scope.selectArticle = function(k) {
-            if (!dataset.articles.length || k > (dataset.articles.length - 1)) k = -1;
+            if (!dataset.subobjects.length || k > (dataset.subobjects.length - 1)) k = -1;
             if (k === -1) return;
             
             $scope.currentArticle = k;
 
             updateSearchObject();
 
-            if (dataset.articles[$scope.currentArticle]._.confirmed)
-                dataset.articles[$scope.currentArticle]._.confirmed = undefined;
+            if (dataset.subobjects[$scope.currentArticle]._.confirmed)
+                dataset.subobjects[$scope.currentArticle]._.confirmed = undefined;
 
         };
 
         $scope.selectNextUnconfirmedArticle = function() {
-            for (let i = $scope.currentArticle; i < dataset.articles.length; i++) {
-                if (typeof dataset.articles[i]._.confirmed === "undefined") {
+            for (let i = $scope.currentArticle; i < dataset.subobjects.length; i++) {
+                if (typeof dataset.subobjects[i]._.confirmed === "undefined") {
                     return $scope.selectArticle(i)
                 }
             }
             for (let i = 0; i < $scope.currentArticle; i++) {
-                if (typeof dataset.articles[i]._.confirmed === "undefined") {
+                if (typeof dataset.subobjects[i]._.confirmed === "undefined") {
                     return $scope.selectArticle(i)
                 }
             }
@@ -70,11 +70,11 @@ angular
         };
 
         $scope.isArticleSelected = function() {
-            return ($scope.currentArticle !== -1) && (dataset.articles.length > 0)
+            return ($scope.currentArticle !== -1) && (dataset.subobjects.length > 0)
         };
 
         $scope.checkArticle = function() {
-            let article = dataset.articles[$scope.currentArticle];
+            let article = dataset.subobjects[$scope.currentArticle];
             let invalid = 0;
             angular.forEach(article, function(property, id) {
                 if ((typeof property !== "undefined") && (typeof property.check === "function") && (property.check() !== false)) {
@@ -86,9 +86,9 @@ angular
 
         $scope.confirmArticle = () => {
             console.log('Confirm Article ' + $scope.currentArticle);
-            if (angular.isUndefined(dataset.articles[$scope.currentArticle])) return;
+            if (angular.isUndefined(dataset.subobjects[$scope.currentArticle])) return;
 
-            dataset.articles[$scope.currentArticle]._.confirmed = true;
+            dataset.subobjects[$scope.currentArticle]._.confirmed = true;
 
             if ((dataset.getStats().undecided === 0) && dataset.getStats().confirmed) {
                 $scope.continue();
@@ -100,9 +100,9 @@ angular
 
         $scope.dismissArticle = () => {
             console.log('Dismiss Article ' + $scope.currentArticle);
-            if (angular.isUndefined(dataset.articles[$scope.currentArticle])) return;
+            if (angular.isUndefined(dataset.subobjects[$scope.currentArticle])) return;
 
-            dataset.articles[$scope.currentArticle]._.confirmed = false;
+            dataset.subobjects[$scope.currentArticle]._.confirmed = false;
 
             if ((dataset.getStats().undecided === 0) && dataset.getStats().confirmed) {
                 $scope.continue();
@@ -113,15 +113,15 @@ angular
 
         $scope.undeleteArticle = () => {
             console.log('Undelete Article ' + $scope.currentArticle);
-            if (angular.isUndefined(dataset.articles[$scope.currentArticle])) return;
+            if (angular.isUndefined(dataset.subobjects[$scope.currentArticle])) return;
 
-            dataset.articles[$scope.currentArticle]._.confirmed = undefined;
+            dataset.subobjects[$scope.currentArticle]._.confirmed = undefined;
         };
 
         $scope.openFullFile = url => {window.open(url)};
 
         $scope.adoptFromZenon = () => {
-            dataset.mapSubObject("zenon", zenonImporter.convert($scope.zenonResult), dataset.articles[$scope.currentArticle]);
+            dataset.mapSubObject("zenon", zenonImporter.convert($scope.zenonResult), dataset.subobjects[$scope.currentArticle]);
         };
 
         $scope.newFromZenon = () => {
@@ -129,12 +129,12 @@ angular
         };
 
         $scope.markAsMissingZenon = () => {
-            if (!dataset.articles[$scope.currentArticle]._.reportToZenon) {
-                dataset.articles[$scope.currentArticle].zenonId.value.value = '[marked as missing]';
-                dataset.articles[$scope.currentArticle]._.reportToZenon = true;
+            if (!dataset.subobjects[$scope.currentArticle]._.reportToZenon) {
+                dataset.subobjects[$scope.currentArticle].zenonId.value.value = '[marked as missing]';
+                dataset.subobjects[$scope.currentArticle]._.reportToZenon = true;
             } else {
-                dataset.articles[$scope.currentArticle].zenonId.value.value = '';
-                dataset.articles[$scope.currentArticle]._.reportToZenon = false;
+                dataset.subobjects[$scope.currentArticle].zenonId.value.value = '';
+                dataset.subobjects[$scope.currentArticle]._.reportToZenon = false;
             }
 
         };

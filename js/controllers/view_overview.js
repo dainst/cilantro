@@ -12,7 +12,7 @@ angular
         $scope.labels = labels;
 
         $scope.init = function() {
-            Object.keys(new dataset.Article()).forEach(key => {
+            Object.keys(new dataset.Subobject()).forEach(key => {
                 $scope.overviewColumns[key] = {
                     'checked': !labels.getIsHidden("sub", key),
                     'title': labels.get("sub", key, true),
@@ -26,12 +26,12 @@ angular
         /* tools & buttons */
 
         $scope.addArticle = function() {
-            const a = new dataset.Article({title: 'Article ' + (dataset.articles.length+1)});
-            dataset.articles.push(a);
+            const a = new dataset.Subobject({title: 'Article ' + (dataset.subobjects.length+1)});
+            dataset.subobjects.push(a);
         };
 
         $scope.continue = function() {
-            dataset.cleanArticles();
+            dataset.cleanSubobjects();
             steps.change('articles');
         };
 
@@ -105,7 +105,7 @@ angular
         $scope.updateOrder = (orderBy, asc) => {dataset.sortSubObjects(orderBy, asc)};
 
         $scope.moveArticle = (article, up) => {
-            angular.forEach(dataset.articles, (a, i) => {a.order.value.value = (i + 1)  * 10});
+            angular.forEach(dataset.subobjects, (a, i) => {a.order.value.value = (i + 1)  * 10});
             article.order.value.value += up ? - 15 : 15;
             dataset.sortSubObjects('order');
         };

@@ -23,7 +23,7 @@ angular
 
         const pdf = pdfFileManager.files[fileName].pdf;
 
-        const article = new dataset.Article();
+        const article = new dataset.Subobject();
          // special data for raw articles
         article.filepath.value.value =  pdfFileManager.files[fileName].url;
         article._.tmp = [
@@ -35,7 +35,7 @@ angular
             }
         ];
 
-        dataset.articles.push(article);
+        dataset.subobjects.push(article);
 
 
         function getPage(pdf, pageIdx) {
@@ -115,7 +115,7 @@ angular
                     article.pages.endPrint = parseInt(pageNr) + pdf.pdfInfo.numPages - pageIdx;
                     //article.pages.resetDesc();
 
-                    article.order	= editables.number((dataset.articles.length  + 1) * 10);
+                    article.order	= editables.number((dataset.subobjects.length  + 1) * 10);
 
                     //article._.tmp = [];
 

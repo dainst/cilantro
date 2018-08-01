@@ -15,7 +15,7 @@ angular
     function file2Articles(file) {
 
         const fileInfo = fileManager.loadedFiles[file.path];
-        const article = new dataset.Article();
+        const article = new dataset.Subobject();
         article.filepath.value.value = fileInfo.url;
         article.title.value.value = !angular.isUndefined(fileInfo.meta.Title) ? fileInfo.meta.Title : '';
         article.abstract.value.value = !angular.isUndefined(fileInfo.meta.Subject) ? fileInfo.meta.Subject : '';
@@ -31,7 +31,7 @@ angular
             }
         }
 
-        dataset.articles.push(article);
+        dataset.subobjects.push(article);
         fileManager.stats.analyzed += 1;
         console.log(article);
         article._.createThumbnail();

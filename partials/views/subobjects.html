@@ -5,7 +5,7 @@
             <div class="btn-group" uib-dropdown id="subobjects-select">
                 <button uib-dropdown-toggle class="btn btn-default">Select Article<span class="caret"></span></button>
                 <ul uib-dropdown-menu>
-                    <li ng-repeat="article in dataset.articles track by $index">
+                    <li ng-repeat="article in dataset.subobjects track by $index">
                         <a      href='#'
                                 ng-if="article._.confirmed !== false"
                                 ng-class="{'btn-primary': $index == currentArticle, 'btn-success': article._.confirmed === true}"
@@ -18,7 +18,7 @@
             <div class="btn-group" uib-dropdown id="subobjects-trash">
                 <button uib-dropdown-toggle class="btn btn-default">Trash<span class="caret"></span></button>
                 <ul uib-dropdown-menu>
-                    <li ng-repeat="article in dataset.articles track by $index">
+                    <li ng-repeat="article in dataset.subobjects track by $index">
                         <a      href='#'
                                 ng-if="article._.confirmed === false"
                                 ng-class="{'btn-primary': $index == currentArticle, 'btn-danger': article._.confirmed === false}"
@@ -45,19 +45,19 @@
                 >This Article:
                 </button>
                 <button
-                        ng-show="isArticleSelected() && dataset.articles[currentArticle]._.confirmed !== false"
+                        ng-show="isArticleSelected() && dataset.subobjects[currentArticle]._.confirmed !== false"
                         ng-click='dismissArticle()'
                         class='btn btn-danger'
                 >Dismiss<span class="glyphicon glyphicon-remove"></span>
                 </button>
                 <button
-                        ng-show="isArticleSelected() && dataset.articles[currentArticle]._.confirmed === false"
+                        ng-show="isArticleSelected() && dataset.subobjects[currentArticle]._.confirmed === false"
                         ng-click='undeleteArticle()'
                         class='btn btn-default'
                 >Undelete<span class="glyphicon glyphicon-remove"></span>
                 </button>
                 <button
-                        ng-show="checkArticle() && isArticleSelected() && dataset.articles[currentArticle]._.confirmed !== false"
+                        ng-show="checkArticle() && isArticleSelected() && dataset.subobjects[currentArticle]._.confirmed !== false"
                         ng-click='confirmArticle()'
                         class='btn btn-success'
                 >Confirm<span class="glyphicon glyphicon-chevron-right"></span>
@@ -72,27 +72,27 @@
 
         <div class="col-lg-6">
             <div class="panel panel-default"
-                 ng-class="{'panel-success':(dataset.articles[currentArticle]._.confirmed === true),'panel-danger':(dataset.articles[currentArticle]._.confirmed === false)}"
-                 ng-show="(currentArticle > -1) && (dataset.articles.length > 0)">
+                 ng-class="{'panel-success':(dataset.subobjects[currentArticle]._.confirmed === true),'panel-danger':(dataset.subobjects[currentArticle]._.confirmed === false)}"
+                 ng-show="(currentArticle > -1) && (dataset.subobjects.length > 0)">
                 <div class="panel-heading">Article</div>
 
                 <table class='table article-table'>
                     <thead></thead>
                     <tbody>
-                        <tr ng-if="currentArticle > -1" ng-repeat="(property, item) in dataset.articles[currentArticle] track by $index">
+                        <tr ng-if="currentArticle > -1" ng-repeat="(property, item) in dataset.subobjects[currentArticle] track by $index">
                             <td>{{labels.get("sub", property)}}</td>
-                            <td><span editable item="dataset.articles[currentArticle][property]" /></td>
+                            <td><span editable item="dataset.subobjects[currentArticle][property]" /></td>
                         </tr>
                     </tbody>
                     <tfoot></tfoot>
                 </table>
             </div>
 
-            <div class="panel panel-default" ng-show="dataset.thumbnails[dataset.articles[currentArticle]._.id]">
+            <div class="panel panel-default" ng-show="dataset.thumbnails[dataset.subobjects[currentArticle]._.id]">
                 <div class="panel-heading">First Page</div>
                 <div class="panel-body">
                     <div class="thumbnail-container">
-                        <img data-ng-src='{{dataset.thumbnails[dataset.articles[currentArticle]._.id]}}'>
+                        <img data-ng-src='{{dataset.thumbnails[dataset.subobjects[currentArticle]._.id]}}'>
                     </div>
                 </div>
             </div>
@@ -119,7 +119,7 @@
                             <button
                                     ng-show="!zenonResult.id && isArticleSelected()"
                                     ng-click='markAsMissingZenon()'
-                                    ng-class="['btn', 'btn-default', {'active': (dataset.articles[currentArticle]._.reportToZenon)}]"
+                                    ng-class="['btn', 'btn-default', {'active': (dataset.subobjects[currentArticle]._.reportToZenon)}]"
                             >Mark as missing in Zenon<span class="glyphicon glyphicon-flag"></span>
                             </button>
                         </span>

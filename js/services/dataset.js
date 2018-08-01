@@ -19,7 +19,7 @@ angular
     dataset.reset = () => {
         console.log('reset dataset');
         dataset.data = new model.MainObjectPrototype(dataset);  // metadata for the imported issue (mainObject)
-        dataset.articles = [];                                  // collection of articles to import
+        dataset.subobjects = [];                                  // collection of articles to import
         dataset.loadedFiles = {};                               // files loaded into pdf.js
         dataset.thumbnails = {}; // their thumbnails they are not part of subObjects/articles due to performance reasons
     };
@@ -40,7 +40,7 @@ angular
     };
 
     /* stats */
-    dataset.getStats = () => dataset.articles.reduce(
+    dataset.getStats = () => dataset.subobjects.reduce(
         (acc, article) => {
             if (typeof article._.confirmed === "undefined") {
                 acc.undecided++;
@@ -93,9 +93,9 @@ angular
 
         let returner = flatten(dataset.data, model.getMeta("main"));
 
-        returner.parts = Object.keys(dataset.articles)
-            .filter(i => dataset.articles[i]._.confirmed === true)
-            .map(i => flatten(dataset.articles[i], model.getMeta("sub")));
+        returner.parts = Object.keys(dataset.subobjects)
+            .filter(i => dataset.subobjects[i]._.confirmed === true)
+            .map(i => flatten(dataset.subobjects[i], model.getMeta("sub")));
 
         return returner;
 
@@ -103,8 +103,8 @@ angular
 
 
     /* Sub-Object functions */
-    dataset.cleanArticles = function() {
-        angular.forEach(dataset.articles, function(article, k) {
+    dataset.cleanSubobjects = () => {
+        angular.forEach(dataset.subobjects, (article, k) => {
             if (typeof article._ !== "undefined") {
                 article._ = {};
             }
@@ -116,8 +116,8 @@ angular
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
 
-    /* Article constructor function */
-    dataset.Article = function(data) {
+    /* Subobject constructor function */
+    dataset.Subobject = function(data) {
         data = data || {};
 
         const subObject = new model.SubObjectPrototype(data, dataset.data, dataset);
@@ -175,7 +175,7 @@ angular
 
         console.log("Sort by " + sortBy + " (" + ascending + ")");
 
-        dataset.articles.sort((a, b) => (typeof a[sortBy] === "object")
+        dataset.subobjects.sort((a, b) => (typeof a[sortBy] === "object")
             ? ascending * a[sortBy].compare(b[sortBy])
             : (ascending * a[sortBy].localeCompare(b[sortBy])));
 
@@ -190,7 +190,7 @@ angular
         const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
 
         console.log("mapping of " + mapName, sourceObject, targetObject);
-        targetObject = targetObject || new dataset.Article();
+        targetObject = targetObject || new dataset.Subobject();
         const report = Object.keys(model.getMeta("sub")).map(fieldName => {
             const field = model.getMeta("sub")[fieldName];
             if (!field.mappings || !field.mappings[mapName])

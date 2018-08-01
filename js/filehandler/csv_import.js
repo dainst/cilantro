@@ -24,8 +24,8 @@ mod.factory("csvImport", ['$rootScope', '$uibModal', 'editables', 'fileManager',
             });
 
             modalInstance.result.then(function(filled_columns) {
-                for (let i = 0, ids = Object.keys(dataset.articles); i < ids.length; i++) {
-                    $rootScope.$broadcast('thumbnaildataChanged', dataset.articles[ids[i]]);
+                for (let i = 0, ids = Object.keys(dataset.subobjects); i < ids.length; i++) {
+                    $rootScope.$broadcast('thumbnaildataChanged', dataset.subobjects[ids[i]]);
                 }
                 fileManager.ready = true;
             }, function(a) {

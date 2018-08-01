@@ -19,7 +19,7 @@ mod.controller('csvImportWindow', ['$scope', '$uibModalInstance', 'dataset', 'fi
         $scope.cols_types = {};
 
         /* available column types */
-        let cols_types = Object.keys(new dataset.Article()).concat(["pageFrom", "pageTo"]);
+        let cols_types = Object.keys(new dataset.Subobject()).concat(["pageFrom", "pageTo"]);
         for (let i = 0; i < cols_types.length; i++) {
             $scope.cols_types[normalize(cols_types[i])] = cols_types[i];
         }
@@ -269,7 +269,7 @@ mod.controller('csvImportWindow', ['$scope', '$uibModalInstance', 'dataset', 'fi
 
             function newArticle() {
                 return new Promise((resolve, reject) => {
-                    resolve(new dataset.Article());
+                    resolve(new dataset.Subobject());
                 })
             }
 
@@ -318,7 +318,7 @@ mod.controller('csvImportWindow', ['$scope', '$uibModalInstance', 'dataset', 'fi
                     }
 
                 }
-                dataset.articles.push(article);
+                dataset.subobjects.push(article);
             }
 
             const articlePromises = [];
