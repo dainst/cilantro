@@ -15,6 +15,7 @@ params:
   allow_upload_without_file: boolean
   nlp_params: dict
   frontmatter_ids: list
+  ojs_metadata: dict
 
 tasks:
   - create_object

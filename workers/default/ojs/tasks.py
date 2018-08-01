@@ -21,10 +21,10 @@ class PublishToOJSTask(BaseTask):
     def execute_task(self):
         """Execute task intructions."""
         work_path = self.get_work_path()
-        data = load_metadata(work_path)
+        data = self.get_param('ojs_metadata')
 
         publish_to_ojs(os.path.join(work_path, 'ojs_import.xml'),
-                       data['data']['ojs_journal_code'])
+                       data['ojs_journal_code'])
 
 
 class GenerateFrontmatterTask(BaseTask):

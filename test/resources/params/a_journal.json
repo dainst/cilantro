@@ -86,10 +86,12 @@
         "NER"
     ]
   },
-  "ojs_journal_code": "aa",
-  "ojs_user": "ojs_user",
-  "auto_publish_issue": false,
-  "default_publish_articles": true,
-  "default_create_frontpage": true,
-  "allow_upload_without_file": false
+  "ojs_metadata": {
+      "ojs_journal_code": "test",
+      "ojs_user": "ojs_user",
+      "auto_publish_issue": false,
+      "default_publish_articles": true,
+      "default_create_frontpage": true,
+      "allow_upload_without_file": false
+  }
 }
