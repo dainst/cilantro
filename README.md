@@ -6,6 +6,8 @@ The future Cilantro-Frontend
 ## a) without backend
 - `npm install`
 - `mv settings.test.json settings.json`
+- `npm run e2e-mock-backend`
+- (new Tab)
 - `npm run server`
 
 ## b) example configuration with local cilantro as backend and local ojs2 with docker
@@ -18,7 +20,8 @@ The future Cilantro-Frontend
     docker run -p 4444:80 ojs2
     ```
 - get cilantro
-    - Clone https://github.com/dainst/cilantro and follow install instructions
+    - Clone https://github.com/dainst/cilantro
+    - follow cilantro install instructions
     - `docker-compose up`
    
 - set up salvia
@@ -27,10 +30,12 @@ The future Cilantro-Frontend
     - create settings.json
         ```
         {
-          "files_url":      "http://localhost:5000/staging/",
+          "files_url":    "http://localhost:5000/staging/",
           "server_url":   "http://localhost:5000/",
           "importer_url": "http://localhost:9082/",
           "ojs_url":      "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api/",
+          "server_user":  "##cilantro user##",
+          "server_pass":  "##cilantro password##"
         }
         ```    
     - `npm run server`
@@ -47,9 +52,6 @@ The future Cilantro-Frontend
 - create settings.json like settings.default.json and fill out
 - http://localhost/importer
 
-
-
-We use a the mock-backend here which was created für the npm tests and serve the app with gulp.
 
 # build
 There is no build process right now.
@@ -70,11 +72,11 @@ There is no build process right now.
 - names
     - for js-variables: camelCase 
     - for members of datamodel (dataset, article): under_score
-    - private functions with _ prefix
     - in css: snake-case 
-    - filenames snake-case myController in my-controller.js
+    - filenames and module names: under_score, eg: myController in my_controller.js
 - ES6
     - `let/const` instead of `var` where it makes sense: http://es6-features.org/#BlockScopedVariables
+    - arrow function when ever function is not local and [this]-scope is not needed
 - more    
     - `===` instead of `==`
     - line endings with `;` even after `}` 
