@@ -22,8 +22,16 @@ def on_celery_setup_logging(**_):
 
 
 def merge_dicts(a, b, path=None):
-    "merges b into a"
-    if path is None: path = []
+    """
+    Merge two dictionaries.
+
+    :param dict a:
+    :param dict b:
+    :param str path:
+    :return dict:
+    """
+    if path is None:
+        path = []
     for key in b:
         if key in a:
             if isinstance(a[key], dict) and isinstance(b[key], dict):
@@ -45,6 +53,10 @@ class BaseTask(Task):
     the file system.
 
     Implementations should override the execute_task() method.
+
+    Return values of execute_task() are saved under the 'result' key in the
+    params dictionary. This allows reading task results at a later stage,
+    i.e. in a following task or when querying the job status.
     """
 
     working_dir = os.environ['WORKING_DIR']
@@ -85,7 +97,12 @@ class BaseTask(Task):
 
         This method has to be implemented by all subclassed tasks and includes
         the actual implementation logic of the specific task.
-        :return:
+
+        Results have to be dicts and are merged recursively so that partial
+        results in task chains accumulate and may be extended or modified
+        by following tasks.
+
+        :return dict:
         """
         raise NotImplementedError("Execute Task method not implemented")
 
