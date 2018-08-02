@@ -21,6 +21,22 @@ def on_celery_setup_logging(**_):
     pass
 
 
+def merge_dicts(a, b, path=None):
+    "merges b into a"
+    if path is None: path = []
+    for key in b:
+        if key in a:
+            if isinstance(a[key], dict) and isinstance(b[key], dict):
+                merge_dicts(a[key], b[key], path + [str(key)])
+            elif a[key] == b[key]:
+                pass  # same leaf value
+            else:
+                raise Exception('Conflict at %s' % '.'.join(path + [str(key)]))
+        else:
+            a[key] = b[key]
+    return a
+
+
 class BaseTask(Task):
     """
     Abstract base class for all tasks in cilantro.
@@ -42,9 +58,18 @@ class BaseTask(Task):
             os.mkdir(work_path)
         return work_path
 
-    def run(self, **params):
+    def run(self, prev_result=None, **params):
         self._init_params(params)
-        self.execute_task()
+        if type(prev_result) is list:
+            for result in prev_result:
+                self.params['result'] = self._add_result_to_params(result)
+        else:
+            self.params['result'] = self._add_result_to_params(prev_result)
+        result = self.execute_task()
+        if result:
+            return self._add_result_to_params(result)
+        else:
+            return self.params['result']
 
     def get_param(self, key):
         try:
@@ -64,10 +89,20 @@ class BaseTask(Task):
         """
         raise NotImplementedError("Execute Task method not implemented")
 
+    def _add_result_to_params(self, result):
+        if type(result) is dict:
+            return merge_dicts(self.params['result'], result)
+        elif result:
+            raise KeyError(f"Wrong result type in previous task")
+        else:
+            return self.params['result']
+
     def _init_params(self, params):
         self.params = params
         try:
             self.job_id = params['job_id']
         except KeyError:
             raise KeyError("job_id has to be set before running a task")
+        if 'result' not in self.params:
+            self.params['result'] = {}
         self.log.debug(f"initialized params: {self.params}")
