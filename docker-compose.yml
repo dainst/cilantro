@@ -118,3 +118,11 @@ services:
       BROKER_HOST: "broker"
       BROKER_USER: ${BROKER_USER}
       BROKER_PASSWORD: ${BROKER_PASSWORD}
+
+  ojs:
+    image: dainst/cilantro-ojs2:1.0
+    ports:
+      - "4444:80"
+    volumes:
+      - ./test/resources:/test/resources
+      - ./data:/data

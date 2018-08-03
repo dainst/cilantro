@@ -41,7 +41,7 @@
                     <galley>
                         <label>PDF</label>
                         <file>
-                            <href src="{{article.filepath}}" mime_type="application/pdf" />
+                            <href src="{{work_path}}/{{article.filepath}}" mime_type="application/pdf" />
                         </file>
                     </galley>
                     {% endif %}

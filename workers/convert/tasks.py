@@ -1,14 +1,13 @@
 import os
 
 from utils.celery_client import celery_app
-from workers.base_task import BaseTask
 
 from utils.object import Object
-
+from workers.base_task import BaseTask
+from workers.convert.convert_image_pdf import \
+    convert_pdf_to_tif, convert_jpg_to_pdf
 from workers.convert.convert_image import convert_tif_to_jpg
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf
-from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
-    convert_jpg_to_pdf
 from workers.convert.tif_to_txt import tif_to_txt
 
 
