@@ -18,13 +18,14 @@ describe('overview page', () => {
             });
     });
 
-    it('should update thumbnail if page changes', done => {
+    fit('should update thumbnail if page changes', done => {
         ot.goToOverview(2)
             .then(() => ot.getCell(0, "Range of Pages"))
             .then(cell => cell.all(by.css('input')))
             .then(input => input[0].sendKeys("3"))
             .then(() => ot.compareThumbnailWithImage(0, "doc1_p13.png"))
             .then(difference => {
+                a.scrollTo(element(by.css('.thumbnail-container ')));
                 expect(difference).toBeLessThan(1500);
                 done()
             });
