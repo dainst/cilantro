@@ -18,7 +18,7 @@ describe('overview page', () => {
             });
     });
 
-    fit('should update thumbnail if page changes', done => {
+    it('should update thumbnail if page changes', done => {
         ot.goToOverview(2)
             .then(() => ot.getCell(0, "Range of Pages"))
             .then(cell => cell.all(by.css('input')))
