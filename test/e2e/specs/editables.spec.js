@@ -48,9 +48,9 @@ describe('subobject view', () => {
         it('should show the languages of the journal', () => {
             so.goToSubObject(3);
             so.getRowContent("Language").then(cell => {
-                expect(cell.all(by.css("label")).get(0).getText()).toBe("German");
                 expect(cell.all(by.css("label")).get(1).getText()).toBe("English");
-                expect(cell.all(by.css("label")).get(2).getText()).toBe("French");
+                expect(cell.all(by.css("label")).get(0).getText()).toBe("German");
+                expect(cell.all(by.css("label")).get(2).getText()).toBe("Russian");
                 expect(cell.all(by.css("label")).get(3).getText()).toBe("Italian");
                 expect(cell.all(by.css("label")).get(4).getText()).toBe("Spanish");
             });
