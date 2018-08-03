@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE issues PUBLIC "-//PKP//OJS Articles and Issues XML//EN" "http://pkp.sfu.ca/ojs/dtds/2.4.8/native.dtd">
 <issues>
-    <issue identification="year" published="False">
+    <issue identification="year" published="true">
 
         <year>2018</year>
         <description>[PDFs teilweise verfügbar]</description>
 
-        
+
             <title locale="en_US">Articles</title>
 
                 <article language="de" locale="de_DE">
