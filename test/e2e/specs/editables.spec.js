@@ -64,14 +64,6 @@ describe('subobject view', () => {
             });
         });
 
-        it('should change to the right language code when clicking a language', () => {
-            so.goToSubObject(3);
-            so.getRowContent("Language").then(cell => {
-                cell.all(by.css("label")).get(3).click();
-                expect(cell.element(by.css('input[type="text"]')).getAttribute("value")).toBe("it_IT");
-            });
-        });
-
         it('should complain if wrong code was entered', () => {
             so.goToSubObject(3);
             so.getRowContent("Language").then(cell => {

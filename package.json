@@ -22,8 +22,10 @@
     "idai-components": "2.6.7",
     "ng-file-upload": "12.2.13",
     "npm": "^5.8.0",
+    "pdfjs-dist": "^2.0.489",
     "pixelmatch": "^4.0.2",
-    "protractor-jasmine2-screenshot-reporter": "^0.5.0"
+    "protractor-jasmine2-screenshot-reporter": "^0.5.0",
+    "requirejs": "^2.3.5"
   },
   "devDependencies": {
     "chromedriver": "2.37",

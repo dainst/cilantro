@@ -13,7 +13,6 @@ angular
     defaultPdfHandler.createThumbnail = pdfFileManager.createThumbnail;
 
     function file2Articles(file) {
-
         const fileInfo = fileManager.loadedFiles[file.path];
         const article = new dataset.Subobject();
         article.filepath.value.value = fileInfo.url;
