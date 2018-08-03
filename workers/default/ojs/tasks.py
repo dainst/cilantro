@@ -3,7 +3,6 @@ import os
 from utils.celery_client import celery_app
 
 from workers.base_task import BaseTask
-from workers.default.metadata.loader import load_metadata
 from workers.default.ojs.publishing import publish_to_ojs
 from workers.default.ojs.frontmatter import generate_frontmatter
 

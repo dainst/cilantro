@@ -28,6 +28,8 @@ def generate_frontmatter(article_id_list, server='ojs', port='80'):
 
     request = Request(url, headers=headers)
 
+    log.debug("Using URL: " + url)
+
     try:
         response = urlopen(request)
     except HTTPError as e:
