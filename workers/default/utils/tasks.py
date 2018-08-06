@@ -51,11 +51,12 @@ ForeachTask = celery_app.register_task(ForeachTask())
 
 class IfTask(BaseTask):
     """
-    Run a task list for every file of a given pattern.
+    Run a task list if a condition is met and optionally another one if not.
 
     TaskParams:
-    -str pattern: Regex string to find the files.
-    -list subtasks: list of tasks to be run.
+    -boolean condition: Condition to be checked upon
+    -TaskList do:
+    -TaskList else:
 
     Preconditions:
 
