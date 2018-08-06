@@ -14,13 +14,16 @@ params:
   default_create_frontpage: boolean
   allow_upload_without_file: boolean
   nlp_params: dict
+  do_ocr: boolean
 
 tasks:
   - create_object
   - foreach: ".*\\.pdf$"
     do: convert.pdf_to_tif
-  - task: convert.tif_to_txt
-    file: 2.tif
+  - if: do_ocr
+    do:
+    - task: convert.tif_to_txt
+      file: 2.tif
   - task: generate_marc_xml
     xml_template_path: resources/marc_template.xml
   - task: generate_xml
