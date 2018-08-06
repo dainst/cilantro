@@ -148,19 +148,9 @@ def _create_foreach_signature(task_def, params):
 
 
 def _create_if_signature(task_def, params):
-<<<<<<< HEAD
     kwargs = params.copy()
     kwargs['condition'] = task_def['condition']
     kwargs['do'] = task_def['do']
-=======
-    if eval(task_def['condition'], None, params):
-        return generate_chain(task_def['do'], params)
-    else:
-        return _evaluate_else(task_def, params)
-
-
-def _evaluate_else(task_def, params, ):
->>>>>>> master
     if 'else' in task_def:
         kwargs['else'] = task_def['else']
     return celery_app.signature('if', kwargs=kwargs, immutable=True)
