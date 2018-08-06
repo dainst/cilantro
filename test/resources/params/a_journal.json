@@ -91,5 +91,5 @@
   "default_publish_articles": true,
   "default_create_frontpage": true,
   "allow_upload_without_file": false,
-  "do_ocr": true
+  "do_ocr": false
 }
