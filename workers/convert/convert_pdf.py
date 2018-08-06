@@ -34,8 +34,7 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
     :param string filename: name of the generated pdf file.
     :param bool remove_old: if True, removes the files used for the split/merge.
     """
-    if not os.path.exists(path):
-        os.makedirs(path)
+    os.makedirs(path, exist_ok=True)
     new_pdf = PyPDF2.PdfFileWriter()
     for file in files:
         input_str = file['file']
