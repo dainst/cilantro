@@ -49,6 +49,38 @@ class ForeachTask(BaseTask):
 ForeachTask = celery_app.register_task(ForeachTask())
 
 
+class IfTask(BaseTask):
+    """
+    Run a task list for every file of a given pattern.
+
+    TaskParams:
+    -str pattern: Regex string to find the files.
+    -list subtasks: list of tasks to be run.
+
+    Preconditions:
+
+    Creates:
+
+    """
+    name = "if"
+
+    def execute_task(self):
+        condition = self.get_param('condition')
+        do = self.get_param('do')
+        group_tasks = []
+        params = self.params.copy()
+        if condition:
+            chain = generate_chain(do, params)
+        elif 'else' in self.params:
+            chain = generate_chain(self.get_param('else'), params)
+        group_tasks.append(chain)
+
+        raise self.replace(group(group_tasks))
+
+
+IfTask = celery_app.register_task(IfTask())
+
+
 class CleanupWorkdirTask(BaseTask):
     """
     Remove the complete content of the working dir.
