@@ -1,4 +1,5 @@
 import os
+from abc import abstractmethod
 
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask
@@ -7,139 +8,223 @@ from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf
 from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
     convert_jpg_to_pdf
 from workers.convert.tif_to_txt import tif_to_txt
+from utils.object import Object
 
 
-class JpgToPdfTask(BaseTask):
-    """
-    Create a one paged pdf with a jpg.
-
-    TaskParams:
-    -str file: jpg file to be turned into pdf
-
-    Preconditions:
-    -file in the working dir.
-
-    Creates:
-    -file_name.converted.pdf in the working dir.
-    """
-    name = "convert.jpg_to_pdf"
-
-    def execute_task(self):
-        file = self.get_param("file")
-        if file is None:
-            raise Exception('NO FILE')
-        _, extension = os.path.splitext(file)
-        new_file = file.replace(extension, '.converted.pdf')
-        convert_jpg_to_pdf(file, new_file)
+def _extract_basename(files):
+    for file in files:
+        file['file'] = os.path.basename(file['file'])
+    return files
 
 
-class TifToJpgTask(BaseTask):
-    """
-    Create a jpg file from a tif.
-
-    TaskParams:
-    -str file: tif file to be turned into jpg
-
-    Preconditions:
-    -file in the working dir.
-
-    Creates:
-    -file_name.jpg in the working dir.
-    """
-    name = "convert.tif_to_jpg"
-
-    def execute_task(self):
-        file = self.get_param('file')
-        _, extension = os.path.splitext(file)
-        new_file = file.replace(extension, '.jpg')
-        convert_tif_to_jpg(file, new_file)
-
-
-class PdfToTxtTask(BaseTask):
-    """
-    Create a txt file for every page in a pdf.
-
-    TaskParams:
-    -str file: pdf file to be turned into txt files
-
-    Preconditions:
-    -file in the working dir.
-
-    Creates:
-    -for each page in file:
-        -page.index.txt
-    """
-    name = "convert.pdf_to_txt"
-
-    def execute_task(self):
-        file = self.get_param('file')
-        convert_pdf_to_txt(file, os.path.join(os.path.dirname(os.path.dirname(file)), 'txt'))
-
-
-class PdfToTifTask(BaseTask):
-    """
-    Create a tif file for every page of a pdf.
-
-    TaskParams:
-    -str file: pdf file to be turned into tif files
-
-    Preconditions:
-    -file in the working dir.
-
-    Creates:
-    -for each page in file:
-        -index.tif
-    """
-    name = "convert.pdf_to_tif"
-
-    def execute_task(self):
-        file = self.get_param('file')
-        convert_pdf_to_tif(file, self.get_work_path())
-
-
-class MergeConvertedPdfTask(BaseTask):
-    """
-    Take all the .converted.pdf files in the workspace and merge them into one.
-
-    TaskParams:
-
-    Preconditions:
-
-    Creates:
-    -merged.pdf in the working dir
-    """
-    name = "convert.merge_converted_pdf"
-
-    def execute_task(self):
-        work_path = self.get_work_path()
-        files = [{'file': os.path.join(work_path, f)} for f in _list_files(work_path, '.converted.pdf')]
-        split_merge_pdf(files, work_path)
-
-
-class TifToTxtTask(BaseTask):
-    """
-    Create a txt file from a tif.
-
-    TaskParams:
-    -str file: tif file to be turned into txt
-
-    Preconditions:
-    -file in the working dir.
-
-    Creates:
-    -file_name.converted.txt
-    """
-    name = "convert.tif_to_txt"
-
-    def execute_task(self):
-        file_name = self.get_param("file")
-        file = os.path.join(self.get_work_path(), file_name)
-        tif_to_txt(file, os.path.join(self.get_work_path(), file_name + '.converted.txt'))
+def _split_pdf_for_object(obj, files):
+    pdf_files = []
+    for file in files:
+        suffix = (file['file']).split('.')[-1]
+        if suffix == 'pdf':
+            pdf_files.append(file)
+    if len(pdf_files) > 0:
+        rep_dir = obj.get_representation_dir(Object.INITIAL_REPRESENTATION)
+        split_merge_pdf(pdf_files, rep_dir)
 
 
 def _list_files(directory, extension):
     return (directory + "/" + f for f in os.listdir(directory)
             if f.endswith(extension))
+
+
+def _get_target_file(file, target_dir, target_extension):
+    _, extension = os.path.splitext(file)
+    new_name = os.path.basename(file).replace(extension, f".{target_extension}")
+    return os.path.join(target_dir, new_name)
+
+
+class SplitPdfTask(BaseTask):
+    """
+    Split multiple pdfs from the working dir.
+
+    TaskParams:
+    -list files_to_split: list of the files as dictionnaries
+        {'file': file_name, 'range': [start, end]}
+
+    Preconditions:
+    -files from files_to_split in the working dir.
+
+    Creates:
+    -for each article:
+        -<file_name>.<article_no>.pdf in the working dir.
+    """
+    name = "convert.split_pdf"
+
+    def execute_task(self):
+        obj = Object(self.get_work_path())
+        rel_files = _extract_basename(self.get_param('files'))
+        _split_pdf_for_object(obj, rel_files)
+        parts = self.get_param('parts')
+        for part in parts:
+            self._execute_for_child(obj.get_child(parts.index(part) + 1), part)
+
+    def _execute_for_child(self, obj, part):
+        _split_pdf_for_object(obj, _extract_basename(part['files']))
+        if 'parts' in part:
+            parts = part['parts']
+            for subpart in parts:
+                self._execute_for_child(obj.get_child(parts.index(subpart) + 1), subpart)
+
+
+class MergeConvertedPdfTask(BaseTask):
+    """
+    Merge all pdf files in a representation into one.
+
+    TaskParams:
+    -representation: The name of the representation
+
+    Preconditions:
+
+    Creates:
+    -merged.pdf in the given representation
+    """
+    name = "convert.merge_converted_pdf"
+
+    def execute_task(self):
+        rep = self.get_param('representation')
+        rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, rep)
+        files = [{'file': os.path.basename(f)}
+                 for f in _list_files(rep_dir, '.pdf')]
+        split_merge_pdf(files, rep_dir)
+
+
+class ConvertTask(BaseTask):
+    """
+    Abstract base class for conversion tasks.
+
+    Subclasses have to override the process_file method that holds the
+    actual conversion logic.
+    """
+
+    def execute_task(self):
+        file = self.get_param('file')
+        target_rep = self.get_param('target')
+        target_dir = os.path.join(self.get_work_path(),
+                                  Object.DATA_DIR, target_rep)
+        os.makedirs(target_dir, exist_ok=True)
+        self.process_file(file, target_dir)
+
+    @abstractmethod
+    def process_file(self, file, target_dir):
+        """
+        Process a single file.
+
+        This method has to be implemented by all subclassed tasks and includes
+        the actual implementation logic of the specific task.
+
+        :param str file: The path to the file that should be processed
+        :param str target_dir: The path of the target directory
+        :return None:
+        """
+        raise NotImplementedError("Process file method not implemented")
+
+
+class JpgToPdfTask(ConvertTask):
+    """
+    Create a one paged pdf with a jpg.
+
+    TaskParams:
+    -str file: Path to a jpg file that should be converted to pdf
+    -str target: Name of the representation the created file will be added to
+
+    Preconditions:
+    -file in the representation
+
+    Creates:
+    -<file_name>.pdf in the working dir.
+    """
+    name = "convert.jpg_to_pdf"
+
+    def process_file(self, file, target_dir):
+        convert_jpg_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
+
+
+class TifToJpgTask(ConvertTask):
+    """
+    Create a jpg file from a tif.
+
+    TaskParams:
+    -str file: Path to the tif file
+    -str target: Name of the representation the created file will be added to
+
+    Preconditions:
+    -file in the representation
+
+    Creates:
+    -<file_name>.jpg in the working dir
+    """
+    name = "convert.tif_to_jpg"
+
+    def process_file(self, file, target_dir):
+        convert_tif_to_jpg(file, _get_target_file(file, target_dir, 'jpg'))
+
+
+class PdfToTxtTask(ConvertTask):
+    """
+    Extract text from a pdf and create a txt file for every page.
+
+    TaskParams:
+    -str file: Path to the pdf file
+    -str target: Name of the representation the created file will be added to
+
+    Preconditions:
+    -file in the representation
+
+    Creates:
+    -for each page in file:
+        -page.<page_no>.txt
+    """
+    name = "convert.pdf_to_txt"
+
+    def process_file(self, file, target_dir):
+        convert_pdf_to_txt(file, target_dir)
+
+
+class PdfToTifTask(ConvertTask):
+    """
+    Create a tif file for every page of a pdf.
+
+    TaskParams:
+    -str file: The path to the pdf file
+    -str target: Name of the representation the created files will be added to
+
+    Preconditions:
+    -file in the representation
+
+    Creates:
+    -for each page in file:
+        -<page_no>.tif
+    """
+    name = "convert.pdf_to_tif"
+
+    def process_file(self, file, target_dir):
+        convert_pdf_to_tif(file, target_dir)
+
+
+class TifToTxtTask(ConvertTask):
+    """
+    Do OCR on a tif file and save the results as txt.
+
+    TaskParams:
+    -str file: The path of the tif file
+    -str target: Name of the representation the created file will be added to
+
+    Preconditions:
+    -file in the representation
+
+    Creates:
+    -<file_name>.txt
+    """
+    name = "convert.tif_to_txt"
+
+    def process_file(self, file, target_dir):
+        tif_to_txt(file, _get_target_file(file, target_dir, 'txt'))
 
 
 JpgToPdfTask = celery_app.register_task(JpgToPdfTask())

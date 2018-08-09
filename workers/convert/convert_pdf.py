@@ -37,7 +37,7 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
     os.makedirs(path, exist_ok=True)
     new_pdf = PyPDF2.PdfFileWriter()
     for file in files:
-        input_str = file['file']
+        input_str = os.path.join(path, file['file'])
         input_stream = open(input_str, 'rb')
         pdf = PyPDF2.PdfFileReader(input_stream)
         if pdf.flattenedPages is None:
