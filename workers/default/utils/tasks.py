@@ -70,7 +70,7 @@ class IfTask(BaseTask):
         do = self.get_param('do')
         group_tasks = []
         params = self.params.copy()
-        if condition:
+        if eval(condition):
             chain = generate_chain(do, params)
         elif 'else' in self.params:
             chain = generate_chain(self.get_param('else'), params)
