@@ -66,15 +66,16 @@ class IfTask(BaseTask):
     name = "if"
 
     def execute_task(self):
-        condition = self.get_param('condition')
+        condition = self.get_param(self.get_param('condition'))
         do = self.get_param('do')
         group_tasks = []
         params = self.params.copy()
-        if eval(condition):
+        if condition:
             chain = generate_chain(do, params)
+            group_tasks.append(chain)
         elif 'else' in self.params:
             chain = generate_chain(self.get_param('else'), params)
-        group_tasks.append(chain)
+            group_tasks.append(chain)
 
         raise self.replace(group(group_tasks))
 

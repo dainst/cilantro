@@ -1,10 +1,10 @@
 {
   "metadata": {
-      "volume": "",
-      "year": 2018,
-      "number": "",
-      "description": "[PDFs teilweise verf\u00fcgbar]",
-      "importFilePath": "e2e-testing.pdf",
+    "volume": "",
+    "year": 2018,
+    "number": "",
+    "description": "[PDFs teilweise verf\u00fcgbar]",
+    "importFilePath": "e2e-testing.pdf",
     "identification": "year"
   },
   "files": [
@@ -82,7 +82,7 @@
   "nlp_params": {
     "lang": "de",
     "operations": [
-        "NER"
+      "NER"
     ]
   },
   "ojs_journal_code": "aa",
@@ -91,5 +91,5 @@
   "default_publish_articles": true,
   "default_create_frontpage": true,
   "allow_upload_without_file": false,
-  "do_ocr": false
+  "do_ocr": true
 }
