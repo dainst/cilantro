@@ -8,6 +8,7 @@ from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf
 from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
     convert_jpg_to_pdf
 from workers.convert.tif_to_txt import tif_to_txt
+from utils.object import Object
 
 
 def _extract_basename(files):
