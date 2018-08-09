@@ -116,7 +116,7 @@ class MergeConvertedPdfTask(BaseTask):
         split_merge_pdf(files, work_path)
 
 
-class TxtToTifTask(BaseTask):
+class TifToTxtTask(BaseTask):
     """
     Create a txt file from a tif.
 
@@ -147,4 +147,4 @@ MergeConvertedPdf = celery_app.register_task(MergeConvertedPdfTask())
 TifToJpgTask = celery_app.register_task(TifToJpgTask())
 PdfToTifTask = celery_app.register_task(PdfToTifTask())
 PdfToTxtTask = celery_app.register_task(PdfToTxtTask())
-TxtFromTifTask = celery_app.register_task(TxtToTifTask())
+TxtFromTifTask = celery_app.register_task(TifToTxtTask())
