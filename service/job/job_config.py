@@ -149,7 +149,7 @@ def _create_foreach_signature(task_def, params):
 
 def _create_if_signature(task_def, params):
     kwargs = params.copy()
-    kwargs['condition'] = task_def['condition']
+    kwargs['condition'] = eval(task_def['condition'])
     kwargs['do'] = task_def['do']
     if 'else' in task_def:
         kwargs['else'] = task_def['else']
