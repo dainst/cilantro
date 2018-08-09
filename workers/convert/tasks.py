@@ -3,9 +3,6 @@ from abc import abstractmethod
 
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask
-
-from utils.object import Object
-
 from workers.convert.convert_image import convert_tif_to_jpg
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf
 from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
@@ -229,7 +226,6 @@ class TxtToTifTask(ConvertTask):
         tif_to_txt(file, _get_target_file(file, target_dir, 'txt'))
 
 
-SplitPdfTask = celery_app.register_task(SplitPdfTask())
 JpgToPdfTask = celery_app.register_task(JpgToPdfTask())
 MergeConvertedPdf = celery_app.register_task(MergeConvertedPdfTask())
 TifToJpgTask = celery_app.register_task(TifToJpgTask())

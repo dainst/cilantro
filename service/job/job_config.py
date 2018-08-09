@@ -153,7 +153,7 @@ def _create_foreach_signature(task_def, params):
 
 
 def _create_if_signature(task_def, params):
-    if eval(task_def['condition'], params):
+    if eval(task_def['condition'], None, params):
         return generate_chain(task_def['do'], params)
     else:
         return _evaluate_else(task_def, params)

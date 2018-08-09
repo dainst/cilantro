@@ -90,5 +90,6 @@
   "auto_publish_issue": false,
   "default_publish_articles": true,
   "default_create_frontpage": true,
-  "allow_upload_without_file": false
+  "allow_upload_without_file": false,
+  "do_ocr": false
 }
