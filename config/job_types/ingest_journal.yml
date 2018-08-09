@@ -25,7 +25,7 @@ tasks:
       do: 
         task: convert.pdf_to_tif
         target: tif
-    - foreach: tif: 
+    - foreach: tif 
       do:
         task: convert.tif_to_txt
         target: txt
