@@ -9,10 +9,16 @@ params:
 
 tasks:
   - create_object
-  - foreach: "\\.(tif|tiff|TIF|TIFF)$"
-    do: convert.tif_to_jpg
-  - foreach: "\\.(jpg|jpeg|JPG|JPEG)$"
-    do: convert.jpg_to_pdf
-  - convert.merge_converted_pdf
+  - foreach: origin
+    pattern: "\\.(tif|tiff|TIF|TIFF)$"
+    do:
+      task: convert.tif_to_jpg
+      target: jpg
+  - foreach: jpg
+    do:
+      task: convert.jpg_to_pdf
+      target: pdf
+  - task: convert.merge_converted_pdf
+    representation: pdf
   - publish_to_repository
   - cleanup_workdir

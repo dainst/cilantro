@@ -1,9 +1,7 @@
-params:
-  do_task2: boolean
-
 tasks:
   - retrieve
-  - foreach: "tif"
+  - foreach: "jpg"
+    pattern: "\\.jpg"
     do:
       task: convert
       quality: high
