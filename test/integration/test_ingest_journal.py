@@ -21,6 +21,8 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0001/meta.json',
             'parts/part_0001/marc.xml',
             'parts/part_0002/data/origin/merged.pdf',
+            'parts/part_0002/data/txt/page.1.txt',
+            'parts/part_0002/data/txt/page.1.json',
             'parts/part_0002/meta.json',
             'parts/part_0002/marc.xml',
             'meta.json',
