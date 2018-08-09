@@ -15,9 +15,8 @@ class IngestJournalTest(JobTypeTest):
 
         files_generated = [
             'data/origin/merged.pdf',
-            'data/tif/0.tif',
-            'data/txt/0.txt',
-            'data/txt/0.json',
+            'data/txt/page.1.txt',
+            'data/txt/page.1.json',
             'parts/part_0001/data/origin/merged.pdf',
             'parts/part_0001/meta.json',
             'parts/part_0001/marc.xml',
