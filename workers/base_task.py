@@ -23,7 +23,10 @@ def on_celery_setup_logging(**_):
 
 def merge_dicts(a, b, path=None):
     """
-    Merge two dictionaries.
+    Deep merge two dictionaries.
+    
+    The two dictionaries are merged recursively so that values
+    that are themselves dictionaries are merged as well.
 
     :param dict a:
     :param dict b:
