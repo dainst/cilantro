@@ -71,16 +71,13 @@ class IfTask(BaseTask):
     def execute_task(self):
         condition = self.get_param(self.get_param('condition'))
         do = self.get_param('do')
-        group_tasks = []
         params = self.params.copy()
         if condition:
             chain = generate_chain(do, params)
-            group_tasks.append(chain)
         elif 'else' in self.params:
             chain = generate_chain(self.get_param('else'), params)
-            group_tasks.append(chain)
 
-        raise self.replace(group(group_tasks))
+        raise self.replace(chain)
 
 
 IfTask = celery_app.register_task(IfTask())

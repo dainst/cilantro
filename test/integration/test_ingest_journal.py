@@ -47,7 +47,7 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0002/data/origin/merged.pdf',
             'parts/part_0002/meta.json',
             'parts/part_0002/marc.xml',
-            '2.tif.converted.txt',
+            'data/txt/merged_0.txt',
             'meta.json',
             'ojs_import.xml'
         ]
