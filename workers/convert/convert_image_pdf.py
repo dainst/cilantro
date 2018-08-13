@@ -1,4 +1,5 @@
 import logging
+import os
 
 from PIL import Image
 from wand.image import Image as WandImage
@@ -19,7 +20,8 @@ def convert_pdf_to_tif(source_file, output_dir):
             for i in range(pages):
                 with WandImage(img.sequence[i]) as page_img:
                     page_img.type = 'truecolor'
-                    page_img.save(filename=output_dir + f"/{i}.tif")
+                    name = os.path.splitext(os.path.basename(source_file))[0]
+                    page_img.save(filename=output_dir + f"/{name}_{i}.tif")
 
     except Exception as e:
         raise e

@@ -16,7 +16,8 @@ def convert_pdf_to_txt(source_file, output_dir):
         for page in pdf:
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
-            output = open(os.path.join(output_dir, f'page.{index}.txt'), 'wb')
+            name = os.path.splitext(os.path.basename(source_file))[0]
+            output = open(os.path.join(output_dir, f'{name}_{index}.txt'), 'wb')
             output.write(page.encode('utf-8'))
             output.close()
             index = index + 1

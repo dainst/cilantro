@@ -18,7 +18,8 @@ class PdfToTifTest(ConvertTest):
 
     def test_success(self):
         convert_pdf_to_tif(self.pdf_path, self.working_dir)
-        tif_0_path = self.tif_path.format(self.working_dir, 0)
+        name = os.path.splitext(os.path.basename(self.pdf_path))[0]
+        tif_0_path = self.tif_path.format(self.working_dir, f"{name}_0")
         self.assertTrue(Path(tif_0_path).is_file())
         stat = os.stat(tif_0_path)
         self.assertGreater(stat.st_size, 0)
