@@ -120,7 +120,7 @@ services:
       BROKER_PASSWORD: ${BROKER_PASSWORD}
 
   ojs:
-    image: dainst/cilantro-ojs2:1.0
+    image: dainst/cilantro-ojs2:latest
     ports:
       - "4444:80"
     volumes:
