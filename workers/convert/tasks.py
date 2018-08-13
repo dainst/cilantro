@@ -207,7 +207,7 @@ class PdfToTifTask(ConvertTask):
         convert_pdf_to_tif(file, target_dir)
 
 
-class TxtToTifTask(ConvertTask):
+class TifToTxtTask(ConvertTask):
     """
     Do OCR on a tif file and save the results as txt.
 
@@ -232,4 +232,4 @@ MergeConvertedPdf = celery_app.register_task(MergeConvertedPdfTask())
 TifToJpgTask = celery_app.register_task(TifToJpgTask())
 PdfToTifTask = celery_app.register_task(PdfToTifTask())
 PdfToTxtTask = celery_app.register_task(PdfToTxtTask())
-TxtFromTifTask = celery_app.register_task(TxtToTifTask())
+TifToTxtTask = celery_app.register_task(TifToTxtTask())
