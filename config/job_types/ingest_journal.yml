@@ -14,23 +14,34 @@ params:
   default_create_frontpage: boolean
   allow_upload_without_file: boolean
   nlp_params: dict
+  do_ocr: boolean
   frontmatter_ids: list
   ojs_metadata: dict
 
 tasks:
   - create_object
-  - convert.split_pdf
-  - foreach: ".*\\.pdf$"
-    do: convert.pdf_to_tif
-  - task: convert.tif_to_txt
-    file: 2.tif
+  - if: do_ocr
+    do:
+    - foreach: origin
+      pattern: ".*\\.pdf$"
+      do: 
+        task: convert.pdf_to_tif
+        target: tif
+    - foreach: tif 
+      do:
+        task: convert.tif_to_txt
+        target: txt
+    else:
+    - foreach: origin
+      pattern: ".*\\.pdf$"
+      do: 
+        task: convert.pdf_to_txt
+        target: txt
   - task: generate_marc_xml
     xml_template_path: resources/marc_template.xml
   - task: generate_xml
     xml_template_path: resources/ojs_template.xml
-  - foreach: "\\.pdf$"
-    do: convert.pdf_to_txt
-  - foreach: "\\.*txt$"
+  - foreach: txt
     do: nlp.annotate
   - publish_to_ojs
   - generate_frontmatter

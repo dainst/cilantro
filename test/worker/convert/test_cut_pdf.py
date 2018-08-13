@@ -16,9 +16,9 @@ class CutPdfTest(ConvertTest):
     file_generated = f'{working_dir}/data/pdf/merged.pdf'
 
     def test_success(self):
-        params = [{"file": "e2e-testing.pdf", "range": [1, 20]},
-                  {"file": "e2e-testing.pdf", "range": [21, 27]}]
         obj = Object(self.working_dir)
+        params = [{"file": f"{obj.get_representation_dir('pdf')}/e2e-testing.pdf", "range": [1, 20]},
+                  {"file": f"{obj.get_representation_dir('pdf')}/e2e-testing.pdf", "range": [21, 27]}]
         stream = open(self.pdf_src, 'rb')
         obj.add_stream('e2e-testing.pdf', 'pdf', stream)
         stream.close()

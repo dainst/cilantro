@@ -25,7 +25,7 @@ class JobConfigTest(unittest.TestCase):
 
         self.assertEqual('foreach', tasks[1]['task'])
         kwargs = tasks[1]['kwargs']
-        self.assertEqual('*.tif', kwargs['pattern'])
+        self.assertEqual('tif', kwargs['representation'])
         self.assertEqual('convert', kwargs['subtasks'][0]['name'])
         self.assertEqual('high', kwargs['subtasks'][0]['params']['quality'])
 
@@ -77,6 +77,25 @@ class JobConfigTest(unittest.TestCase):
 
         self.assertIn('do_task2', tasks[0].kwargs)
         self.assertIn('do_task2', tasks[1].kwargs)
+
+    def test_foreach(self):
+        job_config = JobConfig("test/resources/configs/config_foreach")
+
+        job1 = job_config.generate_job("job1", "test_user",).chain
+
+        tasks1 = job1.tasks
+
+        kwargs1 = tasks1[1]['kwargs']
+        self.assertEqual('tif', kwargs1['representation'])
+        self.assertEqual('.*', kwargs1['pattern'])
+
+        job2 = job_config.generate_job("job2", "test_user").chain
+
+        tasks2 = job2.tasks
+
+        kwargs2 = tasks2[1]['kwargs']
+        self.assertEqual('jpg', kwargs2['representation'])
+        self.assertEqual('\\.jpg', kwargs2['pattern'])
 
     def test_if_param_true(self):
         job_config = JobConfig("test/resources/configs/config_if")

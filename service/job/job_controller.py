@@ -80,8 +80,8 @@ def job_status(job_id):
     response = {
         'status': task.state
     }
-    if hasattr(task.info, 'result'):
-        response['result'] = task.info['result']
+    if hasattr(task, 'result'):
+        response['result'] = task.result
     return jsonify(response)
 
 

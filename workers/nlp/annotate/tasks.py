@@ -24,8 +24,7 @@ class AnnotateTask(BaseTask):
         text_file = self.get_param('file')
         _, extension = os.path.splitext(text_file)
         output_file = os.path.join(
-            os.path.dirname(os.path.dirname(text_file)),
-            'nlp',
+            os.path.dirname(text_file),
             os.path.basename(text_file).replace(extension, '.json'))
 
         with open(text_file, 'r') as file:
