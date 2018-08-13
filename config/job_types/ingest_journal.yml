@@ -24,17 +24,17 @@ tasks:
     do:
     - foreach: origin
       pattern: ".*\\.pdf$"
-      do: 
+      do:
         task: convert.pdf_to_tif
         target: tif
-    - foreach: tif 
+    - foreach: tif
       do:
         task: convert.tif_to_txt
         target: txt
     else:
     - foreach: origin
       pattern: ".*\\.pdf$"
-      do: 
+      do:
         task: convert.pdf_to_txt
         target: txt
   - task: generate_marc_xml

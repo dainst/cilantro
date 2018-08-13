@@ -52,6 +52,37 @@ class ForeachTask(BaseTask):
 ForeachTask = celery_app.register_task(ForeachTask())
 
 
+class IfTask(BaseTask):
+    """
+    Run a task list if a condition is met and optionally another one if not.
+
+    TaskParams:
+    -boolean condition: Condition to be checked upon
+    -TaskList do:
+    -TaskList else:
+
+    Preconditions:
+
+    Creates:
+
+    """
+    name = "if"
+
+    def execute_task(self):
+        condition = self.get_param(self.get_param('condition'))
+        do = self.get_param('do')
+        params = self.params.copy()
+        if condition:
+            chain = generate_chain(do, params)
+        elif 'else' in self.params:
+            chain = generate_chain(self.get_param('else'), params)
+
+        raise self.replace(chain)
+
+
+IfTask = celery_app.register_task(IfTask())
+
+
 class CleanupWorkdirTask(BaseTask):
     """
     Remove the complete content of the working dir.
