@@ -93,9 +93,11 @@ class BaseTask(Task):
         This method has to be implemented by all subclassed tasks and includes
         the actual implementation logic of the specific task.
 
-        Results have to be dicts and are merged recursively so that partial
-        results in task chains accumulate and may be extended or modified
-        by following tasks.
+        Results have to be dicts or lists of results and are merged recursively
+        so that partial results in task chains accumulate and may be extended or
+        modified by following tasks.
+
+        Tasks do not have to return results, i.e. the result may be None.
 
         :return dict:
         """
