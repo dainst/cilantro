@@ -28,10 +28,11 @@ def publish_to_ojs(import_xml_file_path, journalcode, server='ojs', port='80'):
     headers = {'Content-Type': 'application/xml',
                'ojsAuthorization': 'YWRtaW4=:cGFzc3dvcmQ='}
 
-    request = Request('http://' + server + ':' + port +
-                      '/ojs/plugins/generic/ojs-cilantro-plugin/api/import/' +
-                      journalcode,
-                      headers=headers,
+    request_url = (f"http://{server}:{port}"
+                   f"/ojs/plugins/generic/ojs-cilantro-plugin/api/import/"
+                   f"{journalcode}")
+
+    request = Request(request_url, headers=headers,
                       data=import_data.encode(encoding='utf-8'))
 
     with urlopen(request) as response:
