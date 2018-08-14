@@ -1,8 +1,8 @@
 tasks:
   - retrieve
-  - foreach: "jpg"
+  - list_files: "jpg"
     pattern: "\\.jpg"
-    do:
+    foreach:
       task: convert
       quality: high
   - publish

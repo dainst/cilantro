@@ -10,7 +10,7 @@ from service.job.job_config import generate_chain
 from workers.base_task import BaseTask
 
 
-class ForeachTask(BaseTask):
+class ListFilesTask(BaseTask):
     """
     Run a task list for every file in a given representation.
 
@@ -24,7 +24,7 @@ class ForeachTask(BaseTask):
     Creates:
 
     """
-    name = "foreach"
+    name = "list_files"
 
     def execute_task(self):
         rep = self.get_param('representation')
@@ -49,7 +49,7 @@ class ForeachTask(BaseTask):
         raise self.replace(group(group_tasks))
 
 
-ForeachTask = celery_app.register_task(ForeachTask())
+ForeachTask = celery_app.register_task(ListFilesTask())
 
 
 class IfTask(BaseTask):

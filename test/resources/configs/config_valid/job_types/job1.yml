@@ -3,8 +3,8 @@ params:
 
 tasks:
   - retrieve
-  - foreach: "tif"
-    do:
+  - list_files: "tif"
+    foreach:
       task: convert
       quality: high
   - publish

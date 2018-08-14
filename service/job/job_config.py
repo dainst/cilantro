@@ -96,7 +96,7 @@ def _expand_task_def(task_def):
     Expand a single task definition.
 
     Recursively calls _expand_tasks_def in order to expand complex task trees
-    that can be defined with foreach and if.
+    that can be defined with list_files and if.
 
     :param object task_def: Task definition, may be a string or a dict
     :return dict: Task definition as dictionary
@@ -113,13 +113,13 @@ def _expand_task_def(task_def):
             'name': task_name,
             'params': task_def
         }
-    elif 'foreach' in task_def:
+    elif 'list_files' in task_def:
         expanded_task = {
-            'type': 'foreach',
-            'name': 'foreach',
-            'representation': task_def['foreach'],
+            'type': 'list_files',
+            'name': 'list_files',
+            'representation': task_def['list_files'],
             'pattern': ".*",
-            'do': _expand_tasks_def(task_def['do'])
+            'foreach': _expand_tasks_def(task_def['foreach'])
         }
         if 'pattern' in task_def:
             expanded_task['pattern'] = task_def['pattern']
@@ -137,19 +137,19 @@ def _expand_task_def(task_def):
 
 
 def _create_signature(task_def, params=None):
-    if task_def['type'] == 'foreach':
-        return _create_foreach_signature(task_def, params)
+    if task_def['type'] == 'list_files':
+        return _create_list_files_signature(task_def, params)
     if task_def['type'] == 'if':
         return _create_if_signature(task_def, params)
     return _create_signature_for_task(task_def, params)
 
 
-def _create_foreach_signature(task_def, params):
+def _create_list_files_signature(task_def, params):
     kwargs = params.copy()
     kwargs['representation'] = task_def['representation']
     kwargs['pattern'] = task_def['pattern']
-    kwargs['subtasks'] = task_def['do']
-    return celery_app.signature('foreach', kwargs=kwargs)
+    kwargs['subtasks'] = task_def['foreach']
+    return celery_app.signature('list_files', kwargs=kwargs)
 
 
 def _create_if_signature(task_def, params):

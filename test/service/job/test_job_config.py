@@ -23,7 +23,7 @@ class JobConfigTest(unittest.TestCase):
 
         self.assertEqual('retrieve', tasks[0]['task'])
 
-        self.assertEqual('foreach', tasks[1]['task'])
+        self.assertEqual('list_files', tasks[1]['task'])
         kwargs = tasks[1]['kwargs']
         self.assertEqual('tif', kwargs['representation'])
         self.assertEqual('convert', kwargs['subtasks'][0]['name'])
@@ -78,8 +78,8 @@ class JobConfigTest(unittest.TestCase):
         self.assertIn('do_task2', tasks[0].kwargs)
         self.assertIn('do_task2', tasks[1].kwargs)
 
-    def test_foreach(self):
-        job_config = JobConfig("test/resources/configs/config_foreach")
+    def test_list_files(self):
+        job_config = JobConfig("test/resources/configs/config_list_files")
 
         job1 = job_config.generate_job("job1", "test_user",).chain
 

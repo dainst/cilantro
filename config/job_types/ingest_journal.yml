@@ -20,26 +20,26 @@ tasks:
   - create_object
   - if: do_ocr
     do:
-    - foreach: origin
+    - list_files: origin
       pattern: ".*\\.pdf$"
-      do:
+      foreach:
         task: convert.pdf_to_tif
         target: tif
-    - foreach: tif
-      do:
+    - list_files: tif
+      foreach:
         task: convert.tif_to_txt
         target: txt
     else:
-    - foreach: origin
+    - list_files: origin
       pattern: ".*\\.pdf$"
-      do:
+      foreach:
         task: convert.pdf_to_txt
         target: txt
   - task: generate_marc_xml
     xml_template_path: resources/marc_template.xml
   - task: generate_xml
     xml_template_path: resources/ojs_template.xml
-  - foreach: txt
-    do: nlp.annotate
+  - list_files: txt
+    foreach: nlp.annotate
   - publish_to_repository
   - cleanup_workdir
