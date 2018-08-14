@@ -111,7 +111,7 @@ class BaseTask(Task):
             for result in prev_result:
                 self._add_prev_result_to_params(result)
         elif prev_result:
-            raise KeyError(f"Wrong result type in previous task")
+            raise KeyError("Wrong result type in previous task")
 
     def _merge_result(self, result):
         if isinstance(result, dict):
