@@ -1,0 +1,7 @@
+tasks:
+  - retrieve
+  - list_parts:
+    foreach:
+      task: convert
+      quality: high
+  - publish

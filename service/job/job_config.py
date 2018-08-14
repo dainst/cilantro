@@ -124,6 +124,12 @@ def _expand_task_def(task_def):
         if 'pattern' in task_def:
             expanded_task['pattern'] = task_def['pattern']
         return expanded_task
+    elif 'list_parts' in task_def:
+        return {
+            'type': 'list_parts',
+            'name': 'list_parts',
+            'foreach': _expand_tasks_def(task_def['foreach'])
+        }
     elif 'if' in task_def:
         expanded_task = {
             'type': 'if',
@@ -139,6 +145,8 @@ def _expand_task_def(task_def):
 def _create_signature(task_def, params=None):
     if task_def['type'] == 'list_files':
         return _create_list_files_signature(task_def, params)
+    if task_def['type'] == 'list_parts':
+        return _create_list_parts_signature(task_def, params)
     if task_def['type'] == 'if':
         return _create_if_signature(task_def, params)
     return _create_signature_for_task(task_def, params)
@@ -150,6 +158,12 @@ def _create_list_files_signature(task_def, params):
     kwargs['pattern'] = task_def['pattern']
     kwargs['subtasks'] = task_def['foreach']
     return celery_app.signature('list_files', kwargs=kwargs)
+
+
+def _create_list_parts_signature(task_def, params):
+    kwargs = params.copy()
+    kwargs['subtasks'] = task_def['foreach']
+    return celery_app.signature('list_parts', kwargs=kwargs)
 
 
 def _create_if_signature(task_def, params):

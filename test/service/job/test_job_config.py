@@ -97,6 +97,18 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('jpg', kwargs2['representation'])
         self.assertEqual('\\.jpg', kwargs2['pattern'])
 
+    def test_list_parts(self):
+        job_config = JobConfig("test/resources/configs/config_list_parts")
+
+        job1 = job_config.generate_job("job1", "test_user",).chain
+
+        tasks = job1.tasks
+
+        self.assertEqual('list_parts', tasks[1]['task'])
+        kwargs = tasks[1]['kwargs']
+        self.assertEqual('convert', kwargs['subtasks'][0]['name'])
+        self.assertEqual('high', kwargs['subtasks'][0]['params']['quality'])
+
     def test_invalid_request_param(self):
         job_config = JobConfig("test/resources/configs/config_if")
 
