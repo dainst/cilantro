@@ -22,31 +22,29 @@ tasks:
   - create_object
   - list_parts:
     foreach:
-  - if: do_ocr
-    do:
+    - if: do_ocr
+      do:
       - list_files: origin
-      pattern: ".*\\.pdf$"
+        pattern: ".*\\.pdf$"
         foreach:
-        task: convert.pdf_to_tif
-        target: tif
+          task: convert.pdf_to_tif
+          target: tif
       - list_files: tif
         foreach:
-        task: convert.tif_to_txt
-        target: txt
-    else:
+          task: convert.tif_to_txt
+          target: txt
+      else:
       - list_files: origin
-      pattern: ".*\\.pdf$"
+        pattern: ".*\\.pdf$"
         foreach:
-        task: convert.pdf_to_txt
-        target: txt
+          task: convert.pdf_to_txt
+          target: txt
     - list_files: txt
       foreach: nlp.annotate
   - task: generate_marc_xml
     xml_template_path: resources/marc_template.xml
   - task: generate_xml
     xml_template_path: resources/ojs_template.xml
-  - foreach: txt
-    do: nlp.annotate
   - publish_to_ojs
   - generate_frontmatter
   - publish_to_repository
