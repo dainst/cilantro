@@ -35,13 +35,7 @@ def publish_to_ojs(import_xml_file_path, journalcode, server='ojs', port='80'):
                       headers=headers,
                       data=import_data.encode(encoding='utf-8'))
 
-    try:
-        response = urlopen(request)
-    except HTTPError as e:
-        log.error(e.read().decode('utf-8'))
-        raise
-    response_code = response.getcode()
-    response_text = response.read().decode('utf-8')
-    log.debug(response_text)
+    with urlopen(request) as response:
+        response_text = response.read().decode('utf-8')
 
-    return response_code, response_text
+    return response.getcode(), response_text

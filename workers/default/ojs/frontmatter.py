@@ -28,16 +28,7 @@ def generate_frontmatter(article_id_list, server='ojs', port='80'):
 
     request = Request(url, headers=headers)
 
-    log.debug("Using URL: " + url)
+    with urlopen(request) as response:
+        response_text = response.read().decode('utf-8')
 
-    try:
-        response = urlopen(request)
-    except HTTPError as e:
-        log.error(e.read().decode('utf-8'))
-        raise
-
-    response_code = response.getcode()
-    response_text = response.read().decode('utf-8')
-    log.debug(response_text)
-
-    return response_code, response_text
+    return response.getcode(), response_text
