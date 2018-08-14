@@ -75,16 +75,8 @@ class BaseTask(Task):
 
     def run(self, prev_result=None, **params):
         self._init_params(params)
-        if isinstance(prev_result, list):
-            for result in prev_result:
-                self.params['result'] = self._add_result_to_params(result)
-        else:
-            self.params['result'] = self._add_result_to_params(prev_result)
-        result = self.execute_task()
-        if result:
-            return self._add_result_to_params(result)
-        else:
-            return self.params['result']
+        self._add_prev_result_to_params(prev_result)
+        return self._merge_result(self.execute_task())
 
     def get_param(self, key):
         try:
@@ -101,19 +93,29 @@ class BaseTask(Task):
         This method has to be implemented by all subclassed tasks and includes
         the actual implementation logic of the specific task.
 
-        Results have to be dicts and are merged recursively so that partial
-        results in task chains accumulate and may be extended or modified
-        by following tasks.
+        Results have to be dicts or lists of results and are merged recursively
+        so that partial results in task chains accumulate and may be extended or
+        modified by following tasks.
+
+        Tasks do not have to return results, i.e. the result may be None.
 
         :return dict:
         """
         raise NotImplementedError("Execute Task method not implemented")
 
-    def _add_result_to_params(self, result):
+    def _add_prev_result_to_params(self, prev_result):
+        if isinstance(prev_result, dict):
+            self.params['result'] = merge_dicts(self.params['result'],
+                                                prev_result)
+        elif isinstance(prev_result, list):
+            for result in prev_result:
+                self._add_prev_result_to_params(result)
+        elif prev_result:
+            raise KeyError("Wrong result type in previous task")
+
+    def _merge_result(self, result):
         if isinstance(result, dict):
             return merge_dicts(self.params['result'], result)
-        elif result:
-            raise KeyError(f"Wrong result type in previous task")
         else:
             return self.params['result']
 

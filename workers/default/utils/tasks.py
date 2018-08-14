@@ -10,9 +10,21 @@ from service.job.job_config import generate_chain
 from workers.base_task import BaseTask
 
 
-class ForeachTask(BaseTask):
+def _list_files_by_pattern(rep_path, pattern):
+    regex = re.compile(pattern)
+    files = []
+    for f in _recursive_file_list(rep_path):
+        if regex.search(os.path.basename(f)):
+            files.append(f)
+    return files
+
+
+class ListFilesTask(BaseTask):
     """
     Run a task list for every file in a given representation.
+
+    A chain is created for every file. These are run in parellel. The next task
+    is run when the last file chain has finished.
 
     TaskParams:
     -str representation: The name of the representation
@@ -24,21 +36,18 @@ class ForeachTask(BaseTask):
     Creates:
 
     """
-    name = "foreach"
+    name = "list_files"
 
     def execute_task(self):
         rep = self.get_param('representation')
         subtasks = self.get_param('subtasks')
         pattern = self.get_param('pattern')
         rep_path = os.path.join(self.get_work_path(), Object.DATA_DIR, rep)
+        files = _list_files_by_pattern(rep_path, pattern)
+        raise self.replace(self._generate_group_for_files(files, subtasks))
+
+    def _generate_group_for_files(self, files, subtasks):
         group_tasks = []
-        regex = re.compile(pattern)
-        files = []
-
-        for f in _recursive_file_list(rep_path):
-            if regex.search(os.path.basename(f)):
-                files.append(f)
-
         for file in files:
             params = self.params.copy()
             params['job_id'] = self.job_id
@@ -46,10 +55,44 @@ class ForeachTask(BaseTask):
 
             chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
-        raise self.replace(group(group_tasks))
+        return group(group_tasks)
 
 
-ForeachTask = celery_app.register_task(ForeachTask())
+ForeachTask = celery_app.register_task(ListFilesTask())
+
+
+class ListPartsTask(BaseTask):
+    """
+    Run a task list for every part of the current object.
+
+    A chain is created for every suboject. These are run in parallel. The next
+    task is run when the last part chain has finished.
+
+    TaskParams:
+    -list subtasks: list of tasks to be run
+
+    Preconditions:
+
+    Creates:
+
+    """
+    name = "list_parts"
+
+    def execute_task(self):
+        subtasks = self.get_param('subtasks')
+        parts_path = os.path.join(self.get_work_path(), Object.PARTS_DIR)
+        raise self.replace(self._generate_group_for_parts(parts_path, subtasks))
+
+    def _generate_group_for_parts(self, parts_path, subtasks):
+        group_tasks = []
+        for part_path in os.listdir(parts_path):
+            params = self.params.copy()
+            params['job_id'] = os.path.join(params['job_id'],
+                                            Object.PARTS_DIR,
+                                            os.path.basename(part_path))
+            chain = generate_chain(subtasks, params)
+            group_tasks.append(chain)
+        return group(group_tasks)
 
 
 class IfTask(BaseTask):

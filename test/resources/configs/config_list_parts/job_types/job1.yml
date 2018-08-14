@@ -1,9 +1,6 @@
-params:
-  do_task2: boolean
-
 tasks:
   - retrieve
-  - list_files: "tif"
+  - list_parts:
     foreach:
       task: convert
       quality: high

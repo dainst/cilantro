@@ -23,7 +23,7 @@ class JobConfigTest(unittest.TestCase):
 
         self.assertEqual('retrieve', tasks[0]['task'])
 
-        self.assertEqual('foreach', tasks[1]['task'])
+        self.assertEqual('list_files', tasks[1]['task'])
         kwargs = tasks[1]['kwargs']
         self.assertEqual('tif', kwargs['representation'])
         self.assertEqual('convert', kwargs['subtasks'][0]['name'])
@@ -78,8 +78,8 @@ class JobConfigTest(unittest.TestCase):
         self.assertIn('do_task2', tasks[0].kwargs)
         self.assertIn('do_task2', tasks[1].kwargs)
 
-    def test_foreach(self):
-        job_config = JobConfig("test/resources/configs/config_foreach")
+    def test_list_files(self):
+        job_config = JobConfig("test/resources/configs/config_list_files")
 
         job1 = job_config.generate_job("job1", "test_user",).chain
 
@@ -96,6 +96,18 @@ class JobConfigTest(unittest.TestCase):
         kwargs2 = tasks2[1]['kwargs']
         self.assertEqual('jpg', kwargs2['representation'])
         self.assertEqual('\\.jpg', kwargs2['pattern'])
+
+    def test_list_parts(self):
+        job_config = JobConfig("test/resources/configs/config_list_parts")
+
+        job1 = job_config.generate_job("job1", "test_user",).chain
+
+        tasks = job1.tasks
+
+        self.assertEqual('list_parts', tasks[1]['task'])
+        kwargs = tasks[1]['kwargs']
+        self.assertEqual('convert', kwargs['subtasks'][0]['name'])
+        self.assertEqual('high', kwargs['subtasks'][0]['params']['quality'])
 
     def test_invalid_request_param(self):
         job_config = JobConfig("test/resources/configs/config_if")

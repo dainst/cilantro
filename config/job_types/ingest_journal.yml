@@ -20,23 +20,27 @@ params:
 
 tasks:
   - create_object
+  - list_parts:
+    foreach:
   - if: do_ocr
     do:
-    - foreach: origin
+      - list_files: origin
       pattern: ".*\\.pdf$"
-      do:
+        foreach:
         task: convert.pdf_to_tif
         target: tif
-    - foreach: tif
-      do:
+      - list_files: tif
+        foreach:
         task: convert.tif_to_txt
         target: txt
     else:
-    - foreach: origin
+      - list_files: origin
       pattern: ".*\\.pdf$"
-      do:
+        foreach:
         task: convert.pdf_to_txt
         target: txt
+    - list_files: txt
+      foreach: nlp.annotate
   - task: generate_marc_xml
     xml_template_path: resources/marc_template.xml
   - task: generate_xml
