@@ -11,7 +11,7 @@ from utils.object import Object
 
 class GenerateMarcXMLTask(BaseTask):
     """
-    Generate a Marc XML for every article based on a data.json file and validate them.
+    Generate marc-XML for every article based on a data.json file and validate.
 
     TaskParams:
     -str xml_template_path: path to the xml template
@@ -23,6 +23,7 @@ class GenerateMarcXMLTask(BaseTask):
     -for each article:
         -marc.xml in articles/article_dir
     """
+
     name = "generate_marc_xml"
 
     def execute_task(self):
@@ -34,7 +35,8 @@ class GenerateMarcXMLTask(BaseTask):
         marc_schema_file = 'resources/MARC21slim.xsd'
 
         for article_dir in os.listdir(os.path.join(work_path, 'parts')):
-            file_path = os.path.join(work_path, 'parts', article_dir, 'marc.xml')
+            file_path = os.path.join(work_path, 'parts', article_dir,
+                                     'marc.xml')
             validate_xml(file_path, schema_file_path=marc_schema_file)
 
 
@@ -51,6 +53,7 @@ class GenerateXMLTask(BaseTask):
     Creates:
     -ojs_import.xml
     """
+
     name = "generate_xml"
 
     def execute_task(self):
@@ -58,18 +61,24 @@ class GenerateXMLTask(BaseTask):
         obj = Object(work_path)
         articles_meta = []
         for part in obj.get_children():
-            articles_meta.append(part.metadata.to_dict())
+            articles_meta.append({
+                **part.metadata.to_dict(),
+                'filepath': os.path.join(part.get_representation_dir(
+                                Object.INITIAL_REPRESENTATION),
+                            'merged.pdf')  # TODO filename may be different?
+            })
 
-        data = {'data': {
-            **obj.metadata.to_dict(),
-            'auto_publish_issue': self.get_param('auto_publish_issue'),
-            'default_create_frontpage': self.get_param('default_create_frontpage'),
-        },
+        data = {
+            'data': {
+                **obj.metadata.to_dict(),
+                **self.get_param('ojs_metadata')
+            },
             'articles': articles_meta}
 
         xml_template_string = _read_file(self.get_param('xml_template_path'))
         generated_xml_file = generate_xml(obj.path, data, xml_template_string)
-        validate_xml(generated_xml_file, dtd_validation=True)
+        dtd_file = 'resources/ojs_import.dtd'
+        validate_xml(generated_xml_file, dtd_file_path=dtd_file)
 
 
 GenerateMarcXMLTask = celery_app.register_task(GenerateMarcXMLTask())

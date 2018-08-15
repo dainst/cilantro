@@ -1,0 +1,12 @@
+TECHNISCHE UNIVERSITÄT CAROLO-WILHELMINA ZU BRAUNSCHWEIG
+                             Bachelorarbeit
+    Ein kleines Musterdokument mit
+                  zweizeiligem Titel
+                          Erich Mustermann
+                         30. September 2019
+            Institut für Programmierung und Reaktive Systeme
+                          Prof. Dr. Wilhelm Meister
+                                betreut durch:
+                         Dr. Hans-Heinrich Assistent
+                      Dipl.-Inform. Werner Mitarbeiter
+                    Dr. Gisela Teil-Zeit (Fa. Ex & Hopp)
