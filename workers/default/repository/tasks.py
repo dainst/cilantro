@@ -38,7 +38,7 @@ class CreateObjectTask(BaseTask):
         _add_files(obj, files, user)
         if 'parts' in self.params:
             self._execute_for_parts(obj, self.get_param('parts'), user)
-        return {'object_id': self.job_id}
+        return {'object_id': self._get_object_id()}
 
     def _execute_for_parts(self, obj, parts, user):
         for part in parts:
@@ -50,6 +50,15 @@ class CreateObjectTask(BaseTask):
 
             if 'parts' in part:
                 self._execute_for_parts(child, part['parts'], user)
+
+    def _get_object_id(self):
+        try:
+            object_id = self.get_param('object_id')
+        except KeyError:
+            object_id = self.job_id
+        if not object_id:
+            object_id = self.job_id
+        return object_id
 
 
 CreateObjectTask = celery_app.register_task(CreateObjectTask())

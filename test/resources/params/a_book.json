@@ -18,5 +18,6 @@
     { "file": "some_tiffs/test2.tiff" },
     { "file": "some_tiffs/test3.TIF" },
     { "file": "some_tiffs/test4.TIFF" }
-  ]
+  ],
+  "object_id": "test_object_2342"
 }
