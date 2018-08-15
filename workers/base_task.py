@@ -85,6 +85,13 @@ class BaseTask(Task):
             raise KeyError(f"Mandatory parameter {key} is missing"
                            f" for {self.__class__.__name__}")
 
+    def get_result(self, key):
+        try:
+            return self.params['result'][key]
+        except KeyError:
+            raise KeyError(f"Mandatory result {key} is missing"
+                           f" for {self.__class__.__name__}")
+
     @abstractmethod
     def execute_task(self):
         """
