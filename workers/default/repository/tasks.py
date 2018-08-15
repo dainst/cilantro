@@ -38,6 +38,7 @@ class CreateObjectTask(BaseTask):
         _add_files(obj, files, user)
         if 'parts' in self.params:
             self._execute_for_parts(obj, self.get_param('parts'), user)
+        return {'object_id': self.job_id}
 
     def _execute_for_parts(self, obj, parts, user):
         for part in parts:
@@ -85,7 +86,8 @@ class PublishToRepositoryTask(BaseTask):
 
     def execute_task(self):
         work_path = self.get_work_path()
-        repository_path = os.path.join(repository_dir, self.job_id)
+        repository_path = os.path.join(repository_dir,
+                                       self.get_result('object_id'))
         shutil.rmtree(repository_path, ignore_errors=True)
         shutil.copytree(work_path, repository_path)
 
