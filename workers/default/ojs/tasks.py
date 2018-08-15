@@ -3,8 +3,7 @@ import os
 from utils.celery_client import celery_app
 
 from workers.base_task import BaseTask
-from workers.default.ojs.publishing import publish_to_ojs
-from workers.default.ojs.frontmatter import generate_frontmatter
+from workers.default.ojs.ojs_api import publish, generate_frontmatters
 
 
 class PublishToOJSTask(BaseTask):
@@ -22,8 +21,8 @@ class PublishToOJSTask(BaseTask):
         work_path = self.get_work_path()
         data = self.get_param('ojs_metadata')
 
-        publish_to_ojs(os.path.join(work_path, 'ojs_import.xml'),
-                       data['ojs_journal_code'])
+        publish(os.path.join(work_path, 'ojs_import.xml'),
+                data['ojs_journal_code'])
 
 
 class GenerateFrontmatterTask(BaseTask):
@@ -39,7 +38,7 @@ class GenerateFrontmatterTask(BaseTask):
     def execute_task(self):
         """Execute task intructions."""
         id_list = self.get_param('frontmatter_ids')
-        generate_frontmatter(id_list)
+        generate_frontmatters(id_list)
 
 
 PublishToOJSTask = celery_app.register_task(PublishToOJSTask())

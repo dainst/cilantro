@@ -5,7 +5,7 @@ port = "80"
 auth_key = "YWRtaW4=:cGFzc3dvcmQ="
 
 
-def generate_frontmatters(ids):
+def generate_frontmatters(article_id_list):
     """
     Generate frontmatter page for articles in OJS via Frontmatter-Plugin.
 
@@ -14,9 +14,11 @@ def generate_frontmatters(ids):
 
     Authorization is done with a specific test user.
 
-    :param ids: IDs of documents in OJS
+    :param article_id_list: IDs of documents in OJS
     :return: tuple containing the response code and text
     """
+    ids = ','.join(map(str, article_id_list))
+
     headers = {'ojsAuthorization': auth_key}
 
     url = (f"http://{server}:{port}"
@@ -57,7 +59,7 @@ def publish(import_xml_file_path, journalcode):
 
 
 def _make_request(url, headers, import_data=None):
-
+    """Make the request to OJS and return response code and content."""
     request = Request(url, headers=headers,
                       data=import_data)
 

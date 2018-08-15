@@ -2,8 +2,7 @@ import unittest
 import json
 from urllib.error import HTTPError
 
-from workers.default.ojs.publishing import publish_to_ojs
-from workers.default.ojs.frontmatter import generate_frontmatter
+from workers.default.ojs.ojs_api import publish, generate_frontmatters
 
 
 class GenerateFrontmatterTest(unittest.TestCase):
@@ -26,10 +25,10 @@ class GenerateFrontmatterTest(unittest.TestCase):
         expecting failure the odd numbers refenrecing txt instead of PDF.
         """
         ojs_import_file = 'test/resources/objects/xml/ojs_import.xml'
-        _, response_text = publish_to_ojs(ojs_import_file, 'test')
+        _, response_text = publish(ojs_import_file, 'test')
         cls.published_articles.extend(
             json.loads(response_text)['published_articles'])
-        _, response_text = publish_to_ojs(ojs_import_file, 'test')
+        _, response_text = publish(ojs_import_file, 'test')
         cls.published_articles.extend(
             json.loads(response_text)['published_articles'])
 
@@ -41,7 +40,7 @@ class GenerateFrontmatterTest(unittest.TestCase):
         method, which are supposed to be valid PDF files.
         """
         response_status_code, response_text = \
-            generate_frontmatter(self.published_articles[::2])
+            generate_frontmatters(self.published_articles[::2])
 
         self.assertEqual(200, response_status_code)
         self.assertIn('\"success\":true', response_text)
@@ -54,5 +53,5 @@ class GenerateFrontmatterTest(unittest.TestCase):
         method, which are supposed to fail. The expected result of the call is
         to return a 500 HTTP error.
         """
-        self.assertRaises(HTTPError, generate_frontmatter,
+        self.assertRaises(HTTPError, generate_frontmatters,
                           self.published_articles[1::2])

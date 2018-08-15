@@ -1,7 +1,7 @@
 import unittest
 from urllib.error import HTTPError
 
-from workers.default.ojs.publishing import publish_to_ojs
+from workers.default.ojs.ojs_api import publish
 
 
 class PublishToOJSTest(unittest.TestCase):
@@ -16,8 +16,8 @@ class PublishToOJSTest(unittest.TestCase):
         """
         ojs_import_file = 'test/resources/objects/xml/ojs_import.xml'
 
-        response_status_code, response_text = publish_to_ojs(ojs_import_file,
-                                                             'test')
+        response_status_code, response_text = publish(ojs_import_file,
+                                                      'test')
 
         self.assertEqual(200, response_status_code)
         self.assertIn('\"success\":true', response_text)
@@ -30,4 +30,4 @@ class PublishToOJSTest(unittest.TestCase):
         """
         ojs_import_file = 'test/resources/objects/xml/ojs_import_faulty.xml'
 
-        self.assertRaises(HTTPError, publish_to_ojs, ojs_import_file, 'test')
+        self.assertRaises(HTTPError, publish, ojs_import_file, 'test')
