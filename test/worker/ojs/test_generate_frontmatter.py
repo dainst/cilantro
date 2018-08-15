@@ -15,7 +15,7 @@ class GenerateFrontmatterTest(unittest.TestCase):
         """
         Prepare some test data for the frontmatter generation.
 
-        As a cass method this runs once before all the tests are done.
+        As a class method this runs once before all the tests are done.
         It uses the 'publish_to_ojs' worker which in turn uses
         OJS frontmatter plugin to generate 4 articles in OJS. It is done
         in 2 calls as the test import XML only contains 2 articles
