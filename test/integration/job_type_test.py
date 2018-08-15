@@ -61,7 +61,7 @@ class JobTypeTest(unittest.TestCase):
         success = False
         while not success:
             for task_id in task_ids:
-                status = self.get_status(task_id)
+                status = self.get_status(task_id)['status']
                 if status == 'FAILURE':
                     raise AssertionError("child task in FAILURE state")
                 elif status == 'SUCCESS':
@@ -86,12 +86,11 @@ class JobTypeTest(unittest.TestCase):
                 raise AssertionError(f"experienced timeout while waiting for "
                                      f"status '{expected_status}', last status "
                                      f"was '{status}'")
-            status = self.get_status(job_id)
+            status = self.get_status(job_id)['status']
 
     def get_status(self, job_id):
         response = self.client.get(f'/job/{job_id}')
-        data = json.loads(response.get_data(as_text=True))
-        return data['status']
+        return json.loads(response.get_data(as_text=True))
 
     def post_job(self, job_type, data):
         response = self.client.post(
