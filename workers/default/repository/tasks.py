@@ -33,23 +33,8 @@ class CreateObjectTask(BaseTask):
     def execute_task(self):
         user = self.get_param('user')
         obj = Object(self.get_work_path())
-        obj.set_metadata_from_dict(self.get_param('metadata'))
-        files = self.get_param('files')
-        _add_files(obj, files, user)
-        if 'parts' in self.params:
-            self._execute_for_parts(obj, self.get_param('parts'), user)
+        _initialize_object(obj, self.params, user)
         return {'object_id': self._get_object_id()}
-
-    def _execute_for_parts(self, obj, parts, user):
-        for part in parts:
-            child = obj.add_child()
-            child.set_metadata_from_dict(part['metadata'])
-
-            if 'files' in part:
-                _add_files(child, part['files'], user)
-
-            if 'parts' in part:
-                self._execute_for_parts(child, part['parts'], user)
 
     def _get_object_id(self):
         try:
@@ -62,6 +47,15 @@ class CreateObjectTask(BaseTask):
 
 
 CreateObjectTask = celery_app.register_task(CreateObjectTask())
+
+
+def _initialize_object(obj, params, user):
+    obj.set_metadata_from_dict(params['metadata'])
+    if 'files' in params:
+        _add_files(obj, params['files'], user)
+    if 'parts' in params:
+        for part in params['parts']:
+            _initialize_object(obj.add_child(), part, user)
 
 
 def _add_files(obj, files, user):
