@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE issues PUBLIC "-//PKP//OJS Articles and Issues XML//EN" "http://pkp.sfu.ca/ojs/dtds/2.4.8/native.dtd">
 <issues>
-    <issue identification="year" published="false">
+    <issue identification="year" published="true">
 
         <description>[PDFs teilweise verfügbar]</description>
         <year>2018</year>
@@ -21,7 +21,7 @@
                     <galley>
                         <label>PDF</label>
                         <file>
-                            <href src="e2e-testing.pdf" mime_type="application/pdf" />
+                            <href src="/test/resources/objects/pdf/e2e-testing.pdf" mime_type="application/pdf" />
                         </file>
                     </galley>
                 </article>
@@ -38,7 +38,7 @@
                     <galley>
                         <label>PDF</label>
                         <file>
-                            <href src="e2e-testing.pdf" mime_type="application/pdf" />
+                            <href src="/test/resources/page.1.txt" mime_type="text/plain" />
                         </file>
                     </galley>
                 </article>

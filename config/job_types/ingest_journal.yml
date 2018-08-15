@@ -15,6 +15,8 @@ params:
   allow_upload_without_file: boolean
   nlp_params: dict
   do_ocr: boolean
+  frontmatter_ids: list
+  ojs_metadata: dict
 
 tasks:
   - create_object
@@ -43,5 +45,7 @@ tasks:
     xml_template_path: resources/marc_template.xml
   - task: generate_xml
     xml_template_path: resources/ojs_template.xml
+  - publish_to_ojs
+  - generate_frontmatter
   - publish_to_repository
   - cleanup_workdir

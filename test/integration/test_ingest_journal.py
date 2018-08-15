@@ -1,3 +1,5 @@
+import os
+
 from test.integration.job_type_test import JobTypeTest
 
 
@@ -30,6 +32,15 @@ class IngestJournalTest(JobTypeTest):
         ]
         for file in files_generated:
             self.assert_file_in_repository(job_id, file)
+
+        # Prüfen ob die generierte XMLs galley enthält, was für den OJS
+        # Import und frontmatter generation noetig ist
+        file_path = os.path.join(os.environ['REPOSITORY_DIR'], job_id,
+                                 'ojs_import.xml')
+        with open(file_path, 'r') as f:
+            xml_content = f.read()
+        self.assertIn("galley", xml_content)
+
         self.unstage_resource('pdf')
 
     def test_do_ocr(self):
