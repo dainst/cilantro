@@ -67,14 +67,14 @@ class BaseTask(Task):
 
     working_dir = os.environ['WORKING_DIR']
     params = {}
-    job_id = None
+    work_path = None
     log = logging.getLogger(__name__)
 
     def get_work_path(self):
-        work_path = os.path.join(self.working_dir, self.job_id)
-        if not os.path.exists(work_path):
-            os.mkdir(work_path)
-        return work_path
+        abs_path = os.path.join(self.working_dir, self.job_id)
+        if not os.path.exists(abs_path):
+            os.mkdir(abs_path)
+        return abs_path
 
     def run(self, prev_result=None, **params):
         self._init_params(params)

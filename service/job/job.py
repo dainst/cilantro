@@ -38,3 +38,5 @@ class Job:
 
         for task in task_chain:
             task.kwargs['job_id'] = self.id
+            # standard work_path for first level tasks is job_id
+            task.kwargs['work_path'] = self.id
