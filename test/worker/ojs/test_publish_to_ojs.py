@@ -16,11 +16,10 @@ class PublishToOJSTest(unittest.TestCase):
         """
         ojs_import_file = 'test/resources/objects/xml/ojs_import.xml'
 
-        response_status_code, response_text = publish(ojs_import_file,
-                                                      'test')
+        response_status_code, response = publish(ojs_import_file, 'test')
 
         self.assertEqual(200, response_status_code)
-        self.assertIn('\"success\":true', response_text)
+        self.assertTrue(response['success'])
 
     def test_publish_to_ojs_faulty_xml(self):
         """

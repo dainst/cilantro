@@ -25,12 +25,10 @@ class GenerateFrontmatterTest(unittest.TestCase):
         expecting failure the odd numbers refenrecing txt instead of PDF.
         """
         ojs_import_file = 'test/resources/objects/xml/ojs_import.xml'
-        _, response_text = publish(ojs_import_file, 'test')
-        cls.published_articles.extend(
-            json.loads(response_text)['published_articles'])
-        _, response_text = publish(ojs_import_file, 'test')
-        cls.published_articles.extend(
-            json.loads(response_text)['published_articles'])
+        _, response = publish(ojs_import_file, 'test')
+        cls.published_articles.extend(response['published_articles'])
+        _, response = publish(ojs_import_file, 'test')
+        cls.published_articles.extend(response['published_articles'])
 
     def test_generate_frontmatter(self):
         """
@@ -39,11 +37,11 @@ class GenerateFrontmatterTest(unittest.TestCase):
         Takes the even numbered IDs from the published articles in the setup
         method, which are supposed to be valid PDF files.
         """
-        response_status_code, response_text = \
+        response_status_code, response = \
             generate_frontmatters(self.published_articles[::2])
 
         self.assertEqual(200, response_status_code)
-        self.assertIn('\"success\":true', response_text)
+        self.assertTrue(response['success'])
 
     def test_generate_frontmatter_txt(self):
         """

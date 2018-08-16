@@ -6,6 +6,7 @@ about:
 params:
   files: list
   metadata: dict
+  object_id: string
 
 tasks:
   - create_object

@@ -15,6 +15,12 @@ class IngestJournalTest(JobTypeTest):
         self.assertEqual('Accepted', data['status'])
         self.assert_status(job_id, 'SUCCESS', 120000)
 
+        response = self.get_status(job_id)
+        self.assertIn('object_id', response['result'])
+        object_id = response['result']['object_id']
+        journal_code = params['ojs_metadata']['ojs_journal_code']
+        self.assertTrue(object_id.startswith(f"journal-{journal_code}"))
+
         files_generated = [
             'data/origin/merged.pdf',
             'parts/part_0001/data/origin/merged.pdf',
@@ -31,11 +37,11 @@ class IngestJournalTest(JobTypeTest):
             'ojs_import.xml'
         ]
         for file in files_generated:
-            self.assert_file_in_repository(job_id, file)
+            self.assert_file_in_repository(object_id, file)
 
         # Prüfen ob die generierte XMLs galley enthält, was für den OJS
         # Import und frontmatter generation noetig ist
-        file_path = os.path.join(os.environ['REPOSITORY_DIR'], job_id,
+        file_path = os.path.join(os.environ['REPOSITORY_DIR'], object_id,
                                  'ojs_import.xml')
         with open(file_path, 'r') as f:
             xml_content = f.read()
@@ -52,6 +58,12 @@ class IngestJournalTest(JobTypeTest):
         job_id = data['job_id']
         self.assertEqual('Accepted', data['status'])
         self.assert_status(job_id, 'SUCCESS', 120000)
+
+        response = self.get_status(job_id)
+        self.assertIn('object_id', response['result'])
+        object_id = response['result']['object_id']
+        journal_code = params['ojs_metadata']['ojs_journal_code']
+        self.assertTrue(object_id.startswith(f"journal-{journal_code}"))
 
         files_generated = [
             'parts/part_0001/data/origin/merged.pdf',
@@ -70,5 +82,5 @@ class IngestJournalTest(JobTypeTest):
             'ojs_import.xml'
         ]
         for file in files_generated:
-            self.assert_file_in_repository(job_id, file)
+            self.assert_file_in_repository(object_id, file)
         self.unstage_resource('pdf')

@@ -6,6 +6,10 @@ from workers.base_task import BaseTask
 from workers.default.ojs.ojs_api import publish, generate_frontmatters
 
 
+def _generate_object_id(journal_code, result):
+    return f"journal-{journal_code}-{result['published_issues'][0]}"
+
+
 class PublishToOJSTask(BaseTask):
     """
     Publish documents in the XML in the working directory via OJS-Plugin.
@@ -21,8 +25,11 @@ class PublishToOJSTask(BaseTask):
         work_path = self.get_work_path()
         data = self.get_param('ojs_metadata')
 
-        publish(os.path.join(work_path, 'ojs_import.xml'),
-                data['ojs_journal_code'])
+        _, result = publish(os.path.join(work_path, 'ojs_import.xml'),
+                            data['ojs_journal_code'])
+
+        object_id = _generate_object_id(data['ojs_journal_code'], result)
+        return {'object_id': object_id}
 
 
 class GenerateFrontmatterTask(BaseTask):

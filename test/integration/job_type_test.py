@@ -45,6 +45,15 @@ class JobTypeTest(unittest.TestCase):
 
     def assert_file_in_repository(self, object_id, file_path,
                                   wait_time=default_wait_time):
+        """
+        Assert that a file is present in the repository.
+
+        :param str object_id:
+        :param str file_path:
+        :param int wait_time: Time in ms to wait for the file to appear
+            before failing
+        :return:
+        """
         waited = 0
         file = Path(os.path.join(self.repository_dir, object_id, file_path))
         while not file.is_file():
@@ -57,11 +66,21 @@ class JobTypeTest(unittest.TestCase):
                 time.sleep(0.001 * retry_time)
 
     def assert_job_successful(self, task_ids, wait_time=default_wait_time):
+        """
+        Assert that a job completed successfully.
+
+        Fails if one of the tasks given is in failure state or when wait time
+        is reached.
+
+        :param str task_ids:
+        :param int wait_time: Time in ms to wait before failing
+        :return:
+        """
         waited = 0
         success = False
         while not success:
             for task_id in task_ids:
-                status = self.get_status(task_id)
+                status = self.get_status(task_id)['status']
                 if status == 'FAILURE':
                     raise AssertionError("child task in FAILURE state")
                 elif status == 'SUCCESS':
@@ -77,6 +96,14 @@ class JobTypeTest(unittest.TestCase):
 
     def assert_status(self, job_id, expected_status,
                       wait_time=default_wait_time):
+        """
+        Assert that a job has a certain status.
+
+        :param str job_id:
+        :param str expected_status:
+        :param int wait_time: Time in ms to wait before failing
+        :return:
+        """
         waited = 0
         status = self.get_status(job_id)
         while status != expected_status:
@@ -86,14 +113,31 @@ class JobTypeTest(unittest.TestCase):
                 raise AssertionError(f"experienced timeout while waiting for "
                                      f"status '{expected_status}', last status "
                                      f"was '{status}'")
-            status = self.get_status(job_id)
+            status = self.get_status(job_id)['status']
 
     def get_status(self, job_id):
+        """
+        Get the job status.
+
+        This includes the status string and an optional result object.
+
+        :param str job_id:
+        :return dict:
+        """
         response = self.client.get(f'/job/{job_id}')
-        data = json.loads(response.get_data(as_text=True))
-        return data['status']
+        return json.loads(response.get_data(as_text=True))
 
     def post_job(self, job_type, data):
+        """
+        Create a new job.
+
+        The result object contains the job_id for the new job that can be used
+        to query the status and result.
+
+        :param str job_type:
+        :param data: Parameters passed to the job
+        :return tuple: The result object and the HTTP status code
+        """
         response = self.client.post(
             f'/job/{job_type}',
             data=json.dumps(data),
@@ -107,6 +151,13 @@ class JobTypeTest(unittest.TestCase):
         return data, response.status_code
 
     def stage_resource(self, folder, path):
+        """
+        Copy a resource (file oder folder) to the staging folder.
+
+        :param str folder: The source folder
+        :param str path: The relative path to the resource
+        :return:
+        """
         source = os.path.join(self.resource_dir, folder, path)
         target = os.path.join(self.staging_dir, test_user, path)
         try:
@@ -115,6 +166,12 @@ class JobTypeTest(unittest.TestCase):
             pass
 
     def unstage_resource(self, path):
+        """
+        Removes a resource (file or folder) from the staging folder.
+
+        :param str path: The relative path to the resource in the staging folder
+        :return:
+        """
         source = os.path.join(self.staging_dir, test_user, path)
         try:
             shutil.rmtree(source)
@@ -122,6 +179,12 @@ class JobTypeTest(unittest.TestCase):
             pass
 
     def remove_object_from_repository(self, object_id):
+        """
+        Remove an object from the repository.
+
+        :param str object_id:
+        :return:
+        """
         source = os.path.join(self.repository_dir, object_id)
         try:
             shutil.rmtree(source)
@@ -129,6 +192,13 @@ class JobTypeTest(unittest.TestCase):
             pass
 
     def load_params_from_file(self, folder, path):
+        """
+        Loads job params from a JSON file.
+
+        :param str folder: The source folder
+        :param str path: The relative path to the JSON file
+        :return: The parsed JSON
+        """
         source = os.path.join(self.resource_dir, folder, path)
         with open(source) as data_object:
             data = json.load(data_object)

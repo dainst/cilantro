@@ -1,3 +1,4 @@
+import json
 from urllib.request import Request, urlopen
 
 server = "ojs"
@@ -66,4 +67,4 @@ def _make_request(url, headers, import_data=None):
     with urlopen(request) as response:
         response_text = response.read().decode('utf-8')
 
-    return response.getcode(), response_text
+    return response.getcode(), json.loads(response_text)
