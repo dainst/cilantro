@@ -178,3 +178,31 @@ class FileTask(BaseTask):
         :return None:
         """
         raise NotImplementedError("Process file method not implemented")
+
+
+class ObjectTask(BaseTask):
+    """
+    Abstract base class for object based tasks.
+
+    Subclasses have to override the process_object method that holds the
+    actual transformation logic.
+    """
+
+    def get_object(self):
+        return Object(self.get_work_path())
+
+    def execute_task(self):
+        self.process_object(self.get_object())
+
+    @abstractmethod
+    def process_object(self, obj):
+        """
+        Process a single object.
+
+        This method has to be implemented by all subclassed tasks and includes
+        the actual implementation logic of the specific task.
+
+        :param Object obj: The cilantro object that should be processed
+        :return None:
+        """
+        raise NotImplementedError("Process object method not implemented")
