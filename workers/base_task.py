@@ -151,7 +151,10 @@ class FileTask(BaseTask):
 
     def execute_task(self):
         file = self.get_param('work_path')
-        target_rep = self.get_param('target')
+        try:
+            target_rep = self.get_param('target')
+        except KeyError:
+            target_rep = os.path.dirname(file)
         target_dir = os.path.join(self.get_work_path(),
                                   Object.DATA_DIR, target_rep)
         os.makedirs(target_dir, exist_ok=True)
