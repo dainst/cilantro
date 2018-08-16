@@ -2,7 +2,7 @@ import os
 import shutil
 
 from utils.celery_client import celery_app
-from workers.base_task import BaseTask
+from workers.base_task import BaseTask, ObjectTask
 from utils.object import Object
 from workers.convert.convert_pdf import split_merge_pdf
 
@@ -11,7 +11,7 @@ working_dir = os.environ['WORKING_DIR']
 staging_dir = os.environ['STAGING_DIR']
 
 
-class CreateObjectTask(BaseTask):
+class CreateObjectTask(ObjectTask):
     """
     Create a Cilantro-Object, the metadatas and the data files in it.
     Split and merge pdf given files.
@@ -30,9 +30,8 @@ class CreateObjectTask(BaseTask):
     """
     name = "create_object"
 
-    def execute_task(self):
+    def process_object(self, obj):
         user = self.get_param('user')
-        obj = Object(self.get_work_path())
         _initialize_object(obj, self.params, user)
         return {'object_id': self._get_object_id()}
 

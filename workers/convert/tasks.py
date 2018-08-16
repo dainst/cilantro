@@ -1,7 +1,7 @@
 import os
 
 from utils.celery_client import celery_app
-from workers.base_task import BaseTask, FileTask
+from workers.base_task import BaseTask, FileTask, ObjectTask
 from workers.convert.convert_image import convert_tif_to_jpg
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf
 from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
@@ -38,7 +38,7 @@ def _get_target_file(file, target_dir, target_extension):
     return os.path.join(target_dir, new_name)
 
 
-class SplitPdfTask(BaseTask):
+class SplitPdfTask(ObjectTask):
     """
     Split multiple pdfs from the working dir.
 
@@ -55,8 +55,7 @@ class SplitPdfTask(BaseTask):
     """
     name = "convert.split_pdf"
 
-    def execute_task(self):
-        obj = Object(self.get_work_path())
+    def process_object(self, obj):
         rel_files = _extract_basename(self.get_param('files'))
         _split_pdf_for_object(obj, rel_files)
         parts = self.get_param('parts')

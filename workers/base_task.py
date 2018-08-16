@@ -192,7 +192,7 @@ class ObjectTask(BaseTask):
         return Object(self.get_work_path())
 
     def execute_task(self):
-        self.process_object(self.get_object())
+        return self.process_object(self.get_object())
 
     @abstractmethod
     def process_object(self, obj):
@@ -203,6 +203,6 @@ class ObjectTask(BaseTask):
         the actual implementation logic of the specific task.
 
         :param Object obj: The cilantro object that should be processed
-        :return None:
+        :return dict:
         """
         raise NotImplementedError("Process object method not implemented")
