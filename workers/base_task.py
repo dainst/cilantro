@@ -5,6 +5,7 @@ from abc import abstractmethod
 import celery.signals
 from celery.task import Task
 
+from utils.object import Object
 from utils.setup_logging import setup_logging
 
 
@@ -138,3 +139,34 @@ class BaseTask(Task):
         if 'result' not in self.params:
             self.params['result'] = {}
         self.log.debug(f"initialized params: {self.params}")
+
+
+class FileTask(BaseTask):
+    """
+    Abstract base class for file based tasks.
+
+    Subclasses have to override the process_file method that holds the
+    actual conversion logic.
+    """
+
+    def execute_task(self):
+        file = self.get_param('work_path')
+        target_rep = self.get_param('target')
+        target_dir = os.path.join(self.get_work_path(),
+                                  Object.DATA_DIR, target_rep)
+        os.makedirs(target_dir, exist_ok=True)
+        self.process_file(file, target_dir)
+
+    @abstractmethod
+    def process_file(self, file, target_dir):
+        """
+        Process a single file.
+
+        This method has to be implemented by all subclassed tasks and includes
+        the actual implementation logic of the specific task.
+
+        :param str file: The path to the file that should be processed
+        :param str target_dir: The path of the target directory
+        :return None:
+        """
+        raise NotImplementedError("Process file method not implemented")

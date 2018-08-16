@@ -1,8 +1,7 @@
 import os
-from abc import abstractmethod
 
 from utils.celery_client import celery_app
-from workers.base_task import BaseTask
+from workers.base_task import BaseTask, FileTask
 from workers.convert.convert_image import convert_tif_to_jpg
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf
 from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
@@ -94,38 +93,7 @@ class MergeConvertedPdfTask(BaseTask):
         split_merge_pdf(files, rep_dir)
 
 
-class ConvertTask(BaseTask):
-    """
-    Abstract base class for conversion tasks.
-
-    Subclasses have to override the process_file method that holds the
-    actual conversion logic.
-    """
-
-    def execute_task(self):
-        file = self.get_param('work_path')
-        target_rep = self.get_param('target')
-        target_dir = os.path.join(self.get_work_path(),
-                                  Object.DATA_DIR, target_rep)
-        os.makedirs(target_dir, exist_ok=True)
-        self.process_file(file, target_dir)
-
-    @abstractmethod
-    def process_file(self, file, target_dir):
-        """
-        Process a single file.
-
-        This method has to be implemented by all subclassed tasks and includes
-        the actual implementation logic of the specific task.
-
-        :param str file: The path to the file that should be processed
-        :param str target_dir: The path of the target directory
-        :return None:
-        """
-        raise NotImplementedError("Process file method not implemented")
-
-
-class JpgToPdfTask(ConvertTask):
+class JpgToPdfTask(FileTask):
     """
     Create a one paged pdf with a jpg.
 
@@ -145,7 +113,7 @@ class JpgToPdfTask(ConvertTask):
         convert_jpg_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
 
 
-class TifToJpgTask(ConvertTask):
+class TifToJpgTask(FileTask):
     """
     Create a jpg file from a tif.
 
@@ -165,7 +133,7 @@ class TifToJpgTask(ConvertTask):
         convert_tif_to_jpg(file, _get_target_file(file, target_dir, 'jpg'))
 
 
-class PdfToTxtTask(ConvertTask):
+class PdfToTxtTask(FileTask):
     """
     Extract text from a pdf and create a txt file for every page.
 
@@ -186,7 +154,7 @@ class PdfToTxtTask(ConvertTask):
         convert_pdf_to_txt(file, target_dir)
 
 
-class PdfToTifTask(ConvertTask):
+class PdfToTifTask(FileTask):
     """
     Create a tif file for every page of a pdf.
 
@@ -207,7 +175,7 @@ class PdfToTifTask(ConvertTask):
         convert_pdf_to_tif(file, target_dir)
 
 
-class TifToTxtTask(ConvertTask):
+class TifToTxtTask(FileTask):
     """
     Do OCR on a tif file and save the results as txt.
 
