@@ -21,7 +21,7 @@ class AnnotateTask(BaseTask):
 
     def execute_task(self):
         params = self.get_param('nlp_params')
-        text_file = self.get_param('file')
+        text_file = self.get_param('work_path')
         _, extension = os.path.splitext(text_file)
         output_file = os.path.join(
             os.path.dirname(text_file),

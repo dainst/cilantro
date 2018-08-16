@@ -51,7 +51,7 @@ class ListFilesTask(BaseTask):
         for file in files:
             params = self.params.copy()
             params['job_id'] = self.job_id
-            params['file'] = file
+            params['work_path'] = file
 
             chain = generate_chain(subtasks, params)
             group_tasks.append(chain)

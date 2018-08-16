@@ -103,7 +103,7 @@ class ConvertTask(BaseTask):
     """
 
     def execute_task(self):
-        file = self.get_param('file')
+        file = self.get_param('work_path')
         target_rep = self.get_param('target')
         target_dir = os.path.join(self.get_work_path(),
                                   Object.DATA_DIR, target_rep)
