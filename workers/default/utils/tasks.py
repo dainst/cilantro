@@ -87,9 +87,9 @@ class ListPartsTask(BaseTask):
         group_tasks = []
         for part_path in os.listdir(parts_path):
             params = self.params.copy()
-            params['job_id'] = os.path.join(params['job_id'],
-                                            Object.PARTS_DIR,
-                                            os.path.basename(part_path))
+            params['work_path'] = os.path.join(params['work_path'],
+                                               Object.PARTS_DIR,
+                                               os.path.basename(part_path))
             chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
         return group(group_tasks)

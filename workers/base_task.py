@@ -72,7 +72,7 @@ class BaseTask(Task):
     log = logging.getLogger(__name__)
 
     def get_work_path(self):
-        abs_path = os.path.join(self.working_dir, self.job_id)
+        abs_path = os.path.join(self.working_dir, self.work_path)
         if not os.path.exists(abs_path):
             os.mkdir(abs_path)
         return abs_path
@@ -136,6 +136,10 @@ class BaseTask(Task):
             self.job_id = params['job_id']
         except KeyError:
             raise KeyError("job_id has to be set before running a task")
+        try:
+            self.work_path = params['work_path']
+        except KeyError:
+            raise KeyError("work_path has to be set before running a task")
         if 'result' not in self.params:
             self.params['result'] = {}
         self.log.debug(f"initialized params: {self.params}")
@@ -148,15 +152,16 @@ class FileTask(BaseTask):
     Subclasses have to override the process_file method that holds the
     actual conversion logic.
     """
-
     def execute_task(self):
         file = self.get_param('work_path')
         try:
             target_rep = self.get_param('target')
         except KeyError:
-            target_rep = os.path.dirname(file)
-        target_dir = os.path.join(self.get_work_path(),
-                                  Object.DATA_DIR, target_rep)
+            target_rep = os.path.basename(os.path.dirname(file))
+        target_dir = os.path.join(
+            os.path.dirname(os.path.dirname(self.get_work_path())),
+            target_rep
+        )
         os.makedirs(target_dir, exist_ok=True)
         self.process_file(file, target_dir)
 
