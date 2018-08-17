@@ -36,7 +36,7 @@ class GenerateXMLTest(unittest.TestCase):
             template_file.close()
 
             articles_meta = []
-            for part in obj.get_children():
+            for part in obj.get_parts():
                 articles_meta.append(part.metadata.to_dict())
 
             data = {'data': {

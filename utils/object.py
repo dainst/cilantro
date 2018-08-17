@@ -160,8 +160,8 @@ class Object:
         :return List[str]:
         """
         representations = []
-        if os.path.exists(self._get_data_dir()):
-            representations = os.listdir(self._get_data_dir())
+        if os.path.exists(self.get_data_dir()):
+            representations = os.listdir(self.get_data_dir())
             representations.sort()
         return representations
 
@@ -197,37 +197,43 @@ class Object:
         self.metadata = ObjectMetadata.from_dict(d)
         self.write()
 
-    def add_child(self):
+    def add_part(self):
         """
         Add a sub-object to this object.
 
         Creates a new part_XXXX folder under parts. Also creates the parts
         folder if it does not exist already.
 
-        :return: Object
+        :return: Object:
         """
-        if not os.path.exists(self._get_part_dir()):
-            os.makedirs(self._get_part_dir())
-            path = os.path.join(self._get_part_dir(), f"{self.PART_PREFIX}0001")
+        if not os.path.exists(self.get_parts_dir()):
+            os.makedirs(self.get_parts_dir())
+            path = os.path.join(self.get_parts_dir(), f"{self.PART_PREFIX}0001")
             return Object(path)
-        part_no = len(os.listdir(self._get_part_dir())) + 1
-        return self.get_child(part_no)
+        part_no = len(os.listdir(self.get_parts_dir())) + 1
+        return self.get_part(part_no)
 
-    def get_child(self, index: int):
+    def get_part(self, index: int):
+        """
+        Get a sub-object of this object by index.
+
+        :param index:
+        :return Object:
+        """
         return Object(self._get_part_dir_for_index(index))
 
-    def get_children(self):
+    def get_parts(self):
         """
-        Get all sub-objects of this object
+        Get all sub-objects of this object.
 
         :return Iterator[Object]:
         """
         sub_objects = []
-        if os.path.isdir(self._get_part_dir()):
-            for d in [d for d in os.listdir(self._get_part_dir()) if
-                      os.path.isdir(os.path.join(self._get_part_dir(), d))]:
+        if os.path.isdir(self.get_parts_dir()):
+            for d in [d for d in os.listdir(self.get_parts_dir()) if
+                      os.path.isdir(os.path.join(self.get_parts_dir(), d))]:
                 if _is_part_dir_format(d):
-                    sub_objects.append(Object(os.path.join(self._get_part_dir(), d)))
+                    sub_objects.append(Object(os.path.join(self.get_parts_dir(), d)))
         sub_objects.sort(key=lambda obj: obj.path)
         return iter(sub_objects)
 
@@ -240,18 +246,34 @@ class Object:
         """
         copy_tree(self.path, path)
 
-    def _get_part_dir(self):
+    def get_parts_dir(self):
+        """
+        Return the path to the parts directory.
+
+        :return str:
+        """
         return os.path.join(self.path, self.PARTS_DIR)
 
-    def _get_data_dir(self):
+    def get_data_dir(self):
+        """
+        Return the path to the data directory.
+
+        :return str:
+        """
         return os.path.join(self.path, self.DATA_DIR)
+
+    def get_representation_dir(self, representation: str):
+        """
+        Return the path to a representation directory.
+
+        :param str representation: The name of the representation
+        :return str:
+        """
+        return os.path.join(self.get_data_dir(), representation)
 
     def _get_part_dir_for_index(self, index: int):
         part_name = f"{Object.PART_PREFIX}{str(index).zfill(4)}"
-        return os.path.join(self._get_part_dir(), part_name)
-
-    def get_representation_dir(self, representation: str):
-        return os.path.join(self._get_data_dir(), representation)
+        return os.path.join(self.get_parts_dir(), part_name)
 
 
 def _is_part_dir_format(dir_name):
