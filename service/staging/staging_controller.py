@@ -52,14 +52,13 @@ def get_path(path):
     """
     Retrieve a file or folder content from the staging folder.
 
-    Returns HTTP status code 404 if file was not found
+    Returns HTTP status code 404 if file was not found.
 
-    Return A JSON array containing all file names, it it's a direcotry
+    Returns A JSON array containing all file names, if it's a directory.
 
-    Returns the file's content if it's a file
+    Returns the file's content if it's a file.
 
     :param str path: path to file
-    :return:
     """
     abs_path = os.path.join(staging_dir, auth.username(), path)
     if os.path.isdir(abs_path):
@@ -77,8 +76,8 @@ def upload_to_staging():
     """
     Upload files to the staging area.
 
-    If the names of the given files contain folders these are created in the
-    staging area if they are not already present.
+    If the names of the given files contain folders, these are created in the
+    staging area if not already present.
 
     The upload endpoint is able to handle single and multiple files provided
     under any key.
@@ -86,9 +85,9 @@ def upload_to_staging():
     Returns HTTP status code 415 if one of the files' extension is not allowed.
 
     Returns HTTP status code 400 if no files were provided.
-    Returns HTTP status code 200 else
+    Returns HTTP status code 200 otherwise.
 
-    :return: A JSON object with format:
+    Format of the returned JSON object:
 
         {
             "result": {
@@ -102,6 +101,7 @@ def upload_to_staging():
             }
         }
 
+    :return: a JSON object
     """
     logger.debug(f"Uploading {len(request.files)} files")
     results = {}
