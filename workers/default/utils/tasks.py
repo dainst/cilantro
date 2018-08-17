@@ -4,7 +4,6 @@ import shutil
 
 from celery import group
 
-from utils.object import Object
 from utils.celery_client import celery_app
 from service.job.job_config import generate_chain
 from workers.base_task import BaseTask, ObjectTask
@@ -19,7 +18,7 @@ def _list_files_by_pattern(rep_path, pattern):
     return files
 
 
-class ListFilesTask(BaseTask):
+class ListFilesTask(ObjectTask):
     """
     Run a task list for every file in a given representation.
 
@@ -38,11 +37,11 @@ class ListFilesTask(BaseTask):
     """
     name = "list_files"
 
-    def execute_task(self):
+    def process_object(self, obj):
         rep = self.get_param('representation')
         subtasks = self.get_param('subtasks')
         pattern = self.get_param('pattern')
-        rep_path = os.path.join(self.get_work_path(), Object.DATA_DIR, rep)
+        rep_path = obj.get_representation_dir(rep)
         files = _list_files_by_pattern(rep_path, pattern)
         raise self.replace(self._generate_group_for_files(files, subtasks))
 
