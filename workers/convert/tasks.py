@@ -60,14 +60,14 @@ class SplitPdfTask(ObjectTask):
         _split_pdf_for_object(obj, rel_files)
         parts = self.get_param('parts')
         for part in parts:
-            self._execute_for_child(obj.get_child(parts.index(part) + 1), part)
+            self._execute_for_part(obj.get_part(parts.index(part) + 1), part)
 
-    def _execute_for_child(self, obj, part):
+    def _execute_for_part(self, obj, part):
         _split_pdf_for_object(obj, _extract_basename(part['files']))
         if 'parts' in part:
             parts = part['parts']
             for subpart in parts:
-                self._execute_for_child(obj.get_child(parts.index(subpart) + 1), subpart)
+                self._execute_for_part(obj.get_part(parts.index(subpart) + 1), subpart)
 
 
 class MergeConvertedPdfTask(BaseTask):

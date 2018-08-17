@@ -83,7 +83,7 @@ class ListPartsTask(ObjectTask):
 
     def _generate_group_for_parts(self, obj, subtasks):
         group_tasks = []
-        for part in obj.get_children():
+        for part in obj.get_parts():
             params = self.params.copy()
             params['work_path'] = part.path
             chain = generate_chain(subtasks, params)

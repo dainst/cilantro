@@ -12,7 +12,7 @@ def generate_marc_xml(obj: Object, template, target_filename='marc.xml'):
     :return: None
     """
 
-    for part in obj.get_children():
+    for part in obj.get_parts():
         data = {**part.metadata.to_dict(), **obj.metadata.to_dict()}
         generate_xml(part.path,
                      data,

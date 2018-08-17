@@ -57,7 +57,7 @@ class GenerateXMLTask(ObjectTask):
 
     def process_object(self, obj):
         articles_meta = []
-        for part in obj.get_children():
+        for part in obj.get_parts():
             articles_meta.append({
                 **part.metadata.to_dict(),
                 'filepath': os.path.join(part.get_representation_dir(

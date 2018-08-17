@@ -54,7 +54,7 @@ def _initialize_object(obj, params, user):
         _add_files(obj, params['files'], user)
     if 'parts' in params:
         for part in params['parts']:
-            _initialize_object(obj.add_child(), part, user)
+            _initialize_object(obj.add_part(), part, user)
 
 
 def _add_files(obj, files, user):

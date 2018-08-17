@@ -197,26 +197,32 @@ class Object:
         self.metadata = ObjectMetadata.from_dict(d)
         self.write()
 
-    def add_child(self):
+    def add_part(self):
         """
         Add a sub-object to this object.
 
         Creates a new part_XXXX folder under parts. Also creates the parts
         folder if it does not exist already.
 
-        :return: Object
+        :return: Object:
         """
         if not os.path.exists(self.get_parts_dir()):
             os.makedirs(self.get_parts_dir())
             path = os.path.join(self.get_parts_dir(), f"{self.PART_PREFIX}0001")
             return Object(path)
         part_no = len(os.listdir(self.get_parts_dir())) + 1
-        return self.get_child(part_no)
+        return self.get_part(part_no)
 
-    def get_child(self, index: int):
+    def get_part(self, index: int):
+        """
+        Get a sub-object of this object by index.
+
+        :param index:
+        :return Object:
+        """
         return Object(self._get_part_dir_for_index(index))
 
-    def get_children(self):
+    def get_parts(self):
         """
         Get all sub-objects of this object.
 
