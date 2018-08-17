@@ -1,5 +1,6 @@
 import os
 import logging
+import shutil
 
 from flask import Blueprint, jsonify, request, send_file
 from werkzeug.utils import secure_filename
@@ -29,6 +30,27 @@ def _list_dir(dir_path):
                 "name": entry.name,
                 "contents": _list_dir(os.path.join(dir_path, entry.name))})
     return tree
+
+
+@staging_controller.route('/<path:path>', methods=['DELETE'],
+                          strict_slashes=False)
+@auth.login_required
+def delete_from_staging(path):
+    """
+    Delete file or directory from the staging area.
+
+    :param str path: path to file or directory to be deleted
+    """
+    try:
+        os.remove(os.path.join(staging_dir, auth.username(), path))
+    except (FileNotFoundError, IsADirectoryError):
+        try:
+            shutil.rmtree(os.path.join(staging_dir, auth.username(), path))
+        except FileNotFoundError:
+            raise ApiError("file_not_found",
+                           f"No resource was found under the path {path}", 404)
+
+    return jsonify({"success": True}), 200
 
 
 @staging_controller.route('', methods=['GET'], strict_slashes=False)

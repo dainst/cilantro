@@ -96,6 +96,36 @@ class StagingControllerTest(unittest.TestCase):
         self.assertFalse(response_json['success'])
         self.assertEqual(response_json['error']['code'], "file_not_found")
 
+    def test_delete_file(self):
+        self._copy_object_to_staging('objects', test_object)
+        response = self.client.delete(f'/staging/{test_object}',
+                                      headers=get_auth_header())
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_folder(self):
+        self._copy_object_to_staging('objects', test_object)
+        response = self.client.delete(f'/staging/{test_object}',
+                                      headers=get_auth_header())
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_file_in_folder(self):
+        self._copy_object_to_staging('objects', test_object)
+        response = self.client.delete(
+            f'/staging/{test_object}/test_directory/test2.tiff',
+            headers=get_auth_header())
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_folder_in_folder(self):
+        self._copy_object_to_staging('objects', test_object)
+        response = self.client.delete(f'/staging/{test_object}/test_directory',
+                                      headers=get_auth_header())
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_file_not_found(self):
+        response = self.client.delete(f'/staging/{test_object}/{test_file}',
+                                      headers=get_auth_header())
+        self.assertEqual(response.status_code, 404)
+
     def _upload_folder_to_staging(self, obj):
         object_path = os.path.join(self.resource_dir, 'objects', obj)
         files = []
@@ -106,7 +136,8 @@ class StagingControllerTest(unittest.TestCase):
         try:
             for path in file_paths:
                 if os.path.isfile(path):
-                    relpath = os.path.relpath(path,os.path.dirname(object_path))
+                    relpath = os.path.relpath(path,
+                                              os.path.dirname(object_path))
                     file = (open(path, 'rb'), relpath)
                     files.append(file)
             return self._upload_to_staging({'files': files})
@@ -119,8 +150,7 @@ class StagingControllerTest(unittest.TestCase):
             '/staging',
             content_type='multipart/form-data',
             data=data,
-            headers=get_auth_header()
-        )
+            headers=get_auth_header())
 
     def _assert_file_in_staging(self, file_path):
         file = Path(os.path.join(self.staging_dir, test_user, file_path))
