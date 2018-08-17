@@ -7,7 +7,7 @@ from celery import group
 from utils.object import Object
 from utils.celery_client import celery_app
 from service.job.job_config import generate_chain
-from workers.base_task import BaseTask
+from workers.base_task import BaseTask, ObjectTask
 
 
 def _list_files_by_pattern(rep_path, pattern):
@@ -61,7 +61,7 @@ class ListFilesTask(BaseTask):
 ForeachTask = celery_app.register_task(ListFilesTask())
 
 
-class ListPartsTask(BaseTask):
+class ListPartsTask(ObjectTask):
     """
     Run a task list for every part of the current object.
 
@@ -78,18 +78,15 @@ class ListPartsTask(BaseTask):
     """
     name = "list_parts"
 
-    def execute_task(self):
+    def process_object(self, obj):
         subtasks = self.get_param('subtasks')
-        parts_path = os.path.join(self.get_work_path(), Object.PARTS_DIR)
-        raise self.replace(self._generate_group_for_parts(parts_path, subtasks))
+        raise self.replace(self._generate_group_for_parts(obj, subtasks))
 
-    def _generate_group_for_parts(self, parts_path, subtasks):
+    def _generate_group_for_parts(self, obj, subtasks):
         group_tasks = []
-        for part_path in os.listdir(parts_path):
+        for part in obj.get_children():
             params = self.params.copy()
-            params['work_path'] = os.path.join(params['work_path'],
-                                               Object.PARTS_DIR,
-                                               os.path.basename(part_path))
+            params['work_path'] = part.path
             chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
         return group(group_tasks)
