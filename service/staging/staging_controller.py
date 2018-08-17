@@ -1,7 +1,7 @@
 import os
 import logging
 
-from flask import Blueprint, jsonify, request, send_file, abort
+from flask import Blueprint, jsonify, request, send_file
 from werkzeug.utils import secure_filename
 
 from service.errors import ApiError
@@ -22,14 +22,12 @@ def _list_dir(dir_path):
         if entry.is_file():
             tree.append({
                 "type": "file",
-                "name": entry.name
-            })
+                "name": entry.name})
         else:
             tree.append({
                 "type": "directory",
                 "name": entry.name,
-                "contents": _list_dir(os.path.join(dir_path, entry.name))
-            })
+                "contents": _list_dir(os.path.join(dir_path, entry.name))})
     return tree
 
 
@@ -43,16 +41,12 @@ def list_staging():
 
     :return: JSON array containing objects for files and folders
     """
-
     tree = _list_dir(os.path.join(staging_dir, auth.username()))
     return jsonify(tree)
 
 
-@staging_controller.route(
-    '/<path:path>',
-    methods=['GET'],
-    strict_slashes=False
-)
+@staging_controller.route('/<path:path>', methods=['GET'],
+                          strict_slashes=False)
 @auth.login_required
 def get_path(path):
     """
@@ -109,7 +103,6 @@ def upload_to_staging():
         }
 
     """
-
     logger.debug(f"Uploading {len(request.files)} files")
     results = {}
 
@@ -132,15 +125,13 @@ def _process_file(file, username):
                 file,
                 "upload_failed",
                 "An unknown error occurred.",
-                e
-            )
+                e)
     else:
         return _generate_error_result(
             file,
             "extension_not_allowed",
             f"File extension .{_get_file_extension(file.filename)}"
-            f" is not allowed."
-        )
+            f" is not allowed.")
 
 
 def _generate_error_result(file, code, message, e=None):
@@ -151,9 +142,8 @@ def _generate_error_result(file, code, message, e=None):
         "success": False,
         "error": {
             "code": code,
-            "message": message
+            "message": message}
         }
-    }
 
 
 def _upload_file(file, username):
