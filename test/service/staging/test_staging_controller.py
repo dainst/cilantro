@@ -7,6 +7,7 @@ from pathlib import Path
 from run_service import app
 from test.service.user.user_utils import get_auth_header, test_user
 
+parent_folder = 'files'
 test_object = 'some_tiffs'
 test_file = 'test.tif'
 
@@ -19,14 +20,14 @@ class StagingControllerTest(unittest.TestCase):
         self.client = app.test_client()
 
     def tearDown(self):
-        object_path = os.path.join(self.resource_dir, 'objects', test_object)
+        object_path = os.path.join(self.resource_dir, parent_folder, test_object)
         for file_name in os.listdir(object_path):
             self._remove_file_from_staging(file_name)
         self._remove_file_from_staging(test_file)
         self._remove_dir_from_staging(test_object)
 
     def test_upload_single_file(self):
-        file_path = os.path.join(self.resource_dir, 'objects',
+        file_path = os.path.join(self.resource_dir, parent_folder,
                                  test_object, test_file)
         file = False
         try:
@@ -45,7 +46,7 @@ class StagingControllerTest(unittest.TestCase):
                 file[0].close()
 
     def test_upload_multiple_files(self):
-        object_path = os.path.join(self.resource_dir, 'objects', test_object)
+        object_path = os.path.join(self.resource_dir, parent_folder, test_object)
         response = self._upload_folder_to_staging(test_object)
         self.assertEqual(response.status_code, 200)
         self._assert_file_in_staging(os.path.join(test_object, test_file))
@@ -71,7 +72,7 @@ class StagingControllerTest(unittest.TestCase):
         self.assertEqual(response_json['error']['code'], "no_files_provided")
 
     def test_list_staging(self):
-        object_path = os.path.join(self.resource_dir, 'objects', test_object)
+        object_path = os.path.join(self.resource_dir, parent_folder, test_object)
         file_names = os.listdir(object_path)
         self._upload_folder_to_staging(test_object)
 
@@ -82,7 +83,7 @@ class StagingControllerTest(unittest.TestCase):
         self.assertEqual(len(contents), len(file_names))
 
     def test_get_file(self):
-        self._copy_object_to_staging('objects', test_object)
+        self._copy_object_to_staging(parent_folder, test_object)
         response = self.client.get(f'/staging/{test_object}/{test_file}',
                                    headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
@@ -97,7 +98,7 @@ class StagingControllerTest(unittest.TestCase):
         self.assertEqual(response_json['error']['code'], "file_not_found")
 
     def _upload_folder_to_staging(self, obj):
-        object_path = os.path.join(self.resource_dir, 'objects', obj)
+        object_path = os.path.join(self.resource_dir, parent_folder, obj)
         files = []
         file_paths = []
         for root, _, file_names in os.walk(object_path):

@@ -6,7 +6,7 @@ from test.integration.job_type_test import JobTypeTest
 class IngestJournalTest(JobTypeTest):
 
     def test_no_ocr(self):
-        self.stage_resource('objects', 'pdf')
+        self.stage_resource('files', 'test.pdf')
         params = self.load_params_from_file('params', 'a_journal.json')
 
         data, status_code = self.post_job('ingest_journal', params)
@@ -50,7 +50,7 @@ class IngestJournalTest(JobTypeTest):
         self.unstage_resource('pdf')
 
     def test_do_ocr(self):
-        self.stage_resource('objects', 'pdf')
+        self.stage_resource('files', 'test.pdf')
         params = self.load_params_from_file('params', 'a_journal_do_ocr.json')
 
         data, status_code = self.post_job('ingest_journal', params)

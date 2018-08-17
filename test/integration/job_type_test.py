@@ -161,7 +161,11 @@ class JobTypeTest(unittest.TestCase):
         source = os.path.join(self.resource_dir, folder, path)
         target = os.path.join(self.staging_dir, test_user, path)
         try:
-            shutil.copytree(source, target)
+            if os.path.isdir(source):
+                shutil.copytree(source, target)
+            else:
+                os.makedirs(os.path.dirname(target), exist_ok=True)
+                shutil.copyfile(source, target)
         except FileExistsError:
             pass
 

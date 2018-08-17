@@ -5,8 +5,8 @@ import unittest
 from flask import json
 from run_service import app
 
-test_object = 'pdf'
-test_file = 'e2e-testing.pdf'
+test_object = 'a_book'
+test_file = 'data/pdf/test.pdf'
 
 
 class RepositoryControllerTest(unittest.TestCase):
@@ -40,9 +40,10 @@ class RepositoryControllerTest(unittest.TestCase):
         self.assertIn(test_object, data)
 
     def test_list_dir(self):
-        data = self._get(f'/repository/{test_object}')
+        url = f'/repository/{test_object}/{os.path.dirname(test_file)}'
+        data = self._get(url)
         self.assertIsInstance(data, list)
-        self.assertIn(test_file, data)
+        self.assertIn(os.path.basename(test_file), data)
 
     def test_get_file(self):
         response = self.client.get(f'/repository/{test_object}/{test_file}')

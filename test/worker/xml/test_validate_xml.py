@@ -7,10 +7,10 @@ from workers.default.xml.xml_validator import validate_xml
 
 class ValidateXMLTest(unittest.TestCase):
 
-    ojs_xml_file = 'test/resources/objects/xml/ojs_import.xml'
-    ojs_xml_file_faulty = 'test/resources/objects/xml/ojs_import_faulty.xml'
-    marc_xml_file = 'test/resources/objects/xml/marc.xml'
-    marc_xml_file_faulty = 'test/resources/objects/xml/marc_faulty.xml'
+    ojs_xml_file = 'test/resources/files/ojs_import.xml'
+    ojs_xml_file_faulty = 'test/resources/files/ojs_import_faulty.xml'
+    marc_xml_file = 'test/resources/files/marc.xml'
+    marc_xml_file_faulty = 'test/resources/files/marc_faulty.xml'
     dtd_file = 'resources/ojs_import.dtd'
     marc_schema_file = 'resources/MARC21slim.xsd'
 

@@ -4,11 +4,11 @@
         "year": 2018,
         "number": "",
         "description": "[PDFs teilweise verf\u00fcgbar]",
-        "importFilePath": "e2e-testing.pdf",
+        "importFilePath": "test.pdf",
         "identification": "year"
     },
     "files": [{
-        "file": "pdf/e2e-testing.pdf",
+        "file": "test.pdf",
         "range": [
             1,
             5
@@ -35,7 +35,7 @@
                 "create_frontpage": false
             },
             "files": [{
-                "file": "pdf/e2e-testing.pdf",
+                "file": "test.pdf",
                 "range": [
                     1,
                     2
@@ -61,7 +61,7 @@
                 "create_frontpage": false
             },
             "files": [{
-                "file": "pdf/e2e-testing.pdf",
+                "file": "test.pdf",
                 "range": [
                     21,
                     23

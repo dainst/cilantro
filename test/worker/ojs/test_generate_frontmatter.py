@@ -24,7 +24,7 @@ class GenerateFrontmatterTest(unittest.TestCase):
         Therefore the normal test uses the even number IDs and the test
         expecting failure the odd numbers refenrecing txt instead of PDF.
         """
-        ojs_import_file = 'test/resources/objects/xml/ojs_import.xml'
+        ojs_import_file = 'test/resources/files/ojs_import.xml'
         _, response = publish(ojs_import_file, 'test')
         cls.published_articles.extend(response['published_articles'])
         _, response = publish(ojs_import_file, 'test')
