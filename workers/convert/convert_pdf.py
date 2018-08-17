@@ -11,7 +11,7 @@ def convert_pdf_to_txt(source_file, output_dir):
                                       f"to {output_dir}")
     with open(source_file, "rb") as input_stream:
         pdf = pdftotext.PDF(input_stream)
-        index = 1
+        index = 0
         # Needed as pdftotext is not a Python list with .index() capability.
         for page in pdf:
             if not os.path.exists(output_dir):
