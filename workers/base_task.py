@@ -105,8 +105,8 @@ class BaseTask(Task):
         the actual implementation logic of the specific task.
 
         Results have to be dicts or lists of results and are merged recursively
-        so that partial results in task chains accumulate and may be extended or
-        modified by following tasks.
+        so that partial results in task chains accumulate and may be extended
+        or modified by following tasks.
 
         Tasks do not have to return results, i.e. the result may be None.
 
@@ -161,7 +161,7 @@ class FileTask(BaseTask):
         target_dir = os.path.join(
             os.path.dirname(os.path.dirname(self.get_work_path())),
             target_rep
-        )
+            )
         os.makedirs(target_dir, exist_ok=True)
         self.process_file(file, target_dir)
 

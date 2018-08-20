@@ -14,6 +14,7 @@ staging_dir = os.environ['STAGING_DIR']
 class CreateObjectTask(ObjectTask):
     """
     Create a Cilantro-Object, the metadatas and the data files in it.
+
     Split and merge pdf given files.
 
     TaskParams:
@@ -28,6 +29,7 @@ class CreateObjectTask(ObjectTask):
     Creates:
     -An Object in the working dir
     """
+
     name = "create_object"
 
     def process_object(self, obj):
@@ -84,6 +86,7 @@ class PublishToRepositoryTask(BaseTask):
     Creates:
     -a copy of the work dir in the repository.
     """
+
     name = "publish_to_repository"
 
     def execute_task(self):

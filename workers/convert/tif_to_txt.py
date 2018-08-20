@@ -17,7 +17,6 @@ def tif_to_txt(source_file, target_file, language='eng'):
     :param str target_file: name of generated text-file
     :param str language: used by tesseract. Possible values: see above.
     """
-
     tools = pyocr.get_available_tools()
     if len(tools) == 0:
         log.error("No OCR tool found")
@@ -39,7 +38,7 @@ def tif_to_txt(source_file, target_file, language='eng'):
         Image.open(source_file),
         lang=lang,
         builder=pyocr.builders.TextBuilder()
-    )
+        )
 
     with open(target_file, 'w') as outfile:
         outfile.write(txt)

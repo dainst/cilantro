@@ -7,6 +7,12 @@ import PyPDF2
 
 
 def convert_pdf_to_txt(source_file, output_dir):
+    """
+    Create text file for every page of source-PDF file.
+
+    :param str source_file: PDF to generate text files from
+    :param str output_dir: target directory for generated files
+    """
     logging.getLogger(__name__).debug(f"Creating txt files from {source_file} "
                                       f"to {output_dir}")
     with open(source_file, "rb") as input_stream:
@@ -17,7 +23,8 @@ def convert_pdf_to_txt(source_file, output_dir):
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
             name = os.path.splitext(os.path.basename(source_file))[0]
-            output = open(os.path.join(output_dir, f'{name}_{index}.txt'), 'wb')
+            output = open(os.path.join(output_dir, f'{name}_{index}.txt'),
+                          'wb')
             output.write(page.encode('utf-8'))
             output.close()
             index = index + 1
@@ -25,15 +32,15 @@ def convert_pdf_to_txt(source_file, output_dir):
 
 def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
     """
-    Creates a PDF file by combining sections of other PDFs.
+    Create a PDF file by combining sections of other PDFs.
 
     File paths are relative to the path given in the parameters.
 
     :param list files: list of the source pdf files as dict in the format:
         {'file': relative_path, 'range': [start, end]}
     :param string path: The path to the dir where the created file go
-    :param string filename: name of the generated pdf file.
-    :param bool remove_old: if True, removes the files used for the split/merge.
+    :param string filename: name of the generated pdf file
+    :param bool remove_old: if True, remove the files used for the split/merge
     """
     os.makedirs(path, exist_ok=True)
     new_pdf = PyPDF2.PdfFileWriter()

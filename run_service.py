@@ -59,8 +59,8 @@ def handle_http_exception(error):
         "error": {
             "code": _to_snake_case(type(error).__name__),
             "message": str(error)
+            }
         }
-    }
     response = jsonify(dic)
     response.status_code = error.code
     return response

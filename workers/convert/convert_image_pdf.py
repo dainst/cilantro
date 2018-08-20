@@ -29,7 +29,8 @@ def convert_pdf_to_tif(source_file, output_dir):
 
 def convert_jpg_to_pdf(source_file, target_file):
     """
-    Makes a 1 Paged PDF Document from a jpg file.
+    Make a 1 Paged PDF Document from a jpg file.
+
     :param str source_file: path to the jpg
     :param str target_file: desired output path
     """

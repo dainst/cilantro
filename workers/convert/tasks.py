@@ -34,7 +34,8 @@ def _list_files(directory, extension):
 
 def _get_target_file(file, target_dir, target_extension):
     _, extension = os.path.splitext(file)
-    new_name = os.path.basename(file).replace(extension, f".{target_extension}")
+    new_name = os.path.basename(file).replace(extension,
+                                              f".{target_extension}")
     return os.path.join(target_dir, new_name)
 
 
@@ -53,6 +54,7 @@ class SplitPdfTask(ObjectTask):
     -for each article:
         -<file_name>.<article_no>.pdf in the working dir.
     """
+
     name = "convert.split_pdf"
 
     def process_object(self, obj):
@@ -67,7 +69,8 @@ class SplitPdfTask(ObjectTask):
         if 'parts' in part:
             parts = part['parts']
             for subpart in parts:
-                self._execute_for_part(obj.get_part(parts.index(subpart) + 1), subpart)
+                self._execute_for_part(obj.get_part(parts.index(subpart) + 1),
+                                       subpart)
 
 
 class MergeConvertedPdfTask(BaseTask):
@@ -82,6 +85,7 @@ class MergeConvertedPdfTask(BaseTask):
     Creates:
     -merged.pdf in the given representation
     """
+
     name = "convert.merge_converted_pdf"
 
     def execute_task(self):
@@ -106,6 +110,7 @@ class JpgToPdfTask(FileTask):
     Creates:
     -<file_name>.pdf in the working dir.
     """
+
     name = "convert.jpg_to_pdf"
 
     def process_file(self, file, target_dir):
@@ -126,6 +131,7 @@ class TifToJpgTask(FileTask):
     Creates:
     -<file_name>.jpg in the working dir
     """
+
     name = "convert.tif_to_jpg"
 
     def process_file(self, file, target_dir):
@@ -147,6 +153,7 @@ class PdfToTxtTask(FileTask):
     -for each page in file:
         -page.<page_no>.txt
     """
+
     name = "convert.pdf_to_txt"
 
     def process_file(self, file, target_dir):
@@ -168,6 +175,7 @@ class PdfToTifTask(FileTask):
     -for each page in file:
         -<page_no>.tif
     """
+
     name = "convert.pdf_to_tif"
 
     def process_file(self, file, target_dir):
@@ -188,6 +196,7 @@ class TifToTxtTask(FileTask):
     Creates:
     -<file_name>.txt
     """
+
     name = "convert.tif_to_txt"
 
     def process_file(self, file, target_dir):
