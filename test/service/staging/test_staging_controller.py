@@ -20,7 +20,8 @@ class StagingControllerTest(unittest.TestCase):
         self.client = app.test_client()
 
     def tearDown(self):
-        object_path = os.path.join(self.resource_dir, parent_folder, test_object)
+        object_path = os.path.join(self.resource_dir, parent_folder,
+                                   test_object)
         for file_name in os.listdir(object_path):
             self._remove_file_from_staging(file_name)
         self._remove_file_from_staging(test_file)
@@ -47,7 +48,8 @@ class StagingControllerTest(unittest.TestCase):
                 file[0].close()
 
     def test_upload_multiple_files(self):
-        object_path = os.path.join(self.resource_dir, parent_folder, test_object)
+        object_path = os.path.join(self.resource_dir, parent_folder,
+                                   test_object)
         response = self._upload_folder_to_staging(test_object)
         self.assertEqual(response.status_code, 200)
         self._assert_file_in_staging(os.path.join(test_object, test_file))
@@ -73,7 +75,8 @@ class StagingControllerTest(unittest.TestCase):
         self.assertEqual(response_json['error']['code'], "no_files_provided")
 
     def test_list_staging(self):
-        object_path = os.path.join(self.resource_dir, parent_folder, test_object)
+        object_path = os.path.join(self.resource_dir, parent_folder,
+                                   test_object)
         file_names = os.listdir(object_path)
         self._upload_folder_to_staging(test_object)
 
@@ -100,7 +103,8 @@ class StagingControllerTest(unittest.TestCase):
 
     def test_delete_file(self):
         os.makedirs(os.path.join(self.staging_dir, test_user))
-        open(os.path.join(self.staging_dir, test_user, 'test_file'), 'w').close()
+        open(os.path.join(self.staging_dir, test_user, 'test_file'), 'w')\
+            .close()
         response = self.client.delete(f'/staging/test_file',
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
@@ -113,13 +117,15 @@ class StagingControllerTest(unittest.TestCase):
 
     def test_delete_file_in_folder(self):
         os.makedirs(os.path.join(self.staging_dir, test_user, 'test_dir'))
-        open(os.path.join(self.staging_dir, test_user, 'test_dir', 'test_file'), 'w').close()
+        open(os.path.join(self.staging_dir, test_user, 'test_dir',
+                          'test_file'), 'w').close()
         response = self.client.delete(f'/staging/test_dir/test_file',
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
 
     def test_delete_folder_in_folder(self):
-        os.makedirs(os.path.join(self.staging_dir, test_user, 'test_dir', 'test_sub_dir'))
+        os.makedirs(os.path.join(self.staging_dir, test_user, 'test_dir',
+                    'test_sub_dir'))
         response = self.client.delete(f'/staging/test_dir/test_sub_dir',
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
