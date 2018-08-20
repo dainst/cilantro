@@ -6,7 +6,7 @@ class IngestBookTest(JobTypeTest):
     test_object_id = "test_object_2342"
 
     def test_success(self):
-        self.stage_resource('objects', 'some_tiffs')
+        self.stage_resource('files', 'some_tiffs')
         params = self.load_params_from_file('params', 'a_book.json')
 
         data, status_code = self.post_job('ingest_book', params)

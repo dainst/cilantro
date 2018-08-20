@@ -110,7 +110,7 @@ class ObjectTest(unittest.TestCase):
 
     def test_add_child(self):
         obj = Object(test_object_working_path)
-        subobj = obj.add_child()
+        subobj = obj.add_part()
         subobj.metadata.title = "A test object"
         subobj.add_file('jpg', test_file_path)
         obj.write()
@@ -126,7 +126,7 @@ class ObjectTest(unittest.TestCase):
     def test_get_children(self):
         _copy_test_object()
         obj = Object(test_object_working_path)
-        children = obj.get_children()
+        children = obj.get_parts()
         subobj = children.__next__()
         file = subobj.get_representation('jpg').__next__()
         self.assertIsInstance(file, BytesIO)

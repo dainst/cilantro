@@ -2,14 +2,14 @@ import os
 
 from utils.celery_client import celery_app
 
-from workers.base_task import BaseTask
+from workers.base_task import ObjectTask
 from workers.default.xml.xml_generator import generate_xml
 from workers.default.xml.marc_xml_generator import generate_marc_xml
 from workers.default.xml.xml_validator import validate_xml
 from utils.object import Object
 
 
-class GenerateMarcXMLTask(BaseTask):
+class GenerateMarcXMLTask(ObjectTask):
     """
     Generate marc-XML for every article based on a data.json file and validate.
 
@@ -26,9 +26,8 @@ class GenerateMarcXMLTask(BaseTask):
 
     name = "generate_marc_xml"
 
-    def execute_task(self):
+    def process_object(self, obj):
         work_path = self.get_work_path()
-        obj = Object(work_path)
         xml_template_string = _read_file(self.get_param('xml_template_path'))
         generate_marc_xml(obj, xml_template_string)
 
@@ -40,7 +39,7 @@ class GenerateMarcXMLTask(BaseTask):
             validate_xml(file_path, schema_file_path=marc_schema_file)
 
 
-class GenerateXMLTask(BaseTask):
+class GenerateXMLTask(ObjectTask):
     """
     Generate an XML based on a data.json file and validate it.
 
@@ -56,11 +55,9 @@ class GenerateXMLTask(BaseTask):
 
     name = "generate_xml"
 
-    def execute_task(self):
-        work_path = self.get_work_path()
-        obj = Object(work_path)
+    def process_object(self, obj):
         articles_meta = []
-        for part in obj.get_children():
+        for part in obj.get_parts():
             articles_meta.append({
                 **part.metadata.to_dict(),
                 'filepath': os.path.join(part.get_representation_dir(

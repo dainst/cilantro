@@ -3,14 +3,14 @@ import json
 import logging
 
 from utils.celery_client import celery_app
-from workers.base_task import BaseTask
+from workers.base_task import FileTask
 
 from workers.nlp.annotate.annotate import annotate
 
 log = logging.getLogger(__name__)
 
 
-class AnnotateTask(BaseTask):
+class AnnotateTask(FileTask):
     """
     Annotates a given text.
 
@@ -19,22 +19,22 @@ class AnnotateTask(BaseTask):
     """
     name = "nlp.annotate"
 
-    def execute_task(self):
+    def process_file(self, file, target_dir):
         params = self.get_param('nlp_params')
-        text_file = self.get_param('file')
-        _, extension = os.path.splitext(text_file)
-        output_file = os.path.join(
-            os.path.dirname(text_file),
-            os.path.basename(text_file).replace(extension, '.json'))
+        new_file = self.generate_filename(file, 'json')
+        new_file_path = os.path.join(target_dir, new_file)
 
-        with open(text_file, 'r') as file:
+        with open(file, 'r') as file:
             text = file.read().replace('\n', '')
         if text:
             result = annotate(text, params)
-            if not os.path.isdir(os.path.dirname(output_file)):
-                os.makedirs(os.path.dirname(output_file))
-            with open(output_file, 'w+') as file:
+            with open(new_file_path, 'w+') as file:
                 json.dump(result, file)
+
+    @staticmethod
+    def generate_filename(file, new_extension):
+        _, extension = os.path.splitext(file)
+        return os.path.basename(file).replace(extension, f".{new_extension}")
 
 
 AnnotateTask = celery_app.register_task(AnnotateTask())

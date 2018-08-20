@@ -1,8 +1,7 @@
 import os
-from abc import abstractmethod
 
 from utils.celery_client import celery_app
-from workers.base_task import BaseTask
+from workers.base_task import BaseTask, FileTask, ObjectTask
 from workers.convert.convert_image import convert_tif_to_jpg
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf
 from workers.convert.convert_image_pdf import convert_pdf_to_tif, \
@@ -39,7 +38,7 @@ def _get_target_file(file, target_dir, target_extension):
     return os.path.join(target_dir, new_name)
 
 
-class SplitPdfTask(BaseTask):
+class SplitPdfTask(ObjectTask):
     """
     Split multiple pdfs from the working dir.
 
@@ -56,20 +55,19 @@ class SplitPdfTask(BaseTask):
     """
     name = "convert.split_pdf"
 
-    def execute_task(self):
-        obj = Object(self.get_work_path())
+    def process_object(self, obj):
         rel_files = _extract_basename(self.get_param('files'))
         _split_pdf_for_object(obj, rel_files)
         parts = self.get_param('parts')
         for part in parts:
-            self._execute_for_child(obj.get_child(parts.index(part) + 1), part)
+            self._execute_for_part(obj.get_part(parts.index(part) + 1), part)
 
-    def _execute_for_child(self, obj, part):
+    def _execute_for_part(self, obj, part):
         _split_pdf_for_object(obj, _extract_basename(part['files']))
         if 'parts' in part:
             parts = part['parts']
             for subpart in parts:
-                self._execute_for_child(obj.get_child(parts.index(subpart) + 1), subpart)
+                self._execute_for_part(obj.get_part(parts.index(subpart) + 1), subpart)
 
 
 class MergeConvertedPdfTask(BaseTask):
@@ -94,38 +92,7 @@ class MergeConvertedPdfTask(BaseTask):
         split_merge_pdf(files, rep_dir)
 
 
-class ConvertTask(BaseTask):
-    """
-    Abstract base class for conversion tasks.
-
-    Subclasses have to override the process_file method that holds the
-    actual conversion logic.
-    """
-
-    def execute_task(self):
-        file = self.get_param('file')
-        target_rep = self.get_param('target')
-        target_dir = os.path.join(self.get_work_path(),
-                                  Object.DATA_DIR, target_rep)
-        os.makedirs(target_dir, exist_ok=True)
-        self.process_file(file, target_dir)
-
-    @abstractmethod
-    def process_file(self, file, target_dir):
-        """
-        Process a single file.
-
-        This method has to be implemented by all subclassed tasks and includes
-        the actual implementation logic of the specific task.
-
-        :param str file: The path to the file that should be processed
-        :param str target_dir: The path of the target directory
-        :return None:
-        """
-        raise NotImplementedError("Process file method not implemented")
-
-
-class JpgToPdfTask(ConvertTask):
+class JpgToPdfTask(FileTask):
     """
     Create a one paged pdf with a jpg.
 
@@ -145,7 +112,7 @@ class JpgToPdfTask(ConvertTask):
         convert_jpg_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
 
 
-class TifToJpgTask(ConvertTask):
+class TifToJpgTask(FileTask):
     """
     Create a jpg file from a tif.
 
@@ -165,7 +132,7 @@ class TifToJpgTask(ConvertTask):
         convert_tif_to_jpg(file, _get_target_file(file, target_dir, 'jpg'))
 
 
-class PdfToTxtTask(ConvertTask):
+class PdfToTxtTask(FileTask):
     """
     Extract text from a pdf and create a txt file for every page.
 
@@ -186,7 +153,7 @@ class PdfToTxtTask(ConvertTask):
         convert_pdf_to_txt(file, target_dir)
 
 
-class PdfToTifTask(ConvertTask):
+class PdfToTifTask(FileTask):
     """
     Create a tif file for every page of a pdf.
 
@@ -207,7 +174,7 @@ class PdfToTifTask(ConvertTask):
         convert_pdf_to_tif(file, target_dir)
 
 
-class TifToTxtTask(ConvertTask):
+class TifToTxtTask(FileTask):
     """
     Do OCR on a tif file and save the results as txt.
 

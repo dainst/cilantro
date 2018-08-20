@@ -5,6 +5,7 @@ from abc import abstractmethod
 import celery.signals
 from celery.task import Task
 
+from utils.object import Object
 from utils.setup_logging import setup_logging
 
 
@@ -67,14 +68,14 @@ class BaseTask(Task):
 
     working_dir = os.environ['WORKING_DIR']
     params = {}
-    job_id = None
+    work_path = None
     log = logging.getLogger(__name__)
 
     def get_work_path(self):
-        work_path = os.path.join(self.working_dir, self.job_id)
-        if not os.path.exists(work_path):
-            os.mkdir(work_path)
-        return work_path
+        abs_path = os.path.join(self.working_dir, self.work_path)
+        if not os.path.exists(abs_path):
+            os.mkdir(abs_path)
+        return abs_path
 
     def run(self, prev_result=None, **params):
         self._init_params(params)
@@ -135,6 +136,73 @@ class BaseTask(Task):
             self.job_id = params['job_id']
         except KeyError:
             raise KeyError("job_id has to be set before running a task")
+        try:
+            self.work_path = params['work_path']
+        except KeyError:
+            raise KeyError("work_path has to be set before running a task")
         if 'result' not in self.params:
             self.params['result'] = {}
         self.log.debug(f"initialized params: {self.params}")
+
+
+class FileTask(BaseTask):
+    """
+    Abstract base class for file based tasks.
+
+    Subclasses have to override the process_file method that holds the
+    actual conversion logic.
+    """
+    def execute_task(self):
+        file = self.get_param('work_path')
+        try:
+            target_rep = self.get_param('target')
+        except KeyError:
+            target_rep = os.path.basename(os.path.dirname(file))
+        target_dir = os.path.join(
+            os.path.dirname(os.path.dirname(self.get_work_path())),
+            target_rep
+        )
+        os.makedirs(target_dir, exist_ok=True)
+        self.process_file(file, target_dir)
+
+    @abstractmethod
+    def process_file(self, file, target_dir):
+        """
+        Process a single file.
+
+        This method has to be implemented by all subclassed tasks and includes
+        the actual implementation logic of the specific task.
+
+        :param str file: The path to the file that should be processed
+        :param str target_dir: The path of the target directory
+        :return None:
+        """
+        raise NotImplementedError("Process file method not implemented")
+
+
+class ObjectTask(BaseTask):
+    """
+    Abstract base class for object based tasks.
+
+    Subclasses have to override the process_object method that holds the
+    actual transformation logic.
+    """
+
+    def get_object(self):
+        return Object(self.get_work_path())
+
+    def execute_task(self):
+        return self.process_object(self.get_object())
+
+    @abstractmethod
+    def process_object(self, obj):
+        """
+        Process a single object.
+
+        This method has to be implemented by all subclassed tasks and includes
+        the actual implementation logic of the specific task.
+
+        :param Object obj: The cilantro object that should be processed
+        :return dict:
+        """
+        raise NotImplementedError("Process object method not implemented")

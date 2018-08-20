@@ -21,7 +21,7 @@
                     <galley>
                         <label>PDF</label>
                         <file>
-                            <href src="/test/resources/objects/pdf/e2e-testing.pdf" mime_type="application/pdf" />
+                            <href src="/test/resources/files/test.pdf" mime_type="application/pdf" />
                         </file>
                     </galley>
                 </article>
@@ -38,7 +38,7 @@
                     <galley>
                         <label>PDF</label>
                         <file>
-                            <href src="/test/resources/page.1.txt" mime_type="text/plain" />
+                            <href src="/test/resources/files/page_0.txt" mime_type="text/plain" />
                         </file>
                     </galley>
                 </article>

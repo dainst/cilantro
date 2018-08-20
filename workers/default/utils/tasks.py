@@ -4,10 +4,9 @@ import shutil
 
 from celery import group
 
-from utils.object import Object
 from utils.celery_client import celery_app
 from service.job.job_config import generate_chain
-from workers.base_task import BaseTask
+from workers.base_task import BaseTask, ObjectTask
 
 
 def _list_files_by_pattern(rep_path, pattern):
@@ -19,7 +18,7 @@ def _list_files_by_pattern(rep_path, pattern):
     return files
 
 
-class ListFilesTask(BaseTask):
+class ListFilesTask(ObjectTask):
     """
     Run a task list for every file in a given representation.
 
@@ -38,11 +37,11 @@ class ListFilesTask(BaseTask):
     """
     name = "list_files"
 
-    def execute_task(self):
+    def process_object(self, obj):
         rep = self.get_param('representation')
         subtasks = self.get_param('subtasks')
         pattern = self.get_param('pattern')
-        rep_path = os.path.join(self.get_work_path(), Object.DATA_DIR, rep)
+        rep_path = obj.get_representation_dir(rep)
         files = _list_files_by_pattern(rep_path, pattern)
         raise self.replace(self._generate_group_for_files(files, subtasks))
 
@@ -51,7 +50,7 @@ class ListFilesTask(BaseTask):
         for file in files:
             params = self.params.copy()
             params['job_id'] = self.job_id
-            params['file'] = file
+            params['work_path'] = file
 
             chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
@@ -61,7 +60,7 @@ class ListFilesTask(BaseTask):
 ForeachTask = celery_app.register_task(ListFilesTask())
 
 
-class ListPartsTask(BaseTask):
+class ListPartsTask(ObjectTask):
     """
     Run a task list for every part of the current object.
 
@@ -78,18 +77,15 @@ class ListPartsTask(BaseTask):
     """
     name = "list_parts"
 
-    def execute_task(self):
+    def process_object(self, obj):
         subtasks = self.get_param('subtasks')
-        parts_path = os.path.join(self.get_work_path(), Object.PARTS_DIR)
-        raise self.replace(self._generate_group_for_parts(parts_path, subtasks))
+        raise self.replace(self._generate_group_for_parts(obj, subtasks))
 
-    def _generate_group_for_parts(self, parts_path, subtasks):
+    def _generate_group_for_parts(self, obj, subtasks):
         group_tasks = []
-        for part_path in os.listdir(parts_path):
+        for part in obj.get_parts():
             params = self.params.copy()
-            params['job_id'] = os.path.join(params['job_id'],
-                                            Object.PARTS_DIR,
-                                            os.path.basename(part_path))
+            params['work_path'] = part.path
             chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
         return group(group_tasks)
