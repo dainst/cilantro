@@ -25,6 +25,7 @@ class StagingControllerTest(unittest.TestCase):
             self._remove_file_from_staging(file_name)
         self._remove_file_from_staging(test_file)
         self._remove_dir_from_staging(test_object)
+        self._remove_dir_from_staging('test_dir')
 
     def test_upload_single_file(self):
         file_path = os.path.join(self.resource_dir, parent_folder,
@@ -98,32 +99,32 @@ class StagingControllerTest(unittest.TestCase):
         self.assertEqual(response_json['error']['code'], "file_not_found")
 
     def test_delete_file(self):
-        self._copy_object_to_staging('objects', test_object)
-        response = self.client.delete(f'/staging/{test_object}',
+        open(os.path.join(self.staging_dir, test_user, 'test_file'), 'w').close()
+        response = self.client.delete(f'/staging/test_file',
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
 
     def test_delete_folder(self):
-        self._copy_object_to_staging('objects', test_object)
-        response = self.client.delete(f'/staging/{test_object}',
+        os.mkdir(os.path.join(self.staging_dir, test_user, 'test_dir'))
+        response = self.client.delete(f'/staging/test_dir',
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
 
     def test_delete_file_in_folder(self):
-        self._copy_object_to_staging('objects', test_object)
-        response = self.client.delete(
-            f'/staging/{test_object}/test_directory/test2.tiff',
-            headers=get_auth_header())
+        os.mkdir(os.path.join(self.staging_dir, test_user, 'test_dir'))
+        open(os.path.join(self.staging_dir, test_user, 'test_dir', 'test_file'), 'w').close()
+        response = self.client.delete(f'/staging/test_dir/test_file',
+                                      headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
 
     def test_delete_folder_in_folder(self):
-        self._copy_object_to_staging('objects', test_object)
-        response = self.client.delete(f'/staging/{test_object}/test_directory',
+        os.makedirs(os.path.join(self.staging_dir, test_user, 'test_dir', 'test_sub_dir'))
+        response = self.client.delete(f'/staging/test_dir/test_sub_dir',
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
 
     def test_delete_file_not_found(self):
-        response = self.client.delete(f'/staging/{test_object}/{test_file}',
+        response = self.client.delete(f'/staging/test_file',
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 404)
 
