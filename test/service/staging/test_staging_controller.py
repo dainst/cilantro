@@ -99,19 +99,20 @@ class StagingControllerTest(unittest.TestCase):
         self.assertEqual(response_json['error']['code'], "file_not_found")
 
     def test_delete_file(self):
+        os.makedirs(os.path.join(self.staging_dir, test_user))
         open(os.path.join(self.staging_dir, test_user, 'test_file'), 'w').close()
         response = self.client.delete(f'/staging/test_file',
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
 
     def test_delete_folder(self):
-        os.mkdir(os.path.join(self.staging_dir, test_user, 'test_dir'))
+        os.makedirs(os.path.join(self.staging_dir, test_user, 'test_dir'))
         response = self.client.delete(f'/staging/test_dir',
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
 
     def test_delete_file_in_folder(self):
-        os.mkdir(os.path.join(self.staging_dir, test_user, 'test_dir'))
+        os.makedirs(os.path.join(self.staging_dir, test_user, 'test_dir'))
         open(os.path.join(self.staging_dir, test_user, 'test_dir', 'test_file'), 'w').close()
         response = self.client.delete(f'/staging/test_dir/test_file',
                                       headers=get_auth_header())
