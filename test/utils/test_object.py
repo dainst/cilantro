@@ -96,18 +96,6 @@ class ObjectTest(unittest.TestCase):
         self.assertIsInstance(file, BytesIO)
         self.assertGreater(file.getbuffer().nbytes, 0)
 
-    def test_write_metadata_file(self):
-        obj = Object(test_object_working_path)
-        stream = open(test_metadata_file_path, "r")
-        obj.write_metadata_file(
-            test_metadata_file_name,
-            stream
-        )
-        stream.close()
-        expected_file_path = os.path.join(test_object_working_path,
-                                          test_metadata_file_name)
-        self.assertTrue(os.path.isfile(expected_file_path))
-
     def test_add_child(self):
         obj = Object(test_object_working_path)
         subobj = obj.add_part()

@@ -180,19 +180,6 @@ class Object:
                     representations.append(BytesIO(file.read()))
         return iter(representations)
 
-    def write_metadata_file(self, name: str, read_stream: TextIO):
-        """
-        Add a metadata file to the object.
-
-        A new file is created with the given name if it does not already exist,
-        otherwise the existing file is overwritten.
-
-        :param read_stream:
-        :param name: the filename to be written in
-        """
-        with open(os.path.join(self.path, name), 'w+') as file:
-            file.write(read_stream.read())
-
     def set_metadata_from_dict(self, d):
         self.metadata = ObjectMetadata.from_dict(d)
         self.write()
