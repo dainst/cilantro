@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE issues PUBLIC "-//PKP//OJS Articles and Issues XML//EN" "http://pkp.sfu.ca/ojs/dtds/2.4.8/native.dtd">
 <issues>
-    <issue identification="{{data['identification']}}" published="{{data['auto_publish_issue']|lower}}">
+    <issue identification="{{metadata['identification']}}" published="{{ojs_metadata['auto_publish_issue']|lower}}">
 
-        {% if data['description'] %}
-        <description>{{data['description']}}</description>
+        {% if metadata['description'] %}
+        <description>{{metadata['description']}}</description>
         {% endif %}
 
-        {% if data['volume'] %}
-        <volume>{{data['volume']}}</volume>
+        {% if metadata['volume'] %}
+        <volume>{{metadata['volume']}}</volume>
         {% endif -%}
 
-        {% if data['number'] %}
-        <number>{{data['number']}}</number>
+        {% if metadata['number'] %}
+        <number>{{metadata['number']}}</number>
         {% endif -%}
 
-        {% if data['year'] %}
-        <year>{{data['year']}}</year>
+        {% if metadata['year'] %}
+        <year>{{metadata['year']}}</year>
         {% endif -%}
 
         <section>

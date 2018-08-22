@@ -6,8 +6,7 @@ from jinja2 import Template
 log = logging.getLogger(__name__)
 
 
-def generate_xml(work_path, data, template_string,
-                 target_filename='ojs_import.xml'):
+def generate_xml(work_path, data, template_string, target_filename):
     """
     Build Jinja2 template and write it to target file.
 

@@ -41,10 +41,12 @@ tasks:
           target: txt
     - list_files: txt
       foreach: nlp.annotate
-  - task: generate_marc_xml
-    xml_template_path: resources/marc_template.xml
   - task: generate_xml
-    xml_template_path: resources/ojs_template.xml
+    xml_type: ojs
+  - list_parts:
+    foreach:
+        task: generate_xml
+        xml_type: marc
   - publish_to_ojs
   - generate_frontmatter
   - publish_to_repository
