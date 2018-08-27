@@ -1,14 +1,17 @@
 const e = require("./elements");
-const message = require('../modules/messages');
+const documents = require('../modules/documents');
+const EC = protractor.ExpectedConditions;
 
 const Subobject = function() {
 
     this.goToSubObject = docNr => browser.get(browser.baseUrl)
         .then(e.home.startBtn.click)
         .then(e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click)
-        .then(message.waitForMessage)
+        .then(documents.waitForLoaded(docNr))
         .then(e.documents.proceedBtn.click)
-        .then(e.overview.proceedBtn.click);
+        .then(browser.wait(EC.visibilityOf(e.overview.table), 20))
+        .then(e.overview.proceedBtn.click)
+        .then(browser.wait(EC.visibilityOf(e.subobject.table), 20));
 
     this.getRowTitles = () => new Promise((resolve, reject) =>
         e.subobject.tableRows

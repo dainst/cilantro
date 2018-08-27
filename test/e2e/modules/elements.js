@@ -59,6 +59,7 @@ module.exports = {
         autoFetchFromZenon: element(by.id('csv-autofetch')),
     },
     message: {
+        container: element(by.css('#info-container')),
         main: element(by.css('#info-container .alert.main-message')),
         clear: element(by.css('#info-container a')),
     },
