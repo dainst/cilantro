@@ -1,4 +1,8 @@
 const so = require('../modules/subobject');
+const mo = require('../modules/mainobject');
+const e = require("../modules/elements");
+const message = require('../modules/messages');
+
 
 describe('subobject view', () => {
 
@@ -46,13 +50,22 @@ describe('subobject view', () => {
 
     describe('language editable', () => {
         it('should show the languages of the journal', () => {
-            so.goToSubObject(3);
-            so.getRowContent("Language").then(cell => {
-                expect(cell.all(by.css("label")).get(1).getText()).toBe("English");
-                expect(cell.all(by.css("label")).get(0).getText()).toBe("German");
-                expect(cell.all(by.css("label")).get(2).getText()).toBe("Russian");
-                expect(cell.all(by.css("label")).get(3).getText()).toBe("Italian");
-                expect(cell.all(by.css("label")).get(4).getText()).toBe("Spanish");
+            browser.get(browser.baseUrl);
+            mo.getRowContent("OJS: Journal Code").then(cell => {
+                cell.all(by.css("option")).get(1).click();
+                e.home.startBtn.click();
+                e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click();
+                message.waitForMessage().then(() => {
+                    e.documents.proceedBtn.click();
+                    e.overview.proceedBtn.click();
+                    so.getRowContent("Language").then(cell => {
+                        expect(cell.all(by.css("label")).get(0).getText()).toBe("English");
+                        expect(cell.all(by.css("label")).get(1).getText()).toBe("German");
+                        expect(cell.all(by.css("label")).get(2).getText()).toBe("Russian");
+                        expect(cell.all(by.css("label")).get(3).getText()).toBe("Spanish");
+                        expect(cell.all(by.css("label")).get(4).getText()).toBe("French");
+                    });
+                });
             });
         });
 
