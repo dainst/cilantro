@@ -14,6 +14,7 @@ angular
 
     function file2Articles(file) {
         const fileInfo = fileManager.loadedFiles[file.path];
+        if (angular.isUndefined(fileInfo)) return;
         const article = new dataset.Subobject();
         article.filepath.value.value = fileInfo.url;
         article.title.value.value = !angular.isUndefined(fileInfo.meta.Title) ? fileInfo.meta.Title : '';
