@@ -58,7 +58,7 @@ angular
                                 url: fileInfo.url,
                                 pagecontext: fileInfo.pagecontext,
                             };
-                            messenger.info('document: ' + filesToLoad[fileid].url + ' loaded');
+                            messenger.info('document: ' + fileInfo.url + ' loaded');
                             fileManager.stats.loaded += 1;
                             refreshView();
                             resolve();
