@@ -17,7 +17,7 @@ from service.errors import ApiError
 setup_logging()
 
 app = Flask('cilantro')
-CORS(app)
+CORS(app, supports_credentials=True)
 
 app.register_blueprint(front_controller)
 app.register_blueprint(job_controller, url_prefix="/job")
