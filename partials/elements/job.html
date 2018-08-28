@@ -2,13 +2,21 @@
 
     <div class="panel-heading">
         {{job.job_id}}
+        <div class="label"
+             ng-class="{'label-default': job.status === 0, 'label-danger': job.status === -1, 'label-success': job.status === 1}"
+        >{{job.statusText}}
+        </div>
     </div>
 
     <div class="panel-body">
-        <div>Status: {{job.status}}</div>
-
         <ul class="tasks">
-            <li class="task" ng-repeat="task in job.task_ids">{{task}}</li>
+            <li class="task" ng-repeat="taskId in job.task_ids">{{taskId}}
+                <strong
+                        class="label"
+                        ng-class="{'label-default': tasks[taskId].status === 0, 'label-danger': tasks[taskId].status === -1, 'label-success': tasks[taskId].status === 1}"
+                    >{{tasks[taskId].statusText}}
+                </strong>
+            </li>
         </ul>
     </div>
 </div>

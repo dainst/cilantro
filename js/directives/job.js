@@ -4,7 +4,7 @@ angular
 
     .module('directive.job', [])
 
-    .directive('job', [function() {
+    .directive('job', ['jobs', function(jobs) {
         return {
             restrict: 'E',
             templateUrl: 'partials/elements/job.html',
@@ -12,7 +12,7 @@ angular
                 job: '=',
             },
             link: function(scope, element, attrs) {
-
+                scope.tasks = jobs.tasks;
             }
         }
     }]);

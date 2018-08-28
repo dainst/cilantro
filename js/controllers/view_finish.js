@@ -15,9 +15,8 @@ angular
             const param = dataset.get();
 
             webservice.get('job/ingest_journal', 'post', param).then(res => {
-                console.log("START", res);
                 messenger.success("Job: " + res.status);
-                jobs.list[res.job_id] = res;
+                jobs.updateJob(res.job_id, res);
                 $scope.done = true;
                 steps.change('jobs');
                 $rootScope.$broadcast('refreshView');
