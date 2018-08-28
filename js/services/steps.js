@@ -46,6 +46,11 @@ angular
             "template": "partials/views/fatal.html",
             "title": "Fatal Error",
             "showIf": function() {return false}
+        },
+        "jobs": {
+            "template": "partials/views/jobs.html",
+            "title": "Jobs",
+            "showIf": function() {return steps.isStarted}
         }
     };
 

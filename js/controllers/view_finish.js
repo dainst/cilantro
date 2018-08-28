@@ -2,30 +2,32 @@ angular
 
 .module('controller.viewFinish', [])
 
-.controller('viewFinish', ['$scope', 'webservice', 'dataset', 'messenger', 'labels',
-    function($scope, webservice, dataset, messenger, labels) {
+.controller('viewFinish', ['$scope', '$rootScope', 'webservice', 'dataset', 'messenger', 'labels', 'jobs', 'steps',
+    function($scope, $rootScope, webservice, dataset, messenger, labels, jobs, steps) {
 
         $scope.dataset = dataset;
         $scope.labels = labels;
 
         $scope.done = false;
 
-        $scope.run = function() {
+        $scope.run = () => {
 
-            let param = dataset.get();
-            console.log("POST PARAM", param);
+            const param = dataset.get();
 
-            webservice.get('job/ingest_journal', 'post', param)
-                .then(res => {
-                    messenger.success(res.message);
-                    $scope.done = true;
-                }).catch(function() {});
+            webservice.get('job/ingest_journal', 'post', param).then(res => {
+                console.log("START", res);
+                messenger.success("Job: " + res.status);
+                jobs.list[res.job_id] = res;
+                $scope.done = true;
+                steps.change('jobs');
+                $rootScope.$broadcast('refreshView');
+            })
 
         };
 
-        $scope.isReady = function() {
-            let articlesReady = $scope.dataset.isReadyToUpload();
-            let journalReady = $scope.dataset.check();
+        $scope.isReady = () => {
+            const articlesReady = $scope.dataset.isReadyToUpload();
+            const journalReady = $scope.dataset.check();
             return articlesReady && journalReady && !$scope.done;
         };
 

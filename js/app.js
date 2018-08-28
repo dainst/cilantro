@@ -23,6 +23,7 @@ angular
     'module.languageStrings',
     'module.editables',
     'module.settings',
+    'module.jobs',
 
     'controller.main',
 
@@ -31,6 +32,7 @@ angular
     'controller.viewSubObjects',
     'controller.viewFinish',
     'controller.viewDocuments',
+    'controller.viewJobs',
 
     'controller.csvImportWindow',
     'controller.upload',
@@ -43,6 +45,7 @@ angular
     'directive.zenon',
     'directive.autoheight',
     'directive.mainObject',
+    'directive.job',
 
     'module.fileHandlers.defaultPdfHandler',
     'module.fileHandlers.emptyPdfHandler',

@@ -1,0 +1,14 @@
+<div class="job panel panel-default">
+
+    <div class="panel-heading">
+        {{job.job_id}}
+    </div>
+
+    <div class="panel-body">
+        <div>Status: {{job.status}}</div>
+
+        <ul class="tasks">
+            <li class="task" ng-repeat="task in job.task_ids">{{task}}</li>
+        </ul>
+    </div>
+</div>
