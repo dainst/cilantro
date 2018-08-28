@@ -1,5 +1,5 @@
 const e = require("./elements");
-const message = require('../modules/messages');
+const documents = require('../modules/documents');
 const imageComparer = require("../util/image_comparer");
 
 const OverviewTable = function() {
@@ -7,7 +7,7 @@ const OverviewTable = function() {
     this.goToOverview = (docNr) => browser.get(browser.baseUrl)
         .then(e.home.startBtn.click)
         .then(e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click)
-        .then(message.waitForMessage)
+        .then(documents.waitForLoaded(docNr))
         .then(e.documents.proceedBtn.click);
 
     this.getAvailableColumnNames = () => new Promise((resolve, reject) =>
