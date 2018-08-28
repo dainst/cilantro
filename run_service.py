@@ -62,7 +62,10 @@ def handle_http_exception(error):
             }
         }
     response = jsonify(dic)
-    response.status_code = error.code
+    if hasattr(error, 'code'):
+        response.status_code = error.code
+    else:
+        response.status_code = 500
     return response
 
 
