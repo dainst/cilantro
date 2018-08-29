@@ -130,9 +130,9 @@ angular
         return obj;
     }
 
-    editables.types.Pagecontext = function(d){
+    editables.types.Pagecontext = function(d) {
         d = d || {offset:0, maximum: -1};
-        let context = {'offset': d.offset || 0, 'maximum': d.maximum || -1}
+        const context = {'offset': d.offset || 0, 'maximum': d.maximum || -1};
         if (angular.isDefined(d.path)) {
          context.path = d.path;
         }
@@ -208,11 +208,11 @@ angular
         });
 
         obj.getFileData = () => angular.isDefined(obj.context.path)
-            ? {
-                file: obj.context.path,
-                range: [obj.value.startPdf, obj.value.endPdf]
-              }
-            : [];
+                ? {
+                    file: obj.context.path,
+                    range: [obj.value.startPdf, obj.value.endPdf]
+                }
+                : [];
 
         obj.set = seed => {
             obj.seed = seed;
@@ -333,7 +333,6 @@ angular
                 return false;
             }
             if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(obj.value.value))  {
-                console.log("!!" + obj.value.value + "!!");
                 return 'seems not to be proper language code';
             }
             return false;
