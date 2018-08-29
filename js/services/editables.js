@@ -541,6 +541,29 @@ angular
         obj.get = () => obj.value.value ? obj.value.value : 'none';
         return obj;
     };
+
+    editables.multilistitem = function(list, selected, noneallowed) {
+        let obj = new editables.Base(selected, false, false);
+        list = list || {};
+        obj.list = angular.isObject(list) ? list : {};
+        obj.type = 'multilistitem';
+        obj.noneallowed = (noneallowed === true);
+        obj.value = angular.copy(list);
+        obj.select = selected => {
+            selected = (!angular.isArray(selected)) ? [] : selected;
+            Object.keys(obj.value).forEach(entry => obj.value[entry] = (selected && selected.indexOf(entry) !== -1));
+        };
+        obj.check = () => {
+            if (!obj.noneallowed && Object.keys(obj.value).filter(entry => obj.value[entry]).length === 0) {
+                return "You have to choose at least one!";
+            }
+            return false;
+        };
+        obj.select(selected);
+        obj.get = () => Object.keys(obj.value).filter(entry => obj.value[entry]);
+        return obj;
+    };
+
     
     editables.loadedfile = function(list, selected, noneallowed) {
         noneallowed = noneallowed || false;

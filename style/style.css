@@ -388,6 +388,8 @@ input.form-check-input + label {
     background-color: rgb(217, 237, 247);
     border-color: #1f3150;
     margin-bottom:0px;
+    padding-right: 4px;
+    min-width: 2em;
 }
 
 input.form-check-input + label:before {
