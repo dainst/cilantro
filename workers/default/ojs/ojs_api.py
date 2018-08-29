@@ -1,3 +1,4 @@
+import logging
 import json
 from urllib.request import Request, urlopen
 
@@ -5,6 +6,7 @@ server = "ojs"
 port = "80"
 auth_key = "YWRtaW4=:cGFzc3dvcmQ="
 
+log = logging.getLogger(__name__)
 
 def generate_frontmatters(article_id_list):
     """
@@ -61,6 +63,8 @@ def publish(import_xml_file_path, journalcode):
 
 def _make_request(url, headers, import_data=None):
     """Make the request to OJS and return response code and content."""
+    log.debug(f"Request: URL: {url} Headers: {headers} Data: {import_data}")
+
     request = Request(url, headers=headers,
                       data=import_data)
 
