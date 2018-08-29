@@ -40,7 +40,7 @@ angular
                             pdf: pdf,
                             filename: filesToLoad[fileid].name,
                             url: filesToLoad[fileid].path,
-                            pagecontext: new editables.types.Pagecontext({maximum: pdf.pdfInfo.numPages, path: filesToLoad[fileid].url}),
+                            pagecontext: new editables.types.Pagecontext({maximum: pdf.pdfInfo.numPages, path: filesToLoad[fileid].path}),
                             meta: {}
                         };
 
