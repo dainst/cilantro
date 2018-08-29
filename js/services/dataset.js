@@ -86,7 +86,6 @@ angular
                 }
                 if (angular.isFunction(editable.getFileData)) {
                     newObj.files = newObj.files.concat(editable.getFileData());
-                    console.log("FILES", newObj.files);
                 }
             });
             return newObj;
