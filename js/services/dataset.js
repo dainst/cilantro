@@ -68,30 +68,31 @@ angular
      * get journal data in uploadable form
      * @returns see test/e2e/schema/run_job_param.json
      */
-    dataset.get = function() {
+    dataset.get = () => {
 
         function flatten(obj, modelMeta) {
-            let newObj = {
-                metadata: {},
+            const newObj = {
                 files: []
             };
-            angular.forEach(obj, function(editable, key) {
-                let value = angular.isFunction(editable.get) ? editable.get() : editable;
-                let type = (angular.isDefined(modelMeta[key]) && angular.isDefined(modelMeta[key].type)) ? modelMeta[key].type  : false;
-                if (type === "metadata") {
-                    newObj[modelMeta[key].type][key] = value;
-                }
-                if (type === "param") {
-                    newObj[key] = value;
+            angular.forEach(obj, (editable, key) => {
+                const value = angular.isFunction(editable.get) ? editable.get() : editable;
+                if (angular.isDefined(modelMeta[key]) && angular.isDefined(modelMeta[key].param)) {
+                    if (modelMeta[key].param === true) {
+                        newObj[key] = value;
+                    } else {
+                        newObj[modelMeta[key].param] = newObj[modelMeta[key].param] || {};
+                        newObj[modelMeta[key].param][key] = value;
+                    }
                 }
                 if (angular.isFunction(editable.getFileData)) {
                     newObj.files = newObj.files.concat(editable.getFileData());
+                    console.log("FILES", newObj.files);
                 }
             });
             return newObj;
         }
 
-        let returner = flatten(dataset.data, model.getMeta("main"));
+        const returner = flatten(dataset.data, model.getMeta("main"));
 
         returner.parts = Object.keys(dataset.subobjects)
             .filter(i => dataset.subobjects[i]._.confirmed === true)

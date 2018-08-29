@@ -97,56 +97,56 @@ angular
         "volume": {
             title: "Volume",
             description: "Volume typically refers to the number of years the publication has been circulated",
-            type: "metadata"
+            param: "metadata"
         },
         "number": {
             title: "Number",
             description: "refers to how many times that periodical has been published during that year",
-            type: "metadata"
+            param: "metadata"
         },
         "year": {
             title: "Year",
             description: "Issue Year",
-            type: "metadata"
+            param: "metadata"
         },
         "description": {
             title: "Description",
             description: "e.g. '[PDFs teilweise verfügbar]'",
-            type: "metadata"
+            param: "metadata"
         },
         "ojs_journal_code": {
             title: "OJS: Journal Code",
             description:  "e. g. 'chiron', 'aa', 'efb'",
-            type: "metadata"
+            param: "ojs_metadata"
         },
         "ojs_user": {
             title: "OJS: user",
-            type: "metadata"
+            param: "ojs_metadata"
         },
         "identification": {
             title: "OJS: issue identification",
-            type: "metadata"
+            param: "metadata"
         },
         "importFilePath": {
             title: "File(s) to import",
-            type: "metadata",
+            param: "metadata",
             hide: true,
         },
         "auto_publish_issue": {
             title: "Publish Issue after upload",
-            type: "param"
+            param: "ojs_metadata"
         },
         "default_publish_articles": {
             title: "Publish Articles by default",
-            type: "param"
+            param: "ojs_metadata"
         },
         "default_create_frontpage": {
             title: "Create Frontpage by default",
-            type: "param"
+            param: "ojs_metadata"
         },
         "allow_upload_without_file": {
             title: "Upload without selected file is allowed?",
-            type: "param"
+            param: "ojs_metadata"
         }
     };
 
@@ -160,7 +160,7 @@ angular
         author: {
             title: 'Author',
             style: {minWidth: '400px'},
-            type: "metadata",
+            param: "metadata",
             sortByAllowed: true,
             mappings: {
                 zenon: "authors"
@@ -169,7 +169,7 @@ angular
         title: {
             title: 'Title',
             style: {minWidth: '400px'},
-            type: "metadata",
+            param: "metadata",
             sortByAllowed: true,
             mappings: {
                 zenon: "title"
@@ -178,7 +178,7 @@ angular
         pages: {
             title: 'Range of Pages',
             style: {minWidth: '170px'},
-            type: "metadata",
+            param: "metadata",
             thumbnailParam: "pages",
             sortByAllowed: true,
             mappings: {
@@ -189,7 +189,7 @@ angular
             title: 'Abstract',
             style: {minWidth: '400px'},
             hide: true,
-            type: "metadata",
+            param: "metadata",
             mappings: {
                 zenon: "summary"
             }
@@ -198,7 +198,7 @@ angular
             title: 'Date of Publishing',
             style: {minWidth: '150px'},
             hide: true,
-            type: "metadata",
+            param: "metadata",
             mappings: {
                 zenon: "publicationDates"
             }
@@ -208,7 +208,7 @@ angular
             title: '#',
             style: {minWidth: '10px'},
             hide: true,
-            type: "param"
+            param: true
         },
         filepath: {
             title: 'Loaded File',
@@ -228,13 +228,13 @@ angular
             title: '#',
             style: {minWidth: '10px'},
             hide: true,
-            type: "param"
+            param: true
         },
         zenonId: {
             title: 'Zenon-Id',
             style: {minWidth: '150px'},
             hide: true,
-            type: "metadata",
+            param: "metadata",
             mappings: {
                 zenon: "id"
             }
@@ -242,7 +242,7 @@ angular
         language: {
             title: 'Language',
             hide: true,
-            type: "metadata",
+            param: "metadata",
             mappings: {
                 zenon: "languages"
             }
