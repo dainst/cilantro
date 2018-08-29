@@ -25,7 +25,10 @@ angular
             "auto_publish_issue":       editables.checkbox(false),
             "default_publish_articles": true,
             "default_create_frontpage": true,
-            "allow_upload_without_file":false
+            "allow_upload_without_file":false,
+            "operations":               editables.multilistitem({NER: "NER", POS: "POS"}, ['POS'], false),
+            "lang":                     "en",
+            "do_ocr":                   editables.checkbox(false),
         }
     }
 
@@ -147,6 +150,17 @@ angular
         "allow_upload_without_file": {
             title: "Upload without selected file is allowed?",
             param: "ojs_metadata"
+        },
+        "operations" : {
+            title: 'NLP operations',
+            param: "nlp_params"
+        },
+        "lang" : {
+            hide: true,
+            param: "nlp_params"
+        },
+        "do_ocr": {
+            title: "Perform OCR"
         }
     };
 
