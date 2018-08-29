@@ -7,12 +7,6 @@ params:
   files: list
   parts: list
   metadata: dict
-  ojs_journal_code: string
-  ojs_user: string
-  auto_publish_issue: boolean
-  default_publish_articles: boolean
-  default_create_frontpage: boolean
-  allow_upload_without_file: boolean
   nlp_params: dict
   do_ocr: boolean
   frontmatter_ids: list
