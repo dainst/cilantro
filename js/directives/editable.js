@@ -9,7 +9,7 @@ angular
         const killCache = '?nd=' + Date.now();
 
         return {
-          template: '<ng-include src="getTemplateUrl()" ng-click="debug()"/>',
+          template: '<ng-include src="getTemplateUrl()" />',
           restrict: 'A',
           scope: {
             item: '='
