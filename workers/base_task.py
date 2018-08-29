@@ -68,6 +68,7 @@ class BaseTask(Task):
 
     working_dir = os.environ['WORKING_DIR']
     params = {}
+    results = {}
     work_path = None
     log = logging.getLogger(__name__)
 
@@ -79,7 +80,7 @@ class BaseTask(Task):
 
     def run(self, prev_result=None, **params):
         self._init_params(params)
-        self._add_prev_result_to_params(prev_result)
+        self._add_prev_result_to_results(prev_result)
         return self._merge_result(self.execute_task())
 
     def get_param(self, key):
@@ -91,7 +92,7 @@ class BaseTask(Task):
 
     def get_result(self, key):
         try:
-            return self.params['result'][key]
+            return self.results[key]
         except KeyError:
             raise KeyError(f"Mandatory result {key} is missing"
                            f" for {self.__class__.__name__}")
@@ -114,21 +115,20 @@ class BaseTask(Task):
         """
         raise NotImplementedError("Execute Task method not implemented")
 
-    def _add_prev_result_to_params(self, prev_result):
+    def _add_prev_result_to_results(self, prev_result):
         if isinstance(prev_result, dict):
-            self.params['result'] = merge_dicts(self.params['result'],
-                                                prev_result)
+            self.results = merge_dicts(self.results, prev_result)
         elif isinstance(prev_result, list):
             for result in prev_result:
-                self._add_prev_result_to_params(result)
+                self._add_prev_result_to_results(result)
         elif prev_result:
             raise KeyError("Wrong result type in previous task")
 
     def _merge_result(self, result):
         if isinstance(result, dict):
-            return merge_dicts(self.params['result'], result)
+            return merge_dicts(self.results, result)
         else:
-            return self.params['result']
+            return self.results
 
     def _init_params(self, params):
         self.params = params
@@ -140,8 +140,6 @@ class BaseTask(Task):
             self.work_path = params['work_path']
         except KeyError:
             raise KeyError("work_path has to be set before running a task")
-        if 'result' not in self.params:
-            self.params['result'] = {}
         self.log.debug(f"initialized params: {self.params}")
 
 
