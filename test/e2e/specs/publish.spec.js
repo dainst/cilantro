@@ -39,8 +39,9 @@ describe('publish page', () => {
                 cells[2].all(by.css("option")).get(2).click();
                 message.clearMessages();
                 e.publish.uploadBtn.click();
-                e.publish.uploadBtn.click(); // it needs two clicks, reason unknown atm
-                expect(message.getClassOfMain()).toEqual("success");
+                message.waitForMessage().then(() => {
+                    expect(message.getClassOfMain()).toEqual("success");
+                });
             });
     });
 
