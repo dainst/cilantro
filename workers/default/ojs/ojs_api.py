@@ -1,12 +1,14 @@
 import logging
 import json
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError
 
 server = "ojs"
 port = "80"
 auth_key = "YWRtaW4=:cGFzc3dvcmQ="
 
 log = logging.getLogger(__name__)
+
 
 def generate_frontmatters(article_id_list):
     """
@@ -68,7 +70,11 @@ def _make_request(url, headers, import_data=None):
     request = Request(url, headers=headers,
                       data=import_data)
 
-    with urlopen(request) as response:
-        response_text = response.read().decode('utf-8')
+    try:
+        with urlopen(request) as response:
+            response_text = response.read().decode('utf-8')
+    except HTTPError as e:
+        log.debug(f"Request failed with: {e.read()}")
+        raise
 
     return response.getcode(), json.loads(response_text)
