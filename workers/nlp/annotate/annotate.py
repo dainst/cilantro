@@ -127,6 +127,17 @@ def _add_metadata(ta, annotations):
 
 
 def _convert_obj_to_dict(obj):
+    """
+    Converts a (list of) objects to a (list of) dicts
+
+    This works recursively and is needed because the NLP Textanalyzer
+    sometimes gives back non-json-serializable objects, which need to
+    be converted to json.
+
+    :param obj: Object or list of objects to be converted to
+        (list of) dicts.
+    :return dict: object as dict or a list of those
+    """
     if type(obj) is list:
         mylist = []
         for subobj in obj:
