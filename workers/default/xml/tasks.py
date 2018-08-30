@@ -1,4 +1,5 @@
 import os
+import logging
 
 from utils.celery_client import celery_app
 
@@ -6,6 +7,9 @@ from workers.base_task import ObjectTask
 from workers.default.xml.xml_generator import generate_xml
 from workers.default.xml.xml_validator import validate_xml
 from utils.object import Object
+
+
+log = logging.getLogger(__name__)
 
 
 class GenerateXMLTask(ObjectTask):
@@ -28,20 +32,18 @@ class GenerateXMLTask(ObjectTask):
     name = "generate_xml"
 
     def process_object(self, obj):
-        xml_type = self.get_param('xml_type')
-
-        if xml_type == 'ojs':
-            xml_template_string = _read_file('resources/ojs_template.xml')
-            target_filename = 'ojs_import.xml'
-            dtd_file = 'resources/ojs_import.dtd'
-            schema_file = None
-        elif xml_type == 'marc':
-            xml_template_string = _read_file('resources/marc_template.xml')
-            target_filename = 'marc.xml'
+        xml_template_string = _read_file('resources/' + self.get_param('template_file'))
+        target_filename = self.get_param('target_filename')
+        try:
+            dtd_file = 'resources/' + self.get_param('dtd_file')
+        except KeyError:
             dtd_file = None
-            schema_file = 'resources/MARC21slim.xsd'
-        else:
-            raise ValueError(f"Unknown XML type: {{xml_type}}")
+            log.debug("No DTD found for XML validation")
+        try:
+            schema_file = 'resources/' + self.get_param('schema_file')
+        except KeyError:
+            schema_file = None
+            log.debug("No Schema found for XML validation")
 
         data = {
             'metadata': obj.metadata.to_dict()

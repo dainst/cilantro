@@ -42,11 +42,15 @@ tasks:
     - list_files: txt
       foreach: nlp.annotate
   - task: generate_xml
-    xml_type: ojs
+    template_file: ojs_template.xml
+    target_filename: ojs_import.xml
+    dtd_file: ojs_import.dtd
   - list_parts:
     foreach:
         task: generate_xml
-        xml_type: marc
+        template_file: marc_template.xml
+        target_filename: marc.xml
+        schema_file: MARC21slim.xsd
   - publish_to_ojs
   - generate_frontmatter
   - publish_to_repository
