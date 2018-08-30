@@ -11,14 +11,6 @@ The future Cilantro-Frontend
 - `npm run server`
 
 ## b) example configuration with local cilantro as backend and local ojs2 with docker
-- get an OJS2
-    ```
-    cd /mydir
-    mkdir ojs-docker-container
-    cd ojs-docker-container
-    wget https://github.com/dainst/cilantro-images/blob/master/cilantro-ojs2/Dockerfile
-    docker run -p 4444:80 ojs2
-    ```
 - get cilantro
     - Clone https://github.com/dainst/cilantro
     - follow cilantro install instructions
