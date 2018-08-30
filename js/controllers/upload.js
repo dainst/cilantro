@@ -66,10 +66,6 @@ angular.module('controller.upload', ['ngFileUpload'])
             });
         };
 
-        $scope.uploadCSV = function(files, callback) {
-            $scope.uploadFiles(files, 'uploadCSV', callback)
-        }
-
 }])
 
 .filter('trustHtml', function($sce) {
