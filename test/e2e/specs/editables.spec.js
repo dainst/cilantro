@@ -49,13 +49,13 @@ describe('subobject view', () => {
     });
 
     describe('language editable', () => {
-        it('should show the languages of the journal', () => {
+        fit('should show the languages of the journal', () => {
             browser.get(browser.baseUrl);
             mo.getRowContent("OJS: Journal Code").then(cell => {
                 cell.all(by.css("option")).get(1).click();
                 e.home.startBtn.click();
-                e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click();
-                message.waitForMessage().then(() => {
+                e.documents.treeViewItemsTopLevel.get(2).all(by.css('.load')).first().click();
+                message.waitForLoaded(2).then(() => {
                     e.documents.proceedBtn.click();
                     e.overview.proceedBtn.click();
                     so.getRowContent("Language").then(cell => {
