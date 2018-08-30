@@ -5,7 +5,7 @@ angular
 	let settings = {};
 
     settings.load = new Promise(function(resolve, reject) {
-        $http.get('settings.json')
+        $http.get('config/settings.json')
             .then(function(response) {
                 settings = angular.extend(settings, response.data);
                 $http.get('version.json').then(function(response) {

@@ -5,7 +5,7 @@ The future Cilantro-Frontend
 
 ## a) without backend
 - `npm install`
-- `mv settings.test.json settings.json`
+- `mv config/settings.test.json config/settings.json`
 - `npm run e2e-mock-backend`
 - (new Tab)
 - `npm run server`
@@ -27,17 +27,7 @@ The future Cilantro-Frontend
 - set up salvia
     - go to salvia-dir
     - `npm install`
-    - create settings.json
-        ```
-        {
-          "files_url":    "http://localhost:5000/staging/",
-          "server_url":   "http://localhost:5000/",
-          "importer_url": "http://localhost:9082/",
-          "ojs_url":      "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api/",
-          "server_user":  "##cilantro user##",
-          "server_pass":  "##cilantro password##"
-        }
-        ```    
+    - `mv config/settings.cilantro_local.json config/settings.json`
     - `npm run server`
 
 ## c) with old PHP-Backend and Apache (lagacy-branch)
@@ -48,8 +38,8 @@ The future Cilantro-Frontend
     - tmp 
     - reports
     - staging
-- create settings.php like settings.default.php and fill out
-- create settings.json like settings.default.json and fill out
+- create settings.php like config/settings.default.php and fill out
+- create settings.json like config/settings.default.json and fill out
 - http://localhost/importer
 
 
