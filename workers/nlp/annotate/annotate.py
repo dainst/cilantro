@@ -138,7 +138,7 @@ def _convert_obj_to_dict(obj):
         (list of) dicts.
     :return dict: object as dict or a list of those
     """
-    if type(obj) is list:
+    if isinstance(obj, list):
         mylist = []
         for subobj in obj:
             mylist.append(_convert_obj_to_dict(subobj))
