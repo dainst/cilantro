@@ -27,19 +27,6 @@ def annotate(text, params):
     return result
 
 
-def _init_text_analyzer(text):
-    """
-    Initialises the Text Analyzer of the nlp components.
-
-    :param str text: The text to Analyze
-    :return class: The text_analyzer
-    """
-    from nlp_components.idai_journals.publications import TextAnalyzer
-    # dependency in docker container
-    text_analyzer = TextAnalyzer(text)
-    return text_analyzer
-
-
 def _validate_input(text, params):
     """
     Validates the text and parameters given.
@@ -67,38 +54,83 @@ def _validate_input(text, params):
                                            f"{params['operations']}")
 
 
-def _run_annotation(text_analyzer, operations):
+def _init_text_analyzer(text):
+    """
+    Initialises the Text Analyzer of the nlp components.
+
+    :param str text: The text to Analyze
+    :return class: The text_analyzer
+    """
+    from nlp_components.idai_journals.publications import TextAnalyzer
+    # dependency in docker container
+    text_analyzer = TextAnalyzer(text)
+    return text_analyzer
+
+
+def _run_annotation(ta, operations):
     """
     Calls a method of the text_analyzer depending on the operations.
 
-    :param class text_analyzer: the text_analyzer of nlp_components
+    :param class ta: the text_analyzer of nlp_components
     :param list operations: the operations to be excecuted
     :return dict: pure annotations without metadata
     """
     result = {}
 
     if 'POS' in operations:
-        result['part_of_speech_tags'] = text_analyzer.do_pos_tag()
+        result['part_of_speech_tags'] = ta.do_pos_tag()
     if 'NER' in operations:
-        result['named_entities'] = text_analyzer.do_ner()
+        result['named_entities'] = _full_ner(ta)
 
     return result
 
 
-def _add_metadata(text_analyzer, annotations):
+def _full_ner(ta):
+    """
+    Runs complete NER
+
+    This includes extraction of different entity types and geotagging.
+
+    :param class ta: the text_analyzer of nlp_components
+    :return dict: dict with complete NEs, extracted persons and geoparsed
+        locations
+    """
+    named_entites = ta.do_ner()
+    persons = _convert_obj_to_dict(ta.get_persons(named_entites))
+    locations = ta.get_locations(named_entites)
+    geoparsed = _convert_obj_to_dict(ta.geoparse(locations))
+
+    return {
+        "complete_named_entities": named_entites,
+        "persons": persons,
+        "locations": geoparsed
+    }
+
+
+def _add_metadata(ta, annotations):
     """
     Adds metadata to the annotations.
 
-    :param class text_analyzer: the text_analyzer of nlp_components
+    :param class ta: the text_analyzer of nlp_components
     :param dict annotations: annotations made before
     :return dict: annotations with metadata
     """
     metadata = {
-            "detected_language": text_analyzer.lang,
-            "word_count": len(text_analyzer.words),
-            "sentence_count": len(text_analyzer.sentences)
+            "detected_language": ta.lang,
+            "word_count": len(ta.words),
+            "sentence_count": len(ta.sentences)
         }
     return {
         **annotations,
         **metadata
     }
+
+
+def _convert_obj_to_dict(obj):
+    if type(obj) is list:
+        mylist = []
+        for subobj in obj:
+            mylist.append(_convert_obj_to_dict(subobj))
+        return mylist
+    else:
+        return obj.__dict__
