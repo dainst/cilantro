@@ -2,7 +2,7 @@ const so = require('../modules/subobject');
 const mo = require('../modules/mainobject');
 const e = require("../modules/elements");
 const message = require('../modules/messages');
-
+const documents = require('../modules/documents');
 
 describe('subobject view', () => {
 
@@ -55,7 +55,7 @@ describe('subobject view', () => {
                 cell.all(by.css("option")).get(1).click();
                 e.home.startBtn.click();
                 e.documents.treeViewItemsTopLevel.get(2).all(by.css('.load')).first().click();
-                message.waitForLoaded(2).then(() => {
+                documents.waitForLoaded(2).then(() => {
                     e.documents.proceedBtn.click();
                     e.overview.proceedBtn.click();
                     so.getRowContent("Language").then(cell => {

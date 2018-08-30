@@ -29,7 +29,7 @@ describe('publish page', () => {
             });
     });
 
-    it ("should start job if everything is okay", () => {
+    it("should start job if everything is okay", () => {
         so.goToSubObject(2);
         e.subobject.confirmBtn.click();
         Promise.all([mo.getRowContent("Volume"), mo.getRowContent("Number"), mo.getRowContent("OJS: Journal Code")])
