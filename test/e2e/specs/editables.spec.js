@@ -49,7 +49,7 @@ describe('subobject view', () => {
     });
 
     describe('language editable', () => {
-        fit('should show the languages of the journal', () => {
+        it('should show the languages of the journal', () => {
             browser.get(browser.baseUrl);
             mo.getRowContent("OJS: Journal Code").then(cell => {
                 cell.all(by.css("option")).get(1).click();
