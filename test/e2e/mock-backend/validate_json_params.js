@@ -23,7 +23,7 @@ module.exports = function validateJsonParams(req, res, next) {
 
     if (valid) {
         console.log("OK");
-        res.status(200).json({"success": "true", "message": "Your upload have the correct format."});
+        res.status(200).json({"status": "job running", "task_ids": []});
     } else {
         ajv.errors.forEach(e => console.log(e.dataPath + " " + e.message));
         res.status(500).json({
