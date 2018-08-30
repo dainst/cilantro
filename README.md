@@ -22,7 +22,7 @@ The future Cilantro-Frontend
     - `mv config/settings.cilantro_local.json config/settings.json`
     - `npm run server`
 
-## c) with old PHP-Backend and Apache (lagacy-branch)
+## c) with old PHP-Backend and Apache (legacy-branch)
 - clone to /var/www/importer or similar
 - configure apache to serve /var/www
 - npm install
