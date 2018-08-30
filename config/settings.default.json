@@ -3,7 +3,6 @@
   "server_url":   "http:// ##cilantro##",
   "ojs_url":      "http:// ##ojs2 installation## /plugins/generic/ojs-cilantro-plugin/api/",
   "zenon_url":    "https://zenon.dainst.org/api/v1/",
-  "importer_url": "http://localhost:9082",
   "server_user":  "##cilantro user##",
   "server_pass":  "##cilantro password##"
 }

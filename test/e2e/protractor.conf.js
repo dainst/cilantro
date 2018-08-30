@@ -1,6 +1,7 @@
 fs = require('fs');
 process = require('process');
 
+const prepareCilantro = require('./util/prepare_cilantro.js');
 const HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
 
 const reporter = new HtmlScreenshotReporter({
@@ -10,7 +11,7 @@ const reporter = new HtmlScreenshotReporter({
 
 exports.config = {
     chromeDriver : '../../node_modules/chromedriver/lib/chromedriver/chromedriver' + (process.platform === 'win32' ? '.exe' : ''),
-    baseUrl: require('./util/read_settings').get('importer_url'),
+    baseUrl: "http://localhost:9082",
     suites: {
        util: './util/delays.js',
        tests: 'specs/**.spec.js'
@@ -42,7 +43,10 @@ exports.config = {
 
     beforeLaunch: () => new Promise(resolve => reporter.beforeLaunch(resolve)),
 
-    onPrepare: () => jasmine.getEnv().addReporter(reporter),
+    onPrepare: () => {
+        prepareCilantro.run();
+        jasmine.getEnv().addReporter(reporter)
+    },
 
     afterLaunch: exitCode => new Promise(resolve => reporter.afterLaunch(resolve.bind(this, exitCode))),
 
