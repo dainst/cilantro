@@ -1,16 +1,17 @@
 # ojs-importer
 The future Cilantro-Frontend
 
-# installation
+## installation
 
-## a) without backend
-- `npm install`
-- `mv config/settings.test.json config/settings.json`
-- `npm run e2e-mock-backend`
-- (new Tab)
-- `npm run server`
+### a) Run without backend
+- set up salvia
+    - `npm install`
+    - `mv config/settings.test.json config/settings.json`
+    - `npm run e2e-mock-backend`
+    - (new Tab)
+    - `npm run server --settings=local_cilantro`
 
-## b) example configuration with local cilantro as backend and local ojs2 with docker
+### b) Run with local Cilantro
 - get cilantro
     - Clone https://github.com/dainst/cilantro
     - follow cilantro install instructions
@@ -19,34 +20,38 @@ The future Cilantro-Frontend
 - set up salvia
     - go to salvia-dir
     - `npm install`
-    - `mv config/settings.cilantro_local.json config/settings.json`
-    - `npm run server`
+    - `npm run server --settings=local_cilantro`
 
-## c) with old PHP-Backend and Apache (legacy-branch)
-- clone to /var/www/importer or similar
-- configure apache to serve /var/www
-- npm install
-- create folders:
-    - tmp 
-    - reports
-    - staging
-- create settings.php like config/settings.default.php and fill out
-- create settings.json like config/settings.default.json and fill out
-- http://localhost/importer
+### c) Run with user defined configuration
+- set up salvia
+    - `npm install`
+    - `mv config/settings.default.json config/settings.json`
+    - `nano config/settings.json`:
+    ```
+    {
+      "files_url":    "http:// ##cilantro## / ##staging_folder##",
+      "server_url":   "http:// ##cilantro##",
+      "ojs_url":      "http:// ##ojs2 installation## /plugins/generic/ojs-cilantro-plugin/api/",
+      "zenon_url":    "https://zenon.dainst.org/api/v1/",
+      "importer_url": "http://localhost:9082",
+      "server_user":  "##cilantro user##",
+      "server_pass":  "##cilantro password##"
+    }
+    ```
+     - `npm run server`
 
-
-# build
+## build
 There is no build process right now.
 
-# test
+## test
 - `npm run e2e`
-    - or in 3 tabs
+    - or (recommended) in 3 different tabs
         - `npm run e2e-mock-backend`
-        - `npm run server`
+        - `npm run server --settings=test --sync=false` (choose config against which shall be tested)
         - `npm run e2e-test`
 - unit tests are missing 
 
-# code style
+## code style
 
 - indentation: 4 Spaces instead of tab
     - idea: settings->editor->javascript
