@@ -3,7 +3,7 @@
 name=${1}
 tag=${2-latest}
 nocache=${3}
-token=$(grep github_access_token .env | xargs)
+token=$(grep GITHUB_ACCESS_TOKEN .env | xargs)
 token=${token#*=}
 
 if [ -z "${name}" ]
