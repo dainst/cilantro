@@ -6,7 +6,7 @@ const so = require('../modules/subobject');
 
 describe('mainobject view', () => {
     describe('editables', () => {
-        fit("number editable should be limited to numbers", () => {
+        it("number editable should be limited to numbers", () => {
             browser.get(browser.baseUrl);
             mo.getRowContent("Year").then(cell => {
                 cell.element(by.css("input")).clear().sendKeys("abc");
