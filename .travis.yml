@@ -27,7 +27,7 @@ before_install:
   - mkdir data/repository
   - mkdir data/workspace
   - docker-compose build
-  - docker-compose up -d
+  - docker-compose up
 script:
   - bash test/exec_docker_test.sh
   - bash doc/build-doc.sh
