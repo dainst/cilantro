@@ -22,10 +22,6 @@ services:
     image: dainst/cilantro-service:multi-user
     ports:
       - "5000:5000"
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
     working_dir: /app
     environment:
       BROKER_HOST: "broker"
@@ -39,10 +35,6 @@ services:
   default-worker:
     user: ${UID}
     image: dainst/cilantro-default-worker:test_pdf
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
     working_dir: /app
     environment:
       BROKER_HOST: "broker"
@@ -57,10 +49,6 @@ services:
   convert-worker:
     user: ${UID}
     image: dainst/cilantro-convert-worker:stable
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
     working_dir: /app
     environment:
       BROKER_HOST: "broker"
@@ -75,10 +63,6 @@ services:
   nlp-worker:
     user: ${UID}
     image: dainst/cilantro-nlp-worker:stable
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
     working_dir: /app
     environment:
       BROKER_HOST: "broker"
@@ -93,10 +77,6 @@ services:
   test:
     user: ${UID}
     image: dainst/cilantro-test:multi-user
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
     working_dir: /app
     tty: true
     environment:
@@ -123,6 +103,3 @@ services:
     image: dainst/cilantro-ojs2:latest
     ports:
       - "4444:80"
-    volumes:
-      - ./test/resources:/test/resources
-      - ./data:/data

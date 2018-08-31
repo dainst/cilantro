@@ -1,0 +1,38 @@
+version: '3.5'
+
+services:
+
+  service:
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+
+  default-worker:
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+
+  convert-worker:
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+
+  nlp-worker:
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+
+  test:
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+
+  ojs:
+    volumes:
+      - ./test/resources:/test/resources
+      - ./data:/data
