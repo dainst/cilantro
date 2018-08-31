@@ -15,7 +15,7 @@ Login to dockerhub:
 
 To build a new image or to rebuild it run the build script
 
-    `./build.sh <image-name> <tag>`
+    ./build.sh <image-name> <tag>
 
 Tag defaults to stable.
 
