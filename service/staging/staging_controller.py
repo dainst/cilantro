@@ -12,7 +12,7 @@ staging_controller = Blueprint('staging', __name__)
 
 staging_dir = os.environ['STAGING_DIR']
 
-allowed_extensions = ['xml', 'pdf', 'tif', 'tiff', 'json']
+allowed_extensions = ['xml', 'pdf', 'tif', 'tiff', 'json', 'csv']
 
 logger = logging.getLogger(__name__)
 
