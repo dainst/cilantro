@@ -1,38 +1,99 @@
-// const fs = require('fs');
-// const path = require('path');
-const promisedRequest = require('./promised_request');
+const fs = require('fs');
+const path = require('path');
+const rp = require('request-promise-native');
 
-const url = "http://localhost:9082"; // TODO get form protractor
+let frontendUrl = "";
+let backendUrl = "";
+let params = {};
 
-function error(e) {
-    console.error("Cilantro preparation could not be performed", e);
-    process.exit();
+
+function getParams() {
+    return new Promise((resolve, reject) => {
+        rp({uri: frontendUrl + '/config/settings.json', method: 'GET'}).then(res => {
+            const settings = JSON.parse(res);
+            backendUrl = settings.server_url;
+            params = {};
+            params.method = 'GET';
+            if (typeof settings.server_user !== 'undefined') {
+                params.auth = {
+                    user: settings.server_user,
+                    pass: settings.server_pass
+                };
+            }
+            resolve(params);
+        })
+            .catch(reject)
+    });
 }
 
-const prepareCilantro = {
-
-    prepare: () => new Promise((resolve, reject) => {
-        promisedRequest(url + '/config/settings.json', {method: 'GET'}).then(res => {
-            const settings = JSON.parse(res);
-            const params = {};
-            params.method = 'GET';
-            if (typeof settings.server_user !== 'undefined') params.auth = settings.server_user + ':' + settings.server_pass;
-            console.log("[Preparing server for testing]");
-            prepareCilantro.clearStaging(settings.server_url, params)
-                .then(resolve);
-        })
-            .catch(error);
-    }),
-
-    clearStaging: (url, params) => new Promise((resolve, reject) =>
-        promisedRequest(url + 'staging', params).then(res =>
-            Promise.all(JSON.parse(res).map(item =>
-                promisedRequest(url + 'staging' + '/' + item.name, {...params, method: 'DELETE'})
-            ))
+function clearStaging() {
+    return new Promise((resolve, reject) =>
+        rp({...params, uri: backendUrl + 'staging'}).then(res =>
+            Promise.all(JSON.parse(res).map(item => {
+                console.log("Delete", item.name);
+                return rp({...params, uri: backendUrl + 'staging' + '/' + item.name, method: 'DELETE'})
+            }))
                 .then(resolve)
-                .catch(error)
         )
-    )
+            .catch(reject)
+    );
+}
+
+ function fillStaging() {
+    return new Promise((resolve, reject) => {
+        const formData = {};
+        const testResDir = path.join(__dirname, '../resources/staging/');
+        function readDir(path, target) {
+            if (fs.lstatSync(testResDir + path).isDirectory()) {
+                fs.readdirSync(testResDir + path).forEach(entry => readDir(path + '/' + entry, target));
+            } else if (fs.lstatSync(testResDir + path).isFile()) {
+                console.log("Upload", path);
+                target[path] = {
+                    value:  fs.createReadStream(testResDir + path),
+                    options: {
+                        filepath: path.replace('/', '\\') // see form-data/lib/form_data.js l. 225
+                    }
+                };
+            }
+        }
+        readDir('', formData);
+
+        rp({...params, uri: backendUrl + 'staging', method: 'POST', formData: formData}).then(res => {
+            const result = JSON.parse(res).result;
+            const success = Object.values(result).reduce((all, x) => all && x.success, true);
+
+            if (success) {
+                resolve();
+            } else {
+                console.log(result);
+                reject({stack: "Staging Dir Preparation Failed"});
+            }
+        });
+    })
+}
+
+const pc = {
+    
+
+    prepare: url => new Promise((resolve, reject) => {
+        frontendUrl = url;
+        console.log("Salvia on " + frontendUrl);
+        getParams()
+            .then(clearStaging)
+            .then(fillStaging)
+            .then(resolve)
+            .catch(reject)
+    }),
+    
+    cleanUp: url => new Promise((resolve, reject) => {
+        frontendUrl = url;
+        getParams()
+            .then(clearStaging)
+            .then(resolve)
+            .catch(reject)
+    })
+
+ 
 };
 
-module.exports = prepareCilantro;
+module.exports = pc;
