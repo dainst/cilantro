@@ -13,6 +13,7 @@ module.exports = (theUrl, options, body) => new Promise((resolve, reject) => {
 
     const req = http.request(options, res => {
         let result = '';
+        console.info(`${req.method} ${req.path}`)
         res.setEncoding('utf8');
         res.on('data', chunk => result += chunk);
         res.on('end', () => resolve(result));

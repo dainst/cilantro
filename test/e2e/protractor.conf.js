@@ -44,7 +44,7 @@ exports.config = {
     beforeLaunch: () => new Promise(resolve => reporter.beforeLaunch(resolve)),
 
     onPrepare: () => {
-        prepareCilantro.run();
+        prepareCilantro.prepare();
         jasmine.getEnv().addReporter(reporter)
     },
 

@@ -2,34 +2,37 @@
 // const path = require('path');
 const promisedRequest = require('./promised_request');
 
-
 const url = "http://localhost:9082"; // TODO get form protractor
 
-module.exports = {
-    run: () => new Promise((resolve, reject) => {
+function error(e) {
+    console.error("Cilantro preparation could not be performed", e);
+    process.exit();
+}
 
-        // get server url
+const prepareCilantro = {
+
+    prepare: () => new Promise((resolve, reject) => {
         promisedRequest(url + '/config/settings.json', {method: 'GET'}).then(res => {
-            console.log(url + '/config/settings.json');
-            console.log(res);
-            resolve();
-        });
+            const settings = JSON.parse(res);
+            const params = {};
+            params.method = 'GET';
+            if (typeof settings.server_user !== 'undefined') params.auth = settings.server_user + ':' + settings.server_pass;
+            console.log("[Preparing server for testing]");
+            prepareCilantro.clearStaging(settings.server_url, params)
+                .then(resolve);
+        })
+            .catch(error);
+    }),
 
-
-        // get staging dir
-        // promisedRequest(cilantro + '/staging', {'method': 'GET'}).then(res => {
-        //     console.log(cilantro + '/staging');
-        //     console.log(res);
-        //     resolve();
-        // })
-
-
-
-        // delete everything
-
-
-        // upload testdata
-
-
-    })
+    clearStaging: (url, params) => new Promise((resolve, reject) =>
+        promisedRequest(url + 'staging', params).then(res =>
+            Promise.all(JSON.parse(res).map(item =>
+                promisedRequest(url + 'staging' + '/' + item.name, {...params, method: 'DELETE'})
+            ))
+                .then(resolve)
+                .catch(error)
+        )
+    )
 };
+
+module.exports = prepareCilantro;
