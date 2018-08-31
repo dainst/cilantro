@@ -1,6 +1,5 @@
 import logging
 import os
-from utils.object import Object
 
 from jinja2 import Environment, FileSystemLoader
 
