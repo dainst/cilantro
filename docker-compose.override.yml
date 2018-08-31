@@ -2,6 +2,10 @@ version: '3.5'
 
 services:
 
+  redis:
+    volumes:
+      - ./redis-data:/data
+
   service:
     build: ./docker/cilantro-service
     volumes:
