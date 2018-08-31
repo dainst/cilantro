@@ -20,8 +20,11 @@ ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-RUN set -ex && mkdir /app
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
+RUN set -ex && mkdir /app
+
+COPY ./utils /app/utils
+COPY ./workers /app/workers
 WORKDIR /app
 
 COPY Pipfile Pipfile
