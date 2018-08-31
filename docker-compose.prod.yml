@@ -1,0 +1,47 @@
+version: '3.5'
+
+services:
+
+  redis:
+    volumes:
+      - redis-data:/data
+
+  service:
+    build: ./docker/cilantro-service
+    volumes:
+      - data:/data
+      - config:/config
+
+  default-worker:
+    build: ./docker/cilantro-default-worker
+    volumes:
+      - data:/data
+      - config:/config
+
+  convert-worker:
+    build: ./docker/cilantro-convert-worker
+    volumes:
+      - data:/data
+      - config:/config
+
+  nlp-worker:
+    build: ./docker/cilantro-nlp-worker
+    volumes:
+      - data:/data
+      - config:/config
+
+  test:
+    build: ./docker/cilantro-test
+    volumes:
+      - data:/data
+      - config:/config
+
+  ojs:
+    build: ./docker/cilantro-ojs2
+    volumes:
+      - data:/data
+
+volumes:
+  redis-data:
+  data:
+  config:
