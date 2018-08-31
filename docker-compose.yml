@@ -48,7 +48,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:stable
+    image: dainst/cilantro-convert-worker:production-setup
     working_dir: /app
     environment:
       BROKER_HOST: "broker"
