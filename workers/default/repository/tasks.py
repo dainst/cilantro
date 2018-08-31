@@ -56,9 +56,6 @@ def _initialize_object(obj, params, user):
         _add_files(obj, params['files'], user)
     if 'parts' in params:
         for part in params['parts']:
-            # TODO check if this is the proper solution
-            part['metadata']['year'] = params['metadata']['year']
-            part['metadata']['volume'] = params['metadata']['volume']
             _initialize_object(obj.add_part(), part, user)
 
 
