@@ -7,12 +7,16 @@ ENV LANG C.UTF-8
 
 RUN apk add --update python-dev py-pip gcc libffi libffi-dev musl-dev
 
-RUN set -ex && mkdir /app
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
+RUN set -ex && mkdir /app
+
+COPY ./run_service.py /app/
+COPY ./utils /app/utils
+COPY ./service /app/service
 WORKDIR /app
 
-COPY Pipfile Pipfile
-COPY Pipfile.lock Pipfile.lock
+COPY docker/cilantro-service/Pipfile Pipfile
+COPY docker/cilantro-service/Pipfile.lock Pipfile.lock
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system

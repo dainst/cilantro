@@ -19,7 +19,7 @@ services:
       - "6379:6379"
 
   service:
-    image: dainst/cilantro-service:multi-user
+    image: dainst/cilantro-service:production-setup
     ports:
       - "5000:5000"
     working_dir: /app
@@ -34,7 +34,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:test_pdf
+    image: dainst/cilantro-default-worker:production-setup
     working_dir: /app
     environment:
       BROKER_HOST: "broker"
@@ -62,7 +62,7 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:stable
+    image: dainst/cilantro-nlp-worker:production-setup
     working_dir: /app
     environment:
       BROKER_HOST: "broker"
@@ -76,7 +76,7 @@ services:
 
   test:
     user: ${UID}
-    image: dainst/cilantro-test:multi-user
+    image: dainst/cilantro-test:production-setup
     working_dir: /app
     tty: true
     environment:

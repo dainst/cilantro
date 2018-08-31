@@ -15,12 +15,15 @@ ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-RUN set -ex && mkdir /app
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
+RUN set -ex && mkdir /app
+
+COPY ./utils /app/utils
+COPY ./workers /app/workers
 WORKDIR /app
 
-COPY Pipfile Pipfile
-COPY Pipfile.lock Pipfile.lock
+COPY docker/cilantro-default-worker/Pipfile Pipfile
+COPY docker/cilantro-default-worker/Pipfile.lock Pipfile.lock
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system

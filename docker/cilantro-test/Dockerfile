@@ -20,10 +20,14 @@ ENV LIBRARY_PATH=/lib:/usr/lib
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
+COPY ./service /app/service
+COPY ./test /app/test
+COPY ./utils /app/utils
+COPY ./workers /app/workers
 WORKDIR /app
 
-COPY Pipfile Pipfile
-COPY Pipfile.lock Pipfile.lock
+COPY docker/cilantro-test/Pipfile Pipfile
+COPY docker/cilantro-test/Pipfile.lock Pipfile.lock
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system
