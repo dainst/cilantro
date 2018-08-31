@@ -3,36 +3,42 @@ version: '3.5'
 services:
 
   service:
+    build: ./docker/cilantro-service
     volumes:
       - .:/app
       - ./data:/data
       - ./config:/config
 
   default-worker:
+    build: ./docker/cilantro-default-worker
     volumes:
       - .:/app
       - ./data:/data
       - ./config:/config
 
   convert-worker:
+    build: ./docker/cilantro-convert-worker
     volumes:
       - .:/app
       - ./data:/data
       - ./config:/config
 
   nlp-worker:
+    build: ./docker/cilantro-nlp-worker
     volumes:
       - .:/app
       - ./data:/data
       - ./config:/config
 
   test:
+    build: ./docker/cilantro-test
     volumes:
       - .:/app
       - ./data:/data
       - ./config:/config
 
   ojs:
+    build: ./docker/cilantro-ojs2
     volumes:
       - ./test/resources:/test/resources
       - ./data:/data
