@@ -117,7 +117,7 @@ describe('overview page', () => {
         ot.getRowButton(0, 'open').click();
         a.switchToNewTab().then(() => {
             browser.ignoreSynchronization = true;
-            expect(browser.getCurrentUrl()).toMatch(/\/files\/e2e-testing\.pdf/);
+            expect(browser.getCurrentUrl()).toMatch(/\/staging\/e2e-testing\.pdf/);
             browser.ignoreSynchronization = false;
         });
     });
