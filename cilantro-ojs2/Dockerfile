@@ -23,7 +23,9 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install git mysql-server mysql-server nano
 RUN docker-php-ext-install -j$(nproc) mysql \
   && echo "mysql.default_socket=/run/mysqld/mysqld.sock"  >> /usr/local/etc/php/php.ini
-RUN service mysql start \
+# see https://github.com/docker/for-linux/issues/72
+RUN find /var/lib/mysql -type f -exec touch {} \; \
+  && service mysql start \
   && sh -c "echo \"CREATE DATABASE ${mysql_db};\" | mysql" \
   && mysqladmin -u root password ${mysql_password}
 
@@ -46,7 +48,8 @@ RUN chmod -R 777 /var/www/html/ojs/cache \
 RUN cp /var/www/html/ojs/config.TEMPLATE.inc.php /var/www/html/ojs/config.inc.php
 
 # run installation
-RUN service mysql start  \
+RUN find /var/lib/mysql -type f -exec touch {} \; \
+  && service mysql start \
   && echo "en_US\nde_DE\nutf-8\n\n\n/OJSfiles\nmd5\n${admin_user}\n${admin_password}\n${admin_password}\n${admin_email}\nmysql\nlocalhost\nroot\n${mysql_password}\n${mysql_db}\nN\ndockerizedOjs\nY\nY" > /tmp/dialog \
   && sh -c  'cat /tmp/dialog | php /var/www/html/ojs/tools/install.php install'
 
@@ -74,7 +77,8 @@ RUN git clone https://github.com/dainst/ojs-plugin-urnDNB -b ojs2 /var/www/html/
 
 # set up test journal and activate plugins
 RUN git clone https://github.com/dainst/ojs-config-tool.git /root/ojs-config-tool
-RUN service mysql start  \
+RUN find /var/lib/mysql -type f -exec touch {} \; \
+  && service mysql start \
   && php /root/ojs-config-tool/ojs2.php --theme=dainst --journal.theme=dainst --journal.plugins=${enable_plugins}
 
 # some final configs
@@ -83,6 +87,6 @@ RUN chmod -R 777 /OJSfiles
 RUN chmod -R 777 /var/www/html/ojs/plugins/generic/ojs-dainst-frontpage-generator-plugin/lib/tcpdf/fonts/
 
 # startup script
-RUN echo "#!/bin/bash\nservice mysql start\napachectl -DFOREGROUND" >> /root/startup.sh  \
+RUN echo "#!/bin/bash\nfind /var/lib/mysql -type f -exec touch {} \;\nservice mysql start\napachectl -DFOREGROUND" >> /root/startup.sh  \
   && chmod a+x /root/startup.sh
 ENTRYPOINT ["/root/startup.sh"]
