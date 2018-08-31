@@ -4,6 +4,7 @@ import logging
 
 from workers.default.xml.xml_generator import generate_xml
 from utils.object import Object
+from workers.base_task import ObjectTask
 
 log = logging.getLogger(__name__)
 
@@ -15,23 +16,19 @@ class GenerateXMLTest(unittest.TestCase):
 
         def test_generate_ojsxml(self):
             obj = Object(f'{self.resource_dir}/objects/a_journal')
+            template_file = 'ojs_template.xml'
+            target_file_path = os.path.join(obj.path, 'test_ojsxml.xml')
+            task = ObjectTask()
+            task.params['ojs_metadata'] = {
+                "ojs_journal_code": "test",
+                "ojs_user": "ojs_user",
+                "auto_publish_issue": False,
+                "default_publish_articles": True,
+                "default_create_frontpage": True,
+                "allow_upload_without_file": False
+            }
 
-            template_file = open('resources/ojs_template.xml', 'r')
-            template_string = template_file.read()
-            template_file.close()
-
-            articles_meta = []
-            for part in obj.get_parts():
-                articles_meta.append(part.metadata.to_dict())
-
-            data = {
-                'metadata': obj.metadata.to_dict(),
-                'ojs_metadata': {
-                    'auto_publish_issue': True,
-                    'default_create_frontpage': True},
-                'articles': articles_meta}
-
-            generate_xml(obj.path, data, template_string, 'test_ojsxml.xml')
+            generate_xml(task, obj, template_file, target_file_path)
 
             self.assertTrue(os.path.isfile(
                 f'{self.resource_dir}/objects/a_journal/test_ojsxml.xml'))

@@ -1,3 +1,5 @@
+{% set metadata = obj.metadata.to_dict() %}
+{% set parent_metadata = obj.get_parent().metadata.to_dict() %}
 <?xml version="1.0" encoding="UTF-8"?>
 <collection xmlns="http://www.loc.gov/MARC21/slim">
     <record>
@@ -45,7 +47,7 @@
             <subfield code="a">ANA</subfield>
             <subfield code="b">(manuell: ID des Bandes)</subfield>
             <subfield code="l">DAI01</subfield>
-            <subfield code="n">Chiron. Mitteilungen der Kommission für Alte Geschichte und Epigraphik des Deutschen Archäologischen Instituts, {{metadata['volume']}} {{metadata['year']}}</subfield>
+            <subfield code="n">Chiron. Mitteilungen der Kommission für Alte Geschichte und Epigraphik des Deutschen Archäologischen Instituts, {{parent_metadata['volume']}} {{parent_metadata['year']}}</subfield>
             <subfield code="m">{{metadata['title']}}</subfield>
         </datafield>
 
