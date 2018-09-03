@@ -9,7 +9,7 @@ The future Cilantro-Frontend
     - `mv config/settings.test.json config/settings.json`
     - `npm run e2e-mock-backend`
     - (new Tab)
-    - `npm run server --settings=local_cilantro`
+    - `npm run server`
 
 ### b) Run with local Cilantro
 - get cilantro
@@ -19,8 +19,9 @@ The future Cilantro-Frontend
    
 - set up salvia
     - go to salvia-dir
-    - `npm install`
-    - `npm run server --settings=local_cilantro`
+    - `npm install --dev`
+    - `mv config/settings.local_cilantro.json config/settings.json`
+    - `npm run server`
 
 ### c) Run with user defined configuration
 - set up salvia
