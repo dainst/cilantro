@@ -46,7 +46,8 @@ class GenerateXMLTask(ObjectTask):
         generated_xml_file = generate_xml(self, obj, template_file,
                                           target_filepath)
 
-        validate_xml(generated_xml_file, dtd_file, schema_file)
+        validate_xml(generated_xml_file, dtd_file_path=dtd_file,
+                     schema_file_path=schema_file)
 
 
 GenerateXMLTask = celery_app.register_task(GenerateXMLTask())
