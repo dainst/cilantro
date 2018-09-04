@@ -37,10 +37,9 @@ angular
 
         // open file externally
         $scope.openDocument = function(article) {
-            console.log("OPEN " + article.filepath);
+            console.log("Open Document: " + article.filepath.value.value);
             window.open(settings.files_url + article.filepath.value.value);
         };
-
 
         /* merging articles */
         $scope.selectedToMerge = false;

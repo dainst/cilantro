@@ -18,8 +18,8 @@ server.use(middleWares);
 server.use('/job', validateJsonParams);
 server.use('/zenon/:endpoint', fakeZenon);
 
-server.use('/files', fakeStaging);
-server.use('/files', express.static(path.join(__dirname, '/../resources/staging')));
+server.use('/staging', fakeStaging);
+server.use('/staging', express.static(path.join(__dirname, '/../resources/staging')));
 
 server.use(router);
 server.listen(port, () => {
