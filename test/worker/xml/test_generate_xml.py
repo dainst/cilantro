@@ -18,8 +18,7 @@ class GenerateXMLTest(unittest.TestCase):
             obj = Object(f'{self.resource_dir}/objects/a_journal')
             template_file = 'ojs_template.xml'
             target_file_path = os.path.join(obj.path, 'test_ojsxml.xml')
-            task = ObjectTask()
-            task.params['ojs_metadata'] = {
+            additional_params = {
                 "ojs_journal_code": "test",
                 "ojs_user": "ojs_user",
                 "auto_publish_issue": False,
@@ -28,7 +27,7 @@ class GenerateXMLTest(unittest.TestCase):
                 "allow_upload_without_file": False
             }
 
-            generate_xml(task, obj, template_file, target_file_path)
+            generate_xml(obj, template_file, target_file_path, additional_params)
 
             self.assertTrue(os.path.isfile(
                 f'{self.resource_dir}/objects/a_journal/test_ojsxml.xml'))
