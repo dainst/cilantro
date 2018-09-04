@@ -5,7 +5,7 @@ const rp = require('request-promise-native');
 let frontendUrl = "";
 let backendUrl = "";
 let params = {};
-
+let silent = false;
 
 function getParams() {
     return new Promise((resolve, reject) => {
@@ -30,7 +30,7 @@ function clearStaging() {
     return new Promise((resolve, reject) =>
         rp({...params, uri: backendUrl + 'staging'}).then(res =>
             Promise.all(JSON.parse(res).map(item => {
-                console.log("Delete", item.name);
+                if (!silent) console.log("Delete", item.name);
                 return rp({...params, uri: backendUrl + 'staging' + '/' + item.name, method: 'DELETE'})
             }))
                 .then(resolve)
@@ -39,7 +39,12 @@ function clearStaging() {
     );
 }
 
- function fillStaging() {
+function clearSingleFile(file) {
+    if (!silent) console.log("Delete", file);
+    return rp({...params, uri: backendUrl + 'staging' + '/' + file, method: 'DELETE'})
+}
+
+function fillStaging() {
     return new Promise((resolve, reject) => {
         const formData = {};
         const testResDir = path.join(__dirname, '../resources/staging/');
@@ -47,7 +52,7 @@ function clearStaging() {
             if (fs.lstatSync(testResDir + path).isDirectory()) {
                 fs.readdirSync(testResDir + path).forEach(entry => readDir(path + '/' + entry, target));
             } else if (fs.lstatSync(testResDir + path).isFile()) {
-                console.log("Upload", path);
+                if (!silent) console.log("Upload", path);
                 target[path] = {
                     value:  fs.createReadStream(testResDir + path),
                     options: {
@@ -73,11 +78,10 @@ function clearStaging() {
 }
 
 const pc = {
-    
 
     prepare: url => new Promise((resolve, reject) => {
         frontendUrl = url;
-        console.log("Salvia on " + frontendUrl);
+        if (!silent) console.log("Salvia on " + frontendUrl);
         getParams()
             .then(clearStaging)
             .then(fillStaging)
@@ -91,9 +95,19 @@ const pc = {
             .then(clearStaging)
             .then(resolve)
             .catch(reject)
-    })
+    }),
 
- 
+    clearSingleFile: (url, file) => new Promise((resolve, reject) => {
+        frontendUrl = url;
+        getParams()
+            .then(() => clearSingleFile(file))
+            .then(resolve)
+            .catch(reject)
+    }),
+
+    silent: to => {
+        silent = to || !silent
+    }
 };
 
 module.exports = pc;

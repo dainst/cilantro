@@ -2,11 +2,11 @@
   "staging": [
     {
       "type": "file",
-      "name": "e2e-testing.csv"
+      "name": "broken_file.csv"
     },
     {
       "type": "file",
-      "name": "broken_file.csv"
+      "name": "e2e-testing.csv"
     },
     {
       "type": "file",

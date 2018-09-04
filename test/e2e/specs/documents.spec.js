@@ -1,6 +1,9 @@
 const e = require("../modules/elements");
 const a = require('../modules/actions');
 const message = require('../modules/messages');
+const documents = require('../modules/documents');
+const prepareCilantro = require('../util/prepare_cilantro.js');
+
 
 describe('documents page', () => {
 
@@ -49,20 +52,25 @@ describe('documents page', () => {
             .then(expect(e.overview.tableRows.count()).toEqual(0))
     });
 
-    it('should handle a broken file without big drama', () => {
+    it('should handle a broken file without big drama', done => {
         browser.get(browser.baseUrl)
             .then(e.home.startBtn.click)
-            .then(e.documents.treeViewItemsTopLevel.get(1).element(by.css('.load')).click)
+            .then(() => prepareCilantro.silent(true))
+            .then(() => prepareCilantro.clearSingleFile(browser.baseUrl, 'e2e-testing-broken_file.csv'))
+            .then(e.documents.treeViewItemsTopLevel.get(0).element(by.css('.load')).click)
             .then(message.waitForMessage)
-            .then(expect(message.getClassOfMain()).toBe("danger"));
+            .then(() => expect(message.getClassOfMain()).toBe("danger"))
+            .then(() => prepareCilantro.prepare(browser.baseUrl))
+            .then(() => prepareCilantro.silent(false))
+            .then(done);
+
     });
 
     it('should load all files of a directory', () => {
         browser.get(browser.baseUrl)
             .then(e.home.startBtn.click)
             .then(e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click)
-            .then(message.waitForMessage)
-            .then(browser.sleep(500))
+            .then(documents.waitForLoaded(3))
             .then(message.getStats)
             .then(stats => {
                 expect(stats.Analyzed).toEqual(3);
@@ -77,7 +85,7 @@ describe('documents page', () => {
     it('should open the csv import dialogue after loading a csv file', () => {
         browser.get(browser.baseUrl)
             .then(e.home.startBtn.click)
-            .then(e.documents.treeViewItemsTopLevel.get(0).element(by.css('.load')).click)
+            .then(e.documents.treeViewItemsTopLevel.get(1).element(by.css('.load')).click)
             .then(a.waitForModal)
             .then(expect(e.csv.textField.getAttribute('value')).not.toEqual(""))
             .then(e.csv.takeData.click)

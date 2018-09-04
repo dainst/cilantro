@@ -7,7 +7,7 @@ describe('csv import dialogue', () => {
     beforeEach(done =>
         browser.get(browser.baseUrl)
             .then(e.home.startBtn.click)
-            .then(e.documents.treeViewItemsTopLevel.get(0).element(by.css('.load')).click)
+            .then(e.documents.treeViewItemsTopLevel.get(1).element(by.css('.load')).click)
             .then(a.waitForModal)
             .then(done)
     );
