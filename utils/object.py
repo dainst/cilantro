@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 from io import BytesIO
 import json
+from pathlib import Path
 from typing import List, Iterator, TextIO
 from distutils.dir_util import copy_tree
 from utils.serialization import SerializableClass
@@ -261,6 +262,13 @@ class Object:
     def _get_part_dir_for_index(self, index: int):
         part_name = f"{Object.PART_PREFIX}{str(index).zfill(4)}"
         return os.path.join(self.get_parts_dir(), part_name)
+
+    def get_parent(self):
+        """Return the parent Object if this is a part."""
+        if "parts/part_" in self.path:
+            return Object(Path(self.path).parents[1])
+        else:
+            return None
 
 
 def _is_part_dir_format(dir_name):

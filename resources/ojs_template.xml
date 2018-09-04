@@ -1,47 +1,53 @@
+{% set metadata = obj.metadata.to_dict() %}
+{% set ojs_metadata = additional_params %}
+{% set parts = obj.get_parts()|list %}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE issues PUBLIC "-//PKP//OJS Articles and Issues XML//EN" "http://pkp.sfu.ca/ojs/dtds/2.4.8/native.dtd">
 <issues>
-    <issue identification="{{data['identification']}}" published="{{data['auto_publish_issue']|lower}}">
+    <issue identification="{{metadata['identification']}}" published="{{ojs_metadata['auto_publish_issue']|lower}}">
 
-        {% if data['description'] %}
-        <description>{{data['description']}}</description>
+        {% if metadata['description'] %}
+        <description>{{metadata['description']}}</description>
         {% endif %}
 
-        {% if data['volume'] %}
-        <volume>{{data['volume']}}</volume>
+        {% if metadata['volume'] %}
+        <volume>{{metadata['volume']}}</volume>
         {% endif -%}
 
-        {% if data['number'] %}
-        <number>{{data['number']}}</number>
+        {% if metadata['number'] %}
+        <number>{{metadata['number']}}</number>
         {% endif -%}
 
-        {% if data['year'] %}
-        <year>{{data['year']}}</year>
+        {% if metadata['year'] %}
+        <year>{{metadata['year']}}</year>
         {% endif -%}
 
         <section>
             <title locale="en_US">Articles</title>
 
-            {% for article in articles %}
-                <article {{'language="' + article['language'][0:2] + '" locale="' + article['language'] + '"'}}>
-                    <title>{{article.title}}</title>
-                    {% if article.zenonId and article.zenonId != '(((new)))'%}
-                    <id type="other::zenon">{{article.zenonId}}</id>
+            {% for article in parts %}
+                {% set article_metadata = article.metadata.to_dict() %}
+                {% set article_file_path = path_join(article.get_representation_dir('origin'), 'merged.pdf') %}
+
+                <article {{'language="' + article_metadata['language'][0:2] + '" locale="' + article_metadata['language'] + '"'}}>
+                    <title>{{article_metadata.title}}</title>
+                    {% if article_metadata.zenonId and article_metadata.zenonId != '(((new)))'%}
+                    <id type="other::zenon">{{article_metadata.zenonId}}</id>
                     {% endif %}
-                    {% for author in article.author %}
+                    {% for author in article_metadata.author %}
                     <author>
                         <firstname>{{author.firstname}}</firstname>
                         <lastname>{{author.lastname}}</lastname>
                         <email>no@email.given</email>
                     </author>
                     {% endfor %}
-                    <pages>{{article['pages']['showndesc'] + ('#DFM' if article['createFrontpage'] else '')}}</pages>
-                    <date_published>{{article.date_published}}</date_published>
-                    {% if article.filepath %}
+                    <pages>{{article_metadata['pages']['showndesc'] + ('#DFM' if article_metadata['createFrontpage'] else '')}}</pages>
+                    <date_published>{{article_metadata.date_published}}</date_published>
+                    {% if article_file_path %}
                     <galley>
                         <label>PDF</label>
                         <file>
-                            <href src="{{work_path}}/{{article.filepath}}" mime_type="application/pdf" />
+                            <href src="{{article_file_path}}" mime_type="application/pdf" />
                         </file>
                     </galley>
                     {% endif %}
