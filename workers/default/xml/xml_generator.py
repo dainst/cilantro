@@ -22,6 +22,7 @@ def generate_xml(obj, template_file, target_filepath, additional_params):
         lstrip_blocks=True)
     # Some functions which may be needed in the template (logic)
     env.globals['path_join'] = os.path.join
+    env.globals['walk'] = os.walk
 
     template = env.get_template(template_file)
     filled_template = template.render(obj=obj,
