@@ -39,6 +39,7 @@ tasks:
     template_file: ojs_template.xml
     target_filename: ojs_import.xml
     dtd_file: ojs_import.dtd
+    params: ojs_metadata
   - list_parts:
     foreach:
         task: generate_xml

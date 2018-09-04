@@ -1,5 +1,5 @@
 {% set metadata = obj.metadata.to_dict() %}
-{% set ojs_metadata = task.get_param('ojs_metadata') %}
+{% set ojs_metadata = additional_params %}
 {% set parts = obj.get_parts()|list %}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE issues PUBLIC "-//PKP//OJS Articles and Issues XML//EN" "http://pkp.sfu.ca/ojs/dtds/2.4.8/native.dtd">

@@ -6,14 +6,14 @@ from jinja2 import Environment, FileSystemLoader
 log = logging.getLogger(__name__)
 
 
-def generate_xml(task, obj, template_file, target_filepath):
+def generate_xml(obj, template_file, target_filepath, additional_params):
     """
     Build Jinja2 template and write it to target file.
 
-    :param BaseTask task: Task object that was called
     :param Object obj: The Cilantro Object to be used in the template
     :param str template_file: name of the template file to be used
     :param str target_filepath: name of the generated XML file
+    :param dict additional_params: ojs_metadata
     :return str: Path to generated XML file
     """
     env = Environment(
@@ -24,7 +24,8 @@ def generate_xml(task, obj, template_file, target_filepath):
     env.globals['path_join'] = os.path.join
 
     template = env.get_template(template_file)
-    filled_template = template.render(task=task, obj=obj)
+    filled_template = template.render(obj=obj,
+                                      additional_params=additional_params)
 
     _write_xml_to_file(filled_template, target_filepath)
     return os.path.join(target_filepath)
