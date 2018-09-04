@@ -1,0 +1,71 @@
+{% set metadata = obj.metadata.to_dict() %}
+<?xml version="1.0" encoding="UTF-8"?>
+<mets:mets
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:mets="http://www.loc.gov/METS/"
+    xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns:eb="http://sunsite.berkeley.edu/Ebind"
+    xmlns:dcterms="http://purl.org/dc/terms/"
+    xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/mets/mets.xsd
+        http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-2.xsd">
+
+    <mets:metsHdr LASTMODDATE="2017-12-23T14:54:06+00:00">
+        <mets:agent ROLE="CREATOR" TYPE="ORGANIZATION">
+            <mets:name>Deutsches Archäologisches Institut</mets:name>
+        </mets:agent>
+    </mets:metsHdr>
+
+    <mets:dmdSec ID="dmd001">
+        <mets:mdWrap MIMETYPE="text/xml" MDTYPE="MODS">
+            <mets:xmlData>
+                <mods:mods>
+                    <mods:titleInfo>
+                        <mods:title>{{metadata['title']}}</mods:title>
+                    </mods:titleInfo>
+                    {%- for author_item in metadata['author'] -%}
+                    <mods:name type="personal">
+                        <mods:displayForm>{{author_item['firstname']}} {{author_item['lastname']}}</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+                            <mods:roleTerm type="text">Author</mods:roleTerm>
+                        </mods:role>
+                    </mods:name>
+                    {% endfor %}
+                </mods:mods>
+            </mets:xmlData>
+        </mets:mdWrap>
+    </mets:dmdSec>
+
+    <mets:fileSec>
+        <mets:fileGrp USE="DEFAULT">
+            {% for root, dirs, files in walk(obj.get_representation_dir('jpg')) %}
+                {% for file in files|sort %}
+                <mets:file ID="file{{loop.index}}" MIMETYPE="image/jpeg">
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(obj.get_representation_dir('jpg'), file)}}"/>
+                </mets:file>
+                {% endfor %}
+            {% endfor %}
+        </mets:fileGrp>
+    </mets:fileSec>
+
+    <mets:structMap TYPE="PHYSICAL">
+        <mets:div ID="struct_phys_001" TYPE="physSequence">
+            {% for root, dirs, files in walk(obj.get_representation_dir('jpg')) %}
+                {% for file in files %}
+                <mets:div ID="div{{loop.index}}" ORDER="{{loop.index}}" ORDERLABEL="00" TYPE="page">
+                    <mets:fptr FILEID="file{{loop.index}}"/>
+                </mets:div>
+                {% endfor %}
+            {% endfor %}
+        </mets:div>
+    </mets:structMap>
+
+    <mets:structMap TYPE="LOGICAL">
+        <mets:div ID="struct_log_001" DMDID="dmd001" TYPE="monograph"
+            LABEL="{{metadata['title']}}">
+        </mets:div>
+    </mets:structMap>
+
+</mets:mets>
