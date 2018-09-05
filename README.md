@@ -48,9 +48,15 @@ There is no build process right now.
 - `npm run e2e`
     - or (recommended) in 3 different tabs
         - `npm run e2e-mock-backend`
-        - `npm run server --settings=test --sync=false` (choose config against which shall be tested)
+        - `mv config/settings.test.json config/settings.json`
+        - `npm run server
         - `npm run e2e-test`
 - unit tests are missing 
+
+### tips
+
+- change promisesDelay-attribute in  test/e2e/protractor.conf to slow tests down if you wanna watch them (eg to 150)
+
 
 ## code style
 

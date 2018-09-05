@@ -28,7 +28,7 @@
     "data-uri-to-buffer": "^2.0.0",
     "chromedriver": "2.37",
     "jasmine-core": "2.8.0",
-    "pixelmatch": "^4.0.2",
+    "pixelmatch": "4.0.2",
     "protractor": "5.2.1",
     "protractor-console-plugin": "0.1.1",
     "protractor-jasmine2-screenshot-reporter": "^0.5.0",
@@ -36,6 +36,8 @@
     "gulp": "3.9.1",
     "json-server": "0.12.1",
     "connect-modrewrite": "0.10.2",
-    "browser-sync": "2.18.13"
+    "browser-sync": "2.18.13",
+    "request": "2.88.0",
+    "request-promise-native": "1.0.5"
   }
 }

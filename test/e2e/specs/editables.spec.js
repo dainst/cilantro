@@ -60,10 +60,6 @@ describe('subobject view', () => {
                     e.overview.proceedBtn.click();
                     so.getRowContent("Language").then(cell => {
                         expect(cell.all(by.css("label")).get(0).getText()).toBe("English");
-                        expect(cell.all(by.css("label")).get(1).getText()).toBe("German");
-                        expect(cell.all(by.css("label")).get(2).getText()).toBe("Russian");
-                        expect(cell.all(by.css("label")).get(3).getText()).toBe("Spanish");
-                        expect(cell.all(by.css("label")).get(4).getText()).toBe("French");
                     });
                 });
             });

@@ -2,11 +2,11 @@
   "staging": [
     {
       "type": "file",
-      "name": "e2e-testing.csv"
+      "name": "broken_file.csv"
     },
     {
       "type": "file",
-      "name": "broken_file.csv"
+      "name": "e2e-testing.csv"
     },
     {
       "type": "file",
@@ -34,9 +34,7 @@
       "type": "file",
       "name": "zenon_id_list.csv"
     }
-
   ],
-
   "uploadCSV": {
     "uploadId": "test",
     "task": "uploadCSV",
@@ -45,7 +43,6 @@
     "warnings": [],
     "csv": "Titel,Name,Seiten,Startseite,Endseite,PDF-start,PDF-Ende\nDidyma und Milet in archaischer Zeit,Norbert Ehrhardt,11–20,11,20,19,28\nMilet und Athen im zweiten Jahrhundert v. Chr.,Wolfgang Günther,21–34,21,34,29,42"
   },
-
   "journalInfo": {
     "data": {
       "test": {
@@ -66,8 +63,4 @@
       }
     }
   }
-
-
-
-
 }
