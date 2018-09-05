@@ -27,19 +27,6 @@ def annotate(text, params):
     return result
 
 
-def _init_text_analyzer(text):
-    """
-    Initialises the Text Analyzer of the nlp components.
-
-    :param str text: The text to Analyze
-    :return class: The text_analyzer
-    """
-    from nlp_components.idai_journals.publications import TextAnalyzer
-    # dependency in docker container
-    text_analyzer = TextAnalyzer(text)
-    return text_analyzer
-
-
 def _validate_input(text, params):
     """
     Validates the text and parameters given.
@@ -67,6 +54,19 @@ def _validate_input(text, params):
                                            f"{params['operations']}")
 
 
+def _init_text_analyzer(text):
+    """
+    Initialises the Text Analyzer of the nlp components.
+
+    :param str text: The text to Analyze
+    :return class: The text_analyzer
+    """
+    from nlp_components.idai_journals.publications import TextAnalyzer
+    # dependency in docker container
+    text_analyzer = TextAnalyzer(text)
+    return text_analyzer
+
+
 def _run_annotation(text_analyzer, operations):
     """
     Calls a method of the text_analyzer depending on the operations.
@@ -80,9 +80,33 @@ def _run_annotation(text_analyzer, operations):
     if 'POS' in operations:
         result['part_of_speech_tags'] = text_analyzer.do_pos_tag()
     if 'NER' in operations:
-        result['named_entities'] = text_analyzer.do_ner()
+        result['named_entities'] = _full_ner(text_analyzer)
 
     return result
+
+
+def _full_ner(text_analyzer):
+    """
+    Runs complete NER
+
+    This includes extraction of different entity types and geotagging.
+
+    :param class text_analyzer: the text_analyzer of nlp_components
+    :return dict: dict with complete NEs, extracted persons and geoparsed
+        locations
+    """
+    named_entites = text_analyzer.do_ner()
+    persons = _convert_list_of_objs_to_list_of_dicts(
+        text_analyzer.get_persons(named_entites))
+    locations = text_analyzer.get_locations(named_entites)
+    geoparsed = _convert_list_of_objs_to_list_of_dicts(
+        text_analyzer.geoparse(locations))
+
+    return {
+        "complete_named_entities": named_entites,
+        "persons": persons,
+        "locations": geoparsed
+    }
 
 
 def _add_metadata(text_analyzer, annotations):
@@ -102,3 +126,24 @@ def _add_metadata(text_analyzer, annotations):
         **annotations,
         **metadata
     }
+
+
+def _convert_list_of_objs_to_list_of_dicts(list_of_objects):
+    """
+    Recursively converts a list of objects to a list of dicts
+
+    This works recursively and is needed because the NLP Textanalyzer
+    sometimes gives back a list of non-json-serializable objects, which
+    need to be converted to dicts. The list structure has to be kept.
+
+    :param list list_of_objects: List of objects to be converted to
+        list of dicts.
+    :return list: list of objects or a single one
+    """
+    if isinstance(list_of_objects, list):
+        list_of_objects = []
+        for sub in list_of_objects:
+            list_of_objects.append(convert_list_of_objs_to_list_of_dicts(sub))
+        return list_of_objects
+    else:
+        return list_of_objects.__dict__

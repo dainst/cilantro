@@ -27,3 +27,15 @@ class TextAnalyzer:
 
     def do_pos_tag(self):
         return self.annotations
+
+    @staticmethod
+    def get_persons(ne):
+        return type('persons', (), {})()
+
+    @staticmethod
+    def get_locations(ne):
+        return type('locations', (), {})()
+
+    @staticmethod
+    def geoparse(locs):
+        return type('geoparsed', (), {})()
