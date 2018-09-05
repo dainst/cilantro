@@ -1,10 +1,26 @@
 <ul class="tree-view">
     <li ng-repeat="branch in tree">
+        <span ng-if="branch.type !== 'directory'">
+            <button class="btn btn-default btn-block branch" ng-class="getClass(branch)" ng-click="handleFile(branch)">{{branch.name}}</button>
+        </span>
+        <span class="btn-group" ng-if="branch.type === 'directory'">
+            <button class="btn btn-default branch" ng-class="getClass(branch)" ng-click="handleFile(branch)">{{branch.name}}</button>
+            <button type="button" class="btn btn-default" ng-click="toggle(branch.path)">
+                <span class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isOpen(branch.path), 'glyphicon-chevron-right': !isOpen(branch.path)}"></span>
+            </button>
+            <files-treeview tree="branch.contents" ng-show="isOpen(branch.path)"></files-treeview>
+        </span>
+    </li>
+</ul>
+
+<!--<ul class="tree-view">
+    <li ng-repeat="branch in tree" >
         <span class="branch" ng-class="getClass(branch)">{{branch.name}}</span>
         <a class="load" href="#" ng-click="handleFile(branch)" ng-show="!getClass(branch)">load</a>
+
         <span ng-if="branch.type === 'directory'">
             <a class="toggle" href="#" ng-click="toggle(branch.path)">toggle</a>
             <files-treeview tree="branch.contents" ng-show="isOpen(branch.path)"></files-treeview>
         </span>
     </li>
-</ul>
+</ul>-->

@@ -593,6 +593,27 @@ input.editable.date.year {
 }
 
 /* file tree view */
+.tree-view > .table-borderless > tbody > tr > td,
+.tree-view > .table-borderless > tbody > tr > th,
+.tree-view > .table-borderless > tfoot > tr > td,
+.tree-view > .table-borderless > tfoot > tr > th,
+.tree-view > .table-borderless > thead > tr > td,
+.tree-view > .table-borderless > thead > tr > th {
+    border: none;
+}
+
+ul.tree-view {
+    list-style: none;
+}
+
+.tree-view button{
+    height: 32px;
+}
+
+.tree-view .branch {
+    font-weight: bold
+}
+
 .tree-view .branch.loaded {
     color: green
 }
