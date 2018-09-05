@@ -17,6 +17,7 @@ WORKDIR /app
 
 COPY docker/cilantro-service/Pipfile Pipfile
 COPY docker/cilantro-service/Pipfile.lock Pipfile.lock
+COPY docker/cilantro-service/entrypoint.sh /entrypoint.sh
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system
@@ -25,4 +26,4 @@ EXPOSE 5000
 
 ENV FLASK_APP run_service.py
 
-ENTRYPOINT watchmedo auto-restart -R -d service -d config -p="*.py;*.yml" -- flask run --host=0.0.0.0
+ENTRYPOINT bash /entrypoint.sh

@@ -95,10 +95,11 @@ WORKDIR /app
 
 COPY docker/cilantro-nlp-worker/Pipfile Pipfile
 COPY docker/cilantro-nlp-worker/Pipfile.lock Pipfile.lock
+COPY docker/cilantro-nlp-worker/entrypoint.sh /entrypoint.sh
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system
 
 USER nobody
 
-ENTRYPOINT watchmedo auto-restart -R -d workers -p="*.py" -- celery -Q nlp -A workers.nlp.tasks worker --loglevel=info
+ENTRYPOINT bash /entrypoint.sh

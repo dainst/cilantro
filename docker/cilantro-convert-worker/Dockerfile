@@ -23,16 +23,18 @@ ENV LANG C.UTF-8
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 RUN set -ex && mkdir /app
 
+COPY ./service /app/service
 COPY ./utils /app/utils
 COPY ./workers /app/workers
 WORKDIR /app
 
 COPY docker/cilantro-convert-worker/Pipfile Pipfile
 COPY docker/cilantro-convert-worker/Pipfile.lock Pipfile.lock
+COPY docker/cilantro-convert-worker/entrypoint.sh /entrypoint.sh
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system
 
 USER nobody
 
-ENTRYPOINT watchmedo auto-restart -R -d service -d config -d workers -p="*.py;*.yml" -- celery -A workers.convert.tasks -Q convert worker --loglevel=info
+ENTRYPOINT bash /entrypoint.sh
