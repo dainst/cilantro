@@ -141,9 +141,9 @@ def _convert_list_of_objs_to_list_of_dicts(list_of_objects):
     :return list: list of objects or a single one
     """
     if isinstance(list_of_objects, list):
-        list_of_objects = []
+        list_of_subobjects = []
         for sub in list_of_objects:
-            list_of_objects.append(convert_list_of_objs_to_list_of_dicts(sub))
-        return list_of_objects
+            list_of_subobjects.append(_convert_list_of_objs_to_list_of_dicts(sub))
+        return list_of_subobjects
     else:
         return list_of_objects.__dict__
