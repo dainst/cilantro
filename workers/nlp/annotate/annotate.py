@@ -67,38 +67,38 @@ def _init_text_analyzer(text):
     return text_analyzer
 
 
-def _run_annotation(ta, operations):
+def _run_annotation(text_analyzer, operations):
     """
     Calls a method of the text_analyzer depending on the operations.
 
-    :param class ta: the text_analyzer of nlp_components
+    :param class text_analyzer: the text_analyzer of nlp_components
     :param list operations: the operations to be excecuted
     :return dict: pure annotations without metadata
     """
     result = {}
 
     if 'POS' in operations:
-        result['part_of_speech_tags'] = ta.do_pos_tag()
+        result['part_of_speech_tags'] = text_analyzer.do_pos_tag()
     if 'NER' in operations:
-        result['named_entities'] = _full_ner(ta)
+        result['named_entities'] = _full_ner(text_analyzer)
 
     return result
 
 
-def _full_ner(ta):
+def _full_ner(text_analyzer):
     """
     Runs complete NER
 
     This includes extraction of different entity types and geotagging.
 
-    :param class ta: the text_analyzer of nlp_components
+    :param class text_analyzer: the text_analyzer of nlp_components
     :return dict: dict with complete NEs, extracted persons and geoparsed
         locations
     """
-    named_entites = ta.do_ner()
-    persons = _convert_obj_to_dict(ta.get_persons(named_entites))
-    locations = ta.get_locations(named_entites)
-    geoparsed = _convert_obj_to_dict(ta.geoparse(locations))
+    named_entites = text_analyzer.do_ner()
+    persons = _convert_obj_to_dict(text_analyzer.get_persons(named_entites))
+    locations = text_analyzer.get_locations(named_entites)
+    geoparsed = _convert_obj_to_dict(text_analyzer.geoparse(locations))
 
     return {
         "complete_named_entities": named_entites,
@@ -107,18 +107,18 @@ def _full_ner(ta):
     }
 
 
-def _add_metadata(ta, annotations):
+def _add_metadata(text_analyzer, annotations):
     """
     Adds metadata to the annotations.
 
-    :param class ta: the text_analyzer of nlp_components
+    :param class text_analyzer: the text_analyzer of nlp_components
     :param dict annotations: annotations made before
     :return dict: annotations with metadata
     """
     metadata = {
-            "detected_language": ta.lang,
-            "word_count": len(ta.words),
-            "sentence_count": len(ta.sentences)
+            "detected_language": text_analyzer.lang,
+            "word_count": len(text_analyzer.words),
+            "sentence_count": len(text_analyzer.sentences)
         }
     return {
         **annotations,
