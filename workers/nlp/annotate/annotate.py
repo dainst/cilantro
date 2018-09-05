@@ -96,9 +96,11 @@ def _full_ner(text_analyzer):
         locations
     """
     named_entites = text_analyzer.do_ner()
-    persons = _convert_obj_to_dict(text_analyzer.get_persons(named_entites))
+    persons = _convert_list_of_objs_to_list_of_dicts(
+        text_analyzer.get_persons(named_entites))
     locations = text_analyzer.get_locations(named_entites)
-    geoparsed = _convert_obj_to_dict(text_analyzer.geoparse(locations))
+    geoparsed = _convert_list_of_objs_to_list_of_dicts(
+        text_analyzer.geoparse(locations))
 
     return {
         "complete_named_entities": named_entites,
@@ -126,22 +128,22 @@ def _add_metadata(text_analyzer, annotations):
     }
 
 
-def _convert_obj_to_dict(obj):
+def _convert_list_of_objs_to_list_of_dicts(list_of_objects):
     """
-    Converts a (list of) objects to a (list of) dicts
+    Recursively converts a list of objects to a list of dicts
 
     This works recursively and is needed because the NLP Textanalyzer
-    sometimes gives back non-json-serializable objects, which need to
-    be converted to json.
+    sometimes gives back a list of non-json-serializable objects, which
+    need to be converted to dicts. The list structure has to be kept.
 
-    :param obj: Object or list of objects to be converted to
-        (list of) dicts.
-    :return dict: object as dict or a list of those
+    :param list list_of_objects: List of objects to be converted to
+        list of dicts.
+    :return list: list of objects or a single one
     """
-    if isinstance(obj, list):
-        mylist = []
-        for subobj in obj:
-            mylist.append(_convert_obj_to_dict(subobj))
-        return mylist
+    if isinstance(list_of_objects, list):
+        list_of_objects = []
+        for sub in list_of_objects:
+            list_of_objects.append(convert_list_of_objs_to_list_of_dicts(sub))
+        return list_of_objects
     else:
-        return obj.__dict__
+        return list_of_objects.__dict__
