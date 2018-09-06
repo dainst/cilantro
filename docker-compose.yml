@@ -60,9 +60,9 @@ services:
     image: dainst/cilantro-nlp-worker:production-setup
     working_dir: /app
     environment:
-      DB_HOST: "db"
       <<: *env-dirs
       <<: *env-broker
+      DB_HOST: "db"
 
   test:
     user: ${UID}
