@@ -14,7 +14,7 @@ The generated HTML can be viewed via the following URL:
 
     https://dainst.github.io/cilantro/
 
-## Install
+## Setup development environment
 
 * Copy the `.env-default` file to `.env` and modify it. In most cases only
   `UID` has to be adjusted. The UID / GID of the current user can be read with
@@ -37,10 +37,12 @@ The generated HTML can be viewed via the following URL:
     `sudo apt install docker-ce`
 
 ## Running the app with docker
-Docker images can be found at [dockerhub](https://hub.docker.com/u/dainst/),
-Dockerfiles and Pipfiles at [github](https://github.com/dainst/cilantro-images).
-To build the images follow the instructions provided in the repository.
-To start run
+
+Dockerfiles for the different services and their dependencies are stored in
+the subdirectory `docker/`. The complete stack defined for different
+environments is configured with docker-compose files.
+
+To start cilantro for development run:
     
     docker-compose pull
     docker-compose up
@@ -48,6 +50,11 @@ To start run
 To stop the application run:
 
     docker-compose stop
+
+To build and publish the images follow the instructions provided in
+[the docker README](docker/README.md).
+
+Published docker images can be found at [dockerhub](https://hub.docker.com/u/dainst/).
 
 ### Testing the application manually
 
@@ -76,7 +83,7 @@ is available for debugging under http://localhost:5555.
 
 *  Alternatively you can run the complete build script out of the
   [build-scripts repository](https://github.com/dainst/build-scripts/).
-  After cloing the repo into your workspace, run the following command from within your cilantro directory.
+  After cloning the repo into your workspace, run the following command from within your cilantro directory.
 
     `../build-scripts/cilantro-build.sh`
 
