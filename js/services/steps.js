@@ -15,12 +15,12 @@ angular
         "home": {
             "template": "partials/views/home.html",
             "title": "Start",
-            "showIf": function() {return !steps.isStarted}
+            "showIf": function() {return !steps.isStarted && steps.current != "fatal"}
         },
         "restart": {
             "template": "partials/views/restart.html",
             "title": "Restart",
-            "showIf": function() {return steps.isStarted}
+            "showIf": function() {return steps.isStarted || steps.current == "fatal"}
         },
         "documents": {
             "template": "partials/views/documents.html",
