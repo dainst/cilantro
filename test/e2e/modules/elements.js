@@ -15,7 +15,7 @@ module.exports = {
     },
     documents: {
         treeViewItems: element.all(by.css('#staging-dir files-treeview > .tree-view > li')),
-        treeViewItemsNames: element.all(by.css('#staging-dir > files-treeview > .tree-view > li > .branch')),
+        treeViewItemsNames: element.all(by.css('#staging-dir > files-treeview > .tree-view > li > span > .branch')),
         treeViewItemsTopLevel: element.all(by.css('#staging-dir > files-treeview > .tree-view > li')),
         toggleBranchBtn: element(by.css('#staging-dir > files-treeview .toggle')),
         proceedBtn: element(by.css('#proceed')),
