@@ -25,7 +25,7 @@ describe('documents page', () => {
         browser.get(browser.baseUrl)
             .then(e.home.startBtn.click)
             .then(e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click)
-            .then(message.waitForMessage)
+            .then(documents.waitForLoaded(2))
             .then(message.getStats)
             .then(stats => {
                 expect(stats.Analyzed).toEqual(1);
@@ -40,7 +40,7 @@ describe('documents page', () => {
             .then(e.home.startBtn.click)
             .then(e.documents.fileHandlerArea.element(by.css(".file-handler-pdf-empty > label")).click)
             .then(e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click)
-            .then(message.waitForMessage)
+            .then(documents.waitForLoaded(2))
             .then(message.getStats)
             .then(stats => {
                 expect(stats.Analyzed).toEqual(0);
