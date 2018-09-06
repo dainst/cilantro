@@ -26,4 +26,4 @@ EXPOSE 5000
 
 ENV FLASK_APP run_service.py
 
-ENTRYPOINT bash /entrypoint.sh
+ENTRYPOINT sh /entrypoint.sh
