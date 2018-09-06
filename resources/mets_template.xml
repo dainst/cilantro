@@ -5,9 +5,6 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:mets="http://www.loc.gov/METS/"
     xmlns:mods="http://www.loc.gov/mods/v3"
-    xmlns:tei="http://www.tei-c.org/ns/1.0"
-    xmlns:eb="http://sunsite.berkeley.edu/Ebind"
-    xmlns:dcterms="http://purl.org/dc/terms/"
     xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/mets/mets.xsd
         http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-2.xsd">
 
