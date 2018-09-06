@@ -52,6 +52,7 @@ angular
 		/* restart */
 		$scope.restart = ()  => {
 			$scope.initApp().then(() => {
+			    messenger.clear();
                 messenger.info('Restart Importer');
                 steps.change('home');
             });

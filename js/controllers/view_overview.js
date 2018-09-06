@@ -48,7 +48,6 @@ angular
         $scope.mergeArticle = function(article) {
 
             if ($scope.selectedToMerge && ($scope.selectedToMerge._.id === article._.id)) {
-                messenger.ok();
                 $scope.selectedToMerge = false;
                 return;
             }

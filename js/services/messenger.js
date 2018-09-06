@@ -27,11 +27,10 @@ angular
         messenger.info = (text) => messenger.push(text, "info");
         messenger.debug = (text) => messenger.push(text, "debug");
 
-        messenger.ok = () => messenger.main = false;
+        messenger.ok = () => messenger.messages.forEach(message => message.main = false);
 
         messenger.clear = function() {
             messenger.messages = [];
-            messenger.main = false;
         };
 
         messenger.getMainMessage = () => messenger.messages.filter(msg => msg.main)[0] || messenger.messages[0];

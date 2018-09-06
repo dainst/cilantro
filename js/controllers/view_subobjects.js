@@ -27,7 +27,6 @@ angular
         }
 
         $scope.init = () => {
-            messenger.ok();
             $scope.selectArticle(0);
         };
 
