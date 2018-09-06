@@ -106,3 +106,28 @@ Additionally parameters in method docstrings should be given as follows:
 
     :param param_type param_name: parameter description
     :raises ErrorType: Exception throw-condition description
+
+## Production deployment
+
+### Prerequisites:
+* A user on the production server that is able to log in with a private key
+* docker-machine has to be installed on the local machine (comes preinstalled with
+  docker under macOS and Windows)
+* The production machine has to be added to the local docker machines with
+
+
+    docker-machine create \
+      --driver generic \
+      --generic-ip-address=203.0.113.81 \
+      --generic-ssh-key ~/.ssh/id_rsa \
+      cilantro-prod-vm
+
+### Deployment
+
+In order to deploy or update the production version use the following commands:
+
+    eval $(docker-machine env cilantro-prod-vm)
+    docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml cilantro-prod
+
+
+
