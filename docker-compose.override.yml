@@ -1,0 +1,70 @@
+version: '3.5'
+
+services:
+
+  db:
+    volumes:
+      - ./redis-data:/data
+
+  service:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-service/Dockerfile
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    environment:
+      CILANTRO_ENV: development
+
+  default-worker:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-default-worker/Dockerfile
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    environment:
+      CILANTRO_ENV: development
+
+  convert-worker:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-convert-worker/Dockerfile
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    environment:
+      CILANTRO_ENV: development
+
+  nlp-worker:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-nlp-worker/Dockerfile
+      args:
+        GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN}
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    environment:
+      CILANTRO_ENV: development
+
+  test:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-test/Dockerfile
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+
+  ojs:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-ojs2/Dockerfile
+    volumes:
+      - ./test/resources:/test/resources
+      - ./data:/data

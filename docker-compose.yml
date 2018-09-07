@@ -1,113 +1,78 @@
 version: '3.5'
 
+x-env-dirs: &env-dirs
+  REPOSITORY_DIR: /data/repository
+  WORKING_DIR: /data/workspace
+  STAGING_DIR: /data/staging
+  CONFIG_DIR: /config
+
+x-env-broker: &env-broker
+  BROKER_HOST: "broker"
+  BROKER_USER: &broker-user user
+  BROKER_PASSWORD: &broker-password password
+
 services:
 
   broker:
     image: rabbitmq:latest
     environment:
-      - RABBITMQ_DEFAULT_USER=${BROKER_USER}
-      - RABBITMQ_DEFAULT_PASS=${BROKER_PASSWORD}
+      RABBITMQ_DEFAULT_USER: *broker-user
+      RABBITMQ_DEFAULT_PASS: *broker-password
     ports:
       - "5672:5672"
 
   db:
     image: redis:latest
     command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - ./redis-data:/data
     ports:
       - "6379:6379"
 
   service:
-    image: dainst/cilantro-service:multi-user
+    image: dainst/cilantro-service:production-setup-2
     ports:
       - "5000:5000"
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
     working_dir: /app
     environment:
-      BROKER_HOST: "broker"
-      BROKER_USER: ${BROKER_USER}
-      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      <<: *env-dirs
+      <<: *env-broker
       DB_HOST: "db"
-      REPOSITORY_DIR: ${REPOSITORY_DIR}
-      STAGING_DIR: ${STAGING_DIR}
-      CONFIG_DIR: ${CONFIG_DIR}
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:test_pdf
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
+    image: dainst/cilantro-default-worker:production-setup
     working_dir: /app
     environment:
-      BROKER_HOST: "broker"
-      BROKER_USER: ${BROKER_USER}
-      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      <<: *env-dirs
+      <<: *env-broker
       DB_HOST: "db"
-      REPOSITORY_DIR: ${REPOSITORY_DIR}
-      WORKING_DIR: ${WORKING_DIR}
-      STAGING_DIR: ${STAGING_DIR}
-      CONFIG_DIR: ${CONFIG_DIR}
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:stable
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
+    image: dainst/cilantro-convert-worker:production-setup
     working_dir: /app
     environment:
-      BROKER_HOST: "broker"
-      BROKER_USER: ${BROKER_USER}
-      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      <<: *env-dirs
+      <<: *env-broker
       DB_HOST: "db"
-      REPOSITORY_DIR: ${REPOSITORY_DIR}
-      WORKING_DIR: ${WORKING_DIR}
-      STAGING_DIR: ${STAGING_DIR}
-      CONFIG_DIR: ${CONFIG_DIR}
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:stable
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
+    image: dainst/cilantro-nlp-worker:production-setup
     working_dir: /app
     environment:
-      BROKER_HOST: "broker"
-      BROKER_USER: ${BROKER_USER}
-      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      <<: *env-dirs
+      <<: *env-broker
       DB_HOST: "db"
-      REPOSITORY_DIR: ${REPOSITORY_DIR}
-      WORKING_DIR: ${WORKING_DIR}
-      STAGING_DIR: ${STAGING_DIR}
-      CONFIG_DIR: ${CONFIG_DIR}
 
   test:
     user: ${UID}
-    image: dainst/cilantro-test:multi-user
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
+    image: dainst/cilantro-test:production-setup
     working_dir: /app
     tty: true
     environment:
-      BROKER_HOST: "broker"
-      BROKER_USER: ${BROKER_USER}
-      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      <<: *env-dirs
+      <<: *env-broker
       DB_HOST: "db"
-      REPOSITORY_DIR: ${REPOSITORY_DIR}
-      WORKING_DIR: ${WORKING_DIR}
-      STAGING_DIR: ${STAGING_DIR}
-      CONFIG_DIR: ${CONFIG_DIR}
       RESOURCE_DIR: "test/resources"
 
   monitor:
@@ -115,14 +80,9 @@ services:
     ports:
       - "5555:5555"
     environment:
-      BROKER_HOST: "broker"
-      BROKER_USER: ${BROKER_USER}
-      BROKER_PASSWORD: ${BROKER_PASSWORD}
+      <<: *env-broker
 
   ojs:
     image: dainst/cilantro-ojs2:latest
     ports:
       - "4444:80"
-    volumes:
-      - ./test/resources:/test/resources
-      - ./data:/data

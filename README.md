@@ -14,7 +14,7 @@ The generated HTML can be viewed via the following URL:
 
     https://dainst.github.io/cilantro/
 
-## Install
+## Setup development environment
 
 * Copy the `.env-default` file to `.env` and modify it. In most cases only
   `UID` has to be adjusted. The UID / GID of the current user can be read with
@@ -37,10 +37,12 @@ The generated HTML can be viewed via the following URL:
     `sudo apt install docker-ce`
 
 ## Running the app with docker
-Docker images can be found at [dockerhub](https://hub.docker.com/u/dainst/),
-Dockerfiles and Pipfiles at [github](https://github.com/dainst/cilantro-images).
-To build the images follow the instructions provided in the repository.
-To start run
+
+Dockerfiles for the different services and their dependencies are stored in
+the subdirectory `docker/`. The complete stack defined for different
+environments is configured with docker-compose files.
+
+To start cilantro for development run:
     
     docker-compose pull
     docker-compose up
@@ -48,6 +50,11 @@ To start run
 To stop the application run:
 
     docker-compose stop
+
+To build and publish the images follow the instructions provided in
+[the docker README](docker/README.md).
+
+Published docker images can be found at [dockerhub](https://hub.docker.com/u/dainst/).
 
 ### Testing the application manually
 
@@ -76,7 +83,7 @@ is available for debugging under http://localhost:5555.
 
 *  Alternatively you can run the complete build script out of the
   [build-scripts repository](https://github.com/dainst/build-scripts/).
-  After cloing the repo into your workspace, run the following command from within your cilantro directory.
+  After cloning the repo into your workspace, run the following command from within your cilantro directory.
 
     `../build-scripts/cilantro-build.sh`
 
@@ -99,3 +106,28 @@ Additionally parameters in method docstrings should be given as follows:
 
     :param param_type param_name: parameter description
     :raises ErrorType: Exception throw-condition description
+
+## Production deployment
+
+### Prerequisites:
+* A user on the production server that is able to log in with a private key
+* docker-machine has to be installed on the local machine (comes preinstalled with
+  docker under macOS and Windows)
+* The production machine has to be added to the local docker machines with
+
+
+    docker-machine create \
+      --driver generic \
+      --generic-ip-address=203.0.113.81 \
+      --generic-ssh-key ~/.ssh/id_rsa \
+      cilantro-prod-vm
+
+### Deployment
+
+In order to deploy or update the production version use the following commands:
+
+    eval $(docker-machine env cilantro-prod-vm)
+    docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml cilantro-prod
+
+
+
