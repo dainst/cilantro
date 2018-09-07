@@ -1,6 +1,0 @@
-{
-  "files_url":    "##BACKEND_URI##/staging/",
-  "server_url":   "##BACKEND_URI##/",
-  "ojs_url":      "##OJS_URI##/",
-  "zenon_url":    "##ZENON_URI##/"
-}
