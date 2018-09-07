@@ -27,6 +27,10 @@ tasks:
         foreach:
           task: convert.tif_to_txt
           target: txt
+      - list_files: tif
+        foreach:
+          task: convert.tif_to_jpg
+          target: jpg
       else:
       - list_files: origin
         pattern: ".*\\.pdf$"
@@ -46,6 +50,12 @@ tasks:
         template_file: marc_template.xml
         target_filename: marc.xml
         schema_file: MARC21slim.xsd
+  - list_parts:
+    foreach:
+        task: generate_xml
+        template_file: mets_template.xml
+        target_filename: mets.xml
+        schema_file: mets.xsd
   - publish_to_ojs
   - generate_frontmatter
   - publish_to_repository
