@@ -8,7 +8,17 @@ mod.factory("csvImport", ['$rootScope', '$uibModal', 'editables', 'fileManager',
         csvHandler.description = "Create Articles with metadata from a CSV-file";
         csvHandler.fileTypes = ["csv"];
 
-        csvHandler.handleFile = file => fileManager.loadFileContents(file).then(files => files.forEach(csvImport));
+        /*Old version of .handleFile, can be removed if tests succeed*/
+        //csvHandler.handleFile = file => fileManager.loadFileContents(file).then(files => files.forEach(csvImport));
+
+        /*initiates csvImport-modal, either blank or with data from uploaded file*/
+        csvHandler.handleFile = function(file){
+            if(file === ""){
+                return csvImport("");
+            }
+            else
+                return fileManager.loadFileContents(file).then(files => files.forEach(csvImport));
+        }
 
         function csvImport(file) {
 
@@ -31,7 +41,6 @@ mod.factory("csvImport", ['$rootScope', '$uibModal', 'editables', 'fileManager',
             }, function(a) {
                 fileManager.ready = true;
             });
-
         }
 
         return csvHandler

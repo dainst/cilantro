@@ -17,7 +17,10 @@
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">Load Files from Staging Area</div>
+                <div class="panel-heading">
+                    Load Files from Staging Area
+                    <button class="btn btn-default" ng-click="newFile('csv')">Blank CSV</button>
+                </div>
                 <div class="panel-body btn-group" id="staging-dir">
                     <files-treeview tree="stagingDir.tree"></files-treeview>
                 </div>

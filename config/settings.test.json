@@ -1,7 +1,0 @@
- {
-    "files_url":    "http://localhost:3333/staging/",
-    "server_url":   "http://localhost:3333/",
-    "ojs_url":      "http://localhost:3333/",
-    "zenon_url":    "http://localhost:3333/zenon/",
-    "test":         true
-}

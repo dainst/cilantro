@@ -12,5 +12,11 @@ angular
         $scope.filesListSelected = null;
         $scope.isReady = () => fileManager.ready;
         $scope.continue = () => steps.change('overview');
+
+        /*Opens file-editing-modals for 'type', currently only implemented for csv-files.*/
+        $scope.newFile = function(type) {
+            const fileHandler = fileManager.getFileHandler(type);
+            return fileHandler.handleFile("");
+        }
     }
 ]);
