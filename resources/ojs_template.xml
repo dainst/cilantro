@@ -41,7 +41,7 @@
                         <email>no@email.given</email>
                     </author>
                     {% endfor %}
-                    <pages>{{article_metadata['pages']['showndesc'] + ('#DFM' if article_metadata['createFrontpage'] else '')}}</pages>
+                    <pages>{{article_metadata['pages']['showndesc']}}</pages>
                     <date_published>{{article_metadata.date_published}}</date_published>
                     {% if article_file_path %}
                     <galley>
