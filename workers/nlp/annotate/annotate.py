@@ -1,3 +1,6 @@
+import uuid
+
+
 class NoTextProvidedException(Exception):
     pass
 
@@ -23,8 +26,9 @@ def annotate(text, params):
         text_analyzer.lang = params['lang']
 
     annotation = _run_annotation(text_analyzer, params['operations'])
+    viewer_comp = _generatere_viewer_json(annotation)
     result = _add_metadata(text_analyzer, annotation)
-    return result
+    return viewer_comp
 
 
 def _validate_input(text, params):
@@ -107,6 +111,51 @@ def _full_ner(text_analyzer):
         "persons": persons,
         "locations": geoparsed
     }
+
+
+def _generatere_viewer_json(annotation):
+    persons = annotation["named_entities"]["persons"]
+    locations = annotation["named_entities"]["locations"]
+    persons = _modify_entries(persons)
+    locations = _modify_entries(locations)
+
+    json = {"persons": {"items": persons}, "locations": {"items": locations}}
+    return json
+
+
+def _modify_entries(entrylist):
+    resultlist = []
+    for entrydict in entrylist:
+        try:
+            coordinates = [entrydict["latitude"], entrydict["longitude"]]
+        except KeyError:
+            coordinates = None
+
+        references = []
+        for key, value in entrydict["refids"].items():
+            try:
+                url = f"{entrydict['_baseurls'][key]}{value}"
+                reference = {
+                    "id": value,
+                    "url": url,
+                    "type": key
+                }
+            except KeyError:
+                reference = {}
+            references.append(reference)
+
+        resultdict = {
+            "id": str(uuid.uuid1()),
+            "score": None,
+            "terms": [entrydict["string"]],
+            "pages": [1],  # as long as only one page is processed
+            "count": 1,  # as long as every match is its own entry
+            "lemma": entrydict["normform"],
+            "coordinates": coordinates,
+            "references": references
+        }
+        resultlist.append(resultdict)
+    return resultlist
 
 
 def _add_metadata(text_analyzer, annotations):
