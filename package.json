@@ -17,21 +17,21 @@
   "dependencies": {
     "angular": "1.6.7",
     "angular-ui-bootstrap": "2.5.6",
-    "idai-components": "2.6.7",
+    "idai-components": "2.7.0",
     "ng-file-upload": "12.2.13",
-    "npm": "^5.8.0",
-    "pdfjs-dist": "^2.0.489",
-    "requirejs": "^2.3.5"
+    "npm": "^5.10.0",
+    "pdfjs-dist": "2.0.489",
+    "requirejs": "2.3.5"
   },
   "devDependencies": {
     "ajv": "6.5.1",
-    "data-uri-to-buffer": "^2.0.0",
+    "data-uri-to-buffer": "2.0.0",
     "chromedriver": "2.37",
     "jasmine-core": "2.8.0",
     "pixelmatch": "4.0.2",
     "protractor": "5.2.1",
     "protractor-console-plugin": "0.1.1",
-    "protractor-jasmine2-screenshot-reporter": "^0.5.0",
+    "protractor-jasmine2-screenshot-reporter": "0.5.0",
     "webdriver-manager": "12.0.6",
     "gulp": "3.9.1",
     "json-server": "0.12.1",
