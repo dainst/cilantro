@@ -1,0 +1,83 @@
+<div ng-controller="viewDocuments" data-ng-init="init()">
+    <div class="row toprow">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4 text-center">
+            <stats type="documents"></stats>
+        </div>
+        <div class="col-md-4 text-right">
+            <button id="proceed" class='btn btn-primary' ng-click='continue()' ng-show="isReady()">
+                Proceed<span class="glyphicon glyphicon-chevron-right"></span>
+            </button>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Load Files from Staging Area
+                    <button class="btn btn-default" ng-click="newFile('csv')">Blank CSV</button>
+                </div>
+                <div class="panel-body btn-group" id="staging-dir">
+                    <files-treeview tree="stagingDir.tree"></files-treeview>
+                </div>
+            </div>
+
+            <div 	ng-controller="upload"
+                    class="panel panel-default"
+                    ngf-drop="uploadFiles($files)"
+                    ng-model="files"
+                    ngf-multiple="true"
+                    ngf-pattern="pattern"
+                    ngf-accept="application/pdf"
+                    ngf-drag-over-class="'dragOver'"
+                    ngf-validate="{pattern: '.pdf,.csv'}"
+                    ngf-keep="false"
+                    ngf-allow-dir="true"
+                    ngf-include-dir="true"
+                    ngf-drop-available="dropAvailable"
+                    id="upload-area">
+
+                <div class="panel-heading">Upload PDF file</div>
+                <div class="panel-body">
+                    <button id="uploadFileSelect" class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File or Folder into this Box.</span>
+                    <br>
+
+                    <span class="progressbar">
+			        <div ng-style="{width: progress +'%'}" ng-bind="progress + '%'"></div>
+			    </span>
+
+                    <br><span  ng-show="uploadedFiles.length > 0">Files:</span>
+                    <ul>
+                        <li ng-repeat="folderOrFile in uploadedFoldersAndFiles track by $index">{{folderOrFile}}</li>
+                    </ul>
+                    <div ng-show="errorMsg" class="alert alert-danger" ng-bind-html="errorMsg | trustHtml"></div>
+                    <div ng-show="warningsMsg.length >  0" ng-repeat="warning in warningsMsg track by $index" class="alert alert-warning">{{warning}}</div>
+                    <div ng-show="invalidFiles" class="alert alert-warning">Wrong Filetype</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="panel panel-default" id="file-handler-selection">
+                <div class="panel-heading">What to do with newly loaded Files</div>
+                <div class="panel-body">
+                    <div ng-repeat="(fileType, handlerList) in fileHandlers">
+                        <h4>{{fileType}}</h4>
+                        <div ng-repeat="handler in handlerList" class="file-hanlder file-handler-{{fileType}}-{{handler.id}}">
+                            <label ng-click="selectFileHandler(fileType, handler)">
+                                <input type="radio" name="select_handler_for_{{fileType}}" ng-checked="handler.id === getSelectedFileHandler(fileType).id">
+                                {{handler.description}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

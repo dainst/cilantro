@@ -1,0 +1,66 @@
+{
+  "staging": [
+    {
+      "type": "file",
+      "name": "broken_file.csv"
+    },
+    {
+      "type": "file",
+      "name": "e2e-testing.csv"
+    },
+    {
+      "type": "file",
+      "name": "e2e-testing.pdf"
+    },
+    {
+      "type": "directory",
+      "name": "test-directory",
+      "contents": [
+        {
+          "type": "file",
+          "name": "pdf1.pdf"
+        },
+        {
+          "type": "file",
+          "name": "pdf2.pdf"
+        },
+        {
+          "type": "file",
+          "name": "pdf3.pdf"
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "name": "zenon_id_list.csv"
+    }
+  ],
+  "uploadCSV": {
+    "uploadId": "test",
+    "task": "uploadCSV",
+    "success": true,
+    "message": "Success",
+    "warnings": [],
+    "csv": "Titel,Name,Seiten,Startseite,Endseite,PDF-start,PDF-Ende\nDidyma und Milet in archaischer Zeit,Norbert Ehrhardt,11–20,11,20,19,28\nMilet und Athen im zweiten Jahrhundert v. Chr.,Wolfgang Günther,21–34,21,34,29,42"
+  },
+  "journalInfo": {
+    "data": {
+      "test": {
+        "id": "2",
+        "locales": [
+          "en_US",
+          "de_DE",
+          "ru_RU",
+          "es_ES",
+          "fr_FR"
+        ]
+      },
+      "testzwei": {
+        "id": "3",
+        "locales": [
+          "en_US"
+        ]
+      }
+    }
+  }
+}

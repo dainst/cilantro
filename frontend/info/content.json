@@ -1,0 +1,14 @@
+{
+  "id": "Overview",
+  "title": {
+    "de": "Inhalte",
+    "en": "Content"
+  },
+  "children": [{
+    "id": "navbar",
+    "children": []
+  }, {
+    "id": "footer",
+    "children": []
+  }]
+}

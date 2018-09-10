@@ -1,0 +1,27 @@
+<div>
+
+	<div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning'>{{warning}}</div>
+
+	<select class="form-control editable-select" ng-model="item.value.value" ng-change="item.observer ? item.observer(item) : ''">
+		<option ng-repeat="file in item.list track by $index" value='{{file.url}}'>{{file.url}}</option>
+	</select>
+
+	<div class="row" ng-show="!item.check()">
+
+		<div class="col-xs-6">Size</div>
+		<div class="col-xs-6">{{item.list[item.value.value].size}}</div>
+
+		<div class="col-xs-6">Pages</div>
+		<div class="col-xs-6">{{item.list[item.value.value].pagecontext.maximum}}</div>
+
+		<div class="col-xs-6"><strong>Offset</strong></div>
+		<div class="col-xs-6">
+			<input
+					type="number"
+					class='editable'
+					ng-model='item.list[item.value.value].pagecontext.offset'
+					ng-change='item.observer()'
+			/>
+		</div>
+	</div>
+</div>

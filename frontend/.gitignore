@@ -1,0 +1,6 @@
+.git
+config/settings.json
+
+node_modules/
+
+test/e2e/screenshots/*

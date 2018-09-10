@@ -1,0 +1,19 @@
+<div ng-controller="viewJobs">
+    <div class="row toprow">
+        <div class="col-md-6"></div>
+
+        <div class="col-md-6">
+            <div class="btn-toolbar pull-right">
+                <button class='btn btn-default' ng-click='refresh()'>Refresh</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div ng-repeat="job in jobs">
+                <job job="job"></job>
+            </div>
+        </div>
+    </div>
+</div>

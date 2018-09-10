@@ -1,0 +1,133 @@
+<div ng-controller="viewSubObjects" data-ng-init="init()">
+
+    <div class="row toprow">
+        <div class="col-md-4">
+            <div class="btn-group" uib-dropdown id="subobjects-select">
+                <button uib-dropdown-toggle class="btn btn-default">Select Article<span class="caret"></span></button>
+                <ul uib-dropdown-menu>
+                    <li ng-repeat="article in dataset.subobjects track by $index">
+                        <a      href='#'
+                                ng-if="article._.confirmed !== false"
+                                ng-class="{'btn-primary': $index == currentArticle, 'btn-success': article._.confirmed === true}"
+                                ng-click="selectArticle($index)"
+                            >{{article.author.value[0].lastname}} - {{article.title.get()}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn-group" uib-dropdown id="subobjects-trash">
+                <button uib-dropdown-toggle class="btn btn-default">Trash<span class="caret"></span></button>
+                <ul uib-dropdown-menu>
+                    <li ng-repeat="article in dataset.subobjects track by $index">
+                        <a      href='#'
+                                ng-if="article._.confirmed === false"
+                                ng-class="{'btn-primary': $index == currentArticle, 'btn-danger': article._.confirmed === false}"
+                                ng-click="selectArticle($index)"
+                            >{{article.author.value[0].lastname}} - {{article.title.get()}}>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <span class="btn-group">
+                <button class='btn btn-default' id="subobjects-new" ng-click='addArticle()'>New Article<span class="glyphicon glyphicon-plus-sign"></span></button>
+            </span>
+
+
+        </div>
+        <div class="col-md-4 text-center">
+            <stats type="subobjects"></stats>
+        </div>
+        <div class="col-md-4 text-right">
+            <span class="btn-group">
+                <button
+                        ng-show="isArticleSelected()"
+                        class="btn btn-label"
+                >This Article:
+                </button>
+                <button
+                        ng-show="isArticleSelected() && dataset.subobjects[currentArticle]._.confirmed !== false"
+                        ng-click='dismissArticle()'
+                        class='btn btn-danger'
+                >Dismiss<span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <button
+                        ng-show="isArticleSelected() && dataset.subobjects[currentArticle]._.confirmed === false"
+                        ng-click='undeleteArticle()'
+                        class='btn btn-default'
+                >Undelete<span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <button
+                        ng-show="checkArticle() && isArticleSelected() && dataset.subobjects[currentArticle]._.confirmed !== false"
+                        ng-click='confirmArticle()'
+                        class='btn btn-success'
+                >Confirm<span class="glyphicon glyphicon-chevron-right"></span>
+                </button>
+            </span>
+
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div class="panel panel-default"
+                 ng-class="{'panel-success':(dataset.subobjects[currentArticle]._.confirmed === true),'panel-danger':(dataset.subobjects[currentArticle]._.confirmed === false)}"
+                 ng-show="(currentArticle > -1) && (dataset.subobjects.length > 0)">
+                <div class="panel-heading">Article</div>
+
+                <table class='table article-table'>
+                    <thead></thead>
+                    <tbody>
+                        <tr ng-if="currentArticle > -1" ng-repeat="(property, item) in dataset.subobjects[currentArticle] track by $index">
+                            <td>{{labels.get("sub", property)}}</td>
+                            <td><span editable item="dataset.subobjects[currentArticle][property]" /></td>
+                        </tr>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+
+            <div class="panel panel-default" ng-show="dataset.thumbnails[dataset.subobjects[currentArticle]._.id]">
+                <div class="panel-heading">First Page</div>
+                <div class="panel-body">
+                    <div class="thumbnail-container">
+                        <img data-ng-src='{{dataset.thumbnails[dataset.subobjects[currentArticle]._.id]}}'>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Zenon</div>
+                <div class="panel-body">
+                    <div class="pull-right" style="margin-left:1em">
+                        <span class="btn-group">
+                            <button
+                                    ng-show="zenonResult.id"
+                                    class='btn btn-default' ng-click='newFromZenon()'
+                                    data-tooltip="Create a new Article with this Zenon-record"
+                            >New Article<span class="glyphicon glyphicon-file"></span>
+                            </button>
+                            <button
+                                    ng-show="zenonResult.id && isArticleSelected()"
+                                    class='btn btn-default' ng-click='adoptFromZenon()'
+                                    data-tooltip="Continue with the data from Zenon instead of the one you got from the investigation of the table of contents"
+                            >Take Zenon Data<span class="glyphicon glyphicon-import"></span>
+                            </button>
+                            <button
+                                    ng-show="!zenonResult.id && isArticleSelected()"
+                                    ng-click='markAsMissingZenon()'
+                                    ng-class="['btn', 'btn-default', {'active': (dataset.subobjects[currentArticle]._.reportToZenon)}]"
+                            >Mark as missing in Zenon<span class="glyphicon glyphicon-flag"></span>
+                            </button>
+                        </span>
+                    </div>
+                    <zenon search="searchObject" result="zenonResult"></zenon>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

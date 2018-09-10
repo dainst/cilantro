@@ -1,0 +1,8 @@
+{
+  "files_url":    "http:// ##cilantro## / ##staging_folder##",
+  "server_url":   "http:// ##cilantro##",
+  "ojs_url":      "http:// ##ojs2 installation## /plugins/generic/ojs-cilantro-plugin/api/",
+  "zenon_url":    "https://zenon.dainst.org/api/v1/",
+  "server_user":  "##cilantro user##",
+  "server_pass":  "##cilantro password##"
+}
