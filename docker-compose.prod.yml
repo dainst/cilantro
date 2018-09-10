@@ -1,0 +1,42 @@
+version: '3.5'
+
+services:
+
+  db:
+    volumes:
+      - redis-data:/data
+
+  service:
+    ports:
+      - "80:5000"
+    volumes:
+      - data:/data
+      - /opt/cilantro/config:/config
+
+  default-worker:
+    volumes:
+      - data:/data
+      - /opt/cilantro/config:/config
+
+  convert-worker:
+    volumes:
+      - data:/data
+      - /opt/cilantro/config:/config
+
+  nlp-worker:
+    volumes:
+      - data:/data
+      - /opt/cilantro/config:/config
+
+  test:
+    volumes:
+      - data:/data
+      - /opt/cilantro/config:/config
+
+  ojs:
+    volumes:
+      - data:/data
+
+volumes:
+  redis-data:
+  data:
