@@ -10,7 +10,7 @@ class IngestBookTest(JobTypeTest):
         params = self.load_params_from_file('params', 'a_book.json')
 
         data, status_code = self.post_job('ingest_book', params)
-        self.assertEquals(status_code, 202)
+        self.assertEqual(status_code, 202)
         self.assertEqual('Accepted', data['status'])
         self.assert_job_successful(data['task_ids'])
 
