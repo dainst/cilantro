@@ -68,6 +68,15 @@ The web service runs on port 5000. The following command will create a test task
 You can then query the job status with the returned job_id:
 
     curl http://localhost:5000/job/<job_id>
+    
+#### E2E-Tests
+
+...
+
+##### Tips
+
+- change promisesDelay-attribute in  frontend/test/e2e/protractor.conf to slow tests down if you wanna watch them (eg to 150)
+- after Testsuite failed look up frontend/e2e/test/screenshots/report.html fpr details
 
 ### Monitoring
 
@@ -89,6 +98,7 @@ is available for debugging under http://localhost:5555.
 
 This will build, start and stop the docker infrastructure and run the tests.
 
+
 ## Troubleshooting
 
 On Linux hosts the tests will fail because the data directory created by
@@ -106,6 +116,25 @@ Additionally parameters in method docstrings should be given as follows:
 
     :param param_type param_name: parameter description
     :raises ErrorType: Exception throw-condition description
+    
+### Javascript
+
+- indentation: 4 spaces instead of tab
+    - idea: settings->editor->javascript
+    - atom: settings->editor
+- names
+    - for js-variables: camelCase 
+    - for members of datamodel (dataset, article): under_score
+    - in css: snake-case 
+    - filenames and module names: under_score, eg: myController in my_controller.js
+- ES6
+    - `let/const` instead of `var` where it makes sense: http://es6-features.org/#BlockScopedVariables
+    - arrow function whenever function is not local and [this]-scope is not needed
+- more    
+    - `===` instead of `==`
+    - line endings with `;` even after `}`
+    - if without {} only in very simple one liners
+ 
 
 ## Production deployment
 
