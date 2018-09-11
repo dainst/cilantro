@@ -74,4 +74,15 @@ services:
       context: .
       dockerfile: ./docker/cilantro-salvia/Dockerfile
     volumes:
-      - ./frontend:/usr/share/nginx/html
+      - ./frontend/img:/usr/share/nginx/html/img
+      - ./frontend/info:/usr/share/nginx/html/info
+      - ./frontend/js:/usr/share/nginx/html/js
+      - ./frontend/partials:/usr/share/nginx/html/partials
+      - ./frontend/style:/usr/share/nginx/html/style
+      - ./frontend/test:/usr/share/nginx/html/test
+      - ./frontend/favicon.ico:/usr/share/nginx/html/favicon.ico
+      - ./frontend/gulpfile.js:/usr/share/nginx/html/gulpfile.js
+      - ./frontend/index.html:/usr/share/nginx/html/index.html
+      - ./frontend/package.json:/usr/share/nginx/html/package.json
+      - ./frontend/package-lock.json:/usr/share/nginx/html/package-lock.json
+      - ./frontend/version.json:/usr/share/nginx/html/version.json
