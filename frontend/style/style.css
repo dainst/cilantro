@@ -3,8 +3,6 @@
 
 /* -- */
 
-
-
 h1 {
     font-size: x-large;
     font-weight: normal;
@@ -21,7 +19,7 @@ h2 {
 
 table {
     margin: 0px;
-    width: 100%;
+    width:100%;
     border-collapse: collapse;
     margin-top: 0.5em;
     margin-bottom: 0.5em
@@ -32,10 +30,13 @@ table td {
     border: 1px solid silver;
     text-align: center;
     vertical-align: top;
-
 }
 
-
+.tableWrap {
+    overflow: scroll;
+    height: 80vh;
+    width: 97vw;
+}
 
 
 /* tooltips */
@@ -245,6 +246,10 @@ table.super-table td .row {
 
 table.super-table td .row > div {
     padding: 0px;
+}
+
+.contentCol {
+    min-width: 250px
 }
 
 
