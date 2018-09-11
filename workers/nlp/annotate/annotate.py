@@ -7,7 +7,7 @@ class NoTextProvidedException(Exception):
 
 def annotate(text, lang=None):
     """
-    Annotates the given text.
+    Annotate the given text.
 
     Uses the TextAnalyzer of the dainst/nlp_components in the
     nlp-worker docker container to annotate the text.
@@ -27,7 +27,7 @@ def annotate(text, lang=None):
 
 def _init_text_analyzer(text):
     """
-    Initialises the Text Analyzer of the nlp components.
+    Initialise the Text Analyzer of the nlp components.
 
     :param str text: The text to analyze
     :return class: The text_analyzer
@@ -40,7 +40,7 @@ def _init_text_analyzer(text):
 
 def _validate_text(text):
     """
-    Validates the text given. May be extended.
+    Validate the text given. May be extended.
 
     This avoids long initialising of text_analyzer if invalid text is
     provided.
@@ -54,7 +54,7 @@ def _validate_text(text):
 
 def _full_ner(text_analyzer):
     """
-    Runs complete NER
+    Run complete NER.
 
     This includes extraction of different entity types and geotagging.
 
@@ -65,7 +65,7 @@ def _full_ner(text_analyzer):
     named_entites = text_analyzer.do_ner()
 
     persons = _convert_list_of_objs_to_list_of_dicts(
-            text_analyzer.get_persons(named_entites))
+        text_analyzer.get_persons(named_entites))
     locations = text_analyzer.get_locations(named_entites)
     geotagged_locations = _convert_list_of_objs_to_list_of_dicts(
         text_analyzer.geoparse(locations))
@@ -75,7 +75,7 @@ def _full_ner(text_analyzer):
 
 def _generatere_viewer_json(persons, geotagged_locations):
     """
-    Generates the complete, viewer compatible, json
+    Generate the complete, viewer compatible, JSON.
 
     :param list persons: all entities of type person
     :param list geotagged_locations: all entities of type location, enriched
@@ -85,13 +85,14 @@ def _generatere_viewer_json(persons, geotagged_locations):
     persons = _create_json_for_entity_type(persons)
     locations = _create_json_for_entity_type(geotagged_locations)
 
-    viewer_json = {"persons": {"items": persons}, "locations": {"items": locations}}
+    viewer_json = {"persons": {"items": persons},
+                   "locations": {"items": locations}}
     return viewer_json
 
 
 def _create_json_for_entity_type(entities):
     """
-    Creates JSON for every entity type.
+    Create JSON for every entity type.
 
     This is compatible to the viewer and the same for every entity type
         (person, location). Not used keys are filled with None
@@ -135,17 +136,17 @@ def _create_json_for_entity_type(entities):
 
 def _add_metadata(text_analyzer, annotations):
     """
-    Adds metadata to the annotations.
+    Add metadata to the annotations.
 
     :param class text_analyzer: the text_analyzer of nlp_components
     :param dict annotations: annotations made before
     :return dict: annotations with metadata
     """
     metadata = {
-            "detected_language": text_analyzer.lang,
-            "word_count": len(text_analyzer.words),
-            "sentence_count": len(text_analyzer.sentences)
-        }
+        "detected_language": text_analyzer.lang,
+        "word_count": len(text_analyzer.words),
+        "sentence_count": len(text_analyzer.sentences)
+    }
     return {
         **annotations,
         "metadata": metadata
@@ -154,7 +155,7 @@ def _add_metadata(text_analyzer, annotations):
 
 def _convert_list_of_objs_to_list_of_dicts(list_of_objects):
     """
-    Recursively converts a list of objects to a list of dicts
+    Recursively convert a list of objects to a list of dicts.
 
     This works recursively and is needed because the NLP Textanalyzer
     sometimes gives back a list of non-json-serializable objects, which
@@ -167,8 +168,8 @@ def _convert_list_of_objs_to_list_of_dicts(list_of_objects):
     if isinstance(list_of_objects, list):
         list_of_subobjects = []
         for sub in list_of_objects:
-            list_of_subobjects.append(_convert_list_of_objs_to_list_of_dicts(sub))
+            list_of_subobjects.append(
+                _convert_list_of_objs_to_list_of_dicts(sub))
         return list_of_subobjects
     else:
         return list_of_objects.__dict__
-
