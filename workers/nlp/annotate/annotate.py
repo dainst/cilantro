@@ -27,7 +27,7 @@ def annotate(text, lang=None):
 
 def _init_text_analyzer(text):
     """
-    Initialise the Text Analyzer of the nlp components.
+    Initialize the Text Analyzer of the nlp components.
 
     :param str text: The text to analyze
     :return class: The text_analyzer
@@ -42,7 +42,7 @@ def _validate_text(text):
     """
     Validate the text given. May be extended.
 
-    This avoids long initialising of text_analyzer if invalid text is
+    This avoids long initializing of text_analyzer if invalid text is
     provided.
 
     :param str text: the text to validate
