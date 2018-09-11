@@ -7,8 +7,6 @@ services:
       - redis-data:/data
 
   service:
-    ports:
-      - "80:5000"
     volumes:
       - data:/data
       - /opt/cilantro/config:/config
@@ -36,6 +34,12 @@ services:
   ojs:
     volumes:
       - data:/data
+
+  salvia:
+    environment:
+      BACKEND_URI: "http://oneeyedjacks01.dai-cloud.uni-koeln.de:5000"
+      ZENON_URI: "https://zenon.dainst.org/api/v1"
+      OJS_URI: "https://publications.dainst.org/journals/plugins/generic/ojs-cilantro-plugin/api"
 
 volumes:
   redis-data:

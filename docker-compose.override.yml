@@ -68,3 +68,10 @@ services:
     volumes:
       - ./test/resources:/test/resources
       - ./data:/data
+
+  salvia:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-salvia/Dockerfile
+    volumes:
+      - ./frontend:/usr/share/nginx/html

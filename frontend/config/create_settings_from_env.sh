@@ -13,6 +13,7 @@ if [ -z "ZENON_URI" ]; then
     exit 1
 fi
 
+rm settings.json
 touch settings.json
 read -d '' CONFIG <<- EOF
 {

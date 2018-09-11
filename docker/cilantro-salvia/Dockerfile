@@ -11,9 +11,9 @@ RUN wget https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
     && DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs
 
 # salvia
-RUN rm /usr/share/nginx/html/* \
-    && git clone https://github.com/dainst/salvia.git /usr/share/nginx/html \
-    && cd /usr/share/nginx/html \
+RUN rm -R /usr/share/nginx/html/
+COPY ./frontend /usr/share/nginx/html
+RUN cd /usr/share/nginx/html \
     && npm update -g \
     && npm install
 
