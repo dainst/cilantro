@@ -629,3 +629,14 @@ ul.tree-view {
     position: absolute !important;
     left: 50%;
 }
+
+/* filelist */
+.selected {
+    background-color: #5572A1;
+    color: black;
+    font-weight: bold;
+}
+
+.flLine {
+    cursor: pointer
+}

@@ -1,7 +1,14 @@
-<table class="filelist">
-	<tr  ng-repeat="file in item.value">
-		<td>{{file.file}}</td>
-		<td>{{file.from}}</td>
-		<td>{{file.to}}</td>
-	</tr>
-</table>
+<div class="filelist">
+	<div class="btn-group">
+		<button class="btn btn-default btn-xs flDetach" ng-click="item.detach()" title="Detach File"><span class="glyphicon glyphicon-remove-circle"></span></button>
+		<button class="btn btn-default btn-xs flMoveUp" ng-click="item.moveUp()" title="Move Up"><span class="glyphicon glyphicon-arrow-up"></span></button>
+		<button class="btn btn-default btn-xs flMoveDown" ng-click="item.moveDown()" title="Move Down"><span class="glyphicon glyphicon-arrow-down"></span></button>
+	</div>
+	<table class="flTable">
+		<tr class="flLine" ng-repeat="file in item.value track by $index" ng-class="{selected: item.inFocus == $index}" ng-click="item.focus($index)" >
+			<td class="flName">{{file.file}}</td>
+			<td>{{file.from}}</td>
+			<td>{{file.to}}</td>
+		</tr>
+	</table>
+</div>

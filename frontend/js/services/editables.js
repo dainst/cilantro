@@ -496,6 +496,7 @@ angular
 
     editables.filelist = function(seed, mandatory) {
         let obj = new editables.Base(seed, mandatory);
+        obj.inFocus = -1;
         obj.type = 'filelist';
         obj.check =	function() {return false};
         obj.value = seed || [];
@@ -504,9 +505,16 @@ angular
             // @ TODO check if elem is OK value for this
             obj.value.push(elem);
         };
+
         obj.get = function(){
             return this.value
         };
+
+        /*selects/deselects file from the list of attached files*/
+        obj.focus = function(focus){
+            obj.inFocus = (obj.inFocus === focus) ? -1 : focus;
+        };
+
         obj.getFileData = function() {
           return obj.value.map(function(item) {
              return {
@@ -515,6 +523,35 @@ angular
              }
           });
         };
+
+        /*removes currently selected file from the list of attached files*/
+        obj.detach = () => {
+            obj.value.splice(obj.inFocus, 1);
+        };
+
+        /*switch positions of files in list of attached files*/
+        obj.moveUp = () => {
+            const oldPos = obj.inFocus;
+            const newPos = obj.inFocus - 1;
+            if(oldPos > 0) {
+                let temp = obj.value[oldPos];
+                obj.value[oldPos] = obj.value[newPos];
+                obj.value[newPos] = temp;
+                obj.inFocus = newPos;
+            }
+        };
+
+        obj.moveDown = () => {
+            const oldPos = obj.inFocus;
+            const newPos = obj.inFocus + 1;
+            if(oldPos < obj.value.length-1) {
+                let temp = obj.value[oldPos];
+                obj.value[oldPos] = obj.value[newPos];
+                obj.value[newPos] = temp;
+                obj.inFocus = newPos;
+            }
+        };
+
         return obj;
     };
 

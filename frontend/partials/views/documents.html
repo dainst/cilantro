@@ -20,6 +20,9 @@
                 <div class="panel-heading">
                     Load Files from Staging Area
                     <button class="btn btn-default" ng-click="newFile('csv')">Blank CSV</button>
+                    <button class="btn btn-default" ng-click>
+                        <span class="glyphicon glyphicon-refresh"></span>
+                    </button>
                 </div>
                 <div class="panel-body btn-group" id="staging-dir">
                     <files-treeview tree="stagingDir.tree"></files-treeview>
