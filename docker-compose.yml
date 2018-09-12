@@ -103,4 +103,11 @@ services:
     environment:
       BACKEND_URI: "http://localhost:5000"
       ZENON_URI: "https://zenon.dainst.org/api/v1"
-      OJS_URI: "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api"      OJS_URI: "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api"
+      OJS_URI: "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api"
+
+  frontend-test-chrome:
+    tty: true
+    build:
+      context: docker/cilantro-frontend-test-chrome
+    volumes:
+      - node_modules:/salvia/node_modules
