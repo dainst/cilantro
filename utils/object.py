@@ -214,7 +214,7 @@ class Object:
         """
         Get all sub-objects of this object.
 
-        :return Iterator[Object]:
+        :return List[Object]:
         """
         sub_objects = []
         if os.path.isdir(self.get_parts_dir()):
@@ -223,7 +223,7 @@ class Object:
                 if _is_part_dir_format(d):
                     sub_objects.append(Object(os.path.join(self.get_parts_dir(), d)))
         sub_objects.sort(key=lambda obj: obj.path)
-        return iter(sub_objects)
+        return sub_objects
 
     def copy(self, path):
         """

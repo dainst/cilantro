@@ -115,12 +115,13 @@ class ObjectTest(unittest.TestCase):
         _copy_test_object()
         obj = Object(test_object_working_path)
         children = obj.get_parts()
-        subobj = children.__next__()
+
+        subobj = children[0]
         file = subobj.get_representation('jpg').__next__()
         self.assertIsInstance(file, BytesIO)
         self.assertGreater(file.getbuffer().nbytes, 0)
 
-        subobj = children.__next__()
+        subobj = children[1]
         self.assertIsInstance(subobj.metadata, ObjectMetadata)
         self.assertEqual(subobj.metadata.title, "[Attic geometric Pyxis].")
 
