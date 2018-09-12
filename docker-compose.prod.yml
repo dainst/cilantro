@@ -1,45 +1,89 @@
 version: '3.5'
 
+x-env-dirs: &env-dirs
+  REPOSITORY_DIR: /data/repository
+  WORKING_DIR: /data/workspace
+  STAGING_DIR: /data/staging
+  CONFIG_DIR: /config
+
+x-env-broker: &env-broker
+  BROKER_HOST: "broker"
+  BROKER_USER: &broker-user user
+  BROKER_PASSWORD: &broker-password password
+
 services:
 
+  broker:
+    image: rabbitmq:latest
+    environment:
+      RABBITMQ_DEFAULT_USER: *broker-user
+      RABBITMQ_DEFAULT_PASS: *broker-password
+
   db:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - redis-data:/data
 
   service:
+    image: dainst/cilantro-service:production-setup-2
     volumes:
       - data:/data
       - /opt/cilantro/config:/config
+    working_dir: /app
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      DB_HOST: "db"
 
   default-worker:
+    user: ${UID}
+    image: dainst/cilantro-default-worker:production-setup
+    working_dir: /app
     volumes:
       - data:/data
       - /opt/cilantro/config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      DB_HOST: "db"
 
   convert-worker:
+    user: ${UID}
+    image: dainst/cilantro-convert-worker:production-setup
+    working_dir: /app
     volumes:
       - data:/data
       - /opt/cilantro/config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      DB_HOST: "db"
 
   nlp-worker:
+    user: ${UID}
+    image: dainst/cilantro-nlp-worker:production-setup
+    working_dir: /app
     volumes:
       - data:/data
       - /opt/cilantro/config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      DB_HOST: "db"
 
-  test:
-    volumes:
-      - data:/data
-      - /opt/cilantro/config:/config
-
-  ojs:
-    volumes:
-      - data:/data
+  monitor:
+    image: dainst/cilantro-monitor:stable
+    environment:
+      <<: *env-broker
 
   salvia:
+    image: dainst/cilantro-salvia:latest
     environment:
-      BACKEND_URI: "http://oneeyedjacks01.dai-cloud.uni-koeln.de:5000"
+      BACKEND_URI: "http://oneeyedjacks01.dai-cloud.uni-koeln.de/api"
       ZENON_URI: "https://zenon.dainst.org/api/v1"
       OJS_URI: "https://publications.dainst.org/journals/plugins/generic/ojs-cilantro-plugin/api"
+
 
 volumes:
   redis-data:

@@ -4,6 +4,15 @@ Cilantro is a task runner designed to manage long running distributed jobs that
 operate on file system objects. It is written in Python (3.6+) and uses
 [Celery](http://docs.celeryproject.org/) and [Flask](http://flask.pocoo.org/).
 
+## Quick start
+
+Run these commands in order to run the app in development mode:
+
+    make cp-default-config
+    make run
+
+The frontend can then be accessed under http://localhost:7777/.
+
 ## Documentation
 
 The documentation is automatically generated when a commit is pushed to the
@@ -19,12 +28,12 @@ The generated HTML can be viewed via the following URL:
 * Copy the `.env-default` file to `.env` and modify it. In most cases only
   `UID` has to be adjusted. The UID / GID of the current user can be read with
   `id -u` / `id -g` on UNIX systems.
-  
+
 * Copy `config/users.yml-default` to `config/users.yml`. This file stores the
   user information and credentials for all available users. In order for the
   tests to be successful it must contain the user `test_user`. This user has
   to be removed in production environments.
-  
+
   Passwords have to be encrypted with
   [bcrypt](https://en.wikipedia.org/wiki/Bcrypt).
 
@@ -43,13 +52,12 @@ the subdirectory `docker/`. The complete stack defined for different
 environments is configured with docker-compose files.
 
 To start cilantro for development run:
-    
-    docker-compose pull
-    docker-compose up
+
+    make run
 
 To stop the application run:
 
-    docker-compose stop
+    make stop
 
 To build and publish the images follow the instructions provided in
 [the docker README](docker/README.md).
@@ -68,7 +76,7 @@ The web service runs on port 5000. The following command will create a test task
 You can then query the job status with the returned job_id:
 
     curl http://localhost:5000/job/<job_id>
-    
+
 #### E2E-Tests
 
 ...
@@ -116,16 +124,16 @@ Additionally parameters in method docstrings should be given as follows:
 
     :param param_type param_name: parameter description
     :raises ErrorType: Exception throw-condition description
-    
+
 ### Javascript
 
 - indentation: 4 spaces instead of tab
     - idea: settings->editor->javascript
     - atom: settings->editor
 - names
-    - for js-variables: camelCase 
+    - for js-variables: camelCase
     - for members of datamodel (dataset, article): under_score
-    - in css: snake-case 
+    - in css: snake-case
     - filenames and module names: under_score, eg: myController in my_controller.js
 - ES6
     - `let/const` instead of `var` where it makes sense: http://es6-features.org/#BlockScopedVariables
@@ -134,7 +142,7 @@ Additionally parameters in method docstrings should be given as follows:
     - `===` instead of `==`
     - line endings with `;` even after `}`
     - if without {} only in very simple one liners
- 
+
 
 ## Production deployment
 
@@ -157,6 +165,3 @@ In order to deploy or update the production version use the following commands:
 
     eval $(docker-machine env cilantro-prod-vm)
     docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml cilantro-prod
-
-
-
