@@ -86,3 +86,26 @@ services:
       - ./frontend/package.json:/usr/share/nginx/html/package.json
       - ./frontend/package-lock.json:/usr/share/nginx/html/package-lock.json
       - ./frontend/version.json:/usr/share/nginx/html/version.json
+      - node_modules:/usr/share/nginx/html/node_modules
+
+  frontend-test:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-frontend-test/Dockerfile
+    volumes:
+      - ./frontend/img:/salvia/img
+      - ./frontend/info:/salvia/info
+      - ./frontend/js:/salvia/js
+      - ./frontend/partials:/salvia/partials
+      - ./frontend/style:/salvia/style
+      - ./frontend/test:/salvia/test
+      - ./frontend/favicon.ico:/salvia/favicon.ico
+      - ./frontend/gulpfile.js:/salvia/gulpfile.js
+      - ./frontend/index.html:/salvia/index.html
+      - ./frontend/package.json:/salvia/package.json
+      - ./frontend/package-lock.json:/salvia/package-lock.json
+      - ./frontend/version.json:/salvia/version.json
+      - node_modules:/salvia/node_modules
+
+volumes:
+  node_modules:
