@@ -1,52 +1,50 @@
 <div ng-controller="viewOverview" data-ng-init="init()">
 
-<div class="row">
-    <div class="col-md-4">
-        <multiselect elements="overviewColumns">Display Columns</multiselect>
-        <uib-dropdown class="btn-group">
-            <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button">Sort By<span class="caret"></span></button>
-            <ul class="dropdown-menu" uib-dropdown-menu>
-                <li ng-repeat="sortField in dataset.getSortOptionsForSubObjects()">
-                    <a href="#" ng-click="updateOrder(sortField, true)">{{labels.get("sub", sortField, false)}}</a>
-                </li>
-                <li ng-repeat="sortField in dataset.getSortOptionsForSubObjects()">
-                    <a href="#" ng-click="updateOrder(sortField, false)">{{labels.get("sub", sortField, false)}} (descending)</a>
-                </li>
-            </ul>
-        </uib-dropdown>
-        <span class="btn-group">
+    <div class="row">
+        <div class="col-md-4">
+            <multiselect elements="overviewColumns">Display Columns</multiselect>
+            <uib-dropdown class="btn-group">
+                <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button">Sort By<span class="caret"></span></button>
+                <ul class="dropdown-menu" uib-dropdown-menu>
+                    <li ng-repeat="sortField in dataset.getSortOptionsForSubObjects()">
+                        <a href="#" ng-click="updateOrder(sortField, true)">{{labels.get("sub", sortField, false)}}</a>
+                    </li>
+                    <li ng-repeat="sortField in dataset.getSortOptionsForSubObjects()">
+                        <a href="#" ng-click="updateOrder(sortField, false)">{{labels.get("sub", sortField, false)}} (descending)</a>
+                    </li>
+                </ul>
+            </uib-dropdown>
+            <span class="btn-group">
             <button class='btn btn-default' ng-click='addArticle()'>Add Article<span class="glyphicon glyphicon-plus-sign"></span></button>
         </span>
 
+        </div>
+        <div class="col-md-4 text-center">
+            <stats type="subobjects"></stats>
+        </div>
+        <div class="col-md-4 text-right">
+            <button id="proceed" class='btn btn-primary' ng-click='continue()'>
+                Proceed<span class="glyphicon glyphicon-chevron-right"></span>
+            </button>
+        </div>
     </div>
-    <div class="col-md-4 text-center">
-        <stats type="subobjects"></stats>
-    </div>
-    <div class="col-md-4 text-right">
-        <button id="proceed" class='btn btn-primary' ng-click='continue()'>
-            Proceed<span class="glyphicon glyphicon-chevron-right"></span>
-        </button>
-    </div>
-</div>
 
-
-<div class="row">
-    <div class="col-md-12" style="overflow-x:scroll">
-
-        <table class='split-table editable-table super-table'>
-            <thead>
+    <div class="row tableWrap">
+        <div class="col-md-12">
+            <table class="split-table editable-table super-table" style="overflow-x:scroll">
+                <thead>
                 <tr>
                     <td>Preview</td>
-                    <td
+                    <tda
                         ng-repeat="column in overviewColumns"
                         ng-show="column.checked"
                         ng-style="column.style"
                         title = "{{column.description}}"
-                    >{{column.title}}</td>
+                    >{{column.title}}</tda>
                     <td></td>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 <tr ng-repeat="article in dataset.subobjects | orderBy:'article.order.value.value'" ng-if="article._.confirmed !== false" ng-class="{'row-confirmed': article._.confirmed === true}" article="true" >
                     <td style="width:600px">
 
@@ -62,7 +60,7 @@
                             <div class="alert alert-warning">You have to provide a pagenumber and a loaded file to get a preview.</div>
                         </div>
                     </td>
-                    <td ng-repeat="(name, column) in overviewColumns" ng-show="column.checked">
+                    <td class="contentCol" ng-repeat="(name, column) in overviewColumns" ng-show="column.checked">
                         <span editable item="article[name]"></span>
                     </td>
                     <td>
@@ -74,10 +72,10 @@
                         <span class="btn btn-default btn-xs so-btn-down" ng-show="$index<dataset.subobjects.length-1" ng-click="moveArticle(article, false)" title="move down"><span class="glyphicon glyphicon-triangle-bottom"></span></span>
                     </td>
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
+        </div>
     </div>
-</div>
 
 </div>
