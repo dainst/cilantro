@@ -14,7 +14,7 @@ staging_dir = os.environ['STAGING_DIR']
 
 allowed_extensions = ['xml', 'pdf', 'tif', 'tiff', 'json', 'csv']
 
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 
 def _list_dir(dir_path):
@@ -125,7 +125,7 @@ def upload_to_staging():
 
     :return: a JSON object
     """
-    logger.debug(f"Uploading {len(request.files)} files")
+    log.debug(f"Uploading {len(request.files)} files")
     results = {}
 
     if request.files:
@@ -157,9 +157,9 @@ def _process_file(file, username):
 
 
 def _generate_error_result(file, code, message, e=None):
-    logger.error(f"Error during upload of {file.filename}. {message}.")
+    log.error(f"Error during upload of {file.filename}. {message}.")
     if e:
-        logger.error(f" Cause: {str(e)}")
+        log.error(f" Cause: {str(e)}")
     return {
         "success": False,
         "error": {
