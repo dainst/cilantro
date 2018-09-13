@@ -92,6 +92,11 @@ services:
     build:
       context: .
       dockerfile: ./docker/cilantro-frontend-test/Dockerfile
+    environment:
+      TEST: ${TEST}
+      BACKEND_URI: "http://service:5000"
+      ZENON_URI: "https://zenon.dainst.org/api/v1"
+      OJS_URI: "http://ojs:80/ojs/plugins/generic/ojs-cilantro-plugin/api"
     volumes:
       - ./frontend/img:/salvia/img
       - ./frontend/info:/salvia/info
