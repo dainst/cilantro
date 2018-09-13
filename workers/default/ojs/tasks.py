@@ -46,8 +46,8 @@ class GenerateFrontmatterTask(ObjectTask):
 
     def process_object(self, obj):
         if obj.metadata.create_frontpage:
-            id = obj.metadata.ojs_id.split("-")[-1]
-            generate_frontmatters([id])
+            article_id = obj.metadata.ojs_id.split("-")[-1]
+            generate_frontmatters([article_id])
 
 
 PublishToOJSTask = celery_app.register_task(PublishToOJSTask())
