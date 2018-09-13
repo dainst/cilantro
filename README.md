@@ -21,7 +21,7 @@ The documentation files are held on the special branch `gh-pages`.
 
 The generated HTML can be viewed via the following URL:
 
-    https://dainst.github.io/cilantro/
+https://dainst.github.io/cilantro/
 
 ## Setup development environment
 
