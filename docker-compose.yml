@@ -95,3 +95,6 @@ services:
       BACKEND_URI: "http://localhost:5000"
       ZENON_URI: "https://zenon.dainst.org/api/v1"
       OJS_URI: "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api"
+
+  frontend-test:
+    image: dainst/cilantro-frontend-test:latest
