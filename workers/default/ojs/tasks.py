@@ -24,11 +24,11 @@ class PublishToOJSTask(ObjectTask):
                             ojs_metadata['ojs_journal_code'])
 
         children = obj.get_parts()
-        for i in range(len(children)):
-            children[i].metadata.ojs_id = \
+        for i, child in enumerate(children):
+            child.metadata.ojs_id = \
                 f"article-{ojs_metadata['ojs_journal_code']}"\
                 f"-{result['published_articles'][i]}"
-            children[i].write()
+            child.write()
 
         object_id = f"issue-{ojs_metadata['ojs_journal_code']}-"\
                     f"{result['published_issues'][0]}"
