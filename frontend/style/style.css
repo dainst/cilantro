@@ -85,16 +85,25 @@ table.author_box td {
 
 /* -- */
 
-#main-container {
-    padding: 80px 20px 10px 20px;
-    overflow-x: hidden;
-    min-height: 600px;
+#container {
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
+#main-container {
+    padding: 80px 20px 10px 20px;
+    overflow: auto;
+    min-height: 600px;
+    width: 80%;
+}
+
+#main-sidebar {
+    min-height: 600px;
+    width: 20%;
+}
 
 #dataset-table > tr > td {
     border: 1px solid silver
-
 }
 
 table table.editable-table > tbody > tr > td {
