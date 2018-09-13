@@ -63,7 +63,12 @@ def list_staging():
 
     :return: JSON array containing objects for files and folders
     """
-    tree = _list_dir(os.path.join(staging_dir, auth.username()))
+    try:
+        tree = _list_dir(os.path.join(staging_dir, auth.username()))
+    except FileNotFoundError:
+        log.warn(f"List staging called on not-existing folder: "\
+                 f"{os.path.join(staging_dir, auth.username())}")
+        tree = []
     return jsonify(tree)
 
 
