@@ -1,4 +1,4 @@
-FROM python:alpine
+FROM python:3.6-alpine
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
