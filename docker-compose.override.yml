@@ -80,12 +80,6 @@ services:
       - ./frontend/partials:/usr/share/nginx/html/partials
       - ./frontend/style:/usr/share/nginx/html/style
       - ./frontend/test:/usr/share/nginx/html/test
-      - ./frontend/favicon.ico:/usr/share/nginx/html/favicon.ico
-      - ./frontend/gulpfile.js:/usr/share/nginx/html/gulpfile.js
-      - ./frontend/index.html:/usr/share/nginx/html/index.html
-      - ./frontend/package.json:/usr/share/nginx/html/package.json
-      - ./frontend/package-lock.json:/usr/share/nginx/html/package-lock.json
-      - ./frontend/version.json:/usr/share/nginx/html/version.json
       - node_modules:/usr/share/nginx/html/node_modules
 
   frontend-test:
@@ -104,12 +98,6 @@ services:
       - ./frontend/partials:/salvia/partials
       - ./frontend/style:/salvia/style
       - ./frontend/test:/salvia/test
-      - ./frontend/favicon.ico:/salvia/favicon.ico
-      - ./frontend/gulpfile.js:/salvia/gulpfile.js
-      - ./frontend/index.html:/salvia/index.html
-      - ./frontend/package.json:/salvia/package.json
-      - ./frontend/package-lock.json:/salvia/package-lock.json
-      - ./frontend/version.json:/salvia/version.json
       - node_modules:/salvia/node_modules
 
 volumes:
