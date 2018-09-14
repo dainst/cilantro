@@ -6,6 +6,10 @@ from workers.base_task import ObjectTask
 from workers.default.ojs.ojs_api import publish, generate_frontmatters
 
 
+def _generate_object_id(prefix, journal_code, result_id):
+    return f"{prefix}-{journal_code}-{result_id}"
+
+
 class PublishToOJSTask(ObjectTask):
     """
     Publish documents in the XML in the working directory via OJS-Plugin.
@@ -25,14 +29,14 @@ class PublishToOJSTask(ObjectTask):
 
         children = obj.get_parts()
         for i, child in enumerate(children):
-            child.metadata.ojs_id = \
-                f"article-{ojs_metadata['ojs_journal_code']}"\
-                f"-{result['published_articles'][i]}"
+            child.metadata.ojs_id = _generate_object_id('article',
+                ojs_metadata['ojs_journal_code'],
+                result['published_articles'][i])
             child.write()
 
-        object_id = f"issue-{ojs_metadata['ojs_journal_code']}-"\
-                    f"{result['published_issues'][0]}"
-
+        object_id = _generate_object_id('issue',
+                                        ojs_metadata['ojs_journal_code'],
+                                        result['published_issues'][0])
         obj.metadata.ojs_id = object_id
         obj.write()
 
