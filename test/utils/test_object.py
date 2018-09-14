@@ -16,7 +16,8 @@ test_object_resource_path = os.path.join(resource_dir, 'objects',
 test_file_name = 'test.jpg'
 test_file_path = os.path.join(resource_dir, 'files', test_file_name)
 test_metadata_file_name = 'marc.xml'
-test_metadata_file_path = os.path.join(resource_dir, 'files', test_metadata_file_name)
+test_metadata_file_path = os.path.join(resource_dir, 'files',
+                                       test_metadata_file_name)
 copy_working_path = os.path.join(working_dir, 'a_copy')
 
 log = logging.getLogger(__name__)

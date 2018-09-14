@@ -111,8 +111,8 @@ class JobTypeTest(unittest.TestCase):
                 waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
                 raise AssertionError(f"experienced timeout while waiting for "
-                                     f"status '{expected_status}', last status "
-                                     f"was '{status}'")
+                                     f"status '{expected_status}', last status"
+                                     f" was '{status}'")
             status = self.get_status(job_id)['status']
 
     def get_status(self, job_id):
@@ -143,7 +143,7 @@ class JobTypeTest(unittest.TestCase):
             data=json.dumps(data),
             content_type='application/json',
             headers=get_auth_header()
-        )
+            )
         try:
             data = json.loads(response.get_data(as_text=True))
         except JSONDecodeError:
@@ -171,9 +171,9 @@ class JobTypeTest(unittest.TestCase):
 
     def unstage_resource(self, path):
         """
-        Removes a resource (file or folder) from the staging folder.
+        Remove a resource (file or folder) from the staging folder.
 
-        :param str path: The relative path to the resource in the staging folder
+        :param str path: The relative path to the resource in the staging dir
         :return:
         """
         source = os.path.join(self.staging_dir, test_user, path)
@@ -197,7 +197,7 @@ class JobTypeTest(unittest.TestCase):
 
     def load_params_from_file(self, folder, path):
         """
-        Loads job params from a JSON file.
+        Load job params from a JSON file.
 
         :param str folder: The source folder
         :param str path: The relative path to the JSON file
