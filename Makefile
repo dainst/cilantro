@@ -5,7 +5,7 @@ stop:
 	docker-compose stop
 
 build-image:
-	./build.sh IMAGE TAG
+	./build.sh ${IMAGE} ${TAG}
 
 build-doc:
 	bash doc/build-doc.sh
