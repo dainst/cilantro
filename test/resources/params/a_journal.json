@@ -14,7 +14,6 @@
             5
         ]
     }],
-    "frontmatter_ids": [1],
     "parts": [{
             "metadata": {
                 "title": "Ein kleines Musterdokument mit zweizeiligem Titel",
@@ -58,7 +57,7 @@
                 "language": "de_DE",
                 "zenonId": "",
                 "auto_publish": true,
-                "create_frontpage": false
+                "create_frontpage": true
             },
             "files": [{
                 "file": "test.pdf",
@@ -78,7 +77,7 @@
     "ojs_metadata": {
         "ojs_journal_code": "test",
         "ojs_user": "ojs_user",
-        "auto_publish_issue": false,
+        "auto_publish_issue": true,
         "default_publish_articles": true,
         "default_create_frontpage": true,
         "allow_upload_without_file": false
