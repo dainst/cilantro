@@ -26,7 +26,7 @@ services:
       - redis-data:/data
 
   service:
-    image: dainst/cilantro-service:production-setup-2
+    image: dainst/cilantro-service:latest
     volumes:
       - data:/data
       - /opt/cilantro/config:/config
@@ -38,7 +38,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:production-setup
+    image: dainst/cilantro-default-worker:latest
     working_dir: /app
     volumes:
       - data:/data
@@ -50,7 +50,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:production-setup
+    image: dainst/cilantro-convert-worker:latest
     working_dir: /app
     volumes:
       - data:/data
@@ -62,7 +62,7 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:production-setup
+    image: dainst/cilantro-nlp-worker:latest
     working_dir: /app
     volumes:
       - data:/data
