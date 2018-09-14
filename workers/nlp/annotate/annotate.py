@@ -1,64 +1,32 @@
-class NoTextProvidedException(Exception):
-    pass
+import uuid
 
 
-class InvalidNlpOperationException(Exception):
-    pass
-
-
-def annotate(text, params):
+def annotate(text, lang=None):
     """
-    Annotates the given text.
+    Annotate the given text.
 
     Uses the TextAnalyzer of the dainst/nlp_components in the
     nlp-worker docker container to annotate the text.
 
     :param str text: the given text to annotate
-    :param dict params: some configuration options
+    :param str lang: language of the text, if empty the text_analyzer
+        tries to figure out it itself
     :return dict: generated annotations with metadata
     """
-    _validate_input(text, params)
+    if not text:
+        return {}
     text_analyzer = _init_text_analyzer(text)
-    if 'lang' in params:
-        text_analyzer.lang = params['lang']
+    if lang:
+        text_analyzer.lang = lang
 
-    annotation = _run_annotation(text_analyzer, params['operations'])
-    result = _add_metadata(text_analyzer, annotation)
-    return result
-
-
-def _validate_input(text, params):
-    """
-    Validates the text and parameters given.
-
-    This avoids long initialising of text_analyzer if invalid text or
-    params are provided.
-
-    :param str text: the text to validate
-    :param dict params: the parameters to validate
-    :raises NoTextProvided: if text is empty string
-    :raises InvalidNlpOperations: if params['operations'] does not contain
-        POS or NER
-    """
-    if text is "":
-        raise NoTextProvidedException("The provided Text is an empty string")
-
-    try:
-        params['operations']
-    except KeyError:
-        raise InvalidNlpOperationException("No operations specified in params")
-
-    valid_params = {"POS", "NER"}
-    if not (set(params['operations']).intersection(valid_params)):
-        raise InvalidNlpOperationException(f"No valid operation found in "
-                                           f"{params['operations']}")
+    return _add_metadata(text_analyzer, _full_ner(text_analyzer))
 
 
 def _init_text_analyzer(text):
     """
-    Initialises the Text Analyzer of the nlp components.
+    Initialize the Text Analyzer of the nlp components.
 
-    :param str text: The text to Analyze
+    :param str text: The text to analyze
     :return class: The text_analyzer
     """
     from nlp_components.idai_journals.publications import TextAnalyzer
@@ -67,70 +35,110 @@ def _init_text_analyzer(text):
     return text_analyzer
 
 
-def _run_annotation(text_analyzer, operations):
-    """
-    Calls a method of the text_analyzer depending on the operations.
-
-    :param class text_analyzer: the text_analyzer of nlp_components
-    :param list operations: the operations to be excecuted
-    :return dict: pure annotations without metadata
-    """
-    result = {}
-
-    if 'POS' in operations:
-        result['part_of_speech_tags'] = text_analyzer.do_pos_tag()
-    if 'NER' in operations:
-        result['named_entities'] = _full_ner(text_analyzer)
-
-    return result
-
-
 def _full_ner(text_analyzer):
     """
-    Runs complete NER
+    Run complete NER.
 
     This includes extraction of different entity types and geotagging.
 
     :param class text_analyzer: the text_analyzer of nlp_components
-    :return dict: dict with complete NEs, extracted persons and geoparsed
-        locations
+    :return dict: json with persons, geotagged locations and metadata,
+        readalbe by the viewer
     """
     named_entites = text_analyzer.do_ner()
+
     persons = _convert_list_of_objs_to_list_of_dicts(
         text_analyzer.get_persons(named_entites))
     locations = text_analyzer.get_locations(named_entites)
-    geoparsed = _convert_list_of_objs_to_list_of_dicts(
+    geotagged_locations = _convert_list_of_objs_to_list_of_dicts(
         text_analyzer.geoparse(locations))
 
-    return {
-        "complete_named_entities": named_entites,
-        "persons": persons,
-        "locations": geoparsed
-    }
+    return _generatere_viewer_json(persons, geotagged_locations)
+
+
+def _generatere_viewer_json(persons, geotagged_locations):
+    """
+    Generate the complete, viewer compatible, JSON.
+
+    :param list persons: all entities of type person
+    :param list geotagged_locations: all entities of type location, enriched
+        with coordinates and gazetteer ids
+    :return dict: finalized json in viewer's format
+    """
+    persons = _create_json_for_entity_type(persons)
+    locations = _create_json_for_entity_type(geotagged_locations)
+
+    viewer_json = {"persons": {"items": persons},
+                   "locations": {"items": locations}}
+    return viewer_json
+
+
+def _create_json_for_entity_type(entities):
+    """
+    Create JSON for every entity type.
+
+    This is compatible to the viewer and the same for every entity type
+        (person, location). Not used keys are filled with None
+        (null in JSON).
+    :param list entities: all entities of an entity type
+    :return dict: viewer_compatible json of this entity type
+    """
+    viewer_entities = []
+    for entity in entities:
+        try:
+            coordinates = [entity["latitude"], entity["longitude"]]
+        except KeyError:
+            coordinates = None
+
+        references = []
+        for key, value in entity["refids"].items():
+            try:
+                url = f"{entity['_baseurls'][key]}{value}"
+                reference = {
+                    "id": value,
+                    "url": url,
+                    "type": key
+                }
+            except KeyError:
+                reference = {}
+            references.append(reference)
+
+        viewer_entity = {
+            "id": str(uuid.uuid1()),
+            "score": None,
+            "terms": [entity["string"]],
+            "pages": [1],  # as long as only one page is processed
+            "count": 1,  # as long as every match is its own entry
+            "lemma": entity["normform"],
+            "coordinates": coordinates,
+            "references": references
+        }
+        viewer_entities.append(viewer_entity)
+    return viewer_entities
 
 
 def _add_metadata(text_analyzer, annotations):
     """
-    Adds metadata to the annotations.
+    Add metadata to the annotations.
 
     :param class text_analyzer: the text_analyzer of nlp_components
     :param dict annotations: annotations made before
     :return dict: annotations with metadata
     """
     metadata = {
-            "detected_language": text_analyzer.lang,
-            "word_count": len(text_analyzer.words),
-            "sentence_count": len(text_analyzer.sentences)
-        }
+        "detected_language": text_analyzer.lang,
+        "word_count": len(text_analyzer.words),
+        "sentence_count": len(text_analyzer.sentences)
+    }
     return {
         **annotations,
-        **metadata
+        "metadata": metadata
     }
 
 
 def _convert_list_of_objs_to_list_of_dicts(list_of_objects):
     """
-    Recursively converts a list of objects to a list of dicts
+    Recursively convert a list of objects to a list of dicts.
 
     This works recursively and is needed because the NLP Textanalyzer
     sometimes gives back a list of non-json-serializable objects, which
@@ -141,9 +149,10 @@ def _convert_list_of_objs_to_list_of_dicts(list_of_objects):
     :return list: list of objects or a single one
     """
     if isinstance(list_of_objects, list):
-        list_of_objects = []
+        list_of_subobjects = []
         for sub in list_of_objects:
-            list_of_objects.append(convert_list_of_objs_to_list_of_dicts(sub))
-        return list_of_objects
+            list_of_subobjects.append(
+                _convert_list_of_objs_to_list_of_dicts(sub))
+        return list_of_subobjects
     else:
         return list_of_objects.__dict__
