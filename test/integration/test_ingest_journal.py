@@ -6,6 +6,7 @@ from test.integration.job_type_test import JobTypeTest
 class IngestJournalTest(JobTypeTest):
 
     def test_no_ocr(self):
+        """Test ingest journal functionality without OCR tasks."""
         self.stage_resource('files', 'test.pdf')
         params = self.load_params_from_file('params', 'a_journal.json')
 
@@ -19,7 +20,7 @@ class IngestJournalTest(JobTypeTest):
         self.assertIn('object_id', response['result'])
         object_id = response['result']['object_id']
         journal_code = params['ojs_metadata']['ojs_journal_code']
-        self.assertTrue(object_id.startswith(f"journal-{journal_code}"))
+        self.assertTrue(object_id.startswith(f"issue-{journal_code}"))
 
         files_generated = [
             'data/origin/merged.pdf',
@@ -37,7 +38,7 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0002/data/txt/merged_0.json',
             'meta.json',
             'ojs_import.xml'
-        ]
+            ]
         for file in files_generated:
             self.assert_file_in_repository(object_id, file)
 
@@ -52,6 +53,7 @@ class IngestJournalTest(JobTypeTest):
         self.unstage_resource('pdf')
 
     def test_do_ocr(self):
+        """Test ingest journal functionality with OCR tasks enabled."""
         self.stage_resource('files', 'test.pdf')
         params = self.load_params_from_file('params', 'a_journal_do_ocr.json')
 
@@ -65,7 +67,7 @@ class IngestJournalTest(JobTypeTest):
         self.assertIn('object_id', response['result'])
         object_id = response['result']['object_id']
         journal_code = params['ojs_metadata']['ojs_journal_code']
-        self.assertTrue(object_id.startswith(f"journal-{journal_code}"))
+        self.assertTrue(object_id.startswith(f"issue-{journal_code}"))
 
         files_generated = [
             'parts/part_0001/data/origin/merged.pdf',
@@ -82,7 +84,7 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0002/data/txt/merged_0.json',
             'meta.json',
             'ojs_import.xml'
-        ]
+            ]
         for file in files_generated:
             self.assert_file_in_repository(object_id, file)
         self.unstage_resource('pdf')

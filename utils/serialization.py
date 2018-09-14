@@ -12,11 +12,11 @@ class SerializableClass(object):
     @classmethod
     def from_dict(cls, dic: dict):
         """
-        Creates an object of the given Class from a dictionary.
+        Create an object of the given Class from a dictionary.
 
         Fills the attributes accordingly.
 
-        :param dict dic: The dictionary that represents the object from the class.
+        :param dict dic: The dictionary that represents the object of the class
         :return: cls: The generated object
         """
         for key, value in dic.items():
@@ -39,8 +39,8 @@ class SerializableClass(object):
         """
         Creates a tuple<cls> object.
 
-        Works exactly as an object from the Class cls, but is NOT an instance of
-        it and has less incompatibility issues than a simple dict.
+        Works exactly as an object from the Class cls, but is NOT an instance
+        of it and has less incompatibility issues than a simple dict.
 
         :return: tuple<cls>: The generated named tuple
         """

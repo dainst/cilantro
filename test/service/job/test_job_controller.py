@@ -11,7 +11,9 @@ class JobControllerTest(unittest.TestCase):
     def setUp(self):
         app.testing = True
         self.client = app.test_client()
-        self.env = patch.dict('os.environ', {'CONFIG_DIR': "test/resources/configs/config_valid"})
+        self.env = patch.dict(
+            'os.environ',
+            {'CONFIG_DIR': "test/resources/configs/config_valid"})
         self.env.start()
 
     def tearDown(self):

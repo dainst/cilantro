@@ -1,8 +1,7 @@
 import unittest
-import json
 from urllib.error import HTTPError
 
-from workers.default.ojs.ojs_api import publish, generate_frontmatters
+from workers.default.ojs.ojs_api import publish, generate_frontmatter
 
 
 class GenerateFrontmatterTest(unittest.TestCase):
@@ -34,11 +33,11 @@ class GenerateFrontmatterTest(unittest.TestCase):
         """
         Test valid PDF documents in OJS to generate frontmatter for.
 
-        Takes the even numbered IDs from the published articles in the setup
-        method, which are supposed to be valid PDF files.
+        Takes the first ID from the published articles in the setup
+        method, which are supposed to be a valid PDF file.
         """
         response_status_code, response = \
-            generate_frontmatters(self.published_articles[::2])
+            generate_frontmatter(self.published_articles[0])
 
         self.assertEqual(200, response_status_code)
         self.assertTrue(response['success'])
@@ -47,9 +46,9 @@ class GenerateFrontmatterTest(unittest.TestCase):
         """
         Test invalid text documents in OJS to generate frontmatter for.
 
-        Takes the odd numbered IDs from the published articles in the setup
-        method, which are supposed to fail. The expected result of the call is
-        to return a 500 HTTP error.
+        Takes the second ID from the published articles in the setup
+        method, which are supposed to fail becasue it is simple text.
+        The expected result of the call is to return a 500 HTTP error.
         """
-        self.assertRaises(HTTPError, generate_frontmatters,
-                          self.published_articles[1::2])
+        self.assertRaises(HTTPError, generate_frontmatter,
+                          self.published_articles[1])
