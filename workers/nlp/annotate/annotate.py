@@ -1,10 +1,6 @@
 import uuid
 
 
-class NoTextProvidedException(Exception):
-    pass
-
-
 def annotate(text, lang=None):
     """
     Annotate the given text.
@@ -17,7 +13,8 @@ def annotate(text, lang=None):
         tries to figure out it itself
     :return dict: generated annotations with metadata
     """
-    _validate_text(text)
+    if not text:
+        return {}
     text_analyzer = _init_text_analyzer(text)
     if lang:
         text_analyzer.lang = lang
@@ -36,20 +33,6 @@ def _init_text_analyzer(text):
     # dependency in docker container
     text_analyzer = TextAnalyzer(text)
     return text_analyzer
-
-
-def _validate_text(text):
-    """
-    Validate the text given. May be extended.
-
-    This avoids long initializing of text_analyzer if invalid text is
-    provided.
-
-    :param str text: the text to validate
-    :raises NoTextProvided: if text is empty string
-    """
-    if text is "":
-        raise NoTextProvidedException("The provided Text is an empty string")
 
 
 def _full_ner(text_analyzer):

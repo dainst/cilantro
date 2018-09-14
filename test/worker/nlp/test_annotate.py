@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 
 from test.worker.nlp.text_analyzer_mock import TextAnalyzer
-from workers.nlp.annotate.annotate import annotate, NoTextProvidedException
+from workers.nlp.annotate.annotate import annotate
 
 
 @patch('workers.nlp.annotate.annotate._init_text_analyzer')
@@ -17,4 +17,5 @@ class AnnotateTest(unittest.TestCase):
     def test_no_text(self, mock_init):
         mock_init.return_value = TextAnalyzer()
         text = ""
-        self.assertRaises(NoTextProvidedException, annotate, text)
+        result = annotate(text)
+        self.assertEqual(result, {})
