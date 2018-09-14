@@ -3,7 +3,7 @@ import os
 from utils.celery_client import celery_app
 
 from workers.base_task import ObjectTask
-from workers.default.ojs.ojs_api import publish, generate_frontmatters
+from workers.default.ojs.ojs_api import publish, generate_frontmatter
 
 
 def _generate_object_id(prefix, journal_code, result_id):
@@ -51,7 +51,7 @@ class GenerateFrontmatterTask(ObjectTask):
     def process_object(self, obj):
         if obj.metadata.create_frontpage:
             article_id = obj.metadata.ojs_id.split("-")[-1]
-            generate_frontmatters([article_id])
+            generate_frontmatter(article_id)
 
 
 PublishToOJSTask = celery_app.register_task(PublishToOJSTask())
