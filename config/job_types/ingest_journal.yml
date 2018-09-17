@@ -9,7 +9,6 @@ params:
   metadata: dict
   nlp_params: dict
   do_ocr: boolean
-  frontmatter_ids: list
   ojs_metadata: dict
 
 tasks:
