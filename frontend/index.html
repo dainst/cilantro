@@ -11,11 +11,11 @@
 
 </head>
 
-    <body ng-controller="main" data-ng-init="initApp()">
+    <body class="flex-cont-vert" ng-controller="main" data-ng-init="initApp()">
 
         <div id='loader' class='loader' ng-if="isLoading"></div>
 
-        <idai-navbar
+        <idai-navbar class="flex-item idai-navbar"
             hide-register-button="true"
             hide-contact-button="true"
             hide-login-button="true"
@@ -28,25 +28,25 @@
             <salvia-navbar></salvia-navbar>
         </idai-navbar>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 container-fluid" id='main-container'>
-                    <messagebox></messagebox>
-                    <ng-include src="steps.getTemplate()"></ng-include>
-                </div>
-                <div class="col-md-6 sidebar" id="main-sidebar">
-                    <ng-include src="sidebar_tabs.getTemplate()"></ng-include>
-                </div>
+
+        <div class="row container flex-item" style="flex-grow: 1">
+            <div class="col-md-6 container-fluid" id='main-container'>
+                <messagebox></messagebox>
+                <ng-include src="steps.getTemplate()"></ng-include>
+            </div>
+            <div class="col-md-6" id="main-sidebar">
             </div>
         </div>
 
-        <idai-footer institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
+
+        <idai-footer class="flex-item" institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
 
         <!-- load angular, bootstrap, idai-components -->
 
         <script src="node_modules/angular/angular.min.js"></script>
         <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
         <script src="node_modules/idai-components/dist/idai-components.min.js"></script>
+        <script src="node_modules/angular-resizable/angular-resizable.min.js"></script>
 
         <!--  load 3party angular moduls -->
 
@@ -61,7 +61,7 @@
         <script src="js/services/webservice.js"></script>
         <script src="js/services/staging_dir.js"></script>
         <script src="js/services/steps.js"></script>
-        <script src="js/services/sidebar_tabs.js"></script>
+        <script src="js/services/sidebar.js"></script>
         <script src="js/services/zenon_importer.js"></script>
         <script src="js/services/language_strings.js"></script>
         <script src="js/services/jobs.js"></script>

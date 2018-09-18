@@ -2,6 +2,9 @@
 
 
 /* -- */
+html {
+    height: 100%;
+}
 
 h1 {
     font-size: x-large;
@@ -84,22 +87,81 @@ table.author_box td {
 
 
 /* -- */
+body {
+    margin-bottom: 0px;
+    min-height: 100%;
+}
 
-#container {
-    margin-left: 0px;
+idai-footer{
+    font-size: 12px;
+
+    position: unset;
+
+    align-self: flex-end;
+
+    bottom: 0;
+
+    width: 100%;
+
+    padding: 10px 30px 5px;
+
+    background-color: #e2e2e2;
+
+    border-top: 1px solid #d5d5d5;
+}
+
+idai-navbar {
+    align-self: flex-start
+}
+
+.flex-cont-vert {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+}
+
+.flex-item {
+    flex-grow: 0;
+}
+
+.container {
     margin-right: 0px;
+    margin-left: 0px;
+    margin-top: 50px;
+    padding-left: 15px;
+    padding-right: 15px; }
+
+.container:before, .container:after {
+    content: " ";
+    display: table; }
+
+.container:after {
+    clear: both; }
+@media (min-width: 768px) {
+    .container {
+        width: 750px; } }
+@media (min-width: 992px) {
+    .container {
+        width: 970px; } }
+@media (min-width: 1138px) {
+    .container {
+        width: 100%; }
 }
 
 #main-container {
-    padding: 80px 20px 10px 20px;
+    padding: 15px 20px 10px 20px;
     overflow: auto;
-    min-height: 600px;
+    min-height: 100%;
     width: 80%;
 }
 
 #main-sidebar {
-    min-height: 600px;
+    padding: 15px 20px 10px 20px;
+    overflow: auto;
+    min-height: 100%;
     width: 20%;
+    border-left: 4px solid black;
 }
 
 #dataset-table > tr > td {
