@@ -295,12 +295,6 @@ table .alert {
     margin-top: 1em
 }
 
-/* hide login button in navbar */
-
-[ng-click="loginFunction();"] {
-    display:none
-}
-
 #password-box {
     background-clip: padding-box !important;
     background-color: #FFF !important;

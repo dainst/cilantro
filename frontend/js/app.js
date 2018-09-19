@@ -33,6 +33,7 @@ angular
     'controller.viewFinish',
     'controller.viewDocuments',
     'controller.viewJobs',
+    'controller.login',
 
     'controller.csvImportWindow',
     'controller.upload',
