@@ -32,7 +32,7 @@ angular
 
         $scope.continue = function() {
             dataset.cleanSubobjects();
-            steps.change('articles');
+            steps.changeView('articles');
         };
 
         // open file externally

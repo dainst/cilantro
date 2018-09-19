@@ -31,7 +31,7 @@ angular
         };
 
         $scope.continue = () => {
-            steps.change('publish');
+            steps.changeView('publish');
         };
 
         $scope.addArticle = function() {

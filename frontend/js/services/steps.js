@@ -54,7 +54,30 @@ angular
         }
     };
 
-    steps.change = function(to) {
+    let tabs = {
+        current: "data",
+        isCollapsed: false
+    }
+
+    steps.sidebar = {
+        "data": {
+            "template": "partials/elements/sidebar_data.html",
+            "title": "My Data",
+            "showIf": function() {return steps.isStarted && steps.current != "fatal"}
+        },
+        "help": {
+            "template": "partials/elements/sidebar_help.html",
+            "title": "Help",
+            "showIf": function() {return steps.isStarted && steps.current != "fatal"}
+        },
+        "messages": {
+            "template": "partials/elements/sidebar_messages.html",
+            "title": "Messages",
+            "showIf": function() {return steps.isStarted && steps.current != "fatal"}
+        }
+    };
+
+    steps.changeView = function(to) {
 
         if (typeof steps.views[to] === "undefined") {
             console.warn('view ' + to + ' does not exist');
@@ -65,7 +88,7 @@ angular
             return;
         }
 
-        console.log('Tab change to: ', to);
+        console.log('Tab changeView to: ', to);
         //$scope.message.reset();
         steps.current = to;
 
@@ -79,6 +102,21 @@ angular
         return steps.views[steps.current].template + cacheKiller;
     };
 
+    steps.changeTab = (to) => {
+        if (to === tabs.current) {
+            return;
+        }
+
+        tabs.current = to;
+    }
+
+    steps.getTab = () => {
+        return steps.sidebar[tabs.current].template;
+    }
+
+    steps.toggleTab = () => {
+        tabs.isCollapsed = !tabs.isCollapsed;
+    }
 
     return (steps);
 }]);

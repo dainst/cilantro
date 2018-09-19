@@ -150,7 +150,7 @@ idai-navbar {
 }
 
 #main-container {
-    padding: 15px 20px 10px 20px;
+    padding: 15px 10px 10px 20px;
     overflow: auto;
     min-height: 100%;
     width: 80%;
@@ -160,8 +160,22 @@ idai-navbar {
     padding: 15px 20px 10px 20px;
     overflow: auto;
     min-height: 100%;
-    width: 20%;
-    border-left: 4px solid black;
+    width: calc(20% - 40px);
+    border-left: solid black;
+}
+
+#sidebar-tasks {
+    min-height: 100%;
+    width: 40px;
+    writing-mode: vertical-rl;
+    padding-left: 5px;
+    padding-right: 0px;
+}
+
+.task {
+    transform: scale(-1, -1);
+    padding: 5px 5px !important;
+    background-color: #CCCCCC;
 }
 
 #dataset-table > tr > td {

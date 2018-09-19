@@ -65,7 +65,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should change to the right language code when clicking a language', () => {
+        it('should changeView to the right language code when clicking a language', () => {
             so.goToSubObject(3);
             so.getRowContent("Language").then(cell => {
                 cell.all(by.css("label")).get(3).click();
@@ -92,7 +92,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should update index-representation of page numbers if page boundaries change, as long as it it not entered manually', () => {
+        it('should update index-representation of page numbers if page boundaries changeView, as long as it it not entered manually', () => {
             so.goToSubObject(2);
             so.getRowContent("Range of Pages").then(cell => {
                 const startPage = cell.all(by.css("input")).get(0);
@@ -123,7 +123,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should allow page boundaries change as printed in index if document offset is set', () => {
+        it('should allow page boundaries changeView as printed in index if document offset is set', () => {
             so.goToSubObject(2);
             so.getRowContent("Loaded File").then(loadedFileCell => {
                 const docOffset = loadedFileCell.all(by.css("input")).last();
@@ -153,7 +153,7 @@ describe('subobject view', () => {
         });
 
 
-        it('should change page boundaries if a file with different offset is chosen', () => {
+        it('should changeView page boundaries if a file with different offset is chosen', () => {
             so.goToSubObject(3);
             so.getRowContent("Loaded File").then(loadedFileCell => {
                 const docOffset = loadedFileCell.all(by.css("input")).last();
