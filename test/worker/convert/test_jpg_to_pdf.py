@@ -1,7 +1,7 @@
 import os
 
 from test.worker.convert.convert_test import ConvertTest
-from workers.convert.convert_image_pdf import convert_jpg_to_pdf
+from workers.convert.convert_image import convert_jpg_to_pdf
 
 
 class Jpg2PdfTest(ConvertTest):
