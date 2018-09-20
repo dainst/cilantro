@@ -15,7 +15,9 @@ RUN rm -R /usr/share/nginx/html/
 COPY ./frontend /usr/share/nginx/html
 RUN cd /usr/share/nginx/html \
     && npm update -g \
-    && npm install
+    && npm install \
+    && cd node_modules/webdriver-manager/bin \
+    && ./webdriver-manager update
 
 #write startup-script (which creates settings.json)
 RUN touch /root/startup.sh \

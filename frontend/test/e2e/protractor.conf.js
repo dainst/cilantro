@@ -22,7 +22,7 @@ exports.config = {
     exclude: [],
     chromeOnly: true,
     multiCapabilities: [{
-        browserName: 'chrome'
+        browserName: 'firefox'
     }],
     allScriptsTimeout: 110000,
     getPageTimeout: 100000,

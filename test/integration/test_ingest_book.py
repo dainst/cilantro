@@ -6,6 +6,7 @@ class IngestBookTest(JobTypeTest):
     test_object_id = "test_object_2342"
 
     def test_success(self):
+        """Test ingest book task chain."""
         self.stage_resource('files', 'some_tiffs')
         params = self.load_params_from_file('params', 'a_book.json')
 
@@ -21,7 +22,7 @@ class IngestBookTest(JobTypeTest):
             'data/jpg/test4.jpg',
             'data/pdf/merged.pdf',
             'meta.json'
-        ]
+            ]
         for file in files_generated:
             self.assert_file_in_repository(self.test_object_id, file)
 

@@ -92,7 +92,6 @@ class Object:
             os.makedirs(self.path)
         if os.path.exists(os.path.join(self.path, 'meta.json')):
             with open(os.path.join(self.path, 'meta.json'), 'r', encoding="utf-8") as data:
-
                 try:
                     self.metadata = ObjectMetadata.from_dict(json.load(data))
                 except ValueError:
@@ -196,7 +195,8 @@ class Object:
         """
         if not os.path.exists(self.get_parts_dir()):
             os.makedirs(self.get_parts_dir())
-            path = os.path.join(self.get_parts_dir(), f"{self.PART_PREFIX}0001")
+            path = os.path.join(self.get_parts_dir(),
+                                f"{self.PART_PREFIX}0001")
             return Object(path)
         part_no = len(os.listdir(self.get_parts_dir())) + 1
         return self.get_part(part_no)
@@ -214,16 +214,17 @@ class Object:
         """
         Get all sub-objects of this object.
 
-        :return Iterator[Object]:
+        :return List[Object]:
         """
         sub_objects = []
         if os.path.isdir(self.get_parts_dir()):
             for d in [d for d in os.listdir(self.get_parts_dir()) if
                       os.path.isdir(os.path.join(self.get_parts_dir(), d))]:
                 if _is_part_dir_format(d):
-                    sub_objects.append(Object(os.path.join(self.get_parts_dir(), d)))
+                    sub_objects.append(
+                        Object(os.path.join(self.get_parts_dir(), d)))
         sub_objects.sort(key=lambda obj: obj.path)
-        return iter(sub_objects)
+        return sub_objects
 
     def copy(self, path):
         """

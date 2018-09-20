@@ -10,7 +10,7 @@ auth_key = "YWRtaW4=:cGFzc3dvcmQ="
 log = logging.getLogger(__name__)
 
 
-def generate_frontmatters(article_id_list):
+def generate_frontmatter(article_id):
     """
     Generate frontmatter page for articles in OJS via Frontmatter-Plugin.
 
@@ -19,16 +19,14 @@ def generate_frontmatters(article_id_list):
 
     Authorization is done with a specific test user.
 
-    :param article_id_list: IDs of documents in OJS
+    :param article_id: ID of the article in OJS
     :return: tuple containing the response code and text
     """
-    ids = ','.join(map(str, article_id_list))
-
     headers = {'ojsAuthorization': auth_key}
 
     url = (f"http://{server}:{port}"
            f"/ojs/plugins/generic/ojs-cilantro-plugin/api/frontmatters/"
-           f"create/article/?id={ids}")
+           f"create/article/?id={article_id}")
 
     return _make_request(url, headers)
 

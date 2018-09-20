@@ -21,7 +21,7 @@ The documentation files are held on the special branch `gh-pages`.
 
 The generated HTML can be viewed via the following URL:
 
-    https://dainst.github.io/cilantro/
+https://dainst.github.io/cilantro/
 
 ## Setup development environment
 
@@ -79,7 +79,13 @@ You can then query the job status with the returned job_id:
 
 #### E2E-Tests
 
-...
+Run against current env-configuation (defaults to local cilantro):
+
+    TEST="default" docker-compose up frontend-test
+    
+Run against Mock-Backend
+
+    TEST="mock" docker-compose up frontend-test
 
 ##### Tips
 

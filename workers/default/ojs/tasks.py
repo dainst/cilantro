@@ -2,15 +2,15 @@ import os
 
 from utils.celery_client import celery_app
 
-from workers.base_task import BaseTask
-from workers.default.ojs.ojs_api import publish, generate_frontmatters
+from workers.base_task import ObjectTask
+from workers.default.ojs.ojs_api import publish, generate_frontmatter
 
 
-def _generate_object_id(journal_code, result):
-    return f"journal-{journal_code}-{result['published_issues'][0]}"
+def _generate_object_id(prefix, journal_code, result_id):
+    return f"{prefix}-{journal_code}-{result_id}"
 
 
-class PublishToOJSTask(BaseTask):
+class PublishToOJSTask(ObjectTask):
     """
     Publish documents in the XML in the working directory via OJS-Plugin.
 
@@ -20,32 +20,38 @@ class PublishToOJSTask(BaseTask):
 
     name = "publish_to_ojs"
 
-    def execute_task(self):
-        """Execute task intructions."""
+    def process_object(self, obj):
         work_path = self.get_work_path()
-        data = self.get_param('ojs_metadata')
+        ojs_metadata = self.get_param(self.get_param('params'))
 
         _, result = publish(os.path.join(work_path, 'ojs_import.xml'),
-                            data['ojs_journal_code'])
+                            ojs_metadata['ojs_journal_code'])
 
-        object_id = _generate_object_id(data['ojs_journal_code'], result)
+        children = obj.get_parts()
+        for i, child in enumerate(children):
+            child.metadata.ojs_id = _generate_object_id('article',
+                ojs_metadata['ojs_journal_code'],
+                result['published_articles'][i])
+            child.write()
+
+        object_id = _generate_object_id('issue',
+                                        ojs_metadata['ojs_journal_code'],
+                                        result['published_issues'][0])
+        obj.metadata.ojs_id = object_id
+        obj.write()
+
         return {'object_id': object_id}
 
 
-class GenerateFrontmatterTask(BaseTask):
-    """
-    Generate and add frontpage to documents in OJS.
-
-    Add a new page at the start of the referenced document. The IDs
-    for the documents are taken from UI parameters.
-    """
+class GenerateFrontmatterTask(ObjectTask):
+    """Generate and add frontpage to the article in OJS."""
 
     name = "generate_frontmatter"
 
-    def execute_task(self):
-        """Execute task intructions."""
-        id_list = self.get_param('frontmatter_ids')
-        generate_frontmatters(id_list)
+    def process_object(self, obj):
+        if obj.metadata.create_frontpage:
+            article_id = obj.metadata.ojs_id.split("-")[-1]
+            generate_frontmatter(article_id)
 
 
 PublishToOJSTask = celery_app.register_task(PublishToOJSTask())

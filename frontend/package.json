@@ -11,6 +11,7 @@
     "e2e-mock-backend": "cd test/e2e/mock-backend && node backend.js",
     "e2e-server": "gulp server --settings=test --sync=false",
     "e2e": "npm run e2e-mock-backend & npm run e2e-server & npm run e2e-test",
+    "server-nosync": "gulp server --sync=false",
     "server": "gulp server",
     "start": "npm run server"
   },
@@ -27,7 +28,6 @@
   "devDependencies": {
     "ajv": "6.5.1",
     "data-uri-to-buffer": "2.0.0",
-    "chromedriver": "2.37",
     "jasmine-core": "2.8.0",
     "pixelmatch": "4.0.2",
     "protractor": "5.2.1",

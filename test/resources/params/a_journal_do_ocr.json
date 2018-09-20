@@ -14,7 +14,6 @@
             5
         ]
     }],
-    "frontmatter_ids": [1],
     "parts": [{
             "metadata": {
                 "title": "Ein kleines Musterdokument mit zweizeiligem Titel",
@@ -58,7 +57,7 @@
                 "language": "de_DE",
                 "zenonId": "",
                 "auto_publish": true,
-                "create_frontpage": false
+                "create_frontpage": true
             },
             "files": [{
                 "file": "test.pdf",

@@ -4,8 +4,11 @@ see ../README.md
 
 ## setup w/o docker
 
+- have a current version of firefox (newer then esr52)
+
 - set up salvia
     - `npm install`
+    - `node_modules/webdriver-manager/bin/webdriver-manager update`
     - `mv config/settings.test.json config/settings.json`
     - `npm run e2e-mock-backend`
     - (new Tab)

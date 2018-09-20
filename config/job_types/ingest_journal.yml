@@ -9,7 +9,6 @@ params:
   metadata: dict
   nlp_params: dict
   do_ocr: boolean
-  frontmatter_ids: list
   ojs_metadata: dict
 
 tasks:
@@ -56,7 +55,10 @@ tasks:
         template_file: mets_template.xml
         target_filename: mets.xml
         schema_file: mets.xsd
-  - publish_to_ojs
-  - generate_frontmatter
+  - task: publish_to_ojs
+    params: ojs_metadata
+  - list_parts:
+    foreach:
+        task: generate_frontmatter
   - publish_to_repository
   - cleanup_workdir

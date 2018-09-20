@@ -28,7 +28,7 @@ services:
       - "6379:6379"
 
   service:
-    image: dainst/cilantro-service:production-setup-2
+    image: dainst/cilantro-service:latest
     ports:
       - "5000:5000"
     working_dir: /app
@@ -39,7 +39,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:production-setup
+    image: dainst/cilantro-default-worker:latest
     working_dir: /app
     environment:
       <<: *env-dirs
@@ -48,7 +48,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:production-setup
+    image: dainst/cilantro-convert-worker:latest
     working_dir: /app
     environment:
       <<: *env-dirs
@@ -57,7 +57,7 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:production-setup
+    image: dainst/cilantro-nlp-worker:latest
     working_dir: /app
     environment:
       <<: *env-dirs
@@ -66,7 +66,7 @@ services:
 
   test:
     user: ${UID}
-    image: dainst/cilantro-test:production-setup
+    image: dainst/cilantro-test:latest
     working_dir: /app
     tty: true
     environment:
@@ -76,7 +76,7 @@ services:
       RESOURCE_DIR: "test/resources"
 
   monitor:
-    image: dainst/cilantro-monitor:stable
+    image: dainst/cilantro-monitor:latest
     ports:
       - "5555:5555"
     environment:
@@ -95,3 +95,6 @@ services:
       BACKEND_URI: "http://localhost:5000"
       ZENON_URI: "https://zenon.dainst.org/api/v1"
       OJS_URI: "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api"
+
+  frontend-test:
+    image: dainst/cilantro-frontend-test:latest

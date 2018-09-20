@@ -56,8 +56,8 @@ class JobTypeControllerTest(unittest.TestCase):
         Compare job file content with API return value as YAML.
 
         Checks if the file contents of the first file found in the job type
-        directory is the same as what is served by the API when called with that
-        name. Contents are both converted to YAML for comparison.
+        directory is the same as what is served by the API when called with
+        that name. Contents are both converted to YAML for comparison.
 
         :return: None
         """

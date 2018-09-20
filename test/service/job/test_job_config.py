@@ -15,7 +15,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertTrue(
             isinstance(job1, Signature),
             f"job1 is an instance of '{type(job1)}, expected 'Signature'"
-        )
+            )
         self.assertEqual('celery.chain', job1['task'])
 
         tasks = job1.tasks
@@ -35,7 +35,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertTrue(
             isinstance(job2, Signature),
             f"job2 is an instance of '{type(job1)}', expected 'Signature'"
-        )
+            )
         self.assertEqual('celery.chain', job2['task'])
 
         tasks = job2.tasks
@@ -50,13 +50,16 @@ class JobConfigTest(unittest.TestCase):
                           "job3", "test_user")
 
     def test_invalid_yaml(self):
-        self.assertRaises(ConfigParseException, JobConfig, "test/resources/configs/config_invalid_yaml")
+        self.assertRaises(ConfigParseException, JobConfig,
+                          "test/resources/configs/config_invalid_yaml")
 
     def test_invalid_definition(self):
-        self.assertRaises(ConfigParseException, JobConfig, "test/resources/configs/config_invalid_def")
+        self.assertRaises(ConfigParseException, JobConfig,
+                          "test/resources/configs/config_invalid_def")
 
     def test_invalid_params(self):
-        self.assertRaises(ConfigParseException, JobConfig, "test/resources/configs/config_invalid_param")
+        self.assertRaises(ConfigParseException, JobConfig,
+                          "test/resources/configs/config_invalid_param")
 
     def test_config_param_in_task(self):
         job_config = JobConfig("test/resources/configs/config_params")

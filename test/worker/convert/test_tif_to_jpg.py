@@ -23,4 +23,5 @@ class TifToJpgTest(ConvertTest):
         self.assertGreater(stat.st_size, 0)
 
     def test_error(self):
-        self.assertRaises(OSError, convert_tif_to_jpg, self.broken_tif_path, self.jpg_path)
+        self.assertRaises(OSError, convert_tif_to_jpg, self.broken_tif_path,
+                          self.jpg_path)

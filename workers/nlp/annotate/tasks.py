@@ -20,14 +20,13 @@ class AnnotateTask(FileTask):
     name = "nlp.annotate"
 
     def process_file(self, file, target_dir):
-        params = self.get_param('nlp_params')
         new_file = self.generate_filename(file, 'json')
         new_file_path = os.path.join(target_dir, new_file)
 
         with open(file, 'r') as file:
             text = file.read().replace('\n', '')
         if text:
-            result = annotate(text, params)
+            result = annotate(text)
             with open(new_file_path, 'w+') as file:
                 json.dump(result, file)
 
