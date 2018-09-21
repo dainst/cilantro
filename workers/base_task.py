@@ -79,6 +79,7 @@ class BaseTask(Task):
         return abs_path
 
     def run(self, prev_result=None, **params):
+        self.results = {}
         self._init_params(params)
         self._add_prev_result_to_results(prev_result)
         return self._merge_result(self.execute_task())
