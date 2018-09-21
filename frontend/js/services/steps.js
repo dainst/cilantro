@@ -77,6 +77,10 @@ angular
         }
     };
 
+    steps.getCurrent = (tab) => {
+        return (tabs.current === tab);
+    }
+
     steps.changeView = function(to) {
 
         if (typeof steps.views[to] === "undefined") {
@@ -115,7 +119,27 @@ angular
     }
 
     steps.toggleTab = () => {
+        let sidebar = document.getElementById('main-sidebar');
+        let container = document.getElementById('main-container');
+        let toggle =  document.getElementById('toggleButton')
+
+        if(tabs.isCollapsed){
+            sidebar.style.width = "calc(20% - 40px)";
+            sidebar.style.padding = "15px 20px 10px 20px";
+            container.style.width = "80%";
+            toggle.class = "glyphicon glyphicon-remove-circle"
+        }
+        else {
+            sidebar.style.width = "0%";
+            sidebar.style.padding = "15px 0px 10px 0px";
+            container.style.width = "calc(100% - 40px)";
+            toggle.class = "glyphicon glyphicon-chevron-left";
+        }
         tabs.isCollapsed = !tabs.isCollapsed;
+    }
+
+    steps.getTabStatus = () => {
+        return tabs.isCollapsed;
     }
 
     return (steps);

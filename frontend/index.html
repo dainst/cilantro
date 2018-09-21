@@ -34,12 +34,18 @@
                 <messagebox></messagebox>
                 <ng-include src="steps.getTemplate()"></ng-include>
             </div>
-            <div class="col-md-1" role="group" id="sidebar-tasks">
+            <div class="col-md-1" role="group" id="sidebar-tasks" onmousedown="">
                 <div class="btn-group-sm">
-                    <button type="button" class="task btn btn-secondary btn-xs" ng-click="steps.toggleTab()"><span class="glyphicon glyphicon-remove-circle"></span></button>
-                    <button type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab('help')"><b>Help</b></button>
+                    <button type="button" class="task btn btn-secondary btn-xs" ng-click="steps.toggleTab()">
+                        <span id="toggleButton"
+                              ng-class="{'glyphicon glyphicon-remove-circle': !(steps.getTabStatus()), 'glyphicon glyphicon-chevron-right': steps.getTabStatus()}">
+                        </span>
+                    </button>
+                    <button type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab('help')" ng-show="steps.getCurrent('help')"><b>Help</b></button>
                     <button type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab('data')"><b>My Data</b></button>
                     <button type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab('messages')"><b>Messages</b></button>
+                    <button type="button" class="btn btn-secondary btn-xs" id="resizeButton" onmousedown="resizer.initResize()"><b>Resizer</b></button>
+
                 </div>
             </div>
             <div class="col-md-5" id="main-sidebar">
@@ -62,7 +68,8 @@
         <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
         <!-- load salvia app -->
-    
+
+        <script src="js/services/resizer.js"></script>
         <script src="js/services/labels.js"></script>
         <script src="js/services/dataset.js"></script>
         <script src="js/services/messenger.js"></script>

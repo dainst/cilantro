@@ -74,13 +74,7 @@ services:
       context: .
       dockerfile: ./docker/cilantro-salvia/Dockerfile
     volumes:
-      - ./frontend/img:/usr/share/nginx/html/img
-      - ./frontend/info:/usr/share/nginx/html/info
-      - ./frontend/js:/usr/share/nginx/html/js
-      - ./frontend/partials:/usr/share/nginx/html/partials
-      - ./frontend/style:/usr/share/nginx/html/style
-      - ./frontend/test:/usr/share/nginx/html/test
-      - node_modules:/usr/share/nginx/html/node_modules
+      - ./frontend:/usr/share/nginx/html
 
   frontend-test:
     build:
