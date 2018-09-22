@@ -1,8 +1,7 @@
 import os
-import unittest
 
 from test.worker.convert.convert_test import ConvertTest
-from workers.convert.tif_to_txt import tif_to_txt
+from workers.convert.convert_image import tif_to_txt
 
 
 class GenerateTextFromTif(ConvertTest):
