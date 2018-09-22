@@ -19,8 +19,7 @@ RUN echo "error_reporting=E_ALL & ~E_WARNING & ~E_NOTICE & ~E_STRICT & ~E_DEPREC
 RUN echo "date.timezone = Europe/Berlin"  >> /usr/local/etc/php/php.ini
 
 # mysql
-RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install git mysql-server mysql-server nano
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install git mysql-server mysql-server nano
 RUN docker-php-ext-install -j$(nproc) mysql \
   && echo "mysql.default_socket=/run/mysqld/mysqld.sock"  >> /usr/local/etc/php/php.ini
 # see https://github.com/docker/for-linux/issues/72
