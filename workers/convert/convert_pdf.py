@@ -1,9 +1,30 @@
-import os
 import logging
+import os
 
 import pdftotext
-
 import PyPDF2
+from wand.image import Image as WandImage
+
+
+log = logging.getLogger(__name__)
+
+
+def convert_pdf_to_tif(source_file, output_dir):
+    """
+    Create a TIF for every Page in the PDF and saves them to the output_dir.
+
+    :param str source_file: path to the PDF
+    :param str output_dir: path to the output Directory
+    """
+    log.debug(f"Creating tif files from {source_file} to {output_dir}")
+
+    with WandImage(filename=source_file, resolution=200) as img:
+        pages = len(img.sequence)
+        for i in range(pages):
+            with WandImage(img.sequence[i]) as page_img:
+                page_img.type = 'truecolor'
+                name = os.path.splitext(os.path.basename(source_file))[0]
+                page_img.save(filename=output_dir + f"/{name}_{i}.tif")
 
 
 def convert_pdf_to_txt(source_file, output_dir):
@@ -13,8 +34,7 @@ def convert_pdf_to_txt(source_file, output_dir):
     :param str source_file: PDF to generate text files from
     :param str output_dir: target directory for generated files
     """
-    logging.getLogger(__name__).debug(f"Creating txt files from {source_file} "
-                                      f"to {output_dir}")
+    log.debug(f"Creating txt files from {source_file} to {output_dir}")
     with open(source_file, "rb") as input_stream:
         pdf = pdftotext.PDF(input_stream)
         index = 0
