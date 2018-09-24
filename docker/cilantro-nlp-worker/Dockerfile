@@ -94,10 +94,10 @@ COPY ./workers /app/workers
 WORKDIR /app
 
 COPY docker/cilantro-nlp-worker/Pipfile Pipfile
-COPY docker/cilantro-nlp-worker/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-nlp-worker/entrypoint.sh /entrypoint.sh
 
 RUN pip3 install pipenv
+RUN pipenv lock
 RUN set -ex && pipenv install --deploy --system
 
 USER nobody
