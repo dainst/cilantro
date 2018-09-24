@@ -27,7 +27,7 @@ COPY ./workers /app/workers
 WORKDIR /app
 
 COPY docker/cilantro-test/Pipfile Pipfile
-COPY docker/cilantro-test/Pipfile.lock Pipfile.lock
 
 RUN pip3 install pipenv
+RUN pipenv lock
 RUN set -ex && pipenv install --deploy --system

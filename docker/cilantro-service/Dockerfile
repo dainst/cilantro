@@ -16,10 +16,10 @@ COPY ./service /app/service
 WORKDIR /app
 
 COPY docker/cilantro-service/Pipfile Pipfile
-COPY docker/cilantro-service/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-service/entrypoint.sh /entrypoint.sh
 
 RUN pip3 install pipenv
+RUN pipenv lock
 RUN set -ex && pipenv install --deploy --system
 
 EXPOSE 5000
