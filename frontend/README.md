@@ -2,6 +2,8 @@
 
 see ../README.md
 
+## Prerequisites
+- nodejs 9+
 ## setup w/o docker
 
 - have a current version of firefox (newer then esr52)
