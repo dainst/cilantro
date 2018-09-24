@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="node_modules/idai-components/dist/css/idai-components.min.css">
     <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="node_modules/angular-resizable/angular-resizable.min.css">
 
 </head>
 
@@ -28,29 +29,26 @@
             <salvia-navbar></salvia-navbar>
         </idai-navbar>
 
-
-        <div class="row container flex-item" style="flex-grow: 1">
-            <div class="col-md-6 container-fluid" id='main-container'>
-                <messagebox></messagebox>
+        <div class="row container flex-item flex-cont-hor" style="flex-grow: 1">
+            <div id='main-container'>
                 <ng-include src="steps.getTemplate()"></ng-include>
             </div>
-            <div class="col-md-1" role="group" id="sidebar-tasks" onmousedown="">
+            <div role="group" id="sidebar-tasks" ng-show="steps.getStatus()">
                 <div class="btn-group-sm">
-                    <button type="button" class="task btn btn-secondary btn-xs" ng-click="steps.toggleTab()">
-                        <span id="toggleButton"
-                              ng-class="{'glyphicon glyphicon-remove-circle': !(steps.getTabStatus()), 'glyphicon glyphicon-chevron-right': steps.getTabStatus()}">
+                    <button id="main-collapse-button" type="button" class="task btn btn-secondary btn-xs" style="margin-bottom: -1px" ng-click="steps.collapseTabs()" ng-show="!steps.isCollapsed()">
+                        <span
+                              class="glyphicon glyphicon-remove-circle">
                         </span>
                     </button>
-                    <button type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab('help')" ng-show="steps.getCurrent('help')"><b>Help</b></button>
-                    <button type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab('data')"><b>My Data</b></button>
-                    <button type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab('messages')"><b>Messages</b></button>
-                    <button type="button" class="btn btn-secondary btn-xs" id="resizeButton" onmousedown="resizer.initResize()"><b>Resizer</b></button>
-
+                    <button id="main-tab-button" ng-repeat="(tabId, tab) in steps.tabs" type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab(tabId)" ng-show="tab.showIf()">
+                        <b>{{tab.title}}</b>
+                    </button>
                 </div>
             </div>
-            <div class="col-md-5" id="main-sidebar">
+            <div resizable id="main-sidebar" r-directions="['left']" r-flex="true" ng-show="steps.getStatus()">
                 <ng-include src="steps.getTab()"></ng-include>
             </div>
+
         </div>
 
 
@@ -68,8 +66,7 @@
         <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
         <!-- load salvia app -->
-
-        <script src="js/services/resizer.js"></script>
+        
         <script src="js/services/labels.js"></script>
         <script src="js/services/dataset.js"></script>
         <script src="js/services/messenger.js"></script>

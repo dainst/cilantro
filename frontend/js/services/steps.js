@@ -59,25 +59,26 @@ angular
         isCollapsed: false
     }
 
-    steps.sidebar = {
+    steps.tabs = {
         "data": {
             "template": "partials/elements/sidebar_data.html",
             "title": "My Data",
-            "showIf": function() {return steps.isStarted && steps.current != "fatal"}
+            "showIf": function() {return steps.isStarted && steps.current != "fatal" && tabs.current != "data"}
         },
         "help": {
             "template": "partials/elements/sidebar_help.html",
             "title": "Help",
-            "showIf": function() {return steps.isStarted && steps.current != "fatal"}
+            "showIf": function() {return steps.isStarted && steps.current != "fatal"  && tabs.current != "help"}
         },
         "messages": {
             "template": "partials/elements/sidebar_messages.html",
             "title": "Messages",
-            "showIf": function() {return steps.isStarted && steps.current != "fatal"}
+            "showIf": function() {return steps.isStarted && steps.current != "fatal"  && tabs.current != "messages"}
         }
     };
 
     steps.getCurrent = (tab) => {
+        console.log("Current");
         return (tabs.current === tab);
     }
 
@@ -110,36 +111,31 @@ angular
         if (to === tabs.current) {
             return;
         }
-
+        if(tabs.isCollapsed){
+            let sidebar = document.getElementById('main-sidebar');
+            sidebar.style.visibility = "visible";
+            tabs.isCollapsed = false;
+        }
         tabs.current = to;
     }
 
     steps.getTab = () => {
-        return steps.sidebar[tabs.current].template;
+        return steps.tabs[tabs.current].template;
     }
 
-    steps.toggleTab = () => {
+    steps.collapseTabs = () => {
         let sidebar = document.getElementById('main-sidebar');
-        let container = document.getElementById('main-container');
-        let toggle =  document.getElementById('toggleButton')
-
-        if(tabs.isCollapsed){
-            sidebar.style.width = "calc(20% - 40px)";
-            sidebar.style.padding = "15px 20px 10px 20px";
-            container.style.width = "80%";
-            toggle.class = "glyphicon glyphicon-remove-circle"
-        }
-        else {
-            sidebar.style.width = "0%";
-            sidebar.style.padding = "15px 0px 10px 0px";
-            container.style.width = "calc(100% - 40px)";
-            toggle.class = "glyphicon glyphicon-chevron-left";
-        }
-        tabs.isCollapsed = !tabs.isCollapsed;
+        sidebar.style.visibility = "collapse";
+        tabs.current = "collapsed";
+        tabs.isCollapsed = true;
     }
 
-    steps.getTabStatus = () => {
+    steps.isCollapsed = () => {
         return tabs.isCollapsed;
+    }
+
+    steps.getStatus = () => {
+        return steps.isStarted;
     }
 
     return (steps);
