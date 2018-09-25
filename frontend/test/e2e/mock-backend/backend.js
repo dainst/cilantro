@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const validateJsonParams = require('./validate_json_params');
 const fakeZenon = require('./fake_zenon');
 const fakeStaging = require('./fake_staging');
+const fakeUser = require('./fake_user');
 
 const server = jsonServer.create();
 const router = jsonServer.router('routes.json');
@@ -18,6 +19,7 @@ server.use(middleWares);
 server.use('/job', validateJsonParams);
 server.use('/zenon/:endpoint', fakeZenon);
 
+server.use('/user', fakeUser);
 server.use('/staging', fakeStaging);
 server.use('/staging', express.static(path.join(__dirname, '/../resources/staging')));
 

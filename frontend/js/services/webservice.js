@@ -5,6 +5,15 @@ angular
 
 	const webservice = {};
 
+        webservice.userData = {'username': null, 'password': null};
+        webservice.authenticateUser = function (userData) {
+            webservice.userData = userData;
+            return webservice.get('user/' + userData.username, 'GET', null);
+        };
+        webservice.logUserOut = function () {
+            webservice.userData = {'username': null, 'password': null};
+        };
+
     webservice.get = function(endpoint, method, data) {
 
         const params = {
@@ -14,9 +23,9 @@ angular
             method:     method || "get",
             data:       data || {}
         };
-        if (angular.isDefined(settings.server_user) && angular.isDefined(settings.server_pass)) {
+        if (webservice.userData.username && webservice.userData.password) {
             params.headers = {
-                "Authorization": "Basic " + window.btoa(settings.server_user + ":" + settings.server_pass)
+                "Authorization": "Basic " + window.btoa(webservice.userData.username + ":" + webservice.userData.password)
             };
         }
 
