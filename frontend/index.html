@@ -13,7 +13,7 @@
 </head>
 
     <body class="flex-cont-vert" ng-controller="main" data-ng-init="initApp()">
-
+        <messagebox></messagebox>
         <div id='loader' class='loader' ng-if="isLoading"></div>
 
         <idai-navbar class="flex-item idai-navbar"
@@ -40,7 +40,7 @@
                               class="glyphicon glyphicon-remove-circle">
                         </span>
                     </button>
-                    <button id="main-tab-button" ng-repeat="(tabId, tab) in steps.tabs" type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab(tabId)" ng-show="tab.showIf()">
+                    <button ng-repeat="(tabId, tab) in steps.tabs" id="main-sidebar-{{tabId}}" type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab(tabId)" ng-show="tab.showIf()">
                         <b>{{tab.title}}</b>
                     </button>
                 </div>
@@ -66,7 +66,7 @@
         <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
         <!-- load salvia app -->
-        
+
         <script src="js/services/labels.js"></script>
         <script src="js/services/dataset.js"></script>
         <script src="js/services/messenger.js"></script>
