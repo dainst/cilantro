@@ -78,7 +78,6 @@ angular
     };
 
     steps.getCurrent = (tab) => {
-        console.log("Current");
         return (tabs.current === tab);
     }
 
@@ -120,7 +119,7 @@ angular
     }
 
     steps.getTab = () => {
-        return steps.tabs[tabs.current].template;
+        return steps.tabs[tabs.current].template + cacheKiller;
     }
 
     steps.collapseTabs = () => {
