@@ -29,11 +29,10 @@ COPY ./workers /app/workers
 WORKDIR /app
 
 COPY docker/cilantro-convert-worker/Pipfile Pipfile
-COPY docker/cilantro-convert-worker/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-convert-worker/entrypoint.sh /entrypoint.sh
 
 RUN pip3 install pipenv
-RUN set -ex && pipenv install --deploy --system
+RUN set -ex && pipenv lock && pipenv install --deploy --system
 
 USER nobody
 
