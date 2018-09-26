@@ -16,7 +16,7 @@ angular
         $scope.failFatal = err => {
             console.error("fatal error", err);
             $scope.isLoading = false;
-            steps.change("fatal");
+            steps.changeView("fatal");
             $scope.refreshView();
         };
 
@@ -54,7 +54,7 @@ angular
 			$scope.initApp().then(() => {
 			    messenger.clear();
                 messenger.info('Restart Importer');
-                steps.change('home');
+                steps.changeView('home');
             });
 		};
 

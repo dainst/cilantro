@@ -7,7 +7,7 @@ angular
         link: function(scope, elem, attrs) {
             scope.settings = settings;
             scope.views = steps.views;
-            scope.changeView = steps.change;
+            scope.changeView = steps.changeView;
             scope.getCurrentView = () => steps.current;
         }
     }

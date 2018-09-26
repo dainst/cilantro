@@ -18,7 +18,7 @@ angular
                 messenger.success("Job: " + res.status);
                 jobs.updateJob(res.job_id, res);
                 $scope.done = true;
-                steps.change('jobs');
+                steps.changeView('jobs');
                 $rootScope.$broadcast('refreshView');
             })
 

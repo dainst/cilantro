@@ -11,7 +11,7 @@ angular
         $scope.stagingDir = stagingDir;
         $scope.filesListSelected = null;
         $scope.isReady = () => fileManager.ready;
-        $scope.continue = () => steps.change('overview');
+        $scope.continue = () => steps.changeView('overview');
 
         /*Opens file-editing-modals for 'type', currently only implemented for csv-files.*/
         $scope.newFile = function(type) {

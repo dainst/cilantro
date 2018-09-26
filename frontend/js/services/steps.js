@@ -54,7 +54,34 @@ angular
         }
     };
 
-    steps.change = function(to) {
+    let tabs = {
+        current: "data",
+        isCollapsed: false
+    }
+
+    steps.tabs = {
+        "data": {
+            "template": "partials/elements/sidebar_data.html",
+            "title": "My Data",
+            "showIf": function() {return steps.isStarted && steps.current != "fatal" && tabs.current != "data"}
+        },
+        "help": {
+            "template": "partials/elements/sidebar_help.html",
+            "title": "Help",
+            "showIf": function() {return steps.isStarted && steps.current != "fatal"  && tabs.current != "help"}
+        },
+        "messages": {
+            "template": "partials/elements/sidebar_messages.html",
+            "title": "Messages",
+            "showIf": function() {return steps.isStarted && steps.current != "fatal"  && tabs.current != "messages"}
+        }
+    };
+
+    steps.getCurrent = (tab) => {
+        return (tabs.current === tab);
+    }
+
+    steps.changeView = function(to) {
 
         if (typeof steps.views[to] === "undefined") {
             console.warn('view ' + to + ' does not exist');
@@ -65,7 +92,7 @@ angular
             return;
         }
 
-        console.log('Tab change to: ', to);
+        console.log('Tab changeView to: ', to);
         //$scope.message.reset();
         steps.current = to;
 
@@ -79,6 +106,32 @@ angular
         return steps.views[steps.current].template + cacheKiller;
     };
 
+    steps.changeTab = (to) => {
+        if (to === tabs.current) {
+            return;
+        }
+        if(tabs.isCollapsed){
+            tabs.isCollapsed = false;
+        }
+        tabs.current = to;
+    }
+
+    steps.getTab = () => {
+        return steps.tabs[tabs.current].template + cacheKiller;
+    }
+
+    steps.collapseTabs = () => {
+        tabs.current = "collapsed";
+        tabs.isCollapsed = true;
+    }
+
+    steps.isCollapsed = () => {
+        return tabs.isCollapsed;
+    }
+
+    steps.getStatus = () => {
+        return steps.isStarted;
+    }
 
     return (steps);
 }]);

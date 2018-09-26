@@ -3,6 +3,15 @@ module.exports = {
     loader: element(by.css("#loader")),
     modal: element(by.css('.modal-dialog')),
 
+    sidebar: {
+        mainContainer: element(by.css('#main-container')),
+        taskbar: element(by.css('#sidebar-tasks')),
+        sidebar: element(by.css('#main-sidebar')),
+        collapseBtn: element(by.css('#main-collapse-button')),
+        data: element(by.id('main-sidebar-data')),
+        help: element(by.id('main-sidebar-help')),
+        messages: element(by.id('main-sidebar-messages'))
+    },
     restart: {
         confirmBtn: element(by.css('.btn-danger')),
     },

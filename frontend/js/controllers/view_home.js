@@ -7,7 +7,7 @@ angular
         $scope.labels = labels;
         $scope.settings = settings;
         $scope.startBtn = () => {
-            steps.change('documents');
+            steps.changeView('documents');
             steps.isStarted = true;
         };
     }

@@ -2,6 +2,9 @@
 
 
 /* -- */
+html {
+    height: 100%;
+}
 
 h1 {
     font-size: x-large;
@@ -84,17 +87,110 @@ table.author_box td {
 
 
 /* -- */
-
-#main-container {
-    padding: 80px 20px 10px 20px;
-    overflow-x: hidden;
-    min-height: 600px;
+body {
+    margin-bottom: 0px;
+    min-height: 100%;
 }
 
+idai-footer{
+    font-size: 12px;
+
+    position: unset;
+
+    align-self: flex-end;
+
+    bottom: 0;
+
+    width: 100%;
+
+    padding: 10px 30px 5px;
+
+    background-color: #e2e2e2;
+
+    border-top: 1px solid #d5d5d5;
+}
+
+idai-navbar {
+    align-self: flex-start
+}
+
+.flex-cont-vert {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+}
+
+.flex-cont-hor {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-end;
+}
+
+.flex-item {
+    flex-grow: 0;
+}
+
+.container {
+    margin-right: 0px;
+    margin-left: 0px;
+    margin-top: 50px;
+    padding-left: 15px;
+    padding-right: 15px; }
+
+.container:before, .container:after {
+    content: " ";
+    display: table; }
+
+.container:after {
+    clear: both; }
+@media (min-width: 768px) {
+    .container {
+        width: 750px; } }
+@media (min-width: 992px) {
+    .container {
+        width: 970px; } }
+@media (min-width: 1138px) {
+    .container {
+        width: 100%; }
+}
+
+#main-container {
+    padding: 15px 10px 10px 20px;
+    overflow: auto;
+    flex: 1;
+}
+
+#main-sidebar {
+    padding: 15px 10px 10px 10px;
+    flex-basis: 20%;
+    border-left: solid black;
+    right: 0px;
+    max-width: 50%;
+    max-height: 100%;
+    position: relative;
+}
+
+#sidebar-tasks {
+    flex-basis: 40px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    writing-mode: vertical-rl;
+    padding-left: 5px;
+    padding-right: 0px;
+}
+
+.task {
+    transform: scale(-1, -1);
+    padding: 5px 5px !important;
+    background-color: #CCCCCC;
+    margin-bottom: 2px;
+}
 
 #dataset-table > tr > td {
     border: 1px solid silver
-
 }
 
 table table.editable-table > tbody > tr > td {
@@ -462,20 +558,11 @@ input.editable.date.year {
 
 /* info */
 #info-container {
-    position: fixed;
-    bottom: 0px;
-    right: 24%;
-    left: 24%;
-    z-index: 1040;
-    padding: 20px;
-    max-height: 100%;
-    overflow: auto;
-
     background-color: #fff;
-    border: 1px solid rgba(0,0,0,.15);
-    box-shadow: 0 6px 12px rgba(0,0,0,.176);
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100%;
     font-size: 14px;
-
 }
 
 #info-container .alert {

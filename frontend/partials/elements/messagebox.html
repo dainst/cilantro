@@ -1,10 +1,18 @@
 <div id="info-container" ng-mouseover="toggle(true)" ng-mouseout="toggle(false)"  ng-show="hasContent()">
     <div class="row">
         <div class="col-md-12" ng-class="{'closed':!isOpen}">
-            <div class="alert main-message alert {{getClass(getMain().type)}}">{{getMain().text}}<span ng-show="hasContent()" class="badge badge-pill badge-default pull-right">{{messages.length}}</span></div>
+            <div class="alert main-message alert {{getClass(getMain().type)}}">{{getMain().text}}
+                <span ng-show="hasContent()" class="badge badge-pill badge-default pull-right">
+                    {{messages.length}}
+                </span>
+            </div>
             <hr ng-show="isOpen">
             <div ng-repeat="message in messages" class="alert {{getClass(message.type)}}" ng-show="isOpen">{{message.text}}</div>
-            <div ng-show="isOpen" style="text-align:right"><a href="#" ng-click="clearLog()">Clear Message Log</a></div>
+            <div ng-show="isOpen" style="text-align:right">
+                <a href="#" ng-click="clearLog()">
+                    Clear Message Log
+                </a>
+            </div>
         </div>
     </div>
 </div>

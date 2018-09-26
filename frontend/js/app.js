@@ -48,6 +48,8 @@ angular
     'directive.mainObject',
     'directive.job',
 
+    'angularResizable',
+
     'module.fileHandlers.defaultPdfHandler',
     'module.fileHandlers.emptyPdfHandler',
     'module.fileHandlers.chironParted',

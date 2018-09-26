@@ -8,14 +8,15 @@
 
     <link rel="stylesheet" href="node_modules/idai-components/dist/css/idai-components.min.css">
     <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="node_modules/angular-resizable/angular-resizable.min.css">
 
 </head>
 
-    <body ng-controller="main" data-ng-init="initApp()">
-
+    <body class="flex-cont-vert" ng-controller="main" data-ng-init="initApp()">
         <div id='loader' class='loader' ng-if="isLoading"></div>
 
-        <idai-navbar
+
+        <idai-navbar class="flex-item idai-navbar"
                 hide-register-button="true"
                 hide-contact-button="true"
                 hide-login-button="false"
@@ -28,25 +29,44 @@
             <salvia-navbar></salvia-navbar>
         </idai-navbar>
 
-        <div id='main-container' class="container-fluid">
-            <messagebox></messagebox>
-            <ng-include src="steps.getTemplate()"></ng-include>
+        <div class="row container flex-item flex-cont-hor" style="flex-grow: 1">
+            <div id='main-container'>
+                <ng-include src="steps.getTemplate()"></ng-include>
+            </div>
+            <div role="group" id="sidebar-tasks" ng-show="steps.getStatus()">
+                <div class="btn-group-sm">
+                    <button id="main-collapse-button" type="button" class="task btn btn-secondary btn-xs" style="margin-bottom: -1px" ng-click="steps.collapseTabs()" ng-show="!steps.isCollapsed()">
+                        <span
+                              class="glyphicon glyphicon-remove-circle">
+                        </span>
+                    </button>
+                    <button ng-repeat="(tabId, tab) in steps.tabs" id="main-sidebar-{{tabId}}" type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab(tabId)" ng-show="tab.showIf()">
+                        <b>{{tab.title}}</b>
+                    </button>
+                </div>
+            </div>
+            <div resizable id="main-sidebar" r-directions="['left']" r-flex="true" ng-show="steps.getStatus() && !steps.isCollapsed()">
+                <ng-include src="steps.getTab()"></ng-include>
+            </div>
+
         </div>
 
-        <idai-footer institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
+
+        <idai-footer class="flex-item" institutions="{'dai': 'http://www.dainst.de/'}" mailto="philipp.franck@dainst.org"></idai-footer>
 
         <!-- load angular, bootstrap, idai-components -->
 
         <script src="node_modules/angular/angular.min.js"></script>
         <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
         <script src="node_modules/idai-components/dist/idai-components.min.js"></script>
+        <script src="node_modules/angular-resizable/angular-resizable.min.js"></script>
 
         <!--  load 3party angular moduls -->
 
         <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
         <!-- load salvia app -->
-    
+
         <script src="js/services/labels.js"></script>
         <script src="js/services/dataset.js"></script>
         <script src="js/services/messenger.js"></script>
@@ -54,6 +74,7 @@
         <script src="js/services/webservice.js"></script>
         <script src="js/services/staging_dir.js"></script>
         <script src="js/services/steps.js"></script>
+        <script src="js/services/sidebar.js"></script>
         <script src="js/services/zenon_importer.js"></script>
         <script src="js/services/language_strings.js"></script>
         <script src="js/services/jobs.js"></script>
