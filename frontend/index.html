@@ -15,16 +15,17 @@
     <body class="flex-cont-vert" ng-controller="main" data-ng-init="initApp()">
         <div id='loader' class='loader' ng-if="isLoading"></div>
 
+
         <idai-navbar class="flex-item idai-navbar"
-            hide-register-button="true"
-            hide-contact-button="true"
-            hide-login-button="true"
-            hide-search-form="true"
-            hide-language-switcher="true"
-            project-id="workbench"
-            login-function=""
-            logout-function=""
-            user-object='{"username": false}'>
+                hide-register-button="true"
+                hide-contact-button="true"
+                hide-login-button="false"
+                hide-search-form="true"
+                hide-language-switcher="true"
+                project-id="workbench"
+                login-function="openLoginModal()"
+                logout-function="logout()"
+                user-object='user'>
             <salvia-navbar></salvia-navbar>
         </idai-navbar>
 
@@ -81,6 +82,7 @@
         <script src="js/filemanager/pdf_file_manager.js"></script>
 
         <script src="js/controllers/main.js"></script>
+        <script src="js/controllers/modal_login.js"></script>
         <script src="js/controllers/view_home.js"></script>
         <script src="js/controllers/view_overview.js"></script>
         <script src="js/controllers/view_subobjects.js"></script>

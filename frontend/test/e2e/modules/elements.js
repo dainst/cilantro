@@ -108,7 +108,16 @@ module.exports = {
         articles: element(by.id('step-articles')),
         restart: element(by.id('step-restart')),
         publish: element(by.id('step-publish')),
-        toggle: element(by.css('.navbar-toggle'))
+        toggle: element(by.css('.navbar-toggle')),
+        loginBtn: element(by.id('loginbutton')),
+        loggedInDropdown: element(by.css('.ng-scope dropdown'))
+    },
+    loginModal: {
+        username: element(by.id('input-username')),
+        password: element(by.id('input-password')),
+        errorMessage: element(by.id('login-error')),
+        login: element(by.id('submit-login')),
+
     },
     stats: {
         all: element.all(by.css('.stats .stat'))
