@@ -51,7 +51,10 @@ class ListFilesTask(ObjectTask):
             params = self.params.copy()
             params['job_id'] = self.job_id
             params['work_path'] = file
-
+            # workaround for storing results inside params
+            # this is necessary since prev_results do not always seem to be
+            # passed to subtasks correctly by celery
+            params['result'] = self.results
             chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
         return group(group_tasks)
@@ -86,6 +89,10 @@ class ListPartsTask(ObjectTask):
         for part in obj.get_parts():
             params = self.params.copy()
             params['work_path'] = part.path
+            # workaround for storing results inside params
+            # this is necessary since prev_results do not always seem to be
+            # passed to subtasks correctly by celery
+            params['result'] = self.results
             chain = generate_chain(subtasks, params)
             group_tasks.append(chain)
         return group(group_tasks)
