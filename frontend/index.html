@@ -44,7 +44,7 @@
                     </button>
                 </div>
             </div>
-            <div resizable id="main-sidebar" r-directions="['left']" r-flex="true" ng-show="steps.getStatus()">
+            <div resizable id="main-sidebar" r-directions="['left']" r-flex="true" ng-show="steps.getStatus() && !steps.isCollapsed()">
                 <ng-include src="steps.getTab()"></ng-include>
             </div>
 

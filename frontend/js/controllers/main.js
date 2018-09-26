@@ -66,12 +66,5 @@ angular
 
 		$scope.$on('refreshView', $scope.refreshView);
 		window.refresh = $scope.refreshView;
-
-
-        $scope.$on("angular-resizable.resizeStart", function (event, args) {
-            console.log('Woooohoooo!', event, args);
-        });
-
-
 	}
 ]);

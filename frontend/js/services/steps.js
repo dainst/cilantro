@@ -111,8 +111,6 @@ angular
             return;
         }
         if(tabs.isCollapsed){
-            let sidebar = document.getElementById('main-sidebar');
-            sidebar.style.visibility = "visible";
             tabs.isCollapsed = false;
         }
         tabs.current = to;
@@ -123,8 +121,6 @@ angular
     }
 
     steps.collapseTabs = () => {
-        let sidebar = document.getElementById('main-sidebar');
-        sidebar.style.visibility = "collapse";
         tabs.current = "collapsed";
         tabs.isCollapsed = true;
     }
