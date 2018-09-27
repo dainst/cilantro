@@ -112,7 +112,7 @@ describe('overview page', () => {
         expect(ot.getRowTitle(1)).toEqual(titleDoc1);
     });
 
-    xit('should open pdf in other tab on btn click', () => { // see #9363
+    it('should open pdf in other tab on btn click', () => { // see #9363
         ot.goToOverview(2);
         ot.getRowButton(0, 'open').click();
         a.switchToNewTab().then(() => {
