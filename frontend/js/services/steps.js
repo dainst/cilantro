@@ -2,19 +2,24 @@
 
 angular
 .module('module.steps', [])
-.factory("steps", ['fileManager', 'dataset', 'messenger', function(fileManager, dataset, messenger) {
+.factory("steps", ['fileManager', 'dataset', 'messenger', 'webservice', function(fileManager, dataset, messenger, webservice) {
 
     const cacheKiller = '?nd=' + Date.now();
 
     let steps = {
-        current : "home",
+        current : "start",
         isStarted: false
     };
 
     steps.views = {
+        "start": {
+            "template": "partials/views/start_page.html",
+            "title": "Start",
+            "showIf": function() {return false}
+        },
         "home": {
             "template": "partials/views/home.html",
-            "title": "Start",
+            "title": "Home",
             "showIf": function() {return !steps.isStarted && steps.current != "fatal"}
         },
         "restart": {
@@ -99,6 +104,8 @@ angular
     };
 
     steps.getTemplate = function() {
+        if (webservice.userData.username === null && webservice.userData.password === null)
+            steps.current = "start";
         if (angular.isUndefined(steps.views[steps.current]) || angular.isUndefined(steps.views[steps.current].template)) {
             messenger.error("View '" + steps.current + "' not found.");
             steps.current = "fatal";
