@@ -80,10 +80,9 @@ angular
         };
 
         pdfFileManager.loadFiles = file => {
-            //  TODO make recursive!
             console.log("Load File: ", file);
 
-            const filesToLoad = (file.type === 'directory') ? file.contents : [file];
+            const filesToLoad = (file.type === 'directory') ? flatten(file.contents) : [file];
             fileManager.ready = false;
             fileManager.stats.files += filesToLoad.length;
 
@@ -101,6 +100,19 @@ angular
             });
 
         };
+
+        const flatten = files => {
+            let flattened = [];
+            files.forEach(file => {
+                if(file.type === 'directory'){
+                    flattened = flattened.concat(flatten(file.contents));
+                }
+                else {
+                    flattened.push(file);
+                }
+            })
+            return flattened;
+        }
 
         function renderThumbnail(page) {
             return new Promise((resolve, reject) => {

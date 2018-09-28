@@ -2,8 +2,8 @@ angular
 
 .module('controller.viewOverview', [])
 
-.controller('viewOverview', ['$scope', 'settings', 'messenger', 'dataset', 'steps', 'labels',
-    function($scope, settings, messenger, dataset, steps, labels) {
+.controller('viewOverview', ['$scope', 'settings', 'messenger', 'dataset', 'steps', 'labels', 'webservice',
+    function($scope, settings, messenger, dataset, steps, labels, webservice) {
 
         $scope.dataset = dataset;
 
@@ -38,7 +38,11 @@ angular
         // open file externally
         $scope.openDocument = function(article) {
             console.log("Open Document: " + article.filepath.value.value);
-            window.open(settings.files_url + article.filepath.value.value);
+            let nameEncode = encodeURIComponent(webservice.userData.username);
+            let pwEncode = encodeURIComponent(webservice.userData.password);
+            let split = settings.files_url.split(/\/\//, 2);
+
+            window.open(split[0] + "//" + nameEncode + ":" + pwEncode + "@" + split[1] + article.filepath.value.value);
         };
 
         /* merging articles */
