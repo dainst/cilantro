@@ -38,8 +38,8 @@ RUN sed -i -e 's/git:/https:/g' /var/www/html/ojs/lib/pkp/.gitmodules \
   && cd /var/www/html/ojs/lib/pkp/ \
   && git submodule init \
   && git submodule update
-RUN cd /var/www/html/ojs/lib/pkp/ \
-  && sh -c 'curl -sS https://getcomposer.org/installer | php'
+WORKDIR /var/www/html/ojs/lib/pkp/ \
+RUN sh -c 'curl -sS https://getcomposer.org/installer | php'
 RUN chmod -R 777 /var/www/html/ojs/cache \
   && chmod -R 777 /var/www/html/ojs/public \
   && mkdir /OJSfiles \
