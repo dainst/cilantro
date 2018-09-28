@@ -13,8 +13,8 @@ RUN wget https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
 # salvia
 RUN rm -R /usr/share/nginx/html/
 COPY ./frontend /usr/share/nginx/html
-RUN cd /usr/share/nginx/html \
-    && npm update -g \
+WORKDIR /usr/share/nginx/html \
+RUN npm update -g \
     && npm install \
     && cd node_modules/webdriver-manager/bin \
     && ./webdriver-manager update
