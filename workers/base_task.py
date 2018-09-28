@@ -79,8 +79,13 @@ class BaseTask(Task):
         return abs_path
 
     def run(self, prev_result=None, **params):
+        self.results = {}
         self._init_params(params)
-        self._add_prev_result_to_results(prev_result)
+        if prev_result:
+            self._add_prev_result_to_results(prev_result)
+        # results can also be part of the params array in some cases
+        if 'result' in params:
+            self._add_prev_result_to_results(params['result'])
         return self._merge_result(self.execute_task())
 
     def get_param(self, key):
