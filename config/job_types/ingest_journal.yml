@@ -36,8 +36,7 @@ tasks:
         foreach:
           task: convert.pdf_to_txt
           target: txt
-    - list_files: txt
-      foreach: nlp.annotate
+    - nlp.annotate
   - task: generate_xml
     template_file: ojs_template.xml
     target_filename: ojs_import.xml

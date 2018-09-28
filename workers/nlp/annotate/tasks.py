@@ -3,37 +3,51 @@ import json
 import logging
 
 from utils.celery_client import celery_app
-from workers.base_task import FileTask
+from workers.base_task import ObjectTask
 
 from workers.nlp.annotate.annotate import annotate
 
 log = logging.getLogger(__name__)
 
 
-class AnnotateTask(FileTask):
+class AnnotateTask(ObjectTask):
     """
     Annotates a given text.
 
-    Annotates the text in nlp_text.txt with the params in
-    nlp_params.json and stores the annotations in annotations.json.
+    Annotates the text and stores the annotations in the json.
     """
     name = "nlp.annotate"
 
-    def process_file(self, file, target_dir):
-        new_file = self.generate_filename(file, 'json')
-        new_file_path = os.path.join(target_dir, new_file)
+    def process_object(self, obj):
+        txt_folder = os.path.join(obj.path, "data", "txt")
+        full_text = _get_full_text(txt_folder)
+        json_file = os.path.join(txt_folder, "annotations.json")
 
-        with open(file, 'r') as file:
-            text = file.read().replace('\n', '')
-        if text:
-            result = annotate(text)
-            with open(new_file_path, 'w+') as file:
-                json.dump(result, file)
-
-    @staticmethod
-    def generate_filename(file, new_extension):
-        _, extension = os.path.splitext(file)
-        return os.path.basename(file).replace(extension, f".{new_extension}")
+        result = annotate(full_text)
+        with open(json_file, 'w+') as file:
+            json.dump(result, file)
 
 
 AnnotateTask = celery_app.register_task(AnnotateTask())
+
+
+def _get_full_text(folder):
+    """
+    Get the full text from the seperated txts
+    Make it to one big string with new-page markers in it. This improves
+    both, quality and runtime of the annotations
+    :param str folder: The folder which is searched for the txts
+    :return str: The complete text, merged from all txts
+    """
+    full_text = ""
+    page = 0
+    while True:
+        file = os.path.join(folder, f"merged_{page}.txt")
+        if os.path.isfile(file):
+            with open(file, 'r') as f:
+                text = f.read().replace('\n', '')
+                full_text += f"{text}\f"
+            page += 1
+        else:
+            break
+    return full_text

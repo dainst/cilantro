@@ -107,7 +107,7 @@ def _create_json_for_entity_type(entities):
             "id": str(uuid.uuid1()),
             "score": None,
             "terms": [entity["string"]],
-            "pages": [1],  # as long as only one page is processed
+            "pages": [entity["page"]],  # as long as every match is its own entry
             "count": 1,  # as long as every match is its own entry
             "lemma": entity["normform"],
             "coordinates": coordinates,
