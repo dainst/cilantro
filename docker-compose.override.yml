@@ -80,7 +80,6 @@ services:
         - ./frontend/partials:/usr/share/nginx/html/partials
         - ./frontend/style:/usr/share/nginx/html/style
         - ./frontend/test:/usr/share/nginx/html/test
-        - node_modules:/usr/share/nginx/html/node_modules
 
   frontend-test:
     build:
@@ -98,7 +97,4 @@ services:
       - ./frontend/partials:/salvia/partials
       - ./frontend/style:/salvia/style
       - ./frontend/test:/salvia/test
-      - node_modules:/salvia/node_modules
 
-volumes:
-  node_modules:
