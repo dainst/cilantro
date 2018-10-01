@@ -33,9 +33,11 @@ AnnotateTask = celery_app.register_task(AnnotateTask())
 
 def _get_full_text(folder):
     """
-    Get the full text from the seperated txts
-    Make it to one big string with new-page markers in it. This improves
-    both, quality and runtime of the annotations
+    Get the full text from the seperated txts.
+
+    Make it to one big string with new-page markers (\f)in it. This
+    improves both, quality and runtime of the annotations.
+
     :param str folder: The folder which is searched for the txts
     :return str: The complete text, merged from all txts
     """
