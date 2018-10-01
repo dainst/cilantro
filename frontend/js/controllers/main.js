@@ -59,27 +59,27 @@ angular
 		};
 
 		$scope.refreshView = () => {
-            if(!$scope.$$phase) {
+		    if(!$scope.$$phase) {
                 $scope.$apply();
             }
         };
 
-            $scope.openLoginModal = function () {
-                const modalInstance = $uibModal.open({
-                    templateUrl: 'partials/modals/login.html',
-                    controller: 'login'
-                });
-                modalInstance.result.then(function (user) {
-                    $scope.user = user;
-                    $scope.restart();
-                });
-            };
-
-            $scope.logout = function () {
-                webservice.logUserOut();
-                $scope.user = webservice.userData;
+        $scope.openLoginModal = function () {
+            const modalInstance = $uibModal.open({
+                templateUrl: 'partials/modals/login.html',
+                controller: 'login'
+            });
+            modalInstance.result.then(function (user) {
+                $scope.user = user;
                 $scope.restart();
-            };
+            });
+        };
+
+        $scope.logout = function () {
+            webservice.logUserOut();
+            $scope.user = webservice.userData;
+            $scope.restart();
+        };
 
 		$scope.$on('refreshView', $scope.refreshView);
 		window.refresh = $scope.refreshView;
