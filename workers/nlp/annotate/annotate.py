@@ -93,10 +93,11 @@ def _create_json_for_entity_type(nlp_entities):
                    if (x["lemma"] == nlp_entity["normform"])]
         if matches:
             match = matches[0]
+            index = viewer_entities.index(match)
             match["terms"].append(nlp_entity["string"])
             match["count"] += 1
             match["pages"].append(nlp_entity["page"])
-            viewer_entities[viewer_entities.index(match)] = match
+            viewer_entities[index] = match
         else:
             try:
                 coordinates = [nlp_entity["latitude"], nlp_entity["longitude"]]
