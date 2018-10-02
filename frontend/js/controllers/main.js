@@ -59,8 +59,8 @@ angular
 		};
 
 		$scope.refreshView = () => {
-		    if(!$scope.$$phase) {
-                $scope.$apply();
+		    if(!$scope.$$phase){
+		        $scope.$apply();
             }
         };
 

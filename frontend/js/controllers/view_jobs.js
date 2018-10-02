@@ -6,13 +6,13 @@ angular
         function($scope, jobs, $interval, steps) {
 
             const refresh = () => {
-                if(steps.current != 'jobs'){
+                if(steps.current !== 'jobs'){
                     $interval.cancel(promise);
                 }
                 else {
                     jobs.refresh();
                 }
-            }
+            };
 
             let promise = $interval(refresh, 1000);
 
