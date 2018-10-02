@@ -10,6 +10,8 @@ params:
   nlp_params: dict
   do_ocr: boolean
   ojs_metadata: dict
+  image_max_width: string
+  image_max_height: string
 
 tasks:
   - create_object
@@ -38,6 +40,16 @@ tasks:
           target: txt
     - list_files: txt
       foreach: nlp.annotate
+  - list_parts:
+    foreach:
+      list_files: jpg
+      foreach:
+        task: image.scaling
+  - list_parts:
+    foreach:
+      list_files: tif
+      foreach:
+        task: image.scaling
   - task: generate_xml
     template_file: ojs_template.xml
     target_filename: ojs_import.xml
@@ -59,6 +71,6 @@ tasks:
     params: ojs_metadata
   - list_parts:
     foreach:
-        task: generate_frontmatter
+      task: generate_frontmatter
   - publish_to_repository
   - cleanup_workdir
