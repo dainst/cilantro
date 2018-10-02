@@ -14,8 +14,7 @@
 
 
 
-    <div class="row">
-        <div class="col-md-6">
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Load Files from Staging Area
@@ -28,7 +27,6 @@
                     <files-treeview tree="stagingDir.tree"></files-treeview>
                 </div>
             </div>
-
             <div 	ng-controller="upload"
                     class="panel panel-default"
                     ngf-drop="uploadFiles($files)"
@@ -61,11 +59,9 @@
                     <div ng-show="warningsMsg.length >  0" ng-repeat="warning in warningsMsg track by $index" class="alert alert-warning">{{warning}}</div>
                     <div ng-show="invalidFiles" class="alert alert-warning">Wrong Filetype</div>
                 </div>
-            </div>
         </div>
 
 
-        <div class="col-md-6">
             <div class="panel panel-default" id="file-handler-selection">
                 <div class="panel-heading">What to do with newly loaded Files</div>
                 <div class="panel-body">
@@ -80,7 +76,5 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
 </div>

@@ -90,6 +90,7 @@ table.author_box td {
 body {
     margin-bottom: 0px;
     min-height: 100%;
+    max-height: 100%;
 }
 
 idai-footer{
@@ -166,7 +167,6 @@ idai-navbar {
 #main-sidebar {
     padding: 15px 10px 10px 10px;
     flex-basis: 20%;
-    border-left: solid black;
     right: 0px;
     max-width: 50%;
     max-height: 100%;
@@ -174,12 +174,12 @@ idai-navbar {
 }
 
 #sidebar-tasks {
-    flex-basis: 40px;
     flex-shrink: 0;
     flex-grow: 0;
     writing-mode: vertical-rl;
-    padding-left: 5px;
     padding-right: 0px;
+    border-left: solid #5572A1;
+    border-right: solid #5572A1;
 }
 
 .task {

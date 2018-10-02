@@ -28,7 +28,7 @@ angular
             "showIf": function() {return steps.isStarted || steps.current == "fatal"}
         },
         "documents": {
-            "template": "partials/views/documents.html",
+            "template": "partials/views/sidebar_documents.html",
             "title": "Documents",
             "showIf": function() {return steps.isStarted}
         },
@@ -66,19 +66,32 @@ angular
 
     steps.tabs = {
         "data": {
-            "template": "partials/elements/sidebar_data.html",
+            "template": "partials/views/sidebar_documents.html",
             "title": "My Data",
-            "showIf": function() {return steps.isStarted && steps.current !== "fatal" && tabs.current !== "data"}
+            "showIf": function() {
+                return steps.isStarted
+                    && steps.current !== "fatal"
+                    && tabs.current !== "data"
+                    && (steps.current === "articles" || steps.current === "overview")
+            }
         },
         "help": {
-            "template": "partials/elements/sidebar_help.html",
+            "template": "partials/views/sidebar_help.html",
             "title": "Help",
-            "showIf": function() {return steps.isStarted && steps.current !== "fatal"  && tabs.current !== "help"}
+            "showIf": function() {
+                return steps.isStarted
+                    && steps.current !== "fatal"
+                    && tabs.current !== "help"
+            }
         },
         "messages": {
-            "template": "partials/elements/sidebar_messages.html",
+            "template": "partials/views/sidebar_messages.html",
             "title": "Messages",
-            "showIf": function() {return steps.isStarted && steps.current !== "fatal"  && tabs.current !== "messages"}
+            "showIf": function() {
+                return steps.isStarted
+                    && steps.current !== "fatal"
+                    && tabs.current !== "messages"
+            }
         }
     };
 
@@ -97,6 +110,9 @@ angular
             return;
         }
 
+        if(to !== "articles" && to !== "overview" && tabs.current === "data") {
+            steps.changeTab("messages");
+        }
         console.log('Tab changeView to: ', to);
         //$scope.message.reset();
         steps.current = to;
