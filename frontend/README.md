@@ -6,7 +6,7 @@ see ../README.md
 - nodejs 9+
 ## setup w/o docker
 
-- have a current version of firefox (newer then esr52)
+- have a current version of firefox (newer than esr52)
 
 - set up salvia
     - `npm install`
