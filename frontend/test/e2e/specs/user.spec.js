@@ -8,16 +8,14 @@ describe('login dialog', () => {
         browser.get(browser.baseUrl)
 
             .then(() => {
-                if (!e.navbar.toggle.isCollapsed) {
-                    e.navbar.toggle.click();
-                }
-                e.navbar.loginBtn.click();
+
+                a.clickNavbarButton('loginBtn');
 
             }).then(done)
     );
 
-    fit('login with correct credentials', () => {
-        e.loginModal.username.clear().sendKeys('test_username');
+    it('login with correct credentials', () => {
+        e.loginModal.username.clear().sendKeys('test_user');
         e.loginModal.password.clear().sendKeys('test_password');
         e.loginModal.login.click();
         expect(e.navbar.loginBtn.isPresent()).toBe(false);

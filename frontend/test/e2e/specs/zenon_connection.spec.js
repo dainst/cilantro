@@ -1,6 +1,7 @@
 const e = require("../modules/elements");
 const a = require('../modules/actions');
 const so = require('../modules/subobject');
+const LoginHelper = require("../util/login_helper");
 
 describe('subobject view', () => {
     describe('zenon connection', () => {
@@ -70,7 +71,7 @@ describe('subobject view', () => {
         });
 
         it('should automatically fetch data from zenon if list of Ids is provided', () => {
-            browser.get(browser.baseUrl);
+            LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
             a.waitForModal();
@@ -89,7 +90,7 @@ describe('subobject view', () => {
         });
 
         it('just should skip a row which Zenon-Ids is unknown', () => {
-            browser.get(browser.baseUrl);
+            LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
             a.waitForModal();

@@ -1,10 +1,11 @@
 const e = require("./elements");
 const documents = require('../modules/documents');
 const imageComparer = require("../util/image_comparer");
+const LoginHelper = require("../util/login_helper");
 
 const OverviewTable = function() {
 
-    this.goToOverview = (docNr) => browser.get(browser.baseUrl)
+    this.goToOverview = (docNr) => LoginHelper.get(browser, browser.baseUrl)
         .then(e.home.startBtn.click)
         .then(e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click)
         .then(documents.waitForLoaded(docNr))

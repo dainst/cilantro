@@ -3,11 +3,12 @@ const a = require('../modules/actions');
 const message = require('../modules/messages');
 const mo = require('../modules/mainobject');
 const so = require('../modules/subobject');
+const LoginHelper = require("../util/login_helper");
 
 describe('mainobject view', () => {
     describe('editables', () => {
         it("number editable should be limited to numbers", () => {
-            browser.get(browser.baseUrl);
+            LoginHelper.get(browser, browser.baseUrl);
             mo.getRowContent("Year").then(cell => {
                 cell.element(by.css("input")).clear().sendKeys("abc");
                 expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
@@ -15,7 +16,7 @@ describe('mainobject view', () => {
         });
 
         it("should load some journal data codes from ojs cilantro plugin api", () => {
-            browser.get(browser.baseUrl);
+            LoginHelper.get(browser, browser.baseUrl);
             mo.getRowContent("OJS: Journal Code")
                 .then(cell => {
                     e.home.startBtn.click();
