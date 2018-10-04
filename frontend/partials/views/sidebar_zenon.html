@@ -1,0 +1,28 @@
+<div ng-controller="viewSubObjects" data-ng-init="init()" class="panel panel-default">
+    <div class="panel-heading">Zenon</div>
+    <div class="panel-body">
+        <div class="pull-right" style="margin-left:1em">
+            <span class="btn-group">
+                <button
+                        ng-show="zenonResult.id"
+                        class='btn btn-default' ng-click='newFromZenon()'
+                        data-tooltip="Create a new Article with this Zenon-record"
+                >New Article <span class="glyphicon glyphicon-file"></span>
+                </button>
+                <button
+                        ng-show="zenonResult.id && isArticleSelected()"
+                        class='btn btn-default' ng-click='adoptFromZenon()'
+                        data-tooltip="Continue with the data from Zenon instead of the one you got from the investigation of the table of contents"
+                >Take Zenon Data <span class="glyphicon glyphicon-import"></span>
+                </button>
+                <button
+                        ng-show="!zenonResult.id && isArticleSelected()"
+                        ng-click='markAsMissingZenon()'
+                        ng-class="['btn', 'btn-default', {'active': (dataset.subobjects[currentArticle]._.reportToZenon)}]"
+                >Mark as missing in Zenon <span class="glyphicon glyphicon-flag"></span>
+                </button>
+            </span>
+        </div>
+        <zenon search="searchObject" result="zenonResult"></zenon>
+    </div>
+</div>
