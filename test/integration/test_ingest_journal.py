@@ -14,7 +14,7 @@ class IngestJournalTest(JobTypeTest):
         self.assertEqual(status_code, 202)
         job_id = data['job_id']
         self.assertEqual('Accepted', data['status'])
-        self.assert_status(job_id, 'SUCCESS', 120000)
+        self.assert_status(job_id, 'SUCCESS', "TO_JOURNAL")
 
         response = self.get_status(job_id)
         self.assertIn('object_id', response['result'])
@@ -61,7 +61,7 @@ class IngestJournalTest(JobTypeTest):
         self.assertEqual(status_code, 202)
         job_id = data['job_id']
         self.assertEqual('Accepted', data['status'])
-        self.assert_status(job_id, 'SUCCESS', 120000)
+        self.assert_status(job_id, 'SUCCESS', "TO_JOURNAL")
 
         response = self.get_status(job_id)
         self.assertIn('object_id', response['result'])
