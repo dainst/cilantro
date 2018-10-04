@@ -36,12 +36,15 @@ table td {
 }
 
 .tableWrap {
-    overflow: scroll;
     height: 80vh;
-    width: 97vw;
+    width: 100vw;
 }
 
-
+#subobjects-content .col-lg-6, .col-lg-5 {
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-right: 10px;
+}
 /* tooltips */
 
 [data-tooltip] {

@@ -92,6 +92,16 @@ angular
                     && steps.current !== "fatal"
                     && tabs.current !== "messages"
             }
+        },
+        "zenon": {
+            "template": "partials/views/sidebar_zenon.html",
+            "title": "Zenon",
+            "showIf": function() {
+                return steps.isStarted
+                && steps.current !== "fatal"
+                && tabs.current !== "zenon"
+                && (steps.current === "articles" || steps.current === "overview")
+            }
         }
     };
 
@@ -110,9 +120,10 @@ angular
             return;
         }
 
-        if(to !== "articles" && to !== "overview" && tabs.current === "data") {
+        if(!steps.tabs[tabs.current].showIf()) {
             steps.changeTab("messages");
         }
+
         console.log('Tab changeView to: ', to);
         //$scope.message.reset();
         steps.current = to;
@@ -144,7 +155,6 @@ angular
     }
 
     steps.collapseTabs = () => {
-        tabs.current = "collapsed";
         tabs.isCollapsed = true;
     }
 
