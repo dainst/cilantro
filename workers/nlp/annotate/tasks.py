@@ -19,7 +19,7 @@ class AnnotateTask(ObjectTask):
     name = "nlp.annotate"
 
     def process_object(self, obj):
-        txt_folder = os.path.join(obj.path, "data", "txt")
+        txt_folder = obj.get_representation_dir(self.get_param('source'))
         full_text = _get_full_text(txt_folder)
         json_file = os.path.join(txt_folder, "annotations.json")
 
