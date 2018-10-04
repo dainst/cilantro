@@ -29,6 +29,7 @@ before_install:
   - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
 script:
   - bash test/exec_docker_test.sh
+  - bash frontend/test/exec_docker_test.sh
   - bash doc/build-doc.sh
 deploy:
   provider: pages
