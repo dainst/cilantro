@@ -3,6 +3,7 @@ const mo = require('../modules/mainobject');
 const e = require("../modules/elements");
 const message = require('../modules/messages');
 const documents = require('../modules/documents');
+const LoginHelper = require("../util/login_helper");
 
 describe('subobject view', () => {
 
@@ -50,7 +51,7 @@ describe('subobject view', () => {
 
     describe('language editable', () => {
         it('should show the languages of the journal', () => {
-            browser.get(browser.baseUrl);
+            LoginHelper.get(browser, browser.baseUrl);
             mo.getRowContent("OJS: Journal Code").then(cell => {
                 cell.all(by.css("option")).get(1).click();
                 e.home.startBtn.click();
