@@ -1,10 +1,11 @@
 const e = require("./elements");
 const documents = require('../modules/documents');
 const EC = protractor.ExpectedConditions;
+const LoginHelper = require("../util/login_helper");
 
 const Subobject = function() {
 
-    this.goToSubObject = docNr => browser.get(browser.baseUrl)
+    this.goToSubObject = docNr => LoginHelper.get(browser, browser.baseUrl)
         .then(e.home.startBtn.click)
         .then(e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click)
         .then(documents.waitForLoaded(docNr))
