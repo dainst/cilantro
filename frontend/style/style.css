@@ -120,6 +120,7 @@ idai-navbar {
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: stretch;
+    height: 100vh;
 }
 
 .flex-cont-hor {
@@ -160,7 +161,7 @@ idai-navbar {
 
 #main-container {
     padding: 15px 10px 10px 20px;
-    overflow: auto;
+    overflow-y: auto;
     flex: 1;
 }
 
@@ -169,8 +170,11 @@ idai-navbar {
     flex-basis: 20%;
     right: 0px;
     max-width: 50%;
-    max-height: 100%;
-    position: relative;
+}
+
+#main-sidebar #content {
+    overflow-y: auto;
+    height: 100%;
 }
 
 #sidebar-tasks {
