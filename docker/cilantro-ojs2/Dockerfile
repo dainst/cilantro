@@ -56,7 +56,7 @@ RUN find /var/lib/mysql -type f -exec touch {} \; \
 RUN mkdir /var/www/tmp \
   && chmod -R 777 /var/www/tmp \
   && echo "[dainst]\ntmpPath = /var/www/tmp" >> /var/www/html/ojs/config.inc.php
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install ImageMagick Exiftool pdftk
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install ImageMagick Exiftool pdftk
 
 # dainst - plugins
 RUN git clone https://github.com/dainst/ojs-dainst-theme.git /var/www/html/ojs/plugins/themes/dainst \

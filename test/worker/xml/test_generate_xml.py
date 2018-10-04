@@ -11,7 +11,6 @@ log = logging.getLogger(__name__)
 class GenerateXMLTest(unittest.TestCase):
 
         resource_dir = os.environ['RESOURCE_DIR']
-        working_dir = os.environ['WORKING_DIR']
 
         def test_generate_ojsxml(self):
             obj = Object(f'{self.resource_dir}/objects/a_journal')
