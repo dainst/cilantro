@@ -6,14 +6,14 @@ from workers.default.image.image_scaling import scale_image
 
 class ScaleImageTask(FileTask):
     """
-    Creates copies of image files with new proportions.
+    Creates copies of image files with new proportions while keeping ratio.
 
     TaskParams:
     -str image_max_width: width of the generated image file
     -str image_max_height: height of the generated image file
 
     Preconditions:
-    - image files existing
+    - image files existing in format JPEG or TIFF
 
     Creates:
     - scaled copies of images
