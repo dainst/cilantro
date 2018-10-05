@@ -1,3 +1,4 @@
+import os
 
 from utils.celery_client import celery_app
 from workers.base_task import FileTask
@@ -25,7 +26,16 @@ class ScaleImageTask(FileTask):
         """Read parameters and call the actual function."""
         new_width = int(self.get_param('image_max_width'))
         new_height = int(self.get_param('image_max_height'))
-        scale_image(file, new_width, new_height, target_dir)
+
+        file_name = os.path.splitext(os.path.basename(file))[0]
+        file_extension = os.path.splitext(os.path.basename(file))[1]
+        new_file_name = file_name +\
+            "_" + str(new_width) +\
+            "_" + str(new_height) +\
+            "." + file_extension
+
+        scale_image(file, new_width, new_height,
+                    os.path.join(target_dir, new_file_name))
 
 
 ScaleImageTask = celery_app.register_task(ScaleImageTask())
