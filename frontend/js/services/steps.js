@@ -151,10 +151,13 @@ angular
     }
 
     steps.getTab = () => {
-        return steps.tabs[tabs.current].template + cacheKiller;
+        if(!tabs.isCollapsed){
+            return steps.tabs[tabs.current].template + cacheKiller;
+        }
     }
 
     steps.collapseTabs = () => {
+        tabs.current = "collapsed";
         tabs.isCollapsed = true;
     }
 
