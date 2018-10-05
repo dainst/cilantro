@@ -73,47 +73,62 @@ def _generatere_viewer_json(persons, geotagged_locations):
     return viewer_json
 
 
-def _create_json_for_entity_type(entities):
+def _create_json_for_entity_type(nlp_entities):
     """
     Create JSON for every entity type.
 
     This is compatible to the viewer and the same for every entity type
         (person, location). Not used keys are filled with None
-        (null in JSON).
-    :param list entities: all entities of an entity type
-    :return dict: viewer_compatible json of this entity type
+        (null in JSON). Join entities with the same lemma/normform.
+
+    :param list nlp_entities: all entities of an entity type as given by
+        the components
+    :return dict: viewer compatible json of this entity type
     """
+
     viewer_entities = []
-    for entity in entities:
-        try:
-            coordinates = [entity["latitude"], entity["longitude"]]
-        except KeyError:
-            coordinates = None
+    for nlp_entity in nlp_entities:
 
-        references = []
-        for key, value in entity["refids"].items():
+        matches = [x for x in viewer_entities
+                   if (x["lemma"] == nlp_entity["normform"])]
+        if matches:
+            match = matches[0]
+            index = viewer_entities.index(match)
+            match["terms"].append(nlp_entity["string"])
+            match["count"] += 1
+            match["pages"].append(nlp_entity["page"])
+            viewer_entities[index] = match
+        else:
             try:
-                url = f"{entity['_baseurls'][key]}{value}"
-                reference = {
-                    "id": value,
-                    "url": url,
-                    "type": key
-                }
+                coordinates = [nlp_entity["latitude"], nlp_entity["longitude"]]
             except KeyError:
-                reference = {}
-            references.append(reference)
+                coordinates = None
 
-        viewer_entity = {
-            "id": str(uuid.uuid1()),
-            "score": None,
-            "terms": [entity["string"]],
-            "pages": [1],  # as long as only one page is processed
-            "count": 1,  # as long as every match is its own entry
-            "lemma": entity["normform"],
-            "coordinates": coordinates,
-            "references": references
-        }
-        viewer_entities.append(viewer_entity)
+            references = []
+            for key, value in nlp_entity["refids"].items():
+                try:
+                    url = f"{nlp_entity['_baseurls'][key]}{value}"
+                    reference = {
+                        "id": value,
+                        "url": url,
+                        "type": key
+                    }
+                except KeyError:
+                    reference = {}
+                references.append(reference)
+
+            viewer_entity = {
+                "id": str(uuid.uuid1()),
+                "score": None,
+                "terms": [nlp_entity["string"]],
+                "pages": [nlp_entity["page"]],
+                "count": 1,
+                "lemma": nlp_entity["normform"],
+                "coordinates": coordinates,
+                "references": references
+            }
+            viewer_entities.append(viewer_entity)
+
     return viewer_entities
 
 
