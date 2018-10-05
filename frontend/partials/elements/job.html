@@ -9,8 +9,8 @@
     </div>
 
     <div class="panel-body">
-        <ul class="tasks">
-            <li class="task" ng-repeat="taskId in job.task_ids">{{taskId}}
+        <ul>
+            <li ng-repeat="taskId in job.task_ids">{{taskId}}
                 <strong
                         class="label"
                         ng-class="{'label-default': tasks[taskId].status === 0, 'label-danger': tasks[taskId].status === -1, 'label-success': tasks[taskId].status === 1}"

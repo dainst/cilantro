@@ -38,8 +38,8 @@ tasks:
         foreach:
           task: convert.pdf_to_txt
           target: txt
-    - list_files: txt
-      foreach: nlp.annotate
+    - task: nlp.annotate
+      source: txt
   - list_parts:
     foreach:
       list_files: jpg

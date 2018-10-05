@@ -22,7 +22,13 @@ exports.config = {
     exclude: [],
     chromeOnly: true,
     multiCapabilities: [{
-        browserName: 'firefox'
+        browserName: 'chrome',
+        chromeOptions: {
+            args: [
+                "--headless",
+                "--no-sandbox"
+            ]
+        }
     }],
     allScriptsTimeout: 110000,
     getPageTimeout: 100000,

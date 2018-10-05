@@ -18,6 +18,7 @@ flask-cors = "*"
 pyocr = "*"
 Flask-HTTPAuth = "*"
 bcrypt = "*"
+pymongo = "*"
 
 [dev-packages]
 

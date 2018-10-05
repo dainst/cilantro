@@ -29,13 +29,13 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0001/marc.xml',
             'parts/part_0001/mets.xml',
             'parts/part_0001/data/txt/merged_0.txt',
-            'parts/part_0001/data/txt/merged_0.json',
+            'parts/part_0001/data/txt/annotations.json',
             'parts/part_0002/data/origin/merged.pdf',
             'parts/part_0002/meta.json',
             'parts/part_0002/marc.xml',
             'parts/part_0002/mets.xml',
             'parts/part_0002/data/txt/merged_0.txt',
-            'parts/part_0002/data/txt/merged_0.json',
+            'parts/part_0002/data/txt/annotations.json',
             'meta.json',
             'ojs_import.xml'
             ]
@@ -75,13 +75,13 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0001/marc.xml',
             'parts/part_0001/data/tif/merged_0.tif',
             'parts/part_0001/data/txt/merged_0.txt',
-            'parts/part_0001/data/txt/merged_0.json',
+            'parts/part_0001/data/txt/annotations.json',
             'parts/part_0002/data/origin/merged.pdf',
             'parts/part_0002/meta.json',
             'parts/part_0002/marc.xml',
             'parts/part_0002/data/tif/merged_0.tif',
             'parts/part_0002/data/txt/merged_0.txt',
-            'parts/part_0002/data/txt/merged_0.json',
+            'parts/part_0002/data/txt/annotations.json',
             'meta.json',
             'ojs_import.xml'
             ]
