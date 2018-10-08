@@ -16,6 +16,9 @@ env:
     - UID=2000
     - TO_DEFAULT=11000
     - TO_JOURNAL=120000
+    - OJS_SERVER=ojs
+    - OJS_PORT=80
+    - OJS_AUTH_KEY=YWRtaW4=:cGFzc3dvcmQ=
 before_install:
   - cp config/users.yml-default config/users.yml
   - sudo apt-get install -y python3-dev libpoppler-cpp-dev
