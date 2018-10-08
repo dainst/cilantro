@@ -57,9 +57,9 @@ class JobTypeTest(unittest.TestCase):
         file = Path(os.path.join(self.repository_dir, object_id, file_path))
         while not file.is_file():
             if waited > wait_time:
-                raise AssertionError(f"experienced timeout ({wait_time}) while "
-                                     f"waiting for file '{file_path}' to appear"
-                                     f" in repository")
+                raise AssertionError(f"experienced timeout ({wait_time/1000}s) "
+                                     f"while waiting for file '{file_path}' to "
+                                     f"appear in repository")
             else:
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
@@ -91,8 +91,8 @@ class JobTypeTest(unittest.TestCase):
             try:
                 waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
-                raise AssertionError(f"experienced timeout ({wait_time}) while "
-                                     f"waiting for SUCCESS status")
+                raise AssertionError(f"experienced timeout ({wait_time/1000}s) "
+                                     f"while waiting for SUCCESS status")
 
     def assert_status(self, job_id, expected_status, timeout='TO_DEFAULT'):
         """
@@ -110,9 +110,10 @@ class JobTypeTest(unittest.TestCase):
             try:
                 waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
-                raise AssertionError(f"experienced timeout ({wait_time}) while "
-                                     f"waiting for status '{expected_status}', "
-                                     f"last status was '{status}'")
+                raise AssertionError(f"experienced timeout ({wait_time/1000}s) "
+                                     f"while waiting for status "
+                                     f"'{expected_status}', last status was "
+                                     f"'{status}'")
             status = self.get_status(job_id)['status']
 
     def get_status(self, job_id):
