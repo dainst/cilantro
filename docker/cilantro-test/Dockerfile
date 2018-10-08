@@ -29,4 +29,4 @@ WORKDIR /app
 COPY docker/cilantro-test/Pipfile Pipfile
 
 RUN pip3 install pipenv
-RUN set -ex && pipenv install pip==18.0 --deploy
+RUN set -ex && pipenv install pip==18.0 && pipenv install --deploy --system
