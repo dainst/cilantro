@@ -10,6 +10,11 @@ x-test-timeouts: &test-timeouts
   TO_DEFAULT: ${TO_DEFAULT}
   TO_JOURNAL: ${TO_JOURNAL}
 
+x-env-ojs: &env-ojs
+  OJS_SERVER: ${OJS_SERVER}
+  OJS_PORT: ${OJS_PORT}
+  OJS_AUTH_KEY: ${OJS_AUTH_KEY}
+
 x-env-broker: &env-broker
   BROKER_HOST: "broker"
   BROKER_USER: &broker-user user
@@ -48,6 +53,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
+      <<: *env-ojs
       DB_HOST: "db"
 
   convert-worker:
@@ -76,6 +82,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
+      <<: *env-ojs
       <<: *test-timeouts
       DB_HOST: "db"
       RESOURCE_DIR: "test/resources"
