@@ -97,7 +97,7 @@ COPY docker/cilantro-nlp-worker/Pipfile Pipfile
 COPY docker/cilantro-nlp-worker/entrypoint.sh /entrypoint.sh
 
 RUN pip3 install pipenv
-RUN set -ex && pipenv lock && pipenv install --deploy --system
+RUN set -ex && pipenv install pip==18.0 --deploy
 
 USER nobody
 
