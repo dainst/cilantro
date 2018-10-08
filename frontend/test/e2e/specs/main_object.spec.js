@@ -14,8 +14,7 @@ describe('mainobject view', () => {
                 expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
             });
         });
-
-        it("should load some journal data codes from ojs cilantro plugin api", () => {
+        xit("should load some journal data codes from ojs cilantro plugin api", () => {
             LoginHelper.get(browser, browser.baseUrl);
             mo.getRowContent("OJS: Journal Code")
                 .then(cell => {
@@ -42,7 +41,6 @@ describe('mainobject view', () => {
                 });
 
         });
-
 
     });
 

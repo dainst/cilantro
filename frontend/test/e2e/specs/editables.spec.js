@@ -8,7 +8,7 @@ const LoginHelper = require("../util/login_helper");
 describe('subobject view', () => {
 
     describe('base editable', () => {
-        it('should complain on missing title', () => {
+        xit('should complain on missing title', () => {
             so.goToSubObject(3);
             so.getRowContent("Title").then(
                 cell => {
@@ -22,7 +22,7 @@ describe('subobject view', () => {
     });
 
     describe('date editable', () => {
-        it('should complain on wrong date of publishing', () => {
+        xit('should complain on wrong date of publishing', () => {
             so.goToSubObject(3);
             so.getRowContent("Date of Publishing").then(
                 cell => {
@@ -50,7 +50,7 @@ describe('subobject view', () => {
     });
 
     describe('language editable', () => {
-        it('should show the languages of the journal', () => {
+        xit('should show the languages of the journal', () => {
             LoginHelper.get(browser, browser.baseUrl);
             mo.getRowContent("OJS: Journal Code").then(cell => {
                 cell.all(by.css("option")).get(1).click();
@@ -66,7 +66,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should change to the right language code when clicking a language', () => {
+        xit('should change to the right language code when clicking a language', () => {
             so.goToSubObject(3);
             so.getRowContent("Language").then(cell => {
                 cell.all(by.css("label")).get(3).click();
@@ -74,7 +74,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should complain if wrong code was entered', () => {
+        xit('should complain if wrong code was entered', () => {
             so.goToSubObject(3);
             so.getRowContent("Language").then(cell => {
                 cell.element(by.css('input[type="text"]')).clear().sendKeys("xxx");
@@ -84,7 +84,7 @@ describe('subobject view', () => {
     });
 
     describe('Range of Pages', () => {
-        it('should complain if starting page is missing', () => {
+        xit('should complain if starting page is missing', () => {
             so.goToSubObject(2);
             so.getRowContent("Range of Pages").then(cell => {
                 const startPage = cell.all(by.css("input")).get(0);
@@ -93,7 +93,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should update index-representation of page numbers if page boundaries change, as long as it it not entered manually', () => {
+        xit('should update index-representation of page numbers if page boundaries change, as long as it it not entered manually', () => {
             so.goToSubObject(2);
             so.getRowContent("Range of Pages").then(cell => {
                 const startPage = cell.all(by.css("input")).get(0);
@@ -108,7 +108,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should update index-representation of page numbers if file offset was changed', () => {
+        xit('should update index-representation of page numbers if file offset was changed', () => {
             so.goToSubObject(2);
             so.getRowContent("Loaded File").then(loadedFileCell => {
                 const docOffset = loadedFileCell.all(by.css("input")).last();
@@ -124,7 +124,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should allow page boundaries change as printed in index if document offset is set', () => {
+        xit('should allow page boundaries change as printed in index if document offset is set', () => {
             so.goToSubObject(2);
             so.getRowContent("Loaded File").then(loadedFileCell => {
                 const docOffset = loadedFileCell.all(by.css("input")).last();
@@ -140,7 +140,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should complain about impossible page boundaries', () => {
+        xit('should complain about impossible page boundaries', () => {
             so.goToSubObject(2);
             so.getRowContent("Loaded File").then(loadedFileCell => {
                 const docOffset = loadedFileCell.all(by.css("input")).last();
@@ -154,7 +154,7 @@ describe('subobject view', () => {
         });
 
 
-        it('should change page boundaries if a file with different offset is chosen', () => {
+        xit('should change page boundaries if a file with different offset is chosen', () => {
             so.goToSubObject(3);
             so.getRowContent("Loaded File").then(loadedFileCell => {
                 const docOffset = loadedFileCell.all(by.css("input")).last();

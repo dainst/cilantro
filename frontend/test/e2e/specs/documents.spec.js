@@ -8,21 +8,21 @@ const LoginHelper = require("../util/login_helper");
 
 describe('documents page', () => {
 
-    it('should show tree of staging dir', () => {
+    xit('should show tree of staging dir', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.startBtn.click)
             .then(expect(e.documents.treeViewItemsTopLevel.count()).toEqual(5))
             .then(expect(e.documents.treeViewItems.count()).toEqual(8));
     });
 
-    it('should toggle sub-directories', () => {
+    xit('should toggle sub-directories', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.startBtn.click)
             .then(e.documents.toggleBranchBtn.click)
             .then(expect(e.documents.treeViewItemsTopLevel.get(3).all(by.css("li")).count()).toEqual(3));
     });
 
-    it('should load pdf file and create a document if selected so', () => {
+    xit('should load pdf file and create a document if selected so', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.startBtn.click)
             .then(e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click)
@@ -36,7 +36,7 @@ describe('documents page', () => {
             })
     });
 
-    it('should load pdf file and NOT create a document if selected so', () => {
+    xit('should load pdf file and NOT create a document if selected so', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.startBtn.click)
             .then(e.documents.fileHandlerArea.element(by.css(".file-handler-pdf-empty > label")).click)
@@ -53,7 +53,7 @@ describe('documents page', () => {
             .then(expect(e.overview.tableRows.count()).toEqual(0))
     });
 
-    it('should handle a broken file without big drama', done => {
+    xit('should handle a broken file without big drama', done => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.startBtn.click)
             .then(() => prepareCilantro.silent(true))
@@ -67,7 +67,7 @@ describe('documents page', () => {
 
     });
 
-    it('should load all files of a directory', () => {
+    xit('should load all files of a directory', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.startBtn.click)
             .then(e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click)
@@ -83,7 +83,7 @@ describe('documents page', () => {
             .then(expect(e.overview.tableRows.count()).toEqual(3))
     });
 
-    it('should open the csv import dialogue after loading a csv file', () => {
+    xit('should open the csv import dialogue after loading a csv file', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.startBtn.click)
             .then(e.documents.treeViewItemsTopLevel.get(1).element(by.css('.load')).click)

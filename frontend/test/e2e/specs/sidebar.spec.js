@@ -3,7 +3,8 @@ const a = require("../modules/actions");
 const LoginHelper = require("../util/login_helper");
 
 describe('sidebar', () => {
-    it('should switch between tabs', () => {
+
+    xit('should switch between tabs', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.startBtn.click);
         expect(e.sidebar.data.isDisplayed()).toBeFalsy();
@@ -25,4 +26,5 @@ describe('sidebar', () => {
         expect(e.sidebar.sidebar.isDisplayed()).toBeTruthy();
         expect(e.sidebar.data.isDisplayed()).toBeFalsy();
     });
+
 });

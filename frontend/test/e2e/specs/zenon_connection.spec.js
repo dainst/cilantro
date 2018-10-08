@@ -5,7 +5,8 @@ const LoginHelper = require("../util/login_helper");
 
 describe('subobject view', () => {
     describe('zenon connection', () => {
-        it('should show search results', () => {
+
+        xit('should show search results', () => {
             so.goToSubObject(2);
             e.zenon.searchBox.clear().sendKeys("Searchresult Impossible");
             e.zenon.submit.click();
@@ -16,7 +17,8 @@ describe('subobject view', () => {
             expect(e.zenon.resultRows.count()).toBeGreaterThan(0);
         });
 
-        it('should adopt data from zenon into current article', () => {
+
+        xit('should adopt data from zenon into current article', () => {
             so.goToSubObject(2);
             e.zenon.searchBox.clear().sendKeys("magister Equitum");
             e.zenon.resultRows.first().click();
@@ -47,7 +49,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should adopt data from zenon into current article', () => {
+        xit('should adopt data from zenon into current article', () => {
             so.goToSubObject(2);
             e.zenon.searchBox.clear().sendKeys("Equus");
             a.scrollTo(e.zenon.loadMore).then(() => {
@@ -56,7 +58,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should create new data from zenon', () => {
+        xit('should create new data from zenon', () => {
             so.goToSubObject(2);
             e.zenon.searchBox.clear().sendKeys("magister Equitum");
             e.zenon.resultRows.first().click();
@@ -70,7 +72,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('should automatically fetch data from zenon if list of Ids is provided', () => {
+        xit('should automatically fetch data from zenon if list of Ids is provided', () => {
             LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
@@ -89,7 +91,7 @@ describe('subobject view', () => {
             });
         });
 
-        it('just should skip a row which Zenon-Ids is unknown', () => {
+        xit('just should skip a row which Zenon-Ids is unknown', () => {
             LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
@@ -102,6 +104,7 @@ describe('subobject view', () => {
             e.overview.proceedBtn.click();
             expect(e.subobject.select.count()).toEqual(2);
         });
+
 
     });
 });

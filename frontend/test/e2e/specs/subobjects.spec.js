@@ -3,7 +3,7 @@ const so = require('../modules/subobject');
 
 describe('subobject view', () => {
 
-    it('should select article', () => {
+    xit('should select article', () => {
         so.goToSubObject(3);
         e.subobject.selectBtn.click();
         e.subobject.select.get(1).click();
@@ -14,7 +14,7 @@ describe('subobject view', () => {
     });
 
 
-    it('should move dismissed article to trash', () => {
+    xit('should move dismissed article to trash', () => {
         so.goToSubObject(3);
         e.subobject.selectBtn.click();
         e.subobject.select.get(1).click();
@@ -27,7 +27,7 @@ describe('subobject view', () => {
         });
     });
 
-    it('should create new article', () => {
+    xit('should create new article', () => {
         so.goToSubObject(2);
         e.subobject.add.click();
         so.getRowContent("Title").then(cell => {
@@ -37,7 +37,7 @@ describe('subobject view', () => {
         });
     });
 
-    it('should restore article from trash', () => {
+    xit('should restore article from trash', () => {
         so.goToSubObject(2);
         e.subobject.dismissBtn.click();
         e.subobject.trashBtn.click();
@@ -47,7 +47,7 @@ describe('subobject view', () => {
         // expect(e.subobject.select.count()).toEqual(1);
     });
 
-    it('should only confirm validated article', () => {
+    xit('should only confirm validated article', () => {
         so.goToSubObject(2);
         so.getRowContent("Title").then(cell => {
             const input = cell.element(by.css("input"));

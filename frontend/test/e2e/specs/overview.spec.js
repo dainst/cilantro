@@ -9,7 +9,7 @@ describe('overview page', () => {
      * because pdf.js does create slightly different result ins different environments
      */
 
-    it('should show the first page of loaded Document as thumbnail', done => {
+    xit('should show the first page of loaded Document as thumbnail', done => {
         ot.goToOverview(2)
             .then(() => ot.compareThumbnailWithImage(0, "doc1_p1.png"))
             .then(difference => {
@@ -18,7 +18,7 @@ describe('overview page', () => {
             });
     });
 
-    it('should update thumbnail if page changes', done => {
+    xit('should update thumbnail if page changes', done => {
         ot.goToOverview(2)
             .then(() => ot.getCell(0, "Range of Pages"))
             .then(cell => cell.all(by.css('input')))
@@ -31,7 +31,7 @@ describe('overview page', () => {
             });
     });
 
-    it('should update thumbnail if document changes', done => {
+    xit('should update thumbnail if document changes', done => {
         ot.goToOverview(3);
         e.overview.columnsDropdownBtn.click();
         e.overview.columnsDropdown.element(by.cssContainingText("label", "Loaded File")).click();
@@ -49,8 +49,7 @@ describe('overview page', () => {
             });
         });
     });
-
-    it('should complain on missing title', () => {
+    xit('should complain on missing title', () => {
         let titleCell;
         ot.goToOverview(2)
             .then(() => ot.getCell(0, "Title"))
@@ -66,7 +65,7 @@ describe('overview page', () => {
             });
     });
 
-    it('should complain on missing surname (but not on missing first name)', () => {
+    xit('should complain on missing surname (but not on missing first name)', () => {
         let titleCell;
         ot.goToOverview(2)
             .then(() => ot.getCell(0, "Author"))
@@ -82,7 +81,7 @@ describe('overview page', () => {
             });
     });
 
-    it('should add and remove authors', () => {
+    xit('should add and remove authors', () => {
         let titleCell;
         ot.goToOverview(2)
             .then(() => ot.getCell(0, "Author"))
@@ -101,7 +100,7 @@ describe('overview page', () => {
             })
     });
 
-    it('should update table row order on click', () => {
+    xit('should update table row order on click', () => {
         const titleDoc1 = "PII: 0003-9969(92)90087-O";
         const titleDoc2 = "UNITED";
         ot.goToOverview(3);
@@ -111,8 +110,7 @@ describe('overview page', () => {
         expect(ot.getRowTitle(0)).toEqual(titleDoc2);
         expect(ot.getRowTitle(1)).toEqual(titleDoc1);
     });
-
-    it('should open pdf in other tab on btn click', () => { // see #9363
+    xit('should open pdf in other tab on btn click', () => { // see #9363
         ot.goToOverview(2);
         ot.getRowButton(0, 'open').click();
         a.switchToNewTab().then(() => {
@@ -121,8 +119,7 @@ describe('overview page', () => {
             browser.ignoreSynchronization = false;
         });
     });
-
-    it('should merge two documents on btn click', () => {
+    xit('should merge two documents on btn click', () => {
         const testDocFileName1 = "test-directory/pdf2.pdf";
         const testDocFileName2 = "test-directory/pdf3.pdf";
         ot.goToOverview(3);
@@ -159,7 +156,7 @@ describe('overview page', () => {
         expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName1);
     });
 
-    it('hide and show columns', () => {
+    xit('hide and show columns', () => {
         ot.goToOverview(2);
         ot.getVisibleColumnNames().then(columns => {
             expect(columns.indexOf("Title")).not.toEqual(-1);
@@ -171,5 +168,4 @@ describe('overview page', () => {
             expect(columns.indexOf("Title")).toEqual(-1);
         });
     });
-
 });

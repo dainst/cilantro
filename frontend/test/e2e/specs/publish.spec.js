@@ -7,7 +7,7 @@ const message = require('../modules/messages');
 
 describe('publish page', () => {
 
-    it ("should not allow start job if no articles are staged", () => {
+    xit("should not allow start job if no articles are staged", () => {
         so.goToSubObject(2);
         a.toggleNavbar();
         expect(e.navbar.publish.isDisplayed()).toBeFalsy();
@@ -17,7 +17,7 @@ describe('publish page', () => {
         expect(e.navbar.publish.isDisplayed()).toBeTruthy();
     });
 
-    it ("should not allow start job if mainobject data is no valid", () => {
+    xit("should not allow start job if mainobject data is no valid", () => {
         so.goToSubObject(2);
         e.subobject.confirmBtn.click();
         expect(e.publish.uploadBtn.isPresent()).toBeFalsy();
@@ -30,7 +30,7 @@ describe('publish page', () => {
             });
     });
 
-    it("should start job if everything is okay", () => {
+    xit("should start job if everything is okay", () => {
         so.goToSubObject(2);
         e.subobject.confirmBtn.click();
         Promise.all([mo.getRowContent("Volume"), mo.getRowContent("Number"), mo.getRowContent("OJS: Journal Code")])
