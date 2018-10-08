@@ -57,9 +57,9 @@ class JobTypeTest(unittest.TestCase):
         file = Path(os.path.join(self.repository_dir, object_id, file_path))
         while not file.is_file():
             if waited > wait_time:
-                raise AssertionError(f"experienced timeout while waiting for "
-                                     f"file '{file_path}' to appear "
-                                     f"in repository")
+                raise AssertionError(f"experienced timeout ({wait_time}) while "
+                                     f"waiting for file '{file_path}' to appear"
+                                     f" in repository")
             else:
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
@@ -91,8 +91,8 @@ class JobTypeTest(unittest.TestCase):
             try:
                 waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
-                raise AssertionError("experienced timeout while waiting for"
-                                     "SUCCESS status")
+                raise AssertionError(f"experienced timeout ({wait_time}) while "
+                                     f"waiting for SUCCESS status")
 
     def assert_status(self, job_id, expected_status, timeout='TO_DEFAULT'):
         """
@@ -110,9 +110,9 @@ class JobTypeTest(unittest.TestCase):
             try:
                 waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
-                raise AssertionError(f"experienced timeout while waiting for "
-                                     f"status '{expected_status}', last status"
-                                     f" was '{status}'")
+                raise AssertionError(f"experienced timeout ({wait_time}) while "
+                                     f"waiting for status '{expected_status}', "
+                                     f"last status was '{status}'")
             status = self.get_status(job_id)['status']
 
     def get_status(self, job_id):
