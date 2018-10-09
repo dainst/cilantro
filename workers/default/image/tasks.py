@@ -24,15 +24,12 @@ class ScaleImageTask(FileTask):
 
     def process_file(self, file, target_dir):
         """Read parameters and call the actual function."""
-        new_width = int(self.get_param('image_max_width'))
-        new_height = int(self.get_param('image_max_height'))
+        new_width = int(self.get_param('max_width'))
+        new_height = int(self.get_param('max_height'))
 
         file_name = os.path.splitext(os.path.basename(file))[0]
         file_extension = os.path.splitext(os.path.basename(file))[1]
-        new_file_name = file_name +\
-            "_" + str(new_width) +\
-            "_" + str(new_height) +\
-            "." + file_extension
+        new_file_name = f"{file_name}_{new_width}_{new_height}.{file_extension}"
 
         scale_image(file, new_width, new_height,
                     os.path.join(target_dir, new_file_name))
