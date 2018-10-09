@@ -82,7 +82,5 @@
         "default_create_frontpage": true,
         "allow_upload_without_file": false
     },
-    "do_ocr": false,
-    "image_max_width": "50",
-    "image_max_height": "30"
+    "do_ocr": false
 }
