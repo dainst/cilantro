@@ -3,7 +3,7 @@ import logging
 from PIL import Image as PilImage
 
 
-def scale_image(image_path, max_width, max_height, target_file_name):
+def scale_image(source_path, target_path, max_width, max_height):
     """
     Scale the image to the given size keeping aspect ratio.
 
@@ -14,15 +14,15 @@ def scale_image(image_path, max_width, max_height, target_file_name):
 
     Tested working for JPEG and TIFF.
 
-    :param image_path: path to the image to be scaled
+    :param source_path: path to the image to be scaled
+    :param target_path: path to save the generated image to
     :param max_width: maximum width in pixels of the generated image
     :param max_height: maximum height in pixels of the generated image
-    :param target_dir: directory to save the generated image to
     """
-    logging.getLogger(__name__).debug(f"Resizing {image_path} "
+    logging.getLogger(__name__).debug(f"Resizing {source_path} "
                                       f"to size: {(max_width, max_height)}")
 
     # conversion is needed for tiffs
-    image = PilImage.open(image_path).convert('RGB')
+    image = PilImage.open(source_path).convert('RGB')
     image.thumbnail((max_width, max_height))
-    image.save(target_file_name)
+    image.save(target_path)

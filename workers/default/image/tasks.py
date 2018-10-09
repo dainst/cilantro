@@ -31,8 +31,8 @@ class ScaleImageTask(FileTask):
         file_extension = os.path.splitext(os.path.basename(file))[1]
         new_file_name = f"{file_name}_{new_width}_{new_height}.{file_extension}"
 
-        scale_image(file, new_width, new_height,
-                    os.path.join(target_dir, new_file_name))
+        scale_image(file, os.path.join(target_dir, new_file_name),
+                    new_width, new_height)
 
 
 ScaleImageTask = celery_app.register_task(ScaleImageTask())
