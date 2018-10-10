@@ -54,7 +54,7 @@ tasks:
         task: generate_xml
         template_file: mets_template.xml
         target_filename: mets.xml
-        # schema_file: mets.xsd
+        schema_file: mets.xsd
   - task: publish_to_ojs
     params: ojs_metadata
   - list_parts:
