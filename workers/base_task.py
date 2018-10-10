@@ -7,6 +7,7 @@ from celery.task import Task
 
 from utils.object import Object
 from utils.setup_logging import setup_logging
+from utils import job_db
 
 
 setup_logging()
@@ -86,7 +87,14 @@ class BaseTask(Task):
         # results can also be part of the params array in some cases
         if 'result' in params:
             self._add_prev_result_to_results(params['result'])
-        return self._merge_result(self.execute_task())
+
+        try:
+            task_result = self.execute_task()
+        except:  # noqa: ignore bare except
+            job_db.update_job(self.job_id, 'failed')
+            raise
+
+        return self._merge_result(task_result)
 
     def get_param(self, key):
         try:

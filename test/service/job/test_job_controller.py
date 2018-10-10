@@ -62,3 +62,18 @@ class JobControllerTest(unittest.TestCase):
         response_json = response.get_json()
         self.assertFalse(response_json['success'])
         self.assertEqual(response_json['error']['code'], "unknown_job_type")
+
+    def test_list_job(self):
+        """
+        Test listing of jobs.
+
+        The test creates a dummy test-job and then gets a list of all jobs.
+        The job list is checked for some strings which are expected in the
+        job list.
+        """
+        self.client.post('/job/job1', headers=get_auth_header())
+        response = self.client.get('/job/jobs', headers=get_auth_header())
+
+        self.assertIn('job_id', str(response.get_json()))
+        self.assertIn("'user': 'test_user'", str(response.get_json()))
+        self.assertIn("'job_type': 'job1'", str(response.get_json()))

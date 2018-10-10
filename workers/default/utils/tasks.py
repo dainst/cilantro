@@ -5,6 +5,7 @@ import shutil
 from celery import group
 
 from utils.celery_client import celery_app
+from utils import job_db
 from service.job.job_config import generate_chain
 from workers.base_task import BaseTask, ObjectTask
 
@@ -149,6 +150,18 @@ class CleanupWorkdirTask(BaseTask):
 
 
 CleanupWorkdirTask = celery_app.register_task(CleanupWorkdirTask())
+
+
+class FinishJobTask(BaseTask):
+    """Task to set the job state to success after all other tasks have run."""
+
+    name = "finish_job"
+
+    def execute_task(self):
+        job_db.update_job(self.job_id, 'success')
+
+
+FinishJobTask = celery_app.register_task(FinishJobTask())
 
 
 def _recursive_file_list(directory):
