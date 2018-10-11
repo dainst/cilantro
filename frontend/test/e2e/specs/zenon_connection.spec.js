@@ -21,8 +21,9 @@ describe('subobject view', () => {
         });
 
 
-        xit('should adopt data from zenon into current article', () => {
+        it('should adopt data from zenon into current article', () => {
             so.goToSubObject(2);
+            browser.wait(EC.visibilityOf(e.zenon.searchBox), 20000);
             e.zenon.searchBox.clear().sendKeys("magister Equitum");
             e.zenon.resultRows.first().click();
             e.zenon.adopt.click();
@@ -52,8 +53,9 @@ describe('subobject view', () => {
             });
         });
 
-        xit('should adopt data from zenon into current article', () => {
+        it('should adopt data from zenon into current article', () => {
             so.goToSubObject(2);
+            browser.wait(EC.visibilityOf(e.zenon.searchBox), 20000);
             e.zenon.searchBox.clear().sendKeys("Equus");
             a.scrollTo(e.zenon.loadMore).then(() => {
                 e.zenon.loadMore.click();
@@ -61,8 +63,9 @@ describe('subobject view', () => {
             });
         });
 
-        xit('should create new data from zenon', () => {
+        it('should create new data from zenon', () => {
             so.goToSubObject(2);
+            browser.wait(EC.visibilityOf(e.zenon.searchBox), 20000);
             e.zenon.searchBox.clear().sendKeys("magister Equitum");
             e.zenon.resultRows.first().click();
             e.zenon.newArticle.click();
@@ -75,7 +78,7 @@ describe('subobject view', () => {
             });
         });
 
-        xit('should automatically fetch data from zenon if list of Ids is provided', () => {
+        it('should automatically fetch data from zenon if list of Ids is provided', () => {
             LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
@@ -94,7 +97,7 @@ describe('subobject view', () => {
             });
         });
 
-        xit('just should skip a row which Zenon-Ids is unknown', () => {
+        it('just should skip a row which Zenon-Ids is unknown', () => {
             LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
