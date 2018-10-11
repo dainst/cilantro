@@ -38,6 +38,20 @@ tasks:
           target: txt
     - task: nlp.annotate
       source: txt
+  - list_parts:
+    foreach:
+      list_files: jpg
+      foreach:
+        task: image.scaling
+        max_width: 50
+        max_height: 50
+  - list_parts:
+    foreach:
+      list_files: tif
+      foreach:
+        task: image.scaling
+        max_width: 50
+        max_height: 50
   - task: generate_xml
     template_file: ojs_template.xml
     target_filename: ojs_import.xml
@@ -59,6 +73,6 @@ tasks:
     params: ojs_metadata
   - list_parts:
     foreach:
-        task: generate_frontmatter
+      task: generate_frontmatter
   - publish_to_repository
   - cleanup_workdir
