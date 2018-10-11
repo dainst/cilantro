@@ -14,10 +14,10 @@ def scale_image(source_path, target_path, max_width, max_height):
 
     Tested working for JPEG and TIFF.
 
-    :param source_path: path to the image to be scaled
-    :param target_path: path to save the generated image to
-    :param max_width: maximum width in pixels of the generated image
-    :param max_height: maximum height in pixels of the generated image
+    :param str source_path: path to the image to be scaled
+    :param str target_path: path to save the generated image to
+    :param int max_width: maximum width in pixels of the generated image
+    :param int max_height: maximum height in pixels of the generated image
     """
     logging.getLogger(__name__).debug(f"Resizing {source_path} "
                                       f"to size: {(max_width, max_height)}")
