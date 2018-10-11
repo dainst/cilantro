@@ -8,18 +8,22 @@ const LoginHelper = require("../util/login_helper");
 
 describe('documents page', () => {
 
-    xit('should show tree of staging dir', () => {
+    it('should show tree of staging dir', () => {
         LoginHelper.get(browser, browser.baseUrl)
-            .then(e.home.startBtn.click)
-            .then(expect(e.documents.treeViewItemsTopLevel.count()).toEqual(5))
-            .then(expect(e.documents.treeViewItems.count()).toEqual(8));
+            .then(() => {
+                e.home.startBtn.click();
+                expect(e.documents.treeViewItemsTopLevel.count()).toEqual(5);
+                expect(e.documents.treeViewItems.count()).toEqual(8);
+            })
     });
 
-    xit('should toggle sub-directories', () => {
+    it('should toggle sub-directories', () => {
         LoginHelper.get(browser, browser.baseUrl)
-            .then(e.home.startBtn.click)
-            .then(e.documents.toggleBranchBtn.click)
-            .then(expect(e.documents.treeViewItemsTopLevel.get(3).all(by.css("li")).count()).toEqual(3));
+            .then(() => {
+                e.home.startBtn.click();
+                e.documents.toggleBranchBtn.click();
+                expect(e.documents.treeViewItemsTopLevel.get(3).all(by.css("li")).count()).toEqual(3);
+            })
     });
 
     xit('should load pdf file and create a document if selected so', () => {
