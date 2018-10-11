@@ -87,20 +87,19 @@ describe('documents page', () => {
             .then(expect(e.overview.tableRows.count()).toEqual(3))
     });
 
-    xit('should open the csv import dialogue after loading a csv file', () => {
+    it('should open the csv import dialogue after loading a csv file', () => {
         LoginHelper.get(browser, browser.baseUrl)
-            .then(e.home.startBtn.click)
-            .then(e.documents.treeViewItemsTopLevel.get(1).element(by.css('.load')).click)
-            .then(a.waitForModal)
-            .then(expect(e.csv.textField.getAttribute('value')).not.toEqual(""))
-            .then(e.csv.takeData.click)
-            .then(e.csv.ignoreFirstRow.click)
-            .then(e.csv.confirm.click)
-            .then(e.documents.proceedBtn.click)
-            .then(expect(e.overview.tableRows.count()).toEqual(2))
-
+            .then(() => {
+                e.home.startBtn.click();
+                e.documents.treeViewItemsTopLevel.get(1).element(by.css('.load')).click();
+                a.waitForModal();
+                expect(e.csv.textField.getAttribute('value')).not.toEqual("");
+                e.csv.takeData.click();
+                e.csv.ignoreFirstRow.click();
+                e.csv.confirm.click();
+                e.documents.proceedBtn.click();
+                expect(e.overview.tableRows.count()).toEqual(2);
+            })
     });
-
-
 
 });
