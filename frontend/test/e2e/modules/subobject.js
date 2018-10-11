@@ -6,13 +6,15 @@ const LoginHelper = require("../util/login_helper");
 const Subobject = function() {
 
     this.goToSubObject = docNr => LoginHelper.get(browser, browser.baseUrl)
-        .then(e.home.startBtn.click)
-        .then(e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click)
-        .then(documents.waitForLoaded(docNr))
-        .then(e.documents.proceedBtn.click)
-        .then(browser.wait(EC.visibilityOf(e.overview.table), 20))
-        .then(e.overview.proceedBtn.click)
-        .then(browser.wait(EC.visibilityOf(e.subobject.table), 20));
+        .then(() => {
+            e.home.startBtn.click();
+            e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click();
+            documents.waitForLoaded(docNr);
+            e.documents.proceedBtn.click();
+            browser.wait(EC.visibilityOf(e.overview.table), 20000);
+            e.overview.proceedBtn.click();
+            browser.wait(EC.visibilityOf(e.subobject.table), 20000);
+        });
 
     this.getRowTitles = () => new Promise((resolve, reject) =>
         e.subobject.tableRows
