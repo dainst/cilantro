@@ -2,12 +2,15 @@ const e = require("../modules/elements");
 const a = require('../modules/actions');
 const so = require('../modules/subobject');
 const LoginHelper = require("../util/login_helper");
+const EC = protractor.ExpectedConditions;
+
 
 describe('subobject view', () => {
     describe('zenon connection', () => {
 
-        xit('should show search results', () => {
+        it('should show search results', () => {
             so.goToSubObject(2);
+            browser.wait(EC.visibilityOf(e.zenon.searchBox), 20000);
             e.zenon.searchBox.clear().sendKeys("Searchresult Impossible");
             e.zenon.submit.click();
             expect(e.zenon.resultCount.getText().then(v => parseInt(v))).toEqual(0);
