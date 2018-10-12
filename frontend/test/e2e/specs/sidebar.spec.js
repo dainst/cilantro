@@ -4,7 +4,7 @@ const LoginHelper = require("../util/login_helper");
 
 describe('sidebar', () => {
 
-    fit('should switch between tabs', () => {
+    it('should switch between tabs', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.startBtn.click);
         e.sidebar.help.click();
