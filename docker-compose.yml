@@ -7,8 +7,8 @@ x-env-dirs: &env-dirs
   CONFIG_DIR: /config
 
 x-test-timeouts: &test-timeouts
-  TO_DEFAULT: ${TO_DEFAULT}
-  TO_JOURNAL: ${TO_JOURNAL}
+  DEFAULT_TEST_TIMEOUT: ${DEFAULT_TEST_TIMEOUT}
+  JOURNAL_TEST_TIMEOUT: ${JOURNAL_TEST_TIMEOUT}
 
 x-env-ojs: &env-ojs
   OJS_SERVER: ${OJS_SERVER}

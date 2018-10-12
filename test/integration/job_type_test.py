@@ -43,7 +43,7 @@ class JobTypeTest(unittest.TestCase):
         shutil.rmtree(self.repository_dir, ignore_errors=True)
 
     def assert_file_in_repository(self, object_id, file_path,
-                                  timeout='TO_DEFAULT'):
+                                  timeout='DEFAULT_TEST_TIMEOUT'):
         """
         Assert that a file is present in the repository.
 
@@ -64,7 +64,7 @@ class JobTypeTest(unittest.TestCase):
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
 
-    def assert_job_successful(self, task_ids, timeout='TO_DEFAULT'):
+    def assert_job_successful(self, task_ids, timeout='DEFAULT_TEST_TIMEOUT'):
         """
         Assert that a job completed successfully.
 
@@ -94,7 +94,7 @@ class JobTypeTest(unittest.TestCase):
                 raise AssertionError(f"experienced timeout ({wait_time/1000}s) "
                                      f"while waiting for SUCCESS status")
 
-    def assert_status(self, job_id, expected_status, timeout='TO_DEFAULT'):
+    def assert_status(self, job_id, expected_status, timeout='DEFAULT_TEST_TIMEOUT'):
         """
         Assert that a job has a certain status.
 
@@ -210,7 +210,7 @@ class JobTypeTest(unittest.TestCase):
         return data
 
 
-def _get_wait_time(timeout='TO_DEFAULT'):
+def _get_wait_time(timeout='DEFAULT_TEST_TIMEOUT'):
     """
     Determine the waittime.
 
@@ -220,8 +220,8 @@ def _get_wait_time(timeout='TO_DEFAULT'):
     :return int: the determined wait time
     """
     wait_time = os.environ.get(timeout)
-    if not (wait_time or timeout is 'TO_DEFAULT'):
-        wait_time = os.environ.get('TO_DEFAULT')
+    if not (wait_time or timeout is 'DEFAULT_TEST_TIMEOUT'):
+        wait_time = os.environ.get('DEFAULT_TEST_TIMEOUT')
     if not wait_time:
         wait_time = 10000
     return int(wait_time)
