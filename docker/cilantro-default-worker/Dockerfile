@@ -10,6 +10,7 @@ RUN apt-get update && \
     libmagickwand-dev \
     ghostscript
 
+
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
@@ -27,7 +28,7 @@ COPY docker/cilantro-default-worker/Pipfile Pipfile
 COPY docker/cilantro-default-worker/entrypoint.sh /entrypoint.sh
 
 RUN pip3 install pipenv
-RUN set -ex && pipenv lock && pipenv install --deploy --system
+RUN set -ex && pipenv install pip==18.0 && pipenv install --deploy --system
 
 USER nobody
 

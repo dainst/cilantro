@@ -6,6 +6,15 @@ x-env-dirs: &env-dirs
   STAGING_DIR: /data/staging
   CONFIG_DIR: /config
 
+x-test-timeouts: &test-timeouts
+  DEFAULT_TEST_TIMEOUT: ${DEFAULT_TEST_TIMEOUT}
+  JOURNAL_TEST_TIMEOUT: ${JOURNAL_TEST_TIMEOUT}
+
+x-env-ojs: &env-ojs
+  OJS_SERVER: ${OJS_SERVER}
+  OJS_PORT: ${OJS_PORT}
+  OJS_AUTH_KEY: ${OJS_AUTH_KEY}
+
 x-env-broker: &env-broker
   BROKER_HOST: "broker"
   BROKER_USER: &broker-user user
@@ -56,6 +65,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
+      <<: *env-ojs
       <<: *env-jobdb
       DB_HOST: "db"
 
@@ -85,6 +95,8 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
+      <<: *env-ojs
+      <<: *test-timeouts
       <<: *env-jobdb
       DB_HOST: "db"
       RESOURCE_DIR: "test/resources"
