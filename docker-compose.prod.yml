@@ -77,14 +77,21 @@ services:
     environment:
       <<: *env-broker
 
+  ojs:
+    image: dainst/cilantro-ojs2:latest
+    volumes:
+      - data:/data
+
   salvia:
     image: dainst/cilantro-salvia:latest
     environment:
       BACKEND_URI: "http://oneeyedjacks01.dai-cloud.uni-koeln.de/api"
       ZENON_URI: "https://zenon.dainst.org/api/v1"
-      OJS_URI: "https://publications.dainst.org/journals/plugins/generic/ojs-cilantro-plugin/api"
+      OJS_URI: "http://oneeyedjacks01.dai-cloud.uni-koeln.de/ojs/plugins/generic/ojs-cilantro-plugin/api"
 
 
 volumes:
   redis-data:
   data:
+    external:
+      name: archaeocloud_data
