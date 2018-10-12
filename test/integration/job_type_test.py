@@ -12,7 +12,6 @@ from run_service import app
 from test.service.user.user_utils import get_auth_header, test_user
 
 log = logging.getLogger(__name__)
-default_wait_time = 10000
 retry_time = 100
 
 
@@ -44,28 +43,28 @@ class JobTypeTest(unittest.TestCase):
         shutil.rmtree(self.repository_dir, ignore_errors=True)
 
     def assert_file_in_repository(self, object_id, file_path,
-                                  wait_time=default_wait_time):
+                                  timeout='DEFAULT_TEST_TIMEOUT'):
         """
         Assert that a file is present in the repository.
 
         :param str object_id:
         :param str file_path:
-        :param int wait_time: Time in ms to wait for the file to appear
-            before failing
+        :param str timeout: Name of timeout in ENV file
         :return:
         """
+        wait_time = _get_wait_time(timeout)
         waited = 0
         file = Path(os.path.join(self.repository_dir, object_id, file_path))
         while not file.is_file():
             if waited > wait_time:
-                raise AssertionError(f"experienced timeout while waiting for "
-                                     f"file '{file_path}' to appear "
-                                     f"in repository")
+                raise AssertionError(f"experienced timeout ({wait_time/1000}s) "
+                                     f"while waiting for file '{file_path}' to "
+                                     f"appear in repository")
             else:
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
 
-    def assert_job_successful(self, task_ids, wait_time=default_wait_time):
+    def assert_job_successful(self, task_ids, timeout='DEFAULT_TEST_TIMEOUT'):
         """
         Assert that a job completed successfully.
 
@@ -73,9 +72,10 @@ class JobTypeTest(unittest.TestCase):
         is reached.
 
         :param str task_ids:
-        :param int wait_time: Time in ms to wait before failing
+        :param str timeout: Name of timeout in ENV file
         :return:
         """
+        wait_time = _get_wait_time(timeout)
         waited = 0
         success = False
         while not success:
@@ -91,28 +91,29 @@ class JobTypeTest(unittest.TestCase):
             try:
                 waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
-                raise AssertionError("experienced timeout while waiting for"
-                                     "SUCCESS status")
+                raise AssertionError(f"experienced timeout ({wait_time/1000}s) "
+                                     f"while waiting for SUCCESS status")
 
-    def assert_status(self, job_id, expected_status,
-                      wait_time=default_wait_time):
+    def assert_status(self, job_id, expected_status, timeout='DEFAULT_TEST_TIMEOUT'):
         """
         Assert that a job has a certain status.
 
         :param str job_id:
         :param str expected_status:
-        :param int wait_time: Time in ms to wait before failing
+        :param str timeout: Name of timeout in ENV file
         :return:
         """
+        wait_time = _get_wait_time(timeout)
         waited = 0
         status = self.get_status(job_id)
         while status != expected_status:
             try:
                 waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
-                raise AssertionError(f"experienced timeout while waiting for "
-                                     f"status '{expected_status}', last status"
-                                     f" was '{status}'")
+                raise AssertionError(f"experienced timeout ({wait_time/1000}s) "
+                                     f"while waiting for status "
+                                     f"'{expected_status}', last status was "
+                                     f"'{status}'")
             status = self.get_status(job_id)['status']
 
     def get_status(self, job_id):
@@ -207,3 +208,20 @@ class JobTypeTest(unittest.TestCase):
         with open(source) as data_object:
             data = json.load(data_object)
         return data
+
+
+def _get_wait_time(timeout='DEFAULT_TEST_TIMEOUT'):
+    """
+    Determine the waittime.
+
+    Order: specific timeout from env, default timeoutfrom env, 10s.
+
+    :param str timeout: The name of the timeout variable
+    :return int: the determined wait time
+    """
+    wait_time = os.environ.get(timeout)
+    if not (wait_time or timeout is 'DEFAULT_TEST_TIMEOUT'):
+        wait_time = os.environ.get('DEFAULT_TEST_TIMEOUT')
+    if not wait_time:
+        wait_time = 10000
+    return int(wait_time)
