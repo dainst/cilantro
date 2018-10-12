@@ -8,6 +8,15 @@ client = MongoClient(os.environ['JOB_DB_URL'], int(os.environ['JOB_DB_PORT']))
 db = client[os.environ['JOB_DB_NAME']]
 
 
+def create_index():
+    """
+    Create index for faster lookup in database.
+
+    The 2 fields that are used for lookup/update are indexed.
+    """
+    db.jobs.create_index([("job_id", pymongo.DESCENDING),
+                          ("user", pymongo.DESCENDING)])
+
 def get_jobs_for_user(user):
     """
     Find all jobs of the passed user in the job database.
