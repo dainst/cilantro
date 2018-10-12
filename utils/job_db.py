@@ -38,19 +38,31 @@ def add_job(job_id, user, job_type, task_ids):
            'task_ids': task_ids,
            'state': 'new',
            'created': timestamp,
-           'updated': timestamp}
+           'updated': timestamp,
+           'errors': []
+           }
 
     db.jobs.insert_one(job)
 
 
-def update_job(job_id, state):
+def update_job(job_id, state, error_text=''):
     """
     Update a job to the job database with new state and updated timestamp.
 
+    If there is text passed in 'error_text' then that is added to the list
+    of error messages of that task. The error mesages are a list to  make it
+    possible to keep executing the task chain even though some tasks
+    throw errors. The messages are put into the job entry in the database
+    and can be collected later.
+
     :param str job_id: Cilantro-ID of the job
     :param str state: new state of the job
+    :param str error_text: (optional) text containig details about thrown error
     :return: None
     """
     timestamp = datetime.datetime.now()
     db.jobs.update_many({"job_id": job_id},
                         {'$set': {'state': state, 'updated': timestamp}})
+    if error_text != '':
+        db.jobs.update_many({"job_id": job_id},
+                            {'$push': {'errors': error_text}})
