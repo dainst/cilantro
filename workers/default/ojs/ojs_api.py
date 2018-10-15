@@ -1,11 +1,12 @@
+import os
 import logging
 import json
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 
-server = "ojs"
-port = "80"
-auth_key = "YWRtaW4=:cGFzc3dvcmQ="
+server = os.environ['OJS_SERVER']
+port = os.environ['OJS_PORT']
+auth_key = os.environ['OJS_AUTH_KEY']
 
 log = logging.getLogger(__name__)
 
