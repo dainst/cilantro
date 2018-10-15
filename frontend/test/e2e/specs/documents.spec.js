@@ -62,23 +62,6 @@ describe('documents page', () => {
             })
     });
 
-    xit('should handle a broken file without big drama', done => {
-        LoginHelper.get(browser, browser.baseUrl)
-            .then(
-                () => {
-                    e.home.startBtn.click();
-                    prepareCilantro.silent(true);
-                    prepareCilantro.clearSingleFile(browser, browser.baseUrl, 'e2e-testing-broken_file.csv');
-                    e.documents.treeViewItemsTopLevel.get(0).element(by.css('.load')).click();
-                    message.waitForMessage();
-                    expect(message.getClassOfMain()).toBe("info");
-                    prepareCilantro.prepare(browser.baseUrl);
-                    prepareCilantro.silent(false);
-                    done();
-                })
-
-    });
-
     it('should load all files of a directory', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
