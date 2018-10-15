@@ -26,65 +26,74 @@ describe('documents page', () => {
             })
     });
 
-    xit('should load pdf file and create a document if selected so', () => {
+    it('should load pdf file and create a document if selected so', () => {
         LoginHelper.get(browser, browser.baseUrl)
-            .then(e.home.startBtn.click)
-            .then(e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click)
-            .then(documents.waitForLoaded(2))
-            .then(message.getStats)
-            .then(stats => {
-                expect(stats.Analyzed).toEqual(1);
-                expect(stats.Loaded).toEqual(1);
-                expect(stats.Files).toEqual(1);
-                expect(stats.Thumbnails).toEqual(1);
-            })
+            .then(() => {
+                e.home.startBtn.click();
+                e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click();
+                documents.waitForLoaded(2);
+                message.getStats()
+                    .then(stats => {
+                        expect(stats.Analyzed).toEqual(1);
+                        expect(stats.Loaded).toEqual(1);
+                        expect(stats.Files).toEqual(1);
+                        expect(stats.Thumbnails).toEqual(1);
+                    });
+            });
+
     });
 
-    xit('should load pdf file and NOT create a document if selected so', () => {
+    it('should load pdf file and NOT create a document if selected so', () => {
         LoginHelper.get(browser, browser.baseUrl)
-            .then(e.home.startBtn.click)
-            .then(e.documents.fileHandlerArea.element(by.css(".file-handler-pdf-empty > label")).click)
-            .then(e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click)
-            .then(documents.waitForLoaded(2))
-            .then(message.getStats)
-            .then(stats => {
-                expect(stats.Analyzed).toEqual(0);
-                expect(stats.Loaded).toEqual(1);
-                expect(stats.Files).toEqual(1);
-                expect(stats.Thumbnails).toEqual(0);
+            .then(() => {
+                e.home.startBtn.click();
+                e.documents.fileHandlerArea.element(by.css(".file-handler-pdf-empty > label")).click();
+                e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click();
+                documents.waitForLoaded(2);
+                message.getStats()
+                    .then(stats => {
+                        expect(stats.Analyzed).toEqual(0);
+                        expect(stats.Loaded).toEqual(1);
+                        expect(stats.Files).toEqual(1);
+                        expect(stats.Thumbnails).toEqual(0);
+                    });
+                e.documents.proceedBtn.click();
+                expect(e.overview.tableRows.count()).toEqual(0);
             })
-            .then(e.documents.proceedBtn.click)
-            .then(expect(e.overview.tableRows.count()).toEqual(0))
     });
 
     xit('should handle a broken file without big drama', done => {
         LoginHelper.get(browser, browser.baseUrl)
-            .then(e.home.startBtn.click)
-            .then(() => prepareCilantro.silent(true))
-            .then(() => prepareCilantro.clearSingleFile(browser, browser.baseUrl, 'e2e-testing-broken_file.csv'))
-            .then(e.documents.treeViewItemsTopLevel.get(0).element(by.css('.load')).click)
-            .then(message.waitForMessage)
-            .then(() => expect(message.getClassOfMain()).toBe("danger"))
-            .then(() => prepareCilantro.prepare(browser.baseUrl))
-            .then(() => prepareCilantro.silent(false))
-            .then(done);
+            .then(
+                () => {
+                    e.home.startBtn.click();
+                    prepareCilantro.silent(true);
+                    prepareCilantro.clearSingleFile(browser, browser.baseUrl, 'e2e-testing-broken_file.csv');
+                    e.documents.treeViewItemsTopLevel.get(0).element(by.css('.load')).click();
+                    message.waitForMessage();
+                    expect(message.getClassOfMain()).toBe("info");
+                    prepareCilantro.prepare(browser.baseUrl);
+                    prepareCilantro.silent(false);
+                    done();
+                })
 
     });
 
-    xit('should load all files of a directory', () => {
+    it('should load all files of a directory', () => {
         LoginHelper.get(browser, browser.baseUrl)
-            .then(e.home.startBtn.click)
-            .then(e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click)
-            .then(documents.waitForLoaded(3))
-            .then(message.getStats)
-            .then(stats => {
-                expect(stats.Analyzed).toEqual(3);
-                expect(stats.Loaded).toEqual(3);
-                expect(stats.Files).toEqual(3);
-                expect(stats.Thumbnails).toEqual(3);
+            .then(() => {
+                e.home.startBtn.click();
+                e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click();
+                documents.waitForLoaded(3);
+                message.getStats().then(stats => {
+                    expect(stats.Analyzed).toEqual(3);
+                    expect(stats.Loaded).toEqual(3);
+                    expect(stats.Files).toEqual(3);
+                    expect(stats.Thumbnails).toEqual(3);
+                });
+                e.documents.proceedBtn.click();
+                expect(e.overview.tableRows.count()).toEqual(3);
             })
-            .then(e.documents.proceedBtn.click)
-            .then(expect(e.overview.tableRows.count()).toEqual(3))
     });
 
     it('should open the csv import dialogue after loading a csv file', () => {
