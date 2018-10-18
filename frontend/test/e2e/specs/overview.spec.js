@@ -84,38 +84,33 @@ describe('overview page', () => {
             });
     });
 
-    xit('should add and remove authors', () => {
-        let titleCell;
+    it('should add and remove authors', () => {
         ot.goToOverview(2);
         browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 2000);
-        ot.getCell(0, "Author")
-            .then(cell => {titleCell = cell; return titleCell})
-            .then(cell => cell.all(by.css('.btn')))
-            .then(input => input[1].click())
-            .then(() => {
-                expect(titleCell.all(by.css('input')).count()).toEqual(4);
-                expect(titleCell.element(by.css('.alert.alert-warning')).isDisplayed()).toBeTruthy();
-            })
-            .then(() => titleCell.all(by.css('.btn')))
-            .then(input => input[1].click())
-            .then(input => {
-                expect(titleCell.all(by.css('input')).count()).toEqual(2);
-                expect(titleCell.element(by.css('.alert.alert-warning')).isDisplayed()).toBeFalsy();
-            })
+        ot.getCell(0, "Author").then(cell => {
+            cell.all(by.css('.btn')).get(1).click();
+            browser.wait(EC.visibilityOf(cell.element(by.css('.alert.alert-warning'))), 2000);
+            expect(cell.all(by.css('input')).count()).toEqual(4);
+            cell.all(by.css('.btn')).get(1).click();
+            expect(cell.all(by.css('input')).count()).toEqual(2);
+            expect(cell.element(by.css('.alert.alert-warning')).isDisplayed()).toBeFalsy();
+        });
     });
 
-    xit('should update table row order on click', () => {
+    it('should update table row order on click', () => {
         const titleDoc1 = "PII: 0003-9969(92)90087-O";
         const titleDoc2 = "UNITED";
         ot.goToOverview(3);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 2000);
         expect(ot.getRowTitle(0)).toEqual(titleDoc1);
         expect(ot.getRowTitle(1)).toEqual(titleDoc2);
         ot.getRowButton(0, 'down').click();
         expect(ot.getRowTitle(0)).toEqual(titleDoc2);
         expect(ot.getRowTitle(1)).toEqual(titleDoc1);
     });
-    xit('should open pdf in other tab on btn click', () => { // see #9363
+    it('should open pdf in other tab on btn click', () => { // see #9363
         ot.goToOverview(2);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 2000);
         ot.getRowButton(0, 'open').click();
         a.switchToNewTab().then(() => {
             browser.ignoreSynchronization = true;
@@ -123,11 +118,12 @@ describe('overview page', () => {
             browser.ignoreSynchronization = false;
         });
     });
-    xit('should merge two documents on btn click', () => {
+    it('should merge two documents on btn click', () => {
         const testDocFileName1 = "test-directory/pdf2.pdf";
         const testDocFileName2 = "test-directory/pdf3.pdf";
         ot.goToOverview(3);
 
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 2000);
         e.overview.addBtn.click();
         for(var i=0; i < 3; i++){
             ot.getRowButton(0, 'merge').click();
@@ -160,8 +156,9 @@ describe('overview page', () => {
         expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName1);
     });
 
-    xit('hide and show columns', () => {
+    it('hide and show columns', () => {
         ot.goToOverview(2);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 2000);
         ot.getVisibleColumnNames().then(columns => {
             expect(columns.indexOf("Title")).not.toEqual(-1);
         });
