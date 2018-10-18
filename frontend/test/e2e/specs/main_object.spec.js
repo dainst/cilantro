@@ -14,7 +14,7 @@ describe('mainobject view', () => {
                 expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
             });
         });
-        fit("should load some journal data codes from ojs cilantro plugin api", () => {
+        it("should load some journal data codes from ojs cilantro plugin api", () => {
             LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
             a.clickNavbarButton("articles");
