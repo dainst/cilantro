@@ -101,7 +101,7 @@ describe('overview page', () => {
         const titleDoc1 = "PII: 0003-9969(92)90087-O";
         const titleDoc2 = "UNITED";
         ot.goToOverview(3);
-        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 2000);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 5000);
         expect(ot.getRowTitle(0)).toEqual(titleDoc1);
         expect(ot.getRowTitle(1)).toEqual(titleDoc2);
         ot.getRowButton(0, 'down').click();
