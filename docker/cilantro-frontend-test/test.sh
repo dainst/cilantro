@@ -28,5 +28,7 @@ if [ "$TEST" = "default" ]; then
     cat /salvia/config/settings.json
     npm run server-nosync & xvfb-run -a -e /dev/stdout -s "-screen 0 2920x2580x24" npm run e2e-test
 fi
-
+test_res=$?
 echo "TEST Finished. Look for results at http://localhost:7777/test/e2e/screenshots/my-report.html"
+
+exit ${test_res}
