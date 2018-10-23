@@ -108,21 +108,19 @@ describe('overview page', () => {
         expect(ot.getRowTitle(0)).toEqual(titleDoc2);
         expect(ot.getRowTitle(1)).toEqual(titleDoc1);
     });
-    // xit('should open pdf in other tab on btn click', () => {
-        // @TODO: Fix this test, comment out for travis
-        // This test messes up the staging endpoint and CORS, why?
-        // see #9747
-    //     ot.goToOverview(2);
-    //     browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 5000);
-    //     ot.getRowButton(0, 'open').click();
-    //     a.switchToNewTab().then(() => {
-    //         browser.ignoreSynchronization = true;
-    //         expect(browser.getCurrentUrl()).toMatch(/\/staging\/e2e-testing\.pdf/);
-    //         browser.ignoreSynchronization = false;
-    //     }).then(() => {
-    //         a.closeTab();
-    //     });
-    // });
+    it('should open pdf in other tab on btn click', () => {
+        ot.goToOverview(2);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 5000);
+        ot.getRowButton(0, 'open').click();
+        browser.sleep(1000);
+        a.switchToNewTab().then(() => {
+            browser.ignoreSynchronization = true;
+            expect(browser.driver.getCurrentUrl()).toMatch(/\/staging\/e2e-testing\.pdf/);
+            browser.ignoreSynchronization = false;
+        }).then(() => {
+            a.closeTab();
+        });
+    });
     it('should merge two documents on btn click', () => {
         const testDocFileName1 = "test-directory/pdf2.pdf";
         const testDocFileName2 = "test-directory/pdf3.pdf";
