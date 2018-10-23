@@ -33,6 +33,9 @@ angular
                     };
                     reqestParams.withCredentials = true;
                 }
+                //@TODO Implement a Secure way to allow cache instead. See Task #9775
+                reqestParams.httpHeaders["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                reqestParams.httpHeaders["pragma"] = "no-cache";
 
                 const promise = new Promise((resolve, fail) => {pdfFileManager.pdfjs.getDocument(reqestParams).then(
                     pdf => {
@@ -110,9 +113,9 @@ angular
                 else {
                     flattened.push(file);
                 }
-            })
+            });
             return flattened;
-        }
+        };
 
         function renderThumbnail(page) {
             return new Promise((resolve, reject) => {
