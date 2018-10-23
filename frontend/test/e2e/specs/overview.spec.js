@@ -26,13 +26,16 @@ describe('overview page', () => {
         browser.wait(EC.visibilityOf(e.overview.tableRows.get(0)), 2000);
         ot.getCell(0, "Range of Pages")
             .then(cell => cell.all(by.css('input')))
-            .then(input => input[0].clear().sendKeys("13"))
-            .then(() => ot.compareThumbnailWithImage(0, "doc1_p13.png"))
-            .then(difference => {
-                a.scrollTo(element(by.css('.thumbnail-container ')));
-                expect(difference).toBeLessThan(8000); //Image is off by 1 px it seems ?
-                done();
-            });
+            .then(input => {
+                input[0].clear().sendKeys("13");
+                browser.sleep(1000);
+                ot.compareThumbnailWithImage(0, "doc1_p13.png")
+                    .then(difference => {
+                        a.scrollTo(element(by.css('.thumbnail-container ')));
+                        expect(difference).toBeLessThan(8000); //Image is off by 1 px it seems ?
+                        done();
+                    });
+            })
     });
 
     it('should update thumbnail if document changes', done => {
@@ -43,6 +46,7 @@ describe('overview page', () => {
         e.overview.columnsDropdownBtn.click();
         ot.getCell(0, "Loaded File").then(cell => {
             cell.all(by.css('select option')).get(2).click();
+            browser.sleep(1000);
             ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
                 expect(difference).toBeLessThan(1500);
                 done()
