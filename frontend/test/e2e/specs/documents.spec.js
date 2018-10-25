@@ -56,9 +56,10 @@ describe('documents page', () => {
                         expect(stats.Loaded).toEqual(1);
                         expect(stats.Files).toEqual(1);
                         expect(stats.Thumbnails).toEqual(0);
+                        browser.sleep(1000);
+                        e.documents.proceedBtn.click();
+                        expect(e.overview.tableRows.count()).toEqual(0);
                     });
-                e.documents.proceedBtn.click();
-                expect(e.overview.tableRows.count()).toEqual(0);
             })
     });
 
@@ -68,7 +69,6 @@ describe('documents page', () => {
                 e.home.startBtn.click();
                 e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click();
                 documents.waitForLoaded(3);
-                browser.sleep(1000);
                 message.getStats().then(stats => {
                     expect(stats.Analyzed).toEqual(3);
                     expect(stats.Loaded).toEqual(3);
