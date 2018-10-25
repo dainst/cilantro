@@ -74,6 +74,7 @@ describe('documents page', () => {
                     expect(stats.Files).toEqual(3);
                     expect(stats.Thumbnails).toEqual(3);
                 });
+                browser.sleep(1000);
                 e.documents.proceedBtn.click();
                 expect(e.overview.tableRows.count()).toEqual(3);
             })

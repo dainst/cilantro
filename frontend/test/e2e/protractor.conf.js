@@ -4,7 +4,7 @@ process = require('process');
 const prepareCilantro = require('./util/prepare_cilantro.js');
 const HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
 
-const frontendUrl = "http://localhost:9082";
+const frontendUrl = "http://localhost:7777";
 
 const reporter = new HtmlScreenshotReporter({
     dest: 'test/e2e/screenshots',
