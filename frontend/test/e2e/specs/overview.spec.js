@@ -46,7 +46,7 @@ describe('overview page', () => {
         e.overview.columnsDropdownBtn.click();
         ot.getCell(0, "Loaded File").then(cell => {
             cell.all(by.css('select option')).get(2).click();
-            browser.sleep(1000);
+            browser.sleep(2000);
             ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
                 expect(difference).toBeLessThan(1500);
                 done()
