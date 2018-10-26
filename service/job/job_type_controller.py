@@ -16,6 +16,29 @@ def get_job_types():
     """
     Return a JSON list of available job types and their meta information.
 
+    .. :quickref: Job Type Controller; \
+        Return a JSON list of available job types and their meta information.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      GET /job_types/ HTTP/1.1
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+
+      TODO
+
+    :reqheader Accept: application/json
+
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
+
     :return str: JSON list of objecta containing the type names and
                  the about information from the file
     """
@@ -36,8 +59,31 @@ def get_job_type_detail(job_type):
     """
     Serves the contents of the YAML file for the job type definition.
 
-    :param str job_type: Name of the job
-    :return: YAML file content fo the job type
+    .. :quickref: Job Type Controller; \
+        Serves the contents of the YAML file for the job type definition.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      GET /job_types/<job_type> HTTP/1.1
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+
+      TODO
+
+    :reqheader Accept: application/json
+    :param str job_type: Name of the job type
+
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
+
+    :return: YAML file content of the job type
     """
     try:
         with open(os.path.join(job_types_dir, job_type) + '.yml', 'r') as f:
