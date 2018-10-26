@@ -45,8 +45,7 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinxcontrib.httpdomain',
     'sphinxcontrib.autohttp.flask',
-    'sphinxcontrib.autohttp.flaskqref'
-]
+    'sphinxcontrib.autohttp.flaskqref']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -130,15 +129,14 @@ latex_elements = {
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
-}
+    }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'Cilantro.tex', 'Cilantro Documentation',
-     'DAI WissIT', 'manual'),
-]
+     'DAI WissIT', 'manual')]
 
 
 # -- Options for manual page output ------------------------------------------
@@ -147,8 +145,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'cilantro', 'Cilantro Documentation',
-     [author], 1)
-]
+     [author], 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -159,8 +156,7 @@ man_pages = [
 texinfo_documents = [
     (master_doc, 'Cilantro', 'Cilantro Documentation',
      author, 'Cilantro', 'One line description of project.',
-     'Miscellaneous'),
-]
+     'Miscellaneous')]
 
 
 # -- Extension configuration -------------------------------------------------

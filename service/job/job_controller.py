@@ -27,7 +27,7 @@ job_controller = Blueprint('job', __name__)
 @job_controller.route('/<job_type>', methods=['POST'])
 @auth.login_required
 def job_create(job_type):
-    """
+    r"""
     Create a job of the specified job type.
 
     A task chain is constructed as defined in the corresponding job type
@@ -180,14 +180,14 @@ def job_create(job_type):
         'status': 'Accepted',
         'job_id': job_id,
         'task_ids': task_ids
-    })
+        })
     headers = {'Location': url_for('job.job_status', job_id=task.id)}
     return body, 202, headers
 
 
 @job_controller.route('/<job_id>', methods=['GET'])
 def job_status(job_id):
-    """
+    r"""
     Return the status information for a job.
 
     .. :quickref: Job Controller; \
@@ -214,12 +214,12 @@ def job_status(job_id):
     :>json dict: operation result
     :status 200: OK
 
-    :return: A JSON object containing the status (e.g. "{ 'status': 'PENDING' }"
+    :return: A JSON object containing the status info
     """
     task = celery_app.AsyncResult(job_id)
     response = {
         'status': task.state
-    }
+        }
     if hasattr(task, 'result'):
         response['result'] = task.result
     return jsonify(response)
