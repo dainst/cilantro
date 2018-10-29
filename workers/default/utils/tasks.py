@@ -5,8 +5,9 @@ import shutil
 from celery import group
 
 from utils.celery_client import celery_app
+from utils import job_db
 from service.job.job_config import generate_chain
-from workers.base_task import BaseTask, ObjectTask
+from workers.base_task import BaseTask, ObjectTask, ExceptionHandlingException
 
 
 def _list_files_by_pattern(rep_path, pattern):
@@ -149,6 +150,40 @@ class CleanupWorkdirTask(BaseTask):
 
 
 CleanupWorkdirTask = celery_app.register_task(CleanupWorkdirTask())
+
+
+class FinishJobTask(BaseTask):
+    """Task to set the job state to success after all other tasks have run."""
+
+    name = "finish_job"
+
+    def execute_task(self):
+        job_db.update_job(self.job_id, 'success')
+
+
+FinishJobTask = celery_app.register_task(FinishJobTask())
+
+
+class HandleErrorTask(BaseTask):
+    """
+    Task to handle any errors thrown in other tasks.
+
+    It sets the failed job status in the job database and stops execution of
+    any further tasks.
+    """
+
+    name = "handle_error"
+
+    def execute_task(self):
+        try:
+            job_db.update_job(self.job_id, 'failed', self.params['error'])
+            self.stop_chain_execution()
+        except:  # noqa: bare exception is OK here, because any unhandled
+                # Exception would cause an endless loop
+            raise ExceptionHandlingException()
+
+
+HandleErrorTask = celery_app.register_task(HandleErrorTask())
 
 
 def _recursive_file_list(directory):

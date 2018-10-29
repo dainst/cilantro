@@ -7,6 +7,7 @@ from utils.celery_client import celery_app
 from service.job.job_config import JobConfig, UnknownJobTypeException, \
     RequestParameterException
 from service.user.user_service import auth
+from utils import job_db
 
 
 def get_job_config():
@@ -24,6 +25,18 @@ def get_job_config():
 job_controller = Blueprint('job', __name__)
 
 
+@job_controller.route('/jobs', methods=['GET'])
+@auth.login_required
+def job_list():
+    """
+    List all jobs of the user.
+
+    :return: A JSON object containing the list of job objects
+    """
+    user = auth.username()
+    return jsonify(job_db.get_jobs_for_user(user))
+
+
 @job_controller.route('/<job_type>', methods=['POST'])
 @auth.login_required
 def job_create(job_type):
@@ -37,6 +50,8 @@ def job_create(job_type):
     and must match the parameters defined in the corresponding job config YAML.
 
     Valid user credential have to be given via HTTP basic authentication.
+
+    Also adds the job to the job database.
 
     :param str job_type:
     :return: A JSON object containing the status, the job id and the task ids
@@ -58,6 +73,8 @@ def job_create(job_type):
 
     job_id = task.id
     task_ids = _get_task_ids(task)
+
+    job_db.add_job(job_id, user, job_type, task_ids)
 
     body = jsonify({
         'status': 'Accepted',
