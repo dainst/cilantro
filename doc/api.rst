@@ -4,12 +4,12 @@ API Documentation
 Summary
 -------
 
-.. qrefflask:: run_service:app
+.. qrefflask:: service.run_service:app
   :undoc-static:
 
 
 API Details
 -----------
 
-.. autoflask:: run_service:app
+.. autoflask:: service.run_service:app
 :undoc-static:
