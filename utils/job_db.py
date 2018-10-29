@@ -1,7 +1,7 @@
 import os
 import datetime
 
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING
 
 
 client = MongoClient(os.environ['JOB_DB_URL'], int(os.environ['JOB_DB_PORT']))
@@ -14,8 +14,9 @@ def create_index():
 
     The 2 fields that are used for lookup/update are indexed.
     """
-    db.jobs.create_index([("job_id", pymongo.DESCENDING),
-                          ("user", pymongo.DESCENDING)])
+    db.jobs.create_index([("job_id", DESCENDING),
+                          ("user", DESCENDING)])
+
 
 def get_jobs_for_user(user):
     """
