@@ -3,7 +3,7 @@ import os
 import yaml
 import json
 
-from run_service import app
+from service.run_service import app
 
 config_dir = os.environ['CONFIG_DIR']
 job_types_dir = os.path.join(config_dir, 'job_types')

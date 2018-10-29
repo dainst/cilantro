@@ -5,7 +5,8 @@ name = "pypi"
 
 [packages]
 watchdog = "*"
-celery = {extras = ["redis"]}
+celery = "*"
+redis = "*"
 flask = "*"
 flask-cors = "*"
 Flask-HTTPAuth = "*"

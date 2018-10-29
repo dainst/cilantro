@@ -76,3 +76,4 @@ tasks:
       task: generate_frontmatter
   - publish_to_repository
   - cleanup_workdir
+  - finish_job

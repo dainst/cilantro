@@ -20,6 +20,12 @@ x-env-broker: &env-broker
   BROKER_USER: &broker-user user
   BROKER_PASSWORD: &broker-password password
 
+x-env-jobdb: &env-jobdb
+  JOB_DB_URL: ${JOB_DB_URL}
+  JOB_DB_PORT: ${JOB_DB_PORT}
+  JOB_DB_NAME: ${JOB_DB_NAME}
+
+
 services:
 
   broker:
@@ -36,6 +42,11 @@ services:
     ports:
       - "6379:6379"
 
+  job-db:
+    image: mongo
+    ports:
+      - "27017:27017"
+
   service:
     image: dainst/cilantro-service:latest
     ports:
@@ -44,6 +55,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
+      <<: *env-jobdb
       DB_HOST: "db"
 
   default-worker:
@@ -54,6 +66,7 @@ services:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-ojs
+      <<: *env-jobdb
       DB_HOST: "db"
 
   convert-worker:
@@ -84,6 +97,7 @@ services:
       <<: *env-broker
       <<: *env-ojs
       <<: *test-timeouts
+      <<: *env-jobdb
       DB_HOST: "db"
       RESOURCE_DIR: "test/resources"
 

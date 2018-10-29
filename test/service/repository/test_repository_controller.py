@@ -3,7 +3,7 @@ import shutil
 import unittest
 
 from flask import json
-from run_service import app
+from service.run_service import app
 
 test_object = 'a_book'
 test_file = 'data/pdf/test.pdf'

@@ -4,6 +4,7 @@ import shutil
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask, ObjectTask
 from utils.object import Object
+from utils import job_db
 from workers.convert.convert_pdf import split_merge_pdf
 
 repository_dir = os.environ['REPOSITORY_DIR']
@@ -33,6 +34,7 @@ class CreateObjectTask(ObjectTask):
     name = "create_object"
 
     def process_object(self, obj):
+        job_db.update_job(self.job_id, 'started')
         user = self.get_param('user')
         _initialize_object(obj, self.params, user)
         return {'object_id': self._get_object_id()}

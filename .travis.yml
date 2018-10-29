@@ -19,6 +19,9 @@ env:
     - OJS_SERVER=ojs
     - OJS_PORT=80
     - OJS_AUTH_KEY=YWRtaW4=:cGFzc3dvcmQ=
+    - JOB_DB_URL=job-db
+    - JOB_DB_PORT=27017
+    - JOB_DB_NAME=job_database
 before_install:
   - cp config/users.yml-default config/users.yml
   - sudo apt-get install -y python3-dev libpoppler-cpp-dev

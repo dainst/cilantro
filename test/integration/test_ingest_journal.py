@@ -42,8 +42,8 @@ class IngestJournalTest(JobTypeTest):
         for file in files_generated:
             self.assert_file_in_repository(object_id, file)
 
-        # Prüfen ob die generierte XMLs galley enthält, was für den OJS
-        # Import und frontmatter generation noetig ist
+        # Check if the generated XML contains galley, which is required
+        # for the ojs import and frontmatter generation
         file_path = os.path.join(os.environ['REPOSITORY_DIR'], object_id,
                                  'ojs_import.xml')
         with open(file_path, 'r') as f:

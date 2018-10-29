@@ -6,6 +6,10 @@ services:
     volumes:
       - ./redis-data:/data
 
+  job-db:
+    volumes:
+      - ./mongo-data:/data
+
   service:
     volumes:
       - .:/app

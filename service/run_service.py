@@ -13,8 +13,10 @@ from service.staging.staging_controller import staging_controller
 from service.repository.repository_controller import repository_controller
 from service.user.user_controller import user_controller
 from service.errors import ApiError
+from utils.job_db import create_index
 
 setup_logging()
+create_index()
 
 app = Flask('cilantro')
 CORS(app, supports_credentials=True)

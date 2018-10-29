@@ -16,6 +16,11 @@ x-env-broker: &env-broker
   BROKER_USER: &broker-user user
   BROKER_PASSWORD: &broker-password password
 
+x-env-jobdb: &env-jobdb
+  JOB_DB_URL: ${JOB_DB_URL}
+  JOB_DB_PORT: ${JOB_DB_PORT}
+  JOB_DB_NAME: ${JOB_DB_NAME}
+
 services:
 
   broker:
@@ -30,6 +35,11 @@ services:
     volumes:
       - redis-data:/data
 
+  job-db:
+    image: mongo
+    volumes:
+      - mongo-data:/data
+
   service:
     image: dainst/cilantro-service:latest
     volumes:
@@ -39,6 +49,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
+      <<: *env-jobdb
       DB_HOST: "db"
 
   default-worker:
@@ -52,6 +63,7 @@ services:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-ojs
+      <<: *env-jobdb
       DB_HOST: "db"
 
   convert-worker:
