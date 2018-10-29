@@ -4,6 +4,7 @@ const message = require('../modules/messages');
 const documents = require('../modules/documents');
 const prepareCilantro = require('../util/prepare_cilantro.js');
 const LoginHelper = require("../util/login_helper");
+const EC = protractor.ExpectedConditions;
 
 
 describe('documents page', () => {
@@ -56,7 +57,7 @@ describe('documents page', () => {
                         expect(stats.Loaded).toEqual(1);
                         expect(stats.Files).toEqual(1);
                         expect(stats.Thumbnails).toEqual(0);
-                        browser.sleep(1000);
+                        browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
                         e.documents.proceedBtn.click();
                         expect(e.overview.tableRows.count()).toEqual(0);
                     });
@@ -70,12 +71,14 @@ describe('documents page', () => {
                 e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click();
                 documents.waitForLoaded(3);
                 message.getStats().then(stats => {
+                    browser.sleep(1000);
+                    browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
                     expect(stats.Analyzed).toEqual(3);
                     expect(stats.Loaded).toEqual(3);
                     expect(stats.Files).toEqual(3);
                     expect(stats.Thumbnails).toEqual(3);
 
-                    browser.sleep(1000);
+                    browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
                     e.documents.proceedBtn.click();
                     expect(e.overview.tableRows.count()).toEqual(3);
                 });
