@@ -8,3 +8,6 @@ flask_cors
 wand
 pdftotext
 bcrypt
+sphinxcontrib.httpdomain
+sphinxcontrib.autohttp.flask
+sphinxcontrib.autohttp.flaskqref
