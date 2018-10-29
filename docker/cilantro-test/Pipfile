@@ -6,7 +6,8 @@ name = "pypi"
 [packages]
 flask = "*"
 pyyaml = "*"
-celery = {extras = ["redis"]}
+celery = "*"
+redis = "*"
 pillow = "*"
 docker-compose = "*"
 PyPDF2 = "*"

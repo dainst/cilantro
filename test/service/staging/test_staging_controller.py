@@ -4,7 +4,7 @@ import shutil
 import unittest
 from pathlib import Path
 
-from run_service import app
+from service.run_service import app
 from test.service.user.user_utils import get_auth_header, test_user
 
 parent_folder = 'files'
@@ -102,7 +102,7 @@ class StagingControllerTest(unittest.TestCase):
         self.assertEqual(response_json['error']['code'], "file_not_found")
 
     def test_delete_file(self):
-        os.makedirs(os.path.join(self.staging_dir, test_user))
+        os.makedirs(os.path.join(self.staging_dir, test_user), exist_ok=True)
         open(os.path.join(self.staging_dir, test_user, 'test_file'), 'w')\
             .close()
         response = self.client.delete(f'/staging/test_file',

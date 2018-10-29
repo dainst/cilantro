@@ -5,13 +5,15 @@ name = "pypi"
 
 [packages]
 watchdog = "*"
-celery = {extras = ["redis"]}
+celery = "*"
+redis = "*"
 jinja2 = "*"
 PyPDF2 = "*"
 pdftotext = "*"
 lxml = "*"
-Wand="*"
+Wand ="*"
 pillow = "*"
+pymongo = "*"
 
 [dev-packages]
 
