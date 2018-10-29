@@ -10,7 +10,6 @@ RUN apk add --update python-dev py-pip gcc libffi libffi-dev musl-dev
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 RUN set -ex && mkdir /app
 
-COPY ./run_service.py /app/
 COPY ./utils /app/utils
 COPY ./service /app/service
 WORKDIR /app
@@ -23,6 +22,6 @@ RUN set -ex && pipenv install pip==18.0 && pipenv install --deploy --system
 
 EXPOSE 5000
 
-ENV FLASK_APP run_service.py
+ENV FLASK_APP service/run_service.py
 
 ENTRYPOINT sh /entrypoint.sh

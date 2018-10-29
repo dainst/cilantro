@@ -2,7 +2,7 @@ import unittest
 
 from unittest.mock import patch
 
-from run_service import app
+from service.run_service import app
 from test.service.user.user_utils import get_auth_header
 
 

@@ -8,7 +8,7 @@ from json import JSONDecodeError
 from pathlib import Path
 
 from flask import json
-from run_service import app
+from service.run_service import app
 from test.service.user.user_utils import get_auth_header, test_user
 
 log = logging.getLogger(__name__)
