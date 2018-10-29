@@ -4,6 +4,7 @@ const message = require('../modules/messages');
 const mo = require('../modules/mainobject');
 const so = require('../modules/subobject');
 const LoginHelper = require("../util/login_helper");
+const EC = protractor.ExpectedConditions;
 
 describe('mainobject view', () => {
     describe('editables', () => {
@@ -18,6 +19,7 @@ describe('mainobject view', () => {
             LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
             a.clickNavbarButton("articles");
+            browser.wait(EC.visibilityOf(e.subobject.add), 2000);
             e.subobject.add.click();
             so.getRowContent("Language").then(cell => {
                 // without selected a journal we get default values
