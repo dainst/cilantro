@@ -7,7 +7,7 @@
   },
   "description": "",
   "scripts": {
-    "e2e-test": "protractor test/e2e/protractor.conf.js",
+    "e2e-test": "rimraf test/e2e/screenshots/*.png & protractor test/e2e/protractor.conf.js",
     "e2e-mock-backend": "cd test/e2e/mock-backend && node backend.js",
     "e2e-server": "gulp server --settings=test --sync=false",
     "e2e-mock": "npm run e2e-mock-backend & npm run e2e-server & npm run e2e-test",
@@ -25,7 +25,8 @@
     "ng-file-upload": "12.2.13",
     "npm": "^6.4.1",
     "pdfjs-dist": "2.0.489",
-    "requirejs": "2.3.5"
+    "requirejs": "2.3.5",
+    "rimraf": "^2.6.2"
   },
   "devDependencies": {
     "ajv": "6.5.1",
