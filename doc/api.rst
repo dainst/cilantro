@@ -12,4 +12,4 @@ API Details
 -----------
 
 .. autoflask:: service.run_service:app
-:undoc-static:
+  :undoc-static:
