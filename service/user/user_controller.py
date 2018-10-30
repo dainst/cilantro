@@ -22,13 +22,28 @@ def get_user(user_name):
 
       GET /user/<username> HTTP/1.1
 
-    **Example response**:
+    **Example response SUCCESS**:
 
     .. sourcecode:: http
 
-      HTTP/1.1 200 OK
+        HTTP/1.1 200 OK
 
-      TODO
+        {
+            "success": true,
+            "user": {
+                "user_name": "test_user"
+            }
+        }
+
+    **Example response ERROR**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 403 FORBIDDEN
+
+        {
+            "success": false
+        }
 
     :reqheader Accept: application/json
     :param str user_name: name of the user

@@ -48,13 +48,29 @@ def delete_from_staging(path):
 
       DELETE /staging/<path> HTTP/1.1
 
-    **Example response**:
+    **Example response SUCCESS**:
 
     .. sourcecode:: http
 
-      HTTP/1.1 200 OK
+        HTTP/1.1 200 OK
 
-      TODO
+            {
+                "success": true
+            }
+
+    **Example response ERROR**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 404 NOT FOUND
+
+            {
+                "error": {
+                    "code": "file_not_found",
+                    "message": "No resource was found under the path <path>"
+                },
+                "success": false
+            }
 
     :reqheader Accept: application/json
     :resheader Content-Type: application/json
@@ -93,9 +109,14 @@ def list_staging():
 
     .. sourcecode:: http
 
-      HTTP/1.1 200 OK
+        HTTP/1.1 200 OK
 
-      TODO
+        [
+            {
+                "name": "test.pdf",
+                "type": "file"
+            }
+        ]
 
     :reqheader Accept: application/json
 
@@ -132,13 +153,19 @@ def get_path(path):
 
       GET /staging/<path> HTTP/1.1
 
-    **Example response**:
+    **Example response ERROR**:
 
     .. sourcecode:: http
 
-      HTTP/1.1 200 OK
+        HTTP/1.1 404 NOT FOUND
 
-      TODO
+        {
+            "error": {
+                "code": "file_not_found",
+                "message": "No resource was found under the path test"
+            },
+            "success": false
+        }
 
     :reqheader Accept: application/json
     :param str path: path to file
@@ -179,23 +206,33 @@ def upload_to_staging():
 
       POST /staging/ HTTP/1.1
 
-    **Example response**:
+    **Example response SUCCESS**:
 
     .. sourcecode:: http
 
-      HTTP/1.1 200 OK
+        HTTP/1.1 200 OK
 
-      {
+        {
           "result": {
-              <uploaded_file_name>: {
-                  "success": <boolean>,
-                  "error": {
-                      "code": <string>,
-                      "message": <string>
-                  }
+              "<filename>": {
+                  "success": true
               }
           }
-      }
+        }
+
+    **Example response ERROR**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 400 BAD REQUEST
+
+        {
+          "error": {
+              "code": "no_files_provided",
+              "message": "The request did not contain any files"
+          },
+          "success": false
+        }
 
     :reqheader Accept: multipart/form-data
     :formparam file: file to be uploaded
