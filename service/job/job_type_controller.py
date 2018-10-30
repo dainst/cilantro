@@ -93,7 +93,7 @@ def get_job_type_detail(job_type):
     Serve the contents of the YAML file for the job type definition.
 
     .. :quickref: Job Type Controller; \
-        Serves the contents of the YAML file for the job type definition.
+    Serves the contents of the YAML file for the job type definition.
 
     **Example request**:
 
@@ -256,5 +256,4 @@ def get_job_type_detail(job_type):
         raise ApiError(
             "job_type_not_found",
             f"No definition for given job type '{job_type}' found",
-            404
-            )
+            404)

@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, jsonify, send_file, abort
+from flask import Blueprint, jsonify, send_file
 
 from service.errors import ApiError
 
