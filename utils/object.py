@@ -3,7 +3,7 @@ from datetime import datetime
 from io import BytesIO
 import json
 from pathlib import Path
-from typing import List, Iterator, TextIO
+from typing import List, Iterator
 from distutils.dir_util import copy_tree
 
 from utils.serialization import SerializableClass
