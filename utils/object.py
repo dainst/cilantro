@@ -15,9 +15,7 @@ class PathDoesNotExist(Exception):
 
 
 class PagesInfo(SerializableClass):
-    """
-    Printing and visualisation information for the document.
-    """
+    """Printing and visualisation information for the document."""
 
     showndesc: str
     startPrint: str
@@ -25,18 +23,14 @@ class PagesInfo(SerializableClass):
 
 
 class Actor(SerializableClass):
-    """
-    Personal and legal entities in cilantro metadata.
-    """
+    """Personal and legal entities in cilantro metadata."""
 
     firstname: str
     lastname: str
 
 
 class ObjectMetadata(SerializableClass):
-    """
-    Basic metadata that can be recorded for every cilantro object
-    """
+    """Basic metadata that can be recorded for every cilantro object."""
 
     id: str
     title: str
@@ -93,13 +87,15 @@ class Object:
         if not os.path.exists(self.path):
             os.makedirs(self.path)
         if os.path.exists(os.path.join(self.path, 'meta.json')):
-            with open(os.path.join(self.path, 'meta.json'), 'r', encoding="utf-8") as data:
+            with open(os.path.join(self.path, 'meta.json'), 'r',
+                      encoding="utf-8") as data:
                 try:
                     self.metadata = ObjectMetadata.from_dict(json.load(data))
                 except ValueError:
                     self.metadata = ObjectMetadata()
         else:
-            open(os.path.join(self.path, 'meta.json'), 'a', encoding="utf-8").close()
+            open(os.path.join(self.path, 'meta.json'), 'a', encoding="utf-8")\
+                .close()
             self.metadata = ObjectMetadata()
 
     def write(self):
@@ -108,7 +104,8 @@ class Object:
 
         :return: None
         """
-        with open(os.path.join(self.path, 'meta.json'), 'w', encoding="utf-8") as stream:
+        with open(os.path.join(self.path, 'meta.json'), 'w',
+                  encoding="utf-8") as stream:
             stream.write(self.metadata.to_json())
 
     def add_stream(self, file_name: str, representation: str, file: BytesIO):
@@ -124,7 +121,8 @@ class Object:
         """
         if not os.path.exists(self.get_representation_dir(representation)):
             os.makedirs(self.get_representation_dir(representation))
-        with open(os.path.join(self.get_representation_dir(representation), file_name), 'wb+') as stream:
+        with open(os.path.join(self.get_representation_dir(representation),
+                               file_name), 'wb+') as stream:
             stream.write(file.read())
 
     def add_file(self, representation: str, src: str):
