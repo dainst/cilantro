@@ -29,10 +29,7 @@ def generate_chain(tasks_def, params=None):
     """
     chain = _create_signature(tasks_def[0], params)
     for task_def in tasks_def[1:]:
-        signature = _create_signature(
-            task_def,
-            params
-        )
+        signature = _create_signature(task_def, params)
         if signature:
             chain |= signature
     return chain
@@ -54,8 +51,7 @@ def _read_job_config_file(file_name):
         return yaml.load(file)
     except Exception as err:
         raise ConfigParseException(
-            f"Error while reading job type definition from {file_name}: {err}"
-        )
+            f"Error while reading job type definition from {file_name}: {err}")
     finally:
         file.close()
 
@@ -63,12 +59,10 @@ def _read_job_config_file(file_name):
 def _validate_job_config(job_config, job_type):
     if 'tasks' not in job_config:
         raise ConfigParseException(
-            f"Missing attribute 'tasks' in job type {job_type}"
-        )
+            f"Missing attribute 'tasks' in job type {job_type}")
     if not isinstance(job_config['tasks'], list):
         raise ConfigParseException(
-            f"Attribute 'tasks' is no list in job type {job_type}"
-        )
+            f"Attribute 'tasks' is no list in job type {job_type}")
 
 
 def _expand_tasks_def(tasks_def):
@@ -105,14 +99,14 @@ def _expand_task_def(task_def):
         return {
             'type': 'task',
             'name': task_def
-        }
+            }
     elif 'task' in task_def:
         task_name = task_def.pop('task')
         return {
             'type': 'task',
             'name': task_name,
             'params': task_def
-        }
+            }
     elif 'list_files' in task_def:
         expanded_task = {
             'type': 'list_files',
@@ -120,7 +114,7 @@ def _expand_task_def(task_def):
             'representation': task_def['list_files'],
             'pattern': ".*",
             'foreach': _expand_tasks_def(task_def['foreach'])
-        }
+            }
         if 'pattern' in task_def:
             expanded_task['pattern'] = task_def['pattern']
         return expanded_task
@@ -129,14 +123,14 @@ def _expand_task_def(task_def):
             'type': 'list_parts',
             'name': 'list_parts',
             'foreach': _expand_tasks_def(task_def['foreach'])
-        }
+            }
     elif 'if' in task_def:
         expanded_task = {
             'type': 'if',
             'name': 'if',
             'condition': task_def['if'],
             'do': _expand_tasks_def(task_def['do'])
-        }
+            }
         if 'else' in task_def:
             expanded_task['else'] = _expand_tasks_def(task_def['else'])
         return expanded_task
@@ -206,8 +200,7 @@ def _init_default_params(params):
         else:
             raise ConfigParseException(
                 f"Parameter type '{param_type}' for "
-                f"parameter '{param_name}' is invalid!"
-            )
+                f"parameter '{param_name}' is invalid!")
     return default_params
 
 
@@ -232,12 +225,10 @@ def _validate_request_params(default_params, request_params):
                     raise RequestParameterException(
                         f"Wrong parameter type: '{request_param}' is expected "
                         f"to be '{expected_type}' but was "
-                        f"'{type(request_param_value)}'"
-                    )
+                        f"'{type(request_param_value)}'")
             else:
                 raise RequestParameterException(
-                    f"Unknown request parameter '{request_param}'!"
-                )
+                    f"Unknown request parameter '{request_param}'!")
     return params
 
 
@@ -260,9 +251,7 @@ class JobConfig:
     """
 
     def __init__(self, _config_dir=None):
-        """
-        Initialize the config and triggers the parsing of the YAML files.
-        """
+        """Initialize the config and triggers the parsing of the YAML files."""
         self.logger = logging.getLogger(__name__)
         if _config_dir:
             self._config_dir = _config_dir
@@ -306,5 +295,5 @@ class JobConfig:
             self.job_types[job_type] = {
                 'params': default_params,
                 'tasks': expanded_tasks
-            }
+                }
         self.logger.debug(f"job types: {self.job_types}")

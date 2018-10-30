@@ -80,7 +80,7 @@ def job_create(job_type):
         'status': 'Accepted',
         'job_id': job_id,
         'task_ids': task_ids
-    })
+        })
     headers = {'Location': url_for('job.job_status', job_id=task.id)}
     return body, 202, headers
 
@@ -91,12 +91,12 @@ def job_status(job_id):
     Return the status information for a job.
 
     :param str job_id:
-    :return: A JSON object containing the status (e.g. "{ 'status': 'PENDING' }"
+    :return: A JSON object containing the status"
     """
     task = celery_app.AsyncResult(job_id)
     response = {
         'status': task.state
-    }
+        }
     if hasattr(task, 'result'):
         response['result'] = task.result
     return jsonify(response)

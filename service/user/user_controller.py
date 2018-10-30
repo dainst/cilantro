@@ -10,8 +10,8 @@ def get_user(user_name):
     """
     Retrieve the user information for the given user name.
 
-    This endpoint can also be used implement authentication since only logged in
-    users are allowed to retrieve their user info.
+    This endpoint can also be used implement authentication since only logged
+    in users are allowed to retrieve their user info.
 
     :return: JSON object representing the user
     """

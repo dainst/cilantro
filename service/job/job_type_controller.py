@@ -34,7 +34,7 @@ def get_job_types():
 @job_type_controller.route('<job_type>', methods=['GET'])
 def get_job_type_detail(job_type):
     """
-    Serves the contents of the YAML file for the job type definition.
+    Serve the contents of the YAML file for the job type definition.
 
     :param str job_type: Name of the job
     :return: YAML file content fo the job type
@@ -46,5 +46,4 @@ def get_job_type_detail(job_type):
         raise ApiError(
             "job_type_not_found",
             f"No definition for given job type '{job_type}' found",
-            404
-        )
+            404)

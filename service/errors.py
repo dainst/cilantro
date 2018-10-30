@@ -15,5 +15,5 @@ class ApiError(Exception):
         dic['error'] = {
             "code": self.error_code,
             "message": self.message
-        }
+            }
         return dic
