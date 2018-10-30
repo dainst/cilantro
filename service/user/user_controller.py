@@ -7,7 +7,7 @@ user_controller = Blueprint('user', __name__)
 @user_controller.route('/<user_name>', methods=['GET'])
 @auth.login_required
 def get_user(user_name):
-    r"""
+    """
     Retrieve the user information for the given user name.
 
     This endpoint can also be used implement authentication since only logged

@@ -40,7 +40,7 @@ def job_list():
 @job_controller.route('/<job_type>', methods=['POST'])
 @auth.login_required
 def job_create(job_type):
-    r"""
+    """
     Create a job of the specified job type.
 
     A task chain is constructed as defined in the corresponding job type
@@ -204,7 +204,7 @@ def job_create(job_type):
 
 @job_controller.route('/<job_id>', methods=['GET'])
 def job_status(job_id):
-    r"""
+    """
     Return the status information for a job.
 
     .. :quickref: Job Controller; \

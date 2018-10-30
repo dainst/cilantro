@@ -36,7 +36,7 @@ def _list_dir(dir_path):
                           strict_slashes=False)
 @auth.login_required
 def delete_from_staging(path):
-    r"""
+    """
     Delete file or directory from the staging area.
 
     .. :quickref: Staging Controller; \
@@ -75,7 +75,7 @@ def delete_from_staging(path):
 @staging_controller.route('', methods=['GET'], strict_slashes=False)
 @auth.login_required
 def list_staging():
-    r"""
+    """
     List files and directories in the staging area.
 
     Returns a complete recursive folder hierarchy.
@@ -117,7 +117,7 @@ def list_staging():
                           strict_slashes=False)
 @auth.login_required
 def get_path(path):
-    r"""
+    """
     Retrieve a file or folder content from the staging folder.
 
     Returns A JSON array containing all file names, if it's a directory or
@@ -161,7 +161,7 @@ def get_path(path):
 @staging_controller.route('', methods=['POST'], strict_slashes=False)
 @auth.login_required
 def upload_to_staging():
-    r"""
+    """
     Upload files to the staging area.
 
     If the names of the given files contain folders, these are created in the
