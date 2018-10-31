@@ -31,11 +31,8 @@ WORKDIR $TREETAGGER_ROOT
 
 RUN wget http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tree-tagger-linux-3.2.1.tar.gz
 RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/tagger-scripts.tar.gz
-RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/german-par-linux-3.2-utf8.bin.gz
-RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/english-par-linux-3.2-utf8.bin.gz
-RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/italian-par-linux-3.2-utf8.bin.gz
-RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/spanish-par-linux-3.2-utf8.bin.gz
-RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/french-par-linux-3.2-utf8.bin.gz
+RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/german.par.gz
+RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/english.par.gz
 RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/install-tagger.sh
 RUN sh install-tagger.sh
 
