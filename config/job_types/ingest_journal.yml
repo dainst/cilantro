@@ -9,6 +9,7 @@ params:
   metadata: dict
   nlp_params: dict
   do_ocr: boolean
+  ocr_lang: string
   ojs_metadata: dict
 
 tasks:

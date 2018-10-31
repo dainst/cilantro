@@ -154,7 +154,8 @@ class TifToTxtTask(FileTask):
     name = "convert.tif_to_txt"
 
     def process_file(self, file, target_dir):
-        tif_to_txt(file, _get_target_file(file, target_dir, 'txt'))
+        lang = self.get_param("ocr_lang")
+        tif_to_txt(file, _get_target_file(file, target_dir, 'txt'), lang)
 
 
 JpgToPdfTask = celery_app.register_task(JpgToPdfTask())
