@@ -8,5 +8,6 @@ flask_cors
 wand
 pdftotext
 bcrypt
+pymongo
 sphinxcontrib.httpdomain
 flask_httpauth
