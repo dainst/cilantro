@@ -12,7 +12,15 @@ Login to dockerhub:
     docker login
 
 ### Instructions
+Images can be built by
 
+    docker-compose build <image-name>
+
+If `image-name` is blank it builds all images. 
+
+Alternative:
+
+This includes the push to dockerhub.
 To build a new image or to rebuild it run the build script
 
     ./build.sh <image-name> <tag>
