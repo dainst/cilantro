@@ -1,7 +1,7 @@
 import os
 
 from utils.celery_client import celery_app
-from workers.base_task import BaseTask, FileTask, ObjectTask
+from workers.base_task import BaseTask, FileTask
 from utils.object import Object
 from workers.convert.convert_image import convert_tif_to_jpg, \
     convert_jpg_to_pdf, tif_to_txt
@@ -15,17 +15,6 @@ def _extract_basename(files):
     return files
 
 
-def _split_pdf_for_object(obj, files):
-    pdf_files = []
-    for file in files:
-        suffix = (file['file']).split('.')[-1]
-        if suffix == 'pdf':
-            pdf_files.append(file)
-    if len(pdf_files) > 0:
-        rep_dir = obj.get_representation_dir(Object.INITIAL_REPRESENTATION)
-        split_merge_pdf(pdf_files, rep_dir)
-
-
 def _list_files(directory, extension):
     return (directory + "/" + f for f in os.listdir(directory)
             if f.endswith(extension))
@@ -36,40 +25,6 @@ def _get_target_file(file, target_dir, target_extension):
     new_name = os.path.basename(file).replace(extension,
                                               f".{target_extension}")
     return os.path.join(target_dir, new_name)
-
-
-class SplitPdfTask(ObjectTask):
-    """
-    Split multiple pdfs from the working dir.
-
-    TaskParams:
-    -list files_to_split: list of the files as dictionnaries
-        {'file': file_name, 'range': [start, end]}
-
-    Preconditions:
-    -files from files_to_split in the working dir.
-
-    Creates:
-    -for each article:
-        -<file_name>.<article_no>.pdf in the working dir.
-    """
-
-    name = "convert.split_pdf"
-
-    def process_object(self, obj):
-        rel_files = _extract_basename(self.get_param('files'))
-        _split_pdf_for_object(obj, rel_files)
-        parts = self.get_param('parts')
-        for part in parts:
-            self._execute_for_part(obj.get_part(parts.index(part) + 1), part)
-
-    def _execute_for_part(self, obj, part):
-        _split_pdf_for_object(obj, _extract_basename(part['files']))
-        if 'parts' in part:
-            parts = part['parts']
-            for subpart in parts:
-                self._execute_for_part(obj.get_part(parts.index(subpart) + 1),
-                                       subpart)
 
 
 class MergeConvertedPdfTask(BaseTask):

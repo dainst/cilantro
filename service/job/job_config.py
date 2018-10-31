@@ -39,8 +39,8 @@ def _extract_job_type(file_name):
     """
     Strip the extension from the file_name.
 
-    :param str file_name:
-    :return str:
+    :param str file_name: original file name
+    :return str: basename of the filename
     """
     return os.path.splitext(os.path.basename(file_name))[0]
 
