@@ -55,13 +55,13 @@ class Object:
     A cilantro object is a folder that only contains the following files and
     subfolders:
     * a file `meta.json` that contains the metadata for this object
-    * additional metadata files that describe the object in different formats
+    * additional metadata files that describe the object in different formats\
       (e.g. mets.xml, tei.xml, marc.xml, ...)
-    * a folder `data` that contains representations of the complete object
-      in different binary formats, one representation corresponds to a
+    * a folder `data` that contains representations of the complete object\
+      in different binary formats, one representation corresponds to a\
       subfolder that can hold one or more files in the same format
-    * a folder `parts` that contains any number of subfolders that follow the
-      naming patterns `part_XXXX` which in turn are cilantro objects that
+    * a folder `parts` that contains any number of subfolders that follow the\
+      naming patterns `part_XXXX` which in turn are cilantro objects that\
       conform to this definition
 
     This class offers a single interface to the underlying structure and

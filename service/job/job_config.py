@@ -240,11 +240,11 @@ class JobConfig:
     config directory.
 
     Parameters for tasks can be set in three different places:
-    1. Default values are generated based on the data type configured in the
+    1. Default values are generated based on the data type configured in the\
        params section of the job config YAML.
-    2. Task specific parameters can be set in the tasks section of the job
+    2. Task specific parameters can be set in the tasks section of the job\
        config.
-    3. Additional parameters that override the values derived from the job
+    3. Additional parameters that override the values derived from the job\
        config can be set when creating a job chain.
 
     :param str _config_dir: path to the configuration directory.
