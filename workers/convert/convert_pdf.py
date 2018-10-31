@@ -24,7 +24,8 @@ def convert_pdf_to_tif(source_file, output_dir):
             with WandImage(img.sequence[i]) as page_img:
                 page_img.type = 'truecolor'
                 name = os.path.splitext(os.path.basename(source_file))[0]
-                page_img.save(filename=output_dir + f"/{name}_{i}.tif")
+
+                page_img.save(filename=os.path.join(output_dir, f"{name}_{'%04i'% i}.tif"))
 
 
 def convert_pdf_to_txt(source_file, output_dir):
@@ -43,11 +44,9 @@ def convert_pdf_to_txt(source_file, output_dir):
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
             name = os.path.splitext(os.path.basename(source_file))[0]
-            output = open(os.path.join(output_dir, f'{name}_{index}.txt'),
-                          'wb')
-            output.write(page.encode('utf-8'))
-            output.close()
-            index = index + 1
+            with open(os.path.join(output_dir, f'{name}_{"%04i"% index}.txt'), 'wb') as output:
+                output.write(page.encode('utf-8'))
+                index = index + 1
 
 
 def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
