@@ -9,3 +9,4 @@ wand
 pdftotext
 bcrypt
 sphinxcontrib.httpdomain
+flask_httpauth
