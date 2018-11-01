@@ -39,6 +39,41 @@ def delete_from_staging(path):
     """
     Delete file or directory from the staging area.
 
+    .. :quickref: Staging Controller; \
+        Delete file or directory from the staging area.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      DELETE /staging/<path> HTTP/1.1
+
+    **Example response SUCCESS**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+            {
+                "success": true
+            }
+
+    **Example response ERROR**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 404 NOT FOUND
+
+            {
+                "error": {
+                    "code": "file_not_found",
+                    "message": "No resource was found under the path <path>"
+                },
+                "success": false
+            }
+
+    :reqheader Accept: application/json
+    :resheader Content-Type: application/json
     :param str path: path to file or directory to be deleted
     """
     try:
@@ -61,12 +96,39 @@ def list_staging():
 
     Returns a complete recursive folder hierarchy.
 
+    .. :quickref: Staging Controller; \
+        List files and directories in the staging area.
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      GET /staging/ HTTP/1.1
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+        [
+            {
+                "name": "test.pdf",
+                "type": "file"
+            }
+        ]
+
+    :reqheader Accept: application/json
+
+    :resheader Content-Type: application/json
+    :status 200: OK
+
     :return: JSON array containing objects for files and folders
     """
     try:
         tree = _list_dir(os.path.join(staging_dir, auth.username()))
     except FileNotFoundError:
-        log.warn(f"List staging called on not-existing folder: "\
+        log.warn(f"List staging called on not-existing folder: "
                  f"{os.path.join(staging_dir, auth.username())}")
         tree = []
     return jsonify(tree)
@@ -79,13 +141,39 @@ def get_path(path):
     """
     Retrieve a file or folder content from the staging folder.
 
-    Returns HTTP status code 404 if file was not found.
+    Returns A JSON array containing all file names, if it's a directory or
+    the file's content if it's a file.
 
-    Returns A JSON array containing all file names, if it's a directory.
+    .. :quickref: Staging Controller; \
+        Retrieve a file or folder content from the staging folder.
 
-    Returns the file's content if it's a file.
+    **Example request**:
 
+    .. sourcecode:: http
+
+      GET /staging/<path> HTTP/1.1
+
+    **Example response ERROR**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 404 NOT FOUND
+
+        {
+            "error": {
+                "code": "file_not_found",
+                "message": "No resource was found under the path test"
+            },
+            "success": false
+        }
+
+    :reqheader Accept: application/json
     :param str path: path to file
+
+    :resheader Content-Type: application/json
+    :status 200: array containing all file names, if it's a directory or the \
+                 file's content if it's a file
+    :status 404: file was not found
     """
     abs_path = os.path.join(staging_dir, auth.username(), path)
     if os.path.isdir(abs_path):
@@ -109,24 +197,51 @@ def upload_to_staging():
     The upload endpoint is able to handle single and multiple files provided
     under any key.
 
-    Returns HTTP status code 415 if one of the files' extension is not allowed.
+    .. :quickref: Staging Controller; \
+        Upload files to the staging area.
 
-    Returns HTTP status code 400 if no files were provided.
-    Returns HTTP status code 200 otherwise.
+    **Example request**:
 
-    Format of the returned JSON object:
+    .. sourcecode:: http
+
+      POST /staging/ HTTP/1.1
+
+    **Example response SUCCESS**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
 
         {
-            "result": {
-                <uploaded_file_name>: {
-                    "success": <boolean>,
-                    "error": {
-                        "code": <string>,
-                        "message": <string>
-                    }
-                }
-            }
+          "result": {
+              "<filename>": {
+                  "success": true
+              }
+          }
         }
+
+    **Example response ERROR**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 400 BAD REQUEST
+
+        {
+          "error": {
+              "code": "no_files_provided",
+              "message": "The request did not contain any files"
+          },
+          "success": false
+        }
+
+    :reqheader Accept: multipart/form-data
+    :formparam file: file to be uploaded
+
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
+    :status 400: no files were provided
+    :status 415: one of the files' extension is not allowed
 
     :return: a JSON object
     """

@@ -18,3 +18,10 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+API Documentation
+=================
+
+.. toctree::
+    api.rst
