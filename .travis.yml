@@ -34,11 +34,12 @@ before_install:
   - mkdir data/staging
   - mkdir data/repository
   - mkdir data/workspace
-  - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+  - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d > docker.log
 script:
   - bash test/exec_docker_test.sh
   - bash frontend/test/exec_frontend_test.sh
   - bash doc/build-doc.sh
+  - cat docker.log
 deploy:
   provider: pages
   skip_cleanup: true
