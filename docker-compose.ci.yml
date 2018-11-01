@@ -44,3 +44,15 @@ services:
     volumes:
       - ./test/resources:/test/resources
       - ./data:/data
+
+  salvia:
+    volumes:
+    - .:/app
+    - ./data:/data
+    - ./config:/config
+
+  frontend-test:
+    volumes:
+    - .:/app
+    - ./data:/data
+    - ./config:/config
