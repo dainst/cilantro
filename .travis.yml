@@ -36,7 +36,7 @@ before_install:
   - mkdir data/workspace
   - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
 script:
-- bash sleep 20 && frontend/test/exec_frontend_test.sh
+- sleep 20 && bash frontend/test/exec_frontend_test.sh
   - bash test/exec_docker_test.sh
   - bash doc/build-doc.sh
   - docker-compose logs
