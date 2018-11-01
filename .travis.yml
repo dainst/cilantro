@@ -39,6 +39,7 @@ script:
   - bash test/exec_docker_test.sh
   - bash frontend/test/exec_frontend_test.sh
   - bash doc/build-doc.sh
+  - docker-compose logs
 deploy:
   provider: pages
   skip_cleanup: true
