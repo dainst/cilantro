@@ -18,7 +18,7 @@ describe('documents page', () => {
             })
     });
 
-    fit('should toggle sub-directories', () => {
+    it('should toggle sub-directories', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
                 e.home.startBtn.click();
@@ -27,7 +27,7 @@ describe('documents page', () => {
             })
     });
 
-    fit('should load pdf file and create a document if selected so', () => {
+    it('should load pdf file and create a document if selected so', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
                 e.home.startBtn.click();
