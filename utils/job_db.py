@@ -31,14 +31,14 @@ def get_jobs_for_user(user):
     return (job_list)
 
 
-def get_job_by_id(id):
+def get_job_by_id(job_id):
     """
     Find job with the given job_id.
 
     :param str id: job-id to be queried
     :return: job object
     """
-    job = db.jobs.find_one({"job_id": id})
+    job = db.jobs.find_one({"job_id": job_id})
     return job
 
 
