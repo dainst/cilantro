@@ -79,7 +79,7 @@ describe('documents page', () => {
 
                     browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
                     e.documents.proceedBtn.click();
-                    browser.wait(EC.visibilityOf(e.overview.tableRows), 2000);
+                    browser.wait(EC.visibilityOf(e.overview.tableRows.first()), 2000);
                     expect(e.overview.tableRows.count()).toEqual(3);
                 });
             })
