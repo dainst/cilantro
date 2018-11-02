@@ -39,9 +39,6 @@ describe('overview page', () => {
     });
 
     it('should update thumbnail if document changes', done => {
-    // @TODO cell.all(by.css('select option')).get(2) is not always the same option.
-    //       Might be which file was loaded first.
-
         ot.goToOverview(3);
         browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 5000);
         e.overview.columnsDropdownBtn.click();
@@ -116,6 +113,7 @@ describe('overview page', () => {
         expect(ot.getRowTitle(0)).toEqual(titleDoc2);
         expect(ot.getRowTitle(1)).toEqual(titleDoc1);
     });
+
     // it('should open pdf in other tab on btn click', () => {
     // @TODO Travis crashes on this test.
     //     ot.goToOverview(2);
@@ -131,44 +129,44 @@ describe('overview page', () => {
     //         a.closeTab();
     //     });
     // });
-    // it('should merge two documents on btn click', () => {
-    // TODO: Fix this test, depends on machine (travis, different locals if it passes or fails
-    //     const testDocFileName1 = "test-directory/pdf2.pdf";
-    //     const testDocFileName2 = "test-directory/pdf3.pdf";
-    //     ot.goToOverview(3);
-    //
-    //     browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 2000);
-    //     e.overview.addBtn.click();
-    //     for(var i=0; i < 3; i++){
-    //         ot.getRowButton(0, 'merge').click();
-    //         ot.getRowButton(1, 'merge').click();
-    //         browser.switchTo().alert().accept();
-    //         expect(e.overview.tableRows.count()).toEqual(3-i);
-    //     }
-    //
-    //     e.overview.columnsDropdownBtn.click();
-    //     e.overview.columnsDropdown.element(by.cssContainingText("label", "Attached Files/Pages")).click();
-    //     e.overview.columnsDropdownBtn.click();
-    //
-    //     expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName2);
-    //     expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName1);
-    //     e.attachedList.cells.get(1).click();
-    //     e.attachedList.moveDown.get(0).click();
-    //     expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName1);
-    //     expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName2);
-    //     e.attachedList.moveDown.get(0).click();
-    //     expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName2);
-    //     e.attachedList.moveUp.get(0).click();
-    //     expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName2);
-    //     expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName1);
-    //     e.attachedList.cells.get(0).click();
-    //     e.attachedList.detach.get(0).click();
-    //     expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName2);
-    //     expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName1);
-    //     expect(e.attachedList.cells.count()).toEqual(2);
-    //     e.attachedList.detach.get(0).click();
-    //     expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName1);
-    // });
+
+    it('should merge two documents on btn click', () => {
+        const testDocFileName1 = "test-directory/pdf2.pdf";
+        const testDocFileName2 = "test-directory/pdf3.pdf";
+        ot.goToOverview(3);
+
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 10000);
+        e.overview.addBtn.click();
+        for(var i=0; i < 3; i++){
+            ot.getRowButton(0, 'merge').click();
+            ot.getRowButton(1, 'merge').click();
+            browser.switchTo().alert().accept();
+            expect(e.overview.tableRows.count()).toEqual(3-i);
+        }
+
+        e.overview.columnsDropdownBtn.click();
+        e.overview.columnsDropdown.element(by.cssContainingText("label", "Attached Files/Pages")).click();
+        e.overview.columnsDropdownBtn.click();
+
+        expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName2);
+        expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName1);
+        e.attachedList.cells.get(1).click();
+        e.attachedList.moveDown.get(0).click();
+        expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName1);
+        expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName2);
+        e.attachedList.moveDown.get(0).click();
+        expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName2);
+        e.attachedList.moveUp.get(0).click();
+        expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName2);
+        expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName1);
+        e.attachedList.cells.get(0).click();
+        e.attachedList.detach.get(0).click();
+        expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName2);
+        expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName1);
+        expect(e.attachedList.cells.count()).toEqual(2);
+        e.attachedList.detach.get(0).click();
+        expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName1);
+    });
 
     it('hide and show columns', () => {
         ot.goToOverview(2);
