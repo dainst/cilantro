@@ -38,24 +38,25 @@ describe('overview page', () => {
             })
     });
 
-    // it('should update thumbnail if document changes', done => {
+    it('should update thumbnail if document changes', done => {
     // @TODO cell.all(by.css('select option')).get(2) is not always the same option.
     //       Might be which file was loaded first.
-    //
-    //     ot.goToOverview(3);
-    //     browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 5000);
-    //     e.overview.columnsDropdownBtn.click();
-    //     e.overview.columnsDropdown.element(by.cssContainingText("label", "Loaded File")).click();
-    //     e.overview.columnsDropdownBtn.click();
-    //     ot.getCell(0, "Loaded File").then(cell => {
-    //         cell.all(by.css('select option')).get(2).click();
-    //         browser.sleep(2000);
-    //         ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
-    //             expect(difference).toBeLessThan(1500);
-    //             done();
-    //         });
-    //     });
-    // });
+
+        ot.goToOverview(3);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 5000);
+        e.overview.columnsDropdownBtn.click();
+        e.overview.columnsDropdown.element(by.cssContainingText("label", "Loaded File")).click();
+        e.overview.columnsDropdownBtn.click();
+        ot.getCell(0, "Loaded File").then(cell => {
+            cell.all(by.css('select option')).get(2).click();
+            browser.sleep(2000);
+            ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
+                expect(difference).toBeLessThan(1500);
+                done();
+            });
+        });
+    });
+
     it('should complain on missing title', () => {
         let titleCell;
         ot.goToOverview(2);
