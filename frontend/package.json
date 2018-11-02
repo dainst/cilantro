@@ -7,11 +7,11 @@
   },
   "description": "",
   "scripts": {
-    "e2e-test": "rimraf test/e2e/screenshots/*.png & protractor test/e2e/protractor.conf.js",
+    "e2e-test": "rimraf test/e2e/screenshots/*.png && protractor test/e2e/protractor.conf.js",
     "e2e-mock-backend": "cd test/e2e/mock-backend && node backend.js",
     "e2e-server": "gulp server --settings=test --sync=false",
-    "e2e-mock": "npm run e2e-mock-backend & npm run e2e-server & npm run e2e-test",
-    "e2e": "npm run server & npm run e2e-test",
+    "e2e-mock": "npm run e2e-mock-backend && npm run e2e-server && npm run e2e-test",
+    "e2e": "npm run server && npm run e2e-test",
     "server-nosync": "gulp server --sync=false",
     "server": "gulp server",
     "start": "npm run server"
