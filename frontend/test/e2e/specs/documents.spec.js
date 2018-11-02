@@ -71,7 +71,6 @@ describe('documents page', () => {
                 e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click();
                 documents.waitForLoaded(3);
                 message.getStats().then(stats => {
-                    browser.sleep(1000);
                     browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
                     expect(stats.Analyzed).toEqual(3);
                     expect(stats.Loaded).toEqual(3);
@@ -80,6 +79,7 @@ describe('documents page', () => {
 
                     browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
                     e.documents.proceedBtn.click();
+                    browser.wait(EC.visibilityOf(e.overview.tableRows), 2000);
                     expect(e.overview.tableRows.count()).toEqual(3);
                 });
             })
