@@ -40,7 +40,6 @@ describe('documents page', () => {
                         expect(stats.Loaded).toEqual(1);
                         expect(stats.Files).toEqual(1);
                         expect(stats.Thumbnails).toEqual(1);
-                        console.log(stats)
                     });
             });
 
@@ -79,7 +78,6 @@ describe('documents page', () => {
                     expect(stats.Loaded).toEqual(3);
                     expect(stats.Files).toEqual(3);
                     expect(stats.Thumbnails).toEqual(3);
-                    console.log(stats);
 
                     browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
                     e.documents.proceedBtn.click();
