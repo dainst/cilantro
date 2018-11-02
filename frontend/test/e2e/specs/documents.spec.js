@@ -18,7 +18,7 @@ describe('documents page', () => {
             })
     });
 
-    it('should toggle sub-directories', () => {
+    fit('should toggle sub-directories', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
                 e.home.startBtn.click();
@@ -27,18 +27,20 @@ describe('documents page', () => {
             })
     });
 
-    it('should load pdf file and create a document if selected so', () => {
+    fit('should load pdf file and create a document if selected so', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
                 e.home.startBtn.click();
                 e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click();
                 documents.waitForLoaded(2);
+                browser.sleep(2000);
                 message.getStats()
                     .then(stats => {
                         expect(stats.Analyzed).toEqual(1);
                         expect(stats.Loaded).toEqual(1);
                         expect(stats.Files).toEqual(1);
                         expect(stats.Thumbnails).toEqual(1);
+                        console.log(stats)
                     });
             });
 
