@@ -31,6 +31,17 @@ def get_jobs_for_user(user):
     return (job_list)
 
 
+def get_job_by_id(id):
+    """
+    Find job with the given job_id.
+
+    :param str id: job-id to be queried
+    :return: job object
+    """
+    job = db.jobs.find_one({"job_id": id})
+    return job
+
+
 def add_job(job_id, user, job_type, task_ids):
     """
     Add a job to the job database.
