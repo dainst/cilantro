@@ -72,12 +72,14 @@ describe('documents page', () => {
                 e.home.startBtn.click();
                 e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click();
                 documents.waitForLoaded(3);
+                browser.sleep(2000);
                 message.getStats().then(stats => {
                     browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
                     expect(stats.Analyzed).toEqual(3);
                     expect(stats.Loaded).toEqual(3);
                     expect(stats.Files).toEqual(3);
                     expect(stats.Thumbnails).toEqual(3);
+                    console.log(stats);
 
                     browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
                     e.documents.proceedBtn.click();
