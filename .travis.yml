@@ -32,6 +32,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - mkdir data
   - mkdir data/staging
+  - mkdir data/staging/test_user
   - mkdir data/repository
   - mkdir data/workspace
   - docker-compose pull && docker-compose up -d
