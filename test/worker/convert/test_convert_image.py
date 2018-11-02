@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from workers.default.image.image_scaling import scale_image
+from workers.convert.image_scaling import scale_image
 
 
 class ConvertImageTest(unittest.TestCase):

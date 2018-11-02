@@ -7,6 +7,7 @@ from workers.convert.convert_image import convert_tif_to_jpg, \
     convert_jpg_to_pdf, tif_to_txt
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf, \
     convert_pdf_to_tif
+from workers.convert.image_scaling import scale_image
 
 
 def _extract_basename(files):
@@ -158,6 +159,37 @@ class TifToTxtTask(FileTask):
         tif_to_txt(file, _get_target_file(file, target_dir, 'txt'), lang)
 
 
+class ScaleImageTask(FileTask):
+    """
+    Creates copies of image files with new proportions while keeping ratio.
+
+    TaskParams:
+    -str image_max_width: width of the generated image file
+    -str image_max_height: height of the generated image file
+
+    Preconditions:
+    - image files existing in format JPEG or TIFF
+
+    Creates:
+    - scaled copies of images
+    """
+
+    name = "convert.image_scaling"
+
+    def process_file(self, file, target_dir):
+        """Read parameters and call the actual function."""
+        new_width = int(self.get_param('max_width'))
+        new_height = int(self.get_param('max_height'))
+
+        file_name = os.path.splitext(os.path.basename(file))[0]
+        file_extension = os.path.splitext(os.path.basename(file))[1]
+        new_file_name = f"{file_name}_{new_width}_{new_height}.{file_extension}"
+
+        scale_image(file, os.path.join(target_dir, new_file_name),
+                    new_width, new_height)
+
+
+ScaleImageTask = celery_app.register_task(ScaleImageTask())
 JpgToPdfTask = celery_app.register_task(JpgToPdfTask())
 MergeConvertedPdf = celery_app.register_task(MergeConvertedPdfTask())
 TifToJpgTask = celery_app.register_task(TifToJpgTask())

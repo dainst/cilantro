@@ -43,14 +43,14 @@ tasks:
     foreach:
       list_files: jpg
       foreach:
-        task: image.scaling
+        task: convert.image_scaling
         max_width: 50
         max_height: 50
   - list_parts:
     foreach:
       list_files: tif
       foreach:
-        task: image.scaling
+        task: convert.image_scaling
         max_width: 50
         max_height: 50
   - task: generate_xml
