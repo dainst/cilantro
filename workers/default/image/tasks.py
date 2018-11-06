@@ -31,6 +31,10 @@ class ScaleImageTask(FileTask):
         file_extension = os.path.splitext(os.path.basename(file))[1]
         new_file_name = f"{file_name}_{new_width}_{new_height}{file_extension}"
 
+        # create sub directory for scaled images
+        target_dir = os.path.join(target_dir, f"scaled_{new_width}_{new_height}")
+        os.makedirs(target_dir, exist_ok=True)
+
         scale_image(file, os.path.join(target_dir, new_file_name),
                     new_width, new_height)
 
