@@ -20,7 +20,8 @@ def scale_image(source_path, target_path, max_width, max_height):
     :param int max_height: maximum height in pixels of the generated image
     """
     logging.getLogger(__name__).debug(f"Resizing {source_path} "
-                                      f"to size: {(max_width, max_height)}")
+                                      f"to size: {(max_width, max_height)} "
+                                      f"target path: {target_path}")
 
     # conversion is needed for tiffs
     image = PilImage.open(source_path).convert('RGB')

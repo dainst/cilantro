@@ -7,7 +7,7 @@ from workers.default.image.image_scaling import scale_image
 
 class ScaleImageTask(FileTask):
     """
-    Creates copies of image files with new proportions while keeping ratio.
+    Create copies of image files with new proportions while keeping ratio.
 
     TaskParams:
     -str image_max_width: width of the generated image file
