@@ -52,12 +52,17 @@
 
     <mets:fileSec>
         <mets:fileGrp USE="DEFAULT">
-            {% for root, dirs, files in walk(obj.get_representation_dir('jpg')) %}
-                {% for file in files|sort %}
+            {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg') %}
                 <mets:file ID="file{{loop.index}}" MIMETYPE="image/jpeg">
-                    <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(obj.get_representation_dir('jpg'), file)}}"/>
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{file_path}}"/>
                 </mets:file>
-                {% endfor %}
+            {% endfor %}
+        </mets:fileGrp>
+        <mets:fileGrp USE="THUMBS">
+            {% for file_path in glob(path_join(obj.get_representation_dir('jpg'), 'scaled_50_50') + '/*.jpg') %}
+                <mets:file ID="file{{loop.index}}" MIMETYPE="image/jpeg">
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{file_path}}"/>
+                </mets:file>
             {% endfor %}
         </mets:fileGrp>
         <mets:fileGrp USE="DOWNLOAD">
@@ -70,19 +75,16 @@
     <mets:structMap TYPE="PHYSICAL">
         <mets:div ID="struct_phys_001" TYPE="physSequence">
             <mets:fptr FILEID="PDF1"/>
-            {% for root, dirs, files in walk(obj.get_representation_dir('jpg')) %}
-                {% for file in files %}
+            {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg') %}
                 <mets:div ID="div{{loop.index}}" ORDER="{{loop.index}}" ORDERLABEL="00" TYPE="page">
                     <mets:fptr FILEID="file{{loop.index}}"/>
                 </mets:div>
-                {% endfor %}
             {% endfor %}
         </mets:div>
     </mets:structMap>
 
     <mets:structMap TYPE="LOGICAL">
-        <mets:div ID="struct_log_001" DMDID="dmd001" TYPE="monograph"
-            LABEL="{{metadata['title']}}">
+        <mets:div ID="struct_log_001" DMDID="dmd001" TYPE="monograph" LABEL="{{metadata['title']}}">
             <mets:fptr FILEID="PDF1"/>
         </mets:div>
     </mets:structMap>
