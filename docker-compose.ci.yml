@@ -46,12 +46,12 @@ services:
       - ./data:/data
   salvia:
     volumes:
-    - ./frontend/img:/usr/share/nginx/html/img
-    - ./frontend/info:/usr/share/nginx/html/info
-    - ./frontend/js:/usr/share/nginx/html/js
-    - ./frontend/partials:/usr/share/nginx/html/partials
-    - ./frontend/style:/usr/share/nginx/html/style
-    - ./frontend/test:/usr/share/nginx/html/test
+      - ./frontend/img:/usr/share/nginx/html/img
+      - ./frontend/info:/usr/share/nginx/html/info
+      - ./frontend/js:/usr/share/nginx/html/js
+      - ./frontend/partials:/usr/share/nginx/html/partials
+      - ./frontend/style:/usr/share/nginx/html/style
+      - ./frontend/test:/usr/share/nginx/html/test
 
   frontend-test:
     environment:
@@ -60,10 +60,10 @@ services:
       ZENON_URI: "https://zenon.dainst.org/api/v1"
       OJS_URI: "http://ojs:80/ojs/plugins/generic/ojs-cilantro-plugin/api"
     volumes:
-    - ./frontend/img:/salvia/img
-    - ./frontend/info:/salvia/info
-    - ./frontend/js:/salvia/js
-    - ./frontend/partials:/salvia/partials
-    - ./frontend/style:/salvia/style
-    - ./frontend/test:/salvia/test
+      - ./frontend/img:/salvia/img
+      - ./frontend/info:/salvia/info
+      - ./frontend/js:/salvia/js
+      - ./frontend/partials:/salvia/partials
+      - ./frontend/style:/salvia/style
+      - ./frontend/test:/salvia/test
 
