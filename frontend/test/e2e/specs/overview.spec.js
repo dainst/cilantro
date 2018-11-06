@@ -114,21 +114,21 @@ describe('overview page', () => {
         expect(ot.getRowTitle(1)).toEqual(titleDoc1);
     });
 
-    // it('should open pdf in other tab on btn click', () => {
+    it('should open pdf in other tab on btn click', () => {
     // @TODO Travis crashes on this test.
-    //     ot.goToOverview(2);
-    //     browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 5000);
-    //     ot.getRowButton(0, 'open').click();
-    //     browser.sleep(1000);
-    //     a.switchToNewTab().then(() => {
-    //         //browser.ignoreSynchronization = true;
-    //         expect(browser.driver.getCurrentUrl()).toMatch(/\/staging\/e2e-testing\.pdf/);
-    //         browser.sleep(1000);
-    //         //browser.ignoreSynchronization = false;
-    //     }).then(() => {
-    //         a.closeTab();
-    //     });
-    // });
+        ot.goToOverview(2);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 5000);
+        ot.getRowButton(0, 'open').click();
+        browser.sleep(1000);
+        a.switchToNewTab().then(() => {
+            //browser.ignoreSynchronization = true;
+            expect(browser.driver.getCurrentUrl()).toMatch(/\/staging\/e2e-testing\.pdf/);
+            browser.sleep(1000);
+            //browser.ignoreSynchronization = false;
+        }).then(() => {
+            a.closeTab();
+        });
+    });
 
     it('should merge two documents on btn click', () => {
         const testDocFileName1 = "test-directory/pdf2.pdf";
