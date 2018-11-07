@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 def _list_dir(dir_path):
     tree = []
-    for entry in os.scandir(dir_path):
+    for entry in sorted(os.scandir(dir_path), key=lambda e: e.name):
         if entry.is_file():
             tree.append({
                 "type": "file",
