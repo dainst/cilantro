@@ -17,11 +17,9 @@ angular
                 debug: "alert-debug",
                 urgent: "alert-info alert-urgent",
             };
-            scope.isOpen = false;
             scope.getClass = (type) => boostrapClassMap[type] || "alert-info";
             scope.messages = messenger.messages;
             scope.hasContent = () => messenger.messages.length > 0;
-            scope.toggle = (to) => {scope.isOpen = angular.isUndefined(to) ? to : !scope.isOpen};
             scope.getMain = messenger.getMainMessage;
             scope.clearLog = messenger.clear;
         }
