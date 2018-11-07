@@ -28,7 +28,7 @@ def get_jobs_for_user(user):
     job_list = []
     for job in db.jobs.find({"user": user}, {'_id': False}):
         job_list.append(job)
-    return (job_list)
+    return job_list
 
 
 def get_job_by_id(job_id):

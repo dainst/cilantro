@@ -265,6 +265,7 @@ class JobConfig:
         Generate a celery job chain.
 
         :param str job_type: The name of the config file that defines the job
+        :param str user: The user who started the job
         :param dict request_params: Additional parameters that overwrite the
             default parameters
         :return Job:

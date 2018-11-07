@@ -128,8 +128,8 @@ def list_staging():
     try:
         tree = _list_dir(os.path.join(staging_dir, auth.username()))
     except FileNotFoundError:
-        log.warn(f"List staging called on not-existing folder: "
-                 f"{os.path.join(staging_dir, auth.username())}")
+        log.warning(f"List staging called on not-existing folder: "
+                    f"{os.path.join(staging_dir, auth.username())}")
         tree = []
     return jsonify(tree)
 
