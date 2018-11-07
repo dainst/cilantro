@@ -11,6 +11,7 @@ params:
   do_ocr: boolean
   ocr_lang: string
   ojs_metadata: dict
+  keep_ratio: boolean
 
 tasks:
   - create_object

@@ -82,5 +82,6 @@
         "default_create_frontpage": true,
         "allow_upload_without_file": false
     },
-    "do_ocr": false
+    "do_ocr": false,
+    "keep_ratio": true
 }
