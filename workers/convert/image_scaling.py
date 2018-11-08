@@ -19,7 +19,7 @@ def scale_image(source, target_path, max_width, max_height, keep_ratio=True):
     :param str target_path: path without filename to save the generated image to
     :param int max_width: maximum width in pixels of the generated image
     :param int max_height: maximum height in pixels of the generated image
-    :param bln keep_ratio: keeps the ratio of the generated image
+    :param bool keep_ratio: keeps the ratio of the generated image
     """
     logging.getLogger(__name__).debug(f"Resizing {source} "
                                       f"to size: {(max_width, max_height)}")
