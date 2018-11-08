@@ -47,8 +47,6 @@ describe('overview page', () => {
         ot.getCell(0, "Loaded File").then(cell => {
             cell.all(by.css('select option')).get(2).click();
             browser.sleep(2000);
-            expect(e.attachedList.cells.get(1).getText()).toEqual("test-directory/pdf3.pdf");
-            browser.sleep(2000);
             ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
                 expect(difference).toBeLessThan(1500);
                 done();
