@@ -106,7 +106,7 @@ angular
     };
 
     steps.getTemplate = function() {
-        if (webservice.userData.username === null && webservice.userData.password === null)
+        if (!webservice.isLoggedIn())
             steps.current = "start";
         if (angular.isUndefined(steps.views[steps.current]) || angular.isUndefined(steps.views[steps.current].template)) {
             messenger.error("View '" + steps.current + "' not found.");

@@ -14,7 +14,7 @@ angular
             webservice.userData = {'username': null, 'password': null};
         };
         webservice.isLoggedIn = function () {
-            return webservice.userData.username != null;
+            return webservice..userData.username && webservice.userData.password;
         };
     webservice.get = function(endpoint, method, data) {
 
@@ -25,7 +25,7 @@ angular
             method:     method || "get",
             data:       data || {}
         };
-        if (webservice.userData.username && webservice.userData.password) {
+        if (webservice.isLoggedIn()) {
             params.headers = {
                 "Authorization": "Basic " + window.btoa(webservice.userData.username + ":" + webservice.userData.password)
             };
