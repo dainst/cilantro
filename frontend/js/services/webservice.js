@@ -13,7 +13,9 @@ angular
         webservice.logUserOut = function () {
             webservice.userData = {'username': null, 'password': null};
         };
-
+        webservice.isLoggedIn = function () {
+            return webservice.userData.username != null;
+        };
     webservice.get = function(endpoint, method, data) {
 
         const params = {
