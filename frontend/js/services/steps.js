@@ -55,7 +55,9 @@ angular
         "jobs": {
             "template": "partials/views/jobs.html",
             "title": "Jobs",
-            "showIf": function() {return steps.isStarted}
+            "showIf": function () {
+                return webservice.isLoggedIn()
+            }
         }
     };
 
@@ -121,24 +123,24 @@ angular
             tabs.isCollapsed = false;
         }
         tabs.current = to;
-    }
+    };
 
     steps.getTab = () => {
         return steps.tabs[tabs.current].template + cacheKiller;
-    }
+    };
 
     steps.collapseTabs = () => {
         tabs.current = "collapsed";
         tabs.isCollapsed = true;
-    }
+    };
 
     steps.isCollapsed = () => {
         return tabs.isCollapsed;
-    }
+    };
 
     steps.getStatus = () => {
         return steps.isStarted;
-    }
+    };
 
     return (steps);
 }]);
