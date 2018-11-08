@@ -1,9 +1,8 @@
 <div>
 
 	<div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning'>{{warning}}</div>
-
 	<select class="form-control editable-select" ng-model="item.value.value" ng-change="item.observer ? item.observer(item) : ''">
-		<option ng-repeat="file in item.list track by $index" value='{{file.url}}'>{{file.url}}</option>
+		<option ng-repeat="file in item.getList() | orderBy:'url'" value='{{file.url}}'>{{file.url}}</option>
 	</select>
 
 	<div class="row" ng-show="!item.check()">
