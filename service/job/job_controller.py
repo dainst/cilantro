@@ -287,7 +287,7 @@ def job_create(job_type):
     job_id = task.id
     task_ids = _get_task_ids(task)
 
-    job_db.add_job(job_id, user, job_type, task_ids)
+    job_db.add_job(job_id, user, job_type, task_ids, params)
 
     body = jsonify({
         'status': 'Accepted',
