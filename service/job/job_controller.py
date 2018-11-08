@@ -303,6 +303,11 @@ def job_status(job_id):
     """
     Return the status information for a job.
 
+    Also looks up the job  in the job database to get the name.
+
+    This function is also used to get task status. Those cannot be found in the
+    job database (as it only holds job info) and will be set to undefined.
+
     .. :quickref: Job Controller; Return the status information for a job.
 
     **Example request**:
@@ -321,7 +326,8 @@ def job_status(job_id):
             "result": {
                 "object_id": "issue-test-1"
             },
-            "status": "SUCCESS"
+            "status": "SUCCESS",
+            "type": "ingest_book"
         }
 
     :reqheader Accept: application/json
@@ -334,9 +340,15 @@ def job_status(job_id):
     :return: A JSON object containing the status info
     """
     task = celery_app.AsyncResult(job_id)
+    job = job_db.get_job_by_id(job_id)
+    if job:
+        job_type = job['job_type']
+    else:
+        job_type = 'undefined'
     response = {
+        'type': job_type,
         'status': task.state
-        }
+    }
     if hasattr(task, 'result'):
         response['result'] = task.result
     return jsonify(response)

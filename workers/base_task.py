@@ -137,7 +137,8 @@ class BaseTask(Task):
             self.log.error(e)
             params = self.params.copy()
             params['job_id'] = self.job_id
-            params['error'] = str(e)
+            params['task_name'] = self.__name__
+            params['error_message'] = str(e)
             kwargs = {}
             if params:
                 kwargs.update(params)

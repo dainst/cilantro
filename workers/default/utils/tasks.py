@@ -176,7 +176,11 @@ class HandleErrorTask(BaseTask):
 
     def execute_task(self):
         try:
-            job_db.update_job(self.job_id, 'failed', self.params['error'])
+            error = {
+                'task_name': self.params['task_name'],
+                'message': self.params['error_message']
+                }
+            job_db.update_job(self.job_id, 'failed', error)
             self.stop_chain_execution()
         except:  # noqa: bare exception is OK here, because any unhandled
                 # Exception would cause an endless loop

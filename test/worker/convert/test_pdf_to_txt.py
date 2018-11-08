@@ -17,8 +17,8 @@ class PdfToTxtTest(ConvertTest):
         convert_pdf_to_txt(self.pdf_path, self.txt_dir)
         name = os.path.splitext(os.path.basename(self.pdf_path))[0]
         for page in range(0, self.pdf_pages):
-            file = os.path.join(self.txt_dir, f'{name}_{page}.txt')
+            file = os.path.join(self.txt_dir, f'{name}_{"%04i"% page}.txt')
             self.assertTrue(os.path.isfile(file))
 
-        with open(os.path.join(self.txt_dir, f'{name}_0.txt')) as f:
+        with open(os.path.join(self.txt_dir, f'{name}_0000.txt')) as f:
             self.assertIn("TECHNISCHE UNIVERSITÄT CAROLO-WILHELMINA", f.read())
