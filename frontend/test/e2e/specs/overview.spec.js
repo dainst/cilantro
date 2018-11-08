@@ -144,37 +144,34 @@ describe('overview page', () => {
             ot.getRowButton(0, 'merge').click();
             ot.getRowButton(1, 'merge').click();
             browser.switchTo().alert().accept();
-            browser.sleep(200);
             expect(e.overview.tableRows.count()).toEqual(3-i);
         }
 
         e.overview.columnsDropdownBtn.click();
         e.overview.columnsDropdown.element(by.cssContainingText("label", "Attached Files/Pages")).click();
         e.overview.columnsDropdownBtn.click();
-        browser.sleep(200);
         expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName2);
         expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName1);
+
         e.attachedList.cells.get(1).click();
         e.attachedList.moveDown.get(0).click();
-        browser.sleep(200);
         expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName1);
         expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName2);
+
         e.attachedList.moveDown.get(0).click();
-        browser.sleep(200);
         expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName2);
+
         e.attachedList.moveUp.get(0).click();
-        browser.sleep(200);
         expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName2);
         expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName1);
+
         e.attachedList.cells.get(0).click();
-        browser.sleep(200);
         e.attachedList.detach.get(0).click();
-        browser.sleep(200);
         expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName2);
         expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName1);
         expect(e.attachedList.cells.count()).toEqual(2);
+
         e.attachedList.detach.get(0).click();
-        browser.sleep(200);
         expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName1);
     });
 
