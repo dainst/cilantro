@@ -14,7 +14,7 @@ angular
             webservice.userData = {'username': null, 'password': null};
         };
         webservice.isLoggedIn = function () {
-            return webservice..userData.username && webservice.userData.password;
+            return webservice.userData.username && webservice.userData.password;
         };
     webservice.get = function(endpoint, method, data) {
 
