@@ -39,7 +39,6 @@ describe('overview page', () => {
     });
 
     it('should update thumbnail if document changes', done => {
-        // failed thrice in Travis : Expected 401577 to be less than 1500.
         ot.goToOverview(3);
         browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 5000);
         e.overview.columnsDropdownBtn.click();
@@ -47,6 +46,8 @@ describe('overview page', () => {
         e.overview.columnsDropdownBtn.click();
         ot.getCell(0, "Loaded File").then(cell => {
             cell.all(by.css('select option')).get(2).click();
+            browser.sleep(2000);
+            expect(e.attachedList.cells.get(1).getText()).toEqual("test-directory/pdf3.pdf");
             browser.sleep(2000);
             ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
                 expect(difference).toBeLessThan(1500);
@@ -133,7 +134,6 @@ describe('overview page', () => {
     });
 
     it('should merge two documents on btn click', () => {
-        //failed thrice in Travis :   Expected 'test-directory/pdf1.pdf' to equal 'test-directory/pdf2.pdf'.
         const testDocFileName1 = "test-directory/pdf2.pdf";
         const testDocFileName2 = "test-directory/pdf3.pdf";
         ot.goToOverview(3);
@@ -144,6 +144,7 @@ describe('overview page', () => {
             ot.getRowButton(0, 'merge').click();
             ot.getRowButton(1, 'merge').click();
             browser.switchTo().alert().accept();
+            browser.sleep(200);
             expect(e.overview.tableRows.count()).toEqual(3-i);
         }
 
