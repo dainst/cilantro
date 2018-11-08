@@ -14,7 +14,6 @@ angular
     }
 
     function natSort(a, b) {
-        console.log("|",a,b);
         return a.name.localeCompare(b.name);
     }
 
