@@ -26,7 +26,7 @@ angular
             "default_publish_articles": true,
             "default_create_frontpage": true,
             "allow_upload_without_file":false,
-            "operations":               editables.multilistitem({NER: "NER", POS: "POS"}, ['POS'], false),
+            "operations":               editables.checkbox(false),
             "lang":                     "en",
             "do_ocr":                   editables.checkbox(false),
         }

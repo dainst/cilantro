@@ -14,18 +14,21 @@ angular
         $scope.isLoading = true;
 
         $scope.failFatal = err => {
-            console.error("fatal error", err);
+            console.error("Fatal Error", err);
             $scope.isLoading = false;
             steps.changeView("fatal");
             $scope.refreshView();
         };
 
-		$scope.initApp = function() {
+		$scope.initApp = () => {
+            dataset.reset();
+            $scope.isLoading = false;
+		};
 
+		$scope.start = () => {
+            dataset.reset();
             $scope.isLoading = true;
             steps.isStarted = false;
-            dataset.reset();
-
 		    return settings.load.then(() => {
                 webservice.get(["ojs_url", 'journalInfo'])
                     .then((journalInfo) => {
@@ -51,7 +54,7 @@ angular
 
 		/* restart */
 		$scope.restart = ()  => {
-			$scope.initApp().then(() => {
+			$scope.start().then(() => {
 			    messenger.clear();
                 messenger.info('Restart Importer');
                 steps.changeView('home');

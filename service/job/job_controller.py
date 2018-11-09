@@ -287,7 +287,7 @@ def job_create(job_type):
     job_id = task.id
     task_ids = _get_task_ids(task)
 
-    job_db.add_job(job_id, user, job_type, task_ids)
+    job_db.add_job(job_id, user, job_type, task_ids, params)
 
     body = jsonify({
         'status': 'Accepted',
@@ -302,6 +302,12 @@ def job_create(job_type):
 def job_status(job_id):
     """
     Return the status information for a job.
+
+    Also looks up the job  in the job database to get the name.
+
+    This function is also used to get task status. Those cannot be found in the
+    job database (as it only holds job info) and no further info will be
+    returned.
 
     .. :quickref: Job Controller; Return the status information for a job.
 
@@ -321,7 +327,8 @@ def job_status(job_id):
             "result": {
                 "object_id": "issue-test-1"
             },
-            "status": "SUCCESS"
+            "status": "SUCCESS",
+            "type": "ingest_book"
         }
 
     :reqheader Accept: application/json
@@ -334,9 +341,13 @@ def job_status(job_id):
     :return: A JSON object containing the status info
     """
     task = celery_app.AsyncResult(job_id)
+    job = job_db.get_job_by_id(job_id)
+    if not job:
+        job = {}
     response = {
-        'status': task.state
-        }
+        'status': task.state,
+        **job
+    }
     if hasattr(task, 'result'):
         response['result'] = task.result
     return jsonify(response)

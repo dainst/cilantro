@@ -28,10 +28,21 @@ def get_jobs_for_user(user):
     job_list = []
     for job in db.jobs.find({"user": user}, {'_id': False}):
         job_list.append(job)
-    return (job_list)
+    return job_list
 
 
-def add_job(job_id, user, job_type, task_ids):
+def get_job_by_id(job_id):
+    """
+    Find job with the given job_id.
+
+    :param str id: job-id to be queried
+    :return: job object
+    """
+    job = db.jobs.find_one({"job_id": job_id}, {'_id': False})
+    return job
+
+
+def add_job(job_id, user, job_type, task_ids, job_params):
     """
     Add a job to the job database.
 
@@ -39,6 +50,7 @@ def add_job(job_id, user, job_type, task_ids):
     :param str user: username which started the job
     :param str job_type: type of job, i.e. 'ingest_journal'
     :param list task_ids: Cilantro-IDs of all tasks belonging to that job
+    :param dict job_params: Original paramters given when the job was created
     :return: None
     """
     timestamp = datetime.datetime.now()
@@ -49,30 +61,31 @@ def add_job(job_id, user, job_type, task_ids):
            'state': 'new',
            'created': timestamp,
            'updated': timestamp,
+           'params': job_params,
            'errors': []
            }
 
     db.jobs.insert_one(job)
 
 
-def update_job(job_id, state, error_text=''):
+def update_job(job_id, state, error=None):
     """
     Update a job to the job database with new state and updated timestamp.
 
-    If there is text passed in 'error_text' then that is added to the list
-    of error messages of that task. The error mesages are a list to  make it
+    If there is an error object passed then that is added to the list
+    of errors of that task. The errors are a list to  make it
     possible to keep executing the task chain even though some tasks
-    throw errors. The messages are put into the job entry in the database
+    throw errors. The errors are put into the job entry in the database
     and can be collected later.
 
     :param str job_id: Cilantro-ID of the job
     :param str state: new state of the job
-    :param str error_text: (optional) text containig details about thrown error
+    :param dict error: (optional) dict containig task name and error message
     :return: None
     """
     timestamp = datetime.datetime.now()
     db.jobs.update_many({"job_id": job_id},
                         {'$set': {'state': state, 'updated': timestamp}})
-    if error_text != '':
+    if error:
         db.jobs.update_many({"job_id": job_id},
-                            {'$push': {'errors': error_text}})
+                            {'$push': {'errors': error}})

@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 def _list_dir(dir_path):
     tree = []
-    for entry in os.scandir(dir_path):
+    for entry in sorted(os.scandir(dir_path), key=lambda e: e.name):
         if entry.is_file():
             tree.append({
                 "type": "file",
@@ -128,8 +128,8 @@ def list_staging():
     try:
         tree = _list_dir(os.path.join(staging_dir, auth.username()))
     except FileNotFoundError:
-        log.warn(f"List staging called on not-existing folder: "
-                 f"{os.path.join(staging_dir, auth.username())}")
+        log.warning(f"List staging called on not-existing folder: "
+                    f"{os.path.join(staging_dir, auth.username())}")
         tree = []
     return jsonify(tree)
 

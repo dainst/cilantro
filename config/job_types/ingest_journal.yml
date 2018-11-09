@@ -47,6 +47,7 @@ tasks:
         task: convert.image_scaling
         max_width: 50
         max_height: 50
+        target_dir: thumbnails
   - list_parts:
     foreach:
       list_files: tif
