@@ -243,7 +243,7 @@ angular
             title: '#',
             style: {minWidth: '10px'},
             hide: true,
-            param: true
+            param: "metadata"
         },
         zenonId: {
             title: 'Zenon-Id',
