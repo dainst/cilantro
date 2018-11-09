@@ -182,7 +182,7 @@ def get_job_type_detail(job_type):
                         "foreach": {
                             "max_height": 50,
                             "max_width": 50,
-                            "task": "convert.image_scaling"
+                            "task": "convert.scale_image"
                         },
                         "list_files": "jpg"
                     },
@@ -193,7 +193,7 @@ def get_job_type_detail(job_type):
                         "foreach": {
                             "max_height": 50,
                             "max_width": 50,
-                            "task": "convert.image_scaling"
+                            "task": "convert.scale_image"
                         },
                         "list_files": "tif"
                     },

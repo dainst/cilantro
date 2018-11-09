@@ -177,7 +177,7 @@ class ScaleImageTask(FileTask):
     - scaled copies of images
     """
 
-    name = "convert.image_scaling"
+    name = "convert.scale_image"
 
     def process_file(self, file, target_dir):
         """Read parameters and call the actual function."""
