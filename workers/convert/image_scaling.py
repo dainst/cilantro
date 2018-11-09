@@ -22,7 +22,8 @@ def scale_image(source, target_path, max_width, max_height, keep_ratio=True):
     :param bool keep_ratio: keeps the ratio of the generated image
     """
     logging.getLogger(__name__).debug(f"Resizing {source} "
-                                      f"to size: {(max_width, max_height)}")
+                                      f"to size: {(max_width, max_height)} "
+                                      f"target path: {target_path}")
 
     # conversion is needed for tiffs
     image = PilImage.open(source).convert('RGB')
@@ -37,4 +38,5 @@ def scale_image(source, target_path, max_width, max_height, keep_ratio=True):
     file_extension = os.path.splitext(os.path.basename(source))[1]
     new_file_name = f"{file_name}_{width}_{height}{file_extension}"
 
+    os.makedirs(target_path, exist_ok=True)
     image.save(os.path.join(target_path, new_file_name))

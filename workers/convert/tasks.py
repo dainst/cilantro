@@ -161,14 +161,14 @@ class TifToTxtTask(FileTask):
 
 class ScaleImageTask(FileTask):
     """
-    Creates copies of image files with new proportions.
+    Create copies of image files with new proportions.
 
-    If selected so the ratio will be kept.
+    If selected the ratio will be kept.
 
     TaskParams:
     -str image_max_width: width of the generated image file
     -str image_max_height: height of the generated image file
-    -bln keep_ratio: keeps the ratio of the generated image file
+    -bool keep_ratio: keeps the ratio of the generated image file
 
     Preconditions:
     - image files existing in format JPEG or TIFF
@@ -184,6 +184,13 @@ class ScaleImageTask(FileTask):
         max_width = int(self.get_param('max_width'))
         max_height = int(self.get_param('max_height'))
         keep_ratio = self.get_param('keep_ratio')
+
+        try:
+            target_dir = os.path.join(os.path.dirname(self.get_work_path()),
+                                      self.get_param('target_dir'))
+        except KeyError:
+            target_dir = os.path.join(target_dir,
+                                      f"scaled_{max_width}_{max_height}")
 
         scale_image(file, target_dir, max_width, max_height, keep_ratio)
 
