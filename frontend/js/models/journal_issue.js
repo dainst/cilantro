@@ -160,7 +160,8 @@ angular
             param: "nlp_params"
         },
         "do_ocr": {
-            title: "Perform OCR"
+            title: "Perform OCR",
+            param: true
         }
     };
 
