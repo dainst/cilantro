@@ -60,7 +60,7 @@
         </mets:fileGrp>
         <mets:fileGrp USE="THUMBS">
             {% for file_path in glob(path_join(obj.get_representation_dir('jpg'), 'thumbnails') + '/*.jpg') %}
-                <mets:file ID="file{{loop.index}}" MIMETYPE="image/jpeg">
+                <mets:file ID="thumb_file{{loop.index}}" MIMETYPE="image/jpeg">
                     <mets:FLocat LOCTYPE="URL" xlink:href="{{file_path}}"/>
                 </mets:file>
             {% endfor %}
