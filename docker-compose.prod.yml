@@ -17,9 +17,9 @@ x-env-broker: &env-broker
   BROKER_PASSWORD: &broker-password password
 
 x-env-jobdb: &env-jobdb
-  JOB_DB_URL: ${JOB_DB_URL}
-  JOB_DB_PORT: ${JOB_DB_PORT}
-  JOB_DB_NAME: ${JOB_DB_NAME}
+  JOB_DB_URL: job-db
+  JOB_DB_PORT: 27017
+  JOB_DB_NAME: job_database
 
 services:
 
