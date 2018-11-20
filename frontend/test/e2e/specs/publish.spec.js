@@ -29,7 +29,7 @@ describe('publish page', () => {
                 cells[0].element(by.css("input")).sendKeys("2018");
                 cells[1].element(by.css("input")).sendKeys("18");
                 cells[2].all(by.css("option")).get(0).click();
-                browser.wait(EC.visibilityOf(e.publish.uploadBtn), 2000);
+                browser.wait(EC.presenceOf(e.publish.uploadBtn), 2000);
                 expect(e.publish.uploadBtn.isPresent()).toBeTruthy();
             });
     });
