@@ -12,7 +12,6 @@ PyPDF2 = "*"
 pdftotext = "*"
 lxml = "*"
 Wand ="*"
-pillow = "*"
 pymongo = "*"
 
 [dev-packages]

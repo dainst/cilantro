@@ -96,6 +96,14 @@ Run against Mock-Backend
 
 [Flower](https://flower.readthedocs.io/) is included in the docker config and
 is available for debugging under http://localhost:5555.
+    
+### Publish Docker Images
+
+To publish a docker image on dockerhub use the buildscript `build.sh` or the
+commands in it manually.
+
+Every minor release use the version number as image tag. 
+This way it is ensured the images are always compatible to the corresponding code.
 
 ## Running unit tests
 

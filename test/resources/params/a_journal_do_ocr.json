@@ -83,5 +83,6 @@
         "allow_upload_without_file": false
     },
     "do_ocr": true,
-    "ocr_lang": "eng"
+    "ocr_lang": "eng",
+    "keep_ratio": true
 }

@@ -20,12 +20,12 @@ angular
         "home": {
             "template": "partials/views/home.html",
             "title": "Home",
-            "showIf": function() {return !steps.isStarted && steps.current != "fatal"}
+            "showIf": function() {return !steps.isStarted && steps.current !== "fatal"}
         },
         "restart": {
             "template": "partials/views/restart.html",
             "title": "Restart",
-            "showIf": function() {return steps.isStarted || steps.current == "fatal"}
+            "showIf": function() {return steps.isStarted || steps.current === "fatal"}
         },
         "documents": {
             "template": "partials/views/documents.html",
@@ -81,6 +81,9 @@ angular
             "template": "partials/elements/sidebar_messages.html",
             "title": "Messages",
             "showIf": function() {return steps.isStarted && steps.current !== "fatal"  && tabs.current !== "messages"}
+        },
+        "collapsed": {
+            "template": "partials/elements/sidebar_collapsed.html",
         }
     };
 
@@ -88,7 +91,7 @@ angular
         return (tabs.current === tab);
     };
 
-    steps.changeView = function(to) {
+    steps.changeView = (to) => {
 
         if (typeof steps.views[to] === "undefined") {
             console.warn('view ' + to + ' does not exist');
@@ -105,7 +108,7 @@ angular
 
     };
 
-    steps.getTemplate = function() {
+    steps.getTemplate = () {
         if (!webservice.isLoggedIn())
             steps.current = "start";
         if (angular.isUndefined(steps.views[steps.current]) || angular.isUndefined(steps.views[steps.current].template)) {
@@ -125,22 +128,19 @@ angular
         tabs.current = to;
     };
 
-    steps.getTab = () => {
-        return steps.tabs[tabs.current].template + cacheKiller;
-    };
+    steps.getTab = () =>
+        steps.tabs[tabs.current].template + cacheKiller;
 
     steps.collapseTabs = () => {
         tabs.current = "collapsed";
         tabs.isCollapsed = true;
     };
 
-    steps.isCollapsed = () => {
-        return tabs.isCollapsed;
-    };
+    steps.isCollapsed = () =>
+        tabs.isCollapsed;
 
-    steps.getStatus = () => {
-        return steps.isStarted;
-    };
+    steps.getStatus = () =>
+        steps.isStarted;
 
     return (steps);
 }]);

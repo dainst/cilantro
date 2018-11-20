@@ -160,7 +160,8 @@ angular
             param: "nlp_params"
         },
         "do_ocr": {
-            title: "Perform OCR"
+            title: "Perform OCR",
+            param: true
         }
     };
 
@@ -242,7 +243,7 @@ angular
             title: '#',
             style: {minWidth: '10px'},
             hide: true,
-            param: true
+            param: "metadata"
         },
         zenonId: {
             title: 'Zenon-Id',

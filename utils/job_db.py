@@ -38,7 +38,7 @@ def get_job_by_id(job_id):
     :param str id: job-id to be queried
     :return: job object
     """
-    job = db.jobs.find_one({"job_id": job_id})
+    job = db.jobs.find_one({"job_id": job_id}, {'_id': False})
     return job
 
 
