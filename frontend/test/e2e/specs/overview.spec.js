@@ -137,6 +137,11 @@ describe('overview page', () => {
         ot.goToOverview(3);
 
         browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 10000);
+
+        e.overview.sortByBtn.click();
+        e.overview.sortByDropdown.element(by.cssContainingText('a',"Loaded File")).click();
+        e.overview.sortByBtn.click();
+
         e.overview.addBtn.click();
         for(var i=0; i < 3; i++){
             ot.getRowButton(0, 'merge').click();
