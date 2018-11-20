@@ -13,6 +13,10 @@ const OverviewTable = function() {
             documents.waitForLoaded(docNr);
             e.documents.proceedBtn.click();
             browser.wait(EC.visibilityOf(e.overview.table), 20000);
+
+            e.overview.sortByBtn.click();
+            e.overview.sortByDropdown.element(by.cssContainingText('a',"Loaded File")).click();
+            e.overview.sortByBtn.click();
         });
 
     this.getAvailableColumnNames = () => new Promise((resolve, reject) =>
