@@ -27,9 +27,10 @@ angular
 
                 const reqestParams = {url: settings.files_url + filesToLoad[fileid].path};
 
-                if (angular.isDefined(settings.server_user) && angular.isDefined(settings.server_pass)) {
+                if (webservice.isLoggedIn()) {
                     reqestParams.httpHeaders = {
-                        "Authorization": "Basic " + window.btoa(settings.server_user + ":" + settings.server_pass)
+                        "Authorization": "Basic " + window.btoa(webservice.userData.username + ":"
+                            + webservice.userData.password)
                     };
                     reqestParams.withCredentials = true;
                 }
