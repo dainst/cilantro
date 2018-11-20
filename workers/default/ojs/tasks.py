@@ -49,7 +49,8 @@ class GenerateFrontmatterTask(ObjectTask):
     name = "generate_frontmatter"
 
     def process_object(self, obj):
-        if obj.metadata.create_frontpage:
+        if 'create_frontpage' in obj.metadata.to_dict() and \
+           obj.metadata.create_frontpage:
             article_id = obj.metadata.ojs_id.split("-")[-1]
             generate_frontmatter(article_id)
 

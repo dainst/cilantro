@@ -92,6 +92,7 @@ class BaseTask(Task):
         With this the task chain is emptied and execution stops.
         """
         self.request.chain = None
+        self.request.chord = None
 
     def get_work_path(self):
         abs_path = os.path.join(self.working_dir, self.work_path)

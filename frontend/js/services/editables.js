@@ -576,6 +576,7 @@ angular
         };
         obj.select(selected);
         obj.get = () => obj.value.value ? obj.value.value : 'none';
+        obj.getList = () => Object.keys(obj.list).map(it => obj.list[it]);
         return obj;
     };
 

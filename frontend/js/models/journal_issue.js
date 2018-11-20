@@ -26,7 +26,7 @@ angular
             "default_publish_articles": true,
             "default_create_frontpage": true,
             "allow_upload_without_file":false,
-            "operations":               editables.multilistitem({NER: "NER", POS: "POS"}, ['POS'], false),
+            "operations":               editables.checkbox(false),
             "lang":                     "en",
             "do_ocr":                   editables.checkbox(false),
         }
@@ -160,7 +160,8 @@ angular
             param: "nlp_params"
         },
         "do_ocr": {
-            title: "Perform OCR"
+            title: "Perform OCR",
+            param: true
         }
     };
 
@@ -242,7 +243,7 @@ angular
             title: '#',
             style: {minWidth: '10px'},
             hide: true,
-            param: true
+            param: "metadata"
         },
         zenonId: {
             title: 'Zenon-Id',
