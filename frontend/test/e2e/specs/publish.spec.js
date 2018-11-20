@@ -29,6 +29,7 @@ describe('publish page', () => {
                 cells[0].element(by.css("input")).sendKeys("2018");
                 cells[1].element(by.css("input")).sendKeys("18");
                 cells[2].all(by.css("option")).get(0).click();
+                browser.wait(EC.visibilityOf(e.publish.uploadBtn), 20);
                 expect(e.publish.uploadBtn.isPresent()).toBeTruthy();
             });
     });
@@ -37,6 +38,7 @@ describe('publish page', () => {
         so.goToSubObject(2);
         browser.wait(EC.visibilityOf(e.subobject.confirmBtn), 5000);
         e.subobject.confirmBtn.click();
+        browser.wait(EC.visibilityOf(e.mainobject.table), 20);
         Promise.all([mo.getRowContent("Volume"), mo.getRowContent("Number"), mo.getRowContent("OJS: Journal Code")])
             .then(cells => {
                 cells[0].element(by.css("input")).sendKeys("2018");
