@@ -8,6 +8,7 @@ from service.job.job_config import JobConfig, UnknownJobTypeException, \
     RequestParameterException
 from service.user.user_service import auth
 from utils import job_db
+from utils import json_validation
 
 
 def get_job_config():
@@ -270,6 +271,7 @@ def job_create(job_type):
     params = {}
     if request.data:
         params = request.get_json(force=True)
+        json_validation.validate_params(params, job_type)
     user = auth.username()
     try:
         job = get_job_config().generate_job(job_type, user, params)
