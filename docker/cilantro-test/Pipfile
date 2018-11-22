@@ -20,6 +20,7 @@ pyocr = "*"
 Flask-HTTPAuth = "*"
 bcrypt = "*"
 pymongo = "*"
+jsonschema = "*"
 
 [dev-packages]
 

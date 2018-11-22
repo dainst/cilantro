@@ -13,6 +13,7 @@ Flask-HTTPAuth = "*"
 bcrypt = "*"
 gunicorn = "*"
 pymongo = "*"
+jsonschema = "*"
 
 [dev-packages]
 
