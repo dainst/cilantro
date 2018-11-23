@@ -35,7 +35,7 @@
                     ng-model="files"
                     ngf-multiple="true"
                     ngf-pattern="pattern"
-                    ngf-accept="application/pdf"
+                    ngf-accept="application/pdf, application/csv"
                     ngf-drag-over-class="'dragOver'"
                     ngf-validate="{pattern: '.pdf,.csv'}"
                     ngf-keep="false"
@@ -44,9 +44,9 @@
                     ngf-drop-available="dropAvailable"
                     id="upload-area">
 
-                <div class="panel-heading">Upload PDF file</div>
+                <div class="panel-heading">Upload PDF or CSV file</div>
                 <div class="panel-body">
-                    <button id="uploadFileSelect" class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File or Folder into this Box.</span>
+                    <button id="uploadFileSelect" class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf, application/csv">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File or Folder into this Box.</span>
                     <br>
 
                     <span class="progressbar">
