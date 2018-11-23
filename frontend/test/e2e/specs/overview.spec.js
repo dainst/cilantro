@@ -132,14 +132,14 @@ describe('overview page', () => {
     });
 
     it('should merge two documents on btn click', () => {
-        const testDocFileName1 = "test-directory/pdf2.pdf";
+        const testDocFileName0 = "test-directory/pdf2.pdf";
         const testDocFileName2 = "test-directory/pdf3.pdf";
         ot.goToOverview(3);
 
         browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 10000);
 
         e.overview.sortByBtn.click();
-        e.overview.sortByDropdown.element(by.cssContainingText('a',"Loaded File")).click();
+        e.overview.sortByDropdown.element(by.cssContainingText('a',"Title (descending)")).click();
         e.overview.sortByBtn.click();
 
         e.overview.addBtn.click();
@@ -154,11 +154,11 @@ describe('overview page', () => {
         e.overview.columnsDropdown.element(by.cssContainingText("label", "Attached Files/Pages")).click();
         e.overview.columnsDropdownBtn.click();
         expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName2);
-        expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName1);
+        expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName0);
 
         e.attachedList.cells.get(1).click();
         e.attachedList.moveDown.get(0).click();
-        expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName1);
+        expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName0);
         expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName2);
 
         e.attachedList.moveDown.get(0).click();
@@ -166,16 +166,16 @@ describe('overview page', () => {
 
         e.attachedList.moveUp.get(0).click();
         expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName2);
-        expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName1);
+        expect(e.attachedList.cells.get(2).getText()).toEqual(testDocFileName0);
 
         e.attachedList.cells.get(0).click();
         e.attachedList.detach.get(0).click();
         expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName2);
-        expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName1);
+        expect(e.attachedList.cells.get(1).getText()).toEqual(testDocFileName0);
         expect(e.attachedList.cells.count()).toEqual(2);
 
         e.attachedList.detach.get(0).click();
-        expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName1);
+        expect(e.attachedList.cells.get(0).getText()).toEqual(testDocFileName0);
     });
 
     it('hide and show columns', () => {
