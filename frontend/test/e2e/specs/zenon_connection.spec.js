@@ -1,11 +1,16 @@
 const e = require("../modules/elements");
 const a = require('../modules/actions');
 const so = require('../modules/subobject');
+const LoginHelper = require("../util/login_helper");
+const EC = protractor.ExpectedConditions;
+
 
 describe('subobject view', () => {
     describe('zenon connection', () => {
+
         it('should show search results', () => {
             so.goToSubObject(2);
+            browser.wait(EC.visibilityOf(e.zenon.searchBox), 20000);
             e.zenon.searchBox.clear().sendKeys("Searchresult Impossible");
             e.zenon.submit.click();
             expect(e.zenon.resultCount.getText().then(v => parseInt(v))).toEqual(0);
@@ -15,8 +20,10 @@ describe('subobject view', () => {
             expect(e.zenon.resultRows.count()).toBeGreaterThan(0);
         });
 
+
         it('should adopt data from zenon into current article', () => {
             so.goToSubObject(2);
+            browser.wait(EC.visibilityOf(e.zenon.searchBox), 20000);
             e.zenon.searchBox.clear().sendKeys("magister Equitum");
             e.zenon.resultRows.first().click();
             e.zenon.adopt.click();
@@ -48,6 +55,7 @@ describe('subobject view', () => {
 
         it('should adopt data from zenon into current article', () => {
             so.goToSubObject(2);
+            browser.wait(EC.visibilityOf(e.zenon.searchBox), 20000);
             e.zenon.searchBox.clear().sendKeys("Equus");
             a.scrollTo(e.zenon.loadMore).then(() => {
                 e.zenon.loadMore.click();
@@ -57,6 +65,7 @@ describe('subobject view', () => {
 
         it('should create new data from zenon', () => {
             so.goToSubObject(2);
+            browser.wait(EC.visibilityOf(e.zenon.searchBox), 20000);
             e.zenon.searchBox.clear().sendKeys("magister Equitum");
             e.zenon.resultRows.first().click();
             e.zenon.newArticle.click();
@@ -70,7 +79,7 @@ describe('subobject view', () => {
         });
 
         it('should automatically fetch data from zenon if list of Ids is provided', () => {
-            browser.get(browser.baseUrl);
+            LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
             a.waitForModal();
@@ -89,7 +98,7 @@ describe('subobject view', () => {
         });
 
         it('just should skip a row which Zenon-Ids is unknown', () => {
-            browser.get(browser.baseUrl);
+            LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
             a.waitForModal();
@@ -101,6 +110,7 @@ describe('subobject view', () => {
             e.overview.proceedBtn.click();
             expect(e.subobject.select.count()).toEqual(2);
         });
+
 
     });
 });

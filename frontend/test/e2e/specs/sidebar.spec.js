@@ -1,11 +1,12 @@
 const e = require("../modules/elements");
 const a = require("../modules/actions");
+const LoginHelper = require("../util/login_helper");
 
 describe('sidebar', () => {
+
     it('should switch between tabs', () => {
-        browser.get(browser.baseUrl)
+        LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.startBtn.click);
-        expect(e.sidebar.data.isDisplayed()).toBeFalsy();
         e.sidebar.help.click();
         expect(e.sidebar.data.isDisplayed()).toBeTruthy();
         expect(e.sidebar.help.isDisplayed()).toBeFalsy();
@@ -24,4 +25,5 @@ describe('sidebar', () => {
         expect(e.sidebar.sidebar.isDisplayed()).toBeTruthy();
         expect(e.sidebar.data.isDisplayed()).toBeFalsy();
     });
+
 });

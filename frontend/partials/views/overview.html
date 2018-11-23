@@ -4,8 +4,8 @@
         <div class="col-md-4">
             <multiselect elements="overviewColumns">Display Columns</multiselect>
             <uib-dropdown class="btn-group">
-                <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button">Sort By<span class="caret"></span></button>
-                <ul class="dropdown-menu" uib-dropdown-menu>
+                <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button" id="sort-by-toggle">Sort By<span class="caret"></span></button>
+                <ul class="dropdown-menu" uib-dropdown-menu id="sort-by-dropdown">
                     <li ng-repeat="sortField in dataset.getSortOptionsForSubObjects()">
                         <a href="#" ng-click="updateOrder(sortField, true)">{{labels.get("sub", sortField, false)}}</a>
                     </li>

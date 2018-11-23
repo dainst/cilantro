@@ -32,12 +32,15 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - mkdir data
   - mkdir data/staging
+  - mkdir data/staging/test_user
   - mkdir data/repository
   - mkdir data/workspace
-  - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+  - docker-compose pull && docker-compose up -d
 script:
+  - sleep 20 && bash frontend/test/exec_frontend_test.sh
   - bash test/exec_docker_test.sh
   - bash doc/build-doc.sh
+  - docker-compose logs
 deploy:
   provider: pages
   skip_cleanup: true
