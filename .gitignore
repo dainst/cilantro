@@ -116,6 +116,8 @@ cmake-build-release/
 
 # IntelliJ
 out/
+.idea/misc.xml
+.idea/inspectionProfiles/Project_Default.xml
 
 # JIRA plugin
 atlassian-ide-plugin.xml

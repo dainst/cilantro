@@ -27,12 +27,16 @@ angular
 
                 const reqestParams = {url: settings.files_url + filesToLoad[fileid].path};
 
-                if (angular.isDefined(settings.server_user) && angular.isDefined(settings.server_pass)) {
+                if (webservice.isLoggedIn()) {
                     reqestParams.httpHeaders = {
-                        "Authorization": "Basic " + window.btoa(settings.server_user + ":" + settings.server_pass)
+                        "Authorization": "Basic " + window.btoa(webservice.userData.username + ":"
+                            + webservice.userData.password)
                     };
                     reqestParams.withCredentials = true;
                 }
+                //@TODO Implement a Secure way to allow cache instead. See Task #9775
+                reqestParams.httpHeaders["Cache-Control"] = "no-cache, no-store, must-revalidate";
+                reqestParams.httpHeaders["pragma"] = "no-cache";
 
                 const promise = new Promise((resolve, fail) => {pdfFileManager.pdfjs.getDocument(reqestParams).then(
                     pdf => {
@@ -110,9 +114,9 @@ angular
                 else {
                     flattened.push(file);
                 }
-            })
+            });
             return flattened;
-        }
+        };
 
         function renderThumbnail(page) {
             return new Promise((resolve, reject) => {

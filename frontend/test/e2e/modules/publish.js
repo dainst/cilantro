@@ -1,9 +1,10 @@
 const e = require("./elements");
 const message = require('../modules/messages');
+const LoginHelper = require("../util/login_helper");
 
 const Publish = function() {
 
-    this.goToPublish = docNr => browser.get(browser.baseUrl)
+    this.goToPublish = docNr => LoginHelper.get(browser, browser.baseUrl)
         .then(e.home.startBtn.click)
         .then(e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click)
         .then(message.waitForMessage)

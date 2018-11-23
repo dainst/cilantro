@@ -1,10 +1,12 @@
 const e = require("../modules/elements");
 const so = require('../modules/subobject');
+const EC = protractor.ExpectedConditions;
 
 describe('subobject view', () => {
 
     it('should select article', () => {
         so.goToSubObject(3);
+        browser.wait(EC.visibilityOf(e.subobject.add), 20000);
         e.subobject.selectBtn.click();
         e.subobject.select.get(1).click();
         so.getRowContent("Title").then(cell => {
@@ -16,6 +18,7 @@ describe('subobject view', () => {
 
     it('should move dismissed article to trash', () => {
         so.goToSubObject(3);
+        browser.wait(EC.visibilityOf(e.subobject.add), 20000);
         e.subobject.selectBtn.click();
         e.subobject.select.get(1).click();
         e.subobject.dismissBtn.click();
@@ -29,6 +32,7 @@ describe('subobject view', () => {
 
     it('should create new article', () => {
         so.goToSubObject(2);
+        browser.wait(EC.visibilityOf(e.subobject.add), 20000);
         e.subobject.add.click();
         so.getRowContent("Title").then(cell => {
             const input = cell.element(by.css("input"));
@@ -39,6 +43,7 @@ describe('subobject view', () => {
 
     it('should restore article from trash', () => {
         so.goToSubObject(2);
+        browser.wait(EC.visibilityOf(e.subobject.dismissBtn), 20000);
         e.subobject.dismissBtn.click();
         e.subobject.trashBtn.click();
         e.subobject.trash.get(0).click();
@@ -49,6 +54,7 @@ describe('subobject view', () => {
 
     it('should only confirm validated article', () => {
         so.goToSubObject(2);
+        browser.wait(EC.visibilityOf(e.subobject.table), 20000);
         so.getRowContent("Title").then(cell => {
             const input = cell.element(by.css("input"));
             input.clear();

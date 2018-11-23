@@ -16,6 +16,7 @@ angular
         webservice.isLoggedIn = function () {
             return webservice.userData.username && webservice.userData.password;
         };
+
     webservice.get = function(endpoint, method, data) {
 
         const params = {

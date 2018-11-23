@@ -25,8 +25,9 @@ exports.config = {
         browserName: 'chrome',
         chromeOptions: {
             args: [
-                "--headless",
-                "--no-sandbox"
+                "--no-sandbox",
+                "--disable-gpu",
+                '--window-size=1920,1024'
             ]
         }
     }],
@@ -37,7 +38,7 @@ exports.config = {
         isVerbose: false,
         showColors: true,
         includeStackTrace: false,
-        defaultTimeoutInterval: 400000
+        defaultTimeoutInterval: 600000
     },
     plugins: [
         {

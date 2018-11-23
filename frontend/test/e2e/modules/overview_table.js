@@ -1,14 +1,19 @@
 const e = require("./elements");
 const documents = require('../modules/documents');
 const imageComparer = require("../util/image_comparer");
+const LoginHelper = require("../util/login_helper");
+const EC = protractor.ExpectedConditions;
 
 const OverviewTable = function() {
 
-    this.goToOverview = (docNr) => browser.get(browser.baseUrl)
-        .then(e.home.startBtn.click)
-        .then(e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click)
-        .then(documents.waitForLoaded(docNr))
-        .then(e.documents.proceedBtn.click);
+    this.goToOverview = docNr => LoginHelper.get(browser, browser.baseUrl)
+        .then(() => {
+            e.home.startBtn.click();
+            e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click();
+            documents.waitForLoaded(docNr);
+            e.documents.proceedBtn.click();
+            browser.wait(EC.visibilityOf(e.overview.table), 20000);
+        });
 
     this.getAvailableColumnNames = () => new Promise((resolve, reject) =>
         e.overview.tableHeadColumns

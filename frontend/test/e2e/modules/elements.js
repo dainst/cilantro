@@ -39,6 +39,8 @@ module.exports = {
         columnsDropdown: element(by.css('[elements="overviewColumns"]')),
         columnsDropdownBtn: element(by.css('[elements="overviewColumns"] > span > button')),
         columnsDropdownList: element.all(by.css('[elements="overviewColumns"] .dropdown-menu > li > label > input')),
+        sortByBtn: element(by.id('sort-by-toggle')),
+        sortByDropdown: element(by.id('sort-by-dropdown')),
         proceedBtn: element(by.css('#proceed')),
     },
     subobject: {
