@@ -41,56 +41,101 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
     ports:
       - "6379:6379"
+    volumes:
+      - ./redis-data:/data
 
   job-db:
     image: mongo
     ports:
       - "27017:27017"
+    volumes:
+      - ./mongo-data:/data
 
   service:
     image: dainst/cilantro-service:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-service/Dockerfile
     ports:
       - "5000:5000"
     working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
     environment:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-jobdb
       DB_HOST: "db"
+      CILANTRO_ENV: development
 
   default-worker:
     user: ${UID}
     image: dainst/cilantro-default-worker:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-default-worker/Dockerfile
     working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
     environment:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-ojs
       <<: *env-jobdb
       DB_HOST: "db"
+      CILANTRO_ENV: development
 
   convert-worker:
     user: ${UID}
     image: dainst/cilantro-convert-worker:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-convert-worker/Dockerfile
     working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
     environment:
       <<: *env-dirs
       <<: *env-broker
       DB_HOST: "db"
+      CILANTRO_ENV: development
 
   nlp-worker:
     user: ${UID}
     image: dainst/cilantro-nlp-worker:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-nlp-worker/Dockerfile
+      args:
+        GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN}
     working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
     environment:
       <<: *env-dirs
       <<: *env-broker
       DB_HOST: "db"
+      CILANTRO_ENV: development
 
   test:
     user: ${UID}
     image: dainst/cilantro-test:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-test/Dockerfile
     working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
     tty: true
     environment:
       <<: *env-dirs
@@ -110,11 +155,27 @@ services:
 
   ojs:
     image: dainst/cilantro-ojs2:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-ojs2/Dockerfile
+    volumes:
+      - ./test/resources:/test/resources
+      - ./data:/data
     ports:
       - "4444:80"
 
   salvia:
     image: dainst/cilantro-salvia:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-salvia/Dockerfile
+    volumes:
+        - ./frontend/img:/usr/share/nginx/html/img
+        - ./frontend/info:/usr/share/nginx/html/info
+        - ./frontend/js:/usr/share/nginx/html/js
+        - ./frontend/partials:/usr/share/nginx/html/partials
+        - ./frontend/style:/usr/share/nginx/html/style
+        - ./frontend/test:/usr/share/nginx/html/test
     ports:
       - "7777:80"
     environment:
@@ -125,3 +186,18 @@ services:
   frontend-test:
     tty: true
     image: dainst/cilantro-frontend-test:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-frontend-test/Dockerfile
+    volumes:
+      - ./frontend/img:/salvia/img
+      - ./frontend/info:/salvia/info
+      - ./frontend/js:/salvia/js
+      - ./frontend/partials:/salvia/partials
+      - ./frontend/style:/salvia/style
+      - ./frontend/test:/salvia/test
+    environment:
+      TEST: ${TEST}
+      BACKEND_URI: "http://service:5000"
+      ZENON_URI: "https://zenon.dainst.org/api/v1"
+      OJS_URI: "http://ojs:80/ojs/plugins/generic/ojs-cilantro-plugin/api"
