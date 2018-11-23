@@ -55,7 +55,7 @@ angular
         "jobs": {
             "template": "partials/views/jobs.html",
             "title": "Jobs",
-            "showIf": function() {return steps.isStarted}
+            "showIf": function () {return webservice.isLoggedIn()}
         }
     };
 
@@ -107,8 +107,9 @@ angular
     };
 
     steps.getTemplate = () => {
-        if (webservice.userData.username === null && webservice.userData.password === null)
+        if (!webservice.isLoggedIn()) {
             steps.current = "start";
+        }
         if (angular.isUndefined(steps.views[steps.current]) || angular.isUndefined(steps.views[steps.current].template)) {
             messenger.error("View '" + steps.current + "' not found.");
             steps.current = "fatal";
