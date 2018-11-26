@@ -1,0 +1,64 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Ingest Journal schema",
+    "description": "Used to validate ingest-journal job parameters",
+    "type": "object",
+    "required": ["metadata", "files", "object_id"],
+    "properties": {
+        "metadata": {
+            "type": "object",
+            "required": ["title", "abstract", "description", "type",
+                         "created", "creator", "identifiers"],
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "abstract": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "created": {
+                    "type": "string"
+                },
+                "creator": {
+                    "type": "object",
+                    "required": ["firstname", "lastname"],
+                    "properties": {
+                        "firstname": {
+                            "type": "string"
+                        },
+                        "lastname": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "identifiers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "files": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                    "file": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "object_id": {
+            "type": "string"
+        }
+    }
+}
