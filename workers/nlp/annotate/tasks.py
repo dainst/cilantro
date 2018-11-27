@@ -22,8 +22,11 @@ class AnnotateTask(ObjectTask):
         full_text = self._get_full_text(obj)
         json_file = os.path.join(obj.get_representation_dir(
             self.get_param('source')), "annotations.json")
-
-        result = annotate(full_text)
+        try:
+            lang = self.get_param('nlp_params')['lang']
+        except KeyError:
+            lang = None
+        result = annotate(full_text, lang)
         with open(json_file, 'w+') as file:
             json.dump(result, file)
 
