@@ -1,10 +1,9 @@
 import unittest
-import os
 
 from celery.canvas import Signature
 
 from service.job.job_config import JobConfig, ConfigParseException,\
-    UnknownJobTypeException, RequestParameterException
+    UnknownJobTypeException
 
 
 class JobConfigTest(unittest.TestCase):
@@ -53,33 +52,19 @@ class JobConfigTest(unittest.TestCase):
         self.assertRaises(ConfigParseException, JobConfig,
                           "test/resources/configs/config_invalid_yaml")
 
-    def test_invalid_definition(self):
-        self.assertRaises(ConfigParseException, JobConfig,
-                          "test/resources/configs/config_invalid_def")
+    def test_invalid_definition_misspelled_keyword(self):
+        """Test if job definition has keyword 'tasks'"""
+        with self.assertRaises(ConfigParseException) as cm:
+            JobConfig("test/resources/configs/config_invalid_def")
+        exception_message = str(cm.exception)
+        self.assertEqual(exception_message,
+                         "Missing attribute 'tasks' in job type job1")
 
-    def test_invalid_params(self):
-        self.assertRaises(ConfigParseException, JobConfig,
-                          "test/resources/configs/config_invalid_param")
-
-    def test_config_param_in_task(self):
-        job_config = JobConfig("test/resources/configs/config_params")
-
-        job = job_config.generate_job("job1", "test_user").chain
-
-        tasks = job.tasks
-
-        self.assertIn('do_task2', tasks[0].kwargs)
-        self.assertIn('do_task2', tasks[1].kwargs)
-
-    def test_request_param_in_task(self):
-        job_config = JobConfig("test/resources/configs/config_params")
-
-        job = job_config.generate_job("job1", {'do_task2': True}).chain
-
-        tasks = job.tasks
-
-        self.assertIn('do_task2', tasks[0].kwargs)
-        self.assertIn('do_task2', tasks[1].kwargs)
+        with self.assertRaises(ConfigParseException) as cm:
+            JobConfig("test/resources/configs/config_invalid_def2")
+        exception_message = str(cm.exception)
+        self.assertEqual(exception_message,
+                         "Missing attribute 'tasks' in job type job2")
 
     def test_list_files(self):
         job_config = JobConfig("test/resources/configs/config_list_files")
@@ -111,15 +96,3 @@ class JobConfigTest(unittest.TestCase):
         kwargs = tasks[1]['kwargs']
         self.assertEqual('convert', kwargs['subtasks'][0]['name'])
         self.assertEqual('high', kwargs['subtasks'][0]['params']['quality'])
-
-    def test_invalid_request_param(self):
-        job_config = JobConfig("test/resources/configs/config_if")
-
-        with self.assertRaises(RequestParameterException):
-            job_config.generate_job("job1", "test_user", {"skip_task2": True})
-
-    def test_invalid_request_param_type(self):
-        job_config = JobConfig("test/resources/configs/config_if")
-
-        with self.assertRaises(RequestParameterException):
-            job_config.generate_job("job1", "test_user", {"do_task2": "foo"})
