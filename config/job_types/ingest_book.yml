@@ -3,11 +3,6 @@ about:
   description: Create a new Book afrom single image files nd upload it to iDAI.repository
   tags: [repository, book, monography, image, tiff]
 
-params:
-  files: list
-  metadata: dict
-  object_id: string
-
 tasks:
   - create_object
   - list_files: origin
