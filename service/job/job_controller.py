@@ -196,10 +196,7 @@ def job_create(job_type):
                 }
             ],
             "nlp_params": {
-                "lang": "de",
-                "operations": [
-                    "NER"
-                ]
+                "lang": "de"
             },
             "ojs_metadata": {
                 "ojs_journal_code": "test",
