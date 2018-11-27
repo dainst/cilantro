@@ -4,11 +4,13 @@
     "description": "Used to validate ingest-journal job parameters",
     "type": "object",
     "required": ["metadata", "files", "object_id"],
+    "additionalProperties": false,
     "properties": {
         "metadata": {
             "type": "object",
             "required": ["title", "abstract", "description", "type",
                          "created", "creator", "identifiers"],
+            "additionalProperties": false,
             "properties": {
                 "title": {
                     "type": "string"
@@ -28,6 +30,7 @@
                 "creator": {
                     "type": "object",
                     "required": ["firstname", "lastname"],
+                    "additionalProperties": false,
                     "properties": {
                         "firstname": {
                             "type": "string"
@@ -50,6 +53,7 @@
             "items": {
                 "type": "object",
                 "required": ["file"],
+                "additionalProperties": false,
                 "properties": {
                     "file": {
                         "type": "string"

@@ -2,13 +2,35 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Ingest Journal schema",
     "description": "Used to validate ingest-journal job parameters",
+    "definitions": {
+      "file_and_range": {
+        "type": "object",
+        "required": ["file", "range"],
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "range": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 2,
+            "minItems": 2
+          }
+        }
+      }
+    },
     "type": "object",
-    "required": ["metadata", "files", "parts", "nlp_params", "ojs_metadata", "do_ocr", "keep_ratio"],
+    "required": ["metadata", "files"],
+    "additionalProperties": false,
     "properties": {
         "metadata": {
             "type": "object",
             "required": ["volume", "year", "number", "description",
                          "importFilePath", "identification"],
+            "additionalProperties": false,
             "properties": {
                 "volume": {
                     "type": "string"
@@ -33,20 +55,7 @@
         "files": {
             "type": "array",
             "items": {
-                "type": "object",
-                "required": ["file", "range"],
-                "properties": {
-                    "file": {
-                        "type": "string"
-                    },
-                    "range": {
-                        "type": "array",
-                        "items": {
-                            "type": "number"
-                        },
-                        "minItems": 2
-                    }
-                }
+                "$ref": "#/definitions/file_and_range"
             }
         },
         "parts": {
@@ -54,12 +63,13 @@
             "items": {
                 "type": "object",
                 "required": ["metadata", "files"],
+                "additionalProperties": false,
                 "properties": {
                     "metadata": {
                         "type": "object",
                         "required": ["title", "author", "pages",
-                                     "date_published", "language", "zenonId",
-                                     "auto_publish", "create_frontpage"],
+                                     "date_published", "language"],
+                        "additionalProperties": false,
                         "properties": {
                             "title": {
                                 "type": "string"
@@ -72,6 +82,7 @@
                                 "items": {
                                     "type": "object",
                                     "required": ["firstname", "lastname"],
+                                    "additionalProperties": false,
                                     "properties": {
                                         "firstname": {
                                             "type": "string"
@@ -81,73 +92,48 @@
                                         }
                                     }
                                 }
-                            }
-                        },
-                        "pages": {
-                            "type": "object",
-                            "required": ["showndesc", "startPrint", "endPrint"],
-                            "properties": {
-                                "showndesc": {
-                                    "type": "string"
-                                },
-                                "startPrint": {
-                                    "type": "number"
-                                },
-                                "endPrint": {
-                                    "type": "number"
+                            },
+                            "pages": {
+                                "type": "object",
+                                "required": ["showndesc", "startPrint", "endPrint"],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "showndesc": {
+                                        "type": "string"
+                                    },
+                                    "startPrint": {
+                                        "type": "number"
+                                    },
+                                    "endPrint": {
+                                        "type": "number"
+                                    }
                                 }
+                            },
+                            "date_published": {
+                                "type": "string",
+                                "pattern": "[0-9]{4}-[0-9]{0,2}-[0-9]{0,2}$"
+                            },
+                            "language": {
+                                "type": "string",
+                                "pattern": "^[a-z]{2}_[A-Z]{2}$"
+                            },
+                            "zenonId": {
+                                "type": "string"
+                            },
+                            "auto_publish": {
+                                "type": "boolean"
+                            },
+                            "create_frontpage": {
+                                "type": "boolean"
                             }
-                        },
-                        "date_published": {
-                            "type": "string"
-                        },
-                        "language": {
-                            "type": "string"
-                        },
-                        "zenonId": {
-                            "type": "string"
-                        },
-                        "auto_publish": {
-                            "type": "boolean"
-                        },
-                        "create_frontpage": {
-                            "type": "boolean"
                         }
                     },
                     "files": {
                         "type": "array",
                         "items": {
-                            "type": "object",
-                            "properties": {
-                                "file": {
-                                    "type": "string"
-                                },
-                                "range": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "number"
-                                    },
-                                    "minItems": 2
-                                }
-                            }
+                            "$ref": "#/definitions/file_and_range"
                         }
                     }
-                }
-            }
-        },
-        "nlp_params": {
-            "type": "object",
-            "required": ["lang", "operations"],
-            "properties": {
-                "lang": {
-                    "type": "string"
-                },
-                "operations": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "minItems": 1
                 }
             }
         },
@@ -156,6 +142,7 @@
             "required": ["ojs_journal_code", "ojs_user", "auto_publish_issue",
                          "default_publish_articles", "default_create_frontpage",
                          "allow_upload_without_file"],
+            "additionalProperties": false,
             "properties": {
                 "ojs_journal_code": {
                     "type": "string"
@@ -177,8 +164,20 @@
                 }
             }
         },
+        "nlp_params": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "lang": {
+                    "type": "string"
+                }
+            }
+        },
         "do_ocr": {
             "type": "boolean"
+        },
+        "ocr_lang": {
+            "type": "string"
         },
         "keep_ratio": {
             "type": "boolean"
