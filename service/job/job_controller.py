@@ -343,8 +343,7 @@ def job_status(job_id):
         job = {}
     response = {
         'status': task.state,
-        **job
-    }
+        **job}
     if hasattr(task, 'result'):
         response['result'] = task.result
     return jsonify(response)
