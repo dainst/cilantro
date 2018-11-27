@@ -1,5 +1,6 @@
 import os
 import yaml
+import glob
 
 from flask import Blueprint, jsonify
 
@@ -76,9 +77,9 @@ def get_job_types():
                  the about information from the file
     """
     job_types = []
-    for job_type_file in os.listdir(job_types_dir):
-        job_name = job_type_file.rsplit('.', 1)[0]
-        with open(os.path.join(job_types_dir, job_type_file), 'r') as f:
+    for job_type_file in glob.glob(job_types_dir + '/*.yml'):
+        job_name = os.path.basename(job_type_file).rsplit('.', 1)[0]
+        with open(job_type_file, 'r') as f:
             job_file_yaml = yaml.safe_load(f.read())
             job_meta = job_file_yaml['about']
         job_types.append({'name': job_name,

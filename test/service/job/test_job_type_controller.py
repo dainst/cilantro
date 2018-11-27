@@ -2,6 +2,7 @@ import unittest
 import os
 import yaml
 import json
+import glob
 
 from service.run_service import app
 
@@ -25,7 +26,7 @@ class JobTypeControllerTest(unittest.TestCase):
         :return: None
         """
         job_types_from_files = []
-        for job_type in os.listdir(job_types_dir):
+        for job_type in glob.glob(job_types_dir + '/*.yml'):
             job_types_from_files.append(job_type.rsplit('.', 1)[0])
 
         response = self.client.get('/job_types')
