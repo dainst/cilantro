@@ -1,11 +1,12 @@
 import logging
+import jsonschema
+import os
 
 from flask import Blueprint, url_for, jsonify, request, g
 
 from service.errors import ApiError
 from utils.celery_client import celery_app
-from service.job.job_config import JobConfig, UnknownJobTypeException, \
-    RequestParameterException
+from service.job.job_config import JobConfig
 from service.user.user_service import auth
 from utils import job_db
 from utils import json_validation
@@ -268,17 +269,20 @@ def job_create(job_type):
     :return: A JSON object containing the status, the job id and the task ids
         of every subtask in the chain
     """
-    params = {}
-    if request.data:
-        params = request.get_json(force=True)
-        json_validation.validate_params(params, job_type)
-    user = auth.username()
+    if not request.data:
+        raise ApiError("invalid_job_params", "No request payload found")
+    params = request.get_json(force=True)
+    if not os.path.isfile(os.path.join(os.environ['CONFIG_DIR'],
+                          'job_types', job_type + '.yml')):
+        raise ApiError("unknown_job_type", "No job definition file found", 404)
     try:
-        job = get_job_config().generate_job(job_type, user, params)
-    except UnknownJobTypeException as e:
+        json_validation.validate_params(params, job_type)
+    except FileNotFoundError as e:
         raise ApiError("unknown_job_type", str(e), 404)
-    except RequestParameterException as e:
-        raise ApiError("invalid_job_params", str(e))
+    except jsonschema.exceptions.ValidationError as e:
+        raise ApiError("invalid_job_params", str(e), 400)
+    user = auth.username()
+    job = get_job_config().generate_job(job_type, user, params)
     task = job.run()
     logger = logging.getLogger(__name__)
     logger.info(f"created job with id: {task.id}")
