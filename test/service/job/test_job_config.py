@@ -10,7 +10,7 @@ class JobConfigTest(unittest.TestCase):
 
     def test_valid(self):
         job_config = JobConfig("test/resources/configs/config_valid")
-        job1 = job_config.generate_job("job1", "test_user").chain
+        job1 = job_config.generate_job("job1", "test_user", {}).chain
         self.assertTrue(
             isinstance(job1, Signature),
             f"job1 is an instance of '{type(job1)}, expected 'Signature'"
@@ -30,7 +30,7 @@ class JobConfigTest(unittest.TestCase):
 
         self.assertEqual('publish', tasks[2]['task'])
 
-        job2 = job_config.generate_job("job2", "test_user").chain
+        job2 = job_config.generate_job("job2", "test_user", {}).chain
         self.assertTrue(
             isinstance(job2, Signature),
             f"job2 is an instance of '{type(job1)}', expected 'Signature'"
@@ -46,7 +46,7 @@ class JobConfigTest(unittest.TestCase):
     def test_unknown_job_type(self):
         job_config = JobConfig("test/resources/configs/config_valid")
         self.assertRaises(UnknownJobTypeException, job_config.generate_job,
-                          "job3", "test_user")
+                          "job3", "test_user", {})
 
     def test_invalid_yaml(self):
         self.assertRaises(ConfigParseException, JobConfig,
@@ -69,7 +69,7 @@ class JobConfigTest(unittest.TestCase):
     def test_list_files(self):
         job_config = JobConfig("test/resources/configs/config_list_files")
 
-        job1 = job_config.generate_job("job1", "test_user",).chain
+        job1 = job_config.generate_job("job1", "test_user", {}).chain
 
         tasks1 = job1.tasks
 
@@ -77,7 +77,7 @@ class JobConfigTest(unittest.TestCase):
         self.assertEqual('tif', kwargs1['representation'])
         self.assertEqual('.*', kwargs1['pattern'])
 
-        job2 = job_config.generate_job("job2", "test_user").chain
+        job2 = job_config.generate_job("job2", "test_user", {}).chain
 
         tasks2 = job2.tasks
 
@@ -88,7 +88,7 @@ class JobConfigTest(unittest.TestCase):
     def test_list_parts(self):
         job_config = JobConfig("test/resources/configs/config_list_parts")
 
-        job1 = job_config.generate_job("job1", "test_user",).chain
+        job1 = job_config.generate_job("job1", "test_user", {}).chain
 
         tasks = job1.tasks
 

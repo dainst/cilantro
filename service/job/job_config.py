@@ -206,7 +206,7 @@ class JobConfig:
         self.job_types = {}
         self._parse_job_config()
 
-    def generate_job(self, job_type, user, request_params={}):
+    def generate_job(self, job_type, user, request_params):
         """
         Generate a celery job chain.
 
