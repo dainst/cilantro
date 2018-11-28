@@ -13,7 +13,7 @@ test_file = 'test.tif'
 
 
 class StagingControllerTest(unittest.TestCase):
-    resource_dir = os.environ['RESOURCE_DIR']
+    resource_dir = os.environ['TEST_RESOURCE_DIR']
     staging_dir = os.environ['STAGING_DIR']
 
     def setUp(self):

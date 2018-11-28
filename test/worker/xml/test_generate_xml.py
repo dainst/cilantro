@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 class GenerateXMLTest(unittest.TestCase):
 
-        resource_dir = os.environ['RESOURCE_DIR']
+        resource_dir = os.environ['TEST_RESOURCE_DIR']
 
         def test_generate_ojsxml(self):
             obj = Object(f'{self.resource_dir}/objects/a_journal')

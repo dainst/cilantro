@@ -144,7 +144,7 @@ services:
       <<: *test-timeouts
       <<: *env-jobdb
       DB_HOST: "db"
-      RESOURCE_DIR: "test/resources"
+      TEST_RESOURCE_DIR: "test/resources"
 
   monitor:
     image: dainst/cilantro-monitor:latest

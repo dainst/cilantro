@@ -12,7 +12,7 @@ class ConvertImageTest(unittest.TestCase):
     with arbitrary parameters and checking if another file was generated.
     """
 
-    resource_dir = os.environ['RESOURCE_DIR']
+    resource_dir = os.environ['TEST_RESOURCE_DIR']
 
     def test_scale_jpg(self):
         """Test scaling for JPEG type image."""
