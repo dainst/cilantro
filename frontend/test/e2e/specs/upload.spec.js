@@ -9,7 +9,7 @@ const EC = protractor.ExpectedConditions;
 describe('documents page', () => {
     describe("File Upload", () => {
 
-        fit("should upload a file", () => {
+        it("should upload a file", () => {
             LoginHelper.get(browser, browser.baseUrl, 'u', 'p');
             e.home.startBtn.click();
             a.uploadFile();
