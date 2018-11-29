@@ -89,7 +89,7 @@ module.exports = {
     },
 
     upload: {
-        fileUploadArea: element(by.id('fileDropArea')),
+        fileUploadArea: element(by.id('upload-area')),
         fileUploadBtn: element(by.id('uploadFileSelect')),
         fileElem: element(by.css('input[type="file"]')),
 
