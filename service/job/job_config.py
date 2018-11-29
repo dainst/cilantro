@@ -283,7 +283,7 @@ class JobConfig:
         pattern = os.path.join(self._config_dir, "job_types", "*.yml")
         self.logger.debug(f"looking for job type configs in {pattern}")
         for file_name in glob.iglob(pattern):
-            self.logger.info(f"found job type config {file_name}")
+            self.logger.debug(f"found job type config {file_name}")
             job_type = _extract_job_type(file_name)
             self.logger.debug(f"extracted job type defintion {job_type}")
             job_config = _read_job_config_file(file_name)
