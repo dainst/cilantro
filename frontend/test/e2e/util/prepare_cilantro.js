@@ -7,19 +7,18 @@ let backendUrl = "";
 let params = {};
 let silent = false;
 
-function getParams() {
+function getParams(user = 'test_user', password = 'test_password') {
     return new Promise((resolve, reject) => {
         rp({uri: frontendUrl + '/config/settings.json', method: 'GET'}).then(res => {
             const settings = JSON.parse(res);
             backendUrl = settings.server_url;
             params = {};
             params.method = 'GET';
-            if (typeof settings.server_user !== 'undefined') {
-                params.auth = {
-                    user: settings.server_user,
-                    pass: settings.server_pass
-                };
-            }
+            params.auth = {
+                user: user,
+                pass: password
+            };
+
             resolve(params);
         })
             .catch(reject)
@@ -86,12 +85,17 @@ const pc = {
             .then(clearStaging)
             .then(fillStaging)
             .then(resolve)
-            .catch(reject)
+            .catch(reject);
     }),
     
     cleanUp: url => new Promise((resolve, reject) => {
         frontendUrl = url;
         getParams()
+            .then(clearStaging)
+            .then(resolve)
+            .catch(reject);
+
+        getParams('u','p')
             .then(clearStaging)
             .then(resolve)
             .catch(reject)
@@ -102,7 +106,7 @@ const pc = {
         getParams()
             .then(() => clearSingleFile(file))
             .then(resolve)
-            .catch(reject)
+            .catch(reject);
     }),
 
     silent: to => {
