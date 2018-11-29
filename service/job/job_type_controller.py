@@ -122,14 +122,6 @@ def get_job_type_detail(job_type):
                 ],
                 "title": "Ingest a Journal-Issue to iDAI.publications/journals"
             },
-            "params": {
-                "do_ocr": "boolean",
-                "files": "list",
-                "metadata": "dict",
-                "nlp_params": "dict",
-                "ojs_metadata": "dict",
-                "parts": "list"
-            },
             "tasks": [
                 "create_object",
                 {
