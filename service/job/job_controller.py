@@ -219,6 +219,7 @@ def job_create(job_type):
         HTTP/1.1 200 OK
 
         {
+            "success": true,
             "job_id": "010819cc-dc4d-11e8-b152-0242ac130008",
             "status": "Accepted",
             "task_ids": [
