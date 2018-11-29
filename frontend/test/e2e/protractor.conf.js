@@ -55,7 +55,7 @@ exports.config = {
     onPrepare: () => {
         logFix = {
             specStarted: function(result) {
-                console.log('');
+                console.log('\n'+result.fullName + ' : ');
             }
         };
         jasmine.getEnv().addReporter(logFix);

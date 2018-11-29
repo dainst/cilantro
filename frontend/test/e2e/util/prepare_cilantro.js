@@ -90,15 +90,17 @@ const pc = {
     
     cleanUp: url => new Promise((resolve, reject) => {
         frontendUrl = url;
-        getParams()
-            .then(clearStaging)
-            .then(resolve)
-            .catch(reject);
-
         getParams('u','p')
             .then(clearStaging)
-            .then(resolve)
-            .catch(reject)
+            .then(()=>{
+                getParams('test_user', 'test_password')
+                    .then(clearStaging)
+                    .then(resolve)
+                    .catch(reject);
+            })
+            .catch(reject);
+
+
     }),
 
     clearSingleFile: (url, file) => new Promise((resolve, reject) => {
