@@ -54,8 +54,10 @@ exports.config = {
 
     onPrepare: () => {
         logFix = {
-            specStarted: function(result) {
-                console.log('\n'+result.fullName + ' : ');
+            specDone: function(result) {
+                if((''+result.status) != 'disabled'){
+                    console.log('\n'+result.fullName + ' : '+ result.status);
+                }
             }
         };
         jasmine.getEnv().addReporter(logFix);
