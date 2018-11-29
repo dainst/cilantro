@@ -53,6 +53,13 @@ exports.config = {
     beforeLaunch: () => new Promise(resolve => reporter.beforeLaunch(resolve)),
 
     onPrepare: () => {
+        logFix = {
+            specStarted: function(result) {
+                console.log();
+            }
+        };
+        jasmine.getEnv().addReporter(logFix);
+
         const defer = protractor.promise.defer();
         jasmine.getEnv().addReporter(reporter);
         prepareCilantro.prepare(frontendUrl)
