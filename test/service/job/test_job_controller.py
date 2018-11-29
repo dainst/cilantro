@@ -50,7 +50,8 @@ class JobControllerTest(unittest.TestCase):
 
     def test_create_job_no_payload(self):
         """Job creation has to fail without POST payload."""
-        self._make_request('/job/job1', None, 400, 'invalid_job_params', 'No request payload found')
+        self._make_request('/job/job1', None, 400, 'invalid_job_params',
+                           'No request payload found')
 
     def test_create_job_invalid_json(self):
         """Test job creation to fail when the POST payload is not JSON."""
@@ -58,14 +59,16 @@ class JobControllerTest(unittest.TestCase):
 
     def test_create_job_unknown_job_type(self):
         """Test job creation to fail when the job definition is not found."""
-        self._make_request('/job/job3', '{}', 404, 'unknown_job_type', 'No job definition file found')
+        self._make_request('/job/job3', '{}', 404, 'unknown_job_type',
+                           'No job definition file found')
 
     def test_create_job_no_schema(self):
         """Test failing job creation when no schema file is found."""
         error_message = ("[Errno 2] No such file or directory: "
                          "'test/resources/configs/config_valid/job_types"
                          "/schemas/job1_schema.json'")
-        self._make_request('/job/job1', '{}', 404, 'unknown_job_type', error_message)
+        self._make_request('/job/job1', '{}', 404, 'unknown_job_type',
+                           error_message)
 
     def test_create_job_unknown_param(self):
         """Test job creation to fail when there are unknown params given."""
@@ -81,7 +84,9 @@ class JobControllerTest(unittest.TestCase):
                 ],
             "bla": "blub"
             }
-        self._make_request('/job/job2', json.dumps(data), 400, 'invalid_job_params', 'Additional properties are not allowed')
+        self._make_request('/job/job2', json.dumps(data), 400,
+                           'invalid_job_params',
+                           'Additional properties are not allowed')
 
     def test_create_job_missing_param(self):
         """Test job creation to fail when there are params missing."""
@@ -95,7 +100,8 @@ class JobControllerTest(unittest.TestCase):
                 {"file": "some_tiffs/test2.tiff"}
                 ]
             }
-        self._make_request('/job/job2', json.dumps(data), 400, 'invalid_job_params', 'is a required property')
+        self._make_request('/job/job2', json.dumps(data), 400,
+                           'invalid_job_params', 'is a required property')
 
     def test_create_job_wrong_param_type(self):
         """Test job creation to fail when a param has the wrong type."""
@@ -110,9 +116,11 @@ class JobControllerTest(unittest.TestCase):
                 {"file": "some_tiffs/test2.tiff"}
                 ]
             }
-        self._make_request('/job/job2', json.dumps(data), 400, 'invalid_job_params', 'is not of type')
+        self._make_request('/job/job2', json.dumps(data), 400,
+                           'invalid_job_params', 'is not of type')
 
-    def _make_request(self, job_name, payload, expected_http_code, expected_error_code='', expected_error_message=''):
+    def _make_request(self, job_name, payload, expected_http_code,
+                      expected_error_code='', expected_error_message=''):
         response = self.client.post(job_name, data=payload,
                                     headers=get_auth_header())
 
@@ -123,5 +131,7 @@ class JobControllerTest(unittest.TestCase):
             self.assertEqual(response_json['status'], 'Accepted')
         else:
             self.assertFalse(response_json['success'])
-            self.assertEqual(response_json['error']['code'], expected_error_code)
-            self.assertTrue(expected_error_message in response_json['error']['message'])
+            self.assertEqual(response_json['error']['code'],
+                             expected_error_code)
+            self.assertTrue(expected_error_message in
+                            response_json['error']['message'])
