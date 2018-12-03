@@ -6,7 +6,15 @@ angular
         function($scope, jobs, $interval, steps) {
 
             const refresh = () => {
-                if(steps.current !== 'jobs'){
+                function isJobFinished(job) {
+                    return job[1].status == 1;
+                }
+
+                if (Object.entries(jobs.list).every(isJobFinished)) {
+                    $interval.cancel(promise);
+                }
+
+                if(steps.current !== 'jobs') {
                     $interval.cancel(promise);
                 }
                 else {
