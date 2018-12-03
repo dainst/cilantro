@@ -11,3 +11,4 @@ bcrypt
 pymongo
 sphinxcontrib.httpdomain
 flask_httpauth
+jsonschema
