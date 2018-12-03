@@ -26,7 +26,7 @@ angular
             "default_publish_articles": true,
             "default_create_frontpage": true,
             "allow_upload_without_file":false,
-            "operations":               editables.checkbox(false),
+            "do_nlp":                   editables.checkbox(false),
             "lang":                     "en",
             "do_ocr":                   editables.checkbox(false),
         }
@@ -151,16 +151,16 @@ angular
             title: "Upload without selected file is allowed?",
             param: "ojs_metadata"
         },
-        "operations" : {
-            title: 'NLP operations',
-            param: "nlp_params"
-        },
         "lang" : {
             hide: true,
             param: "nlp_params"
         },
         "do_ocr": {
             title: "Perform OCR",
+            param: true
+        },
+        "do_nlp": {
+            title: "Perform NLP",
             param: true
         }
     };
