@@ -13,7 +13,7 @@ class ConvertTest(unittest.TestCase):
     you need to extend these methods.
     """
 
-    resource_dir = os.environ['RESOURCE_DIR']
+    resource_dir = os.environ['TEST_RESOURCE_DIR']
     working_dir = "test_data"
 
     def setUp(self):

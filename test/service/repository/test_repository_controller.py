@@ -11,7 +11,7 @@ test_file = 'data/pdf/test.pdf'
 
 class RepositoryControllerTest(unittest.TestCase):
 
-    resource_dir = os.environ['RESOURCE_DIR']
+    resource_dir = os.environ['TEST_RESOURCE_DIR']
     repository_dir = os.environ['REPOSITORY_DIR']
 
     def setUp(self):
