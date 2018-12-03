@@ -2,7 +2,7 @@ import os
 import yaml
 import glob
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 from service.errors import ApiError
 
@@ -110,9 +110,7 @@ def get_job_type_detail(job_type):
 
         {
             "about": {
-                "description": "Create a new Issue of an existing journal
-                                and upload it's files to
-                                iDAI.publications/journals",
+                "description": "Create a new Issue of an existing journal, and upload it's files to iDAI.publications/journals",
                 "tags": [
                     "OJS",
                     "iDAI.publications/journals",
@@ -121,6 +119,227 @@ def get_job_type_detail(job_type):
                     "pdf"
                 ],
                 "title": "Ingest a Journal-Issue to iDAI.publications/journals"
+            },
+            "schema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "additionalProperties": false,
+                "definitions": {
+                    "file_and_range": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "file": {
+                                "type": "string"
+                            },
+                            "range": {
+                                "items": {
+                                    "type": "number"
+                                },
+                                "maxItems": 2,
+                                "minItems": 2,
+                                "type": "array"
+                            }
+                        },
+                        "required": [
+                            "file",
+                            "range"
+                        ],
+                        "type": "object"
+                    }
+                },
+                "description": "Used to validate ingest-journal job parameters",
+                "properties": {
+                    "do_nlp": {
+                        "type": "boolean"
+                    },
+                    "do_ocr": {
+                        "type": "boolean"
+                    },
+                    "files": {
+                        "items": {
+                            "$ref": "#/definitions/file_and_range"
+                        },
+                        "type": "array"
+                    },
+                    "keep_ratio": {
+                        "type": "boolean"
+                    },
+                    "metadata": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "description": {
+                                "type": "string"
+                            },
+                            "identification": {
+                                "type": "string"
+                            },
+                            "importFilePath": {
+                                "type": "string"
+                            },
+                            "number": {
+                                "type": "string"
+                            },
+                            "volume": {
+                                "type": "string"
+                            },
+                            "year": {
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "volume",
+                            "year",
+                            "number",
+                            "description",
+                            "importFilePath",
+                            "identification"
+                        ],
+                        "type": "object"
+                    },
+                    "nlp_params": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "lang": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "ocr_lang": {
+                        "type": "string"
+                    },
+                    "ojs_metadata": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "allow_upload_without_file": {
+                                "type": "boolean"
+                            },
+                            "auto_publish_issue": {
+                                "type": "boolean"
+                            },
+                            "default_create_frontpage": {
+                                "type": "boolean"
+                            },
+                            "default_publish_articles": {
+                                "type": "boolean"
+                            },
+                            "ojs_journal_code": {
+                                "type": "string"
+                            },
+                            "ojs_user": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "ojs_journal_code",
+                            "ojs_user",
+                            "auto_publish_issue",
+                            "default_publish_articles",
+                            "default_create_frontpage",
+                            "allow_upload_without_file"
+                        ],
+                        "type": "object"
+                    },
+                    "parts": {
+                        "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                                "files": {
+                                    "items": {
+                                        "$ref": "#/definitions/file_and_range"
+                                    },
+                                    "type": "array"
+                                },
+                                "metadata": {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "abstract": {
+                                            "type": "string"
+                                        },
+                                        "author": {
+                                            "items": {
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "firstname": {
+                                                        "type": "string"
+                                                    },
+                                                    "lastname": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "firstname",
+                                                    "lastname"
+                                                ],
+                                                "type": "object"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "auto_publish": {
+                                            "type": "boolean"
+                                        },
+                                        "create_frontpage": {
+                                            "type": "boolean"
+                                        },
+                                        "date_published": {
+                                            "pattern": "[0-9]{4}-[0-9]{0,2}-[0-9]{0,2}$",
+                                            "type": "string"
+                                        },
+                                        "language": {
+                                            "pattern": "^[a-z]{2}_[A-Z]{2}$",
+                                            "type": "string"
+                                        },
+                                        "pages": {
+                                            "additionalProperties": false,
+                                            "properties": {
+                                                "endPrint": {
+                                                    "type": "number"
+                                                },
+                                                "showndesc": {
+                                                    "type": "string"
+                                                },
+                                                "startPrint": {
+                                                    "type": "number"
+                                                }
+                                            },
+                                            "required": [
+                                                "showndesc",
+                                                "startPrint",
+                                                "endPrint"
+                                            ],
+                                            "type": "object"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "zenonId": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "title",
+                                        "author",
+                                        "pages",
+                                        "date_published",
+                                        "language"
+                                    ],
+                                    "type": "object"
+                                }
+                            },
+                            "required": [
+                                "metadata",
+                                "files"
+                            ],
+                            "type": "object"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "metadata",
+                    "files"
+                ],
+                "title": "Ingest Journal schema",
+                "type": "object"
             },
             "tasks": [
                 "create_object",
@@ -175,6 +394,7 @@ def get_job_type_detail(job_type):
                         "foreach": {
                             "max_height": 50,
                             "max_width": 50,
+                            "target_dir": "thumbnails",
                             "task": "convert.scale_image"
                         },
                         "list_files": "jpg"
@@ -235,6 +455,7 @@ def get_job_type_detail(job_type):
 
     :reqheader Accept: application/json
     :param str job_type: Name of the job type
+    :param str schema: (optional) if set to 'true', parameter schema is served
 
     :resheader Content-Type: application/json
     :>json dict: operation result
@@ -244,7 +465,16 @@ def get_job_type_detail(job_type):
     """
     try:
         with open(os.path.join(job_types_dir, job_type) + '.yml', 'r') as f:
-            return jsonify(yaml.safe_load(f.read()))
+            job_type_def = yaml.safe_load(f.read())
+
+        schema_requested = request.args.get('schema')
+        if schema_requested == 'true':
+            schema_path = os.path.join(job_types_dir, 'schemas',
+                                       job_type + '_schema.json')
+            with open(schema_path, 'r') as schema_file:
+                job_type_def['schema'] = yaml.safe_load(schema_file.read())
+
+        return jsonify(job_type_def)
     except FileNotFoundError:
         raise ApiError(
             "job_type_not_found",
