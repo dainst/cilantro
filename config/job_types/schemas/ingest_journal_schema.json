@@ -176,6 +176,9 @@
         "do_ocr": {
             "type": "boolean"
         },
+        "do_nlp": {
+            "type": "boolean"
+        },
         "ocr_lang": {
             "type": "string"
         },
