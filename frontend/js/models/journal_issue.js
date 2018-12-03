@@ -223,7 +223,7 @@ angular
             title: '#',
             style: {minWidth: '10px'},
             hide: true,
-            param: true
+            param: "metadata"
         },
         filepath: {
             title: 'Loaded File',
