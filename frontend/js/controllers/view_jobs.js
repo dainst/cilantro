@@ -22,7 +22,7 @@ angular
                 }
             };
 
-            let promise = $interval(refresh, 1000);
+            let promise = $interval(refresh, 5000);
 
             $scope.jobs = jobs.list;
 
