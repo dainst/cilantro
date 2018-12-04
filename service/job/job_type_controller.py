@@ -455,7 +455,7 @@ def get_job_type_detail(job_type):
 
     :reqheader Accept: application/json
     :param str job_type: Name of the job type
-    :param str schema: (optional) if set to 'true', parameter schema is served
+    :query schema: (optional) if set to 'true', parameter schema is served
 
     :resheader Content-Type: application/json
     :>json dict: operation result
