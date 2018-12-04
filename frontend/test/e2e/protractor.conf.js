@@ -55,7 +55,7 @@ exports.config = {
     onPrepare: () => {
         logFix = {
             specDone: function(result) {
-                if((''+result.status) != 'disabled'){
+                if(result.status.toString() != 'disabled'){
                     console.log('\n'+result.fullName + ' : '+ result.status);
                 }
             }
