@@ -1,23 +1,37 @@
 #!/usr/bin/env bash
 
-name=${1}
-tag=${2-latest}
-nocache=${3}
-token=$(grep GITHUB_ACCESS_TOKEN .env | xargs)
-token=${token#*=}
+### Install required libraries ###
+sudo apt-get install -y python3-dev libpoppler-cpp-dev
+sudo apt-get install -y docker-compose
+pip3 install --user -r doc/requirements.txt
 
-if [ -z "${name}" ]
-    then
-        echo "Please specify a name"
-        read name
+### Preparation ###
+cp config/users.yml-default config/users.yml
+
+### Startup ###
+docker-compose pull
+docker-compose up -d > docker.log
+
+### Backend Tests ###
+test/exec_docker_test.sh
+backend_test_return_code=$?
+
+if [ $backend_test_return_code -ne 0 ]; then
+  exit 1;
 fi
 
-if [ -z "${nocache}" ]
-    then
-        nocache=""
-fi
+### Frontend Tests ###
+frontend/test/exec_frontend_test.sh
 
-docker image build -t ${name}:${tag} -f docker/${name}/Dockerfile . --build-arg GITHUB_ACCESS_TOKEN=${token} ${nocache}
-docker tag ${name}:${tag} dainst/${name}:${tag}
-docker push dainst/${name}:${tag}
-exit
+### Build documentation ###
+doc/build-doc.sh
+# cleanup
+rm -r doc/_build/doctrees
+find doc -maxdepth 1 -type f \
+! -name 'api.rst' ! -name 'build-doc.sh' \! -name 'conf.py' \
+! -name 'index.rst' ! -name 'Makefile' ! -name 'requirements.txt' \
+-exec rm -f {} +
+
+### Shutdown ###
+docker-compose stop
+docker-compose down
