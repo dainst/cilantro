@@ -7,7 +7,7 @@ angular
 
             const refresh = () => {
                 function isJobFinished(job) {
-                    return job[1].status == 1;
+                    return job[1].status === 1;
                 }
 
                 if (Object.entries(jobs.list).every(isJobFinished)) {
