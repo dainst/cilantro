@@ -7,7 +7,7 @@ let backendUrl = "";
 let params = {};
 let silent = false;
 
-function getParams(user = 'test_user', password = 'test_password') {
+function getParams(upload = false) {
     return new Promise((resolve, reject) => {
         rp({uri: frontendUrl + '/config/settings.json', method: 'GET'}).then(res => {
             const settings = JSON.parse(res);
@@ -15,10 +15,15 @@ function getParams(user = 'test_user', password = 'test_password') {
             params = {};
             params.method = 'GET';
             params.auth = {
-                user: user,
-                pass: password
+                user: settings.normal_user,
+                pass: settings.normal_user_psw
             };
-
+            if(upload){
+                params.auth = {
+                    user: settings.upload_user,
+                    pass: settings.upload_user_psw
+                };
+            }
             resolve(params);
         })
             .catch(reject)
@@ -90,10 +95,10 @@ const pc = {
     
     cleanUp: url => new Promise((resolve, reject) => {
         frontendUrl = url;
-        getParams('u','p')
+        getParams(true)
             .then(clearStaging)
             .then(()=>{
-                getParams('test_user', 'test_password')
+                getParams()
                     .then(clearStaging)
                     .then(resolve)
                     .catch(reject);
