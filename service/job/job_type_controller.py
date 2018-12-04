@@ -122,47 +122,11 @@ def get_job_type_detail(job_type):
             },
             "schema": {
                 "$schema": "http://json-schema.org/draft-07/schema#",
-                "additionalProperties": false,
-                "definitions": {
-                    "file_and_range": {
-                        "additionalProperties": false,
-                        "properties": {
-                            "file": {
-                                "type": "string"
-                            },
-                            "range": {
-                                "items": {
-                                    "type": "number"
-                                },
-                                "maxItems": 2,
-                                "minItems": 2,
-                                "type": "array"
-                            }
-                        },
-                        "required": [
-                            "file",
-                            "range"
-                        ],
-                        "type": "object"
-                    }
-                },
+                "title": "Ingest Journal schema",
                 "description": "Used to validate ingest-journal job parameters",
+                "type": "object"
+                "additionalProperties": false,
                 "properties": {
-                    "do_nlp": {
-                        "type": "boolean"
-                    },
-                    "do_ocr": {
-                        "type": "boolean"
-                    },
-                    "files": {
-                        "items": {
-                            "$ref": "#/definitions/file_and_range"
-                        },
-                        "type": "array"
-                    },
-                    "keep_ratio": {
-                        "type": "boolean"
-                    },
                     "metadata": {
                         "additionalProperties": false,
                         "properties": {
@@ -171,175 +135,18 @@ def get_job_type_detail(job_type):
                             },
                             "identification": {
                                 "type": "string"
-                            },
-                            "importFilePath": {
-                                "type": "string"
-                            },
-                            "number": {
-                                "type": "string"
-                            },
-                            "volume": {
-                                "type": "string"
-                            },
-                            "year": {
-                                "type": "number"
                             }
                         },
                         "required": [
-                            "volume",
-                            "year",
-                            "number",
                             "description",
-                            "importFilePath",
                             "identification"
                         ],
                         "type": "object"
-                    },
-                    "nlp_params": {
-                        "additionalProperties": false,
-                        "properties": {
-                            "lang": {
-                                "type": "string"
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "ocr_lang": {
-                        "type": "string"
-                    },
-                    "ojs_metadata": {
-                        "additionalProperties": false,
-                        "properties": {
-                            "allow_upload_without_file": {
-                                "type": "boolean"
-                            },
-                            "auto_publish_issue": {
-                                "type": "boolean"
-                            },
-                            "default_create_frontpage": {
-                                "type": "boolean"
-                            },
-                            "default_publish_articles": {
-                                "type": "boolean"
-                            },
-                            "ojs_journal_code": {
-                                "type": "string"
-                            },
-                            "ojs_user": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "ojs_journal_code",
-                            "ojs_user",
-                            "auto_publish_issue",
-                            "default_publish_articles",
-                            "default_create_frontpage",
-                            "allow_upload_without_file"
-                        ],
-                        "type": "object"
-                    },
-                    "parts": {
-                        "items": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "files": {
-                                    "items": {
-                                        "$ref": "#/definitions/file_and_range"
-                                    },
-                                    "type": "array"
-                                },
-                                "metadata": {
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "abstract": {
-                                            "type": "string"
-                                        },
-                                        "author": {
-                                            "items": {
-                                                "additionalProperties": false,
-                                                "properties": {
-                                                    "firstname": {
-                                                        "type": "string"
-                                                    },
-                                                    "lastname": {
-                                                        "type": "string"
-                                                    }
-                                                },
-                                                "required": [
-                                                    "firstname",
-                                                    "lastname"
-                                                ],
-                                                "type": "object"
-                                            },
-                                            "type": "array"
-                                        },
-                                        "auto_publish": {
-                                            "type": "boolean"
-                                        },
-                                        "create_frontpage": {
-                                            "type": "boolean"
-                                        },
-                                        "date_published": {
-                                            "pattern": "[0-9]{4}-[0-9]{0,2}-[0-9]{0,2}$",
-                                            "type": "string"
-                                        },
-                                        "language": {
-                                            "pattern": "^[a-z]{2}_[A-Z]{2}$",
-                                            "type": "string"
-                                        },
-                                        "pages": {
-                                            "additionalProperties": false,
-                                            "properties": {
-                                                "endPrint": {
-                                                    "type": "number"
-                                                },
-                                                "showndesc": {
-                                                    "type": "string"
-                                                },
-                                                "startPrint": {
-                                                    "type": "number"
-                                                }
-                                            },
-                                            "required": [
-                                                "showndesc",
-                                                "startPrint",
-                                                "endPrint"
-                                            ],
-                                            "type": "object"
-                                        },
-                                        "title": {
-                                            "type": "string"
-                                        },
-                                        "zenonId": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "required": [
-                                        "title",
-                                        "author",
-                                        "pages",
-                                        "date_published",
-                                        "language"
-                                    ],
-                                    "type": "object"
-                                }
-                            },
-                            "required": [
-                                "metadata",
-                                "files"
-                            ],
-                            "type": "object"
-                        },
-                        "type": "array"
                     }
                 },
                 "required": [
-                    "metadata",
-                    "files"
-                ],
-                "title": "Ingest Journal schema",
-                "type": "object"
+                    "metadata"
+                ]
             },
             "tasks": [
                 "create_object",
