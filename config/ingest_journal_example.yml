@@ -3,12 +3,6 @@ about:
   description: Create a new Issue of an existing journal, and upload it's files to iDAI.publications/journals
   tags: [OJS, iDAI.publications/journals, publish, journal, pdf]
 
-params:
-  do_ocr: boolean
-  publish_to_webanno: boolean
-  ojs_journal_code: string
-  auto_publish_issue: boolean
-
 tasks:
   - create_object
   - split_pdf

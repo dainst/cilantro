@@ -3,16 +3,6 @@ about:
   description: Create a new Issue of an existing journal, and upload it's files to iDAI.publications/journals
   tags: [OJS, iDAI.publications/journals, publish, journal, pdf]
 
-params:
-  files: list
-  parts: list
-  metadata: dict
-  nlp_params: dict
-  do_ocr: boolean
-  ocr_lang: string
-  ojs_metadata: dict
-  keep_ratio: boolean
-
 tasks:
   - create_object
   - list_parts:

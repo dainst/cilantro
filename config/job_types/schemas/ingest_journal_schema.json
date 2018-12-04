@@ -1,0 +1,189 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Ingest Journal schema",
+    "description": "Used to validate ingest-journal job parameters",
+    "definitions": {
+      "file_and_range": {
+        "type": "object",
+        "required": ["file", "range"],
+        "additionalProperties": false,
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "range": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "maxItems": 2,
+            "minItems": 2
+          }
+        }
+      }
+    },
+    "type": "object",
+    "required": ["metadata", "files"],
+    "additionalProperties": false,
+    "properties": {
+        "metadata": {
+            "type": "object",
+            "required": ["volume", "year", "number", "description",
+                         "importFilePath", "identification"],
+            "additionalProperties": false,
+            "properties": {
+                "volume": {
+                    "type": "string"
+                },
+                "year": {
+                    "type": "number"
+                },
+                "number": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "importFilePath": {
+                    "type": "string"
+                },
+                "identification": {
+                    "type": "string"
+                }
+            }
+        },
+        "files": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/file_and_range"
+            }
+        },
+        "parts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["metadata", "files"],
+                "additionalProperties": false,
+                "properties": {
+                    "metadata": {
+                        "type": "object",
+                        "required": ["title", "author", "pages",
+                                     "date_published", "language"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "title": {
+                                "type": "string"
+                            },
+                            "abstract": {
+                                "type": "string"
+                            },
+                            "author": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": ["firstname", "lastname"],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "firstname": {
+                                            "type": "string"
+                                        },
+                                        "lastname": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "pages": {
+                                "type": "object",
+                                "required": ["showndesc", "startPrint", "endPrint"],
+                                "additionalProperties": false,
+                                "properties": {
+                                    "showndesc": {
+                                        "type": "string"
+                                    },
+                                    "startPrint": {
+                                        "type": "number"
+                                    },
+                                    "endPrint": {
+                                        "type": "number"
+                                    }
+                                }
+                            },
+                            "date_published": {
+                                "type": "string",
+                                "pattern": "[0-9]{4}-[0-9]{0,2}-[0-9]{0,2}$"
+                            },
+                            "language": {
+                                "type": "string",
+                                "pattern": "^[a-z]{2}_[A-Z]{2}$"
+                            },
+                            "zenonId": {
+                                "type": "string"
+                            },
+                            "auto_publish": {
+                                "type": "boolean"
+                            },
+                            "create_frontpage": {
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "files": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/file_and_range"
+                        }
+                    }
+                }
+            }
+        },
+        "ojs_metadata": {
+            "type": "object",
+            "required": ["ojs_journal_code", "ojs_user", "auto_publish_issue",
+                         "default_publish_articles", "default_create_frontpage",
+                         "allow_upload_without_file"],
+            "additionalProperties": false,
+            "properties": {
+                "ojs_journal_code": {
+                    "type": "string"
+                },
+                "ojs_user": {
+                    "type": "string"
+                },
+                "auto_publish_issue": {
+                    "type": "boolean"
+                },
+                "default_publish_articles": {
+                    "type": "boolean"
+                },
+                "default_create_frontpage": {
+                    "type": "boolean"
+                },
+                "allow_upload_without_file": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "nlp_params": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "lang": {
+                    "type": "string"
+                }
+            }
+        },
+        "do_ocr": {
+            "type": "boolean"
+        },
+        "do_nlp": {
+            "type": "boolean"
+        },
+        "ocr_lang": {
+            "type": "string"
+        },
+        "keep_ratio": {
+            "type": "boolean"
+        }
+    }
+}

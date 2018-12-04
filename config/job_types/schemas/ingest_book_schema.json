@@ -1,0 +1,68 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Ingest Book schema",
+    "description": "Used to validate ingest-book job parameters",
+    "type": "object",
+    "required": ["metadata", "files", "object_id"],
+    "additionalProperties": false,
+    "properties": {
+        "metadata": {
+            "type": "object",
+            "required": ["title", "abstract", "description", "type",
+                         "created", "creator", "identifiers"],
+            "additionalProperties": false,
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "abstract": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "created": {
+                    "type": "string"
+                },
+                "creator": {
+                    "type": "object",
+                    "required": ["firstname", "lastname"],
+                    "additionalProperties": false,
+                    "properties": {
+                        "firstname": {
+                            "type": "string"
+                        },
+                        "lastname": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "identifiers": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "files": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["file"],
+                "additionalProperties": false,
+                "properties": {
+                    "file": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "object_id": {
+            "type": "string"
+        }
+    }
+}

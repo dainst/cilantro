@@ -1,7 +1,8 @@
 import os
 import yaml
+import glob
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 from service.errors import ApiError
 
@@ -76,9 +77,9 @@ def get_job_types():
                  the about information from the file
     """
     job_types = []
-    for job_type_file in os.listdir(job_types_dir):
-        job_name = job_type_file.rsplit('.', 1)[0]
-        with open(os.path.join(job_types_dir, job_type_file), 'r') as f:
+    for job_type_file in glob.glob(job_types_dir + '/*.yml'):
+        job_name = os.path.basename(job_type_file).rsplit('.', 1)[0]
+        with open(job_type_file, 'r') as f:
             job_file_yaml = yaml.safe_load(f.read())
             job_meta = job_file_yaml['about']
         job_types.append({'name': job_name,
@@ -109,9 +110,7 @@ def get_job_type_detail(job_type):
 
         {
             "about": {
-                "description": "Create a new Issue of an existing journal
-                                and upload it's files to
-                                iDAI.publications/journals",
+                "description": "Create a new Issue of an existing journal, and upload it's files to iDAI.publications/journals",
                 "tags": [
                     "OJS",
                     "iDAI.publications/journals",
@@ -121,13 +120,33 @@ def get_job_type_detail(job_type):
                 ],
                 "title": "Ingest a Journal-Issue to iDAI.publications/journals"
             },
-            "params": {
-                "do_ocr": "boolean",
-                "files": "list",
-                "metadata": "dict",
-                "nlp_params": "dict",
-                "ojs_metadata": "dict",
-                "parts": "list"
+            "schema": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "title": "Ingest Journal schema",
+                "description": "Used to validate ingest-journal job parameters",
+                "type": "object"
+                "additionalProperties": false,
+                "properties": {
+                    "metadata": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "description": {
+                                "type": "string"
+                            },
+                            "identification": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "description",
+                            "identification"
+                        ],
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "metadata"
+                ]
             },
             "tasks": [
                 "create_object",
@@ -182,6 +201,7 @@ def get_job_type_detail(job_type):
                         "foreach": {
                             "max_height": 50,
                             "max_width": 50,
+                            "target_dir": "thumbnails",
                             "task": "convert.scale_image"
                         },
                         "list_files": "jpg"
@@ -242,6 +262,7 @@ def get_job_type_detail(job_type):
 
     :reqheader Accept: application/json
     :param str job_type: Name of the job type
+    :query schema: (optional) if set to 'true', parameter schema is served
 
     :resheader Content-Type: application/json
     :>json dict: operation result
@@ -251,7 +272,16 @@ def get_job_type_detail(job_type):
     """
     try:
         with open(os.path.join(job_types_dir, job_type) + '.yml', 'r') as f:
-            return jsonify(yaml.safe_load(f.read()))
+            job_type_def = yaml.safe_load(f.read())
+
+        schema_requested = request.args.get('schema')
+        if schema_requested == 'true':
+            schema_path = os.path.join(job_types_dir, 'schemas',
+                                       job_type + '_schema.json')
+            with open(schema_path, 'r') as schema_file:
+                job_type_def['schema'] = yaml.safe_load(schema_file.read())
+
+        return jsonify(job_type_def)
     except FileNotFoundError:
         raise ApiError(
             "job_type_not_found",
