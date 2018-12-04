@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Ingest Journal schema",
-    "description": "Used to validate ingest-journal job parameters",
+    "title": "Ingest Book schema",
+    "description": "Used to validate ingest-book job parameters",
     "type": "object",
     "required": ["metadata", "files", "object_id"],
     "additionalProperties": false,
