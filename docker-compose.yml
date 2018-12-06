@@ -180,9 +180,9 @@ services:
     ports:
       - "7777:80"
     environment:
-      BACKEND_URI: "http://localhost:5000"
-      ZENON_URI: "https://zenon.dainst.org/api/v1"
-      OJS_URI: "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api"
+      BACKEND_URI: ${BACKEND_URI}
+      ZENON_URI: ${ZENON_URI}
+      OJS_URI: ${OJS_URI}
 
   frontend-test:
     tty: true
@@ -199,6 +199,6 @@ services:
       - ./frontend/test:/salvia/test
     environment:
       TEST: ${TEST}
-      BACKEND_URI: "http://service:5000"
-      ZENON_URI: "https://zenon.dainst.org/api/v1"
-      OJS_URI: "http://ojs:80/ojs/plugins/generic/ojs-cilantro-plugin/api"
+      BACKEND_URI: ${BACKEND_URI_TEST}
+      ZENON_URI: ${ZENON_URI_TEST}
+      OJS_URI: ${OJS_URI_TEST}
