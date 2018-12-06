@@ -104,9 +104,9 @@ services:
   salvia:
     image: dainst/cilantro-salvia:latest
     environment:
-      BACKEND_URI: "http://oneeyedjacks01.dai-cloud.uni-koeln.de/api"
-      ZENON_URI: "https://zenon.dainst.org/api/v1"
-      OJS_URI: "http://oneeyedjacks01.dai-cloud.uni-koeln.de/ojs/plugins/generic/ojs-cilantro-plugin/api"
+      BACKEND_URI: ${BACKEND_URI}
+      ZENON_URI: ${ZENON_URI}
+      OJS_URI: ${OJS_URI}
 
 
 volumes:
