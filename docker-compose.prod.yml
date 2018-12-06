@@ -9,6 +9,7 @@ x-env-dirs: &env-dirs
 x-env-ojs: &env-ojs
   OJS_SERVER: ${OJS_SERVER}
   OJS_PORT: ${OJS_PORT}
+  OJS_PATH: ${OJS_PATH}
   OJS_AUTH_KEY: ${OJS_AUTH_KEY}
 
 x-env-broker: &env-broker
