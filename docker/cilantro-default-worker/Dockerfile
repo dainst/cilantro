@@ -22,6 +22,7 @@ RUN set -ex && mkdir /app
 COPY ./service /app/service
 COPY ./utils /app/utils
 COPY ./workers /app/workers
+COPY ./resources /app/resources
 WORKDIR /app
 
 COPY docker/cilantro-default-worker/Pipfile Pipfile
