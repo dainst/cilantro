@@ -117,6 +117,7 @@ cmake-build-release/
 # IntelliJ
 out/
 .idea/misc.xml
+.idea/encodings.xml
 .idea/inspectionProfiles/Project_Default.xml
 
 # JIRA plugin
