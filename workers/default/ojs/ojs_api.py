@@ -57,7 +57,7 @@ def publish(import_xml_file_path, journalcode):
 
 def _get_api_url():
     return (f"http://{server}:{port}/{path}"
-            f"/ojs/plugins/generic/ojs-cilantro-plugin/api")
+            f"/plugins/generic/ojs-cilantro-plugin/api")
 
 
 def _make_request(url, headers, import_data=None):
