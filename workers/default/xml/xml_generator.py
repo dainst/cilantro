@@ -27,6 +27,8 @@ def generate_xml(obj, template_file, target_filepath, additional_params):
     env.globals['datetime'] = datetime.datetime
     env.globals['glob'] = glob.glob
 
+    log.info("Generating XML with template: " + template_file)
+
     template = env.get_template(template_file)
     filled_template = template.render(obj=obj,
                                       additional_params=additional_params)
