@@ -1,5 +1,4 @@
 {% set ns = namespace() %}
-{% set metadata = obj.metadata.to_dict() %}
 {% set ojs_metadata = additional_params %}
 <?xml version="1.0" encoding="UTF-8"?>
 <mets:mets
