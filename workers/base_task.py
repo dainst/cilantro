@@ -1,6 +1,7 @@
 import logging
 import os
 from abc import abstractmethod
+import traceback
 
 import celery.signals
 from celery.task import Task
@@ -135,7 +136,7 @@ class BaseTask(Task):
             # Error when handling Exception of the task
             raise
         except Exception as e:  # noqa: ignore bare except
-            self.log.error(e)
+            self.log.error(traceback.format_exc())
             params = self.params.copy()
             params['job_id'] = self.job_id
             params['task_name'] = self.__name__
