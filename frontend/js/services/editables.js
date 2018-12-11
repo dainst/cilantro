@@ -302,11 +302,12 @@ angular
         const obj = new editables.Base(seed, mandatory);
         obj.type = 'language';
 
-        if (angular.isArray(locales) && locales.length >= 1) {
+        if (angular.isDefined(locales) && (angular.isArray(locales) && locales.length)) {
             obj.locales = locales;
         } else {
             obj.locales = angular.copy(editables.defaultLocales);
         }
+
 
         obj.set = value => {
 
@@ -340,7 +341,7 @@ angular
 
         obj.getLanguageName = (code) => languageStrings.getName(code.split("_")[0]);
 
-        obj.set(seed || locales[0] || "");
+        obj.set(seed || obj.locales[0] || "");
         return obj;
 
     };
