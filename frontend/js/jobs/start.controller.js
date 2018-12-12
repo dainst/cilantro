@@ -1,7 +1,7 @@
 angular
-.module('controller.viewHome', [])
+.module('controller.viewStart', [])
 
-.controller('viewHome', ['$scope', 'dataset', 'steps', 'labels', 'settings',
+.controller('viewStart', ['$scope', 'dataset', 'steps', 'labels', 'settings',
     function($scope, dataset, steps, labels, settings) {
         $scope.dataset = dataset;
         $scope.labels = labels;

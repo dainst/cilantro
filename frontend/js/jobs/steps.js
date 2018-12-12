@@ -13,13 +13,13 @@ angular
 
     steps.views = {
         "start": {
-            "template": "js/jobs/start_page.html",
-            "title": "Start",
+            "template": "js/home.html",
+            "title": "Home",
             "showIf": function() {return false}
         },
         "home": {
-            "template": "js/home.html",
-            "title": "Home",
+            "template": "js/jobs/start.html",
+            "title": "Start",
             "showIf": function() {return !steps.isStarted && steps.current !== "fatal"}
         },
         "restart": {

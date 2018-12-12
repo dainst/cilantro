@@ -27,7 +27,7 @@ angular
 
     'controller.main',
 
-    'controller.viewHome',
+    'controller.viewStart',
     'controller.viewOverview',
     'controller.viewSubObjects',
     'controller.viewFinish',
@@ -77,6 +77,3 @@ angular
         return filtered;
     };
 });
-
-
-
