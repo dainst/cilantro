@@ -15,7 +15,6 @@
     <body class="flex-cont-vert" ng-controller="main" data-ng-init="initApp()">
         <div id='loader' class='loader' ng-if="isLoading"></div>
 
-
         <idai-navbar class="flex-item idai-navbar"
                 hide-register-button="true"
                 hide-contact-button="true"
@@ -30,25 +29,7 @@
         </idai-navbar>
 
         <div class="row container flex-item flex-cont-hor" style="flex-grow: 1">
-            <div id='main-container'>
-                <ng-include src="steps.getTemplate()"></ng-include>
-            </div>
-            <div role="group" id="sidebar-tasks" ng-show="steps.getStatus()">
-                <div class="btn-group-sm">
-                    <span id="main-collapse-button" type="button" class="task btn btn-secondary btn-xs" style="margin-bottom: -1px" ng-click="steps.collapseTabs()" ng-show="!steps.isCollapsed()">
-                        <span
-                              class="glyphicon glyphicon-remove-circle">
-                        </span>
-                    </span>
-                    <span ng-repeat="(tabId, tab) in steps.tabs" id="main-sidebar-{{tabId}}" type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab(tabId)" ng-show="tab.showIf()">
-                        <b>{{tab.title}}</b>
-                    </span>
-                </div>
-            </div>
-            <div resizable id="main-sidebar" r-directions="['left']" r-flex="true" ng-show="steps.getStatus() && !steps.isCollapsed()">
-                <ng-include src="steps.getTab()"></ng-include>
-            </div>
-
+            <div ng-view></div>
         </div>
 
 
@@ -57,6 +38,7 @@
         <!-- load angular, bootstrap, idai-components -->
 
         <script src="node_modules/angular/angular.min.js"></script>
+        <script src="node_modules/angular-route/angular-route.min.js"></script>
         <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
         <script src="node_modules/idai-components/dist/idai-components.min.js"></script>
         <script src="node_modules/angular-resizable/angular-resizable.min.js"></script>
@@ -67,7 +49,6 @@
 
         <!-- load salvia app -->
 
-        <script src="js/steps.js"></script>
         <script src="js/utils/labels.js"></script>
         <script src="js/jobs/dataset.js"></script>
         <script src="js/utils/messenger.js"></script>
@@ -82,6 +63,8 @@
         <script src="index.controller.js"></script>
         <script src="js/modals/login.controller.js"></script>
         <script src="js/modals/csv_import.controller.js"></script>
+        <script src="js/jobs/wizard/steps.js"></script>
+        <script src="js/jobs/wizard/wizard.controller.js"></script>
         <script src="js/jobs/wizard/start.controller.js"></script>
         <script src="js/jobs/wizard/overview.controller.js"></script>
         <script src="js/jobs/wizard/subobjects.controller.js"></script>

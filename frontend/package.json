@@ -19,6 +19,7 @@
   "dependencies": {
     "angular": "1.6.7",
     "angular-resizable": "1.2.0",
+    "angular-route": "1.6.7",
     "angular-ui-bootstrap": "2.5.6",
     "chromedriver": "^2.43.1",
     "idai-components": "2.7.0",

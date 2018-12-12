@@ -12,11 +12,6 @@ angular
     };
 
     steps.views = {
-        "start": {
-            "template": "js/home.html",
-            "title": "Home",
-            "showIf": function() {return false}
-        },
         "home": {
             "template": "js/jobs/wizard/start.html",
             "title": "Start",
@@ -103,13 +98,10 @@ angular
         console.log('Tab changeView to: ', to);
         //$scope.message.reset();
         steps.current = to;
-
+        console.log()
     };
 
     steps.getTemplate = () => {
-        if (!webservice.isLoggedIn()) {
-            steps.current = "start";
-        }
         if (angular.isUndefined(steps.views[steps.current]) || angular.isUndefined(steps.views[steps.current].template)) {
             messenger.error("View '" + steps.current + "' not found.");
             steps.current = "fatal";

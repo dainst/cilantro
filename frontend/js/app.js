@@ -6,6 +6,7 @@ angular
 
     'ui.bootstrap',
     'ngFileUpload',
+    'ngRoute',
 
     'idai.components',
     'idai.templates',
@@ -27,6 +28,7 @@ angular
 
     'controller.main',
 
+    'controller.wizardController',
     'controller.viewStart',
     'controller.viewOverview',
     'controller.viewSubObjects',
@@ -55,6 +57,19 @@ angular
     'module.fileHandlers.chironParted',
     'module.fileHandlers.csvImport',
 ])
+
+.config(function($routeProvider) {
+    $routeProvider
+        .when('/', {
+            templateUrl : 'js/home.html',
+        })
+        .when('/jobs', {
+            templateUrl : 'js/jobs/jobs.html',
+        })
+        .when('/jobs/create', {
+            templateUrl : 'js/jobs/wizard/wizard.html',
+        });
+})
 
 .constant('componentsSettings', {
         transl8Uri: "https://arachne.dainst.org/transl8/translation/jsonp?application=shared&lang={LANG}"
