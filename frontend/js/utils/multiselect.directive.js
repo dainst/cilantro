@@ -7,7 +7,7 @@ angular
 		scope: {
 			'elements': '='
 		},
-		templateUrl: 'js/directives/multiselect.html',
+		templateUrl: 'js/utils/multiselect.html',
 		link: function(scope, element, attrs) {
 			scope.toggled = true;
 			scope.toggleList  = function() {

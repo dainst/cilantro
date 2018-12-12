@@ -6,7 +6,7 @@ angular
         scope: {
             type: "="
         },
-        templateUrl: 'js/directives/stats.html',
+        templateUrl: 'js/utils/stats.html',
         link: function(scope, elem, attrs) {
 
             scope.type = attrs.type;
