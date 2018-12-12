@@ -7,7 +7,7 @@ angular
     .directive('job', ['jobs', function(jobs) {
         return {
             restrict: 'E',
-            templateUrl: 'partials/elements/job.html',
+            templateUrl: 'js/directives/job.html',
             scope: {
                 job: '=',
             },

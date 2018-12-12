@@ -3,7 +3,7 @@ angular
     .directive('mainObject' , ['dataset', 'labels', function(dataset, labels) {
         return {
             restrict: 'E',
-            templateUrl: 'partials/elements/main_object.html',
+            templateUrl: 'js/directives/main_object.html',
             scope: {},
             link: function (scope, element, attrs) {
                 scope.dataset = dataset;

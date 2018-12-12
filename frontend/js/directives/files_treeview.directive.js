@@ -7,7 +7,7 @@ angular
     .directive('filesTreeview', ['fileManager', function(fileManager) {
         return {
             restrict: 'E',
-            templateUrl: 'partials/elements/files_treeview.html',
+            templateUrl: 'js/directives/files_treeview.html',
             scope: {
                 tree: '=',
                 filehandler: '=',

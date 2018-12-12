@@ -66,22 +66,22 @@ angular
 
     steps.tabs = {
         "data": {
-            "template": "partials/elements/sidebar_data.html",
+            "template": "js/directives/sidebar_data.html",
             "title": "My Data",
             "showIf": function() {return steps.isStarted && steps.current !== "fatal" && tabs.current !== "data"}
         },
         "help": {
-            "template": "partials/elements/sidebar_help.html",
+            "template": "js/directives/sidebar_help.html",
             "title": "Help",
             "showIf": function() {return steps.isStarted && steps.current !== "fatal"  && tabs.current !== "help"}
         },
         "messages": {
-            "template": "partials/elements/sidebar_messages.html",
+            "template": "js/directives/sidebar_messages.html",
             "title": "Messages",
             "showIf": function() {return steps.isStarted && steps.current !== "fatal"  && tabs.current !== "messages"}
         },
         "collapsed": {
-            "template": "partials/elements/sidebar_collapsed.html",
+            "template": "js/directives/sidebar_collapsed.html",
         }
     };
 

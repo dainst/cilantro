@@ -3,7 +3,7 @@ angular
 .directive('messagebox' , ['messenger', function(messenger) {
     return {
         restrict: 'E',
-        templateUrl: 'partials/elements/messagebox.html',
+        templateUrl: 'js/directives/messagebox.html',
         scope: {
             isOpen: '@'
         },
