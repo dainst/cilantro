@@ -18,37 +18,37 @@ angular
             "showIf": function() {return false}
         },
         "home": {
-            "template": "js/jobs/start.html",
+            "template": "js/jobs/wizard/start.html",
             "title": "Start",
             "showIf": function() {return !steps.isStarted && steps.current !== "fatal"}
         },
         "restart": {
-            "template": "js/jobs/restart.html",
+            "template": "js/jobs/wizard/restart.html",
             "title": "Restart",
             "showIf": function() {return steps.isStarted || steps.current === "fatal"}
         },
         "documents": {
-            "template": "js/jobs/documents.html",
+            "template": "js/jobs/wizard/documents.html",
             "title": "Documents",
             "showIf": function() {return steps.isStarted}
         },
         "overview": {
-            "template": "js/jobs/overview.html",
+            "template": "js/jobs/wizard/overview.html",
             "title": "Overview",
             "showIf": function() {return steps.isStarted}
         },
         "articles": {
-            "template": "js/jobs/subobjects.html",
+            "template": "js/jobs/wizard/subobjects.html",
             "title": "Articles",
             "showIf": function() {return steps.isStarted}
         },
         "publish": {
-            "template": "js/jobs/finish.html",
+            "template": "js/jobs/wizard/finish.html",
             "title": "Publish",
             "showIf": function() {return steps.isStarted && fileManager.ready && dataset.isReadyToUpload()}
         },
         "fatal": {
-            "template": "js/jobs/fatal.html",
+            "template": "js/fatal.html",
             "title": "Fatal Error",
             "showIf": function() {return false}
         },
