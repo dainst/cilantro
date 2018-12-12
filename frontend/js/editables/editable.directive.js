@@ -19,8 +19,8 @@ angular
               scope.caption = attrs.caption;
               scope.getTemplateUrl = () =>
                   (angular.isUndefined(scope.item) || angular.isUndefined(scope.item.type) || scope.item.readonly)
-                      ? 'partials/editables/undefined.html' + killCache
-                      : 'partials/editables/' + scope.item.type + '.html'  + killCache;
+                      ? 'js/editables/undefined.html' + killCache
+                      : 'js/editables/' + scope.item.type + '.html'  + killCache;
           }
         }
       }
