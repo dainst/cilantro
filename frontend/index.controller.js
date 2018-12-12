@@ -69,7 +69,7 @@ angular
 
         $scope.openLoginModal = function () {
             const modalInstance = $uibModal.open({
-                templateUrl: 'partials/modals/login.html',
+                templateUrl: 'js/modals/login.html',
                 controller: 'login'
             });
             modalInstance.result.then(function (user) {

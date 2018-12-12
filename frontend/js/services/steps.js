@@ -13,47 +13,47 @@ angular
 
     steps.views = {
         "start": {
-            "template": "partials/views/start_page.html",
+            "template": "js/jobs/start_page.html",
             "title": "Start",
             "showIf": function() {return false}
         },
         "home": {
-            "template": "partials/views/home.html",
+            "template": "js/home.html",
             "title": "Home",
             "showIf": function() {return !steps.isStarted && steps.current !== "fatal"}
         },
         "restart": {
-            "template": "partials/views/restart.html",
+            "template": "js/jobs/restart.html",
             "title": "Restart",
             "showIf": function() {return steps.isStarted || steps.current === "fatal"}
         },
         "documents": {
-            "template": "partials/views/documents.html",
+            "template": "js/jobs/documents.html",
             "title": "Documents",
             "showIf": function() {return steps.isStarted}
         },
         "overview": {
-            "template": "partials/views/overview.html",
+            "template": "js/jobs/overview.html",
             "title": "Overview",
             "showIf": function() {return steps.isStarted}
         },
         "articles": {
-            "template": "partials/views/subobjects.html",
+            "template": "js/jobs/subobjects.html",
             "title": "Articles",
             "showIf": function() {return steps.isStarted}
         },
         "publish": {
-            "template": "partials/views/finish.html",
+            "template": "js/jobs/finish.html",
             "title": "Publish",
             "showIf": function() {return steps.isStarted && fileManager.ready && dataset.isReadyToUpload()}
         },
         "fatal": {
-            "template": "partials/views/fatal.html",
+            "template": "js/jobs/fatal.html",
             "title": "Fatal Error",
             "showIf": function() {return false}
         },
         "jobs": {
-            "template": "partials/views/jobs.html",
+            "template": "js/jobs/jobs.html",
             "title": "Jobs",
             "showIf": function () {return webservice.isLoggedIn()}
         }

@@ -1,4 +1,4 @@
-angular.module('controller.csvImportWindow', ['ui.bootstrap']);
+mod = angular.module('controller.csvImportWindow', ['ui.bootstrap']);
 mod.controller('csvImportWindow', ['$scope', '$uibModalInstance', 'dataset', 'file', 'labels', 'zenonImporter', 'messenger',
     function($scope, $uibModalInstance, dataset, file, labels, zenonImporter, messenger) {
 
