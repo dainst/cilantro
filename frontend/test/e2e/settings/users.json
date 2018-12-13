@@ -1,0 +1,10 @@
+{
+  "normal": {
+    "username": "test_user",
+    "password": "test_password"
+  },
+  "upload": {
+    "username": "u",
+    "password": "p"
+  }
+}
