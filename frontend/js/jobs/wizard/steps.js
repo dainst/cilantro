@@ -12,7 +12,7 @@ angular
     };
 
     steps.views = {
-        "home": {
+        "start": {
             "template": "js/jobs/wizard/start.html",
             "title": "Start",
             "showIf": function() {return !steps.isStarted && steps.current !== "fatal"}
