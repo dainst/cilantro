@@ -46,11 +46,6 @@ angular
             "template": "js/fatal.html",
             "title": "Fatal Error",
             "showIf": function() {return false}
-        },
-        "jobs": {
-            "template": "js/jobs/jobs.html",
-            "title": "Jobs",
-            "showIf": function () {return webservice.isLoggedIn()}
         }
     };
 
