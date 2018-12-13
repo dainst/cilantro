@@ -47,6 +47,7 @@ class GenerateXMLTask(ObjectTask):
             additional_params = self.get_param(self.get_param('params'))
         except KeyError:
             additional_params = None
+
         generated_xml_file = generate_xml(obj, template_file, target_filepath,
                                           additional_params)
 
