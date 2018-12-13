@@ -4,8 +4,8 @@ angular
 
 .module('controller.main', [])
 
-    .controller('main', ['$scope', '$uibModal', 'webservice', '$route',
-        function ($scope, $uibModal, webservice, $route) {
+    .controller('main', ['$scope', '$uibModal', 'webservice', '$location',
+        function ($scope, $uibModal, webservice, $location) {
 
         $scope.openLoginModal = function () {
             const modalInstance = $uibModal.open({
@@ -14,14 +14,14 @@ angular
             });
             modalInstance.result.then(function (user) {
                 $scope.user = user;
-                $route.reload();
+                $location.path('/');
             });
         };
 
         $scope.logout = function () {
             webservice.logUserOut();
             $scope.user = webservice.userData;
-            $route.reload();
+            $location.path('/');
         };
 
 		$scope.$on('refreshView', $scope.refreshView);

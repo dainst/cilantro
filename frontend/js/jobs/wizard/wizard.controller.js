@@ -62,4 +62,6 @@ angular.module('controller.wizardController', [])
         }
     };
 
+    $scope.start();
+
 }]);
