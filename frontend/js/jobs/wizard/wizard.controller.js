@@ -21,6 +21,7 @@ angular.module('controller.wizardController', [])
     };
 
     $scope.start = () => {
+        steps.changeView('start');
         dataset.reset();
         $scope.isLoading = true;
         steps.isStarted = false;
