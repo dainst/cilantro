@@ -18,3 +18,4 @@ tasks:
     representation: pdf
   - publish_to_repository
   - cleanup_workdir
+  - finish_job
