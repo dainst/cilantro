@@ -22,6 +22,12 @@ env:
     - JOB_DB_URL=job-db
     - JOB_DB_PORT=27017
     - JOB_DB_NAME=job_database
+    - BACKEND_URI=http://localhost:5000
+    - ZENON_URI=https://zenon.dainst.org/api/v1
+    - OJS_URI=http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api
+    - BACKEND_URI_TEST=http://service:5000
+    - ZENON_URI_TEST=https://zenon.dainst.org/api/v1
+    - OJS_URI_TEST=http://ojs:80/ojs/plugins/generic/ojs-cilantro-plugin/api
 before_install:
   - cp config/users.yml-default config/users.yml
   - sudo apt-get install -y python3-dev libpoppler-cpp-dev

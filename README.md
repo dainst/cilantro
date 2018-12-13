@@ -82,7 +82,7 @@ You can then query the job status with the returned job_id:
 Run against current env-configuation (defaults to local cilantro):
 
     TEST="default" docker-compose up frontend-test
-    
+
 Run against Mock-Backend
 
     TEST="mock" docker-compose up frontend-test
@@ -96,13 +96,13 @@ Run against Mock-Backend
 
 [Flower](https://flower.readthedocs.io/) is included in the docker config and
 is available for debugging under http://localhost:5555.
-    
+
 ### Publish Docker Images
 
-To publish a docker image on dockerhub use the buildscript `build.sh` or the
-commands in it manually.
+To publish a docker image on dockerhub use the buildscript
+`docker_image_build.sh` or the commands in it manually.
 
-Every minor release use the version number as image tag. 
+Every minor release use the version number as image tag.
 This way it is ensured the images are always compatible to the corresponding code.
 
 ## Running unit tests
@@ -156,26 +156,3 @@ Additionally parameters in method docstrings should be given as follows:
     - `===` instead of `==`
     - line endings with `;` even after `}`
     - if without {} only in very simple one liners
-
-
-## Production deployment
-
-### Prerequisites:
-* A user on the production server that is able to log in with a private key
-* docker-machine has to be installed on the local machine (comes preinstalled with
-  docker under macOS and Windows)
-* The production machine has to be added to the local docker machines with
-
-
-    docker-machine create \
-      --driver generic \
-      --generic-ip-address=203.0.113.81 \
-      --generic-ssh-key ~/.ssh/id_rsa \
-      cilantro-prod-vm
-
-### Deployment
-
-In order to deploy or update the production version use the following commands:
-
-    eval $(docker-machine env cilantro-prod-vm)
-    docker stack deploy -c docker-compose.yml -c docker-compose.prod.yml cilantro-prod

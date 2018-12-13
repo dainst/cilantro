@@ -37,12 +37,12 @@ gulp.task('server', () => {
 
     if (syncBrowser) {
         console.log("Sync browser mode is on");
-        gulp.watch('style/**/*.css', ['watch']);
-        gulp.watch('js/**/*.js', ['watch']);
-        gulp.watch('partials/**/*.html', ['watch']);
-        gulp.watch('index.html', ['watch']);
-        gulp.watch('config/*.json', ['watch']);
-        gulp.watch('style/*.css', ['watch']);
+        gulp.watch('style/**/*.css', gulp.series('watch'));
+        gulp.watch('js/**/*.js', gulp.series('watch'));
+        gulp.watch('partials/**/*.html', gulp.series('watch'));
+        gulp.watch('index.html', gulp.series('watch'));
+        gulp.watch('config/*.json', gulp.series('watch'));
+        gulp.watch('style/*.css', gulp.series('watch'));
     }
 
 });

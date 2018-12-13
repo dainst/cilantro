@@ -22,6 +22,7 @@ RUN set -ex && mkdir /app
 COPY ./service /app/service
 COPY ./utils /app/utils
 COPY ./workers /app/workers
+COPY ./resources /app/resources
 WORKDIR /app
 
 COPY docker/cilantro-default-worker/Pipfile Pipfile
@@ -29,7 +30,5 @@ COPY docker/cilantro-default-worker/entrypoint.sh /entrypoint.sh
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv lock && pipenv install --deploy --system
-
-USER nobody
 
 ENTRYPOINT bash /entrypoint.sh

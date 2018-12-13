@@ -1,18 +1,24 @@
 run:
 	docker-compose up
 
+run_detached:
+	docker-compose up -d
+
 stop:
 	docker-compose stop
 
 build-image:
-	./build.sh ${IMAGE} ${TAG}
+	./docker_image_build.sh ${IMAGE} ${TAG}
 
 build-doc:
 	bash doc/build-doc.sh
 
-run-tests:
-	docker-compose up -d
+run-backend-tests: run_detached
 	bash test/exec_docker_test.sh
+	docker-compose stop
+
+run-frontend-tests: run_detached
+	bash frontend/test/exec_frontend_test.sh
 	docker-compose stop
 
 fix-data-permissions:
@@ -24,3 +30,5 @@ rm-ds-store:
 cp-default-config:
 	cp .env-default .env
 	cp config/users.yml-default config/users.yml
+
+run-all-tests: run_detached run-backend-tests run-frontend-tests stop

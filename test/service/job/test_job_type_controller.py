@@ -2,6 +2,7 @@ import unittest
 import os
 import yaml
 import json
+import glob
 
 from service.run_service import app
 
@@ -25,7 +26,7 @@ class JobTypeControllerTest(unittest.TestCase):
         :return: None
         """
         job_types_from_files = []
-        for job_type in os.listdir(job_types_dir):
+        for job_type in glob.glob(job_types_dir + '/*.yml'):
             job_types_from_files.append(job_type.rsplit('.', 1)[0])
 
         response = self.client.get('/job_types')
@@ -41,7 +42,7 @@ class JobTypeControllerTest(unittest.TestCase):
 
         :return: None
         """
-        first_job_type_name = os.listdir(job_types_dir)[0].rsplit('.', 1)[0]
+        first_job_type_name = _get_first_job_type_file().rsplit('.', 1)[0]
         response_text = self.client.get('/job_types').get_data(as_text=True)
         response_json = json.loads(response_text)
 
@@ -61,12 +62,22 @@ class JobTypeControllerTest(unittest.TestCase):
 
         :return: None
         """
-        first_job_type_file = os.listdir(job_types_dir)[0]
+        first_job_type_file = _get_first_job_type_file()
         with open(os.path.join(job_types_dir, first_job_type_file), 'r') as f:
             first_job_type_file_content = f.read()
-        response_text = self.client.get('/job_types/' + first_job_type_file.rsplit('.', 1)[0]).get_data(as_text=True)
+        url = '/job_types/' + first_job_type_file.rsplit('.', 1)[0]
+        response_text = self.client.get(url).get_data(as_text=True)
 
-        self.assertEqual(yaml.safe_load(first_job_type_file_content), yaml.safe_load(str(response_text)))
+        self.assertEqual(yaml.safe_load(first_job_type_file_content),
+                         yaml.safe_load(str(response_text)))
+
+    def test_job_type_detail_with(self):
+        """Test if a schema is returned when any job type is requested."""
+        first_job_type_file = _get_first_job_type_file()
+        url = '/job_types/' + first_job_type_file.rsplit('.', 1)[0] + '?schema=true'
+        response_text = self.client.get(url).get_data(as_text=True)
+
+        self.assertTrue("\"schema\":{\"$schema\"" in response_text)
 
     def test_invalid_job_type(self):
         response = self.client.get('/job_types/foobarbaz')
@@ -75,3 +86,7 @@ class JobTypeControllerTest(unittest.TestCase):
         response_json = response.get_json()
         self.assertFalse(response_json['success'])
         self.assertEqual(response_json['error']['code'], "job_type_not_found")
+
+
+def _get_first_job_type_file():
+    return os.path.basename(glob.glob(f"{job_types_dir}/*.yml")[0])

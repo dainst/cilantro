@@ -6,6 +6,7 @@ from urllib.error import HTTPError
 
 server = os.environ['OJS_SERVER']
 port = os.environ['OJS_PORT']
+path = os.environ['OJS_PATH']
 auth_key = os.environ['OJS_AUTH_KEY']
 
 log = logging.getLogger(__name__)
@@ -24,11 +25,7 @@ def generate_frontmatter(article_id):
     :return: tuple containing the response code and text
     """
     headers = {'ojsAuthorization': auth_key}
-
-    url = (f"http://{server}:{port}"
-           f"/ojs/plugins/generic/ojs-cilantro-plugin/api/frontmatters/"
-           f"create/article/?id={article_id}")
-
+    url = f"{_get_api_url()}/frontmatters/create/article/?id={article_id}"
     return _make_request(url, headers)
 
 
@@ -53,13 +50,14 @@ def publish(import_xml_file_path, journalcode):
 
     headers = {'Content-Type': 'application/xml',
                'ojsAuthorization': auth_key}
-
-    request_url = (f"http://{server}:{port}"
-                   f"/ojs/plugins/generic/ojs-cilantro-plugin/api/import/"
-                   f"{journalcode}")
-
+    request_url = f"{_get_api_url()}/import/{journalcode}"
     return _make_request(request_url, headers,
                          import_data.encode(encoding='utf-8'))
+
+
+def _get_api_url():
+    return (f"http://{server}:{port}/{path}"
+            f"/plugins/generic/ojs-cilantro-plugin/api")
 
 
 def _make_request(url, headers, import_data=None):
