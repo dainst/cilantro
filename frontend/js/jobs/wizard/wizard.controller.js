@@ -1,8 +1,8 @@
 
 angular.module('controller.wizardController', [])
 
-.controller('wizardController', ['$scope', '$uibModal', 'webservice', 'settings', 'messenger', 'fileManager', 'dataset', 'stagingDir', 'steps',
-    function ($scope, $uibModal, webservice, settings, messenger, fileManager, dataset, stagingDir, steps) {
+.controller('wizardController', ['$rootScope', '$scope', '$uibModal', 'webservice', 'settings', 'messenger', 'fileManager', 'dataset', 'stagingDir', 'steps',
+    function ($rootScope, $scope, $uibModal, webservice, settings, messenger, fileManager, dataset, stagingDir, steps) {
 
     $scope.steps = steps;
 
@@ -38,7 +38,7 @@ angular.module('controller.wizardController', [])
                             fileManager.reset();
                             fileManager.selectDefaultFileHandlers();
 
-                            $scope.refreshView();
+                            $rootScope.$broadcast('refreshView');
 
                         })
                         .catch($scope.failFatal);
@@ -55,12 +55,6 @@ angular.module('controller.wizardController', [])
             messenger.info('Restart Importer');
             steps.changeView('home');
         });
-    };
-
-    $scope.refreshView = () => {
-        if(!$scope.$$phase){
-            $scope.$apply();
-        }
     };
 
     $scope.start();

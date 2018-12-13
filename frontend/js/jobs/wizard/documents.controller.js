@@ -32,7 +32,7 @@ angular
             }
         };
 
-        let promise = $interval(timer, 30000);
+        //let promise = $interval(timer, 1000);
 
         /*Opens file-editing-modals for 'type', currently only implemented for csv-files.*/
         $scope.newFile = function(type) {

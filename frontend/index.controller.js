@@ -24,6 +24,12 @@ angular
             $location.path('/');
         };
 
+        $scope.refreshView = () => {
+            if(!$scope.$$phase){
+                $scope.$apply();
+            }
+        };
+
 		$scope.$on('refreshView', $scope.refreshView);
 		window.refresh = $scope.refreshView;
 	}
