@@ -3,9 +3,5 @@
   "server_url": "http://localhost:3333/",
   "ojs_url": "http://localhost:3333/",
   "zenon_url": "http://localhost:3333/zenon/",
-  "test": true,
-  "normal_user": "test_user",
-  "normal_user_psw": "test_password",
-  "upload_user": "u",
-  "upload_user_psw": "p"
+  "test": true
 }

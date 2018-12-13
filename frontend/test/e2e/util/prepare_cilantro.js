@@ -1,13 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 const rp = require('request-promise-native');
+const users = require('../settings/users');
 
 let frontendUrl = "";
 let backendUrl = "";
 let params = {};
 let silent = false;
 
-function getParams(upload = false) {
+function getParams(userTestId = 'normal') {
     return new Promise((resolve, reject) => {
         rp({uri: frontendUrl + '/config/settings.json', method: 'GET'}).then(res => {
             const settings = JSON.parse(res);
@@ -15,15 +16,10 @@ function getParams(upload = false) {
             params = {};
             params.method = 'GET';
             params.auth = {
-                user: settings.normal_user,
-                pass: settings.normal_user_psw
+                user: users[userTestId].username,
+                pass: users[userTestId].password
             };
-            if(upload){
-                params.auth = {
-                    user: settings.upload_user,
-                    pass: settings.upload_user_psw
-                };
-            }
+
             resolve(params);
         })
             .catch(reject)
@@ -95,7 +91,7 @@ const pc = {
     
     cleanUp: url => new Promise((resolve, reject) => {
         frontendUrl = url;
-        getParams(true)
+        getParams('upload')
             .then(clearStaging)
             .then(()=>{
                 getParams()
