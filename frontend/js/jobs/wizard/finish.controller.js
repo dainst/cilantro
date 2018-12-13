@@ -2,8 +2,8 @@ angular
 
 .module('controller.viewFinish', [])
 
-.controller('viewFinish', ['$scope', '$rootScope', 'webservice', 'dataset', 'messenger', 'labels', 'jobs', '$location',
-    function($scope, $rootScope, webservice, dataset, messenger, labels, jobs, $location) {
+.controller('viewFinish', ['$scope', '$rootScope', 'webservice', 'dataset', 'messenger', 'labels', 'jobs', '$location', 'steps',
+    function($scope, $rootScope, webservice, dataset, messenger, labels, jobs, $location, steps) {
 
         $scope.dataset = dataset;
         $scope.labels = labels;
@@ -18,6 +18,7 @@ angular
                 messenger.success("Job: " + res.status);
                 jobs.updateJob(res.job_id, res);
                 $scope.done = true;
+                steps.reset();
                 $location.path('/jobs');
                 $rootScope.$broadcast('refreshView');
             })

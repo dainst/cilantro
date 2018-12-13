@@ -15,7 +15,7 @@ angular
         "start": {
             "template": "js/jobs/wizard/start.html",
             "title": "Start",
-            "showIf": function() {return !steps.isStarted && steps.current !== "fatal"}
+            "showIf": () => false
         },
         "restart": {
             "template": "js/jobs/wizard/restart.html",
@@ -127,6 +127,11 @@ angular
 
     steps.getStatus = () =>
         steps.isStarted;
+
+    steps.reset = () => {
+        steps.current = 'start';
+        steps.isStarted = false;
+    }
 
     return (steps);
 }]);
