@@ -4,7 +4,7 @@ angular
         function($timeout, $rootScope, zenonImporter) {
             return {
                 restrict: 'E',
-                templateUrl: 'js/directives/zenon.html',
+                templateUrl: 'js/zenon/zenon.html',
                 scope: {
                     search: '<', // {term: "", id: ""}
                     result: '='
