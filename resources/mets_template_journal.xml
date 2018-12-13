@@ -68,11 +68,15 @@
             {% endfor %}
         </mets:fileGrp>
         <mets:fileGrp USE="THUMBS">
-            {% for id in ns.id_list %}
-                        <mets:file ID="thumb_{{ns.id_list[loop.index - 1]}}" MIMETYPE="image/jpeg">
+            {% for part in obj.get_parts() %}
+                {% set part_index = '%04d' | format(loop.index) %}
+                {% for file_path in glob(path_join(part.get_representation_dir('jpg'), 'thumbnails') + '/*.jpg')|sort() %}
+                    {% set ns.id = "file_part_" + part_index|string + "_" + loop.index|string %}
+                        <mets:file ID="thumb_{{ns.id}}" MIMETYPE="image/jpeg">
                             <mets:FLocat LOCTYPE="URL" xlink:href="{{file_path}}"/>
                         </mets:file>
-             {% endfor %}
+                {% endfor %}
+            {% endfor %}
         </mets:fileGrp>
         <mets:fileGrp USE="DOWNLOAD">
             <mets:file ID="PDF1" MIMETYPE="application/pdf">
