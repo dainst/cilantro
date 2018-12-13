@@ -131,7 +131,7 @@ describe('overview page', () => {
         });
     });
 
-    xit('should merge two documents on btn click', () => {
+    it('should merge two documents on btn click', () => {
         const testDocFileName0 = "test-directory/pdf2.pdf";
         const testDocFileName2 = "test-directory/pdf3.pdf";
         ot.goToOverview(3);
@@ -139,9 +139,9 @@ describe('overview page', () => {
         browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 10000);
 
         e.overview.sortByBtn.click();
+        browser.wait(EC.visibilityOf(e.overview.sortByDropdown), 1000);
         e.overview.sortByDropdown.element(by.cssContainingText('a',"Title (descending)")).click();
-        e.overview.sortByBtn.click();
-
+        browser.wait(EC.not(EC.visibilityOf(e.overview.sortByDropdown)), 1000);
         e.overview.addBtn.click();
         for(var i=0; i < 3; i++){
             ot.getRowButton(0, 'merge').click();
