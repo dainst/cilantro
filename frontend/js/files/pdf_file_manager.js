@@ -38,46 +38,48 @@ angular
                 reqestParams.httpHeaders["Cache-Control"] = "no-cache, no-store, must-revalidate";
                 reqestParams.httpHeaders["pragma"] = "no-cache";
 
-                const promise = new Promise((resolve, fail) => {pdfFileManager.pdfjs.getDocument(reqestParams).then(
-                    pdf => {
-                        const fileInfo = {
-                            pdf: pdf,
-                            filename: filesToLoad[fileid].name,
-                            url: filesToLoad[fileid].path,
-                            pagecontext: new editables.types.Pagecontext({maximum: pdf.pdfInfo.numPages, path: filesToLoad[fileid].path}),
-                            meta: {}
-                        };
-
-                        const promise1 = pdf.getMetadata().then(meta => {
-                            fileInfo.meta = meta.info
-                        });
-                        const promise2 = pdf.getDownloadInfo().then(dil => {
-                            fileInfo.size = fileSize(dil.length);
-                        });
-
-                        const metadataLoaded = () => {
-                            fileManager.loadedFiles[fileInfo.url] = fileInfo;
-                            dataset.loadedFiles[fileInfo.url] = { // TODO double counting of files - to be removed
-                                size: fileInfo.size,
-                                url: fileInfo.url,
-                                pagecontext: fileInfo.pagecontext,
+                const promise = new Promise((resolve, fail) => {
+                    pdfFileManager.pdfjs.getDocument(reqestParams).then(
+                        pdf => {
+                            const fileInfo = {
+                                pdf: pdf,
+                                filename: filesToLoad[fileid].name,
+                                url: filesToLoad[fileid].path,
+                                pagecontext: new editables.types.Pagecontext({maximum: pdf.pdfInfo.numPages, path: filesToLoad[fileid].path}),
+                                meta: {}
                             };
-                            messenger.info('document: ' + fileInfo.url + ' loaded');
-                            fileManager.stats.loaded += 1;
-                            refreshView();
-                            resolve();
-                        };
 
-                        Promise.all([promise1, promise2]).then(metadataLoaded, metadataLoaded);
-                        // if metadata could not be loaded, it's no reason not to continue, therefore we don't fail
+                            const promise1 = pdf.getMetadata().then(meta => {
+                                fileInfo.meta = meta.info
+                            });
+                            const promise2 = pdf.getDownloadInfo().then(dil => {
+                                fileInfo.size = fileSize(dil.length);
+                            });
 
-                    },
+                            const metadataLoaded = () => {
+                                fileManager.loadedFiles[fileInfo.url] = fileInfo;
+                                dataset.loadedFiles[fileInfo.url] = { // TODO double counting of files - to be removed
+                                    size: fileInfo.size,
+                                    url: fileInfo.url,
+                                    pagecontext: fileInfo.pagecontext,
+                                };
+                                console.log('document: ' + fileInfo.url + ' loaded');
+                                fileManager.stats.loaded += 1;
+                                refreshView();
+                                resolve();
+                            };
 
-                    reason => {
-                        messenger.warning("get document " + reqestParams.url + " failed: " + reason, true);
-                        resolve(); //!
-                    })}
-                );
+                            Promise.all([promise1, promise2]).then(metadataLoaded, metadataLoaded);
+                            // if metadata could not be loaded, it's no reason not to continue, therefore we don't fail
+
+                        },
+
+                        reason => {
+                            messenger.warning("get document " + reqestParams.url + " failed: " + reason, true);
+                            resolve(); //!
+                        }
+                    )
+                });
                 loadFilePromises.push(promise);
             }
             return loadFilePromises;
