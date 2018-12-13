@@ -59,7 +59,6 @@ module.exports = function (dropArea, filePath) {
 
             // upload the file to the new input
             input.sendKeys(filePath);
-
         });
     });
 };

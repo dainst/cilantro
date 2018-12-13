@@ -27,5 +27,4 @@ describe('documents page', () => {
             });
         });
     });
-
 });
