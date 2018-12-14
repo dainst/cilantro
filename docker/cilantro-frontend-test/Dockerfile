@@ -10,6 +10,7 @@ COPY ./frontend /salvia
 
 WORKDIR /salvia \
 RUN npm update -g \
+    && npm install -g gulp-cli \
     && npm install \
     && cd node_modules/webdriver-manager/bin \
     && ./webdriver-manager update
