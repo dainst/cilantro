@@ -42,11 +42,13 @@ class JobControllerTest(unittest.TestCase):
         }
         self._make_request('/job/job2', json.dumps(data), 202)
 
-        response2 = self.client.get('/job/jobs', headers=get_auth_header())
-        response2_json = response2.get_json()
-        self.assertIn("job_id", str(response2_json))
-        self.assertIn("'user': 'test_user'", str(response2_json))
-        self.assertIn("'job_type': 'job2'", str(response2_json))
+        all_jobs = self.client.get('/job/jobs', headers=get_auth_header())
+        all_jobs_json = all_jobs.get_json()
+        this_job_json = all_jobs_json[len(all_jobs_json) - 1]
+
+        self.assertTrue(this_job_json["job_id"])
+        self.assertEqual("test_user", this_job_json["user"])
+        self.assertEqual("job2", this_job_json["job_type"])
 
     def test_create_job_no_payload(self):
         """Job creation has to fail without POST payload."""
