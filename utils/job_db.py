@@ -3,7 +3,6 @@ import datetime
 
 from pymongo import MongoClient, DESCENDING
 
-
 client = MongoClient(os.environ['JOB_DB_URL'], int(os.environ['JOB_DB_PORT']))
 db = client[os.environ['JOB_DB_NAME']]
 
@@ -35,7 +34,7 @@ def get_job_by_id(job_id):
     """
     Find job with the given job_id.
 
-    :param str id: job-id to be queried
+    :param str job_id: job-id to be queried
     :return: job object
     """
     job = db.jobs.find_one({"job_id": job_id}, {'_id': False})

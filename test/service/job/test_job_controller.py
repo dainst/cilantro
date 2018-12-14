@@ -34,12 +34,12 @@ class JobControllerTest(unittest.TestCase):
                 "title": "Test-Title",
                 "description": "Test-Description",
                 "year": 1992
-                },
+            },
             "files": [
                 {"file": "some_tiffs/test.tif"},
                 {"file": "some_tiffs/test2.tiff"}
-                ]
-            }
+            ]
+        }
         self._make_request('/job/job2', json.dumps(data), 202)
 
         response2 = self.client.get('/job/jobs', headers=get_auth_header())
@@ -77,13 +77,13 @@ class JobControllerTest(unittest.TestCase):
                 "title": "Test-Title",
                 "description": "Test-Description",
                 "year": 1992
-                },
+            },
             "files": [
                 {"file": "some_tiffs/test.tif"},
                 {"file": "some_tiffs/test2.tiff"}
-                ],
+            ],
             "bla": "blub"
-            }
+        }
         self._make_request('/job/job2', json.dumps(data), 400,
                            'invalid_job_params',
                            'Additional properties are not allowed')
@@ -94,12 +94,12 @@ class JobControllerTest(unittest.TestCase):
             "metadata": {
                 "title": "Test-Title",
                 "year": 1992
-                },
+            },
             "files": [
                 {"file": "some_tiffs/test.tif"},
                 {"file": "some_tiffs/test2.tiff"}
-                ]
-            }
+            ]
+        }
         self._make_request('/job/job2', json.dumps(data), 400,
                            'invalid_job_params', 'is a required property')
 
@@ -110,12 +110,12 @@ class JobControllerTest(unittest.TestCase):
                 "title": "Test-Title",
                 "description": "Test-Description",
                 "year": "1992"
-                },
+            },
             "files": [
                 {"file": "some_tiffs/test.tif"},
                 {"file": "some_tiffs/test2.tiff"}
-                ]
-            }
+            ]
+        }
         self._make_request('/job/job2', json.dumps(data), 400,
                            'invalid_job_params', 'is not of type')
 
