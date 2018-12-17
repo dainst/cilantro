@@ -189,7 +189,7 @@ services:
 
   frontend-test:
     tty: true
-    image: dainst/cilantro-frontend-test:latest
+    image: dainst/cilantro-frontend-test:refactor-folder-structure
     build:
       context: .
       dockerfile: ./docker/cilantro-frontend-test/Dockerfile
