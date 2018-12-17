@@ -200,6 +200,8 @@ services:
       - ./frontend/partials:/salvia/partials
       - ./frontend/style:/salvia/style
       - ./frontend/test:/salvia/test
+      - ./frontend/index.html:/usr/share/nginx/html/index.html
+      - ./frontend/index.controller.js:/usr/share/nginx/html/index.controller.js
     environment:
       TEST: ${TEST}
       BACKEND_URI: ${BACKEND_URI_TEST}
