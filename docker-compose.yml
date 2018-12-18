@@ -35,6 +35,10 @@ x-env-arachne: &env-arachne
   ARACHNE_DB_USER: ${ARACHNE_DB_USER}
   ARACHNE_DB_PASSWORD: ${ARACHNE_DB_PASSWORD}
 
+x-env-archaeocloud: &env-archaeocloud
+  ARCHAEOCLOUD_PATH: ${ARCHAEOCLOUD_PATH}
+
+
 services:
 
   broker:
@@ -101,12 +105,14 @@ services:
       - .:/app
       - ./data:/data
       - ./config:/config
+      - ./archaeocloud_test_dir:/archaeocloud_test_dir
     environment:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-ojs
       <<: *env-jobdb
       <<: *env-arachne
+      <<: *env-archaeocloud
       DB_HOST: "db"
       CILANTRO_ENV: development
 
@@ -168,6 +174,7 @@ services:
       <<: *env-arachne
       DB_HOST: "db"
       TEST_RESOURCE_DIR: "test/resources"
+      ARCHAEOCLOUD_PATH: "archaeocloud_test_dir"
 
   monitor:
     image: dainst/cilantro-monitor:latest
