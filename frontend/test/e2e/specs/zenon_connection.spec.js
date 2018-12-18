@@ -81,6 +81,7 @@ describe('subobject view', () => {
         it('should automatically fetch data from zenon if list of Ids is provided', () => {
             LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
+            e.home.importJournal.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
             a.waitForModal();
             e.csv.takeData.click();
@@ -100,6 +101,7 @@ describe('subobject view', () => {
         it('just should skip a row which Zenon-Ids is unknown', () => {
             LoginHelper.get(browser, browser.baseUrl);
             e.home.startBtn.click();
+            e.home.importJournal.click();
             e.documents.treeViewItemsTopLevel.get(4).element(by.css('.load')).click();
             a.waitForModal();
             e.csv.textField.sendKeys("\n000000000");

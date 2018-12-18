@@ -16,7 +16,8 @@ module.exports = {
         confirmBtn: element(by.css('.btn-danger')),
     },
     home: {
-        startBtn: element(by.css('.row.toprow .btn-primary')),
+        startBtn: element(by.css('#projectLogo img')),
+        importJournal: element(by.id('import-journal-link'))
     },
     mainobject: {
         table: element(by.css('.dataset-table')),
