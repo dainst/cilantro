@@ -17,8 +17,8 @@ describe('mainobject view', () => {
         });
         it("should load some journal data codes from ojs cilantro plugin api", () => {
             LoginHelper.get(browser, browser.baseUrl);
-            e.home.startBtn.click();
             e.home.importJournal.click();
+            e.home.startBtn.click();
             a.clickNavbarButton("articles");
             browser.wait(EC.visibilityOf(e.subobject.add), 2000);
             e.subobject.add.click();
@@ -29,8 +29,8 @@ describe('mainobject view', () => {
             }).then(() => {
                 a.restart();
                 // the journal 0 is selected by default
-                e.home.startBtn.click();
                 e.home.importJournal.click();
+                e.home.startBtn.click();
                 a.clickNavbarButton("articles");
                 e.subobject.add.click();
                 so.getRowContent("Language").then(cell => {

@@ -6,8 +6,8 @@ describe('sidebar', () => {
 
     it('should switch between tabs', () => {
         LoginHelper.get(browser, browser.baseUrl)
-            .then(e.home.startBtn.click)
-            .then(e.home.importJournal.click);
+            .then(e.home.importJournal.click)
+            .then(e.home.startBtn.click);
         e.sidebar.help.click();
         expect(e.sidebar.data.isDisplayed()).toBeTruthy();
         expect(e.sidebar.help.isDisplayed()).toBeFalsy();

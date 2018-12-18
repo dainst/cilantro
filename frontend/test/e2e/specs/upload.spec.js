@@ -9,8 +9,8 @@ describe('documents page', () => {
 
         it("should upload a file", () => {
             LoginHelper.get(browser, browser.baseUrl);
-            e.home.startBtn.click();
             e.home.importJournal.click();
+            e.home.startBtn.click();
             a.uploadFile();
             d.getStagingAreaFiles().then(list => {
                 expect(list).toContain('e2e-testing.pdf')

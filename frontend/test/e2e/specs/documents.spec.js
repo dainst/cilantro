@@ -12,8 +12,8 @@ describe('documents page', () => {
     it('should show tree of staging dir', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
-                e.home.startBtn.click();
                 e.home.importJournal.click();
+                e.home.startBtn.click();
                 expect(e.documents.treeViewItemsTopLevel.count()).toEqual(5);
                 expect(e.documents.treeViewItems.count()).toEqual(8);
             })
@@ -22,8 +22,8 @@ describe('documents page', () => {
     it('should toggle sub-directories', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
-                e.home.startBtn.click();
                 e.home.importJournal.click();
+                e.home.startBtn.click();
                 e.documents.toggleBranchBtn.click();
                 expect(e.documents.treeViewItemsTopLevel.get(3).all(by.css("li")).count()).toEqual(3);
             })
@@ -32,8 +32,8 @@ describe('documents page', () => {
     it('should load pdf file and create a document if selected so', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
-                e.home.startBtn.click();
                 e.home.importJournal.click();
+                e.home.startBtn.click();
                 e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click();
                 documents.waitForLoaded(2);
                 browser.sleep(2000);
@@ -51,8 +51,8 @@ describe('documents page', () => {
     it('should load pdf file and NOT create a document if selected so', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
-                e.home.startBtn.click();
                 e.home.importJournal.click();
+                e.home.startBtn.click();
                 e.documents.fileHandlerArea.element(by.css(".file-handler-pdf-empty > label")).click();
                 e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click();
                 documents.waitForLoaded(2);
@@ -72,8 +72,8 @@ describe('documents page', () => {
     it('should load all files of a directory', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
-                e.home.startBtn.click();
                 e.home.importJournal.click();
+                e.home.startBtn.click();
                 e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click();
                 documents.waitForLoaded(3);
                 browser.sleep(2000);
@@ -95,8 +95,8 @@ describe('documents page', () => {
     it('should open the csv import dialogue after loading a csv file', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(() => {
-                e.home.startBtn.click();
                 e.home.importJournal.click();
+                e.home.startBtn.click();
                 e.documents.treeViewItemsTopLevel.get(1).element(by.css('.load')).click();
                 a.waitForModal();
                 expect(e.csv.textField.getAttribute('value')).not.toEqual("");

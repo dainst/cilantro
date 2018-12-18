@@ -16,7 +16,7 @@ module.exports = {
         confirmBtn: element(by.css('.btn-danger')),
     },
     home: {
-        startBtn: element(by.css('#projectLogo img')),
+        startBtn: element(by.css('.row.toprow .btn-primary')),
         importJournal: element(by.id('import-journal-link'))
     },
     mainobject: {

@@ -7,8 +7,8 @@ const Subobject = function() {
 
     this.goToSubObject = docNr => LoginHelper.get(browser, browser.baseUrl)
         .then(() => {
-            e.home.startBtn.click();
             e.home.importJournal.click();
+            e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click();
             documents.waitForLoaded(docNr);
             e.documents.proceedBtn.click();

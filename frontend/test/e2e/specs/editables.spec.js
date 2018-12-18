@@ -57,8 +57,8 @@ describe('subobject view', () => {
             LoginHelper.get(browser, browser.baseUrl);
             mo.getRowContent("OJS: Journal Code").then(cell => {
                 cell.all(by.css("option")).get(0).click();
-                e.home.startBtn.click();
                 e.home.importJournal.click();
+                e.home.startBtn.click();
                 e.documents.treeViewItemsTopLevel.get(2).all(by.css('.load')).first().click();
                 documents.waitForLoaded(2).then(() => {
                     e.documents.proceedBtn.click();
