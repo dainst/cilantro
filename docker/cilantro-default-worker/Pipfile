@@ -13,6 +13,7 @@ pdftotext = "*"
 lxml = "*"
 Wand ="*"
 pymongo = "*"
+mysql-connector = "*"
 
 [dev-packages]
 

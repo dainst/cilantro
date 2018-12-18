@@ -21,6 +21,7 @@ Flask-HTTPAuth = "*"
 bcrypt = "*"
 pymongo = "*"
 jsonschema = "*"
+mysql-connector = "*"
 
 [dev-packages]
 
