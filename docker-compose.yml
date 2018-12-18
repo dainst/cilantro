@@ -29,6 +29,12 @@ x-env-jobdb: &env-jobdb
 x-env-app-config: &env-app-config
   OLD_JOBS_THRESHOLD_DAYS: ${OLD_JOBS_THRESHOLD_DAYS}
 
+x-env-arachne: &env-arachne
+  ARACHNE_DB_HOST: ${ARACHNE_DB_HOST}
+  ARACHNE_DB_NAME: ${ARACHNE_DB_NAME}
+  ARACHNE_DB_USER: ${ARACHNE_DB_USER}
+  ARACHNE_DB_PASSWORD: ${ARACHNE_DB_PASSWORD}
+
 services:
 
   broker:
@@ -53,6 +59,16 @@ services:
       - "27017:27017"
     volumes:
       - ./mongo-data:/data
+
+  arachne-db:
+    image: mysql:5.5.62
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=arachne
+    volumes:
+      - ./test/resources/files/arachne.sql:/docker-entrypoint-initdb.d/arachne.sql
 
   service:
     image: dainst/cilantro-service:latest
@@ -90,6 +106,7 @@ services:
       <<: *env-broker
       <<: *env-ojs
       <<: *env-jobdb
+      <<: *env-arachne
       DB_HOST: "db"
       CILANTRO_ENV: development
 
@@ -148,6 +165,7 @@ services:
       <<: *test-timeouts
       <<: *env-jobdb
       <<: *env-app-config
+      <<: *env-arachne
       DB_HOST: "db"
       TEST_RESOURCE_DIR: "test/resources"
 
