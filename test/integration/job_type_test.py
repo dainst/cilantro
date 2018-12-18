@@ -28,11 +28,21 @@ class JobTypeTest(unittest.TestCase):
     staging_dir = os.environ['STAGING_DIR']
     working_dir = os.environ['WORKING_DIR']
     repository_dir = os.environ['REPOSITORY_DIR']
+    archaeocloud_dir = os.environ['ARCHAEOCLOUD_PATH']
+    BOOKSCAN_PATH = os.path.join(archaeocloud_dir, 'aronscans', 'bookscans')
+    PDF_FOLDER = os.path.join(archaeocloud_dir, 'aronscans', 'download-book')
+    METS_FOLDER = os.path.join(archaeocloud_dir, 'S-Arachne', 'MetsDocuments')
+    ARCHIVE_PATH = os.path.join(archaeocloud_dir, 'historical-books-archive', 'DAI')
 
     def setUp(self):
         os.makedirs(self.staging_dir, exist_ok=True)
         os.makedirs(self.working_dir, exist_ok=True)
         os.makedirs(self.repository_dir, exist_ok=True)
+        os.makedirs(self.archaeocloud_dir, exist_ok=True)
+        os.makedirs(self.BOOKSCAN_PATH, exist_ok=True)
+        os.makedirs(self.PDF_FOLDER, exist_ok=True)
+        os.makedirs(self.METS_FOLDER, exist_ok=True)
+        os.makedirs(self.ARCHIVE_PATH, exist_ok=True)
 
         app.testing = True
         self.client = app.test_client()
@@ -41,6 +51,10 @@ class JobTypeTest(unittest.TestCase):
         shutil.rmtree(self.staging_dir, ignore_errors=True)
         shutil.rmtree(self.working_dir, ignore_errors=True)
         shutil.rmtree(self.repository_dir, ignore_errors=True)
+        shutil.rmtree(self.BOOKSCAN_PATH, ignore_errors=True)
+        shutil.rmtree(self.PDF_FOLDER, ignore_errors=True)
+        shutil.rmtree(self.METS_FOLDER, ignore_errors=True)
+        shutil.rmtree(self.ARCHIVE_PATH, ignore_errors=True)
 
     def assert_file_in_repository(self, object_id, file_path,
                                   timeout='DEFAULT_TEST_TIMEOUT'):
