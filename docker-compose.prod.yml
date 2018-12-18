@@ -22,6 +22,12 @@ x-env-jobdb: &env-jobdb
   JOB_DB_PORT: 27017
   JOB_DB_NAME: job_database
 
+x-env-arachne: &env-arachne
+  ARACHNE_DB_HOST: ${ARACHNE_DB_HOST}
+  ARACHNE_DB_NAME: ${ARACHNE_DB_NAME}
+  ARACHNE_DB_USER: ${ARACHNE_DB_USER}
+  ARACHNE_DB_PASSWORD: ${ARACHNE_DB_PASSWORD}
+
 services:
 
   broker:
@@ -65,6 +71,7 @@ services:
       <<: *env-broker
       <<: *env-ojs
       <<: *env-jobdb
+      <<: *env-arachne
       DB_HOST: "db"
 
   convert-worker:
