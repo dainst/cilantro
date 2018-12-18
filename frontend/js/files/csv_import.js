@@ -24,7 +24,7 @@ mod.factory("csvImport", ['$rootScope', '$uibModal', 'editables', 'fileManager',
 
             const modalInstance = $uibModal.open({
                 animation: true,
-                templateUrl: 'partials/modals/csv_import.html',
+                templateUrl: 'js/modals/csv_import.html',
                 controller: "csvImportWindow",
                 controllerAs: '$ctrl',
                 size: 'lg',
@@ -47,4 +47,3 @@ mod.factory("csvImport", ['$rootScope', '$uibModal', 'editables', 'fileManager',
 
     }])
 .run(function(csvImport) {csvImport.register()});
-
