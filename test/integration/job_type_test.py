@@ -9,6 +9,7 @@ from pathlib import Path
 
 from flask import json
 from service.run_service import app
+from utils.repository import generate_repository_path
 from test.service.user.user_utils import get_auth_header, test_user
 
 log = logging.getLogger(__name__)
@@ -53,7 +54,8 @@ class JobTypeTest(unittest.TestCase):
         """
         wait_time = _get_wait_time(timeout)
         waited = 0
-        file = Path(os.path.join(self.repository_dir, object_id, file_path))
+        file = Path(os.path.join(self.repository_dir, generate_repository_path(
+            object_id), file_path))
         while not file.is_file():
             if waited > wait_time:
                 raise AssertionError(
@@ -186,7 +188,8 @@ class JobTypeTest(unittest.TestCase):
 
         :param str object_id: The id of the object
         """
-        source = os.path.join(self.repository_dir, object_id)
+        source = os.path.join(self.repository_dir,
+                              generate_repository_path(object_id))
         try:
             shutil.rmtree(source)
         except FileNotFoundError:

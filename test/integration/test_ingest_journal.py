@@ -1,5 +1,6 @@
 import os
 
+from utils.repository import generate_repository_path
 from test.integration.job_type_test import JobTypeTest
 
 
@@ -44,7 +45,8 @@ class IngestJournalTest(JobTypeTest):
 
         # Check if the generated XML contains galley, which is required
         # for the ojs import and frontmatter generation
-        file_path = os.path.join(os.environ['REPOSITORY_DIR'], object_id,
+        file_path = os.path.join(os.environ['REPOSITORY_DIR'],
+                                 generate_repository_path(object_id),
                                  'ojs_import.xml')
         with open(file_path, 'r') as f:
             xml_content = f.read()
