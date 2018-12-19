@@ -4,7 +4,7 @@ const LoginHelper = require("../util/login_helper");
 
 describe('sidebar', () => {
 
-    it('should switch between tabs', () => {
+    xit('should switch between tabs', () => {
         LoginHelper.get(browser, browser.baseUrl)
             .then(e.home.importJournal.click)
             .then(e.home.startBtn.click);
