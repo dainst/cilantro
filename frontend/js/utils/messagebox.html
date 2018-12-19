@@ -9,7 +9,7 @@
             <hr>
             <div ng-repeat="message in messages" class="alert {{getClass(message.type)}}">{{message.text}}</div>
             <div style="text-align:right">
-                <a href="#" ng-click="clearLog()">
+                <a ng-click="clearLog()">
                     Clear Message Log
                 </a>
             </div>

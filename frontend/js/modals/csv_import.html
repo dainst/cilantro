@@ -2,8 +2,8 @@
     <div class="modal-header">
         <ul class="nav nav-pills">
             <li><div style="padding: 10px 15px 10px 0px; font-weight:bold">CSV Data Wizard</div></li>
-            <li ng-class="{active:state.tab=='raw'}" ng-click="clickTab('raw')"><a href="#">Enter/Review CSV Data</a></li>
-            <li ng-class="{active:state.tab=='csv', disabled:csv.length==0}" ng-click="clickTab('csv')"><a href="#">Assign Columns</a></li>
+            <li ng-class="{active:state.tab=='raw'}" ng-click="clickTab('raw')"><a>Enter/Review CSV Data</a></li>
+            <li ng-class="{active:state.tab=='csv', disabled:csv.length==0}" ng-click="clickTab('csv')"><a>Assign Columns</a></li>
             <li class="btn btn-danger pull-right" type="button" ng-click="cancel()">Cancel</li>
         </ul>
     </div>
@@ -27,7 +27,7 @@
                 but you selected <strong>{{options.delimiter}}</strong>. Please make sure, that this is correct before continue.
             </div>
 
-            <a ng-click="toggleParseOptions()" href="#" id="csv-more-options">More Options</a>
+            <a ng-click="toggleParseOptions()" id="csv-more-options">More Options</a>
             <div ng-show="state.parseOptions">
                 <form class="form-inline">
                     <div class="form-group input-group-sm">

@@ -7,10 +7,10 @@
                 <button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type="button" id="sort-by-toggle">Sort By<span class="caret"></span></button>
                 <ul class="dropdown-menu" uib-dropdown-menu id="sort-by-dropdown">
                     <li ng-repeat="sortField in dataset.getSortOptionsForSubObjects()">
-                        <a href="#" ng-click="updateOrder(sortField, true)">{{labels.get("sub", sortField, false)}}</a>
+                        <a ng-click="updateOrder(sortField, true)">{{labels.get("sub", sortField, false)}}</a>
                     </li>
                     <li ng-repeat="sortField in dataset.getSortOptionsForSubObjects()">
-                        <a href="#" ng-click="updateOrder(sortField, false)">{{labels.get("sub", sortField, false)}} (descending)</a>
+                        <a ng-click="updateOrder(sortField, false)">{{labels.get("sub", sortField, false)}} (descending)</a>
                     </li>
                 </ul>
             </uib-dropdown>
