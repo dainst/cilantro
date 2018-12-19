@@ -7,7 +7,7 @@ from typing import List, Iterator
 from distutils.dir_util import copy_tree
 
 from utils.serialization import SerializableClass
-from utils.sorting_algorithms import sort_alphanumeric
+from utils.list_dir import list_dir
 
 
 class PathDoesNotExist(Exception):
@@ -174,7 +174,7 @@ class Object:
         """
         representations = []
         path = self.get_representation_dir(representation)
-        for filename in sort_alphanumeric(os.listdir(path)):
+        for filename in list_dir(path, sorted=True):
             if not os.path.isdir(os.path.join(path, filename)):
                 with open(os.path.join(path, filename), 'rb') as file:
                     representations.append(BytesIO(file.read()))
