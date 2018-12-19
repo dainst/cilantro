@@ -13,8 +13,8 @@ def convert_tif_to_ptif(source_file, output_dir):
     new_filename = os.path.join(output_dir,
                                 os.path.splitext(os.path.basename(
                                     source_file))[0] + '.ptif')
-    shell_command = subprocess.run(["convert", source_file, "-colorspace",
-                                    "sRGB", "-define",
+    shell_command = subprocess.run(["/usr/bin/convert", source_file,
+                                    "-colorspace", "sRGB", "-define",
                                     "tiff:tile-geometry=256x256", "-compress",
                                     "jpeg", "ptif:" + new_filename])
     if shell_command.returncode != 0:
