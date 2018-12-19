@@ -54,7 +54,8 @@ describe('subobject view', () => {
 
     describe('language editable', () => {
         it('should show the languages of the journal', () => {
-            LoginHelper.get(browser, browser.baseUrl);
+            LoginHelper.get(browser, browser.baseUrl)
+                .then(e.home.importJournal.click);
             mo.getRowContent("OJS: Journal Code").then(cell => {
                 cell.all(by.css("option")).get(0).click();
                 e.home.importJournal.click();
