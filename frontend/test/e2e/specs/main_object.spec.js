@@ -6,7 +6,7 @@ const so = require('../modules/subobject');
 const LoginHelper = require("../util/login_helper");
 const EC = protractor.ExpectedConditions;
 
-fdescribe('mainobject view', () => {
+describe('mainobject view', () => {
     describe('editables', () => {
         it("number editable should be limited to numbers", () => {
             LoginHelper.get(browser, browser.baseUrl)
