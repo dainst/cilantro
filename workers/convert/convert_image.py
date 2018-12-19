@@ -1,9 +1,25 @@
 import logging
+import os
+import subprocess
 
 from PIL import Image as PilImage
 import pyocr
 
 log = logging.getLogger(__name__)
+
+
+def convert_tif_to_ptif(source_file, output_dir):
+    """Transform the source TIFF file to PTIF via imagemagick shell command."""
+    new_filename = os.path.join(output_dir,
+                                os.path.splitext(os.path.basename(
+                                    source_file))[0] + '.ptif')
+    shell_command = subprocess.run(["convert", source_file, "-colorspace",
+                                    "sRGB", "-define",
+                                    "tiff:tile-geometry=256x256", "-compress",
+                                    "jpeg", "ptif:" + new_filename])
+    if shell_command.returncode != 0:
+        log.error("PTIF conversion failed")
+        raise OSError(f"PTIF conversion failed")
 
 
 def convert_tif_to_jpg(source_file, target_file):
