@@ -6,8 +6,7 @@
                 <button uib-dropdown-toggle class="btn btn-default">Select Article<span class="caret"></span></button>
                 <ul uib-dropdown-menu>
                     <li ng-repeat="article in dataset.subobjects track by $index">
-                        <a      href='#'
-                                ng-if="article._.confirmed !== false"
+                        <a ng-if="article._.confirmed !== false"
                                 ng-class="{'btn-primary': $index == currentArticle, 'btn-success': article._.confirmed === true}"
                                 ng-click="selectArticle($index)"
                             >{{article.author.value[0].lastname}} - {{article.title.get()}}
@@ -19,8 +18,7 @@
                 <button uib-dropdown-toggle class="btn btn-default">Trash<span class="caret"></span></button>
                 <ul uib-dropdown-menu>
                     <li ng-repeat="article in dataset.subobjects track by $index">
-                        <a      href='#'
-                                ng-if="article._.confirmed === false"
+                        <a ng-if="article._.confirmed === false"
                                 ng-class="{'btn-primary': $index == currentArticle, 'btn-danger': article._.confirmed === false}"
                                 ng-click="selectArticle($index)"
                             >{{article.author.value[0].lastname}} - {{article.title.get()}}>
