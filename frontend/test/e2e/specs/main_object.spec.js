@@ -6,10 +6,11 @@ const so = require('../modules/subobject');
 const LoginHelper = require("../util/login_helper");
 const EC = protractor.ExpectedConditions;
 
-describe('mainobject view', () => {
+fdescribe('mainobject view', () => {
     describe('editables', () => {
         it("number editable should be limited to numbers", () => {
-            LoginHelper.get(browser, browser.baseUrl);
+            LoginHelper.get(browser, browser.baseUrl)
+                .then(e.home.importJournal.click);
             mo.getRowContent("Year").then(cell => {
                 cell.element(by.css("input")).clear().sendKeys("abc");
                 expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
@@ -29,7 +30,6 @@ describe('mainobject view', () => {
             }).then(() => {
                 a.restart();
                 // the journal 0 is selected by default
-                e.home.importJournal.click();
                 e.home.startBtn.click();
                 a.clickNavbarButton("articles");
                 e.subobject.add.click();
