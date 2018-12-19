@@ -19,5 +19,6 @@ tasks:
   - task: convert.merge_converted_pdf
     representation: pdf
   - publish_to_repository
+  - publish_to_arachne
   - cleanup_workdir
   - finish_job
