@@ -55,22 +55,22 @@ describe('subobject view', () => {
     describe('language editable', () => {
         it('should show the languages of the journal', () => {
             LoginHelper.get(browser, browser.baseUrl)
-                .then(e.home.importJournal.click);
-            mo.getRowContent("OJS: Journal Code").then(cell => {
-                cell.all(by.css("option")).get(0).click();
-                e.home.importJournal.click();
-                e.home.startBtn.click();
-                e.documents.treeViewItemsTopLevel.get(2).all(by.css('.load')).first().click();
-                documents.waitForLoaded(2).then(() => {
-                    e.documents.proceedBtn.click();
-                    e.overview.proceedBtn.click();
-                    so.getRowContent("Language").then(cell => {
-                        expect(cell.all(by.css("label")).get(0).getText()).toBe("German");
-                        expect(cell.all(by.css("label")).get(1).getText()).toBe("English");
-                        expect(cell.all(by.css("label")).get(2).getText()).toBe("French");
+                .then(e.home.importJournal.click)
+                .then(() => mo.getRowContent("OJS: Journal Code"))
+                .then(cell => {
+                    cell.all(by.css("option")).get(0).click();
+                    e.home.startBtn.click();
+                    e.documents.treeViewItemsTopLevel.get(2).all(by.css('.load')).first().click();
+                    documents.waitForLoaded(2).then(() => {
+                        e.documents.proceedBtn.click();
+                        e.overview.proceedBtn.click();
+                        so.getRowContent("Language").then(cell => {
+                            expect(cell.all(by.css("label")).get(0).getText()).toBe("German");
+                            expect(cell.all(by.css("label")).get(1).getText()).toBe("English");
+                            expect(cell.all(by.css("label")).get(2).getText()).toBe("French");
+                        });
                     });
                 });
-            });
         });
 
         it('should change to the right language code when clicking a language', () => {
