@@ -94,7 +94,7 @@ class Object:
                 except ValueError:
                     self.metadata = ObjectMetadata()
         else:
-            open(os.path.join(self.path, 'meta.json'), 'a', encoding="utf-8")\
+            open(os.path.join(self.path, 'meta.json'), 'a', encoding="utf-8") \
                 .close()
             self.metadata = ObjectMetadata()
 

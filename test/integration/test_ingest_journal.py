@@ -38,7 +38,7 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0002/data/txt/annotations.json',
             'meta.json',
             'ojs_import.xml'
-            ]
+        ]
         for file in files_generated:
             self.assert_file_in_repository(object_id, file)
 
@@ -84,7 +84,7 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0002/data/txt/annotations.json',
             'meta.json',
             'ojs_import.xml'
-            ]
+        ]
         for file in files_generated:
             self.assert_file_in_repository(object_id, file)
         self.unstage_resource('pdf')
