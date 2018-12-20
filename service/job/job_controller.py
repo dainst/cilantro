@@ -30,7 +30,7 @@ job_controller = Blueprint('job', __name__)
 
 @job_controller.route('/jobs', methods=['GET'])
 @auth.login_required
-def job_list(show_all_jobs=False):
+def job_list():
     """
     List jobs of the user
 
@@ -106,6 +106,7 @@ def job_list(show_all_jobs=False):
     """
     user = auth.username()
     jobs = job_db.get_jobs_for_user(user)
+    show_all_jobs = request.args.get('show_all_jobs')
     response = []
     if not show_all_jobs:
         for job in jobs:
