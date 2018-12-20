@@ -101,6 +101,7 @@ def job_list(show_all_jobs=False):
             }
         ]
 
+    :query show_all_jobs: (optional) if 'True', all jobs are listed
     :return: A JSON object containing the list of job objects
     """
     user = auth.username()
