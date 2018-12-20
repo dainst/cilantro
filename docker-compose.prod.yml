@@ -104,6 +104,7 @@ services:
   salvia:
     image: dainst/cilantro-salvia:latest
     environment:
+      <<: *env-ojs
       BACKEND_URI: ${BACKEND_URI}
       ZENON_URI: ${ZENON_URI}
       OJS_URI: ${OJS_URI}

@@ -177,9 +177,11 @@ services:
         - ./frontend/partials:/usr/share/nginx/html/partials
         - ./frontend/style:/usr/share/nginx/html/style
         - ./frontend/test:/usr/share/nginx/html/test
+        - ./frontend/index.html:/usr/share/nginx/html/index.html
     ports:
       - "7777:80"
     environment:
+      <<: *env-ojs
       BACKEND_URI: ${BACKEND_URI}
       ZENON_URI: ${ZENON_URI}
       OJS_URI: ${OJS_URI}

@@ -8,8 +8,9 @@ RUN apt-get update && apt-get -y install google-chrome-stable
 
 COPY ./frontend /salvia
 
-WORKDIR /salvia \
+WORKDIR /salvia
 RUN npm update -g \
+    && npm install -g gulp-cli \
     && npm install \
     && cd node_modules/webdriver-manager/bin \
     && ./webdriver-manager update
