@@ -2,6 +2,7 @@ const e = require("../modules/elements");
 const a = require('../modules/actions');
 const so = require('../modules/subobject');
 const mo = require('../modules/mainobject');
+const j = require('../modules/jobs');
 const message = require('../modules/messages');
 const EC = protractor.ExpectedConditions;
 
@@ -43,12 +44,11 @@ describe('publish page', () => {
             .then(cells => {
                 cells[0].element(by.css("input")).sendKeys("2018");
                 cells[1].element(by.css("input")).sendKeys("18");
-                cells[2].all(by.css("option")).get(1).click();
-                message.clearMessages();
+                var option = cells[2].all(by.css("option")).get(1);
+                browser.wait(EC.visibilityOf(option), 2000);
+                option.click();
                 e.publish.uploadBtn.click();
-                message.waitForMessage().then(() => {
-                    expect(message.getClassOfMain()).toEqual("success");
-                });
+                expect(j.getLastJobStatus()).toEqual('Accepted');
             });
     });
 
