@@ -136,13 +136,14 @@ describe('overview page', () => {
         const testDocFileName2 = "test-directory/pdf3.pdf";
         ot.goToOverview(3);
 
-        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 10000);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 5000);
 
         e.overview.sortByBtn.click();
-        browser.wait(EC.visibilityOf(e.overview.sortByDropdown), 1000);
+        browser.wait(EC.visibilityOf(e.overview.sortByDropdown), 5000);
         e.overview.sortByDropdown.element(by.cssContainingText('a',"Title (descending)")).click();
-        browser.wait(EC.not(EC.visibilityOf(e.overview.sortByDropdown)), 1000);
+        browser.wait(EC.not(EC.visibilityOf(e.overview.sortByDropdown)), 5000);
         e.overview.addBtn.click();
+        browser.wait(EC.presenceOf(ot.getRowButton(3, 'merge')), 5000);
         for(var i=0; i < 3; i++){
             ot.getRowButton(0, 'merge').click();
             ot.getRowButton(1, 'merge').click();
