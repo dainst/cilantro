@@ -49,7 +49,7 @@ class JobControllerTest(unittest.TestCase):
         self.assertTrue(this_job_json["job_id"])
         self.assertEqual("test_user", this_job_json["user"])
         self.assertEqual("job2", this_job_json["job_type"])
-        self.assertEqual('job2-some_tiffs/test.tif-some_tiffs/test2.tiff',
+        self.assertEqual('JOB-job2-some_tiffs/test.tif-some_tiffs/test2.tiff',
                          this_job_json["name"])
 
     def test_create_job_no_payload(self):
