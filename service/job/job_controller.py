@@ -1,6 +1,7 @@
 import logging
 import jsonschema
 import os
+import datetime as dt
 
 from flask import Blueprint, url_for, jsonify, request, g
 
@@ -29,11 +30,15 @@ job_controller = Blueprint('job', __name__)
 
 @job_controller.route('/jobs', methods=['GET'])
 @auth.login_required
-def job_list():
+def job_list(show_all_jobs=False):
     """
-    List all jobs of the user.
+    List jobs of the user
 
-    .. :quickref: Job Controller; List all jobs of the user
+    List jobs of the user updated less than a week ago and all jobs, which were
+    not successful.
+    If show_all_jobs is set True it returns all jobs.
+
+    .. :quickref: Job Controller; List jobs of the user
 
     **Example request**:
 
@@ -99,7 +104,16 @@ def job_list():
     :return: A JSON object containing the list of job objects
     """
     user = auth.username()
-    return jsonify(job_db.get_jobs_for_user(user))
+    jobs = job_db.get_jobs_for_user(user)
+    response = []
+    if not show_all_jobs:
+        for job in jobs:
+            if (job['updated'] > dt.datetime.now() - dt.timedelta(days=7)) \
+                    or (job['state'] != 'success'):
+                response.append(job)
+    else:
+        response = jobs
+    return jsonify(response)
 
 
 @job_controller.route('/<job_type>', methods=['POST'])
