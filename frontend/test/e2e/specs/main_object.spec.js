@@ -12,6 +12,7 @@ describe('mainobject view', () => {
             LoginHelper.get(browser, browser.baseUrl)
                 .then(e.home.importJournal.click);
             mo.getRowContent("Year").then(cell => {
+                browser.wait(EC.visibilityOf(cell), 2000);
                 cell.element(by.css("input")).clear().sendKeys("abc");
                 expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
             });
