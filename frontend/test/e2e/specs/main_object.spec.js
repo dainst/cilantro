@@ -24,24 +24,18 @@ describe('mainobject view', () => {
             a.clickNavbarButton("articles");
             browser.wait(EC.visibilityOf(e.subobject.add), 2000);
             e.subobject.add.click();
-            so.getRowContent("Language").then(cell => {
-                // without selected a journal we get default values
-                expect(cell.all(by.css("label")).get(1).getText()).toBe("English");
-                expect(cell.all(by.css("label")).get(0).getText()).toBe("German");
-            }).then(() => {
-                a.restart();
-                // the journal 0 is selected by default
-                e.home.startBtn.click();
-                a.clickNavbarButton("articles");
-                e.subobject.add.click();
-                so.getRowContent("Language").then(cell => {
-                    expect(cell.all(by.css("label")).get(1).getText()).toBe("English");
-                    expect(cell.all(by.css("label")).get(0).getText()).toBe("German");
-                });
-            });
-
-
-
+            const cell = so.getRowContent("language");
+            // without selected a journal we get default values
+            expect(cell.all(by.css("label")).get(1).getText()).toBe("English");
+            expect(cell.all(by.css("label")).get(0).getText()).toBe("German");
+            a.restart();
+            // the journal 0 is selected by default
+            e.home.startBtn.click();
+            a.clickNavbarButton("articles");
+            e.subobject.add.click();
+            const cell2 = so.getRowContent("language");
+            expect(cell.all(by.css("label")).get(1).getText()).toBe("English");
+            expect(cell.all(by.css("label")).get(0).getText()).toBe("German");
         });
 
     });

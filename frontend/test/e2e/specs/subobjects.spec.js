@@ -9,10 +9,9 @@ describe('subobject view', () => {
         browser.wait(EC.visibilityOf(e.subobject.add), 20000);
         e.subobject.selectBtn.click();
         e.subobject.select.get(1).click();
-        so.getRowContent("Title").then(cell => {
-            const input = cell.element(by.css("input"));
-            expect(input.getAttribute("value")).toEqual("UNITED");
-        });
+        const cell = so.getRowContent("title");
+        const input = cell.element(by.css("input"));
+        expect(input.getAttribute("value")).toEqual("UNITED");
     });
 
 
@@ -22,23 +21,21 @@ describe('subobject view', () => {
         e.subobject.selectBtn.click();
         e.subobject.select.get(1).click();
         e.subobject.dismissBtn.click();
-        so.getRowContent("Title").then(cell => {
-            const input = cell.element(by.css("input"));
-            expect(input.getAttribute("value")).toEqual("");
-            expect(e.subobject.select.count()).toEqual(2);
-            expect(e.subobject.trash.count()).toEqual(1);
-        });
+        const cell = so.getRowContent("title");
+        const input = cell.element(by.css("input"));
+        expect(input.getAttribute("value")).toEqual("");
+        expect(e.subobject.select.count()).toEqual(2);
+        expect(e.subobject.trash.count()).toEqual(1);
     });
 
     it('should create new article', () => {
         so.goToSubObject(2);
         browser.wait(EC.visibilityOf(e.subobject.add), 20000);
         e.subobject.add.click();
-        so.getRowContent("Title").then(cell => {
-            const input = cell.element(by.css("input"));
-            expect(input.getAttribute("value")).toEqual("Article 2");
-            expect(e.subobject.select.count()).toEqual(2);
-        });
+        const cell = so.getRowContent("title")
+        const input = cell.element(by.css("input"));
+        expect(input.getAttribute("value")).toEqual("Article 2");
+        expect(e.subobject.select.count()).toEqual(2);
     });
 
     it('should restore article from trash', () => {
@@ -55,13 +52,12 @@ describe('subobject view', () => {
     it('should only confirm validated article', () => {
         so.goToSubObject(2);
         browser.wait(EC.visibilityOf(e.subobject.table), 20000);
-        so.getRowContent("Title").then(cell => {
-            const input = cell.element(by.css("input"));
-            input.clear();
-            expect(e.subobject.confirmBtn.isDisplayed()).toBeFalsy();
-            input.sendKeys("shit");
-            expect(e.subobject.confirmBtn.isDisplayed()).toBeTruthy();
-        });
+        const cell = so.getRowContent("title");
+        const input = cell.element(by.css("input"));
+        input.clear();
+        expect(e.subobject.confirmBtn.isDisplayed()).toBeFalsy();
+        input.sendKeys("shit");
+        expect(e.subobject.confirmBtn.isDisplayed()).toBeTruthy();
     });
 
 });

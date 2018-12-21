@@ -77,7 +77,8 @@
                 <table class='table article-table'>
                     <thead></thead>
                     <tbody>
-                        <tr ng-if="currentArticle > -1" ng-repeat="(property, item) in dataset.subobjects[currentArticle] track by $index">
+                        <tr ng-if="currentArticle > -1" ng-repeat="(property, item) in dataset.subobjects[currentArticle] track by $index"
+                                 class="row-{{property}}">
                             <td>{{labels.get("sub", property)}}</td>
                             <td><span editable item="dataset.subobjects[currentArticle][property]" /></td>
                         </tr>

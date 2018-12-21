@@ -17,15 +17,8 @@ const Subobject = function() {
             browser.wait(EC.visibilityOf(e.subobject.table), 20000);
         });
 
-    this.getRowTitles = () => new Promise((resolve, reject) =>
-        e.subobject.tableRows
-            .then(rows => Promise.all(rows.map(row => row.all(by.css("td")).get(0).getText()))
-                .then(resolve).catch(reject)));
+    this.getRowContent = id => e.subobject.table.element(by.css(".row-" + id));
 
-    this.getRowContent = title => new Promise((resolve, reject) =>
-        this.getRowTitles()
-            .then(titles => e.subobject.tableRows.get(titles.indexOf(title)))
-                .then(resolve).catch(reject));
 };
 
 module.exports = new Subobject();

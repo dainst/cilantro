@@ -27,30 +27,24 @@ describe('subobject view', () => {
             e.zenon.searchBox.clear().sendKeys("magister Equitum");
             e.zenon.resultRows.first().click();
             e.zenon.adopt.click();
-            so.getRowContent("Title").then(cell => {
-                const input = cell.element(by.css("input"));
-                expect(input.getAttribute("value")).toEqual("The missing magister equitum.");
-            });
-            so.getRowContent("Zenon-Id").then(cell => {
-                const input = cell.element(by.css("input"));
-                expect(input.getAttribute("value")).toEqual("001175390");
-            });
-            so.getRowContent("Language").then(cell => {
-                const input = cell.element(by.css("input[type=\"text\"]"));
-                expect(input.getAttribute("value")).toEqual("en_US");
-            });
-            so.getRowContent("Date of Publishing").then(cell => {
-                const input = cell.all(by.css("input")).first();
-                expect(input.getAttribute("value")).toEqual("1997");
-            });
-            so.getRowContent("Range of Pages").then(cell => {
-                const input = cell.all(by.css("input")).first();
-                expect(input.getAttribute("value")).toEqual("157");
-            });
-            so.getRowContent("Author").then(cell => {
-                const input = cell.all(by.css("input")).last();
-                expect(input.getAttribute("value")).toEqual("Ridley");
-            });
+            var cell = so.getRowContent("title");
+            var input = cell.element(by.css("input"));
+            expect(input.getAttribute("value")).toEqual("The missing magister equitum.");
+            cell = so.getRowContent("zenonId");
+            input = cell.element(by.css("input"));
+            expect(input.getAttribute("value")).toEqual("001175390");
+            cell = so.getRowContent("language");
+            input = cell.element(by.css("input[type=\"text\"]"));
+            expect(input.getAttribute("value")).toEqual("en_US");
+            cell = so.getRowContent("date_published");
+            input = cell.all(by.css("input")).first();
+            expect(input.getAttribute("value")).toEqual("1997");
+            cell = so.getRowContent("pages");
+            input = cell.all(by.css("input")).first();
+            expect(input.getAttribute("value")).toEqual("157");
+            cell = so.getRowContent("author");
+            input = cell.all(by.css("input")).last();
+            expect(input.getAttribute("value")).toEqual("Ridley");
         });
 
         it('should adopt data from zenon into current article', () => {
@@ -72,7 +66,7 @@ describe('subobject view', () => {
 
             expect(e.subobject.select.count()).toEqual(2);
 
-            so.getRowContent("Title").then(cell => {
+            so.getRowContent("title").then(cell => {
                 const input = cell.element(by.css("input"));
                 expect(input.getAttribute("value")).toEqual("The missing magister equitum.");
             });
@@ -89,7 +83,7 @@ describe('subobject view', () => {
             e.csv.confirm.click();
             e.documents.proceedBtn.click();
             e.overview.proceedBtn.click();
-            so.getRowContent("Title").then(cell => {
+            so.getRowContent("title").then(cell => {
                 const input = cell.element(by.css("input"));
                 const title1 = "The missing magister equitum.";
                 const title2  = "Equus : the horse in the Roman World ";

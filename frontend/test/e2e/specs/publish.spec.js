@@ -25,7 +25,7 @@ describe('publish page', () => {
         browser.wait(EC.visibilityOf(e.subobject.confirmBtn), 5000);
         e.subobject.confirmBtn.click();
         expect(e.publish.uploadBtn.isPresent()).toBeFalsy();
-        Promise.all([mo.getRowContent("Volume"), mo.getRowContent("Number"), mo.getRowContent("OJS: Journal Code")])
+        Promise.all([mo.getRowContent("volume"), mo.getRowContent("number"), mo.getRowContent("ojs_journal_code")])
             .then(cells => {
                 cells[0].element(by.css("input")).sendKeys("2018");
                 cells[1].element(by.css("input")).sendKeys("18");
@@ -40,7 +40,7 @@ describe('publish page', () => {
         browser.wait(EC.visibilityOf(e.subobject.confirmBtn), 5000);
         e.subobject.confirmBtn.click();
         browser.wait(EC.visibilityOf(e.mainobject.table), 2000);
-        Promise.all([mo.getRowContent("Volume"), mo.getRowContent("Number"), mo.getRowContent("OJS: Journal Code")])
+        Promise.all([mo.getRowContent("volume"), mo.getRowContent("number"), mo.getRowContent("ojs_journal_code")])
             .then(cells => {
                 cells[0].element(by.css("input")).sendKeys("2018");
                 cells[1].element(by.css("input")).sendKeys("18");
