@@ -8,14 +8,14 @@ const EC = protractor.ExpectedConditions;
 
 describe('mainobject view', () => {
     describe('editables', () => {
-        it("number editable should be limited to numbers", () => {
+        fit("number editable should be limited to numbers", () => {
             LoginHelper.get(browser, browser.baseUrl)
                 .then(e.home.importJournal.click);
-            mo.getRowContent("Year").then(cell => {
-                browser.wait(EC.visibilityOf(cell), 2000);
-                cell.element(by.css("input")).clear().sendKeys("abc");
-                expect(cell.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
-            });
+            var row = mo.getRowContent("year");
+            browser.wait(EC.visibilityOf(row), 2000);
+            var input = row.element(by.css("input"));
+            input.clear().sendKeys("abc");
+            expect(row.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
         });
         it("should load some journal data codes from ojs cilantro plugin api", () => {
             LoginHelper.get(browser, browser.baseUrl);
