@@ -8,7 +8,7 @@ const EC = protractor.ExpectedConditions;
 
 describe('mainobject view', () => {
     describe('editables', () => {
-        fit("number editable should be limited to numbers", () => {
+        it("number editable should be limited to numbers", () => {
             LoginHelper.get(browser, browser.baseUrl)
                 .then(e.home.importJournal.click);
             var row = mo.getRowContent("year");
