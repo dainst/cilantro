@@ -26,31 +26,29 @@ class JobControllerTest(unittest.TestCase):
         Test listing of jobs.
 
         The test creates a job and then gets a list of all jobs.
-        The job list is checked for some strings which are expected in the
-        job list.
+        The job list is checked for existence of a job-id, the test user,
+        the correct job type and job name.
         """
         data = {
             "metadata": {
                 "title": "Test-Title",
                 "description": "Test-Description",
                 "year": 1992
-            },
+                },
             "files": [
                 {"file": "some_tiffs/test.tif"},
                 {"file": "some_tiffs/test2.tiff"}
-            ]
-        }
+                ]}
         self._make_request('/job/job2', json.dumps(data), 202)
 
-        all_jobs = self.client.get('/job/jobs', headers=get_auth_header())
-        all_jobs_json = all_jobs.get_json()
-        this_job_json = all_jobs_json[len(all_jobs_json) - 1]
+        response = self.client.get('/job/jobs', headers=get_auth_header())
+        last_job_json = response.get_json()[-1]
 
-        self.assertTrue(this_job_json["job_id"])
-        self.assertEqual("test_user", this_job_json["user"])
-        self.assertEqual("job2", this_job_json["job_type"])
-        self.assertEqual('JOB-job2-some_tiffs/test.tif-some_tiffs/test2.tiff',
-                         this_job_json["name"])
+        self.assertTrue(last_job_json["job_id"])
+        self.assertEqual("test_user", last_job_json["user"])
+        self.assertEqual("job2", last_job_json["job_type"])
+        self.assertEqual('JOB-job2-some_tiffs/test.tif',
+                         last_job_json["name"])
 
     def test_create_job_no_payload(self):
         """Job creation has to fail without POST payload."""
