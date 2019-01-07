@@ -26,6 +26,8 @@ x-env-jobdb: &env-jobdb
   JOB_DB_PORT: ${JOB_DB_PORT}
   JOB_DB_NAME: ${JOB_DB_NAME}
 
+x-env-app-config: &env-app-config
+  OLD_JOBS_THRESHOLD_DAYS: ${OLD_JOBS_THRESHOLD_DAYS}
 
 services:
 
@@ -68,6 +70,7 @@ services:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-jobdb
+      <<: *env-app-config
       DB_HOST: "db"
       CILANTRO_ENV: development
 
@@ -144,6 +147,7 @@ services:
       <<: *env-ojs
       <<: *test-timeouts
       <<: *env-jobdb
+      <<: *env-app-config
       DB_HOST: "db"
       TEST_RESOURCE_DIR: "test/resources"
 

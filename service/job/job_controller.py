@@ -109,9 +109,10 @@ def job_list():
     show_all_jobs = request.args.get('show_all_jobs')
     response = []
     if not show_all_jobs:
+        threshold_days = int(os.environ['OLD_JOBS_THRESHOLD_DAYS'])
+        threshold_date = dt.datetime.now() - dt.timedelta(days=threshold_days)
         for job in jobs:
-            if (job['updated'] > dt.datetime.now() - dt.timedelta(days=7)) \
-                    or (job['state'] != 'success'):
+            if job['updated'] > threshold_date or job['state'] != 'success':
                 response.append(job)
     else:
         response = jobs
