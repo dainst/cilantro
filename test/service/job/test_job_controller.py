@@ -135,3 +135,4 @@ class JobControllerTest(unittest.TestCase):
                              expected_error_code)
             self.assertTrue(expected_error_message in
                             response_json['error']['message'])
+        return response
