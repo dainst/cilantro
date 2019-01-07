@@ -274,7 +274,7 @@ def job_create(job_type):
         raise ApiError("invalid_job_params", "No request payload found")
     params = request.get_json(force=True)
     if not os.path.isfile(os.path.join(os.environ['CONFIG_DIR'],
-                          'job_types', job_type + '.yml')):
+                                       'job_types', job_type + '.yml')):
         raise ApiError("unknown_job_type", "No job definition file found", 404)
     try:
         json_validation.validate_params(params, job_type)
