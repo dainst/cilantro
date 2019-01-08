@@ -131,7 +131,7 @@ describe('overview page', () => {
         });
     });
 
-    fit('should merge two documents on btn click', () => {
+    it('should merge two documents on btn click', () => {
         const testDocFileName0 = "test-directory/pdf3.pdf";
         const testDocFileName2 = "test-directory/pdf2.pdf";
         ot.goToOverview(3);
