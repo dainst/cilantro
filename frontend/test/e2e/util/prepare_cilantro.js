@@ -1,25 +1,25 @@
 const fs = require('fs');
 const path = require('path');
 const rp = require('request-promise-native');
+const users = require('../settings/users');
 
 let frontendUrl = "";
 let backendUrl = "";
 let params = {};
 let silent = false;
 
-function getParams() {
+function getParams(userTestId = 'normal') {
     return new Promise((resolve, reject) => {
         rp({uri: frontendUrl + '/config/settings.json', method: 'GET'}).then(res => {
             const settings = JSON.parse(res);
             backendUrl = settings.server_url;
             params = {};
             params.method = 'GET';
-            if (typeof settings.server_user !== 'undefined') {
-                params.auth = {
-                    user: settings.server_user,
-                    pass: settings.server_pass
-                };
-            }
+            params.auth = {
+                user: users[userTestId].username,
+                pass: users[userTestId].password
+            };
+
             resolve(params);
         })
             .catch(reject)
@@ -86,15 +86,22 @@ const pc = {
             .then(clearStaging)
             .then(fillStaging)
             .then(resolve)
-            .catch(reject)
+            .catch(reject);
     }),
     
     cleanUp: url => new Promise((resolve, reject) => {
         frontendUrl = url;
-        getParams()
+        getParams('upload')
             .then(clearStaging)
-            .then(resolve)
-            .catch(reject)
+            .then(()=>{
+                getParams()
+                    .then(clearStaging)
+                    .then(resolve)
+                    .catch(reject);
+            })
+            .catch(reject);
+
+
     }),
 
     clearSingleFile: (url, file) => new Promise((resolve, reject) => {
@@ -102,7 +109,7 @@ const pc = {
         getParams()
             .then(() => clearSingleFile(file))
             .then(resolve)
-            .catch(reject)
+            .catch(reject);
     }),
 
     silent: to => {

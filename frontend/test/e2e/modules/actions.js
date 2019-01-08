@@ -23,7 +23,7 @@ const Actions = function() {
         return elements.restart.confirmBtn.click();
     };
 
-    this.uploadFile = function(file = '../resources/staging/e2e-testing.pdf') {
+    this.uploadFile = function(file = '../resources/upload/upload.pdf') {
         browser.setFileDetector(new remote.FileDetector());
         let absolutePath = path.resolve(__dirname, file);
         browser.wait(EC.presenceOf(elements.upload.fileElem));
