@@ -131,7 +131,7 @@ describe('overview page', () => {
         });
     });
 
-    it('should merge two documents on btn click', () => {
+    fit('should merge two documents on btn click', () => {
         const testDocFileName0 = "test-directory/pdf3.pdf";
         const testDocFileName2 = "test-directory/pdf2.pdf";
         ot.goToOverview(3);
@@ -145,6 +145,10 @@ describe('overview page', () => {
         browser.wait(EC.visibilityOf(e.overview.sortByDropdown), 5000);
         e.overview.sortByDropdown.element(by.cssContainingText('a',"Title (descending)")).click();
         browser.wait(EC.not(EC.visibilityOf(e.overview.sortByDropdown)), 5000);
+        expect(ot.getRowTitle(0)).toEqual('UNITED');
+        expect(ot.getRowTitle(1)).toEqual('PII: 0003-9969(92)90087-O');
+        expect(ot.getRowTitle(2)).toEqual('Article 4');
+        expect(ot.getRowTitle(3)).toEqual('');
         for(var i=0; i < 3; i++){
             ot.getRowButton(0, 'merge').click();
             ot.getRowButton(1, 'merge').click();
