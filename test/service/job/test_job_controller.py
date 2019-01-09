@@ -53,8 +53,7 @@ class JobControllerTest(unittest.TestCase):
         self.assertTrue(last_job_json["job_id"])
         self.assertEqual("test_user", last_job_json["user"])
         self.assertEqual("job2", last_job_json["job_type"])
-        self.assertEqual('JOB-job2-some_tiffs/test.tif',
-                         last_job_json["name"])
+        self.assertEqual('JOB-job2-some_tiffs/test.tif', last_job_json["name"])
 
     def test_create_job_no_payload(self):
         """Job creation has to fail without POST payload."""
