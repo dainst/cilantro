@@ -55,6 +55,37 @@ class JobControllerTest(unittest.TestCase):
         self.assertEqual("job2", last_job_json["job_type"])
         self.assertEqual('JOB-job2-some_tiffs/test.tif', last_job_json["name"])
 
+    def test_create_job_success_and_list_job_without_files(self):
+        """
+        Test listing of jobs with empty files-object.
+
+        The test creates a job and then gets a list of all jobs.
+        The job list is checked for existence of a job-id, the test user,
+        the correct job type and job name.
+        """
+        data = {
+            "metadata": {
+                "title": "Test-Title",
+                "description": "Test-Description",
+                "year": 1992
+                },
+            "files": [],
+            "parts": [{
+                "files": [
+                    {"file": "test.pdf"}
+                    ]
+                }]
+            }
+        self._make_request('/job/job2', json.dumps(data), 202)
+
+        response = self.client.get('/job/jobs', headers=get_auth_header())
+        last_job_json = response.get_json()[-1]
+
+        self.assertTrue(last_job_json["job_id"])
+        self.assertEqual("test_user", last_job_json["user"])
+        self.assertEqual("job2", last_job_json["job_type"])
+        self.assertEqual('JOB-job2-test.pdf', last_job_json["name"])
+
     def test_create_job_no_payload(self):
         """Job creation has to fail without POST payload."""
         self._make_request('/job/job1', None, 400, 'invalid_job_params',
