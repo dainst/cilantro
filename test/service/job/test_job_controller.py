@@ -38,7 +38,13 @@ class JobControllerTest(unittest.TestCase):
             "files": [
                 {"file": "some_tiffs/test.tif"},
                 {"file": "some_tiffs/test2.tiff"}
-                ]}
+                ],
+            "parts": [{
+                "files": [
+                    {"file": "test.pdf"}
+                    ]
+                }]
+            }
         self._make_request('/job/job2', json.dumps(data), 202)
 
         response = self.client.get('/job/jobs', headers=get_auth_header())
