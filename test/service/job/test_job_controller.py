@@ -1,5 +1,9 @@
 import unittest
 import json
+import os
+import datetime
+
+from pymongo import MongoClient
 
 from unittest.mock import patch
 
@@ -20,6 +24,58 @@ class JobControllerTest(unittest.TestCase):
 
     def tearDown(self):
         self.env.stop()
+
+    def test_list_job_filter(self):
+        """
+        Test the filtering of old jobs when listing.
+
+        This test creates 3 test jobs. 2 of them are manipulated directly on
+        the job database (mongodb), so that the updated timestamp is 1 more
+        day than the threshold value for old jobs. The listing is checked
+        for appearance of the jobs. Jobs older than the threshold and being
+        successful are not to show up.
+        """
+        data = {
+            "metadata": {
+                "title": "Test-Title",
+                "description": "Test-Description",
+                "year": 1992
+                },
+            "files": [
+                {"file": "some_tiffs/test.tif"},
+                {"file": "some_tiffs/test2.tiff"}
+                ]
+            }
+        job1_response = self._make_request('/job/job2', json.dumps(data), 202)
+        job_id1 = job1_response.get_json()['job_id']
+        job2_response = self._make_request('/job/job2', json.dumps(data), 202)
+        job_id2 = job2_response.get_json()['job_id']
+        self._make_request('/job/job2', json.dumps(data), 202)
+
+        # hack to change the updated timestamp and job status on some test jobs
+        client = MongoClient(os.environ['JOB_DB_URL'],
+                             int(os.environ['JOB_DB_PORT']))
+        db = client[os.environ['JOB_DB_NAME']]
+        threshold_days = int(os.environ['OLD_JOBS_THRESHOLD_DAYS'])
+        timestamp = (datetime.datetime.now() -
+                     datetime.timedelta(days=threshold_days + 1))
+        db.jobs.update_one({"job_id": job_id1},
+                           {'$set': {'state': 'success',
+                                     'updated': timestamp}})
+        db.jobs.update_one({"job_id": job_id2},
+                           {'$set': {'state': 'started',
+                                     'updated': timestamp}})
+
+        response_job_list_all = self.client.get('/job/jobs?show_all_jobs=True',
+                                                headers=get_auth_header())
+        job_list_all_json = response_job_list_all.get_json()
+
+        response_job_list_filtered = self.client.get('/job/jobs',
+                                                     headers=get_auth_header())
+        job_list_filtered_json = response_job_list_filtered.get_json()
+
+        self.assertTrue(len((job_list_all_json)) >
+                        len((job_list_filtered_json)))
 
     def test_create_job_success_and_list_job(self):
         """
@@ -135,3 +191,5 @@ class JobControllerTest(unittest.TestCase):
                              expected_error_code)
             self.assertTrue(expected_error_message in
                             response_json['error']['message'])
+
+        return response
