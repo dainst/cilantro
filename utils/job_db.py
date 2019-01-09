@@ -103,7 +103,7 @@ def _generate_job_name(job_type, job_params):
     :param list job_params: parameters of the job
     :return str: name of the job
     """
-    if job_params['files'][0]['file']:
+    if job_params['files']:
         first_file_name = job_params['files'][0]['file']
     else:
         first_file_name = job_params['parts'][0]['files'][0]['file']
