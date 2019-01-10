@@ -18,7 +18,7 @@ angular
                 task_ids: job.task_ids,
                 updated: job.updated,
                 user: job.user,
-                should_show: true
+                should_collapse: true
             };
 
             if (!job.errors.length) {
@@ -33,7 +33,7 @@ angular
             updated = new Date(job.updated);
             now = Date.now();
             if((now-updated)>10000000){
-                jobs.list[job.job_id].should_show=false;
+                jobs.list[job.job_id].should_collapse=false;
             }
 
             $rootScope.$digest();
