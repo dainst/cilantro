@@ -25,6 +25,5 @@ tasks:
     params: object_id
   - publish_to_cloud
   - publish_to_repository
-  - publish_to_arachne
   - cleanup_workdir
   - finish_job
