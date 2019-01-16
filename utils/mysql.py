@@ -41,13 +41,12 @@ def insert(query, args):
         else:
             generated_id = None
         conn.commit()
+        return generated_id
     except MySQLERROR as e:
-        log.error(e)
+        raise e
     finally:
         cursor.close()
         conn.close()
-
-    return generated_id
 
 
 def query(query):
