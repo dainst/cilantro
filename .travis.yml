@@ -30,6 +30,11 @@ env:
     - ZENON_URI_TEST=https://zenon.dainst.org/api/v1
     - OJS_URI_TEST=http://ojs:80/ojs/plugins/generic/ojs-cilantro-plugin/api
     - OLD_JOBS_THRESHOLD_DAYS=7
+    - ARACHNE_DB_HOST=arachne-db
+    - ARACHNE_DB_NAME=arachne
+    - ARACHNE_DB_USER=root
+    - ARACHNE_DB_PASSWORD=password
+    - ARCHAEOCLOUD_PATH=/archaeocloud_test_dir
 before_install:
   - cp config/users.yml-default config/users.yml
   - sudo apt-get install -y python3-dev libpoppler-cpp-dev
