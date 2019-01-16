@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 
 from utils import mysql
@@ -17,7 +18,6 @@ class IngestBookTest(JobTypeTest):
     """
 
     test_object_id = "test_object_2342"
-
 
     def test_success(self):
         """Test ingest book task chain."""
@@ -40,35 +40,58 @@ class IngestBookTest(JobTypeTest):
         for file in files_generated:
             self.assert_file_in_repository(self.test_object_id, file)
 
-        cloud_files = [
-            os.path.join(self.BOOKSCAN_PATH, self.test_object_id,
-                         'BOOK-' + self.test_object_id + '-0_test.jpg'),
-            os.path.join(self.PDF_FOLDER, self.test_object_id + '.pdf.zip')
-            # TODO mets
-            ]
+        # Get arachne ID from metadata file
+        with open(os.path.join(self.repository_dir, self.test_object_id,
+                               'meta.json'), 'r') as metadata_file:
+            arachne_book_id = json.load(metadata_file)['arachne_id']
 
+        cloud_files = [
+            os.path.join(self.BOOKSCAN_PATH,
+                         _generate_folder_name(self.test_object_id,
+                                               arachne_book_id),
+                         'BOOK-' + self.test_object_id + '-0_test.jpg'),
+            os.path.join(self.TEI_PATH,
+                         _generate_folder_name(self.test_object_id,
+                                               arachne_book_id),
+                         'transcription.xml'),
+            os.path.join(self.PTIF_PATH,
+                         _generate_folder_name(self.test_object_id,
+                                               arachne_book_id),
+                         'BOOK-' + self.test_object_id + '-0_test.ptif'),
+            os.path.join(self.ARCHIVE_PATH,
+                         _generate_folder_name(self.test_object_id,
+                                               arachne_book_id),
+                         'Rohscans',
+                         'BOOK-' + self.test_object_id + '-0_test.tif'),
+            os.path.join(self.ARCHIVE_PATH,
+                         _generate_folder_name(self.test_object_id,
+                                               arachne_book_id),
+                         'datenbankfertig',
+                         'BOOK-' + self.test_object_id + '-0_test.jpg'),
+            os.path.join(self.PDF_PATH, self.test_object_id + '.pdf.zip')]
         for f in cloud_files:
             self.assertTrue(Path(f).is_file())
 
-        # self._clean_database_entries()
-
+        _clean_database_entries(arachne_book_id)
         self.unstage_resource('some_tiffs')
         self.remove_object_from_repository(self.test_object_id)
 
-    def _clean_database_entries(self):
-        book_query = ("SELECT PS_BuchID FROM arachne.buch "
-                      "WHERE BearbeiterBuch = 'cilantro'")
-        query_result = mysql.query(book_query)
-        for result_dict in query_result:
-            book_id = result_dict['PS_BuchID']
-            image_delete_query = (f"DELETE FROM arachne.marbilder "
-                                  f"WHERE FS_BuchID={book_id}")
-            mysql.delete(image_delete_query)
 
-        page_delete_query = ("DELETE FROM arachne.buchseite "
-                             "WHERE BearbeiterBuchseite = 'cilantro'")
-        mysql.delete(page_delete_query)
+def _generate_folder_name(object_id, book_id):
+    """Generate folder name in the cloud from Xenon and Arachne IDs."""
+    formatted_book_id = '{:06d}'.format(int(book_id))
+    return f"BOOK-ZID{object_id}-AraID{formatted_book_id}"
 
-        book_delete_query = ("DELETE FROM arachne.buch "
-                             "WHERE BearbeiterBuch = 'cilantro'")
-        mysql.delete(book_delete_query)
+
+def _clean_database_entries(arachne_book_id):
+    book_delete_query = ("DELETE FROM arachne.buch "
+                         f"WHERE PS_BuchID = {arachne_book_id}")
+    mysql.delete(book_delete_query)
+
+    page_delete_query = ("DELETE FROM arachne.buchseite "
+                         f"WHERE FS_BuchID = {arachne_book_id}")
+    mysql.delete(page_delete_query)
+
+    image_delete_query = ("DELETE FROM arachne.marbilder "
+                          f"WHERE FS_BuchID={arachne_book_id}")
+    mysql.delete(image_delete_query)
