@@ -77,9 +77,9 @@ class JobTypeTest(unittest.TestCase):
         file = Path(os.path.join(self.repository_dir, object_id, file_path))
         while not file.is_file():
             if waited > wait_time:
-                raise AssertionError(f"experienced timeout ({wait_time/1000}s) "
-                                     f"while waiting for file '{file_path}' to "
-                                     f"appear in repository")
+                raise AssertionError(f"experienced timeout ({wait_time/1000}s)"
+                                     f" while waiting for file '{file_path}' "
+                                     f"to appear in repository")
             else:
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
@@ -111,10 +111,11 @@ class JobTypeTest(unittest.TestCase):
             try:
                 waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
-                raise AssertionError(f"experienced timeout ({wait_time/1000}s) "
-                                     f"while waiting for SUCCESS status")
+                raise AssertionError(f"experienced timeout ({wait_time/1000}s)"
+                                     f" while waiting for SUCCESS status")
 
-    def assert_status(self, job_id, expected_status, timeout='DEFAULT_TEST_TIMEOUT'):
+    def assert_status(self, job_id, expected_status,
+                      timeout='DEFAULT_TEST_TIMEOUT'):
         """
         Assert that a job has a certain status.
 
@@ -130,8 +131,8 @@ class JobTypeTest(unittest.TestCase):
             try:
                 waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
-                raise AssertionError(f"experienced timeout ({wait_time/1000}s) "
-                                     f"while waiting for status "
+                raise AssertionError(f"experienced timeout ({wait_time/1000}s)"
+                                     f" while waiting for status "
                                      f"'{expected_status}', last status was "
                                      f"'{status}'")
             status = self.get_status(job_id)['status']
