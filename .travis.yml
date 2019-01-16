@@ -48,6 +48,7 @@ before_install:
   - mkdir data/staging/test_user
   - mkdir data/repository
   - mkdir data/workspace
+  - mkdir archaeocloud_test_dir
   - docker-compose pull && docker-compose up -d
 script:
   - sleep 20 && bash frontend/test/exec_frontend_test.sh
