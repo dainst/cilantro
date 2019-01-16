@@ -4,7 +4,7 @@ from utils.celery_client import celery_app
 from workers.base_task import BaseTask, FileTask
 from utils.object import Object
 from workers.convert.convert_image import convert_tif_to_jpg, \
-    convert_jpg_to_pdf, tif_to_txt
+    convert_jpg_to_pdf, tif_to_txt, convert_tif_to_ptif
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf, \
     convert_pdf_to_tif
 from workers.convert.image_scaling import scale_image
@@ -195,6 +195,27 @@ class ScaleImageTask(FileTask):
         scale_image(file, target_dir, max_width, max_height, keep_ratio)
 
 
+class TifToPTifTask(FileTask):
+    """
+    Create copies of image files as PTIF.
+
+    TaskParams:
+    -str file: The path to the pdf file
+    -str target: Name of the representation the created files will be added to
+
+    Preconditions:
+    -file in the representation
+
+    Creates:
+    - PTIF representation of all TIFFs
+    """
+
+    name = "convert.tif_to_ptif"
+
+    def process_file(self, file, target_dir):
+        convert_tif_to_ptif(file, target_dir)
+
+
 ScaleImageTask = celery_app.register_task(ScaleImageTask())
 JpgToPdfTask = celery_app.register_task(JpgToPdfTask())
 MergeConvertedPdf = celery_app.register_task(MergeConvertedPdfTask())
@@ -202,3 +223,4 @@ TifToJpgTask = celery_app.register_task(TifToJpgTask())
 PdfToTifTask = celery_app.register_task(PdfToTifTask())
 PdfToTxtTask = celery_app.register_task(PdfToTxtTask())
 TifToTxtTask = celery_app.register_task(TifToTxtTask())
+TifToPTifTask = celery_app.register_task(TifToPTifTask())
