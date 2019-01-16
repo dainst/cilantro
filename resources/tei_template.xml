@@ -1,0 +1,59 @@
+{% set ns = namespace() %}
+{% set metadata = obj.metadata.to_dict() %}
+{% set object_id = additional_params %}
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" version="5.0" xml:id="TEI.{{object_id}}">
+
+    <teiHeader xml:id="teiHeader.{{object_id}}">
+        <fileDesc xml:id="fileDesc.{{object_id}}">
+            <titleStmt xml:id="titleStmt.{{object_id}}">
+                <title xml:id="titleStmt.title.{{object_id}}">{{metadata['title']}}</title>
+                <author xml:id="author.{{object_id}}">{{metadata['creator']['lastname']}}, {{metadata['creator']['firstname']}}</author>
+            </titleStmt>
+            <publicationStmt xml:id="publicationStmt.{{object_id}}">
+                <p xml:id="publicationStmt.p.{{object_id}}">Publication Information</p>
+            </publicationStmt>
+            <sourceDesc xml:id="sourceDesc.{{object_id}}">
+                <msDesc xml:lang="de" xml:id="msDesc.{{object_id}}">
+                    <msIdentifier xml:id="msIdentifier.{{object_id}}">
+                        <country lang="de" xml:id="country.{{object_id}}">Germany</country>
+                        <region lang="de" xml:id="region.{{object_id}}">Berlin</region>
+                        <settlement lang="de" xml:id="settlement.{{object_id}}">Berlin</settlement>
+                        <institution lang="de" xml:id="institution.{{object_id}}">Deutsches Archäologisches Institut</institution>
+                        <repository lang="de" xml:id="repository.{{object_id}}">#unknown</repository>
+                        <idno type="bookId" xml:id="idno.bookId.{{object_id}}">{{metadata['arachne_id']}}</idno>
+                        <idno type="zenonId" xml:id="idno.zenonId.{{object_id}}">{{object_id}}</idno>
+                    </msIdentifier>
+                    <head xml:id="head.{{object_id}}">
+                        <title xml:id="sourceDesc.msDesc.title.{{object_id}}">{{metadata['creator']['lastname']}}, {{metadata['creator']['firstname']}}; - {{metadata['title']}}</title>
+                    </head>
+                </msDesc>
+            </sourceDesc>
+        </fileDesc>
+    </teiHeader>
+
+    <facsimile xml:base="http://arachne.uni-koeln.de/images/stichwerke/BOOK-ZID{{object_id}}-AraID{{'%06d' | format(metadata['arachne_id'])}}" xml:id="facsimile.{{object_id}}">
+        {% set ns.graphic_id_list = [] %}
+        {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg')|sort() %}
+            <surface xml:id="surface.{{object_id}}.{{loop.index}}">
+                {% set id = "BOOK-" + object_id + "-" + loop.index|string + "_" + splitext(basename(file_path))[0] %}
+                {% set ns.graphic_id_list = ns.graphic_id_list + [id] %}
+                <graphic xml:id="{{id}}"
+                         mimeType="jpg"
+                         url="BOOK-{{object_id}}-{{loop.index}}_{{basename(file_path)}}" />
+
+            </surface>
+        {% endfor %}
+    </facsimile>
+
+    <text xml:id="text.{{object_id}}">
+        <body xml:id="body.{{object_id}}">
+            {% for id in ns.graphic_id_list %}
+                <div facs="{{id}}" xml:id="text.body.div.{{id}}">
+                    <p xml:id="text.body.div.p.{{id}}" />
+                </div>
+            {% endfor %}
+        </body>
+    </text>
+
+</TEI>

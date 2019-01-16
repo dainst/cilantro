@@ -26,6 +26,8 @@ def generate_xml(obj, template_file, target_filepath, additional_params):
     env.globals['path_join'] = os.path.join
     env.globals['datetime'] = datetime.datetime
     env.globals['glob'] = glob.glob
+    env.globals['basename'] = os.path.basename
+    env.globals['splitext'] = os.path.splitext
 
     log.info("Generating XML with template: " + template_file)
 
