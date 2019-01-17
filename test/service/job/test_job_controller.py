@@ -82,8 +82,8 @@ class JobControllerTest(unittest.TestCase):
         Test listing of jobs.
 
         The test creates a job and then gets a list of all jobs.
-        The job list is checked for some strings which are expected in the
-        job list.
+        The job list is checked for existence of a job-id, the test user,
+        the correct job type and job name.
         """
         data = {
             "metadata": {
@@ -94,15 +94,53 @@ class JobControllerTest(unittest.TestCase):
             "files": [
                 {"file": "some_tiffs/test.tif"},
                 {"file": "some_tiffs/test2.tiff"}
-                ]
+                ],
+            "parts": [{
+                "files": [
+                    {"file": "test.pdf"}
+                    ]
+                }]
             }
         self._make_request('/job/job2', json.dumps(data), 202)
 
-        response2 = self.client.get('/job/jobs', headers=get_auth_header())
-        response2_json = response2.get_json()
-        self.assertIn("job_id", str(response2_json))
-        self.assertIn("'user': 'test_user'", str(response2_json))
-        self.assertIn("'job_type': 'job2'", str(response2_json))
+        response = self.client.get('/job/jobs', headers=get_auth_header())
+        last_job_json = response.get_json()[-1]
+
+        self.assertTrue(last_job_json["job_id"])
+        self.assertEqual("test_user", last_job_json["user"])
+        self.assertEqual("job2", last_job_json["job_type"])
+        self.assertEqual('JOB-job2-some_tiffs/test.tif', last_job_json["name"])
+
+    def test_create_job_success_and_list_job_without_files(self):
+        """
+        Test listing of jobs with empty files-object.
+
+        The test creates a job and then gets a list of all jobs.
+        The job list is checked for existence of a job-id, the test user,
+        the correct job type and job name.
+        """
+        data = {
+            "metadata": {
+                "title": "Test-Title",
+                "description": "Test-Description",
+                "year": 1992
+                },
+            "files": [],
+            "parts": [{
+                "files": [
+                    {"file": "test.pdf"}
+                    ]
+                }]
+            }
+        self._make_request('/job/job2', json.dumps(data), 202)
+
+        response = self.client.get('/job/jobs', headers=get_auth_header())
+        last_job_json = response.get_json()[-1]
+
+        self.assertTrue(last_job_json["job_id"])
+        self.assertEqual("test_user", last_job_json["user"])
+        self.assertEqual("job2", last_job_json["job_type"])
+        self.assertEqual('JOB-job2-test.pdf', last_job_json["name"])
 
     def test_create_job_no_payload(self):
         """Job creation has to fail without POST payload."""
@@ -133,13 +171,13 @@ class JobControllerTest(unittest.TestCase):
                 "title": "Test-Title",
                 "description": "Test-Description",
                 "year": 1992
-                },
+            },
             "files": [
                 {"file": "some_tiffs/test.tif"},
                 {"file": "some_tiffs/test2.tiff"}
-                ],
+            ],
             "bla": "blub"
-            }
+        }
         self._make_request('/job/job2', json.dumps(data), 400,
                            'invalid_job_params',
                            'Additional properties are not allowed')
@@ -150,12 +188,12 @@ class JobControllerTest(unittest.TestCase):
             "metadata": {
                 "title": "Test-Title",
                 "year": 1992
-                },
+            },
             "files": [
                 {"file": "some_tiffs/test.tif"},
                 {"file": "some_tiffs/test2.tiff"}
-                ]
-            }
+            ]
+        }
         self._make_request('/job/job2', json.dumps(data), 400,
                            'invalid_job_params', 'is a required property')
 
@@ -166,12 +204,12 @@ class JobControllerTest(unittest.TestCase):
                 "title": "Test-Title",
                 "description": "Test-Description",
                 "year": "1992"
-                },
+            },
             "files": [
                 {"file": "some_tiffs/test.tif"},
                 {"file": "some_tiffs/test2.tiff"}
-                ]
-            }
+            ]
+        }
         self._make_request('/job/job2', json.dumps(data), 400,
                            'invalid_job_params', 'is not of type')
 

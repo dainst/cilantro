@@ -34,6 +34,29 @@
                     }
                 }
             }
+        },
+        "parts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["files"],
+                "additionalProperties": false,
+                "properties": {
+                    "files": {
+                        "type": "array",
+                        "items": {
+                            "file": {
+                              "type": "object",
+                              "properties": {
+                                  "file": {
+                                    "type": "string"
+                                  }
+                              }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

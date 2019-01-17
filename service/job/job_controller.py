@@ -58,6 +58,7 @@ def job_list():
                 "errors": [],
                 "job_id": "010819cc-dc4d-11e8-b152-0242ac130008",
                 "job_type": "ingest_journal",
+                "name": "JOB-ingest_journal-test.pdf"
                 "state": "success",
                 "task_ids": [
                     "9331a617-d35f-4b1a-be24-ec7a970c480e",
@@ -81,6 +82,7 @@ def job_list():
                 "errors": [],
                 "job_id": "147b74cc-dc4d-11e8-8db4-0242ac130008",
                 "job_type": "ingest_journal",
+                "name": "JOB-ingest_journal-test.pdf"
                 "state": "success",
                 "task_ids": [
                     "55614d2e-e442-46f8-8708-029c8e83c37f",
