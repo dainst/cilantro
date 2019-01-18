@@ -3,8 +3,8 @@ from workers.base_task import ObjectTask
 
 from workers.default.arachne.arachne_db_publish import add_pages, add_book
 from workers.default.arachne.cloud_publish import move_jpeg_to_cloud, \
-    move_tiff_to_cloud, move_mets_to_cloud, move_pdf_to_cloud, \
-    move_ptif_to_cloud, move_tei_to_cloud
+    move_tiff_to_cloud, move_pdf_to_cloud, move_ptif_to_cloud, \
+    move_tei_to_cloud
 
 
 class PublishToArachneDBTask(ObjectTask):
@@ -32,7 +32,7 @@ class PublishToCloudTask(ObjectTask):
         move_jpeg_to_cloud(object_id, arachne_book_id, obj)
         move_tiff_to_cloud(object_id, arachne_book_id, obj)
         move_ptif_to_cloud(object_id, arachne_book_id, obj)
-        move_mets_to_cloud(object_id, arachne_book_id, obj)
+        # move_mets_to_cloud(object_id, arachne_book_id, obj) # TODO
         move_tei_to_cloud(object_id, arachne_book_id, obj)
         move_pdf_to_cloud(object_id, obj)
 

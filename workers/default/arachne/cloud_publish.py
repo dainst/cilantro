@@ -74,20 +74,21 @@ def move_ptif_to_cloud(object_id, book_id, book_object):
         shutil.copy2(file_path, os.path.join(archive_dir_ptif, new_filename))
 
 
-def move_mets_to_cloud(object_id, book_id, book_object):
-    """
-    Move book's METS-XML to cloud folder.
-
-    Also create the target directory if not existing.
-    """
-    mets_dir = _get_target_path(METS_PATH, object_id, book_id)
-    if not os.path.exists(mets_dir):
-        os.makedirs(mets_dir)
-    try:  # TODO
-        mets_file_path = os.path.join(book_object.path, 'mets.xml')
-        shutil.copy2(mets_file_path, mets_dir)
-    except FileNotFoundError:
-        log.error("Mets file not found!")
+# TODO rework when METS is available
+# def move_mets_to_cloud(object_id, book_id, book_object):
+#     """
+#     Move book's METS-XML to cloud folder.
+#
+#     Also create the target directory if not existing.
+#     """
+#     target_file_name = os.path.join(METS_PATH,
+#                                     'oai_arachne.uni-koeln.de_buch-' +
+#                                     book_id + '.xml')
+#     try:
+#         mets_file_path = os.path.join(book_object.path, 'mets.xml')
+#         shutil.copy2(mets_file_path, target_file_name)
+#     except FileNotFoundError:
+#         log.error("Mets file not found!")
 
 
 def move_tei_to_cloud(object_id, book_id, book_object):
