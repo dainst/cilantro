@@ -43,29 +43,20 @@ class IngestBookTest(JobTypeTest):
         # Get arachne ID from metadata file
         with open(os.path.join(self.repository_dir, self.test_object_id,
                                'meta.json'), 'r') as metadata_file:
-            arachne_book_id = json.load(metadata_file)['arachne_id']
+            self.arachne_book_id = json.load(metadata_file)['arachne_id']
 
         cloud_files = [
-            os.path.join(self.BOOKSCAN_PATH,
-                         _generate_folder_name(self.test_object_id,
-                                               arachne_book_id),
+            os.path.join(self.BOOKSCAN_PATH, self.test_object_id,
                          'BOOK-' + self.test_object_id + '-0_test.jpg'),
-            os.path.join(self.TEI_PATH,
-                         _generate_folder_name(self.test_object_id,
-                                               arachne_book_id),
+            os.path.join(self.TEI_PATH, self.test_object_id,
                          'transcription.xml'),
             os.path.join(self.PTIF_PATH,
                          _generate_folder_name(self.test_object_id,
-                                               arachne_book_id),
+                                               self.arachne_book_id),
                          'BOOK-' + self.test_object_id + '-0_test.ptif'),
-            os.path.join(self.ARCHIVE_PATH,
-                         _generate_folder_name(self.test_object_id,
-                                               arachne_book_id),
-                         'Rohscans',
+            os.path.join(self.ARCHIVE_PATH, self.test_object_id, 'Rohscans',
                          'BOOK-' + self.test_object_id + '-0_test.tif'),
-            os.path.join(self.ARCHIVE_PATH,
-                         _generate_folder_name(self.test_object_id,
-                                               arachne_book_id),
+            os.path.join(self.ARCHIVE_PATH, self.test_object_id,
                          'datenbankfertig',
                          'BOOK-' + self.test_object_id + '-0_test.jpg'),
             os.path.join(self.PDF_PATH, self.test_object_id + '.pdf.zip')]
