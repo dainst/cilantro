@@ -21,6 +21,7 @@ describe('documents page', () => {
 
         it("should upload a file on drag&drop", () =>{
             LoginHelper.get(browser, browser.baseUrl, 'upload');
+            e.home.importJournal.click();
             e.home.startBtn.click();
             dropFile(e.upload.fileUploadArea, "test/e2e/resources/upload/dragndrop.pdf");
             d.getStagingAreaFiles().then(list => {
