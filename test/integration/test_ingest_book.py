@@ -19,6 +19,17 @@ class IngestBookTest(JobTypeTest):
 
     test_object_id = "test_object_2342"
 
+    def tearDown(self):
+        """
+        Cleanup after test run.
+
+        Remove created database entries, staging files and repository object.
+        """
+        _clean_database_entries(self.arachne_book_id)
+        self.unstage_resource('some_tiffs')
+        self.remove_object_from_repository(self.test_object_id)
+        super().tearDown()
+
     def test_success(self):
         """Test ingest book task chain."""
         self.stage_resource('files', 'some_tiffs')
@@ -62,10 +73,6 @@ class IngestBookTest(JobTypeTest):
             os.path.join(self.PDF_PATH, self.test_object_id + '.pdf.zip')]
         for f in cloud_files:
             self.assertTrue(Path(f).is_file())
-
-        _clean_database_entries(arachne_book_id)
-        self.unstage_resource('some_tiffs')
-        self.remove_object_from_repository(self.test_object_id)
 
 
 def _generate_folder_name(object_id, book_id):
