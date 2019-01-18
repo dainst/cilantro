@@ -66,10 +66,9 @@ describe('subobject view', () => {
 
             expect(e.subobject.select.count()).toEqual(2);
 
-            so.getRowContent("title").then(cell => {
-                const input = cell.element(by.css("input"));
-                expect(input.getAttribute("value")).toEqual("The missing magister equitum.");
-            });
+            var cell = so.getRowContent("title")
+            const input = cell.element(by.css("input"));
+            expect(input.getAttribute("value")).toEqual("The missing magister equitum.");
         });
 
         it('should automatically fetch data from zenon if list of Ids is provided', () => {
@@ -83,13 +82,12 @@ describe('subobject view', () => {
             e.csv.confirm.click();
             e.documents.proceedBtn.click();
             e.overview.proceedBtn.click();
-            so.getRowContent("title").then(cell => {
-                const input = cell.element(by.css("input"));
-                const title1 = "The missing magister equitum.";
-                const title2  = "Equus : the horse in the Roman World ";
-                // because order may vary, ansynchornous speed stuff
-                expect([title1, title2]).toContain(input.getAttribute("value"));
-            });
+            var cell = so.getRowContent("title");
+            const input = cell.element(by.css("input"));
+            const title1 = "The missing magister equitum.";
+            const title2  = "Equus : the horse in the Roman World ";
+            // because order may vary, ansynchornous speed stuff
+            expect([title1, title2]).toContain(input.getAttribute("value"));
         });
 
         it('just should skip a row which Zenon-Ids is unknown', () => {
