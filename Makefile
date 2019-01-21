@@ -15,11 +15,9 @@ build-doc:
 
 run-backend-tests: run_detached
 	bash test/exec_docker_test.sh
-	docker-compose stop
 
 run-frontend-tests: run_detached
 	bash frontend/test/exec_frontend_test.sh
-	docker-compose stop
 
 fix-data-permissions:
 	sudo chown -R $(whoami):$(whoami) data/
