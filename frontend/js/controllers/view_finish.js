@@ -16,12 +16,11 @@ angular
 
             webservice.get('job/ingest_journal', 'post', param).then(res => {
                 messenger.success("Job: " + res.status);
-                jobs.updateJob(res.job_id, res);
                 $scope.done = true;
                 steps.changeView('jobs');
                 $rootScope.$broadcast('refreshView');
-            })
-
+            });
+            webservice.get('job/jobs').then(result => result.forEach(job => jobs.updateJob(job)));
         };
 
         $scope.isReady = () => {
