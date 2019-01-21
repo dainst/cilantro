@@ -29,4 +29,8 @@ cp-default-config:
 	cp .env-default .env
 	cp config/users.yml-default config/users.yml
 
+fix-docker-user:
+	$(shell sed -i 's/user_id_placeholder/$(shell id -u)/g' .env)
+	$(shell sed -i 's/user_group_placeholder/$(shell id -g)/g' .env)
+
 run-all-tests: run_detached run-backend-tests run-frontend-tests stop
