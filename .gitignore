@@ -4,6 +4,7 @@ redis-data
 .env
 test/integration/env.py
 /config/users.yml
+/config/settings.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

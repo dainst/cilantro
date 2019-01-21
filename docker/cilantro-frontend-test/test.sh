@@ -25,7 +25,7 @@ fi
 
 if [ "$TEST" = "default" ]; then
     echo "Running Frontend tests against current docker-compose configuation:"
-    cat /salvia/config/settings.json
+    cat /config/settings.json
     npm run server-nosync &
     xvfb-run -a -e /dev/stdout -s "-screen 0 2920x2580x24" npm run e2e-test
 fi
