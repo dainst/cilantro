@@ -9,6 +9,8 @@ from utils.repository import generate_repository_path
 test_object = 'a_book'
 test_subobject = 'a_book/part_0001'
 test_representation = 'pdf'
+test_subrepresentation = 'jpg/thumbnails'
+test_jpg = "test.jpg"
 test_file = 'test.pdf'
 test_subfile = 'full.pdf'
 test_metafile = 'meta.json'
@@ -90,18 +92,24 @@ class RepositoryControllerTest(unittest.TestCase):
 
     def test_get_file(self):
         response = self.client.get(
-            f'/repository/file/{test_object}/{test_representation}/{test_file}')
+            f'/repository/file/{test_object}/data/{test_representation}/{test_file}')
         self.assertEqual(response.status_code, 200)
 
     def test_get_file_for_subobject(self):
         response = self.client.get(
-            f'/repository/file/{test_subobject}/{test_representation}/'
+            f'/repository/file/{test_subobject}/data/{test_representation}/'
             f'{test_subfile}')
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_file_for_subrepresentation(self):
+        response = self.client.get(
+            f'/repository/file/{test_subobject}/data/{test_subrepresentation}/'
+            f'{test_jpg}')
         self.assertEqual(response.status_code, 200)
 
     def test_get_file_not_found(self):
         response = self.client.get(
-            f'/repository/file/{test_object}/{test_representation}/wrong_file')
+            f'/repository/file/{test_object}/data/{test_representation}/wrong_file')
         self.assertEqual(response.status_code, 404)
 
         response_json = response.get_json()
@@ -110,17 +118,17 @@ class RepositoryControllerTest(unittest.TestCase):
 
     def test_get_metafile(self):
         response = self.client.get(
-            f'/repository/metafile/{test_object}/{test_metafile}')
+            f'/repository/file/{test_object}/{test_metafile}')
         self.assertEqual(response.status_code, 200)
 
     def test_get_metafile_for_subobject(self):
         response = self.client.get(
-            f'/repository/metafile/{test_subobject}/{test_metafile}')
+            f'/repository/file/{test_subobject}/{test_metafile}')
         self.assertEqual(response.status_code, 200)
 
     def test_get_metafile_not_found(self):
         response = self.client.get(
-            f'/repository/metafile/{test_object}/wrong_metafile')
+            f'/repository/file/{test_object}/wrong_metafile')
         self.assertEqual(response.status_code, 404)
 
         response_json = response.get_json()

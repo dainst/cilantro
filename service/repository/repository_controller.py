@@ -162,8 +162,9 @@ def get_representation(object_id, rep_name):
                        f"id {object_id} was found", 404)
 
 
-@repository_controller.route('/file/<path:object_id>/<rep_name>/<file>',
-                             methods=['GET'], strict_slashes=False)
+@repository_controller.route(
+    '/file/<path:object_id>/data/<path:rep_name>/<file>', methods=['GET'],
+    strict_slashes=False)
 def get_file(object_id, rep_name, file):
     """
     Retrieve a file from a representation of a cilantro (sub)object
@@ -214,7 +215,7 @@ def get_file(object_id, rep_name, file):
                        f"of object {object_id}", 404)
 
 
-@repository_controller.route('/metafile/<path:object_id>/<file>',
+@repository_controller.route('/file/<path:object_id>/<file>',
                              methods=['GET'], strict_slashes=False)
 def get_meta_file(object_id, file):
     """
