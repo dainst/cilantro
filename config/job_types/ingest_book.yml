@@ -8,8 +8,10 @@ tasks:
   - list_files: origin
     pattern: "\\.(tif|tiff|TIF|TIFF)$"
     foreach:
-      task: convert.tif_to_jpg
-      target: jpg
+      - task: convert.tif_to_jpg
+        target: jpg
+      - task: convert.tif_to_ptif
+        target: ptif
   - list_files: jpg
     foreach:
       task: convert.jpg_to_pdf
@@ -18,3 +20,4 @@ tasks:
     representation: pdf
   - publish_to_repository
   - cleanup_workdir
+  - finish_job

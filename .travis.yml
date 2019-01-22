@@ -29,6 +29,7 @@ env:
     - BACKEND_URI_TEST=http://service:5000
     - ZENON_URI_TEST=https://zenon.dainst.org/api/v1
     - OJS_URI_TEST=http://ojs:80/ojs/plugins/generic/ojs-cilantro-plugin/api
+    - OLD_JOBS_THRESHOLD_DAYS=7
 before_install:
   - cp config/users.yml-default config/users.yml
   - sudo apt-get install -y python3-dev libpoppler-cpp-dev

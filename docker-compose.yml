@@ -26,6 +26,8 @@ x-env-jobdb: &env-jobdb
   JOB_DB_PORT: ${JOB_DB_PORT}
   JOB_DB_NAME: ${JOB_DB_NAME}
 
+x-env-app-config: &env-app-config
+  OLD_JOBS_THRESHOLD_DAYS: ${OLD_JOBS_THRESHOLD_DAYS}
 
 services:
 
@@ -68,6 +70,7 @@ services:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-jobdb
+      <<: *env-app-config
       DB_HOST: "db"
       CILANTRO_ENV: development
 
@@ -144,6 +147,7 @@ services:
       <<: *env-ojs
       <<: *test-timeouts
       <<: *env-jobdb
+      <<: *env-app-config
       DB_HOST: "db"
       TEST_RESOURCE_DIR: "test/resources"
 
@@ -171,13 +175,7 @@ services:
       context: .
       dockerfile: ./docker/cilantro-salvia/Dockerfile
     volumes:
-        - ./frontend/img:/usr/share/nginx/html/img
-        - ./frontend/info:/usr/share/nginx/html/info
-        - ./frontend/js:/usr/share/nginx/html/js
-        - ./frontend/partials:/usr/share/nginx/html/partials
-        - ./frontend/style:/usr/share/nginx/html/style
-        - ./frontend/test:/usr/share/nginx/html/test
-        - ./frontend/index.html:/usr/share/nginx/html/index.html
+        - ./frontend:/frontend
     ports:
       - "7777:80"
     environment:
@@ -193,12 +191,7 @@ services:
       context: .
       dockerfile: ./docker/cilantro-frontend-test/Dockerfile
     volumes:
-      - ./frontend/img:/salvia/img
-      - ./frontend/info:/salvia/info
-      - ./frontend/js:/salvia/js
-      - ./frontend/partials:/salvia/partials
-      - ./frontend/style:/salvia/style
-      - ./frontend/test:/salvia/test
+      - ./frontend:/frontend
     environment:
       TEST: ${TEST}
       BACKEND_URI: ${BACKEND_URI_TEST}

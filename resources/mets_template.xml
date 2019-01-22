@@ -1,4 +1,5 @@
 {% set metadata = obj.metadata.to_dict() %}
+{% set repo_dir = additional_params['os.environ']['REPOSITORY_DIR'] %}
 <?xml version="1.0" encoding="UTF-8"?>
 <mets:mets
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -52,22 +53,25 @@
 
     <mets:fileSec>
         <mets:fileGrp USE="DEFAULT">
-            {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg') %}
+            {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg')|sort() %}
                 <mets:file ID="file{{loop.index}}" MIMETYPE="image/jpeg">
-                    <mets:FLocat LOCTYPE="URL" xlink:href="{{file_path}}"/>
+                    {% set new_file_path = path_join(repo_dir, obj.get_parent().metadata.ojs_id, 'parts') + file_path.split('parts')[1] %}
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                 </mets:file>
             {% endfor %}
         </mets:fileGrp>
         <mets:fileGrp USE="THUMBS">
-            {% for file_path in glob(path_join(obj.get_representation_dir('jpg'), 'thumbnails') + '/*.jpg') %}
+            {% for file_path in glob(path_join(obj.get_representation_dir('jpg'), 'thumbnails') + '/*.jpg')|sort() %}
                 <mets:file ID="thumb_file{{loop.index}}" MIMETYPE="image/jpeg">
-                    <mets:FLocat LOCTYPE="URL" xlink:href="{{file_path}}"/>
+                    {% set new_file_path = path_join(repo_dir, obj.get_parent().metadata.ojs_id, 'parts') + file_path.split('parts')[1] %}
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                 </mets:file>
             {% endfor %}
         </mets:fileGrp>
         <mets:fileGrp USE="DOWNLOAD">
             <mets:file ID="PDF1" MIMETYPE="application/pdf">
-                <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(obj.get_representation_dir('pdf'), 'merged.pdf')}}"/>
+                {% set new_path =  path_join(repo_dir, obj.get_parent().metadata.ojs_id, 'parts') + obj.get_representation_dir('origin').split('parts')[1] %}
+                <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(new_path, 'merged.pdf')}}"/>
             </mets:file>
         </mets:fileGrp>
     </mets:fileSec>
@@ -75,8 +79,8 @@
     <mets:structMap TYPE="PHYSICAL">
         <mets:div ID="struct_phys_001" TYPE="physSequence">
             <mets:fptr FILEID="PDF1"/>
-            {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg') %}
-                <mets:div ID="div{{loop.index}}" ORDER="{{loop.index}}" ORDERLABEL="00" TYPE="page">
+            {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg')|sort() %}
+                <mets:div ID="div{{loop.index}}" ORDER="{{loop.index}}" ORDERLABEL="{{loop.index}}" TYPE="page">
                     <mets:fptr FILEID="file{{loop.index}}"/>
                 </mets:div>
             {% endfor %}
