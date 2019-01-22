@@ -55,7 +55,7 @@
         <mets:fileGrp USE="DEFAULT">
             {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg')|sort() %}
                 <mets:file ID="file{{loop.index}}" MIMETYPE="image/jpeg">
-                    {% set new_file_path = path_join(repo_dir, obj.get_parent().metadata.ojs_id, 'parts') + file_path.split('parts')[1] %}
+                    {% set new_file_path = server_url + 'repository/file/' + obj.get_parent().metadata.ojs_id + file_path.split('parts')[1] %}
                     <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                 </mets:file>
             {% endfor %}
@@ -63,14 +63,14 @@
         <mets:fileGrp USE="THUMBS">
             {% for file_path in glob(path_join(obj.get_representation_dir('jpg'), 'thumbnails') + '/*.jpg')|sort() %}
                 <mets:file ID="thumb_file{{loop.index}}" MIMETYPE="image/jpeg">
-                    {% set new_file_path = path_join(repo_dir, obj.get_parent().metadata.ojs_id, 'parts') + file_path.split('parts')[1] %}
+                   {% set new_file_path = server_url + 'repository/file/' + obj.get_parent().metadata.ojs_id + file_path.split('parts')[1] %}
                     <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                 </mets:file>
             {% endfor %}
         </mets:fileGrp>
         <mets:fileGrp USE="DOWNLOAD">
             <mets:file ID="PDF1" MIMETYPE="application/pdf">
-                {% set new_path =  path_join(repo_dir, obj.get_parent().metadata.ojs_id, 'parts') + obj.get_representation_dir('origin').split('parts')[1] %}
+                {% set new_path = server_url + 'repository/file/' + obj.get_parent().metadata.ojs_id + obj.get_representation_dir('origin').split('parts')[1] %}
                 <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(new_path, 'merged.pdf')}}"/>
             </mets:file>
         </mets:fileGrp>
