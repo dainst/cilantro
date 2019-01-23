@@ -69,6 +69,31 @@ def get_object(object_id):
 
       GET /repository/object/<object_id> HTTP/1.1
 
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+        {
+            "metadata": {
+                "description": "[PDFs teilweise verf\u00fcgbar]",
+                "identification": "year",
+                "importFilePath": "e2e-testing.pdf",
+                "number": "",
+                "ojs_id": "issue-test-188",
+                "volume": "",
+                "year": 2018
+            },
+            "representations": [
+                "origin"
+            ],
+            "sub_objects": [
+                "part_0001",
+                "part_0002"
+            ]
+        }
+
     **Example response ERROR**:
 
     .. sourcecode:: http
@@ -127,6 +152,16 @@ def get_representation(object_id, rep_name):
 
       GET /repository/representation/<object_id>/<rep_name> HTTP/1.1
 
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+        [
+          "merged.pdf"
+        ]
+
     **Example response ERROR**:
 
     .. sourcecode:: http
@@ -135,7 +170,7 @@ def get_representation(object_id, rep_name):
 
         {
             "error": {
-                "code": "object_not_found",
+                "code": "representation_not_found",
                 "message": "No representation jpg for object with id test_object
                     was found"
             },
@@ -178,7 +213,7 @@ def get_file(object_id, rep_name, file):
 
     .. sourcecode:: http
 
-      GET /repository/file/<object_id>/<rep_name>/<file> HTTP/1.1
+      GET /repository/file/<object_id>/data/<rep_name>/<file> HTTP/1.1
 
     **Example response ERROR**:
 
@@ -230,7 +265,7 @@ def get_meta_file(object_id, file):
 
     .. sourcecode:: http
 
-      GET /repository/metafile/<object_id>/<file> HTTP/1.1
+      GET /repository/file/<object_id>/<file> HTTP/1.1
 
     **Example response ERROR**:
 
