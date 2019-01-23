@@ -1,22 +1,22 @@
 #!/bin/bash
-cd /salvia
+cd /frontend
 
 if [ "$TEST" = "skip" ]; then
     echo "Frontend tests skipped"
     exit 0
 fi
 
-cd /salvia/config
+cd /frontend/config
 chmod a+x create_settings_from_env.sh
 ./create_settings_from_env.sh
-cd /salvia
+cd /frontend
 
 # the selenium tries to find the driver in a path from the other container...
 mkdir /usr/share/nginx
 mkdir /usr/share/nginx/html
 mkdir /usr/share/nginx/html/node_modules
 mkdir /usr/share/nginx/html/node_modules/webdriver-manager
-ln -s /salvia/node_modules/webdriver-manager/selenium /usr/share/nginx/html/node_modules/webdriver-manager/selenium
+ln -s /frontend/node_modules/webdriver-manager/selenium /usr/share/nginx/html/node_modules/webdriver-manager/selenium
 
 if [ "$TEST" = "mock" ]; then
     echo "Running Frontend tests against mock-backend"

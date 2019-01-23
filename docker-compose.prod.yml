@@ -101,8 +101,8 @@ services:
     volumes:
       - data:/data
 
-  salvia:
-    image: dainst/cilantro-salvia:latest
+  frontend:
+    image: dainst/cilantro-frontend:latest
     environment:
       <<: *env-ojs
       BACKEND_URI: ${BACKEND_URI}

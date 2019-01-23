@@ -6,9 +6,9 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
     && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
 RUN apt-get update && apt-get -y install google-chrome-stable
 
-COPY ./frontend /salvia
+COPY ./frontend /frontend
 
-WORKDIR /salvia
+WORKDIR /frontend
 RUN npm update -g \
     && npm install -g gulp-cli \
     && npm install \

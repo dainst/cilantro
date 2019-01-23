@@ -10,7 +10,6 @@ RUN wget https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs
 
-# salvia
 RUN rm -R /usr/share/nginx/html/
 COPY ./frontend /usr/share/nginx/html
 WORKDIR /usr/share/nginx/html
