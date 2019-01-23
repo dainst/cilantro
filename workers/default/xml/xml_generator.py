@@ -19,8 +19,6 @@ def generate_xml(obj, template_file, target_filepath, additional_params):
     :param dict additional_params: ojs_metadata
     :return str: Path to generated XML file
     """
-    with open('config/settings.json') as f:
-        server_url = json.load(f)['server_url']
     env = Environment(
         loader=FileSystemLoader('resources'),
         trim_blocks=True,
@@ -29,7 +27,6 @@ def generate_xml(obj, template_file, target_filepath, additional_params):
     env.globals['path_join'] = os.path.join
     env.globals['datetime'] = datetime.datetime
     env.globals['glob'] = glob.glob
-    env.globals['server_url'] = server_url
     log.info("Generating XML with template: " + template_file)
 
     template = env.get_template(template_file)

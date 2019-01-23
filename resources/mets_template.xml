@@ -1,5 +1,6 @@
 {% set metadata = obj.metadata.to_dict() %}
 {% set repo_dir = additional_params['os.environ']['REPOSITORY_DIR'] %}
+{% set server_url = additional_params['os.environ']['BACKEND_URI'] %}
 <?xml version="1.0" encoding="UTF-8"?>
 <mets:mets
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -55,7 +56,7 @@
         <mets:fileGrp USE="DEFAULT">
             {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg')|sort() %}
                 <mets:file ID="file{{loop.index}}" MIMETYPE="image/jpeg">
-                    {% set new_file_path = server_url + 'repository/file/' + obj.get_parent().metadata.ojs_id + file_path.split('parts')[1] %}
+                    {% set new_file_path = server_url + '/repository/file/' + obj.get_parent().metadata.ojs_id + file_path.split('parts')[1] %}
                     <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                 </mets:file>
             {% endfor %}
@@ -63,14 +64,14 @@
         <mets:fileGrp USE="THUMBS">
             {% for file_path in glob(path_join(obj.get_representation_dir('jpg'), 'thumbnails') + '/*.jpg')|sort() %}
                 <mets:file ID="thumb_file{{loop.index}}" MIMETYPE="image/jpeg">
-                   {% set new_file_path = server_url + 'repository/file/' + obj.get_parent().metadata.ojs_id + file_path.split('parts')[1] %}
+                   {% set new_file_path = server_url + '/repository/file/' + obj.get_parent().metadata.ojs_id + file_path.split('parts')[1] %}
                     <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                 </mets:file>
             {% endfor %}
         </mets:fileGrp>
         <mets:fileGrp USE="DOWNLOAD">
             <mets:file ID="PDF1" MIMETYPE="application/pdf">
-                {% set new_path = server_url + 'repository/file/' + obj.get_parent().metadata.ojs_id + obj.get_representation_dir('origin').split('parts')[1] %}
+                {% set new_path = server_url + '/repository/file/' + obj.get_parent().metadata.ojs_id + obj.get_representation_dir('origin').split('parts')[1] %}
                 <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(new_path, 'merged.pdf')}}"/>
             </mets:file>
         </mets:fileGrp>
