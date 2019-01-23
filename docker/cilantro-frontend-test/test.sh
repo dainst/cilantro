@@ -11,11 +11,6 @@ chmod a+x create_settings_from_env.sh
 ./create_settings_from_env.sh
 cd /frontend
 
-if [ "$TEST" = "mock" ]; then
-    echo "Running Frontend tests against mock-backend"
-    npm run e2e-mock-backend && npm run e2e-server && xvfb-run -a -e /dev/stdout -s "-screen 0 2920x2580x24" npm run e2e-test
-fi
-
 if [ "$TEST" = "default" ]; then
     echo "Running Frontend tests against current docker-compose configuation:"
     cat /config/settings.json
