@@ -2,7 +2,6 @@ import logging
 import os
 import datetime
 import glob
-import json
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -27,6 +26,7 @@ def generate_xml(obj, template_file, target_filepath, additional_params):
     env.globals['path_join'] = os.path.join
     env.globals['datetime'] = datetime.datetime
     env.globals['glob'] = glob.glob
+
     log.info("Generating XML with template: " + template_file)
 
     template = env.get_template(template_file)

@@ -26,7 +26,7 @@ def list_objects_in_repository():
 
 def generate_repository_path(object_id):
     """
-    Generates the path of a cilantro (sub)object in the repository.
+    Generate the path of a cilantro (sub)object in the repository.
 
     This is based on the md5 checksum of the object_id.
 
@@ -48,7 +48,7 @@ def generate_repository_path(object_id):
 
 def _generate_md5(string):
     """
-    Generates the hexadecimal md5 checksum of a string
+    Generate the hexadecimal md5 checksum of a string
 
     :param str string: The string to use
     :return str: The hexadecimal md5 checksum of the string
