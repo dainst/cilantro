@@ -14,8 +14,8 @@ cd /frontend
 if [ "$TEST" = "default" ]; then
     echo "Running Frontend tests against current docker-compose configuation:"
     cat /config/settings.json
-    npm run server-nosync &
-    xvfb-run -a -e /dev/stdout -s "-screen 0 2920x2580x24" npm run e2e-test
+    npm run server &
+    xvfb-run -a -e /dev/stdout -s "-screen 0 2920x2580x24" npm run e2e
 fi
 test_res=$?
 echo "TEST Finished. Look for results at http://localhost:7777/test/e2e/screenshots/my-report.html"
