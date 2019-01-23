@@ -11,21 +11,20 @@ RUN wget https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
     && DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs
 
 RUN rm -R /usr/share/nginx/html/
-COPY ./frontend /usr/share/nginx/html
+COPY frontend /usr/share/nginx/html
+COPY config/create_settings_from_env.sh /create_settings_from_env.sh
 WORKDIR /usr/share/nginx/html
 RUN npm update -g \
-    && npm install \
-    && cd node_modules/webdriver-manager/bin \
-    && ./webdriver-manager update
+    && npm install
 
 #write startup-script (which creates settings.json)
-RUN touch /root/startup.sh \
-    && echo "#!/bin/bash\n" >> /root/startup.sh \
-    && echo "cd /usr/share/nginx/html/config\n" >> /root/startup.sh \
-    && echo "./create_settings_from_env.sh" >> /root/startup.sh \
-    && echo "nginx -g 'daemon off;'" >> /root/startup.sh \
-    && chmod a+x /root/startup.sh \
-    && chmod a+x /usr/share/nginx/html/config/create_settings_from_env.sh
+RUN touch /startup.sh \
+    && echo "#!/bin/bash\n" >> /startup.sh \
+    && echo "cd /usr/share/nginx/html/config\n" >> /startup.sh \
+    && echo "/create_settings_from_env.sh" >> /startup.sh \
+    && echo "nginx -g 'daemon off;'" >> /startup.sh \
+    && chmod a+x /startup.sh \
+    && chmod a+x /create_settings_from_env.sh
 
 # startup script
-ENTRYPOINT ["/root/startup.sh"]
+ENTRYPOINT ["/startup.sh"]
