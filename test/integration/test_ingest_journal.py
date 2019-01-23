@@ -6,6 +6,9 @@ from test.integration.job_type_test import JobTypeTest
 
 class IngestJournalTest(JobTypeTest):
 
+    def tearDown(self):
+        pass
+
     def test_no_ocr(self):
         """Test ingest journal functionality without OCR tasks."""
         self.stage_resource('files', 'test.pdf')
@@ -98,5 +101,4 @@ class IngestJournalTest(JobTypeTest):
         content = str(response.data)
         s = content.split('<mets:FLocat LOCTYPE="URL" xlink:href="')[1]
         link = s.split('"/>')[0]
-        print(link)
         self.assertEqual(self.client.get(link).status_code, 200)
