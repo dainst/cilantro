@@ -6,9 +6,6 @@ from test.integration.job_type_test import JobTypeTest
 
 class IngestJournalTest(JobTypeTest):
 
-    def tearDown(self):
-        pass
-
     def test_no_ocr(self):
         """Test ingest journal functionality without OCR tasks."""
         self.stage_resource('files', 'test.pdf')
