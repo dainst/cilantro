@@ -17,6 +17,6 @@ if [ "$TEST" = "default" ]; then
     xvfb-run -a -e /dev/stdout -s "-screen 0 2920x2580x24" npm run e2e
 fi
 test_res=$?
-echo "TEST Finished. Look for results at http://localhost:7777/test/e2e/screenshots/my-report.html"
+echo "TEST Finished."
 
 exit ${test_res}

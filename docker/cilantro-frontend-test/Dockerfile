@@ -11,7 +11,6 @@ COPY config/create_settings_from_env.sh /create_settings_from_env.sh
 
 WORKDIR /frontend
 RUN npm update -g \
-    && npm install -g gulp-cli \
     && npm install
 
 COPY docker/cilantro-frontend-test/test.sh /test.sh
