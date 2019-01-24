@@ -1,7 +1,7 @@
 from utils.celery_client import celery_app
 from workers.base_task import ObjectTask
 
-from workers.default.arachne.arachne_db_publish import add_pages, add_book
+from workers.default.arachne.db_publish import add_pages, add_book
 from workers.default.arachne.cloud_publish import move_jpeg_to_cloud, \
     move_tiff_to_cloud, move_pdf_to_cloud, move_ptif_to_cloud, \
     move_tei_to_cloud

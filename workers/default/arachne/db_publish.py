@@ -7,12 +7,6 @@ from utils import mysql
 log = logging.getLogger(__name__)
 
 
-PDF_PATH = 'aronscans/download-book'
-METS_PATH = 'S-Arachne/MetsDocuments'
-PTIF_PATH = 'S-Arachne/arachne4scans/arachne4webimages/bookscans'
-ARCHIVE_PATH = 'historical-books-archive/DAI'
-
-
 def add_book(book, object_id):
     """Write book data to Arachne-Database."""
     book_metadata = book.metadata.to_dict()
