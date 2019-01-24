@@ -34,7 +34,13 @@ env:
     - ARACHNE_DB_NAME=arachne
     - ARACHNE_DB_USER=root
     - ARACHNE_DB_PASSWORD=password
-    - ARCHAEOCLOUD_PATH=/archaeocloud_test_dir
+    - ARCHAEOCLOUD_DIR=/archaeocloud_test_dir
+    - BOOKSCAN_DIR=aronscans/bookscans
+    - PDF_DIR=aronscans/download-book
+    - METS_DIR=S-Arachne/MetsDocuments
+    - TEI_DIR=S-Arachne/TeiDocuments
+    - PTIF_DIR=S-Arachne/arachne4scans/arachne4webimages/bookscans
+    - ARCHIVE_DIR=historical-books-archive/DAI
 before_install:
   - cp config/users.yml-default config/users.yml
   - sudo apt-get install -y python3-dev libpoppler-cpp-dev

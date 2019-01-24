@@ -57,20 +57,20 @@ class IngestBookTest(JobTypeTest):
             self.arachne_book_id = json.load(metadata_file)['arachne_id']
 
         cloud_files = [
-            os.path.join(self.BOOKSCAN_PATH, self.test_object_id,
+            os.path.join(self.bookscan_dir, self.test_object_id,
                          'BOOK-' + self.test_object_id + '-0_test.jpg'),
-            os.path.join(self.TEI_PATH, self.test_object_id,
+            os.path.join(self.tei_dir, self.test_object_id,
                          'transcription.xml'),
-            os.path.join(self.PTIF_PATH,
+            os.path.join(self.ptif_dir,
                          _generate_folder_name(self.test_object_id,
                                                self.arachne_book_id),
                          'BOOK-' + self.test_object_id + '-0_test.ptif'),
-            os.path.join(self.ARCHIVE_PATH, self.test_object_id, 'Rohscans',
+            os.path.join(self.archive_dir, self.test_object_id, 'Rohscans',
                          'BOOK-' + self.test_object_id + '-0_test.tif'),
-            os.path.join(self.ARCHIVE_PATH, self.test_object_id,
+            os.path.join(self.archive_dir, self.test_object_id,
                          'datenbankfertig',
                          'BOOK-' + self.test_object_id + '-0_test.jpg'),
-            os.path.join(self.PDF_PATH, self.test_object_id + '.pdf.zip')]
+            os.path.join(self.pdf_dir, self.test_object_id + '.pdf.zip')]
         for f in cloud_files:
             self.assertTrue(Path(f).is_file())
 

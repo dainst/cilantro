@@ -28,26 +28,24 @@ class JobTypeTest(unittest.TestCase):
     staging_dir = os.environ['STAGING_DIR']
     working_dir = os.environ['WORKING_DIR']
     repository_dir = os.environ['REPOSITORY_DIR']
-    archaeocloud_dir = os.environ['ARCHAEOCLOUD_PATH']
-    BOOKSCAN_PATH = os.path.join(archaeocloud_dir, 'aronscans', 'bookscans')
-    PDF_PATH = os.path.join(archaeocloud_dir, 'aronscans', 'download-book')
-    METS_PATH = os.path.join(archaeocloud_dir, 'S-Arachne', 'MetsDocuments')
-    TEI_PATH = os.path.join(archaeocloud_dir, 'S-Arachne', 'TeiDocuments')
-    ARCHIVE_PATH = os.path.join(archaeocloud_dir, 'historical-books-archive',
-                                'DAI')
-    PTIF_PATH = os.path.join(archaeocloud_dir, 'S-Arachne', 'arachne4scans',
-                             'arachne4webimages', 'bookscans')
+    archaeocloud_dir = os.environ['ARCHAEOCLOUD_DIR']
+    bookscan_dir = os.path.join(archaeocloud_dir, os.environ['BOOKSCAN_DIR'])
+    pdf_dir = os.path.join(archaeocloud_dir, os.environ['PDF_DIR'])
+    mets_dir = os.path.join(archaeocloud_dir, os.environ['METS_DIR'])
+    tei_dir = os.path.join(archaeocloud_dir, os.environ['TEI_DIR'])
+    archive_dir = os.path.join(archaeocloud_dir, os.environ['ARCHIVE_DIR'])
+    ptif_dir = os.path.join(archaeocloud_dir, os.environ['PTIF_DIR'])
 
     def setUp(self):
         os.makedirs(self.staging_dir, exist_ok=True)
         os.makedirs(self.working_dir, exist_ok=True)
         os.makedirs(self.repository_dir, exist_ok=True)
         os.makedirs(self.archaeocloud_dir, exist_ok=True)
-        os.makedirs(self.BOOKSCAN_PATH, exist_ok=True)
-        os.makedirs(self.PDF_PATH, exist_ok=True)
-        os.makedirs(self.METS_PATH, exist_ok=True)
-        os.makedirs(self.ARCHIVE_PATH, exist_ok=True)
-        os.makedirs(self.PTIF_PATH, exist_ok=True)
+        os.makedirs(self.bookscan_dir, exist_ok=True)
+        os.makedirs(self.pdf_dir, exist_ok=True)
+        os.makedirs(self.mets_dir, exist_ok=True)
+        os.makedirs(self.archive_dir, exist_ok=True)
+        os.makedirs(self.ptif_dir, exist_ok=True)
 
         app.testing = True
         self.client = app.test_client()
@@ -56,11 +54,11 @@ class JobTypeTest(unittest.TestCase):
         shutil.rmtree(self.staging_dir, ignore_errors=True)
         shutil.rmtree(self.working_dir, ignore_errors=True)
         shutil.rmtree(self.repository_dir, ignore_errors=True)
-        shutil.rmtree(self.BOOKSCAN_PATH, ignore_errors=True)
-        shutil.rmtree(self.PDF_PATH, ignore_errors=True)
-        shutil.rmtree(self.METS_PATH, ignore_errors=True)
-        shutil.rmtree(self.ARCHIVE_PATH, ignore_errors=True)
-        shutil.rmtree(self.PTIF_PATH, ignore_errors=True)
+        shutil.rmtree(self.bookscan_dir, ignore_errors=True)
+        shutil.rmtree(self.pdf_dir, ignore_errors=True)
+        shutil.rmtree(self.mets_dir, ignore_errors=True)
+        shutil.rmtree(self.archive_dir, ignore_errors=True)
+        shutil.rmtree(self.ptif_dir, ignore_errors=True)
 
     def assert_file_in_repository(self, object_id, file_path,
                                   timeout='DEFAULT_TEST_TIMEOUT'):

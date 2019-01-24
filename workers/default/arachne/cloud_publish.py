@@ -6,13 +6,13 @@ import zipfile
 
 log = logging.getLogger(__name__)
 
-CLOUD_PATH = os.environ['ARCHAEOCLOUD_PATH']
-PDF_PATH = 'aronscans/download-book'
-METS_PATH = 'S-Arachne/MetsDocuments'
-TEI_PATH = 'S-Arachne/TeiDocuments'
-PTIF_PATH = 'S-Arachne/arachne4scans/arachne4webimages/bookscans'
-BOOKSCAN_PATH = 'aronscans/bookscans'
-ARCHIVE_PATH = 'historical-books-archive/DAI'
+CLOUD_DIR = os.environ['ARCHAEOCLOUD_DIR']
+BOOKSCAN_DIR = os.environ['BOOKSCAN_DIR']
+PDF_DIR = os.environ['PDF_DIR']
+METS_DIR = os.environ['METS_DIR']
+TEI_DIR = os.environ['TEI_DIR']
+PTIF_DIR= os.environ['PTIF_DIR']
+ARCHIVE_DIR = os.environ['ARCHIVE_DIR']
 
 
 def move_jpeg_to_cloud(object_id, book_id, book_object):
@@ -21,10 +21,10 @@ def move_jpeg_to_cloud(object_id, book_id, book_object):
     Move jpeg-images of pages to bookscan folder and to archive folder.
     Create the target folders if not existing.
     """
-    bookscan_path = os.path.join(CLOUD_PATH, BOOKSCAN_PATH, object_id)
+    bookscan_path = os.path.join(CLOUD_DIR, BOOKSCAN_DIR, object_id)
     if not os.path.exists(bookscan_path):
         os.makedirs(bookscan_path)
-    archive_dir_jpg = os.path.join(CLOUD_PATH, ARCHIVE_PATH, object_id,
+    archive_dir_jpg = os.path.join(CLOUD_DIR, ARCHIVE_DIR, object_id,
                                    'datenbankfertig')
     if not os.path.exists(archive_dir_jpg):
         os.makedirs(archive_dir_jpg)
@@ -45,7 +45,7 @@ def move_tiff_to_cloud(object_id, book_id, book_object):
 
     The files are renamed with the object_id and a continuous index.
     """
-    archive_dir_tif = os.path.join(CLOUD_PATH, ARCHIVE_PATH, object_id,
+    archive_dir_tif = os.path.join(CLOUD_DIR, ARCHIVE_DIR, object_id,
                                    'Rohscans')
     if not os.path.exists(archive_dir_tif):
         os.makedirs(archive_dir_tif)
@@ -66,7 +66,7 @@ def move_ptif_to_cloud(object_id, book_id, book_object):
     """
     formatted_book_id = '{:06d}'.format(int(book_id))
     new_folder_name = f"BOOK-ZID{object_id}-AraID{formatted_book_id}"
-    archive_dir_ptif = os.path.join(CLOUD_PATH, PTIF_PATH, new_folder_name)
+    archive_dir_ptif = os.path.join(CLOUD_DIR, PTIF_DIR, new_folder_name)
     if not os.path.exists(archive_dir_ptif):
         os.makedirs(archive_dir_ptif)
     file_list = sorted(glob.glob(book_object.get_representation_dir('ptif') +
@@ -99,7 +99,7 @@ def move_tei_to_cloud(object_id, book_id, book_object):
 
     Also create the target directory if not existing.
     """
-    tei_dir = os.path.join(CLOUD_PATH, TEI_PATH, object_id)
+    tei_dir = os.path.join(CLOUD_DIR, TEI_DIR, object_id)
     if not os.path.exists(tei_dir):
         os.makedirs(tei_dir)
     try:
@@ -122,7 +122,7 @@ def move_pdf_to_cloud(object_id, book_object):
     with zipfile.ZipFile(pdf_file + '.zip', mode='w') as myzip:
         myzip.write(pdf_file, os.path.basename(pdf_file))
 
-    pdf_dir = os.path.join(os.environ['ARCHAEOCLOUD_PATH'], PDF_PATH)
+    pdf_dir = os.path.join(os.environ['ARCHAEOCLOUD_DIR'], PDF_DIR)
     if not os.path.exists(pdf_dir):
         os.makedirs(pdf_dir)
     source_path = os.path.join(book_object.get_representation_dir('pdf'),

@@ -36,7 +36,13 @@ x-env-arachne: &env-arachne
   ARACHNE_DB_PASSWORD: ${ARACHNE_DB_PASSWORD}
 
 x-env-archaeocloud: &env-archaeocloud
-  ARCHAEOCLOUD_PATH: ${ARCHAEOCLOUD_PATH}
+  ARCHAEOCLOUD_DIR: ${ARCHAEOCLOUD_DIR}
+  BOOKSCAN_DIR: ${BOOKSCAN_DIR}
+  PDF_DIR: ${PDF_DIR}
+  METS_DIR: ${METS_DIR}
+  TEI_DIR: ${TEI_DIR}
+  PTIF_DIR: ${PTIF_DIR}
+  ARCHIVE_DIR: ${ARCHIVE_DIR}
 
 
 services:
@@ -172,9 +178,9 @@ services:
       <<: *env-jobdb
       <<: *env-app-config
       <<: *env-arachne
+      <<: *env-archaeocloud
       DB_HOST: "db"
       TEST_RESOURCE_DIR: "test/resources"
-      ARCHAEOCLOUD_PATH: "archaeocloud_test_dir"
 
   monitor:
     image: dainst/cilantro-monitor:latest
