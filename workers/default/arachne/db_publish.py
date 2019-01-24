@@ -7,7 +7,7 @@ from utils import mysql
 log = logging.getLogger(__name__)
 
 
-def add_book(book, object_id):
+def add_book(book, object_id, username):
     """Write book data to Arachne-Database."""
     book_metadata = book.metadata.to_dict()
     author = (f"{book_metadata['creator']['lastname']}, "
@@ -16,22 +16,19 @@ def add_book(book, object_id):
 
     book_query = ("INSERT INTO arachne.buch"
                   "(DatensatzGruppeBuch, BearbeiterBuch, creatienDateTime, "
-                  "creation, lastModified, Verzeichnis, origFile, "
+                  "creation, lastModified, Verzeichnis, "
                   "KurzbeschreibungBuch, BuchAuthor, BuchTitel, BuchJahr, "
-                  "BuchOrt, BuchSeiten, Materialbeschreibung, "
-                  "ZusaetzlicheMasze, BuchMaszeBemerk, hasOcrText, "
-                  "hasMarcData) "
+                  "BuchSeiten, hasOcrText, hasMarcData) "
                   "VALUES(%s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, "
-                  "CURRENT_TIMESTAMP, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,"
-                  " %s, %s, %s)")
-    book_args = ('Arachne', 'cilantro', object_id, '',
+                  "CURRENT_TIMESTAMP, %s, %s, %s, %s, %s, %s, %s, %s)")
+    book_args = ('Arachne', username + ' (via iDAI.workbench)', object_id,
                  book_metadata['abstract'], author, book_metadata['title'],
-                 book_metadata['created'], '', page_count, '', '', '', 0, 0)
+                 book_metadata['created'], page_count, 0, 1)
 
     return mysql.insert(book_query, book_args)
 
 
-def add_pages(book_id, book_object, object_id):
+def add_pages(book_id, book_object, object_id, username):
     """Create database entries for pages and their images.
 
     Entries in 'buchseite' and 'marbilder' for every page, by calling internal
@@ -43,21 +40,20 @@ def add_pages(book_id, book_object, object_id):
         new_filename = (f"BOOK-{object_id}-{str(i)}_" +
                         f"{os.path.basename(file_path)}")
 
-        page_id = _add_page_to_db(book_id, i, new_filename)
+        page_id = _add_page_to_db(book_id, i, new_filename, username)
         _add_image_to_db(object_id, book_id, page_id, file_path, new_filename)
 
 
-def _add_page_to_db(book_id, page_index, new_filename):
+def _add_page_to_db(book_id, page_index, new_filename, username):
     """Create row for image in table 'buchseite'."""
     page_query = ("INSERT INTO arachne.buchseite"
                   "(FS_BuchID, DatensatzGruppeBuchseite, BearbeiterBuchseite, "
-                  "creatienDateTime, creation, lastModified, aliasBuchseite, "
-                  "seite, seite_natuerlich, Originalpaginierung, image,"
-                  "Folierung, MotivFrei, version) "
+                  "creatienDateTime, creation, lastModified, "
+                  "seite, seite_natuerlich, image, version) "
                   "VALUES(%s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, "
-                  "CURRENT_TIMESTAMP, %s, %s, %s, %s, %s, %s, %s, %s)")
-    page_args = (book_id, 'Arachne', 'cilantro', '', page_index, page_index,
-                 '', new_filename, '', '', 0)
+                  "CURRENT_TIMESTAMP, %s, %s, %s, %s)")
+    page_args = (book_id, 'Arachne', username + ' (via iDAI.workbench)',
+                 page_index, page_index, new_filename, 0)
     return mysql.insert(page_query, page_args)
 
 

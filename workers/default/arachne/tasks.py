@@ -14,10 +14,12 @@ class PublishToArachneDBTask(ObjectTask):
 
     def process_object(self, obj):
         object_id = self.get_param('object_id')
-        book_id = add_book(obj, object_id)
+        username = self.get_param('user')
+
+        book_id = add_book(obj, object_id, username)
         obj.metadata.arachne_id = book_id
         obj.write()
-        add_pages(book_id, obj, object_id)
+        add_pages(book_id, obj, object_id, username)
 
 
 class PublishToCloudTask(ObjectTask):
