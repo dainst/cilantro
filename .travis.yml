@@ -34,7 +34,7 @@ env:
     - ARACHNE_DB_NAME=arachne
     - ARACHNE_DB_USER=root
     - ARACHNE_DB_PASSWORD=password
-    - ARCHAEOCLOUD_DIR=/archaeocloud_test_dir
+    - ARCHAEOCLOUD_DIR=archaeocloud_test_dir
     - BOOKSCAN_DIR=aronscans/bookscans
     - PDF_DIR=aronscans/download-book
     - METS_DIR=S-Arachne/MetsDocuments
