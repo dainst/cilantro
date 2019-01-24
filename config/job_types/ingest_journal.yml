@@ -56,6 +56,8 @@ tasks:
         template_file: marc_template.xml
         target_filename: marc.xml
         schema_file: MARC21slim.xsd
+  - task: publish_to_ojs
+    params: ojs_metadata
   - list_parts:
     foreach:
         task: generate_xml
@@ -67,8 +69,6 @@ tasks:
     target_filename: mets.xml
     params: ojs_metadata
     schema_file: mets.xsd
-  - task: publish_to_ojs
-    params: ojs_metadata
   - list_parts:
     foreach:
       task: generate_frontmatter

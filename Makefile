@@ -15,11 +15,9 @@ build-doc:
 
 run-backend-tests: run_detached
 	bash test/exec_docker_test.sh
-	docker-compose stop
 
 run-frontend-tests: run_detached
 	bash frontend/test/exec_frontend_test.sh
-	docker-compose stop
 
 fix-data-permissions:
 	sudo chown -R $(whoami):$(whoami) data/
@@ -30,5 +28,9 @@ rm-ds-store:
 cp-default-config:
 	cp .env-default .env
 	cp config/users.yml-default config/users.yml
+
+fix-docker-user:
+	$(shell sed -i 's/user_id_placeholder/$(shell id -u)/g' .env)
+	$(shell sed -i 's/user_group_placeholder/$(shell id -g)/g' .env)
 
 run-all-tests: run_detached run-backend-tests run-frontend-tests stop

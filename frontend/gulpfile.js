@@ -9,7 +9,7 @@ const argv = require('yargs').argv;
 gulp.task('server', () => {
 
     const settingsFileName = (typeof argv.settings !== "undefined") ?  '.' + argv.settings : '';
-    const settingsFilePath = "config/settings" + settingsFileName + ".json";
+    const settingsFilePath = "../config/settings" + settingsFileName + ".json";
     const syncBrowser = (typeof argv.sync === "undefined") || (argv.sync !== "false");
 
     if (!fs.existsSync(settingsFilePath)) {

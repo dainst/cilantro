@@ -206,13 +206,7 @@ services:
       context: .
       dockerfile: ./docker/cilantro-salvia/Dockerfile
     volumes:
-        - ./frontend/img:/usr/share/nginx/html/img
-        - ./frontend/info:/usr/share/nginx/html/info
-        - ./frontend/js:/usr/share/nginx/html/js
-        - ./frontend/partials:/usr/share/nginx/html/partials
-        - ./frontend/style:/usr/share/nginx/html/style
-        - ./frontend/test:/usr/share/nginx/html/test
-        - ./frontend/index.html:/usr/share/nginx/html/index.html
+        - ./frontend:/frontend
     ports:
       - "7777:80"
     environment:
@@ -228,12 +222,7 @@ services:
       context: .
       dockerfile: ./docker/cilantro-frontend-test/Dockerfile
     volumes:
-      - ./frontend/img:/salvia/img
-      - ./frontend/info:/salvia/info
-      - ./frontend/js:/salvia/js
-      - ./frontend/partials:/salvia/partials
-      - ./frontend/style:/salvia/style
-      - ./frontend/test:/salvia/test
+      - ./frontend:/frontend
     environment:
       TEST: ${TEST}
       BACKEND_URI: ${BACKEND_URI_TEST}
