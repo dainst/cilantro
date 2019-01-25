@@ -22,6 +22,21 @@ x-env-jobdb: &env-jobdb
   JOB_DB_PORT: 27017
   JOB_DB_NAME: job_database
 
+x-env-arachne: &env-arachne
+  ARACHNE_DB_HOST: ${ARACHNE_DB_HOST}
+  ARACHNE_DB_NAME: ${ARACHNE_DB_NAME}
+  ARACHNE_DB_USER: ${ARACHNE_DB_USER}
+  ARACHNE_DB_PASSWORD: ${ARACHNE_DB_PASSWORD}
+
+x-env-archaeocloud: &env-archaeocloud
+  ARCHAEOCLOUD_DIR: ${ARCHAEOCLOUD_DIR}
+  BOOKSCAN_DIR: ${BOOKSCAN_DIR}
+  PDF_DIR: ${PDF_DIR}
+  METS_DIR: ${METS_DIR}
+  TEI_DIR: ${TEI_DIR}
+  PTIF_DIR: ${PTIF_DIR}
+  ARCHIVE_DIR: ${ARCHIVE_DIR}
+
 services:
 
   broker:
@@ -65,6 +80,8 @@ services:
       <<: *env-broker
       <<: *env-ojs
       <<: *env-jobdb
+      <<: *env-arachne
+      <<: *env-archaeocloud
       DB_HOST: "db"
 
   convert-worker:

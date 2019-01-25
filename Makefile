@@ -21,6 +21,7 @@ run-frontend-tests: run_detached
 
 fix-data-permissions:
 	sudo chown -R $(whoami):$(whoami) data/
+	sudo chown -R $(whoami):$(whoami) archaeocloud_test_dir/
 
 rm-ds-store:
 	find . -name '.DS_Store' -type f -delete
