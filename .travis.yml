@@ -30,6 +30,17 @@ env:
     - ZENON_URI_TEST=https://zenon.dainst.org/api/v1
     - OJS_URI_TEST=http://ojs:80/ojs/plugins/generic/ojs-cilantro-plugin/api
     - OLD_JOBS_THRESHOLD_DAYS=7
+    - ARACHNE_DB_HOST=arachne-db
+    - ARACHNE_DB_NAME=arachne
+    - ARACHNE_DB_USER=root
+    - ARACHNE_DB_PASSWORD=password
+    - ARCHAEOCLOUD_DIR=archaeocloud_test_dir
+    - BOOKSCAN_DIR=aronscans/bookscans
+    - PDF_DIR=aronscans/download-book
+    - METS_DIR=S-Arachne/MetsDocuments
+    - TEI_DIR=S-Arachne/TeiDocuments
+    - PTIF_DIR=S-Arachne/arachne4scans/arachne4webimages/bookscans
+    - ARCHIVE_DIR=historical-books-archive/DAI
 before_install:
   - cp config/users.yml-default config/users.yml
   - cp config/settings.test.json config/settings.json
@@ -44,6 +55,7 @@ before_install:
   - mkdir data/staging/test_user
   - mkdir data/repository
   - mkdir data/workspace
+  - mkdir archaeocloud_test_dir
   - docker-compose pull && docker-compose up -d
 script:
   - sleep 20 && bash frontend/test/exec_frontend_test.sh
