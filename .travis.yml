@@ -59,7 +59,7 @@ before_install:
 script:
   - sleep 20 && bash frontend/test/exec_frontend_test.sh
   - bash test/exec_docker_test.sh
-  - bash docker exec cilantro_test_1 doc/build-doc.sh
+  - docker exec cilantro_test_1 doc/build-doc.sh
   - docker-compose logs
 deploy:
   provider: pages
