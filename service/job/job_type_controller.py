@@ -17,8 +17,7 @@ def get_job_types():
     """
     Return a JSON list of available job types and their meta information.
 
-    .. :quickref: Job Type Controller; \
-        Return a JSON list of available job types and their meta information.
+    .. :quickref: Job Type Controller; List of job types and meta information
 
     **Example request**:
 
@@ -93,8 +92,7 @@ def get_job_type_detail(job_type):
     """
     Serve the contents of the YAML file for the job type definition.
 
-    .. :quickref: Job Type Controller; \
-    Serves the contents of the YAML file for the job type definition.
+    .. :quickref: Job Type Controller; Contents of the job type definition file
 
     **Example request**:
 
@@ -110,7 +108,9 @@ def get_job_type_detail(job_type):
 
         {
             "about": {
-                "description": "Create a new Issue of an existing journal, and upload it's files to iDAI.publications/journals",
+                "description": "Create a new Issue of an existing journal
+                                and upload it's files to
+                                iDAI.publications/journals",
                 "tags": [
                     "OJS",
                     "iDAI.publications/journals",
@@ -123,7 +123,7 @@ def get_job_type_detail(job_type):
             "schema": {
                 "$schema": "http://json-schema.org/draft-07/schema#",
                 "title": "Ingest Journal schema",
-                "description": "Used to validate ingest-journal job parameters",
+                "description": "Use to validate ingest-journal job parameters",
                 "type": "object"
                 "additionalProperties": false,
                 "properties": {
@@ -160,7 +160,7 @@ def get_job_type_detail(job_type):
                                         "task": "convert.pdf_to_tif"
                                     },
                                     "list_files": "origin",
-                                    "pattern": ".*\\.pdf$"
+                                    "pattern": ".pdf$"
                                 },
                                 {
                                     "foreach": {
@@ -184,7 +184,7 @@ def get_job_type_detail(job_type):
                                         "task": "convert.pdf_to_txt"
                                     },
                                     "list_files": "origin",
-                                    "pattern": ".*\\.pdf$"
+                                    "pattern": ".pdf$"
                                 }
                             ],
                             "if": "do_ocr"
