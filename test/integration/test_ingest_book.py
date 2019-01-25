@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 from utils import mysql
+from utils.repository import generate_repository_path
 
 from test.integration.job_type_test import JobTypeTest
 
@@ -52,7 +53,8 @@ class IngestBookTest(JobTypeTest):
             self.assert_file_in_repository(self.test_object_id, file)
 
         # Get arachne ID from metadata file
-        with open(os.path.join(self.repository_dir, self.test_object_id,
+        with open(os.path.join(self.repository_dir,
+                               generate_repository_path(self.test_object_id),
                                'meta.json'), 'r') as metadata_file:
             self.arachne_book_id = json.load(metadata_file)['arachne_id']
 
