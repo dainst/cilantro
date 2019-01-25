@@ -36,6 +36,7 @@ class ListFilesTask(ObjectTask):
     Creates:
 
     """
+
     name = "list_files"
 
     def process_object(self, obj):
@@ -79,6 +80,7 @@ class ListPartsTask(ObjectTask):
     Creates:
 
     """
+
     name = "list_parts"
 
     def process_object(self, obj):
@@ -113,6 +115,7 @@ class IfTask(BaseTask):
     Creates:
 
     """
+
     name = "if"
 
     def execute_task(self):
