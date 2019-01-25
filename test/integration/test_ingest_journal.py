@@ -1,5 +1,6 @@
 import os
 
+from utils.repository import generate_repository_path
 from test.integration.job_type_test import JobTypeTest
 
 
@@ -38,13 +39,15 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0002/data/txt/annotations.json',
             'meta.json',
             'ojs_import.xml'
-            ]
+        ]
         for file in files_generated:
             self.assert_file_in_repository(object_id, file)
 
+        self._test_mets_reference(object_id)
         # Check if the generated XML contains galley, which is required
         # for the ojs import and frontmatter generation
-        file_path = os.path.join(os.environ['REPOSITORY_DIR'], object_id,
+        file_path = os.path.join(os.environ['REPOSITORY_DIR'],
+                                 generate_repository_path(object_id),
                                  'ojs_import.xml')
         with open(file_path, 'r') as f:
             xml_content = f.read()
@@ -84,7 +87,15 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0002/data/txt/annotations.json',
             'meta.json',
             'ojs_import.xml'
-            ]
+        ]
         for file in files_generated:
             self.assert_file_in_repository(object_id, file)
         self.unstage_resource('pdf')
+
+    def _test_mets_reference(self, object_id):
+        response = self.client.get(
+            f'/repository/file/{object_id}/part_0001/mets.xml')
+        content = str(response.data)
+        s = content.split('<mets:FLocat LOCTYPE="URL" xlink:href="')[1]
+        link = s.split('"/>')[0]
+        self.assertEqual(self.client.get(link).status_code, 200)

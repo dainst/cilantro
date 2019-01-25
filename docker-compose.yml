@@ -121,6 +121,7 @@ services:
       <<: *env-archaeocloud
       DB_HOST: "db"
       CILANTRO_ENV: development
+      BACKEND_URI: ${BACKEND_URI}
 
   convert-worker:
     user: ${UID}
@@ -181,6 +182,7 @@ services:
       <<: *env-archaeocloud
       DB_HOST: "db"
       TEST_RESOURCE_DIR: "test/resources"
+      BACKEND_URI: ${BACKEND_URI}
 
   monitor:
     image: dainst/cilantro-monitor:latest
