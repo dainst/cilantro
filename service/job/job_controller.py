@@ -365,10 +365,13 @@ def job_status(job_id):
     """
     task = celery_app.AsyncResult(job_id)
     job = job_db.get_job_by_id(job_id)
+    job_duration = dt.timedelta(
+        seconds=int((job['updated'] - job['created']).total_seconds()))
     if not job:
         job = {}
     response = {
         'status': task.state,
+        'duration': str(job_duration),
         **job}
     if hasattr(task, 'result'):
         response['result'] = task.result
