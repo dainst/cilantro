@@ -1,7 +1,7 @@
 import logging
 import jsonschema
 import os
-import datetime as dt
+import datetime
 
 from flask import Blueprint, url_for, jsonify, request, g
 
@@ -112,7 +112,7 @@ def job_list():
     response = []
     if not show_all_jobs:
         threshold_days = int(os.environ['OLD_JOBS_THRESHOLD_DAYS'])
-        threshold_date = dt.datetime.now() - dt.timedelta(days=threshold_days)
+        threshold_date = datetime.datetime.now() - datetime.timedelta(days=threshold_days)
         for job in jobs:
             if job['updated'] > threshold_date or job['state'] != 'success':
                 response.append(job)
@@ -369,8 +369,12 @@ def job_status(job_id):
     if not job:  # simple task, not a job
         job = {}
     else:
-        job['duration'] = str(dt.timedelta(
-            seconds=int((job['updated'] - job['created']).total_seconds())))
+        if task.state == 'SUCCESS':
+            end_time = job['updated']
+        else:
+            end_time = datetime.datetime.now()
+        job['duration'] = str(datetime.timedelta(
+            seconds=int((end_time - job['created']).total_seconds())))
     response = {
         'status': task.state,
         **job}
