@@ -108,6 +108,18 @@ services:
       <<: *env-broker
       DB_HOST: "db"
 
+  latex-worker:
+    user: ${UID}
+    image: dainst/cilantro-latex-worker:latest
+    working_dir: /app
+    volumes:
+      - data:/data
+      - /opt/cilantro/config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      DB_HOST: "db"
+
   monitor:
     image: dainst/cilantro-monitor:stable
     environment:

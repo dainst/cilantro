@@ -159,6 +159,26 @@ services:
       DB_HOST: "db"
       CILANTRO_ENV: development
 
+  latex-worker:
+    user: ${UID}
+    image: dainst/cilantro-latex-worker:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-latex-worker/Dockerfile
+      args:
+        GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN}
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      DB_HOST: "db"
+      HOME: "/tmp"
+      CILANTRO_ENV: development
+
   test:
     user: ${UID}
     image: dainst/cilantro-test:latest

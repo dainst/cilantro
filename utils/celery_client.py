@@ -16,11 +16,13 @@ celery_app = Celery('cilantro', broker=broker_config, backend=result_config)
 default_exchange = Exchange('default', type='direct')
 nlp_exchange = Exchange('nlp', type='direct')
 convert_exchange = Exchange('convert', type='direct')
+latex_exchange = Exchange('latex', type='direct')
 
 celery_app.conf.task_queues = (
     Queue('default', default_exchange, routing_key='default'),
     Queue('nlp', nlp_exchange, routing_key='nlp'),
     Queue('convert', nlp_exchange, routing_key='convert'),
+    Queue('latex', latex_exchange, routing_key='latex'),
 )
 celery_app.conf.task_default_queue = 'default'
 celery_app.conf.task_default_exchange = 'default'
@@ -35,6 +37,10 @@ celery_app.conf.task_routes = {
     'convert.*': {
             'queue': 'convert',
             'routing_key': 'convert',
+    },
+    'latex.*': {
+            'queue': 'latex',
+            'routing_key': 'latex',
     }
 }
 
