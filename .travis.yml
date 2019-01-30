@@ -67,8 +67,8 @@ before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 script:
-  - npm run --prefix frontend e2e
-  - bash test/exec_docker_test.sh
+  - make test-backend
+  - make e2e
   - docker exec cilantro_test_1 doc/build-doc.sh
   - docker-compose logs
 deploy:
