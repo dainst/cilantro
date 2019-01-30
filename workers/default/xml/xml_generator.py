@@ -31,7 +31,10 @@ def generate_xml(obj, template_file, target_filepath, additional_params):
 
     template = env.get_template(template_file)
     filled_template = template.render(obj=obj,
-                                      additional_params=additional_params)
+                                      additional_params={'additional_params':
+                                                         additional_params,
+                                                         'os.environ':
+                                                         os.environ})
 
     _write_xml_to_file(filled_template, target_filepath)
     return os.path.join(target_filepath)

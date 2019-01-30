@@ -1,5 +1,6 @@
 {% set ns = namespace() %}
-{% set ojs_metadata = additional_params %}
+{% set ojs_metadata = additional_params['additional_params'] %}
+{% set repo_dir = additional_params['os.environ']['REPOSITORY_DIR'] %}
 <?xml version="1.0" encoding="UTF-8"?>
 <mets:mets
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -62,7 +63,8 @@
                     {% set ns.id = "file_part_" + part_index|string + "_" + loop.index|string %}
                     {% set ns.id_list = ns.id_list + [ns.id] %}
                         <mets:file ID="{{ns.id}}" MIMETYPE="image/jpeg">
-                            <mets:FLocat LOCTYPE="URL" xlink:href="{{file_path}}"/>
+                            {% set new_file_path = path_join(repo_dir, obj.metadata.ojs_id, 'parts') + file_path.split('parts')[1] %}
+                            <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                         </mets:file>
                 {% endfor %}
             {% endfor %}
@@ -73,14 +75,15 @@
                 {% for file_path in glob(path_join(part.get_representation_dir('jpg'), 'thumbnails') + '/*.jpg')|sort() %}
                     {% set ns.id = "file_part_" + part_index|string + "_" + loop.index|string %}
                         <mets:file ID="thumb_{{ns.id}}" MIMETYPE="image/jpeg">
-                            <mets:FLocat LOCTYPE="URL" xlink:href="{{file_path}}"/>
+                            {% set new_file_path = path_join(repo_dir, obj.metadata.ojs_id, 'parts') + file_path.split('parts')[1] %}
+                            <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                         </mets:file>
                 {% endfor %}
             {% endfor %}
         </mets:fileGrp>
         <mets:fileGrp USE="DOWNLOAD">
             <mets:file ID="PDF1" MIMETYPE="application/pdf">
-                <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(obj.get_representation_dir('pdf'), 'merged.pdf')}}"/>
+                <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(repo_dir, obj.metadata.ojs_id, 'data', 'origin', 'merged.pdf')}}"/>
             </mets:file>
         </mets:fileGrp>
     </mets:fileSec>

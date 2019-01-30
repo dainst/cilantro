@@ -25,17 +25,8 @@ https://dainst.github.io/cilantro/
 
 ## Setup development environment
 
-* Copy the `.env-default` file to `.env` and modify it. In most cases only
-  `UID` has to be adjusted. The UID / GID of the current user can be read with
-  `id -u` / `id -g` on UNIX systems.
-
-* Copy `config/users.yml-default` to `config/users.yml`. This file stores the
-  user information and credentials for all available users. In order for the
-  tests to be successful it must contain the user `test_user`. This user has
-  to be removed in production environments.
-
-  Passwords have to be encrypted with
-  [bcrypt](https://en.wikipedia.org/wiki/Bcrypt).
+* Run `make cp-default-config` `make fix-docker-user` to set up docker
+  environment.
 
 * Install docker (Community Edition)
 
