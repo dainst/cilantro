@@ -1,7 +1,7 @@
 run:
 	docker-compose up
 
-run_detached:
+run-detached:
 	docker-compose up -d
 
 stop:
@@ -13,10 +13,12 @@ build-image:
 build-doc:
 	bash doc/build-doc.sh
 
-run-backend-tests: run_detached
-	bash test/exec_docker_test.sh
+test: run-detached test-backend test-e2e
 
-run-frontend-tests:
+test-backend:
+	docker exec cilantro_test_1 python -m unittest -v $1
+
+test-e2e:
 	npm run --prefix frontend e2e
 
 fix-data-permissions:
@@ -33,5 +35,3 @@ cp-default-config:
 fix-docker-user:
 	$(shell sed -i 's/user_id_placeholder/$(shell id -u)/g' .env)
 	$(shell sed -i 's/user_group_placeholder/$(shell id -g)/g' .env)
-
-run-all-tests: run_detached run-backend-tests run-frontend-tests stop
