@@ -202,11 +202,11 @@ services:
     ports:
       - "4444:80"
 
-  salvia:
-    image: dainst/cilantro-salvia:latest
+  frontend:
+    image: dainst/cilantro-frontend:latest
     build:
       context: .
-      dockerfile: ./docker/cilantro-salvia/Dockerfile
+      dockerfile: ./docker/cilantro-frontend/Dockerfile
     volumes:
         - ./frontend:/frontend
     ports:
