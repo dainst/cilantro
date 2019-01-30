@@ -28,7 +28,6 @@ tasks:
   - task: generate_xml
     template_file: tei_template.xml
     target_filename: tei.xml
-    params: object_id
   - publish_to_cloud
   - publish_to_repository
   - cleanup_workdir

@@ -1,6 +1,6 @@
 {% set metadata = obj.metadata.to_dict() %}
-{% set repo_dir = additional_params['os.environ']['REPOSITORY_DIR'] %}
-{% set server_url = additional_params['os.environ']['BACKEND_URI'] %}
+{% set repo_dir = environ['REPOSITORY_DIR'] %}
+{% set server_url = environ['BACKEND_URI'] %}
 <?xml version="1.0" encoding="UTF-8"?>
 <mets:mets
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

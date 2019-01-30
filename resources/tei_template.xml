@@ -1,6 +1,6 @@
 {% set ns = namespace() %}
 {% set metadata = obj.metadata.to_dict() %}
-{% set object_id = additional_params['additional_params'] %}
+{% set object_id = params['object_id'] %}
 <?xml version="1.0" encoding="UTF-8"?>
 <TEI xmlns="http://www.tei-c.org/ns/1.0" version="5.0" xml:id="TEI.{{object_id}}">
 
