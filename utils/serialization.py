@@ -51,6 +51,10 @@ class SerializableClass(object):
         return json.dumps(self.to_dict(), default=_to_serializable)
 
     def to_dict(self):
+        """
+        Return the attributes as dict.
+        :return dict: The attributes as dict
+        """
         d = {}
         for key, value in self.__dict__.items():
             if SerializableClass().__class__ in inspect.getmro(value.__class__):
@@ -59,6 +63,18 @@ class SerializableClass(object):
                 d[key] = value
 
         return d
+
+    def get_attribute(self, attribute):
+        """
+        Return the value of one attribute
+        :param attribute: the attribute for which the value should be returned
+        :return: the value of the attribute, can be any type
+        """
+        d = self.to_dict()
+        try:
+            return d[attribute]
+        except KeyError:
+            return None
 
 
 def _to_serializable(val):

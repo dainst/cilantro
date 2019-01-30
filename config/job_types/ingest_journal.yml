@@ -71,7 +71,7 @@ tasks:
     schema_file: mets.xsd
   - list_parts:
     foreach:
-      task: generate_frontmatter
+      task: latex.generate_frontmatter
   - publish_to_repository
   - cleanup_workdir
   - finish_job

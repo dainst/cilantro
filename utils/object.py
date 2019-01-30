@@ -47,6 +47,9 @@ class ObjectMetadata(SerializableClass):
     volume: str
     identification: str
 
+    ojs_id: str
+    create_frontpage: bool
+
 
 class Object:
     """

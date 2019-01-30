@@ -12,23 +12,6 @@ auth_key = os.environ['OJS_AUTH_KEY']
 log = logging.getLogger(__name__)
 
 
-def generate_frontmatter(article_id):
-    """
-    Generate frontmatter page for articles in OJS via Frontmatter-Plugin.
-
-    Does a simple GET request to the OJS plugin passing on IDs of documents
-    already present in OJSself.
-
-    Authorization is done with a specific test user.
-
-    :param article_id: ID of the article in OJS
-    :return: tuple containing the response code and text
-    """
-    headers = {'ojsAuthorization': auth_key}
-    url = f"{_get_api_url()}/frontmatters/create/article/?id={article_id}"
-    return _make_request(url, headers)
-
-
 def publish(import_xml_file_path, journalcode):
     """
     Publish the documents referenced in the passed XML via OJS-Import-Plugin.
