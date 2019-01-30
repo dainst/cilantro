@@ -63,6 +63,26 @@
         },
         "object_id": {
             "type": "string"
+        },
+        "parts": {
+            "type": "array",
+            "items": {
+                "required": ["title", "range"],
+                "additionalProperties": false,
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "range": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "maxItems": 2,
+                        "minItems": 2
+                    }
+                }
+            }
         }
     }
 }

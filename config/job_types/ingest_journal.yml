@@ -4,7 +4,8 @@ about:
   tags: [OJS, iDAI.publications/journals, publish, journal, pdf]
 
 tasks:
-  - create_object
+  - task: create_object
+    create_subobject: true
   - list_parts:
     foreach:
     - if: do_ocr
