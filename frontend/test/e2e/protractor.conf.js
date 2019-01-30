@@ -20,6 +20,8 @@ exports.config = {
         chromeOptions: {
             args: [
                 "--no-sandbox",
+                // see https://stackoverflow.com/questions/50642308/org-openqa-selenium-webdriverexception-unknown-error-devtoolsactiveport-file-d
+                "--disable-dev-shm-usage",
                 "--disable-gpu",
                 '--window-size=1920,1024'
             ]
