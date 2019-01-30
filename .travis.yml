@@ -43,7 +43,7 @@ env:
     - ARCHIVE_DIR=historical-books-archive/DAI
 before_install:
   - cp config/users.yml-default config/users.yml
-  - cp config/settings.default.json config/settings.json
+  - cp config/settings.travis.json config/settings.json
   - sudo apt-get install -y python3-dev libpoppler-cpp-dev python3-sphinx
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
