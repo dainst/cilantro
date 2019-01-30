@@ -6,6 +6,7 @@ from workers.base_task import BaseTask, ObjectTask
 from utils.object import Object
 from utils import job_db
 from workers.convert.convert_pdf import split_merge_pdf
+from utils.repository import generate_repository_path
 
 repository_dir = os.environ['REPOSITORY_DIR']
 working_dir = os.environ['WORKING_DIR']
@@ -94,7 +95,8 @@ class PublishToRepositoryTask(BaseTask):
     def execute_task(self):
         work_path = self.get_work_path()
         repository_path = os.path.join(repository_dir,
-                                       self.get_result('object_id'))
+                                       generate_repository_path(
+                                           self.get_result('object_id')))
         shutil.rmtree(repository_path, ignore_errors=True)
         shutil.copytree(work_path, repository_path)
 

@@ -7,14 +7,7 @@
   },
   "description": "",
   "scripts": {
-    "e2e-test": "rimraf test/e2e/screenshots/*.png && protractor test/e2e/protractor.conf.js",
-    "e2e-mock-backend": "cd test/e2e/mock-backend && node backend.js",
-    "e2e-server": "gulp server --settings=test --sync=false",
-    "e2e-mock": "npm run e2e-mock-backend && npm run e2e-server && npm run e2e-test",
-    "e2e": "npm run server && npm run e2e-test",
-    "server-nosync": "gulp server --sync=false",
-    "server": "gulp server",
-    "start": "npm run server"
+    "e2e": "rimraf test/e2e/screenshots/*.png && protractor test/e2e/protractor.conf.js"
   },
   "dependencies": {
     "angular": "1.6.7",
@@ -33,7 +26,6 @@
     "chromedriver": "^2.43.1",
     "connect-modrewrite": "0.10.2",
     "data-uri-to-buffer": "2.0.0",
-    "gulp": "^4.0.0",
     "jasmine-core": "2.8.0",
     "json-server": "^0.14.0",
     "pixelmatch": "4.0.2",

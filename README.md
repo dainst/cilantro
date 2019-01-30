@@ -23,6 +23,10 @@ The generated HTML can be viewed via the following URL:
 
 https://dainst.github.io/cilantro/
 
+For the in-house CI Jenkins, the generated docu can be found under:
+
+http://oneeyedjacks02.dai-cloud.uni-koeln.de/cilantro-docu/index.html
+
 ## Setup development environment
 
 * Run `make cp-default-config` `make fix-docker-user` to set up docker

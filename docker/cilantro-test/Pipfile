@@ -21,6 +21,9 @@ Flask-HTTPAuth = "*"
 bcrypt = "*"
 pymongo = "*"
 jsonschema = "*"
+mysql-connector = "*"
+Sphinx = "*"
+sphinxcontrib-httpdomain = "*"
 
 [dev-packages]
 

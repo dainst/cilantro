@@ -1,5 +1,6 @@
 redis-data
 /data
+/archaeocloud_test_dir
 .DS_Store
 .env
 test/integration/env.py

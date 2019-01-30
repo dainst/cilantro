@@ -29,6 +29,22 @@ x-env-jobdb: &env-jobdb
 x-env-app-config: &env-app-config
   OLD_JOBS_THRESHOLD_DAYS: ${OLD_JOBS_THRESHOLD_DAYS}
 
+x-env-arachne: &env-arachne
+  ARACHNE_DB_HOST: ${ARACHNE_DB_HOST}
+  ARACHNE_DB_NAME: ${ARACHNE_DB_NAME}
+  ARACHNE_DB_USER: ${ARACHNE_DB_USER}
+  ARACHNE_DB_PASSWORD: ${ARACHNE_DB_PASSWORD}
+
+x-env-archaeocloud: &env-archaeocloud
+  ARCHAEOCLOUD_DIR: ${ARCHAEOCLOUD_DIR}
+  BOOKSCAN_DIR: ${BOOKSCAN_DIR}
+  PDF_DIR: ${PDF_DIR}
+  METS_DIR: ${METS_DIR}
+  TEI_DIR: ${TEI_DIR}
+  PTIF_DIR: ${PTIF_DIR}
+  ARCHIVE_DIR: ${ARCHIVE_DIR}
+
+
 services:
 
   broker:
@@ -53,6 +69,16 @@ services:
       - "27017:27017"
     volumes:
       - ./mongo-data:/data
+
+  arachne-db:
+    image: mysql:5.5.62
+    ports:
+      - "13306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=arachne
+    volumes:
+      - ./test/resources/files/arachne.sql:/docker-entrypoint-initdb.d/arachne.sql
 
   service:
     image: dainst/cilantro-service:latest
@@ -85,13 +111,17 @@ services:
       - .:/app
       - ./data:/data
       - ./config:/config
+      - ./archaeocloud_test_dir:/archaeocloud_test_dir
     environment:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-ojs
       <<: *env-jobdb
+      <<: *env-arachne
+      <<: *env-archaeocloud
       DB_HOST: "db"
       CILANTRO_ENV: development
+      BACKEND_URI: ${BACKEND_URI}
 
   convert-worker:
     user: ${UID}
@@ -148,8 +178,11 @@ services:
       <<: *test-timeouts
       <<: *env-jobdb
       <<: *env-app-config
+      <<: *env-arachne
+      <<: *env-archaeocloud
       DB_HOST: "db"
       TEST_RESOURCE_DIR: "test/resources"
+      BACKEND_URI: ${BACKEND_URI}
 
   monitor:
     image: dainst/cilantro-monitor:latest
@@ -169,11 +202,11 @@ services:
     ports:
       - "4444:80"
 
-  salvia:
-    image: dainst/cilantro-salvia:latest
+  frontend:
+    image: dainst/cilantro-frontend:latest
     build:
       context: .
-      dockerfile: ./docker/cilantro-salvia/Dockerfile
+      dockerfile: ./docker/cilantro-frontend/Dockerfile
     volumes:
         - ./frontend:/frontend
     ports:

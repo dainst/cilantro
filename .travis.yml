@@ -30,11 +30,21 @@ env:
     - ZENON_URI_TEST=https://zenon.dainst.org/api/v1
     - OJS_URI_TEST=http://ojs:80/ojs/plugins/generic/ojs-cilantro-plugin/api
     - OLD_JOBS_THRESHOLD_DAYS=7
+    - ARACHNE_DB_HOST=arachne-db
+    - ARACHNE_DB_NAME=arachne
+    - ARACHNE_DB_USER=root
+    - ARACHNE_DB_PASSWORD=password
+    - ARCHAEOCLOUD_DIR=archaeocloud_test_dir
+    - BOOKSCAN_DIR=aronscans/bookscans
+    - PDF_DIR=aronscans/download-book
+    - METS_DIR=S-Arachne/MetsDocuments
+    - TEI_DIR=S-Arachne/TeiDocuments
+    - PTIF_DIR=S-Arachne/arachne4scans/arachne4webimages/bookscans
+    - ARCHIVE_DIR=historical-books-archive/DAI
 before_install:
   - cp config/users.yml-default config/users.yml
   - cp config/settings.test.json config/settings.json
-  - sudo apt-get install -y python3-dev libpoppler-cpp-dev
-  - pip3 install -r doc/requirements.txt
+  - sudo apt-get install -y python3-dev libpoppler-cpp-dev python3-sphinx
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
@@ -44,11 +54,12 @@ before_install:
   - mkdir data/staging/test_user
   - mkdir data/repository
   - mkdir data/workspace
+  - mkdir archaeocloud_test_dir
   - docker-compose pull && docker-compose up -d
 script:
   - sleep 20 && bash frontend/test/exec_frontend_test.sh
   - bash test/exec_docker_test.sh
-  - bash doc/build-doc.sh
+  - docker exec cilantro_test_1 doc/build-doc.sh
   - docker-compose logs
 deploy:
   provider: pages

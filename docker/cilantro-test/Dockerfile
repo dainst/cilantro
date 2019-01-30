@@ -13,7 +13,8 @@ RUN apt-get update && \
     libmagickwand-dev \
     ghostscript \
     tesseract-ocr \
-    tesseract-ocr-deu
+    tesseract-ocr-deu \
+    python3-sphinx
 
 
 ENV LIBRARY_PATH=/lib:/usr/lib
@@ -24,6 +25,7 @@ COPY ./service /app/service
 COPY ./test /app/test
 COPY ./utils /app/utils
 COPY ./workers /app/workers
+COPY ./doc /app/doc
 WORKDIR /app
 
 COPY docker/cilantro-test/Pipfile Pipfile

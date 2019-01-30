@@ -9,7 +9,6 @@ def sort_alphanumeric(it):
 
     :param iterable it: Iterable to be sorted
     :return iterable: Sorted iterable
-
     """
     def _convert(text):
         if text.isdigit():

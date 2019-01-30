@@ -1,7 +1,7 @@
 import logging
 import jsonschema
 import os
-import datetime as dt
+import datetime
 
 from flask import Blueprint, url_for, jsonify, request, g
 
@@ -32,7 +32,7 @@ job_controller = Blueprint('job', __name__)
 @auth.login_required
 def job_list():
     """
-    List jobs of the user
+    List jobs of the user.
 
     List jobs of the user updated less than a week ago and all jobs, which were
     not successful.
@@ -112,7 +112,7 @@ def job_list():
     response = []
     if not show_all_jobs:
         threshold_days = int(os.environ['OLD_JOBS_THRESHOLD_DAYS'])
-        threshold_date = dt.datetime.now() - dt.timedelta(days=threshold_days)
+        threshold_date = datetime.datetime.now() - datetime.timedelta(days=threshold_days)
         for job in jobs:
             if job['updated'] > threshold_date or job['state'] != 'success':
                 response.append(job)
@@ -137,8 +137,7 @@ def job_create(job_type):
 
     Also adds the job to the job database.
 
-    .. :quickref: Job Controller; \
-        Create a job of the specified job type
+    .. :quickref: Job Controller; Create a job of the specified job type
 
     **Example request**:
 
@@ -151,7 +150,7 @@ def job_create(job_type):
                 "volume": "",
                 "year": 2018,
                 "number": "",
-                "description": "[PDFs teilweise verf\u00fcgbar]",
+                "description": "[PDFs teilweise verfugbar]",
                 "importFilePath": "test.pdf",
                 "identification": "year"
             },
@@ -171,7 +170,7 @@ def job_create(job_type):
                             "lastname": "Mustermann"
                         }],
                         "pages": {
-                            "showndesc": "1\u201320",
+                            "showndesc": "101320",
                             "startPrint": 1,
                             "endPrint": 2
                         },
@@ -197,7 +196,7 @@ def job_create(job_type):
                             "lastname": "Dererste"
                         }],
                         "pages": {
-                            "showndesc": "21\u201327",
+                            "showndesc": "2101327",
                             "startPrint": 21,
                             "endPrint": 23
                         },
@@ -266,9 +265,9 @@ def job_create(job_type):
             {
                 "error": {
                     "code": "bad_request",
-                    "message": "400 Bad Request: The browser (or proxy) sent \
-                                a request that this server could not \
-                                understand."
+                    "message": "400 Bad Request: The browser (or proxy)
+                                sent a request that this server could
+                                not understand."
                 },
                 "success": false
             }
@@ -333,7 +332,7 @@ def job_status(job_id):
     job database (as it only holds job info) and no further info will be
     returned.
 
-    .. :quickref: Job Controller; Return the status information for a job.
+    .. :quickref: Job Controller; Status information for a job
 
     **Example request**:
 
@@ -366,8 +365,16 @@ def job_status(job_id):
     """
     task = celery_app.AsyncResult(job_id)
     job = job_db.get_job_by_id(job_id)
-    if not job:
+
+    if not job:  # simple task, not a job
         job = {}
+    else:
+        if task.state == 'SUCCESS':
+            end_time = job['updated']
+        else:
+            end_time = datetime.datetime.now()
+        job['duration'] = str(datetime.timedelta(
+            seconds=int((end_time - job['created']).total_seconds())))
     response = {
         'status': task.state,
         **job}

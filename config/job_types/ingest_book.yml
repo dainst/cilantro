@@ -18,6 +18,12 @@ tasks:
       target: pdf
   - task: convert.merge_converted_pdf
     representation: pdf
+  - publish_to_arachne_db
+  - task: generate_xml
+    template_file: tei_template.xml
+    target_filename: tei.xml
+    params: object_id
+  - publish_to_cloud
   - publish_to_repository
   - cleanup_workdir
   - finish_job
