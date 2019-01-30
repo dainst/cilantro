@@ -21,7 +21,7 @@ test-backend:
 test-e2e:
 	npm run --prefix frontend e2e
 
-fix-data-permissions:
+fix-permissions:
 	sudo chown -R $(whoami):$(whoami) data/
 	sudo chown -R $(whoami):$(whoami) archaeocloud_test_dir/
 
