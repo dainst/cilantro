@@ -50,9 +50,6 @@ env:
     - PTIF_DIR=S-Arachne/arachne4scans/arachne4webimages/bookscans
     - ARCHIVE_DIR=historical-books-archive/DAI
 before_install:
-  - cp config/users.yml-default config/users.yml
-  - mkdir frontend/config
-  - cp config/settings.travis.json frontend/config/settings.json
   - sudo apt-get install -y python3-dev libpoppler-cpp-dev python3-sphinx
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -64,7 +61,12 @@ before_install:
   - mkdir data/repository
   - mkdir data/workspace
   - mkdir archaeocloud_test_dir
+install:
+  - cp config/users.yml-default config/users.yml
+  - mkdir frontend/config
+  - cp config/settings.travis.json frontend/config/settings.json
   - npm --prefix frontend install
+before_script:
   - docker-compose pull && docker-compose up -d
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
