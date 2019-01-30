@@ -55,11 +55,10 @@ before_install:
   - mkdir data/repository
   - mkdir data/workspace
   - mkdir archaeocloud_test_dir
+  - npm --prefix frontend install
   - docker-compose pull && docker-compose up -d
 script:
-  - cd frontend
-  - npm run e2e
-  - cd ..
+  - npm run --prefix frontend e2e
   - bash test/exec_docker_test.sh
   - docker exec cilantro_test_1 doc/build-doc.sh
   - docker-compose logs
