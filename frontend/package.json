@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "http://github.com/dainst/ojs-importer.git"
+    "url": "http://github.com/dainst/cilantro.git"
   },
   "description": "",
   "scripts": {
