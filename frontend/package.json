@@ -7,7 +7,7 @@
   },
   "description": "",
   "scripts": {
-    "e2e": "rimraf test/e2e/screenshots/*.png && protractor test/e2e/protractor.conf.js"
+    "e2e": "protractor test/e2e/protractor.conf.js"
   },
   "dependencies": {
     "angular": "1.6.7",
@@ -17,8 +17,7 @@
     "ng-file-upload": "12.2.13",
     "npm": "^6.4.1",
     "pdfjs-dist": "2.0.489",
-    "requirejs": "2.3.5",
-    "rimraf": "^2.6.2"
+    "requirejs": "2.3.5"
   },
   "devDependencies": {
     "ajv": "6.5.1",
