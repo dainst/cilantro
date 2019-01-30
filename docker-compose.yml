@@ -216,17 +216,3 @@ services:
       BACKEND_URI: ${BACKEND_URI}
       ZENON_URI: ${ZENON_URI}
       OJS_URI: ${OJS_URI}
-
-  frontend-test:
-    tty: true
-    image: dainst/cilantro-frontend-test:latest
-    build:
-      context: .
-      dockerfile: ./docker/cilantro-frontend-test/Dockerfile
-    volumes:
-      - ./frontend:/usr/share/nginx/html
-    environment:
-      TEST: ${TEST}
-      BACKEND_URI: ${BACKEND_URI_TEST}
-      ZENON_URI: ${ZENON_URI_TEST}
-      OJS_URI: ${OJS_URI_TEST}
