@@ -16,8 +16,8 @@ build-doc:
 run-backend-tests: run_detached
 	bash test/exec_docker_test.sh
 
-run-frontend-tests: run_detached
-	bash frontend/test/exec_frontend_test.sh
+run-frontend-tests:
+	npm run --prefix frontend e2e
 
 fix-data-permissions:
 	sudo chown -R $(whoami):$(whoami) data/
