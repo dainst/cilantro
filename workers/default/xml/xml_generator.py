@@ -5,6 +5,8 @@ import glob
 
 from jinja2 import Environment, FileSystemLoader
 
+from utils.repository import generate_repository_path
+
 log = logging.getLogger(__name__)
 
 
@@ -28,6 +30,7 @@ def generate_xml(obj, template_file, target_filepath, params):
     env.globals['glob'] = glob.glob
     env.globals['basename'] = os.path.basename
     env.globals['splitext'] = os.path.splitext
+    env.globals['gen_repo_path'] = generate_repository_path
     env.globals['environ'] = os.environ
 
     log.info("Generating XML with template: " + template_file)
