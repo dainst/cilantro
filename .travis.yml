@@ -65,7 +65,6 @@ script:
   - make test-e2e
   - make build-doc
   - make stop
-  - docker-compose logs
 deploy:
   provider: pages
   skip_cleanup: true
@@ -73,3 +72,5 @@ deploy:
   github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
   on:
     branch: master
+after_script:
+  - docker-compose logs
