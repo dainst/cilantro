@@ -65,7 +65,7 @@ install:
   - cp config/users.yml-default config/users.yml
   - mkdir frontend/config
   - cp config/settings.travis.json frontend/config/settings.json
-  - npm --prefix frontend install
+  - make init
 before_script:
   - docker-compose pull && docker-compose up -d
   - export DISPLAY=:99.0

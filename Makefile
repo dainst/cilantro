@@ -7,6 +7,9 @@ run-detached:
 stop:
 	docker-compose stop
 
+init:
+	npm install --prefix frontend
+
 build-image:
 	./docker_image_build.sh ${IMAGE} ${TAG}
 
