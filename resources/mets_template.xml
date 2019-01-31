@@ -55,7 +55,7 @@
     <mets:fileSec>
         <mets:fileGrp USE="DEFAULT">
             {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg')|sort() %}
-                <mets:file ID="file{{loop.index}}" MIMETYPE="image/jpeg">
+                <mets:file ID="file_{{loop.index}}" MIMETYPE="image/jpeg">
                     {% set new_file_path = server_url + '/repository/file/' + obj.get_parent().metadata.ojs_id + file_path.split('parts')[1] %}
                     <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                 </mets:file>
@@ -63,7 +63,7 @@
         </mets:fileGrp>
         <mets:fileGrp USE="THUMBS">
             {% for file_path in glob(path_join(obj.get_representation_dir('jpg'), 'thumbnails') + '/*.jpg')|sort() %}
-                <mets:file ID="thumb_file{{loop.index}}" MIMETYPE="image/jpeg">
+                <mets:file ID="thumb_file_{{loop.index}}" MIMETYPE="image/jpeg">
                    {% set new_file_path = server_url + '/repository/file/' + obj.get_parent().metadata.ojs_id + file_path.split('parts')[1] %}
                     <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                 </mets:file>
@@ -82,7 +82,8 @@
             <mets:fptr FILEID="PDF1"/>
             {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg')|sort() %}
                 <mets:div ID="div{{loop.index}}" ORDER="{{loop.index}}" ORDERLABEL="{{loop.index}}" TYPE="page">
-                    <mets:fptr FILEID="file{{loop.index}}"/>
+                    <mets:fptr FILEID="file_{{loop.index}}"/>
+                    <mets:fptr FILEID="thumb_file_{{loop.index}}"/>
                 </mets:div>
             {% endfor %}
         </mets:div>

@@ -63,7 +63,7 @@
                 {% for file_path in glob(part.get_representation_dir('jpg') + '/*.jpg')|sort() %}
                     {% set ns.id = "file_part_" + part_index|string + "_" + loop.index|string %}
                     {% set ns.id_list = ns.id_list + [ns.id] %}
-                        <mets:file ID="{{ns.id}}" MIMETYPE="image/jpeg">
+                        <mets:file ID="file_{{ns.id}}" MIMETYPE="image/jpeg">
                              {% set new_file_path = server_url + '/repository/file/' + obj.metadata.ojs_id + file_path.split('parts')[1] %}
                             <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                         </mets:file>
@@ -75,7 +75,7 @@
                 {% set part_index = '%04d' | format(loop.index) %}
                 {% for file_path in glob(path_join(part.get_representation_dir('jpg'), 'thumbnails') + '/*.jpg')|sort() %}
                     {% set ns.id = "file_part_" + part_index|string + "_" + loop.index|string %}
-                        <mets:file ID="thumb_{{ns.id}}" MIMETYPE="image/jpeg">
+                        <mets:file ID="thumb_file_{{ns.id}}" MIMETYPE="image/jpeg">
                             {% set new_file_path = server_url + '/repository/file/' + obj.metadata.ojs_id + file_path.split('parts')[1] %}
                             <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                         </mets:file>
@@ -94,7 +94,8 @@
             <mets:fptr FILEID="PDF1"/>
             {% for id in ns.id_list %}
                 <mets:div ID="div{{loop.index}}" ORDER="{{loop.index}}" ORDERLABEL="{{loop.index}}" TYPE="page">
-                    <mets:fptr FILEID="{{ns.id_list[loop.index - 1]}}"/>
+                    <mets:fptr FILEID="file_{{ns.id_list[loop.index - 1]}}"/>
+                    <mets:fptr FILEID="thumb_file_{{ns.id_list[loop.index - 1]}}"/>
                 </mets:div>
             {% endfor %}
         </mets:div>
