@@ -45,8 +45,8 @@ rm-ds-store:
 
 cp-ci-config:
 	cp config/users.yml-default config/users.yml
-    mkdir frontend/config
-    cp config/settings.travis.json frontend/config/settings.json
+	mkdir frontend/config
+	cp config/settings.travis.json frontend/config/settings.json
 
 cp-dev-config:
 	cp .env-default .env
