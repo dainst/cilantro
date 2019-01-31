@@ -14,7 +14,7 @@ build-image:
 	./docker_image_build.sh ${IMAGE} ${TAG}
 
 build-doc:
-	bash doc/build-doc.sh
+	docker exec cilantro_test_1 doc/build-doc.sh
 
 test: run-detached test-backend test-e2e stop
 
