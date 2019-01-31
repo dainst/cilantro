@@ -208,7 +208,7 @@ services:
       context: .
       dockerfile: ./docker/cilantro-frontend/Dockerfile
     volumes:
-        - ./frontend:/frontend
+        - ./frontend:/usr/share/nginx/html
     ports:
       - "7777:80"
     environment:
@@ -216,17 +216,3 @@ services:
       BACKEND_URI: ${BACKEND_URI}
       ZENON_URI: ${ZENON_URI}
       OJS_URI: ${OJS_URI}
-
-  frontend-test:
-    tty: true
-    image: dainst/cilantro-frontend-test:refactor-folder-structure
-    build:
-      context: .
-      dockerfile: ./docker/cilantro-frontend-test/Dockerfile
-    volumes:
-      - ./frontend:/frontend
-    environment:
-      TEST: ${TEST}
-      BACKEND_URI: ${BACKEND_URI_TEST}
-      ZENON_URI: ${ZENON_URI_TEST}
-      OJS_URI: ${OJS_URI_TEST}

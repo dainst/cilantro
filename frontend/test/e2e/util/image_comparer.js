@@ -4,7 +4,6 @@ const pixelmatch = require('pixelmatch');
 const path = require('path');
 const dataUriToBuffer = require('data-uri-to-buffer');
 const imgPath = path.join(__dirname,'/../resources/images/');
-const outPath = path.join(__dirname,'/../screenshots/');
 
 const ImageComparer = function() {
 
@@ -18,7 +17,6 @@ const ImageComparer = function() {
     function compare(imgs) {
         const diff = new PNG({width: imgs[0].width, height: imgs[0].height});
         const diffC = pixelmatch(imgs[0].data, imgs[1].data, diff.data, imgs[0].width, imgs[0].height, {threshold: 0.2});
-        diff.pack().pipe(fs.createWriteStream(outPath + this.outputFileName));
         return diffC;
     }
 

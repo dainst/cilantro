@@ -1,19 +1,36 @@
 # Cilantro
 
 Cilantro is a task runner designed to manage long running distributed jobs that
-operate on file system objects. It is written in Python (3.6+) and uses
+operate on file system objects. Its backend is written in Python (3.6+) and uses
 [Celery](http://docs.celeryproject.org/) and [Flask](http://flask.pocoo.org/).
+Its frontend is written in JavaScript and uses
+[AngularJS](https://angularjs.org/).
 
-## Quick start
+## Development
 
-Run these commands in order to run the app in development mode:
+### Prerequisites
 
-    make cp-default-config
+* Docker Community Edition
+* NodeJS
+
+### Running cilantro
+
+Run this command after first checking out the code:
+
+    make init
+
+Run all docker containers with:
+
     make run
 
-The frontend can then be accessed under http://localhost:7777/.
+Code changes should be immediatly reflected in the corresponding containers.
+The frontend can be accessed under http://localhost:7777/.
 
-## Documentation
+To stop the application run:
+
+    make stop
+
+### Documentation
 
 The documentation is automatically generated when a commit is pushed to the
 master branch.
@@ -27,65 +44,38 @@ For the in-house CI Jenkins, the generated docu can be found under:
 
 http://oneeyedjacks02.dai-cloud.uni-koeln.de/cilantro-docu/index.html
 
-## Setup development environment
-
-* Run `make cp-default-config` `make fix-docker-user` to set up docker
-  environment.
-
-* Install docker (Community Edition)
-
-    You might have to add the proper 3rd party PPA. Refer to the official
-    documentation. Example for Ubuntu-based distributions:
-    https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce
-
-    `sudo apt install docker-ce`
-
-## Running the app with docker
+### Docker images
 
 Dockerfiles for the different services and their dependencies are stored in
 the subdirectory `docker/`. The complete stack defined for different
 environments is configured with docker-compose files.
 
-To start cilantro for development run:
-
-    make run
-
-To stop the application run:
-
-    make stop
-
 To build and publish the images follow the instructions provided in
 [the docker README](docker/README.md).
 
-Published docker images can be found at [dockerhub](https://hub.docker.com/u/dainst/).
+Published docker images can be found at
+[dockerhub](https://hub.docker.com/u/dainst/).
 
-### Testing the application manually
+### Testing
 
-In order for the test to function properly you have to create some files with
-.tif ending in the folder `./data/staging/foo`.
+To start all containers and run all tests call:
 
-The web service runs on port 5000. The following command will create a test task:
+    make test
 
-    curl -XPOST http://localhost:5000/job/test/foo
+When the application is started with `make run` backend tests can be run
+separately with:
 
-You can then query the job status with the returned job_id:
+    make test-backend
 
-    curl http://localhost:5000/job/<job_id>
+Similarly end-to-end tests that test the whole application with protractor can
+be run with:
 
-#### E2E-Tests
-
-Run against current env-configuation (defaults to local cilantro):
-
-    TEST="default" docker-compose up frontend-test
-
-Run against Mock-Backend
-
-    TEST="mock" docker-compose up frontend-test
+    make test-e2e
 
 ##### Tips
 
-- change promisesDelay-attribute in  frontend/test/e2e/protractor.conf to slow tests down if you wanna watch them (eg to 150)
-- after Testsuite failed look up frontend/e2e/test/screenshots/report.html fpr details
+* change promisesDelay-attribute in `frontend/test/e2e/protractor.conf
+  to slow tests down if you wanna watch them (eg to 150)
 
 ### Monitoring
 
@@ -97,44 +87,34 @@ is available for debugging under http://localhost:5555.
 To publish a docker image on dockerhub use the buildscript
 `docker_image_build.sh` or the commands in it manually.
 
-Every minor release use the version number as image tag.
-This way it is ensured the images are always compatible to the corresponding code.
-
-## Running unit tests
-
-* Start the application as described under [Running the app with docker
-](https://github.com/dainst/cilantro#running-the-app-with-docker)
-
-* Run the tests inside the dedicated docker container with the `test/exec_docker_test.sh` script.
-
-*  Alternatively you can run the complete build script out of the
-  [build-scripts repository](https://github.com/dainst/build-scripts/).
-  After cloning the repo into your workspace, run the following command from within your cilantro directory.
-
-    `../build-scripts/cilantro-build.sh`
-
-This will build, start and stop the docker infrastructure and run the tests.
-
+Every minor release use the version number as image tag. This way it is ensured
+the images are always compatible to the corresponding code.
 
 ## Troubleshooting
 
 On Linux hosts the tests will fail because the data directory created by
-docker not have the right permissions and the user account that runs the test can not access it. The easiest way to fix that is just to change the owner on the whole directory and subfolders.
+docker does not have the right permissions and the user account that runs the
+tests can not access it. The easiest way to fix that is just to change the owner
+on the whole directory and subfolders. The Makefile offers a short command for
+this:
 
-    sudo chown -R $(whoami):$(whoami) data/
+    make fix-permissions
 
 After that re-run the tests and they may succeed.
 
 ## Code style
 
-Cilantro generally uses the [PEP 8 style guide](https://www.python.org/dev/peps/pep-0008/).
+### Python
+
+Cilantro generally uses the
+[PEP 8 style guide](https://www.python.org/dev/peps/pep-0008/).
 
 Additionally parameters in method docstrings should be given as follows:
 
     :param param_type param_name: parameter description
     :raises ErrorType: Exception throw-condition description
 
-### Javascript
+### JavaScript
 
 - indentation: 4 spaces instead of tab
     - idea: settings->editor->javascript
@@ -143,10 +123,13 @@ Additionally parameters in method docstrings should be given as follows:
     - for js-variables: camelCase
     - for members of datamodel (dataset, article): under_score
     - in css: snake-case
-    - filenames and module names: under_score, eg: myController in my_controller.js
+    - filenames and module names: under_score,
+      eg: myController in my_controller.js
 - ES6
-    - `let/const` instead of `var` where it makes sense: http://es6-features.org/#BlockScopedVariables
-    - arrow function whenever function is not local and [this]-scope is not needed
+    - `let/const` instead of `var` where it makes sense:
+      http://es6-features.org/#BlockScopedVariables
+    - arrow function whenever function is not local and [this]-scope is not
+      needed
 - more    
     - `===` instead of `==`
     - line endings with `;` even after `}`

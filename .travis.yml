@@ -1,5 +1,13 @@
-language: python
+language: node_js
+node_js:
+  - "lts/*"
 sudo: required
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
 services:
   - docker
 python:
@@ -42,29 +50,27 @@ env:
     - PTIF_DIR=S-Arachne/arachne4scans/arachne4webimages/bookscans
     - ARCHIVE_DIR=historical-books-archive/DAI
 before_install:
-  - cp config/users.yml-default config/users.yml
-  - cp config/settings.test.json config/settings.json
-  - sudo apt-get install -y python3-dev libpoppler-cpp-dev python3-sphinx
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
-  - mkdir data
-  - mkdir data/staging
-  - mkdir data/staging/test_user
-  - mkdir data/repository
-  - mkdir data/workspace
-  - mkdir archaeocloud_test_dir
+install:
+  - make init-ci
+before_script:
   - docker-compose pull && docker-compose up -d
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
 script:
-  - sleep 20 && bash frontend/test/exec_frontend_test.sh
-  - bash test/exec_docker_test.sh
-  - docker exec cilantro_test_1 doc/build-doc.sh
-  - docker-compose logs
+  - make test-backend
+  - make test-e2e
+  - make build-doc
+  - make stop
 deploy:
   provider: pages
   skip_cleanup: true
   local_dir: doc/_build/html
-  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  github_token: $GITHUB_ACCESS_TOKEN # Set in travis-ci.org dashboard
   on:
     branch: master
+after_script:
+  - docker-compose logs
