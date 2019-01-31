@@ -75,6 +75,7 @@ script:
   - make test-e2e
   - docker exec cilantro_test_1 doc/build-doc.sh
   - docker-compose logs
+  - make stop
 deploy:
   provider: pages
   skip_cleanup: true

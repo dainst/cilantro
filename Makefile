@@ -13,7 +13,7 @@ build-image:
 build-doc:
 	bash doc/build-doc.sh
 
-test: run-detached test-backend test-e2e
+test: run-detached test-backend test-e2e stop
 
 test-backend:
 	docker exec cilantro_test_1 python -m unittest -v $1
@@ -31,6 +31,8 @@ rm-ds-store:
 cp-default-config:
 	cp .env-default .env
 	cp config/users.yml-default config/users.yml
+	mkdir frontend/config
+	cp config/settings.default.json frontend/config/settings.json
 
 fix-docker-user:
 	$(shell sed -i 's/user_id_placeholder/$(shell id -u)/g' .env)
