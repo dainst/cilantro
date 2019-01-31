@@ -64,8 +64,8 @@ script:
   - make test-backend
   - make test-e2e
   - make build-doc
-  - docker-compose logs
   - make stop
+  - docker-compose logs
 deploy:
   provider: pages
   skip_cleanup: true
