@@ -7,7 +7,19 @@ run-detached:
 stop:
 	docker-compose stop
 
-init:
+init: create-data-dir fix-docker-user cp-dev-config install-frontend-deps
+
+init-ci: create-data-dir cp-ci-config install-frontend-deps
+
+create-data-dir:
+	mkdir data
+	mkdir data/staging
+	mkdir data/staging/test_user
+	mkdir data/repository
+	mkdir data/workspace
+	mkdir archaeocloud_test_dir
+
+install-frontend-deps:
 	npm install --prefix frontend
 
 build-image:
@@ -31,7 +43,12 @@ fix-permissions:
 rm-ds-store:
 	find . -name '.DS_Store' -type f -delete
 
-cp-default-config:
+cp-ci-config:
+	cp config/users.yml-default config/users.yml
+    mkdir frontend/config
+    cp config/settings.travis.json frontend/config/settings.json
+
+cp-dev-config:
 	cp .env-default .env
 	cp config/users.yml-default config/users.yml
 	mkdir frontend/config
