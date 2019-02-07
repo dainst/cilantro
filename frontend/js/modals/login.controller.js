@@ -10,8 +10,7 @@ angular
 
             $scope.login = function () {
                 if ($scope.loginData.username) {
-                    webservice.userData = $scope.loginData;
-                    webservice.authenticateUser($scope.loginData)
+                    webservice.authenticateUser($scope.loginData.username, $scope.loginData.password)
                         .then(res => {
                             $uibModalInstance.close($scope.loginData);
                         })

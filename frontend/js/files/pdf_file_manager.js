@@ -29,8 +29,7 @@ angular
 
                 if (webservice.isLoggedIn()) {
                     reqestParams.httpHeaders = {
-                        "Authorization": "Basic " + window.btoa(webservice.userData.username + ":"
-                            + webservice.userData.password)
+                        "Authorization": "Basic " + webservice.userData.btoa
                     };
                     reqestParams.withCredentials = true;
                 }

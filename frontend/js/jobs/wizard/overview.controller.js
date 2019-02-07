@@ -38,11 +38,8 @@ angular
         // open file externally
         $scope.openDocument = function(article) {
             console.log("Open Document: " + article.filepath.value.value);
-            let nameEncode = encodeURIComponent(webservice.userData.username);
-            let pwEncode = encodeURIComponent(webservice.userData.password);
             let split = settings.files_url.split(/\/\//, 2);
-
-            window.open(split[0] + "//" + nameEncode + ":" + pwEncode + "@" + split[1] + article.filepath.value.value);
+            window.open("http://"+split[1] + article.filepath.value.value);
         };
 
         /* merging articles */

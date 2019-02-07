@@ -13,7 +13,8 @@ angular
                     controller: 'login'
                 });
                 modalInstance.result.then(function (user) {
-                    $scope.user = user;
+                    webservice.setUserData(user.username, user.password);
+                    $scope.user = webservice.userData;
                     cookiemanager.setCookie('user', webservice.userData);
                     $location.path('/');
                 });

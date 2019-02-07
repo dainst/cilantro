@@ -5,20 +5,26 @@ angular
 
             const webservice = {};
 
-            webservice.userData = {'username': null, 'password': null};
-            webservice.authenticateUser = function (userData) {
-                webservice.userData = userData;
-                return webservice.get('user/' + userData.username, 'GET', null);
+            webservice.userData = {'username': null, 'btoa': null, 'uriComponent':null};
+            webservice.authenticateUser = function (username, password) {
+                webservice.setUserData(username, password);
+                return webservice.get('user/' + username, 'GET', null);
+            };
+            webservice.setUserData = function (username, password){
+
+                webservice.userData.username = username;
+                webservice.userData.btoa = window.btoa(username + ":" + password);
+                webservice.userData.uriComponent =encodeURIComponent(username)+":"+encodeURIComponent(password);
             };
             webservice.logUserOut = function () {
                 webservice.userData = {'username': null, 'password': null};
             };
             webservice.isLoggedIn = function () {
-                return webservice.userData.username && webservice.userData.password;
+                return webservice.userData.username && webservice.userData.btoa;
             };
 
             webservice.get = function (endpoint, method, data) {
-
+                console.log(webservice.userData);
                 const params = {
                     url: angular.isArray(endpoint)
                         ? settings[endpoint[0]] + endpoint[1]
@@ -28,7 +34,7 @@ angular
                 };
                 if (webservice.isLoggedIn()) {
                     params.headers = {
-                        "Authorization": "Basic " + window.btoa(webservice.userData.username + ":" + webservice.userData.password)
+                        "Authorization": "Basic " + webservice.userData.btoa
                     };
                 }
 
