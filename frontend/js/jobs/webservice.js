@@ -24,7 +24,6 @@ angular
             };
 
             webservice.get = function (endpoint, method, data) {
-                console.log(webservice.userData);
                 const params = {
                     url: angular.isArray(endpoint)
                         ? settings[endpoint[0]] + endpoint[1]
