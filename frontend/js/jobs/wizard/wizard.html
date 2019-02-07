@@ -1,0 +1,21 @@
+<div ng-controller="wizardController">
+    <h1>{{steps.current}}</h1>
+    <div id='main-container'>
+        <ng-include src="steps.getTemplate()"></ng-include>
+    </div>
+    <div role="group" id="sidebar-tasks" ng-show="steps.getStatus()">
+        <div class="btn-group-sm">
+            <span id="main-collapse-button" type="button" class="task btn btn-secondary btn-xs" style="margin-bottom: -1px" ng-click="steps.collapseTabs()" ng-show="!steps.isCollapsed()">
+                <span
+                      class="glyphicon glyphicon-remove-circle">
+                </span>
+            </span>
+            <span ng-repeat="(tabId, tab) in steps.tabs" id="main-sidebar-{{tabId}}" type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab(tabId)" ng-show="tab.showIf()">
+                <b>{{tab.title}}</b>
+            </span>
+        </div>
+    </div>
+    <div resizable id="main-sidebar" r-directions="['left']" r-flex="true" ng-show="steps.getStatus() && !steps.isCollapsed()">
+        <ng-include src="steps.getTab()"></ng-include>
+    </div>
+</div>

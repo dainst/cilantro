@@ -2,6 +2,7 @@ const e = require("../modules/elements");
 const a = require('../modules/actions');
 const so = require('../modules/subobject');
 const mo = require('../modules/mainobject');
+const j = require('../modules/jobs');
 const message = require('../modules/messages');
 const EC = protractor.ExpectedConditions;
 
@@ -24,7 +25,7 @@ describe('publish page', () => {
         browser.wait(EC.visibilityOf(e.subobject.confirmBtn), 5000);
         e.subobject.confirmBtn.click();
         expect(e.publish.uploadBtn.isPresent()).toBeFalsy();
-        Promise.all([mo.getRowContent("Volume"), mo.getRowContent("Number"), mo.getRowContent("OJS: Journal Code")])
+        Promise.all([mo.getRowContent("volume"), mo.getRowContent("number"), mo.getRowContent("ojs_journal_code")])
             .then(cells => {
                 cells[0].element(by.css("input")).sendKeys("2018");
                 cells[1].element(by.css("input")).sendKeys("18");
@@ -34,21 +35,20 @@ describe('publish page', () => {
             });
     });
 
-    it("should start job if everything is okay", () => {
+    xit("should start job if everything is okay", () => {
         so.goToSubObject(2);
         browser.wait(EC.visibilityOf(e.subobject.confirmBtn), 5000);
         e.subobject.confirmBtn.click();
         browser.wait(EC.visibilityOf(e.mainobject.table), 2000);
-        Promise.all([mo.getRowContent("Volume"), mo.getRowContent("Number"), mo.getRowContent("OJS: Journal Code")])
+        Promise.all([mo.getRowContent("volume"), mo.getRowContent("number"), mo.getRowContent("ojs_journal_code")])
             .then(cells => {
                 cells[0].element(by.css("input")).sendKeys("2018");
                 cells[1].element(by.css("input")).sendKeys("18");
-                cells[2].all(by.css("option")).get(1).click();
-                message.clearMessages();
+                var option = cells[2].all(by.css("option")).get(1);
+                browser.wait(EC.visibilityOf(option), 2000);
+                option.click();
                 e.publish.uploadBtn.click();
-                message.waitForMessage().then(() => {
-                    expect(message.getClassOfMain()).toEqual("success");
-                });
+                expect(j.getLastJobStatus()).toEqual('Accepted');
             });
     });
 

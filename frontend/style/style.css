@@ -6,6 +6,10 @@ html {
     height: 100%;
 }
 
+a[ng-click] {
+    cursor: pointer;
+}
+
 h1 {
     font-size: x-large;
     font-weight: normal;
@@ -126,7 +130,7 @@ idai-navbar {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: stretch;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 .flex-item {
@@ -158,9 +162,6 @@ idai-navbar {
 }
 
 #main-container {
-    padding: 15px 10px 10px 20px;
-    overflow: auto;
-    flex: 1;
 }
 
 #main-sidebar {

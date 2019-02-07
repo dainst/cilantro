@@ -8,6 +8,7 @@ const OverviewTable = function() {
 
     this.goToOverview = docNr => LoginHelper.get(browser, browser.baseUrl)
         .then(() => {
+            e.home.importJournal.click();
             e.home.startBtn.click();
             e.documents.treeViewItemsTopLevel.get(docNr).all(by.css('.load')).first().click();
             documents.waitForLoaded(docNr);

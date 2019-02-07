@@ -7,6 +7,7 @@ describe('csv import dialogue', () => {
 
     beforeEach(done =>
         LoginHelper.get(browser, browser.baseUrl)
+            .then(e.home.importJournal.click)
             .then(e.home.startBtn.click)
             .then(e.documents.treeViewItemsTopLevel.get(1).element(by.css('.load')).click)
             .then(a.waitForModal)

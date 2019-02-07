@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "angular": "1.6.7",
-    "angular-resizable": "1.2.0",
+    "angular-route": "1.6.7",
     "angular-ui-bootstrap": "2.5.6",
     "idai-components": "2.7.0",
     "ng-file-upload": "12.2.13",

@@ -1,0 +1,18 @@
+<div id="info-container" ng-show="hasContent()">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert main-message alert {{getClass(getMain().type)}}">{{getMain().text}}
+                <span ng-show="hasContent()" class="badge badge-pill badge-default pull-right">
+                    {{messages.length}}
+                </span>
+            </div>
+            <hr>
+            <div ng-repeat="message in messages" class="alert {{getClass(message.type)}}">{{message.text}}</div>
+            <div style="text-align:right">
+                <a ng-click="clearLog()">
+                    Clear Message Log
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

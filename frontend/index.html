@@ -8,13 +8,11 @@
 
     <link rel="stylesheet" href="node_modules/idai-components/dist/css/idai-components.min.css">
     <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="node_modules/angular-resizable/angular-resizable.min.css">
 
 </head>
 
     <body class="flex-cont-vert" ng-controller="main" data-ng-init="initApp()">
         <div id='loader' class='loader' ng-if="isLoading"></div>
-
 
         <idai-navbar class="flex-item idai-navbar"
                 hide-register-button="true"
@@ -29,26 +27,8 @@
             <salvia-navbar></salvia-navbar>
         </idai-navbar>
 
-        <div class="row container flex-item flex-cont-hor" style="flex-grow: 1">
-            <div id='main-container'>
-                <ng-include src="steps.getTemplate()"></ng-include>
-            </div>
-            <div role="group" id="sidebar-tasks" ng-show="steps.getStatus()">
-                <div class="btn-group-sm">
-                    <span id="main-collapse-button" type="button" class="task btn btn-secondary btn-xs" style="margin-bottom: -1px" ng-click="steps.collapseTabs()" ng-show="!steps.isCollapsed()">
-                        <span
-                              class="glyphicon glyphicon-remove-circle">
-                        </span>
-                    </span>
-                    <span ng-repeat="(tabId, tab) in steps.tabs" id="main-sidebar-{{tabId}}" type="button" class="task btn btn-secondary btn-xs" ng-click="steps.changeTab(tabId)" ng-show="tab.showIf()">
-                        <b>{{tab.title}}</b>
-                    </span>
-                </div>
-            </div>
-            <div resizable id="main-sidebar" r-directions="['left']" r-flex="true" ng-show="steps.getStatus() && !steps.isCollapsed()">
-                <ng-include src="steps.getTab()"></ng-include>
-            </div>
-
+        <div class="row container" style="flex-grow: 1">
+            <div ng-view></div>
         </div>
 
 
@@ -57,9 +37,9 @@
         <!-- load angular, bootstrap, idai-components -->
 
         <script src="node_modules/angular/angular.min.js"></script>
+        <script src="node_modules/angular-route/angular-route.min.js"></script>
         <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
         <script src="node_modules/idai-components/dist/idai-components.min.js"></script>
-        <script src="node_modules/angular-resizable/angular-resizable.min.js"></script>
 
         <!--  load 3party angular moduls -->
 
@@ -67,41 +47,42 @@
 
         <!-- load salvia app -->
 
-        <script src="js/services/labels.js"></script>
-        <script src="js/services/dataset.js"></script>
-        <script src="js/services/messenger.js"></script>
-        <script src="js/services/file_manager.js"></script>
-        <script src="js/services/webservice.js"></script>
-        <script src="js/services/staging_dir.js"></script>
-        <script src="js/services/steps.js"></script>
-        <script src="js/services/sidebar.js"></script>
-        <script src="js/services/zenon_importer.js"></script>
-        <script src="js/services/language_strings.js"></script>
-        <script src="js/services/jobs.js"></script>
+        <script src="js/utils/labels.js"></script>
+        <script src="js/jobs/dataset.js"></script>
+        <script src="js/utils/messenger.js"></script>
+        <script src="js/files/file_manager.js"></script>
+        <script src="js/jobs/webservice.js"></script>
+        <script src="js/jobs/staging_dir.js"></script>
+        <script src="js/zenon/zenon_importer.js"></script>
+        <script src="js/editables/language_strings.js"></script>
+        <script src="js/jobs/jobs.js"></script>
+        <script src="js/settings.js"></script>
 
-        <script src="js/filemanager/pdf_file_manager.js"></script>
+        <script src="index.controller.js"></script>
+        <script src="js/modals/login.controller.js"></script>
+        <script src="js/modals/csv_import.controller.js"></script>
+        <script src="js/jobs/wizard/steps.js"></script>
+        <script src="js/jobs/wizard/wizard.controller.js"></script>
+        <script src="js/jobs/wizard/start.controller.js"></script>
+        <script src="js/jobs/wizard/overview.controller.js"></script>
+        <script src="js/jobs/wizard/subobjects.controller.js"></script>
+        <script src="js/jobs/wizard/finish.controller.js"></script>
+        <script src="js/jobs/wizard/documents.controller.js"></script>
+        <script src="js/jobs/jobs.controller.js"></script>
+        <script src="js/jobs/wizard/upload.controller.js"></script>
 
-        <script src="js/controllers/main.js"></script>
-        <script src="js/controllers/modal_login.js"></script>
-        <script src="js/controllers/view_home.js"></script>
-        <script src="js/controllers/view_overview.js"></script>
-        <script src="js/controllers/view_subobjects.js"></script>
-        <script src="js/controllers/view_finish.js"></script>
-        <script src="js/controllers/view_documents.js"></script>
-        <script src="js/controllers/view_jobs.js"></script>
-        <script src="js/controllers/upload.js"></script>
-        <script src="js/directives/editable.js"></script>
-        <script src="js/directives/multiselect.js"></script>
-        <script src="js/directives/salvia_navbar.js"></script>
-        <script src="js/directives/messagebox.js"></script>
-        <script src="js/directives/files_treeview.js"></script>
-        <script src="js/directives/stats.js"></script>
-        <script src="js/directives/zenon.js"></script>
-        <script src="js/services/editables.js"></script>
-        <script src="js/services/settings.js"></script>
-        <script src="js/directives/autoheight.js"></script>
-        <script src="js/directives/main_object.js"></script>
-        <script src="js/directives/job.js"></script>
+        <script src="js/editables/editables.js"></script>
+        <script src="js/editables/editable.directive.js"></script>
+
+        <script src="js/utils/multiselect.directive.js"></script>
+        <script src="js/salvia_navbar.directive.js"></script>
+        <script src="js/utils/messagebox.directive.js"></script>
+        <script src="js/files/files_treeview.directive.js"></script>
+        <script src="js/utils/stats.directive.js"></script>
+        <script src="js/zenon/zenon.directive.js"></script>
+        <script src="js/utils/autoheight.directive.js"></script>
+        <script src="js/jobs/main_object.directive.js"></script>
+        <script src="js/jobs/job.directive.js"></script>
 
         <script src="js/models/journal_issue.js"></script>
 
@@ -109,11 +90,11 @@
 
         <!-- load file handlers -->
 
-        <script src="js/filehandler/default_pdf_handler.js"></script>
-        <script src="js/filehandler/empty_pdf_handler.js"></script>
-        <script src="js/filehandler/chiron_parted.js"></script>
-        <script src="js/filehandler/csv_import.js"></script>
-        <script src="js/controllers/csv_import_window.js"></script>
+        <script src="js/files/default_pdf_handler.js"></script>
+        <script src="js/files/empty_pdf_handler.js"></script>
+        <script src="js/files/chiron_parted.js"></script>
+        <script src="js/files/csv_import.js"></script>
+        <script src="js/files/pdf_file_manager.js"></script>
 
         <!-- load require.js for non-angular modules -->
 

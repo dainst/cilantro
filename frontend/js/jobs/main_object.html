@@ -1,0 +1,12 @@
+<table class='dataset-table table main_object'>
+    <thead></thead>
+    <tbody>
+    <tr ng-repeat="(id, value) in dataset.data track by $index" class="row-{{id}}">
+        <td ng-hide="labels.getIsHidden('main', id)" title="{{labels.get('main', id, false)}}">{{labels.get("main", id, true)}}</td>
+        <td ng-hide="labels.getIsHidden('main', id)" ng-model="dataset.data[id]">
+            <span editable item="value" />
+        </td>
+    </tr>
+    </tbody>
+    <tfoot></tfoot>
+</table>
