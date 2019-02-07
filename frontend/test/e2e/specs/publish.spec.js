@@ -35,7 +35,7 @@ describe('publish page', () => {
             });
     });
 
-    it("should start job if everything is okay", () => {
+    xit("should start job if everything is okay", () => {
         so.goToSubObject(2);
         browser.wait(EC.visibilityOf(e.subobject.confirmBtn), 5000);
         e.subobject.confirmBtn.click();
