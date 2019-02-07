@@ -44,6 +44,7 @@ rm-ds-store:
 	find . -name '.DS_Store' -type f -delete
 
 cp-ci-config:
+	cp .env-default .env
 	cp config/users.yml-default config/users.yml
 	mkdir frontend/config
 	cp config/settings.travis.json frontend/config/settings.json
