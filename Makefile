@@ -26,12 +26,12 @@ build-image:
 	./docker_image_build.sh ${IMAGE} ${TAG}
 
 build-doc:
-	docker exec cilantro_test_1 doc/build-doc.sh
+	docker exec cilantro_test doc/build-doc.sh
 
 test: run-detached test-backend test-e2e stop
 
 test-backend:
-	docker exec cilantro_test_1 python -m unittest -v $1
+	docker exec cilantro_test python -m unittest -v $1
 
 test-e2e:
 	npm run --prefix frontend e2e

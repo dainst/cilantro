@@ -160,6 +160,7 @@ services:
       CILANTRO_ENV: development
 
   test:
+    container_name: cilantro_test
     user: ${UID}
     image: dainst/cilantro-test:latest
     build:
