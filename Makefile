@@ -9,7 +9,8 @@ stop:
 
 down:
 	docker-compose down
-init: create-data-dir fix-docker-user cp-dev-config install-frontend-deps
+
+init: create-data-dir cp-dev-config fix-docker-user install-frontend-deps
 
 init-ci: create-data-dir cp-ci-config install-frontend-deps
 
