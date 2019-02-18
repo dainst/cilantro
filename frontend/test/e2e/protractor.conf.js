@@ -1,6 +1,8 @@
 fs = require('fs');
 process = require('process');
 
+failFast = require('protractor-fail-fast');
+
 const prepareCilantro = require('./util/prepare_cilantro.js');
 
 const frontendUrl = "http://localhost:7777";
@@ -43,7 +45,8 @@ exports.config = {
             failOnError: false,
             logWarnings: false,
             exclude: []
-        }
+        },
+        failFast.init()
     ],
 
     onPrepare: () => {
