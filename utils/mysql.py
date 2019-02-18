@@ -25,7 +25,7 @@ def _get_connection():
             log.error('Connection to MySQL failed!')
     except MySQLERROR as e:
         log.error(e)
-
+        raise e
     return conn
 
 
@@ -43,6 +43,7 @@ def insert(query, args):
         conn.commit()
         return generated_id
     except MySQLERROR as e:
+        log.error("Failed SQL statement: " + cursor.statement)
         raise e
     finally:
         cursor.close()
@@ -58,7 +59,8 @@ def query(query):
         log.debug(cursor.statement)
         rows = cursor.fetchall()
     except MySQLERROR as e:
-        log.error(e)
+        log.error("Failed SQL statement: " + cursor.statement)
+        raise e
     finally:
         cursor.close()
         conn.close()
@@ -78,6 +80,7 @@ def delete(query):
     except MySQLERROR as e:
         log.error("Failed to Delete all records from database table: {}"
                   .format(e))
+        raise e
     finally:
         cursor.close()
         conn.close()
