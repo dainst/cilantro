@@ -4,15 +4,16 @@ const ot = require('../modules/overview_table');
 
 describe('login dialog', () => {
 
-    beforeEach(done =>
+    beforeEach(done => {
+        browser.driver.manage().deleteAllCookies().then();
         browser.get(browser.baseUrl)
 
             .then(() => {
 
                 a.clickNavbarButton('loginBtn');
 
-            }).then(done)
-    );
+            }).then(done);
+    });
 
     it('login with correct credentials', () => {
         e.loginModal.username.clear().sendKeys('test_user');
