@@ -7,6 +7,8 @@ run-detached:
 stop:
 	docker-compose stop
 
+down:
+	docker-compose down
 init: create-data-dir fix-docker-user cp-dev-config install-frontend-deps
 
 init-ci: create-data-dir cp-ci-config install-frontend-deps
