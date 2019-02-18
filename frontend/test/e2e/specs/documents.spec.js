@@ -36,7 +36,7 @@ describe('documents page', () => {
                 e.home.startBtn.click();
                 e.documents.treeViewItemsTopLevel.get(2).element(by.css('.load')).click();
                 documents.waitForLoaded(2);
-                browser.sleep(2000);
+                browser.sleep(20000);
                 message.getStats()
                     .then(stats => {
                         expect(stats.Analyzed).toEqual(1);
@@ -62,7 +62,7 @@ describe('documents page', () => {
                         expect(stats.Loaded).toEqual(1);
                         expect(stats.Files).toEqual(1);
                         expect(stats.Thumbnails).toEqual(0);
-                        browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
+                        browser.wait(EC.visibilityOf(e.documents.proceedBtn), 20000);
                         e.documents.proceedBtn.click();
                         expect(e.overview.tableRows.count()).toEqual(0);
                     });
@@ -76,17 +76,17 @@ describe('documents page', () => {
                 e.home.startBtn.click();
                 e.documents.treeViewItemsTopLevel.get(3).all(by.css('.load')).first().click();
                 documents.waitForLoaded(3);
-                browser.sleep(2000);
+                browser.sleep(20000);
                 message.getStats().then(stats => {
-                    browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
+                    browser.wait(EC.visibilityOf(e.documents.proceedBtn), 20000);
                     expect(stats.Analyzed).toEqual(3);
                     expect(stats.Loaded).toEqual(3);
                     expect(stats.Files).toEqual(3);
                     expect(stats.Thumbnails).toEqual(3);
 
-                    browser.wait(EC.visibilityOf(e.documents.proceedBtn), 2000);
+                    browser.wait(EC.visibilityOf(e.documents.proceedBtn), 20000);
                     e.documents.proceedBtn.click();
-                    browser.wait(EC.visibilityOf(e.overview.tableRows.first()), 2000);
+                    browser.wait(EC.visibilityOf(e.overview.tableRows.first()), 20000);
                     expect(e.overview.tableRows.count()).toEqual(3);
                 });
             })

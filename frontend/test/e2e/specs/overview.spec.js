@@ -13,7 +13,7 @@ describe('overview page', () => {
 
     it('should show the first page of loaded Document as thumbnail', done => {
         ot.goToOverview(2);
-        browser.wait(EC.visibilityOf(e.overview.tableRows.get(0)), 2000);
+        browser.wait(EC.visibilityOf(e.overview.tableRows.get(0)), 20000);
         ot.compareThumbnailWithImage(0, "doc1_p1.png")
             .then(difference => {
                 expect(difference).toBeLessThan(1500);
@@ -23,7 +23,7 @@ describe('overview page', () => {
 
     it('should update thumbnail if page changes', done => {
         ot.goToOverview(2);
-        browser.wait(EC.visibilityOf(e.overview.tableRows.get(0)), 2000);
+        browser.wait(EC.visibilityOf(e.overview.tableRows.get(0)), 20000);
         ot.getCell(0, "Range of Pages")
             .then(cell => cell.all(by.css('input')))
             .then(input => {
@@ -46,7 +46,7 @@ describe('overview page', () => {
         e.overview.columnsDropdownBtn.click();
         ot.getCell(0, "Loaded File").then(cell => {
             cell.all(by.css('select option')).get(2).click();
-            browser.sleep(2000);
+            browser.sleep(20000);
             ot.compareThumbnailWithImage(0, "doc3_p1.png").then(difference => {
                 expect(difference).toBeLessThan(1500);
                 done();
@@ -58,7 +58,7 @@ describe('overview page', () => {
         let titleCell;
         ot.goToOverview(2);
 
-        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 2000);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 20000);
         ot.getCell(0, "Title")
             .then(cell => {
                 titleCell = cell;
@@ -76,7 +76,7 @@ describe('overview page', () => {
         // Failed Travis once :  Expected true to be falsy.
         let titleCell;
         ot.goToOverview(2);
-        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 2000);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 20000);
         ot.getCell(0, "Author")
             .then(cell => {
                 titleCell = cell;
@@ -92,10 +92,10 @@ describe('overview page', () => {
 
     it('should add and remove authors', () => {
         ot.goToOverview(2);
-        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 2000);
+        browser.wait(EC.visibilityOf(e.overview.columnsDropdownBtn), 20000);
         ot.getCell(0, "Author").then(cell => {
             cell.all(by.css('.btn')).get(1).click();
-            browser.wait(EC.visibilityOf(cell.element(by.css('.alert.alert-warning'))), 2000);
+            browser.wait(EC.visibilityOf(cell.element(by.css('.alert.alert-warning'))), 20000);
             expect(cell.all(by.css('input')).count()).toEqual(4);
             cell.all(by.css('.btn')).get(1).click();
             expect(cell.all(by.css('input')).count()).toEqual(2);
