@@ -149,7 +149,7 @@ def get_job_type_detail(job_type):
                 ]
             },
             "tasks": [
-                "create_object",
+                "create_objects",
                 {
                     "foreach": [
                         {

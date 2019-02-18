@@ -32,7 +32,7 @@ class CreateObjectTask(ObjectTask):
     -An Object in the working dir
     """
 
-    name = "create_object"
+    name = "create_objects"
 
     def process_object(self, obj):
         job_db.update_job(self.job_id, 'started')
