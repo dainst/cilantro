@@ -5,10 +5,14 @@ const EC = protractor.ExpectedConditions;
 
 const LoginHelper = function () {
     this.get = (browser, destination, userTestId='normal') => new Promise((resolve, reject) => {
+
+
+        browser.driver.manage().deleteAllCookies().then();
+
         browser.get(destination).then(() => {
+
+
             a.clickNavbarButton('loginBtn');
-
-
 
             e.loginModal.username.clear().sendKeys(users[userTestId].username);
             e.loginModal.password.clear().sendKeys(users[userTestId].password);
