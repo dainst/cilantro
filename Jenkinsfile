@@ -45,6 +45,18 @@ pipeline {
             sh 'rm -rf doc/_build/doctrees/'
             archiveArtifacts artifacts: 'docker.log', fingerprint: true
         }
+        success {
+            script {
+                def previousResult = currentBuild.previousBuild?.result
+                if (previousResult && previousResult != currentBuild.result) {
+                    if (env.BRANCH_NAME == 'master') {
+                        hipchatSend (color: 'GREEN', notify: true, room: 'team2',
+                            credentialId: '775b13ab-9054-4e02-9bdf-406af225865e',
+                            message: "Back to Normal: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                    }
+                }
+            }
+        }
         failure {
             sh 'docker-compose logs'
             script {
