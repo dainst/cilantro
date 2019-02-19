@@ -204,7 +204,7 @@ services:
       - "4444:80"
 
   frontend:
-    image: dainst/cilantro-frontend:refactor-folder-structure
+    image: dainst/cilantro-frontend:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-frontend/Dockerfile
