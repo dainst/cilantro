@@ -8,7 +8,7 @@ from pymongo import MongoClient
 from unittest.mock import patch
 
 from service.run_service import app
-from test.service.user.user_utils import get_auth_header
+from test.unit.service.user.user_utils import get_auth_header
 
 
 class JobControllerTest(unittest.TestCase):

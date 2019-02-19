@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from test.worker.nlp.text_analyzer_mock import TextAnalyzer
+from test.unit.worker.nlp.text_analyzer_mock import TextAnalyzer
 from workers.nlp.annotate.annotate import annotate
 
 

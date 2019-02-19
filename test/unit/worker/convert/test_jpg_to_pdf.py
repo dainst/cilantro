@@ -1,6 +1,6 @@
 import os
 
-from test.worker.convert.convert_test import ConvertTest
+from test.unit.worker.convert.convert_test import ConvertTest
 from workers.convert.convert_image import convert_jpg_to_pdf
 
 

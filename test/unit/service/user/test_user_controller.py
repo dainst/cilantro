@@ -1,7 +1,7 @@
 import unittest
 
 from service.run_service import app
-from test.service.user.user_utils import get_auth_header, test_user
+from test.unit.service.user.user_utils import get_auth_header, test_user
 
 test_object = 'some_tiffs'
 test_file = 'test.tif'

@@ -1,7 +1,7 @@
 import os
 import logging
 
-from test.worker.convert.convert_test import ConvertTest
+from test.unit.worker.convert.convert_test import ConvertTest
 from workers.convert.convert_pdf import split_merge_pdf
 from utils.object import Object
 

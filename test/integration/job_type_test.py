@@ -10,7 +10,7 @@ from pathlib import Path
 from flask import json
 from service.run_service import app
 from utils.repository import generate_repository_path
-from test.service.user.user_utils import get_auth_header, test_user
+from test.unit.service.user.user_utils import get_auth_header, test_user
 
 log = logging.getLogger(__name__)
 retry_time = 100
