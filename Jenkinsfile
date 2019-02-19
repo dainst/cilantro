@@ -28,9 +28,9 @@ pipeline {
             }
         }
         stage('Build code documentation') {
-                when{
-                    branch 'master'
-                }
+            when{
+                branch 'master'
+            }
             steps {
                 echo 'Building docu..'
                 sh 'make build-doc'
@@ -45,7 +45,7 @@ pipeline {
             sh 'rm -rf doc/_build/doctrees/'
             archiveArtifacts artifacts: 'docker.log', fingerprint: true
         }
-        unsuccessful {
+        failure {
             sh 'docker-compose logs'
             script {
                 if (env.BRANCH_NAME == 'master') {
