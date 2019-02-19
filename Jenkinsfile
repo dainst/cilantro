@@ -9,16 +9,16 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                    echo 'Preparing..'
-                    sh 'make init'
-                    sh 'docker-compose pull && docker-compose up -d'
+                echo 'Preparing..'
+                sh 'make init'
+                sh 'docker-compose pull && docker-compose up -d'
             }
         }
         stage('Test backend') {
             steps {
-                    echo 'Testing backend..'
-                    sleep 10
-                    sh 'make test-backend'
+                echo 'Testing backend..'
+                sleep 10
+                sh 'make test-backend'
             }
         }
         stage('Test frontend (e2e)') {
@@ -41,12 +41,13 @@ pipeline {
         always {
             sh 'make down'
             sh 'docker-compose logs > docker.log -t'
+            // clean documentation residues
             sh 'git clean -f'
             sh 'rm -rf doc/_build/doctrees/'
             archiveArtifacts artifacts: 'docker.log', fingerprint: true
         }
         success {
-            script {
+            script {  // Send back-to-normal notification
                 def previousResult = currentBuild.previousBuild?.result
                 if (previousResult && previousResult != currentBuild.result) {
                     if (env.BRANCH_NAME == 'master') {
@@ -58,7 +59,7 @@ pipeline {
             }
         }
         failure {
-            sh 'docker-compose logs'
+            sh 'docker-compose logs'  // write docker logs to Jenkins' logs
             script {
                 if (env.BRANCH_NAME == 'master') {
                     hipchatSend (color: 'RED', notify: true, room: 'team2',
