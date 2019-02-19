@@ -4,7 +4,7 @@ about:
   tags: [OJS, iDAI.publications/journals, publish, journal, pdf]
 
 tasks:
-  - create_objects
+  - create_object
   - split_pdf
   - foreach: "article_*"
     do:

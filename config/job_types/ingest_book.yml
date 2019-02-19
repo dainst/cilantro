@@ -4,8 +4,8 @@ about:
   tags: [repository, book, monography, image, tiff]
 
 tasks:
-  - task: create_objects
-    create_subobject: false
+  - task: create_object
+    create_subobjects: false
   - list_files: origin
     pattern: "\\.(tif|tiff|TIF|TIFF)$"
     foreach:

@@ -32,7 +32,7 @@ class CreateObjectTask(ObjectTask):
     -An Object in the working dir
     """
 
-    name = "create_objects"
+    name = "create_object"
 
     def process_object(self, obj):
         job_db.update_job(self.job_id, 'started')
@@ -57,8 +57,8 @@ def _initialize_object(obj, params, user):
     obj.set_metadata_from_dict(params['metadata'])
     if 'files' in params:
         _add_files(obj, params['files'], user)
-    if 'parts' in params and 'create_subobject' in params and \
-            params['create_subobject'] is True:
+    if 'parts' in params and 'create_subobjects' in params and \
+            params['create_subobjects'] is True:
         for part in params['parts']:
             _initialize_object(obj.add_part(), part, user)
 
