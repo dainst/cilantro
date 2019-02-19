@@ -47,6 +47,13 @@ pipeline {
         }
         unsuccessful {
             sh 'docker-compose logs'
+            script {
+                if (env.BRANCH_NAME == 'master') {
+                    hipchatSend (color: 'RED', notify: true, room: 'team2',
+                        credentialId: '775b13ab-9054-4e02-9bdf-406af225865e',
+                        message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                }
+            }
         }
     }
 }
