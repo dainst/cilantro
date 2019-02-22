@@ -33,10 +33,6 @@ def scale_image(source, target_path, max_width, max_height, keep_ratio=True):
     else:
         image = image.resize((max_width, max_height))
 
-    width, height = image.size
     file_name = os.path.splitext(os.path.basename(source))[0]
     file_extension = os.path.splitext(os.path.basename(source))[1]
-    new_file_name = f"{file_name}_{width}_{height}{file_extension}"
-
-    os.makedirs(target_path, exist_ok=True)
-    image.save(os.path.join(target_path, new_file_name))
+    image.save(os.path.join(target_path, file_name + file_extension))

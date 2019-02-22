@@ -186,11 +186,7 @@ class ScaleImageTask(FileTask):
         keep_ratio = self.get_param('keep_ratio')
 
         try:
-            target_dir = os.path.join(os.path.dirname(self.get_work_path()),
-                                      self.get_param('target_dir'))
         except KeyError:
-            target_dir = os.path.join(target_dir,
-                                      f"scaled_{max_width}_{max_height}")
 
         scale_image(file, target_dir, max_width, max_height, keep_ratio)
 
