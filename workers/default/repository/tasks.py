@@ -73,6 +73,7 @@ def _add_files(obj, files, user):
             pdf_files.append({'file': src, 'range': file['range']})
         else:
             obj.add_file(Object.INITIAL_REPRESENTATION, src)
+        obj.add_file(suffix, src)
 
     if len(pdf_files) > 0:
         rep_dir = obj.get_representation_dir(Object.INITIAL_REPRESENTATION)
