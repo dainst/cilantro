@@ -38,6 +38,7 @@ class PublishToOJSTask(ObjectTask):
                                         ojs_metadata['ojs_journal_code'],
                                         result['published_issues'][0])
         obj.metadata.ojs_id = object_id
+        obj.metadata.object_id = object_id
         obj.write()
 
         return {'object_id': object_id}
