@@ -30,7 +30,6 @@ def generate_xml(obj, template_file, target_filepath, params):
     env.globals['glob'] = glob.glob
     env.globals['basename'] = os.path.basename
     env.globals['splitext'] = os.path.splitext
-    env.globals['gen_repo_path'] = generate_repository_path
     env.globals['environ'] = os.environ
 
     log.info("Generating XML with template: " + template_file)
