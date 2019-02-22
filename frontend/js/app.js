@@ -42,7 +42,6 @@ angular
     'controller.upload',
     'directive.editable',
     'directive.multiselect',
-    'directive.salviaNavbar',
     'directive.messagebox',
     'directive.filesTreeview',
     'directive.stats',

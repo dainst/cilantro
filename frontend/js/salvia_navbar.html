@@ -1,6 +1,0 @@
-<ul class="nav navbar-nav">
-    <li ng-show="settings.devMode()" class="dev-warning"><a type="button">Dev-Mode</a></li>
-    <li ng-repeat="(viewId, view) in views" >
-        <a ng-click="changeView(viewId)" ng-class="{'active':getCurrentView()==viewId}" id="step-{{viewId}}" ng-show="view.showIf()">{{view.title}}</a>
-    </li>
-</ul>
