@@ -1,5 +1,10 @@
 <div ng-controller="wizardController">
-    <h1>{{steps.current}}</h1>
+    <ul class="breadcrumb">
+        <li ng-repeat="(viewId, view) in steps.views" ng-show="view.showIf() || steps.current == viewId">
+            <span class="active" ng-show="steps.current == viewId">{{view.title}}</span>
+            <a ng-click="steps.changeView(viewId)" ng-show="steps.current != viewId" id="step-{{viewId}}">{{view.title}}</a>
+        </li>
+    </ul>
     <div id='main-container'>
         <ng-include src="steps.getTemplate()"></ng-include>
     </div>
