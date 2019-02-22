@@ -12,7 +12,7 @@ describe('mainobject view', () => {
             LoginHelper.get(browser, browser.baseUrl)
                 .then(e.home.importJournal.click);
             var row = mo.getRowContent("year");
-            browser.wait(EC.visibilityOf(row), 2000);
+            browser.wait(EC.visibilityOf(row), 20000);
             var input = row.element(by.css("input"));
             input.clear().sendKeys("abc");
             expect(row.element(by.css(".alert-warning")).isDisplayed()).toBeTruthy();
@@ -22,7 +22,7 @@ describe('mainobject view', () => {
             e.home.importJournal.click();
             e.home.startBtn.click();
             a.clickNavbarButton("articles");
-            browser.wait(EC.visibilityOf(e.subobject.add), 2000);
+            browser.wait(EC.visibilityOf(e.subobject.add), 20000);
             e.subobject.add.click();
             const cell = so.getRowContent("language");
             // without selected a journal we get default values

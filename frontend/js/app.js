@@ -17,6 +17,7 @@ angular
     'module.fileManager',
     'module.messenger',
     'module.webservice',
+    'module.cookiemanager',
     'module.stagingDir',
     'module.steps',
     'module.journalIssue',

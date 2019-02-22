@@ -34,8 +34,7 @@ angular.module('controller.upload', ['ngFileUpload'])
 
             const headers = {"Content-Type" : 'multipart/form-data'};
             if (webservice.isLoggedIn()) {
-                headers.Authorization = "Basic " + window.btoa(webservice.userData.username + ":"
-                    + webservice.userData.password);
+                headers.Authorization = "Basic " + webservice.userData.btoa;
             }
 
             //working with ngFileUpload directive
