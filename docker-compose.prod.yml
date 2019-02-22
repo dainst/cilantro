@@ -140,4 +140,4 @@ volumes:
   redis-data:
   data:
     external:
-      name: archaeocloud_data
+      name: cilantro_repository_data
