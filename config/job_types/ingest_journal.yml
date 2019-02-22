@@ -6,6 +6,7 @@ about:
 tasks:
   - task: create_object
     create_subobjects: true
+    fix_metadata: true
   - list_parts:
     foreach:
     - if: do_ocr

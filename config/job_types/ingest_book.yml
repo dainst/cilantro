@@ -6,6 +6,7 @@ about:
 tasks:
   - task: create_object
     create_subobjects: false
+    fix_metadata: true
   - list_files: origin
     pattern: "\\.(tif|tiff|TIF|TIFF)$"
     foreach:

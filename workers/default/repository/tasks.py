@@ -55,6 +55,8 @@ CreateObjectTask = celery_app.register_task(CreateObjectTask())
 
 def _initialize_object(obj, params, user):
     obj.set_metadata_from_dict(params['metadata'])
+    if 'fix_metadata' in params and params['fix_metadata'] is True:
+        _fix_metadata(obj, params)
     if 'files' in params:
         _add_files(obj, params['files'], user)
     if 'parts' in params and 'create_subobjects' in params and \
@@ -62,6 +64,18 @@ def _initialize_object(obj, params, user):
         for part in params['parts']:
             _initialize_object(obj.add_part(), part, user)
 
+
+def _fix_metadata(obj, params):
+    if not 'author' in params['metadata']:
+        author_list = []
+        for part in params['parts']:
+            author_list += part['metadata']['author']
+        obj.metadata.author = author_list
+    if not 'title' in params['metadata'] and 'ojs_journal_code' in params['ojs_metadata']:
+        obj.metadata.title = params['ojs_metadata']['ojs_journal_code']
+    if not 'object_id' in params['metadata'] and 'object_id' in params:
+        obj.metadata.object_id = params['object_id']
+    obj.write()
 
 def _add_files(obj, files, user):
     pdf_files = []
