@@ -51,16 +51,6 @@ class JobTypeTest(unittest.TestCase):
         app.testing = True
         self.client = app.test_client()
 
-    def tearDown(self):
-        shutil.rmtree(self.staging_dir, ignore_errors=True)
-        shutil.rmtree(self.working_dir, ignore_errors=True)
-        shutil.rmtree(self.repository_dir, ignore_errors=True)
-        shutil.rmtree(self.bookscan_dir, ignore_errors=True)
-        shutil.rmtree(self.pdf_dir, ignore_errors=True)
-        shutil.rmtree(self.mets_dir, ignore_errors=True)
-        shutil.rmtree(self.archive_dir, ignore_errors=True)
-        shutil.rmtree(self.ptif_dir, ignore_errors=True)
-
     def assert_file_in_repository(self, object_id, file_path,
                                   timeout='DEFAULT_TEST_TIMEOUT'):
         """
