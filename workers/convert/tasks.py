@@ -183,10 +183,10 @@ class ScaleImageTask(FileTask):
         """Read parameters and call the actual function."""
         max_width = int(self.get_param('max_width'))
         max_height = int(self.get_param('max_height'))
-        keep_ratio = self.get_param('keep_ratio')
-
         try:
+            keep_ratio = self.get_param('keep_ratio')
         except KeyError:
+            keep_ratio = None
 
         scale_image(file, target_dir, max_width, max_height, keep_ratio)
 
