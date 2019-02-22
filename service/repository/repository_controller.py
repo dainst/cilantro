@@ -215,6 +215,9 @@ def get_file(object_id, rep_name, file):
 
       GET /repository/file/<object_id>/data/<rep_name>/<file> HTTP/1.1
 
+    Note that for sub-object the 'object_id' looks like:
+    "<parent-object_id>/part_0001"
+
     **Example response ERROR**:
 
     .. sourcecode:: http
