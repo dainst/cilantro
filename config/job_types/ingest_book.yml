@@ -27,7 +27,7 @@ tasks:
     representation: pdf
   - publish_to_arachne_db
   - task: generate_xml
-    template_file: mets_template_book.xml
+    template_file: mets_template.xml
     target_filename: mets.xml
     schema_file: mets.xsd
   - task: generate_xml
