@@ -7,10 +7,10 @@ x-env-dirs: &env-dirs
   CONFIG_DIR: /config
 
 x-env-ojs: &env-ojs
-  OJS_SERVER: ${OJS_SERVER}
-  OJS_PORT: ${OJS_PORT}
-  OJS_PATH: ${OJS_PATH}
-  OJS_AUTH_KEY: ${OJS_AUTH_KEY}
+  OJS_SERVER: ojs
+  OJS_PORT: 80
+  OJS_PATH: ojs
+  OJS_AUTH_KEY: /run/secrets/ojs_auth_key
 
 x-env-broker: &env-broker
   BROKER_HOST: "broker"
@@ -23,19 +23,19 @@ x-env-jobdb: &env-jobdb
   JOB_DB_NAME: job_database
 
 x-env-arachne: &env-arachne
-  ARACHNE_DB_HOST: ${ARACHNE_DB_HOST}
-  ARACHNE_DB_NAME: ${ARACHNE_DB_NAME}
-  ARACHNE_DB_USER: ${ARACHNE_DB_USER}
-  ARACHNE_DB_PASSWORD: ${ARACHNE_DB_PASSWORD}
+  ARACHNE_DB_HOST: bogusman02.dai-cloud.uni-koeln.de
+  ARACHNE_DB_NAME: arachne
+  ARACHNE_DB_USER: root
+  ARACHNE_DB_PASSWORD: /run/secrets/arachne_db_password
 
 x-env-archaeocloud: &env-archaeocloud
-  ARCHAEOCLOUD_DIR: ${ARCHAEOCLOUD_DIR}
-  BOOKSCAN_DIR: ${BOOKSCAN_DIR}
-  PDF_DIR: ${PDF_DIR}
-  METS_DIR: ${METS_DIR}
-  TEI_DIR: ${TEI_DIR}
-  PTIF_DIR: ${PTIF_DIR}
-  ARCHIVE_DIR: ${ARCHIVE_DIR}
+  ARCHAEOCLOUD_DIR: archaeocloud_test_dir
+  BOOKSCAN_DIR: aronscans/bookscans
+  PDF_DIR: aronscans/download-book
+  METS_DIR: S-Arachne/MetsDocuments
+  TEI_DIR: S-Arachne/TeiDocuments
+  PTIF_DIR: S-Arachne/arachne4scans/arachne4webimages/bookscans
+  ARCHIVE_DIR: $historical-books-archive/DAI
 
 services:
 
@@ -83,6 +83,9 @@ services:
       <<: *env-arachne
       <<: *env-archaeocloud
       DB_HOST: "db"
+    secrets:
+      - ojs_auth_key
+      - arachne_db_password
 
   convert-worker:
     user: ${UID}
@@ -126,6 +129,11 @@ services:
       ZENON_URI: ${ZENON_URI}
       OJS_URI: ${OJS_URI}
 
+secrets:
+  ojs_auth_key:
+    external: true
+  arachne_db_password:
+    external: true
 
 volumes:
   mongo-data:
