@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="node_modules/idai-components/dist/css/idai-components.min.css">
     <link rel="stylesheet" href="style/style.css">
+    <base id="baseLink" href="/">
 
 </head>
 
@@ -28,7 +29,7 @@
         </idai-navbar>
 
         <div class="row container" style="flex-grow: 1">
-            <div ng-view></div>
+            <div ui-view></div>
         </div>
 
 
@@ -37,7 +38,7 @@
         <!-- load angular, bootstrap, idai-components -->
 
         <script src="node_modules/angular/angular.min.js"></script>
-        <script src="node_modules/angular-route/angular-route.min.js"></script>
+        <script src="node_modules/@uirouter/angularjs/release/angular-ui-router.min.js"></script>
         <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
         <script src="node_modules/idai-components/dist/idai-components.min.js"></script>
 

@@ -10,6 +10,7 @@
     "e2e": "protractor test/e2e/protractor.conf.js"
   },
   "dependencies": {
+    "@uirouter/angularjs": "^1.0.22",
     "angular": "1.6.7",
     "angular-route": "1.6.7",
     "angular-ui-bootstrap": "2.5.6",
