@@ -1,8 +1,8 @@
 <div ng-controller="wizardController">
     <ul class="breadcrumb">
-        <li ng-repeat="(viewId, view) in steps.views" ng-show="view.showIf() || steps.current == viewId">
+        <li ng-repeat="(viewId, view) in steps.views" ng-show="view.showIf() || steps.current == viewId" id="step-{{viewId}}">
             <span class="active" ng-show="steps.current == viewId">{{view.title}}</span>
-            <a ng-click="steps.changeView(viewId)" ng-show="steps.current != viewId" id="step-{{viewId}}">{{view.title}}</a>
+            <a ng-click="steps.changeView(viewId)" ng-show="steps.current != viewId">{{view.title}}</a>
         </li>
     </ul>
     <div id='main-container'>
