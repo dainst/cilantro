@@ -9,14 +9,11 @@ const EC = protractor.ExpectedConditions;
 
 describe('publish page', () => {
 
-    it("should not allow start job if no articles are staged", () => {
+    fit("should not allow start job if no articles are staged", () => {
         so.goToSubObject(2);
-        a.toggleNavbar();
         expect(e.navbar.publish.isDisplayed()).toBeFalsy();
-        a.toggleNavbar();
         browser.wait(EC.visibilityOf(e.subobject.confirmBtn), 20000);
         e.subobject.confirmBtn.click();
-        a.toggleNavbar();
         expect(e.navbar.publish.isDisplayed()).toBeTruthy();
     });
 

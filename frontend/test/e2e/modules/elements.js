@@ -111,7 +111,6 @@ module.exports = {
         articles: element(by.id('step-articles')),
         restart: element(by.id('step-restart')),
         publish: element(by.id('step-publish')),
-        toggle: element(by.css('.navbar-toggle')),
         loginBtn: element(by.id('loginbutton')),
         loggedInDropdown: element(by.css('.ng-scope dropdown'))
     },

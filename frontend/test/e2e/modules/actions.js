@@ -5,21 +5,12 @@ const EC = protractor.ExpectedConditions;
 
 const Actions = function() {
 
-    this.toggleNavbar = function() {
-        return browser.wait(EC.visibilityOf(elements.navbar.toggle), 10)
-            .then(elements.navbar.toggle.click)
-            .catch(function(){/*Navbar expanded. Doing nothing*/});
-    };
-
     this.clickNavbarButton = function(button) {
-        return this.toggleNavbar()
-            .then(elements.navbar[button].click)
-            .then(this.toggleNavbar)
+        return elements.navbar[button].click();
     };
 
     this.restart = () => {
         this.clickNavbarButton("restart");
-        //browser.wait(EC.visibilityOf(elements.restart.confirmBtn));
         return elements.restart.confirmBtn.click();
     };
 
