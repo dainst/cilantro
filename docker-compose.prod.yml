@@ -7,9 +7,9 @@ x-env-dirs: &env-dirs
   CONFIG_DIR: /config
 
 x-env-ojs: &env-ojs
-  OJS_SERVER: ojs
+  OJS_SERVER: test.publications.dainst.org
   OJS_PORT: 80
-  OJS_PATH: ojs
+  OJS_PATH: journals
   OJS_AUTH_KEY: /run/secrets/ojs_auth_key
 
 x-env-broker: &env-broker
@@ -115,11 +115,6 @@ services:
     image: dainst/cilantro-monitor:stable
     environment:
       <<: *env-broker
-
-  ojs:
-    image: dainst/cilantro-ojs2:latest
-    volumes:
-      - data:/data
 
   frontend:
     image: dainst/cilantro-frontend:latest
