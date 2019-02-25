@@ -48,10 +48,7 @@ pipeline {
         }
         success {
             script {  // Send back-to-normal notification
-                def previousResult = currentBuild.previousBuild.result
-                echo previousResult
-                echo currentBuild.result
-                if (previousResult && previousResult != currentBuild.result) {
+                if (currentBuild.previousBuild.result != 'SUCCESS') {
                     if (env.BRANCH_NAME == 'master') {
                         hipchatSend (color: 'GREEN', notify: true, room: 'team2',
                             credentialId: '775b13ab-9054-4e02-9bdf-406af225865e',
