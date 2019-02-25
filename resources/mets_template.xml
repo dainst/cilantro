@@ -140,4 +140,21 @@
         </mets:div>
     </mets:structMap>
 
+
+    <mets:structLink>
+        <mets:smLink xlink:from="struct-logical" xlink:to="struct-physical"></mets:smLink>
+
+        {% set file_index_offset = 0 %}
+        {% for part in obj.get_parts() %}
+            {% set part_index = loop.index %}
+            {% for file_path in glob(part.get_representation_dir('jpg') + '/*.jpg')|sort() %}
+                {% set file_index = loop.index + file_index_offset %}
+                <mets:smLink xlink:from="struct_log_{{part_index}}" xlink:to="struct_phys_{{part_index}}_{{file_index}}"></mets:smLink>
+            {% endfor %}
+            {% set file_index_offset = file_index_offset +  glob(part.get_representation_dir('jpg') + '/*.jpg')|length %}
+        {% endfor %}
+
+    </mets:structLink>
+
+
 </mets:mets>
