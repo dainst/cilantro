@@ -5,8 +5,6 @@ import glob
 
 from jinja2 import Environment, FileSystemLoader
 
-from utils.repository import generate_repository_path
-
 log = logging.getLogger(__name__)
 
 
