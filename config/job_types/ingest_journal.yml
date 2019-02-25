@@ -4,7 +4,9 @@ about:
   tags: [OJS, iDAI.publications/journals, publish, journal, pdf]
 
 tasks:
-  - create_object
+  - task: create_object
+    create_subobjects: true
+    fix_metadata: true
   - list_parts:
     foreach:
     - if: do_ocr
@@ -49,7 +51,6 @@ tasks:
     template_file: ojs_template.xml
     target_filename: ojs_import.xml
     dtd_file: ojs_import.dtd
-    params: ojs_metadata
   - list_parts:
     foreach:
         task: generate_xml
@@ -62,12 +63,13 @@ tasks:
     foreach:
         task: generate_xml
         template_file: mets_template.xml
+        is_subobject: true
         target_filename: mets.xml
         schema_file: mets.xsd
   - task: generate_xml
-    template_file: mets_template_journal.xml
+    template_file: mets_template.xml
+    images_from_parts: true
     target_filename: mets.xml
-    params: ojs_metadata
     schema_file: mets.xsd
   - list_parts:
     foreach:

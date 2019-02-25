@@ -4,7 +4,9 @@ about:
   tags: [repository, book, monography, image, tiff]
 
 tasks:
-  - create_object
+  - task: create_object
+    create_subobjects: false
+    fix_metadata: true
   - list_files: origin
     pattern: "\\.(tif|tiff|TIF|TIFF)$"
     foreach:
@@ -26,9 +28,12 @@ tasks:
     representation: pdf
   - publish_to_arachne_db
   - task: generate_xml
+    template_file: mets_template.xml
+    target_filename: mets.xml
+    schema_file: mets.xsd
+  - task: generate_xml
     template_file: tei_template.xml
     target_filename: tei.xml
-    params: object_id
   - publish_to_cloud
   - publish_to_repository
   - cleanup_workdir

@@ -1,6 +1,6 @@
 {% set ns = namespace() %}
 {% set metadata = obj.metadata.to_dict() %}
-{% set object_id = additional_params['additional_params'] %}
+{% set object_id = params['object_id'] %}
 <?xml version="1.0" encoding="UTF-8"?>
 <TEI xmlns="http://www.tei-c.org/ns/1.0" version="5.0" xml:id="TEI.{{object_id}}">
 
@@ -8,7 +8,7 @@
         <fileDesc xml:id="fileDesc.{{object_id}}">
             <titleStmt xml:id="titleStmt.{{object_id}}">
                 <title xml:id="titleStmt.title.{{object_id}}">{{metadata['title']}}</title>
-                <author xml:id="author.{{object_id}}">{{metadata['creator']['lastname']}}, {{metadata['creator']['firstname']}}</author>
+                <author xml:id="author.{{object_id}}">{{metadata['author']['lastname']}}, {{metadata['author']['firstname']}}</author>
             </titleStmt>
             <publicationStmt xml:id="publicationStmt.{{object_id}}">
                 <p xml:id="publicationStmt.p.{{object_id}}">Publication Information</p>
@@ -25,7 +25,7 @@
                         <idno type="zenonId" xml:id="idno.zenonId.{{object_id}}">{{object_id}}</idno>
                     </msIdentifier>
                     <head xml:id="head.{{object_id}}">
-                        <title xml:id="sourceDesc.msDesc.title.{{object_id}}">{{metadata['creator']['lastname']}}, {{metadata['creator']['firstname']}}; - {{metadata['title']}}</title>
+                        <title xml:id="sourceDesc.msDesc.title.{{object_id}}">{{metadata['author']['lastname']}}, {{metadata['author']['firstname']}}; - {{metadata['title']}}</title>
                     </head>
                 </msDesc>
             </sourceDesc>

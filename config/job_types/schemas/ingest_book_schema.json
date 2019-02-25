@@ -9,7 +9,7 @@
         "metadata": {
             "type": "object",
             "required": ["title", "abstract", "description", "type",
-                         "created", "creator", "identifiers"],
+                         "created", "author", "identifiers"],
             "additionalProperties": false,
             "properties": {
                 "title": {
@@ -27,16 +27,19 @@
                 "created": {
                     "type": "string"
                 },
-                "creator": {
-                    "type": "object",
-                    "required": ["firstname", "lastname"],
-                    "additionalProperties": false,
-                    "properties": {
-                        "firstname": {
-                            "type": "string"
-                        },
-                        "lastname": {
-                            "type": "string"
+                "author": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": ["firstname", "lastname"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "firstname": {
+                                "type": "string"
+                            },
+                            "lastname": {
+                                "type": "string"
+                            }
                         }
                     }
                 },
@@ -63,6 +66,33 @@
         },
         "object_id": {
             "type": "string"
+        },
+        "parts": {
+            "type": "array",
+            "items": {
+                "required": ["metadata", "range"],
+                "additionalProperties": false,
+                "properties": {
+                    "metadata": {
+                        "type": "object",
+                        "required": ["title"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "title": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "range": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "maxItems": 2,
+                        "minItems": 2
+                    }
+                }
+            }
         }
     }
 }

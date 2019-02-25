@@ -43,13 +43,8 @@ class GenerateXMLTask(ObjectTask):
         except KeyError:
             schema_file = None
 
-        try:
-            additional_params = self.get_param(self.get_param('params'))
-        except KeyError:
-            additional_params = None
-
         generated_xml_file = generate_xml(obj, template_file, target_filepath,
-                                          additional_params)
+                                          self.params)
 
         validate_xml(generated_xml_file, dtd_file_path=dtd_file,
                      schema_file_path=schema_file)

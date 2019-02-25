@@ -10,8 +10,9 @@ log = logging.getLogger(__name__)
 def add_book(book, object_id, username):
     """Write book data to Arachne-Database."""
     book_metadata = book.metadata.to_dict()
-    author = (f"{book_metadata['creator']['lastname']}, "
-              f"{book_metadata['creator']['firstname']}")
+    author_list = []
+    for author in book_metadata['author']:
+        author_list.append(f"{author['firstname']} {author['lastname']}")
     page_count = len(glob.glob(book.get_representation_dir('origin') + '/*'))
 
     book_query = ("INSERT INTO arachne.buch"
@@ -22,8 +23,9 @@ def add_book(book, object_id, username):
                   "VALUES(%s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, "
                   "CURRENT_TIMESTAMP, %s, %s, %s, %s, %s, %s, %s, %s)")
     book_args = ('Arachne', username + ' (via iDAI.workbench)', object_id,
-                 book_metadata['abstract'], author, book_metadata['title'],
-                 book_metadata['created'], page_count, 0, 1)
+                 book_metadata['abstract'], str(author_list),
+                 book_metadata['title'], book_metadata['created'], page_count,
+                 0, 1)
 
     return mysql.insert(book_query, book_args)
 
