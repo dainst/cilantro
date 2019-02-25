@@ -20,6 +20,7 @@ class ExceptionHandlingException(Exception):
     This is to be thrown when an error occurs while handling another exception.
     This way a loop is avoided.
     """
+
     pass
 
 

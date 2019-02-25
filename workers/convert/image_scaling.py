@@ -16,7 +16,7 @@ def scale_image(source, target_path, max_width, max_height, keep_ratio=True):
     Tested, working for JPEG and TIFF.
 
     :param str source: path to the image to be scaled, with filename
-    :param str target_path: path without filename to save the generated image to
+    :param str target_path: path without filename to save generated image to
     :param int max_width: maximum width in pixels of the generated image
     :param int max_height: maximum height in pixels of the generated image
     :param bool keep_ratio: keeps the ratio of the generated image

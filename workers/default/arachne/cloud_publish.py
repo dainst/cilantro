@@ -11,7 +11,7 @@ BOOKSCAN_DIR = os.environ['BOOKSCAN_DIR']
 PDF_DIR = os.environ['PDF_DIR']
 METS_DIR = os.environ['METS_DIR']
 TEI_DIR = os.environ['TEI_DIR']
-PTIF_DIR= os.environ['PTIF_DIR']
+PTIF_DIR = os.environ['PTIF_DIR']
 ARCHIVE_DIR = os.environ['ARCHIVE_DIR']
 
 

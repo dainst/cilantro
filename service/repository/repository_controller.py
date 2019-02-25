@@ -19,12 +19,11 @@ sub_object_dir = 'parts'
 @repository_controller.route('', methods=['GET'], strict_slashes=False)
 def list_repository():
     """
-    List the ids of all cilantro objects in the repository
+    List the ids of all cilantro objects in the repository.
 
     Returns a list of the object_ids
 
-    .. :quickref: Repository Controller; \
-        List the ids of all cilantro objects in the repository
+    .. :quickref: Repository Controller; List IDs of objects in the repository
 
     **Example request**:
 
@@ -60,8 +59,7 @@ def get_object(object_id):
     Returns A JSON object containing metadata, representations and sub_objects
     of the cilantro object. This can be a subobject as well.
 
-    .. :quickref: Repository Controller; \
-        Retrieve an cilantro (sub)object in the repository folder.
+    .. :quickref: Repository Controller; Retrieve (sub)object in the repository
 
     **Example request**:
 
@@ -77,7 +75,7 @@ def get_object(object_id):
 
         {
             "metadata": {
-                "description": "[PDFs teilweise verf\u00fcgbar]",
+                "description": "[PDFs teilweise verfugbar]",
                 "identification": "year",
                 "importFilePath": "e2e-testing.pdf",
                 "number": "",
@@ -114,8 +112,8 @@ def get_object(object_id):
     :resheader Content-Type: application/json
     :status 200: OK
     :status 404: cilantro object was not found
-    :return: JSON object containing metadata, representations and sub_objects of
-        the cilantro (sub)object
+    :return: JSON object containing metadata, representations and sub_objects
+        of the cilantro (sub)object
     """
     path = os.path.join(repository_dir, generate_repository_path(object_id))
     if os.path.isdir(path):
@@ -128,8 +126,7 @@ def get_object(object_id):
         return jsonify({
             'metadata': metadata,
             'representations': representations,
-            'sub_objects': sub_objects
-        })
+            'sub_objects': sub_objects})
     else:
         raise ApiError("object_not_found",
                        f"No object with id {object_id} was found", 404)
@@ -143,8 +140,7 @@ def get_representation(object_id, rep_name):
 
     Returns A JSON array containing all files of the representation.
 
-    .. :quickref: Repository Controller; \
-        Retrieve a representation of a cilantro (sub)object.
+    .. :quickref: Repository Controller; Retrieve a (sub)object representation
 
     **Example request**:
 
@@ -171,8 +167,8 @@ def get_representation(object_id, rep_name):
         {
             "error": {
                 "code": "representation_not_found",
-                "message": "No representation jpg for object with id test_object
-                    was found"
+                "message": "No representation jpg for object with id
+                    test_object was found"
             },
             "success": false
         }
@@ -202,12 +198,11 @@ def get_representation(object_id, rep_name):
     strict_slashes=False)
 def get_file(object_id, rep_name, file):
     """
-    Retrieve a file from a representation of a cilantro (sub)object
+    Retrieve a file from a representation of a cilantro (sub)object.
 
     Returns the file's content
 
-    .. :quickref: Repository Controller; \
-        Retrieve a file from a representation of a cilantro (sub)object
+    .. :quickref: Repository Controller; Retrieve a file from a representation
 
     **Example request**:
 
@@ -249,20 +244,19 @@ def get_file(object_id, rep_name, file):
         return send_file(path)
     else:
         raise ApiError("file_not_found",
-                       f"No file {file} was found in representation {rep_name} "
-                       f"of object {object_id}", 404)
+                       f"No file {file} was found in representation {rep_name}"
+                       f" of object {object_id}", 404)
 
 
 @repository_controller.route('/file/<path:object_id>/<file>',
                              methods=['GET'], strict_slashes=False)
 def get_meta_file(object_id, file):
     """
-    Retrieve a file from the root of a cilantro (sub)object
+    Retrieve a file from the root of a cilantro (sub)object.
 
     Returns the file's content. Files on root level are normally metdata files.
 
-    .. :quickref: Repository Controller; \
-        Retrieve a file from the root of a cilantro (sub)object
+    .. :quickref: Repository Controller; Retrieve metadatafile of (sub)object
 
     **Example request**:
 

@@ -13,8 +13,7 @@ def get_user(user_name):
     This endpoint can also be used implement authentication since only logged
     in users are allowed to retrieve their user info.
 
-    .. :quickref: User Controller; \
-        Retrieve the user information for the given user name.
+    .. :quickref: User Controller; Retrieve user information
 
     **Example request**:
 

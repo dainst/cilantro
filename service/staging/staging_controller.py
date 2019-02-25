@@ -39,8 +39,7 @@ def delete_from_staging(path):
     """
     Delete file or directory from the staging area.
 
-    .. :quickref: Staging Controller; \
-        Delete file or directory from the staging area.
+    .. :quickref: Staging Controller; Delete file or dir from the staging area
 
     **Example request**:
 
@@ -96,8 +95,7 @@ def list_staging():
 
     Returns a complete recursive folder hierarchy.
 
-    .. :quickref: Staging Controller; \
-        List files and directories in the staging area.
+    .. :quickref: Staging Controller; List files/dirs in the staging area
 
     **Example request**:
 
@@ -144,8 +142,7 @@ def get_path(path):
     Returns A JSON array containing all file names, if it's a directory or
     the file's content if it's a file.
 
-    .. :quickref: Staging Controller; \
-        Retrieve a file or folder content from the staging folder.
+    .. :quickref: Staging Controller; Retrieve file/folder from staging folder
 
     **Example request**:
 
@@ -171,7 +168,7 @@ def get_path(path):
     :param str path: path to file
 
     :resheader Content-Type: application/json
-    :status 200: array containing all file names, if it's a directory or the \
+    :status 200: array containing all file names, if it's a directory or the
                  file's content if it's a file
     :status 404: file was not found
     """
@@ -197,8 +194,7 @@ def upload_to_staging():
     The upload endpoint is able to handle single and multiple files provided
     under any key.
 
-    .. :quickref: Staging Controller; \
-        Upload files to the staging area.
+    .. :quickref: Staging Controller; Upload files to the staging area
 
     **Example request**:
 

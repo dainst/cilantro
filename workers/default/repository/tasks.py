@@ -77,6 +77,7 @@ def _fix_metadata(obj, params):
         obj.metadata.object_id = params['object_id']
     obj.write()
 
+
 def _add_files(obj, files, user):
     pdf_files = []
     for file in files:

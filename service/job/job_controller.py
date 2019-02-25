@@ -112,7 +112,8 @@ def job_list():
     response = []
     if not show_all_jobs:
         threshold_days = int(os.environ['OLD_JOBS_THRESHOLD_DAYS'])
-        threshold_date = datetime.datetime.now() - datetime.timedelta(days=threshold_days)
+        threshold_date = (datetime.datetime.now() -
+                          datetime.timedelta(days=threshold_days))
         for job in jobs:
             if job['updated'] > threshold_date or job['state'] != 'success':
                 response.append(job)
