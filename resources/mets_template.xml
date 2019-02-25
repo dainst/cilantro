@@ -57,11 +57,11 @@
             {% set ns.id_list = [] %}
             {% if params['images_from_parts'] %}
                 {% for part in obj.get_parts() %}
-                    {% set part_index = '%04d' | format(loop.index) %}
+                    {% set part_index = loop.index %}
                     {% for file_path in glob(part.get_representation_dir('jpg') + '/*.jpg')|sort() %}
-                        {% set ns.id = "file_part_" + part_index|string + "_" + loop.index|string %}
+                        {% set ns.id = part_index|string + "_" + loop.index|string %}
                         {% set ns.id_list = ns.id_list + [ns.id] %}
-                            <mets:file ID="{{ns.id}}" MIMETYPE="image/jpeg">
+                            <mets:file ID="file_{{ns.id}}" MIMETYPE="image/jpeg">
                                  {% set new_file_path = path_join(server_url, 'repository', 'file', metadata['object_id'], file_path.split('parts')[1][1:]) %}
                                 <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
                             </mets:file>
@@ -84,9 +84,9 @@
         <mets:fileGrp USE="THUMBS">
         {% if params['images_from_parts'] %}
             {% for part in obj.get_parts() %}
-                {% set part_index = '%04d' | format(loop.index) %}
+                {% set part_index = loop.index %}
                 {% for file_path in glob(part.get_representation_dir('jpg_thumbnails') + '/*.jpg')|sort() %}
-                    {% set ns.id = "file_part_" + part_index|string + "_" + loop.index|string %}
+                    {% set ns.id = "file_" + part_index|string + "_" + loop.index|string %}
                         <mets:file ID="thumb_{{ns.id}}" MIMETYPE="image/jpeg">
                              {% set new_file_path = path_join(server_url, 'repository', 'file', metadata['object_id'], file_path.split('parts')[1][1:]) %}
                             <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
@@ -120,23 +120,22 @@
     </mets:fileSec>
 
     <mets:structMap TYPE="PHYSICAL">
-        <mets:div ID="struct_phys_001" TYPE="physSequence">
+        <mets:div ID="struct_phys" TYPE="physSequence">
             <mets:fptr FILEID="PDF1"/>
             {% for id in ns.id_list %}
-                <mets:div ID="div{{loop.index}}" ORDER="{{loop.index}}" ORDERLABEL="{{loop.index}}" TYPE="page">
-                    <mets:fptr FILEID="file_{{ns.id_list[loop.index - 1]}}"/>
-                    <mets:fptr FILEID="thumb_file_{{ns.id_list[loop.index - 1]}}"/>
-                </mets:div>
+                    <mets:div ID="struct_phys_{{id}}" ORDER="{{loop.index}}" ORDERLABEL="{{loop.index}}" TYPE="page">
+                        <mets:fptr FILEID="file_{{ns.id_list[loop.index - 1]}}"/>
+                        <mets:fptr FILEID="thumb_file_{{ns.id_list[loop.index - 1]}}"/>
+                    </mets:div>
             {% endfor %}
         </mets:div>
     </mets:structMap>
 
     <mets:structMap TYPE="LOGICAL">
-        <mets:div ID="struct_log_001" DMDID="dmd001" ADMID="amd1" TYPE="contents">
+        <mets:div ID="struct_log" DMDID="dmd001" ADMID="amd1" TYPE="Monograph">
             <mets:fptr FILEID="PDF1"/>
             {% for part in obj.get_parts() %}
-                {% set part_index = '%04d' | format(loop.index) %}
-                    <mets:div ID="struct_log_001_{{part_index}}" TYPE="chapter" LABEL="{{part.metadata['title']}}"></mets:div>
+                    <mets:div ID="struct_log_{{loop.index}}" TYPE="chapter" LABEL="{{part.metadata['title']}}"></mets:div>
             {% endfor %}
         </mets:div>
     </mets:structMap>
