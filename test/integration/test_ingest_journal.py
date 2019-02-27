@@ -28,13 +28,11 @@ class IngestJournalTest(JobTypeTest):
             'parts/part_0001/data/origin/merged.pdf',
             'parts/part_0001/meta.json',
             'parts/part_0001/marc.xml',
-            'parts/part_0001/mets.xml',
             'parts/part_0001/data/txt/merged_0000.txt',
             'parts/part_0001/data/txt/annotations.json',
             'parts/part_0002/data/origin/merged.pdf',
             'parts/part_0002/meta.json',
             'parts/part_0002/marc.xml',
-            'parts/part_0002/mets.xml',
             'parts/part_0002/data/txt/merged_0000.txt',
             'parts/part_0002/data/txt/annotations.json',
             'meta.json',
@@ -43,7 +41,6 @@ class IngestJournalTest(JobTypeTest):
         for file in files_generated:
             self.assert_file_in_repository(object_id, file)
 
-        self._test_mets_reference(object_id)
         # Check if the generated XML contains galley, which is required
         # for the ojs import and frontmatter generation
         file_path = os.path.join(os.environ['REPOSITORY_DIR'],
