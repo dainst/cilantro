@@ -123,10 +123,10 @@
         <mets:div ID="struct_phys" TYPE="physSequence">
             <mets:fptr FILEID="PDF1"/>
             {% for id in ns.id_list %}
-                    <mets:div ID="struct_phys_{{id}}" ORDER="{{loop.index}}" ORDERLABEL="{{loop.index}}" TYPE="page">
-                        <mets:fptr FILEID="file_{{ns.id_list[loop.index - 1]}}"/>
-                        <mets:fptr FILEID="thumb_file_{{ns.id_list[loop.index - 1]}}"/>
-                    </mets:div>
+                <mets:div ID="struct_phys_{{id}}" ORDER="{{loop.index}}" ORDERLABEL="{{loop.index}}" TYPE="page">
+                    <mets:fptr FILEID="file_{{ns.id_list[loop.index - 1]}}"/>
+                    <mets:fptr FILEID="thumb_file_{{ns.id_list[loop.index - 1]}}"/>
+                </mets:div>
             {% endfor %}
         </mets:div>
     </mets:structMap>
@@ -134,27 +134,34 @@
     <mets:structMap TYPE="LOGICAL">
         <mets:div ID="struct_log" DMDID="dmd001" ADMID="amd1" TYPE="Monograph">
             <mets:fptr FILEID="PDF1"/>
-            {% for part in obj.get_parts() %}
+            {% if params['images_from_parts'] %}
+                {% for part in obj.get_parts() %}
                     <mets:div ID="struct_log_{{loop.index}}" TYPE="chapter" LABEL="{{part.metadata['title']}}"></mets:div>
-            {% endfor %}
+                {% endfor %}
+            {% else %}
+                <mets:div ID="struct_log_1" TYPE="chapter" LABEL="{{metadata['title']}}"></mets:div>
+            {% endif %}
         </mets:div>
     </mets:structMap>
 
-
-    <mets:structLink>
-        <mets:smLink xlink:from="struct-logical" xlink:to="struct-physical"></mets:smLink>
-
-        {% set file_index_offset = 0 %}
-        {% for part in obj.get_parts() %}
-            {% set part_index = loop.index %}
-            {% for file_path in glob(part.get_representation_dir('jpg') + '/*.jpg')|sort() %}
-                {% set file_index = loop.index + file_index_offset %}
-                <mets:smLink xlink:from="struct_log_{{part_index}}" xlink:to="struct_phys_{{part_index}}_{{file_index}}"></mets:smLink>
-            {% endfor %}
-            {% set file_index_offset = file_index_offset +  glob(part.get_representation_dir('jpg') + '/*.jpg')|length %}
-        {% endfor %}
-
-    </mets:structLink>
-
+    {% if ns.id_list|length > 0 %}
+        <mets:structLink>
+            {% if params['images_from_parts'] %}
+                {% set file_index_offset = 0 %}
+                {% for part in obj.get_parts() %}
+                    {% set part_index = loop.index %}
+                    {% for file_path in glob(part.get_representation_dir('jpg') + '/*.jpg')|sort() %}
+                        {% set file_index = loop.index + file_index_offset %}
+                        <mets:smLink xlink:from="struct_log_{{part_index}}" xlink:to="struct_phys_{{part_index}}_{{file_index}}"></mets:smLink>
+                    {% endfor %}
+                    {% set file_index_offset = file_index_offset +  glob(part.get_representation_dir('jpg') + '/*.jpg')|length %}
+                {% endfor %}
+            {% else %}
+                {% for id in ns.id_list %}
+                    <mets:smLink xlink:from="struct_log_1" xlink:to="struct_phys_{{id}}"/>
+                {% endfor %}
+            {% endif %}
+        </mets:structLink>
+    {% endif %}
 
 </mets:mets>
