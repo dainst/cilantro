@@ -1,8 +1,4 @@
-'use strict';
-
-angular
-
-    .module('directive.filesTreeview', [])
+angular.module('workbench.files')
 
     .directive('filesTreeview', ['fileManager', function(fileManager) {
         return {

@@ -1,7 +1,5 @@
-'use strict';
+angular.module('workbench.utils')
 
-angular
-    .module('directive.autoheight', [])
     .directive('autoheight', ['$timeout',
         function($timeout) {
             return {

@@ -1,5 +1,5 @@
-angular
-    .module('module.cookiemanager', [])
+angular.module('workbench.utils')
+
     .factory('cookiemanager', ['$http', '$rootScope', function ($http, $rootScope) {
         const cookiemanager = {};
         cookiemanager.getCookie = function (name) {

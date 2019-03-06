@@ -1,10 +1,6 @@
-'use strict';
+angular.module('workbench')
 
-angular
-
-    .module('controller.main', [])
-
-    .controller('main', ['$scope', '$uibModal', 'webservice', '$location', 'cookiemanager',
+    .controller('indexController', ['$scope', '$uibModal', 'webservice', '$location', 'cookiemanager',
         function ($scope, $uibModal, webservice, $location, cookiemanager) {
 
             $scope.openLoginModal = function () {

@@ -1,21 +1,23 @@
-angular
-.module("module.fileHandlers.emptyPdfHandler", [])
-.factory("emptyPdfHandler", ['$rootScope', 'editables', 'fileManager', 'pdfFileManager',
-    function($rootScope, editables, fileManager, pdfFileManager) {
+angular.module('workbench.files')
 
-    let emptyPdfHandler = new fileManager.FileHandler('empty');
+    .factory("emptyPdfHandler", ['$rootScope', 'editables', 'fileManager', 'pdfFileManager',
+        function($rootScope, editables, fileManager, pdfFileManager) {
 
-    emptyPdfHandler.description = "Do nothing, just load";
-    emptyPdfHandler.fileTypes = ["pdf", "directory"];
+            let emptyPdfHandler = new fileManager.FileHandler('empty');
 
-    emptyPdfHandler.handleFile = file => pdfFileManager.loadFiles(file).then(files => files.forEach(file2Articles));
+            emptyPdfHandler.description = "Do nothing, just load";
+            emptyPdfHandler.fileTypes = ["pdf", "directory"];
 
-    emptyPdfHandler.createThumbnail = pdfFileManager.createThumbnail;
+            emptyPdfHandler.handleFile = file => pdfFileManager.loadFiles(file).then(files => files.forEach(file2Articles));
 
-    function file2Articles(file) {
-        fileManager.stats.analyzed += 1;
-    }
+            emptyPdfHandler.createThumbnail = pdfFileManager.createThumbnail;
 
-    return (emptyPdfHandler);
-}])
-.run(function(emptyPdfHandler) {emptyPdfHandler.register()});
+            function file2Articles(file) {
+                fileManager.stats.analyzed += 1;
+            }
+
+            return (emptyPdfHandler);
+        }
+    ])
+
+    .run(function(emptyPdfHandler) { emptyPdfHandler.register(); });

@@ -1,5 +1,5 @@
-angular
-    .module('module.webservice', [])
+angular.module('workbench.jobs')
+
     .factory("webservice", ['$http', '$rootScope', 'settings', 'messenger',
         function ($http, $rootScope, settings, messenger) {
 

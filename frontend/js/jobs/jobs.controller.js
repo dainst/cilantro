@@ -1,6 +1,4 @@
-angular
-
-    .module("controller.viewJobs", [])
+angular.module("workbench.jobs")
 
     .controller("viewJobs",  ["$scope", "jobs", "$interval", "steps",
         function($scope, jobs, $interval, steps) {

@@ -1,34 +1,32 @@
-angular
+angular.module('workbench.jobs.wizard')
 
-.module('controller.viewFinish', [])
+    .controller('viewFinish', ['$scope', '$rootScope', 'webservice', 'dataset', 'messenger', 'labels', 'jobs', '$location', 'steps',
+        function($scope, $rootScope, webservice, dataset, messenger, labels, jobs, $location, steps) {
 
-.controller('viewFinish', ['$scope', '$rootScope', 'webservice', 'dataset', 'messenger', 'labels', 'jobs', '$location', 'steps',
-    function($scope, $rootScope, webservice, dataset, messenger, labels, jobs, $location, steps) {
+            $scope.dataset = dataset;
+            $scope.labels = labels;
 
-        $scope.dataset = dataset;
-        $scope.labels = labels;
+            $scope.done = false;
 
-        $scope.done = false;
+            $scope.run = () => {
 
-        $scope.run = () => {
+                const param = dataset.get();
 
-            const param = dataset.get();
+                webservice.get('job/ingest_journal', 'post', param).then(res => {
+                    messenger.success("Job: " + res.status);
+                    $scope.done = true;
+                    steps.reset();
+                    $location.path('/jobs');
+                    $rootScope.$broadcast('refreshView');
+                });
+                webservice.get('job/jobs').then(result => result.forEach(job => jobs.updateJob(job)));
+            };
 
-            webservice.get('job/ingest_journal', 'post', param).then(res => {
-                messenger.success("Job: " + res.status);
-                $scope.done = true;
-                steps.reset();
-                $location.path('/jobs');
-                $rootScope.$broadcast('refreshView');
-            });
-            webservice.get('job/jobs').then(result => result.forEach(job => jobs.updateJob(job)));
-        };
+            $scope.isReady = () => {
+                const articlesReady = $scope.dataset.isReadyToUpload();
+                const journalReady = $scope.dataset.check();
+                return articlesReady && journalReady && !$scope.done;
+            };
 
-        $scope.isReady = () => {
-            const articlesReady = $scope.dataset.isReadyToUpload();
-            const journalReady = $scope.dataset.check();
-            return articlesReady && journalReady && !$scope.done;
-        };
-
-    }
-]);
+        }
+    ]);

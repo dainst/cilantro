@@ -1,15 +1,14 @@
-angular
-.module('controller.viewStart', [])
+angular.module('workbench.jobs.wizard')
 
-.controller('viewStart', ['$scope', 'dataset', 'steps', 'labels', 'settings',
-    function($scope, dataset, steps, labels, settings) {
-        $scope.dataset = dataset;
-        $scope.labels = labels;
-        $scope.settings = settings;
-        $scope.startBtn = () => {
-            steps.changeView('documents');
-            steps.isStarted = true;
-        };
-    }
+    .controller('viewStart', ['$scope', 'dataset', 'steps', 'labels', 'settings',
+        function($scope, dataset, steps, labels, settings) {
+            $scope.dataset = dataset;
+            $scope.labels = labels;
+            $scope.settings = settings;
+            $scope.startBtn = () => {
+                steps.changeView('documents');
+                steps.isStarted = true;
+            };
+        }
 
-]);
+    ]);

@@ -1,5 +1,5 @@
-angular
-    .module("module.jobs", [])
+angular.module("workbench.jobs")
+
     .factory("jobs", ['$rootScope', 'webservice', function($rootScope, webservice) {
         const jobs = {};
 

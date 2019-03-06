@@ -1,8 +1,4 @@
-'use strict';
-
-angular
-
-    .module('directive.job', [])
+angular.module('workbench.jobs')
 
     .directive('job', ['jobs', function(jobs) {
         return {
