@@ -9,7 +9,7 @@ const EC = protractor.ExpectedConditions;
 
 describe('publish page', () => {
 
-    fit("should not allow start job if no articles are staged", () => {
+    it("should not allow start job if no articles are staged", () => {
         so.goToSubObject(2);
         browser.wait(EC.presenceOf(e.navbar.publish), 20000);
         expect(e.navbar.publish.isDisplayed()).toBeFalsy();
