@@ -32,6 +32,7 @@
     "pixelmatch": "4.0.2",
     "protractor": "^5.4.1",
     "protractor-console-plugin": "0.1.1",
+    "protractor-fail-fast": "^3.1.0",
     "request": "2.88.0",
     "request-promise-native": "1.0.5"
   }
