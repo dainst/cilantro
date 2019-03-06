@@ -1,6 +1,6 @@
 angular
-.module('module.editables', [])
-.factory("editables", ['languageStrings', function(languageStrings) {
+.module("module.editables", [])
+.factory("editables", ["languageStrings", function(languageStrings) {
 
     /**
      * refactor plans
@@ -11,15 +11,15 @@ angular
 
     const editables = {};
     editables.types = {}; // constructors for useful subtypes
-    
+
     editables.Base = function(seed, mandatory, readonly) {
-        this.type =	        'editable';
+        this.type =	        "editable";
         this.value =        angular.isObject(seed) ? seed : {value: seed};
         this.mandatory =    angular.isUndefined(mandatory) ? true : mandatory;
         this.readonly = 	angular.isUndefined(readonly) ? false : readonly;
-        this.check = 		() => 
-            (this.mandatory && (angular.isUndefined(this.value.value) || (this.value.value === ''))) 
-                ? 'This  field is mandatory' 
+        this.check = 		() =>
+            (this.mandatory && (angular.isUndefined(this.value.value) || (this.value.value === "")))
+                ? "This  field is mandatory"
                 : false;
         this.set =          value => this.value.value = value;
         this.get =		    () => this.value.value;
@@ -30,31 +30,31 @@ angular
         this.observer =	    param => observers.forEach(observer => observer(param));
     };
 
-    editables.types.Author = function(first, second) {return {'firstname': first, 'lastname': second}};
-    
+    editables.types.Author = function(first, second) {return {"firstname": first, "lastname": second}};
+
     editables.authorlist = function(seed, format) {
         var obj = new editables.Base();
-        obj.type = 'authorlist';
-            
+        obj.type = "authorlist";
+
         if (!angular.isArray(seed) || seed.length === 0) {
             obj.value = [new editables.types.Author];
         }
-        
+
         obj.addRow = function() {
             obj.value.push(new editables.types.Author);
-            console.log('Add author');
+            console.log("Add author");
         }
-        
+
         obj.delRow = function(k) {
             obj.value.splice(k,1);
-            console.log('Delete author ' + k);
+            console.log("Delete author " + k);
         }
-                
+
         obj.format = (typeof format === "undefined") ? 0 : format;
-        
+
         obj.formats = [
             [/(((\S+)\s)*)(\S+)/, 1, 4], // "FirstName SecondName LastName"
-            [/([^,]+),?\s?(.*)/, 2, 1]   // "Lastname, FirstName SecondName" 
+            [/([^,]+),?\s?(.*)/, 2, 1]   // "Lastname, FirstName SecondName"
         ];
 
         obj.get = function(){
@@ -68,71 +68,72 @@ angular
             authors = (!angular.isArray(authors)) ? [authors] : authors;
             format = (angular.isUndefined(format)) ? 0 : format;
             angular.forEach(authors, function(author) {
-                
-                //console.log('author', author);
-                
+
+                //console.log("author", author);
+
                 if (!author) {
                     return;
                 }
-                
-                if (typeof author === 'object') {
+
+                if (typeof author === "object") {
                     obj.value.push(author);
                     return;
                 }
-                
+
                 // create author from string
                 var split = author.trim().match(obj.formats[format][0]);
-                
-                //console.log('split', split);
-                
+
+                //console.log("split", split);
+
                 if (!split) {
                     return;
-                } 
-                
+                }
+
                 obj.value.push(editables.types.Author(split[obj.formats[format][1]], split[obj.formats[format][2]]));
-                
+
             });
-        
+
         }
 
         obj.set = obj.setAuthors;
-        
+
         obj.check = function() {
-            
+
             var error = false;
-            
+
             if (!obj.value || obj.value.length === 0) {
-                error  = 'no Author!'
+                error  = "no Author!"
             }
-            
+
             angular.forEach(obj.value, function(author, i) {
                 if (!author.lastname) {
-                    error = ' Author ' + i + ' needs a family Name';
+                    error = "No family name given";
+                } else if (!author.firstname) {
+                    error = "No first name given";
                 }
             });
-            
-            
+
             return error;
-            
+
         }
-        
-        
+
+
         obj.compare = function(that) {
-            let a = (typeof this.value[0] !== "undefined") ? this.value[0].lastname : '';
-            let b = (typeof that.value[0] !== "undefined") ? that.value[0].lastname : '';
-            
+            let a = (typeof this.value[0] !== "undefined") ? this.value[0].lastname : "";
+            let b = (typeof that.value[0] !== "undefined") ? that.value[0].lastname : "";
+
             return (a.localeCompare(b));
         }
-        
-        
+
+
         obj.setAuthors(seed, format)
-        
+
         return obj;
     }
 
     editables.types.Pagecontext = function(d) {
         d = d || {offset:0, maximum: -1};
-        const context = {'offset': d.offset || 0, 'maximum': d.maximum || -1};
+        const context = {"offset": d.offset || 0, "maximum": d.maximum || -1};
         if (angular.isDefined(d.path)) {
          context.path = d.path;
         }
@@ -150,16 +151,16 @@ angular
     editables.page = function(seed) {
         const obj = new editables.Base(seed);
         let manualDesc = false;
-        obj.type = 'page';
+        obj.type = "page";
         obj.value = {
-            startPdf: '',
-            endPdf: '',
-            showndesc: '', // manually set page description
+            startPdf: "",
+            endPdf: "",
+            showndesc: "", // manually set page description
         };
 
         obj.context = new editables.types.Pagecontext();
 
-        Object.defineProperty(obj, 'startPrint', {
+        Object.defineProperty(obj, "startPrint", {
             get: function() {
                 return parseInt(this.value.startPdf) + parseInt(this.context.offset);
             },
@@ -167,7 +168,7 @@ angular
                 this.value.startPdf = y - this.context.offset;
             }
         });
-        Object.defineProperty(obj, 'endPrint', {
+        Object.defineProperty(obj, "endPrint", {
             get: function() {
                 return parseInt(this.value.endPdf) + parseInt(this.context.offset);
             },
@@ -176,7 +177,7 @@ angular
             }
         });
 
-        Object.defineProperty(obj, 'desc', {
+        Object.defineProperty(obj, "desc", {
             get: function() {
                 if (!manualDesc) {
                     obj.resetDesc();
@@ -194,7 +195,7 @@ angular
                 manualDesc = true;
             } else {
                 obj.value.showndesc = parseInt(obj.startPrint);
-                obj.value.showndesc += parseInt(obj.endPrint) ? '–' + parseInt(obj.endPrint) : '';
+                obj.value.showndesc += parseInt(obj.endPrint) ? "–" + parseInt(obj.endPrint) : "";
                 manualDesc = false
             }
         };
@@ -275,12 +276,12 @@ angular
         obj.set(seed);
         return obj;
     };
-    
-    
+
+
     editables.text = function(seed, mandatory) {
         const obj = new editables.Base(seed, mandatory);
-        obj.type = 'text';
-        
+        obj.type = "text";
+
         obj.compare = second =>  this.value.value.localeCompare(second.value.value);
 
         obj.set(seed);
@@ -288,7 +289,7 @@ angular
     };
 
 
-    editables.defaultLocales = ['de_DE', 'en_US', 'fr_FR', 'it_IT', 'es_ES'];
+    editables.defaultLocales = ["de_DE", "en_US", "fr_FR", "it_IT", "es_ES"];
 
     /**
      *
@@ -300,7 +301,7 @@ angular
      */
     editables.language = function(seed, mandatory, locales) {
         const obj = new editables.Base(seed, mandatory);
-        obj.type = 'language';
+        obj.type = "language";
 
         if (angular.isDefined(locales) && (angular.isArray(locales) && locales.length)) {
             obj.locales = locales;
@@ -327,14 +328,14 @@ angular
 
 
         obj.check =	() => {
-            if (this.mandatory && !angular.isUndefined(obj.value.value) && (obj.value.value === '')) {
-                return 'This field is mandatory';
+            if (this.mandatory && !angular.isUndefined(obj.value.value) && (obj.value.value === "")) {
+                return "This field is mandatory";
             }
-            if (!this.mandatory && !angular.isUndefined(obj.value.value) && (obj.value.value === '')) {
+            if (!this.mandatory && !angular.isUndefined(obj.value.value) && (obj.value.value === "")) {
                 return false;
             }
             if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(obj.value.value))  {
-                return 'seems not to be proper language code';
+                return "seems not to be proper language code";
             }
             return false;
         };
@@ -355,8 +356,8 @@ angular
      */
     editables.multilingualtext = function(seed, mandatory, locales) {
 
-        var obj = new editables.Base('', mandatory);
-        obj.type = 'multilingualtext';
+        var obj = new editables.Base("", mandatory);
+        obj.type = "multilingualtext";
 
         obj.locales = (angular.isArray(locales) && locales.length >  1) ? locales : editables.defaultLocales;
 
@@ -375,7 +376,7 @@ angular
         obj.addRow = function(text, locale) {
             obj.value.push({
                 text: text,
-                locale: (typeof locale === "undefined") ? '' : locale
+                locale: (typeof locale === "undefined") ? "" : locale
             });
         }
 
@@ -405,7 +406,7 @@ angular
             obj.value[index].locale = to;
             obj.value.map(function(thing, idx) {
                 if ((thing.locale === to) && (index !== idx)) {
-                    thing.locale = '';
+                    thing.locale = "";
                 }
             })
         }
@@ -426,27 +427,27 @@ angular
 
         obj.check =	function() {
 
-            if (!obj.value.reduce(function(acc, val) {return acc && (val.text !== '')}, true)) {
-                return 'Please fill out all selected languages or remove them'
+            if (!obj.value.reduce(function(acc, val) {return acc && (val.text !== "")}, true)) {
+                return "Please fill out all selected languages or remove them"
             }
 
             if (this.mandatory && !Object.keys(obj.value).length) {
-                return 'At least one locale version of this is mandatory'
+                return "At least one locale version of this is mandatory"
             }
 
             // if there is only translation and the locale is not selected it is okay
 
-            if (obj.value.length === 1 && obj.value[0].locale === '') {
+            if (obj.value.length === 1 && obj.value[0].locale === "") {
                 return false;
             }
 
             // else check if all locales are supported
             let errorLocales = obj.value
-                .map(function(x){return ((obj.locales.indexOf(x.locale) === -1) || (x.locale === '')) ? x.locale : false})
+                .map(function(x){return ((obj.locales.indexOf(x.locale) === -1) || (x.locale === "")) ? x.locale : false})
                 .filter(function(x){return (x !== false)});
 
             if (errorLocales.length > 0) {
-                return 'These locales are not supported by selected journal: ' + errorLocales.join(', ');
+                return "These locales are not supported by selected journal: " + errorLocales.join(", ");
             }
 
 
@@ -461,17 +462,17 @@ angular
         return obj;
 
     }
-    
+
     editables.number = function(seed, mandatory) {
         let obj = new editables.Base(parseInt(seed), mandatory);
-        obj.type = 'number';
+        obj.type = "number";
         obj.check =	function() {
-            if ((obj.value.value.toString() !== parseInt(obj.value.value).toString()) && (this.value.value !== '')) {
+            if ((obj.value.value.toString() !== parseInt(obj.value.value).toString()) && (this.value.value !== "")) {
                 return "Only numbers allowed";
             }
-            if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value === '')) {
-                return 'This field is mandatory'
-            } 
+            if (this.mandatory && !angular.isUndefined(this.value.value) && (this.value.value === "")) {
+                return "This field is mandatory"
+            }
             return false;
         }
         obj.get = function() {
@@ -482,14 +483,14 @@ angular
         }
         return obj;
     }
-    
+
     editables.checkbox = function(seed, mandatory) {
         const obj = new editables.Base(seed, mandatory);
-        obj.type = 'checkbox';
+        obj.type = "checkbox";
         obj.check =	() => false;
         obj.compare = second => (this.value.value === second.value.value) ? 0 : 1;
         obj.set = value => {
-            obj.value.value = ([false, 'false', 0, '0', NaN, '', undefined, null].indexOf(value) === -1);
+            obj.value.value = ([false, "false", 0, "0", NaN, "", undefined, null].indexOf(value) === -1);
         };
         obj.set(seed);
         return obj;
@@ -498,7 +499,7 @@ angular
     editables.filelist = function(seed, mandatory) {
         let obj = new editables.Base(seed, mandatory);
         obj.inFocus = -1;
-        obj.type = 'filelist';
+        obj.type = "filelist";
         obj.check =	function() {return false};
         obj.value = seed || [];
         obj.compare = function(second) {return 0};
@@ -560,7 +561,7 @@ angular
         let obj = new editables.Base(selected, false, false);
         list = list || {};
         obj.list = list;
-        obj.type = 'listitem';
+        obj.type = "listitem";
         obj.noneallowed = (noneallowed === true);
         const select = selected => {
             if (selected && selected in obj.list) return selected;
@@ -576,7 +577,7 @@ angular
             return false;
         };
         obj.select(selected);
-        obj.get = () => obj.value.value ? obj.value.value : 'none';
+        obj.get = () => obj.value.value ? obj.value.value : "none";
         obj.getList = () => Object.keys(obj.list).map(it => obj.list[it]);
         return obj;
     };
@@ -585,7 +586,7 @@ angular
         let obj = new editables.Base(selected, false, false);
         list = list || {};
         obj.list = angular.isObject(list) ? list : {};
-        obj.type = 'multilistitem';
+        obj.type = "multilistitem";
         obj.noneallowed = (noneallowed === true);
         obj.value = angular.copy(list);
         obj.select = selected => {
@@ -603,20 +604,20 @@ angular
         return obj;
     };
 
-    
+
     editables.loadedfile = function(list, selected, noneallowed) {
         noneallowed = noneallowed || false;
         let obj = editables.listitem(list, selected, noneallowed);
-        obj.type = 'loadedfile';
+        obj.type = "loadedfile";
         return obj;
     };
 
-    editables.types.Date = function(year, month, day) {return {'day': day, 'month': month, 'year': year}};
+    editables.types.Date = function(year, month, day) {return {"day": day, "month": month, "year": year}};
 
     editables.date = function(year, month, day, mandatory) {
         let seed = new editables.types.Date(year, month, day);
         let obj = new editables.Base(seed, mandatory);
-        obj.type = 'date';
+        obj.type = "date";
 
         function toJsDate(date) {
             let year = parseInt(date.year) || 3000;
@@ -652,7 +653,7 @@ angular
         }
 
         obj.get = function() {
-            return [obj.value.year, obj.value.month, obj.value.day].join('-');
+            return [obj.value.year, obj.value.month, obj.value.day].join("-");
         }
 
         obj.set = function(year, month, day) {
@@ -670,6 +671,6 @@ angular
         obj.set(year, month, day);
         return obj;
     }
-    
+
     return (editables);
 }])
