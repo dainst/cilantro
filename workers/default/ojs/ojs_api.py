@@ -74,4 +74,8 @@ def _make_request(url, headers, import_data=None):
         log.debug(f"Request failed with: {e.read()}")
         raise
 
-    return response.getcode(), json.loads(response_text)
+    try:
+        return response.getcode(), json.loads(response_text)
+    except json.JSONDecodeError as e:
+        log.error(f"Failed to parse response as JSON: {response_text}")
+        raise
