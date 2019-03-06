@@ -2,7 +2,7 @@
 
 angular
 
-.module('pimport', [
+.module('workbench', [
 
     'ui.bootstrap',
     'ngFileUpload',
