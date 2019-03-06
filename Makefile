@@ -34,8 +34,8 @@ build-doc:
 test: run-detached test-backend test-e2e stop
 
 test-backend:
-	docker exec cilantro_test python -m unittest discover test.unit -v
-	docker exec cilantro_test python -m unittest discover test.integration -v
+	docker exec cilantro_test python -m unittest discover test.unit -vf
+	docker exec cilantro_test python -m unittest discover test.integration -vf
 
 test-e2e:
 	npm run --prefix frontend e2e
