@@ -28,16 +28,6 @@ angular
             name: 'home',
             url: '/',
             templateUrl: 'js/home.html'
-        })
-        .state({
-            name: 'jobs-list',
-            url: '/jobs',
-            templateUrl: 'js/jobs/jobs.html',
-        })
-        .state( {
-            name: 'jobs-create',
-            url: '/jobs/create',
-            templateUrl: 'js/jobs/wizard/wizard.html',
         });
 }])
 
