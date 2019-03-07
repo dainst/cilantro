@@ -1,7 +1,7 @@
 angular.module('workbench.jobs.wizard')
 
-    .controller('subobjectsController', ['$scope', 'messenger', 'dataset', 'steps', 'labels', 'zenonImporter',
-        function($scope, messenger, dataset, steps, labels, zenonImporter) {
+    .controller('subobjectsController', ['$scope', 'messenger', 'dataset', '$state', 'labels', 'zenonImporter',
+        function($scope, messenger, dataset, $state, labels, zenonImporter) {
 
             $scope.dataset = dataset;
 
@@ -29,7 +29,7 @@ angular.module('workbench.jobs.wizard')
             };
 
             $scope.continue = () => {
-                steps.changeView('publish');
+                $state.go("jobs.wizard.publish");
             };
 
             $scope.addArticle = function() {

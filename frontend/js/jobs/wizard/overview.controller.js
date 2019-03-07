@@ -1,7 +1,7 @@
 angular.module('workbench.jobs.wizard')
 
-    .controller('viewOverview', ['$scope', 'settings', 'messenger', 'dataset', 'steps', 'labels', 'webservice',
-        function($scope, settings, messenger, dataset, steps, labels, webservice) {
+    .controller('viewOverview', ['$scope', 'settings', 'messenger', 'dataset', '$state', 'labels', 'webservice',
+        function($scope, settings, messenger, dataset, $state, labels, webservice) {
 
             $scope.dataset = dataset;
 
@@ -30,7 +30,7 @@ angular.module('workbench.jobs.wizard')
 
             $scope.continue = function() {
                 dataset.cleanSubobjects();
-                steps.changeView('articles');
+                $state.go("jobs.wizard.subobjects");
             };
 
             // open file externally

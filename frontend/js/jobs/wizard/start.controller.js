@@ -5,10 +5,5 @@ angular.module('workbench.jobs.wizard')
             $scope.dataset = dataset;
             $scope.labels = labels;
             $scope.settings = settings;
-            $scope.startBtn = () => {
-                steps.changeView('documents');
-                steps.isStarted = true;
-            };
         }
-
     ]);

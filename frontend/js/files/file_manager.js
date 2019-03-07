@@ -120,5 +120,7 @@ angular.module('workbench.files')
                         return[]
                     });
 
+        file_manager.selectDefaultFileHandlers();
+
         return (file_manager);
     }]);

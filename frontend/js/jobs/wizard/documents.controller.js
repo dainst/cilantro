@@ -9,7 +9,6 @@ angular.module('workbench.jobs.wizard')
             $scope.stagingDir = stagingDir;
             $scope.filesListSelected = null;
             $scope.isReady = () => fileManager.ready;
-            $scope.continue = () => steps.changeView('overview');
 
             $scope.refreshStage = () => {
                 webservice.get("staging")
@@ -37,5 +36,8 @@ angular.module('workbench.jobs.wizard')
                 const fileHandler = fileManager.getFileHandler(type);
                 return fileHandler.handleFile("");
             }
+
+            $scope.refreshStage();
+
         }
     ]);
