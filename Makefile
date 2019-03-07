@@ -57,7 +57,7 @@ cp-dev-config:
 	cp .env-default .env
 	cp config/users.yml-default config/users.yml
 	mkdir -p frontend/config
-	cp config/settings.default.json frontend/config/settings.json
+	cp frontend/config/settings.default.json frontend/config/settings.json
 
 fix-docker-user:
 	$(shell sed -i 's/user_id_placeholder/$(shell id -u)/g' .env)
