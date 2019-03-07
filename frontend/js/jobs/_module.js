@@ -11,10 +11,5 @@ angular.module('workbench.jobs', [])
                 name: 'jobs.list',
                 url: '/list',
                 templateUrl: 'js/jobs/list.html',
-            })
-            .state( {
-                name: 'jobs.create',
-                url: '/create',
-                templateUrl: 'js/jobs/wizard/wizard.html',
             });
     }]);
