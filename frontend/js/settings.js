@@ -2,19 +2,24 @@ angular.module('workbench')
 
 	.factory("settings", ['$http', function($http) {
 
+		let loaded = false;
 		let settings = {};
 
-	    settings.load = new Promise(function(resolve, reject) {
-	        $http.get('config/settings.json')
-	            .then(function(response) {
-	                settings = angular.extend(settings, response.data);
-	                $http.get('version.json').then(function(response) {
-	                    settings.versionInfo = response.data;
-	                    console.log('settings', settings);
-	                    resolve();
-	                }, reject);
-	            }, reject)
-	    });
+	    settings.load = () => {
+	        return $http.get('config/settings.json').then(response => {
+                settings = angular.extend(settings, response.data);
+				return $http.get('version.json');
+			}).then(response => {
+				settings.versionInfo = response.data;
+				console.log('settings', settings);
+				return settings;
+			});
+	    }
+
+		settings.get = () => {
+			if (loaded) return Promise.resolve(settings);
+			else return settings.load();
+		}
 
 
 	    settings.devMode = function() {

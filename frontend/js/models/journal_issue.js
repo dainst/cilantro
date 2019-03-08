@@ -76,7 +76,7 @@ angular.module("workbench.models")
             locales.length = 0;
             const journalCode = mainObject.ojs_journal_code.get();
             if (journalCode && journalConstraints[journalCode])
-                journalConstraints[journalCode].locales.forEach(loc => {locales.push(loc)});
+                journalConstraints[journalCode].supportedLocales.forEach(loc => {locales.push(loc)});
         }
 
         function setConstraints(constraints) {
