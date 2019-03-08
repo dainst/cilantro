@@ -9,7 +9,7 @@ const EC = protractor.ExpectedConditions;
 
 describe('publish page', () => {
 
-    it("should not allow start job if no articles are staged", () => {
+    fit("should not allow start job if no articles are staged", () => {
         so.goToSubObject(2);
         expect(e.navbar.publish.isPresent()).toBeFalsy();
         browser.wait(EC.visibilityOf(e.subobject.confirmBtn), 20000);
@@ -17,7 +17,7 @@ describe('publish page', () => {
         expect(e.navbar.publish.isDisplayed()).toBeTruthy();
     });
 
-    xit("should not allow start job if mainobject data is no valid", () => {
+    fit("should not allow start job if mainobject data is no valid", () => {
         so.goToSubObject(2);
         browser.wait(EC.visibilityOf(e.subobject.confirmBtn), 5000);
         e.subobject.confirmBtn.click();

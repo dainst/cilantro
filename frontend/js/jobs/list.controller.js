@@ -1,7 +1,7 @@
 angular.module("workbench.jobs")
 
-    .controller("viewJobsList",  ["$scope", "jobs", "$interval", "steps",
-        function($scope, jobs, $interval, steps) {
+    .controller("viewJobsList",  ["$scope", "jobs", "$interval",
+        function($scope, jobs, $interval) {
 
             const refresh = () => jobs.refresh();
 

@@ -1,7 +1,7 @@
 angular.module('workbench.jobs.wizard')
 
-    .controller('viewDocuments', ['$scope', 'fileManager', 'stagingDir', 'steps', 'webservice',
-        function($scope, fileManager, stagingDir, steps, webservice) {
+    .controller('viewDocuments', ['$scope', 'fileManager', 'stagingDir', 'webservice',
+        function($scope, fileManager, stagingDir, webservice) {
 
             $scope.fileHandlers = fileManager.fileHandlers;
             $scope.getSelectedFileHandler = fileManager.getFileHandler;

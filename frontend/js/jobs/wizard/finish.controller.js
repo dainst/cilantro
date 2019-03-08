@@ -1,7 +1,7 @@
 angular.module('workbench.jobs.wizard')
 
-    .controller('viewFinish', ['$scope', '$rootScope', 'webservice', 'dataset', 'messenger', 'labels', 'jobs', '$state', 'steps',
-        function($scope, $rootScope, webservice, dataset, messenger, labels, jobs, $state, steps) {
+    .controller('viewFinish', ['$scope', '$rootScope', 'webservice', 'dataset', 'messenger', 'labels', 'jobs', '$state',
+        function($scope, $rootScope, webservice, dataset, messenger, labels, jobs, $state) {
 
             $scope.dataset = dataset;
             $scope.labels = labels;
@@ -15,7 +15,6 @@ angular.module('workbench.jobs.wizard')
                 webservice.get('job/ingest_journal', 'post', param).then(res => {
                     messenger.success("Job: " + res.status);
                     $scope.done = true;
-                    steps.reset();
                     $state.go('jobs.list');
                 });
                 webservice.get('job/jobs').then(result => result.forEach(job => jobs.updateJob(job)));
