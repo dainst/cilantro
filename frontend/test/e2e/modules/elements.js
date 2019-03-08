@@ -109,7 +109,7 @@ module.exports = {
     navbar: {
         start: element(by.id('step-start')),
         subobjects: element(by.id('step-subobjects')),
-        publish: element(by.id('step-publish')),
+        publish: element(by.id('step-finish')),
         loginBtn: element(by.id('loginbutton')),
         loggedInDropdown: element(by.css('.ng-scope dropdown'))
     },
