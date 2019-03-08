@@ -1,7 +1,7 @@
 angular.module('workbench.jobs.wizard')
 
-    .controller('viewDocuments', ['$scope', '$interval', 'fileManager', 'stagingDir', 'steps', 'webservice',
-        function($scope, $interval, fileManager, stagingDir, steps, webservice) {
+    .controller('viewDocuments', ['$scope', 'fileManager', 'stagingDir', 'steps', 'webservice',
+        function($scope, fileManager, stagingDir, steps, webservice) {
 
             $scope.fileHandlers = fileManager.fileHandlers;
             $scope.getSelectedFileHandler = fileManager.getFileHandler;
@@ -19,17 +19,6 @@ angular.module('workbench.jobs.wizard')
                     })
                     .catch($scope.failFatal);
             };
-
-            const timer = () => {
-                if(steps.current !== "documents"){
-                    $interval.cancel(promise);
-                }
-                else {
-                    $scope.refreshStage();
-                }
-            };
-
-            //let promise = $interval(timer, 1000);
 
             /*Opens file-editing-modals for 'type', currently only implemented for csv-files.*/
             $scope.newFile = function(type) {
