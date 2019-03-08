@@ -29,7 +29,7 @@ angular.module('workbench.jobs.wizard')
             };
 
             $scope.continue = () => {
-                $state.go("jobs.wizard.publish");
+                $state.go("jobs.wizard.finish");
             };
 
             $scope.addArticle = function() {
