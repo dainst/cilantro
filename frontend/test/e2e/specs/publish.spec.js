@@ -17,7 +17,7 @@ describe('publish page', () => {
         expect(e.navbar.publish.isDisplayed()).toBeTruthy();
     });
 
-    it("should not allow start job if mainobject data is no valid", () => {
+    xit("should not allow start job if mainobject data is no valid", () => {
         so.goToSubObject(2);
         browser.wait(EC.visibilityOf(e.subobject.confirmBtn), 5000);
         e.subobject.confirmBtn.click();
