@@ -6,6 +6,7 @@ angular.module("workbench.jobs")
         jobs.list = {};
 
         jobs.updateJob = (job) => {
+            
             jobs.list[job.job_id] = {
                 statusText: 'unknown',
                 status: 0,
@@ -36,7 +37,6 @@ angular.module("workbench.jobs")
                 jobs.list[job.job_id].should_collapse=false;
             }
 
-            $rootScope.$digest();
         };
 
         jobs.refresh = () => {
