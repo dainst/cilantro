@@ -107,9 +107,8 @@ module.exports = {
         loadMore: element(by.css('#zenon-load-more')),
     },
     navbar: {
-        overview: element(by.id('step-overview')),
-        articles: element(by.id('step-articles')),
-        restart: element(by.id('step-restart')),
+        start: element(by.id('step-start')),
+        subobjects: element(by.id('step-subobjects')),
         publish: element(by.id('step-publish')),
         loginBtn: element(by.id('loginbutton')),
         loggedInDropdown: element(by.css('.ng-scope dropdown'))
