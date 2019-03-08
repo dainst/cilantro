@@ -1,10 +1,4 @@
 <div ng-controller="createController">
-    <ul class="breadcrumb">
-        <li ng-repeat="(id, title) in steps" id="step-{{id}}">
-            <span class="active" ng-show="isActive(id)">{{title}}</span>
-            <a ui-sref="jobs.wizard.{{id}}" ng-hide="isActive(id)">{{title}}</a>
-        </li>
-    </ul>
     <div id="main-container">
         <ui-view></ui-view>
     </div>
