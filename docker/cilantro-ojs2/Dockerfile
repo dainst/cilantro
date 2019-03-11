@@ -88,9 +88,9 @@ RUN a2enmod rewrite
 RUN chmod -R 777 /OJSfiles
 RUN chmod -R 777 /var/www/html/ojs/plugins/generic/ojs-dainst-frontpage-generator-plugin/lib/tcpdf/fonts/
 
-# Skip auto detection of base url
+# Ignore protocol when constructing base url
 # see https://forum.pkp.sfu.ca/t/ojs-3-behind-reverse-proxy-how-to-achieve/25055/16
-RUN sed -i 's/$serverHost = $_this->getServerHost(false);/$serverHost = false;/' /var/www/html/ojs/lib/pkp/classes/core/PKPRequest.inc.php
+RUN sed -i "s/$_this->_baseUrl = $_this->getProtocol() . ':\/\/'/$_this->_baseUrl = '\/\/'/" /var/www/html/ojs/lib/pkp/classes/core/PKPRequest.inc.php
 
 # startup script
 RUN echo "#!/bin/bash\nfind /var/lib/mysql -type f -exec touch {} \;\nservice mysql start\napachectl -DFOREGROUND" >> /root/startup.sh  \
