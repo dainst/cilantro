@@ -81,7 +81,8 @@ RUN find /var/lib/mysql -type f -exec touch {} \; \
   && php /root/ojs-config-tool/ojs2.php --theme=dainst --journal.theme=dainst --journal.plugins=${enable_plugins}
 
 # activate CORS
-RUN echo 'Header set Access-Control-Allow-Origin "*"' > /etc/apache2/conf-enabled/cors.conf
+RUN a2enmod headers
+RUN echo 'Header set Access-Control-Allow-Origin "*"' > /var/www/html/ojs/.htaccess
 
 # some final configs
 RUN a2enmod rewrite
