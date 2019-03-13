@@ -302,6 +302,7 @@ angular.module("workbench.editables")
         editables.language = function(seed, mandatory, locales) {
             const obj = new editables.Base(seed, mandatory);
             obj.type = "language";
+            this.mandatory = mandatory;
 
             if (angular.isDefined(locales) && (angular.isArray(locales) && locales.length)) {
                 obj.locales = locales;
@@ -328,11 +329,8 @@ angular.module("workbench.editables")
 
 
             obj.check =	() => {
-                if (this.mandatory && !angular.isUndefined(obj.value.value) && (obj.value.value === "")) {
+                if (this.mandatory && (angular.isUndefined(obj.value.value) || (obj.value.value === ""))) {
                     return "This field is mandatory";
-                }
-                if (!this.mandatory && !angular.isUndefined(obj.value.value) && (obj.value.value === "")) {
-                    return false;
                 }
                 if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(obj.value.value))  {
                     return "seems not to be proper language code";
