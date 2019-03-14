@@ -1,4 +1,20 @@
 <div ng-controller="viewDocuments" data-ng-init="init()">
+
+    <ul class="breadcrumb">
+        <li id="step-start">
+            <a ui-sref="jobs.wizard.start">Start</a>
+        </li>
+        <li id="step-documents">
+            <span class="active">Documents</span>
+        </li>
+        <li id="step-overview">
+            <a ui-sref="jobs.wizard.overview">Overview</a>
+        </li>
+        <li id="step-subobjects">
+            <a ui-sref="jobs.wizard.subobjects">Articles</a>
+        </li>
+    </ul>
+
     <div class="row toprow">
         <div class="col-md-4">
         </div>
@@ -6,9 +22,9 @@
             <stats type="documents"></stats>
         </div>
         <div class="col-md-4 text-right">
-            <button id="proceed" class='btn btn-primary' ng-click='continue()' ng-show="isReady()">
+            <a id="proceed" class='btn btn-primary' ng-show="isReady()" ui-sref="jobs.wizard.overview">
                 Proceed<span class="glyphicon glyphicon-chevron-right"></span>
-            </button>
+            </a>
         </div>
     </div>
 

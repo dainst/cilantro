@@ -37,6 +37,11 @@ x-env-archaeocloud: &env-archaeocloud
   PTIF_DIR: S-Arachne/arachne4scans/arachne4webimages/bookscans
   ARCHIVE_DIR: $historical-books-archive/DAI
 
+x-env-frontend-uris: &env-frontend-uris
+  BACKEND_URI: https://workbench.idai.world/api
+  ZENON_URI: https://zenon.dainst.org/api/v1/
+  OJS_URI: http://test.publications.dainst.org/journals/plugins/generic/ojs-cilantro-plugin/api/
+
 services:
 
   broker:
@@ -67,6 +72,15 @@ services:
       <<: *env-broker
       <<: *env-jobdb
       DB_HOST: "db"
+    networks:
+      - default
+      - web
+    deploy:
+      labels:
+        - "traefik.docker.network=web"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:workbench.idai.world; PathPrefixStrip:/api"
+        - "traefik.port=5000"
 
   default-worker:
     user: ${UID}
@@ -120,9 +134,16 @@ services:
     image: dainst/cilantro-frontend:latest
     environment:
       <<: *env-ojs
-      BACKEND_URI: ${BACKEND_URI}
-      ZENON_URI: ${ZENON_URI}
-      OJS_URI: ${OJS_URI}
+      <<: *env-frontend-uris
+    networks:
+      - default
+      - web
+    deploy:
+      labels:
+        - "traefik.docker.network=web"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:workbench.idai.world"
+        - "traefik.port=80"
 
 secrets:
   ojs_auth_key:
@@ -136,3 +157,7 @@ volumes:
   data:
     external:
       name: cilantro_repository_data
+
+networks:
+  web:
+    external: true

@@ -1,5 +1,20 @@
 <div ng-controller="viewOverview" data-ng-init="init()">
 
+    <ul class="breadcrumb">
+        <li id="step-start">
+            <a ui-sref="jobs.wizard.start">Start</a>
+        </li>
+        <li id="step-documents">
+            <a ui-sref="jobs.wizard.documents">Documents</a>
+        </li>
+        <li id="step-overview">
+            <span class="active">Overview</span>
+        </li>
+        <li id="step-subobjects">
+            <a ui-sref="jobs.wizard.subobjects">Articles</a>
+        </li>
+    </ul>
+
     <div class="row">
         <div class="col-md-4">
             <multiselect elements="overviewColumns">Display Columns</multiselect>
@@ -15,7 +30,7 @@
                 </ul>
             </uib-dropdown>
             <span class="btn-group">
-            <button class='btn btn-default' ng-click='addArticle()'>Add Article<span class="glyphicon glyphicon-plus-sign"></span></button>
+            <button class="btn btn-default" ng-click="addArticle()">Add Article<span class="glyphicon glyphicon-plus-sign"></span></button>
         </span>
 
         </div>
@@ -23,7 +38,7 @@
             <stats type="subobjects"></stats>
         </div>
         <div class="col-md-4 text-right">
-            <button id="proceed" class='btn btn-primary' ng-click='continue()'>
+            <button id="proceed" class="btn btn-primary" ng-click="continue()">
                 Proceed<span class="glyphicon glyphicon-chevron-right"></span>
             </button>
         </div>

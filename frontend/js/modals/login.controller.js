@@ -1,6 +1,4 @@
-angular
-
-    .module('controller.login', ['ui.bootstrap'])
+angular.module('workbench.modals')
 
     .controller('login', ['$scope', '$uibModalInstance', 'webservice', '$timeout',
         function ($scope, $uibModalInstance, webservice, $timeout) {

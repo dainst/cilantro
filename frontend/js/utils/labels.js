@@ -1,5 +1,5 @@
-angular
-    .module('module.labels', [])
+angular.module('workbench.utils')
+
     .factory("labels", ['dataset', function(dataset) {
 
         let labels = {

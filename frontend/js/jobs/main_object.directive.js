@@ -1,5 +1,5 @@
-angular
-    .module('directive.mainObject', ['ng'] )
+angular.module('workbench.jobs')
+
     .directive('mainObject' , ['dataset', 'labels', function(dataset, labels) {
         return {
             restrict: 'E',

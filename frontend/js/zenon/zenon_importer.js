@@ -1,6 +1,4 @@
-angular
-
-    .module('module.zenonImporter', [])
+angular.module('workbench.zenon')
 
     .factory('zenonImporter', ['$sce', '$http', 'dataset', 'editables', 'settings', 'messenger',
         function($sce, $http, dataset, editables, settings, messenger) {

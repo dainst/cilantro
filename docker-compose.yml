@@ -90,7 +90,6 @@ services:
       - ./test/resources/files/arachne.sql:/docker-entrypoint-initdb.d/arachne.sql
 
   service:
-    image: dainst/cilantro-service:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-service/Dockerfile
@@ -111,7 +110,6 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-default-worker/Dockerfile
@@ -134,7 +132,6 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-convert-worker/Dockerfile
@@ -151,7 +148,6 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-nlp-worker/Dockerfile
@@ -171,7 +167,6 @@ services:
   test:
     container_name: cilantro_test
     user: ${UID}
-    image: dainst/cilantro-test:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-test/Dockerfile
@@ -195,14 +190,15 @@ services:
       BACKEND_URI: ${BACKEND_URI}
 
   monitor:
-    image: dainst/cilantro-monitor:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-test/Dockerfile
     ports:
       - "5555:5555"
     environment:
       <<: *env-broker
 
   ojs2:
-    image: dainst/cilantro-ojs2:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-ojs2/Dockerfile
@@ -213,7 +209,6 @@ services:
       - "4444:80"
 
   ojs3:
-    image: dainst/cilantro-ojs3:latest
     build:
       context: ./docker/cilantro-ojs3
       args:
@@ -228,7 +223,6 @@ services:
       - /var/www/ojsfiles
 
   frontend:
-    image: dainst/cilantro-frontend:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-frontend/Dockerfile

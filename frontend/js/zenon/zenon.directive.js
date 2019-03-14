@@ -1,5 +1,5 @@
-angular
-    .module('directive.zenon', [])
+angular.module('workbench.zenon')
+
     .directive("zenon", ['$timeout', '$rootScope', 'zenonImporter',
         function($timeout, $rootScope, zenonImporter) {
             return {

@@ -1,43 +1,32 @@
-angular
+angular.module('workbench.jobs.wizard')
 
-.module('controller.viewDocuments', [])
+    .controller('viewDocuments', ['$scope', 'fileManager', 'stagingDir', 'webservice',
+        function($scope, fileManager, stagingDir, webservice) {
 
-.controller('viewDocuments', ['$scope', '$interval', 'fileManager', 'stagingDir', 'steps', 'webservice',
-    function($scope, $interval, fileManager, stagingDir, steps, webservice) {
+            $scope.fileHandlers = fileManager.fileHandlers;
+            $scope.getSelectedFileHandler = fileManager.getFileHandler;
+            $scope.selectFileHandler = fileManager.setFileHandler;
+            $scope.stagingDir = stagingDir;
+            $scope.filesListSelected = null;
+            $scope.isReady = () => fileManager.ready;
 
-        $scope.fileHandlers = fileManager.fileHandlers;
-        $scope.getSelectedFileHandler = fileManager.getFileHandler;
-        $scope.selectFileHandler = fileManager.setFileHandler;
-        $scope.stagingDir = stagingDir;
-        $scope.filesListSelected = null;
-        $scope.isReady = () => fileManager.ready;
-        $scope.continue = () => steps.changeView('overview');
+            $scope.refreshStage = () => {
+                webservice.get("staging")
+                    .then((stagingFolder) => {
+                        stagingDir.update(stagingFolder);
+                        fileManager.reset();
+                        $scope.refreshView();
+                    })
+                    .catch($scope.failFatal);
+            };
 
-        $scope.refreshStage = () => {
-            webservice.get("staging")
-                .then((stagingFolder) => {
-                    stagingDir.update(stagingFolder);
-                    fileManager.reset();
-                    $scope.refreshView();
-                })
-                .catch($scope.failFatal);
-        };
-
-        const timer = () => {
-            if(steps.current !== "documents"){
-                $interval.cancel(promise);
+            /*Opens file-editing-modals for 'type', currently only implemented for csv-files.*/
+            $scope.newFile = function(type) {
+                const fileHandler = fileManager.getFileHandler(type);
+                return fileHandler.handleFile("");
             }
-            else {
-                $scope.refreshStage();
-            }
-        };
 
-        //let promise = $interval(timer, 1000);
+            $scope.refreshStage();
 
-        /*Opens file-editing-modals for 'type', currently only implemented for csv-files.*/
-        $scope.newFile = function(type) {
-            const fileHandler = fileManager.getFileHandler(type);
-            return fileHandler.handleFile("");
         }
-    }
-]);
+    ]);

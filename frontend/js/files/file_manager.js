@@ -1,5 +1,5 @@
-angular
-    .module("module.fileManager", [])
+angular.module('workbench.files')
+
     .factory("fileManager", ['webservice', function(webservice) {
 
         const fileExtRegEx = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi;
@@ -119,6 +119,8 @@ angular
                         file_manager.loadedFiles[file.path] = false;
                         return[]
                     });
+
+        file_manager.selectDefaultFileHandlers();
 
         return (file_manager);
     }]);

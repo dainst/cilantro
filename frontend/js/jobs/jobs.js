@@ -1,11 +1,12 @@
-angular
-    .module("module.jobs", [])
+angular.module("workbench.jobs")
+
     .factory("jobs", ['$rootScope', 'webservice', function($rootScope, webservice) {
         const jobs = {};
 
         jobs.list = {};
 
         jobs.updateJob = (job) => {
+            
             jobs.list[job.job_id] = {
                 statusText: 'unknown',
                 status: 0,
@@ -36,7 +37,6 @@ angular
                 jobs.list[job.job_id].should_collapse=false;
             }
 
-            $rootScope.$digest();
         };
 
         jobs.refresh = () => {

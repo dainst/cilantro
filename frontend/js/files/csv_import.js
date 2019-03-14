@@ -1,49 +1,51 @@
-const mod = angular.module('module.fileHandlers.csvImport', ['ui.bootstrap']);
+angular.module('workbench.files')
 
-mod.factory("csvImport", ['$rootScope', '$uibModal', 'editables', 'fileManager', 'dataset',
-    function($rootScope, $uibModal, editables, fileManager, dataset) {
+    .factory("csvImport", ['$rootScope', '$uibModal', 'editables', 'fileManager', 'dataset',
+        function($rootScope, $uibModal, editables, fileManager, dataset) {
 
-        const csvHandler = new fileManager.FileHandler('csv_import');
+            const csvHandler = new fileManager.FileHandler('csv_import');
 
-        csvHandler.description = "Create Articles with metadata from a CSV-file";
-        csvHandler.fileTypes = ["csv"];
+            csvHandler.description = "Create Articles with metadata from a CSV-file";
+            csvHandler.fileTypes = ["csv"];
 
-        /*Old version of .handleFile, can be removed if tests succeed*/
-        //csvHandler.handleFile = file => fileManager.loadFileContents(file).then(files => files.forEach(csvImport));
+            /*Old version of .handleFile, can be removed if tests succeed*/
+            //csvHandler.handleFile = file => fileManager.loadFileContents(file).then(files => files.forEach(csvImport));
 
-        /*initiates csvImport-modal, either blank or with data from uploaded file*/
-        csvHandler.handleFile = function(file){
-            if(file === ""){
-                return csvImport("");
-            }
-            else
-                return fileManager.loadFileContents(file).then(files => files.forEach(csvImport));
-        }
-
-        function csvImport(file) {
-
-            const modalInstance = $uibModal.open({
-                animation: true,
-                templateUrl: 'js/modals/csv_import.html',
-                controller: "csvImportWindow",
-                controllerAs: '$ctrl',
-                size: 'lg',
-                backdrop: 'static',
-                keyboard: false,
-                resolve: {'file': () => file}
-            });
-
-            modalInstance.result.then(function(filled_columns) {
-                for (let i = 0, ids = Object.keys(dataset.subobjects); i < ids.length; i++) {
-                    $rootScope.$broadcast('thumbnaildataChanged', dataset.subobjects[ids[i]]);
+            /*initiates csvImport-modal, either blank or with data from uploaded file*/
+            csvHandler.handleFile = function(file){
+                if(file === ""){
+                    return csvImport("");
                 }
-                fileManager.ready = true;
-            }, function(a) {
-                fileManager.ready = true;
-            });
+                else
+                    return fileManager.loadFileContents(file).then(files => files.forEach(csvImport));
+            }
+
+            function csvImport(file) {
+
+                const modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'js/modals/csv_import.html',
+                    controller: "csvImportWindow",
+                    controllerAs: '$ctrl',
+                    size: 'lg',
+                    backdrop: 'static',
+                    keyboard: false,
+                    resolve: {'file': () => file}
+                });
+
+                modalInstance.result.then(function(filled_columns) {
+                    for (let i = 0, ids = Object.keys(dataset.subobjects); i < ids.length; i++) {
+                        $rootScope.$broadcast('thumbnaildataChanged', dataset.subobjects[ids[i]]);
+                    }
+                    fileManager.ready = true;
+                }, function(a) {
+                    fileManager.ready = true;
+                });
+            }
+
+            return csvHandler
+
         }
+    ])
 
-        return csvHandler
-
-    }])
-.run(function(csvImport) {csvImport.register()});
+    .run(function(csvImport) { csvImport.register(); });

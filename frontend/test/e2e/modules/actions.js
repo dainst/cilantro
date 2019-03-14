@@ -10,8 +10,7 @@ const Actions = function() {
     };
 
     this.restart = () => {
-        this.clickNavbarButton("restart");
-        return elements.restart.confirmBtn.click();
+        return this.clickNavbarButton("start");
     };
 
     this.uploadFile = function(file = '../resources/upload/upload.pdf') {

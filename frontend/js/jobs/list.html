@@ -1,0 +1,27 @@
+<div ng-controller="viewJobsList">
+
+    <h1>Jobs</h1>
+
+    <div class="row toprow">
+        <div class="col-md-6"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div ng-repeat="job in jobs" ng-show="job.should_collapse">
+                <job job="job"></job>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <button ng-click="active = !active" class="btn" ng-class="{'label-default': !active, 'label-success': active}">
+            Show more
+        </button>
+
+        <div class="slideDown panel-body" ng-hide="!active">
+            <div ng-repeat="job in jobs" ng-show="!job.should_collapse">
+                <job job="job"></job>
+            </div>
+        </div>
+    </div>
+</div>

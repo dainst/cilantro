@@ -1,8 +1,4 @@
-'use strict';
-
-angular
-
-    .module('directive.editable', [])
+angular.module('workbench.editables')
 
     .directive('editable', [function() {
 

@@ -1,5 +1,5 @@
-angular
-	.module('module.messenger', [])
+angular.module('workbench.utils')
+
 	.factory("messenger", [function() {
 
 	    const messenger = {};
@@ -36,5 +36,4 @@ angular
         messenger.getMainMessage = () => messenger.messages.filter(msg => msg.main)[0] || messenger.messages[0];
 
 		return (messenger);
-	}]
-);
+	}]);

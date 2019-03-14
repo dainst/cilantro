@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="pimport">
+<html lang="en" ng-app="workbench">
 <head>
 
     <meta charset="utf-8">
@@ -12,7 +12,7 @@
 
 </head>
 
-    <body class="flex-cont-vert" ng-controller="main" data-ng-init="initApp()">
+    <body class="flex-cont-vert" ng-controller="indexController" data-ng-init="initApp()">
         <div id='loader' class='loader' ng-if="isLoading"></div>
 
         <idai-navbar class="flex-item idai-navbar"
@@ -40,62 +40,69 @@
         <script src="node_modules/@uirouter/angularjs/release/angular-ui-router.min.js"></script>
         <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
         <script src="node_modules/idai-components/dist/idai-components.min.js"></script>
+        <script src="node_modules/idai-cookie-notice/idai-cookie-notice.js"></script>
 
-        <!--  load 3party angular moduls -->
+        <!--  load 3party angular modules -->
 
         <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
 
         <!-- load salvia app -->
-        <script src="node_modules/idai-cookie-notice/idai-cookie-notice.js"></script>
 
-        <script src="js/utils/labels.js"></script>
-        <script src="js/jobs/dataset.js"></script>
-        <script src="js/utils/messenger.js"></script>
-        <script src="js/files/file_manager.js"></script>
-        <script src="js/jobs/webservice.js"></script>
-        <script src="js/utils/cookiemanager.js"></script>
-        <script src="js/jobs/staging_dir.js"></script>
-        <script src="js/zenon/zenon_importer.js"></script>
-        <script src="js/editables/language_strings.js"></script>
-        <script src="js/jobs/jobs.js"></script>
-        <script src="js/settings.js"></script>
-
-        <script src="index.controller.js"></script>
-        <script src="js/modals/login.controller.js"></script>
-        <script src="js/modals/csv_import.controller.js"></script>
-        <script src="js/jobs/wizard/steps.js"></script>
+        <script src="js/jobs/wizard/_module.js"></script>
         <script src="js/jobs/wizard/wizard.controller.js"></script>
         <script src="js/jobs/wizard/start.controller.js"></script>
         <script src="js/jobs/wizard/overview.controller.js"></script>
         <script src="js/jobs/wizard/subobjects.controller.js"></script>
         <script src="js/jobs/wizard/finish.controller.js"></script>
         <script src="js/jobs/wizard/documents.controller.js"></script>
-        <script src="js/jobs/jobs.controller.js"></script>
         <script src="js/jobs/wizard/upload.controller.js"></script>
 
-        <script src="js/editables/editables.js"></script>
-        <script src="js/editables/editable.directive.js"></script>
-
-        <script src="js/utils/multiselect.directive.js"></script>
-        <script src="js/utils/messagebox.directive.js"></script>
-        <script src="js/files/files_treeview.directive.js"></script>
-        <script src="js/utils/stats.directive.js"></script>
-        <script src="js/zenon/zenon.directive.js"></script>
-        <script src="js/utils/autoheight.directive.js"></script>
+        <script src="js/jobs/_module.js"></script>
+        <script src="js/jobs/dataset.js"></script>
+        <script src="js/jobs/webservice.js"></script>
+        <script src="js/jobs/jobs.js"></script>
+        <script src="js/jobs/staging_dir.js"></script>
+        <script src="js/jobs/list.controller.js"></script>
         <script src="js/jobs/main_object.directive.js"></script>
         <script src="js/jobs/job.directive.js"></script>
 
+        <script src="js/modals/_module.js"></script>
+        <script src="js/modals/login.controller.js"></script>
+        <script src="js/modals/csv_import.controller.js"></script>
+
+        <script src="js/models/_module.js"></script>
         <script src="js/models/journal_issue.js"></script>
 
-        <script src="js/app.js"></script>
+        <script src="js/utils/_module.js"></script>
+        <script src="js/utils/labels.js"></script>
+        <script src="js/utils/messenger.js"></script>
+        <script src="js/utils/cookiemanager.js"></script>
+        <script src="js/utils/multiselect.directive.js"></script>
+        <script src="js/utils/messagebox.directive.js"></script>
+        <script src="js/utils/autoheight.directive.js"></script>
+        <script src="js/utils/stats.directive.js"></script>
 
-        <!-- load file handlers -->
+        <script src="js/zenon/_module.js"></script>
+        <script src="js/zenon/zenon_importer.js"></script>
+        <script src="js/zenon/zenon.directive.js"></script>
 
+        <script src="js/editables/_module.js"></script>
+        <script src="js/editables/language_strings.js"></script>
+        <script src="js/editables/editables.js"></script>
+        <script src="js/editables/editable.directive.js"></script>
+
+        <script src="js/files/_module.js"></script>
+        <script src="js/files/file_manager.js"></script>
+        <script src="js/files/files_treeview.directive.js"></script>
         <script src="js/files/default_pdf_handler.js"></script>
         <script src="js/files/empty_pdf_handler.js"></script>
         <script src="js/files/chiron_parted.js"></script>
         <script src="js/files/csv_import.js"></script>
         <script src="js/files/pdf_file_manager.js"></script>
+
+        <script src="js/app.js"></script>
+        <script src="js/settings.js"></script>
+        <script src="js/index.controller.js"></script>
 
         <!-- load require.js for non-angular modules -->
 

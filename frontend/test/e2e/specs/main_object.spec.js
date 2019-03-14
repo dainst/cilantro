@@ -21,7 +21,7 @@ describe('mainobject view', () => {
             LoginHelper.get(browser, browser.baseUrl);
             e.home.importJournal.click();
             e.home.startBtn.click();
-            a.clickNavbarButton("articles");
+            a.clickNavbarButton("subobjects");
             browser.wait(EC.visibilityOf(e.subobject.add), 20000);
             e.subobject.add.click();
             const cell = so.getRowContent("language");
@@ -31,7 +31,7 @@ describe('mainobject view', () => {
             a.restart();
             // the journal 0 is selected by default
             e.home.startBtn.click();
-            a.clickNavbarButton("articles");
+            a.clickNavbarButton("subobjects");
             e.subobject.add.click();
             const cell2 = so.getRowContent("language");
             expect(cell.all(by.css("label")).get(1).getText()).toBe("English");

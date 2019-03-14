@@ -1,8 +1,4 @@
-'use strict';
-
-angular
-
-    .module('module.languageStrings', [])
+angular.module("workbench.editables")
 
     .factory('languageStrings', [function() {
 
@@ -109,5 +105,5 @@ angular
             + (ls.getName3166(code3166) && (' (' + ls.getName3166(code3166) + ")"));
 
         return ls;
-    }
-    ]);
+
+    }]);
