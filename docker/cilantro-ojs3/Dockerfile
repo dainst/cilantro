@@ -130,59 +130,59 @@ RUN git init && \
     git checkout --track origin/${OJS_BRANCH}
 RUN git submodule update --init --recursive
 
-# RUN composer install -v -d lib/pkp --no-dev
-# RUN composer install -v -d plugins/paymethod/paypal --no-dev
-# RUN composer install -v -d plugins/generic/citationStyleLanguage --no-dev
-#
-# RUN npm install -y
-# RUN npm run build
-#
-# RUN cp config.TEMPLATE.inc.php config.inc.php
-# WORKDIR /var
-# RUN chgrp -f -R www-data www && \
-#     chmod -R 771 www && \
-#     chmod g+s www && \
-#     setfacl -Rm o::x,d:o::x www && \
-#     setfacl -Rm g::rwx,d:g::rwx www
-#
-# ### Install OJS ###
-# WORKDIR /var/www
-# RUN service mysql start && expect /root/ojsInstall.exp ${ADMIN_USER} ${ADMIN_PASSWORD} ${ADMIN_EMAIL} ${MYSQL_USER} ${MYSQL_PASSWORD} ${MYSQL_DB}
-# RUN git clone https://github.com/dainst/ojs-config-tool ojsconfig
-# WORKDIR html/plugins
-# RUN git clone --single-branch -b ${OJS_BRANCH} https://github.com/asmecher/texture generic/texture
-# RUN git submodule update --init --recursive
-# RUN chgrp -f -R www-data generic/texture && \
-#     chmod -R 771 generic/texture && \
-#     chmod g+s generic/texture && \
-#     setfacl -Rm o::x,d:o::x generic/texture && \
-#     setfacl -Rm g::rwx,d:g::rwx generic/texture
-# RUN service mysql start && php /var/www/ojsconfig/ojs3.php
-#
-# # Install OJS Plugins
-# WORKDIR /var/www/html/plugins
-# RUN git clone -b ojs3 https://github.com/dainst/ojs-cilantro-plugin.git generic/ojs-cilantro-plugin
-# # RUN git clone https://github.com/dainst/ojs-dainst-zenonlink-plugin.git pubIds/zenon  # TODO comment-in when actually available
-# RUN git clone -b ojs3 https://github.com/dainst/epicur.git oaiMetadataFormats/epicur
-# RUN git submodule update --init --recursive
-#
-# WORKDIR /var/www/html/
-# RUN chgrp -f -R www-data plugins && \
-#     chmod -R 771 plugins && \
-#     chmod g+s plugins && \
-#     setfacl -Rm o::x,d:o::x plugins && \
-#     setfacl -Rm g::rwx,d:g::rwx plugins
-#
-# RUN mkdir /var/www/tmp
-# RUN echo "[dainst]\ntmpPath = /var/www/tmp" >> /var/www/html/config.inc.php
-# WORKDIR /var/www
-# RUN chgrp -f -R www-data tmp && \
-#     chmod -R 771 tmp && \
-#     chmod g+s tmp && \
-#     setfacl -Rm o::x,d:o::x tmp && \
-#     setfacl -Rm g::rwx,d:g::rwx tmp
-#
-# RUN sed -i 's/allowProtocolRelative = false/allowProtocolRelative = true/' /var/www/html/lib/pkp/classes/core/PKPRequest.inc.php
+RUN composer install -v -d lib/pkp --no-dev
+RUN composer install -v -d plugins/paymethod/paypal --no-dev
+RUN composer install -v -d plugins/generic/citationStyleLanguage --no-dev
+
+RUN npm install -y
+RUN npm run build
+
+RUN cp config.TEMPLATE.inc.php config.inc.php
+WORKDIR /var
+RUN chgrp -f -R www-data www && \
+    chmod -R 771 www && \
+    chmod g+s www && \
+    setfacl -Rm o::x,d:o::x www && \
+    setfacl -Rm g::rwx,d:g::rwx www
+
+### Install OJS ###
+WORKDIR /var/www
+RUN service mysql start && expect /root/ojsInstall.exp ${ADMIN_USER} ${ADMIN_PASSWORD} ${ADMIN_EMAIL} ${MYSQL_USER} ${MYSQL_PASSWORD} ${MYSQL_DB}
+RUN git clone https://github.com/dainst/ojs-config-tool ojsconfig
+WORKDIR html/plugins
+RUN git clone --single-branch -b ${OJS_BRANCH} https://github.com/asmecher/texture generic/texture
+RUN git submodule update --init --recursive
+RUN chgrp -f -R www-data generic/texture && \
+    chmod -R 771 generic/texture && \
+    chmod g+s generic/texture && \
+    setfacl -Rm o::x,d:o::x generic/texture && \
+    setfacl -Rm g::rwx,d:g::rwx generic/texture
+RUN service mysql start && php /var/www/ojsconfig/ojs3.php
+
+### Install OJS Plugins ###
+WORKDIR /var/www/html/plugins
+RUN git clone -b ojs3 https://github.com/dainst/ojs-cilantro-plugin.git generic/ojs-cilantro-plugin
+RUN git clone -b ojs3 https://github.com/dainst/ojs-zenon-plugin.git pubIds/zenon
+RUN git clone -b ojs3 https://github.com/dainst/epicur.git oaiMetadataFormats/epicur
+RUN git submodule update --init --recursive
+
+WORKDIR /var/www/html/
+RUN chgrp -f -R www-data plugins && \
+    chmod -R 771 plugins && \
+    chmod g+s plugins && \
+    setfacl -Rm o::x,d:o::x plugins && \
+    setfacl -Rm g::rwx,d:g::rwx plugins
+
+RUN mkdir /var/www/tmp
+RUN echo "[dainst]\ntmpPath = /var/www/tmp" >> /var/www/html/config.inc.php
+WORKDIR /var/www
+RUN chgrp -f -R www-data tmp && \
+    chmod -R 771 tmp && \
+    chmod g+s tmp && \
+    setfacl -Rm o::x,d:o::x tmp && \
+    setfacl -Rm g::rwx,d:g::rwx tmp
+
+RUN sed -i 's/allowProtocolRelative = false/allowProtocolRelative = true/' /var/www/html/lib/pkp/classes/core/PKPRequest.inc.php
 
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
