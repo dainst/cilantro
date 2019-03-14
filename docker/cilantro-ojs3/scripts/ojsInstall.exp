@@ -1,0 +1,73 @@
+#!/usr/bin/expect -df
+set timeout 20000
+
+set adminUser [lindex $argv 0]
+set adminPwd [lindex $argv 1]
+set adminMail [lindex $argv 2]
+set dbUser [lindex $argv 3]
+set dbPWd [lindex $argv 4]
+set dbName [lindex $argv 5]
+
+spawn php  /var/www/html/tools/install.php install
+
+expect "Select (en_US):"
+send -- "en_US\n"
+
+expect "Select (None):"
+send -- "de_DE\n"
+
+expect "Select (utf-8):"
+send -- "utf-8\n"
+
+expect "Select (None):"
+send -- "\n"
+
+expect "Select (None):"
+send -- "\n"
+
+expect "Directory for uploads: "
+send -- "/var/www/ojsfiles\n"
+
+expect "Username: "
+send -- $adminUser\n
+
+expect "Password: "
+send -- $adminPwd\n
+
+expect "Repeat password: "
+send -- $adminPwd\n
+
+expect "Email: "
+send -- $adminMail\n
+
+expect "Select: "
+send -- "mysqli\n"
+
+expect "Host (None): "
+send -- "localhost\n"
+
+expect "Username (None): "
+send -- $dbUser\n
+
+expect "Password (None): "
+send -- $dbPWd\n
+
+expect "Database name: "
+send -- $dbName\n
+
+expect "Create new database "
+send -- "n\n"
+
+expect "Repository Identifier: "
+send -- "dockerizedOJS3\n"
+
+expect "Provide a unique site ID and OAI base URL to PKP for statistics and security alert purposes only. "
+send -- "n\n"
+
+expect "Install Open Journal Systems "
+send -- "y\n"
+
+#expect "Successfully installed version"
+
+expect eof
+#catch wait result

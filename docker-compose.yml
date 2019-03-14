@@ -44,6 +44,15 @@ x-env-archaeocloud: &env-archaeocloud
   PTIF_DIR: ${PTIF_DIR}
   ARCHIVE_DIR: ${ARCHIVE_DIR}
 
+x-env-ojs3: &env-ojs3
+  MYSQL_USER: ojs
+  MYSQL_PASSWORD: ojs
+  MYSQL_DB: ojs
+  OJS_BRANCH: ojs-stable-3_1_1
+  ADMIN_USER: admin
+  ADMIN_PASSWORD: password
+  ADMIN_EMAIL: dummy@address.local
+
 
 services:
 
@@ -192,7 +201,7 @@ services:
     environment:
       <<: *env-broker
 
-  ojs:
+  ojs2:
     image: dainst/cilantro-ojs2:latest
     build:
       context: .
@@ -202,6 +211,21 @@ services:
       - ./data:/data
     ports:
       - "4444:80"
+
+  ojs3:
+    image: dainst/cilantro-ojs3:latest
+    build:
+      context: ./docker/cilantro-ojs3
+      args:
+        <<: *env-ojs3
+    ports:
+      - "4445:8000"
+    environment:
+      <<: *env-ojs3
+    volumes:
+      - /var/lib/mysql
+      - /var/www/html
+      - /var/www/ojsfiles
 
   frontend:
     image: dainst/cilantro-frontend:latest
