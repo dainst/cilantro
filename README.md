@@ -19,6 +19,8 @@ Run this command after first checking out the code:
 
     make init
 
+Then generate an access token at https://github.com/settings/tokens/new, and add the token to your local .env file.
+
 Run all docker containers with:
 
     make run
