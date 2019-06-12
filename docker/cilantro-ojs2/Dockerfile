@@ -14,6 +14,8 @@ ENV mysql_password="ojs"
 ENV mysql_db="ojs"
 ENV enable_plugins="generic/ojs-dainst-frontpage-generator-plugin,pubIds/urnDNB,pubIds/zenon"
 
+RUN printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://archive.debian.org/debian/ jessie main\ndeb http://security.debian.org jessie/updates main\ndeb-src http://security.debian.org jessie/updates main" > /etc/apt/sources.list
+
 # php settings
 RUN echo "error_reporting=E_ALL & ~E_WARNING & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED"  >> /usr/local/etc/php/php.ini
 RUN echo "date.timezone = Europe/Berlin"  >> /usr/local/etc/php/php.ini
