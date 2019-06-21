@@ -159,7 +159,7 @@ volumes:
   redis-data:
   data:
     external:
-      name: cilantro_repository_data
+    name: cilantro_repository_data
 
 networks:
   web:
