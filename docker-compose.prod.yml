@@ -37,6 +37,9 @@ x-env-archaeocloud: &env-archaeocloud
   PTIF_DIR: S-Arachne/arachne4scans/arachne4webimages/bookscans
   ARCHIVE_DIR: $historical-books-archive/DAI
 
+x-env-app-config: &env-app-config
+  OLD_JOBS_THRESHOLD_DAYS: 7
+
 x-env-frontend-uris: &env-frontend-uris
   BACKEND_URI: https://workbench.idai.world/api
   ZENON_URI: https://zenon.dainst.org/api/v1/
