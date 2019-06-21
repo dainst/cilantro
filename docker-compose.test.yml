@@ -1,0 +1,165 @@
+version: '3.5'
+
+x-env-dirs: &env-dirs
+  REPOSITORY_DIR: /data/repository
+  WORKING_DIR: /data/workspace
+  STAGING_DIR: /data/staging
+  CONFIG_DIR: /config
+
+x-env-ojs: &env-ojs
+  OJS_SERVER: test.publications.dainst.org
+  OJS_PORT: 80
+  OJS_PATH: journals
+  OJS_AUTH_KEY: /run/secrets/workbench_ojs_auth_key
+
+x-env-broker: &env-broker
+  BROKER_HOST: "broker"
+  BROKER_USER: &broker-user user
+  BROKER_PASSWORD: &broker-password password
+
+x-env-jobdb: &env-jobdb
+  JOB_DB_URL: job-db
+  JOB_DB_PORT: 27017
+  JOB_DB_NAME: job_database
+
+x-env-arachne: &env-arachne
+  ARACHNE_DB_HOST: bogusman02.dai-cloud.uni-koeln.de
+  ARACHNE_DB_NAME: arachne
+  ARACHNE_DB_USER: arachne
+  ARACHNE_DB_PASSWORD: /run/secrets/workbench_arachne_db_password
+
+x-env-archaeocloud: &env-archaeocloud
+  ARCHAEOCLOUD_DIR: archaeocloud_test_dir
+  BOOKSCAN_DIR: aronscans/bookscans
+  PDF_DIR: aronscans/download-book
+  METS_DIR: S-Arachne/MetsDocuments
+  TEI_DIR: S-Arachne/TeiDocuments
+  PTIF_DIR: S-Arachne/arachne4scans/arachne4webimages/bookscans
+  ARCHIVE_DIR: $historical-books-archive/DAI
+
+x-env-app-config: &env-app-config
+  OLD_JOBS_THRESHOLD_DAYS: 7
+
+x-env-frontend-uris: &env-frontend-uris
+  BACKEND_URI: https://workbench.test.idai.world/api
+  ZENON_URI: https://zenon.dainst.org/api/v1/
+  OJS_URI: http://test.publications.dainst.org/journals/plugins/generic/ojs-cilantro-plugin/api/
+
+services:
+
+  broker:
+    image: rabbitmq:latest
+    environment:
+      RABBITMQ_DEFAULT_USER: *broker-user
+      RABBITMQ_DEFAULT_PASS: *broker-password
+
+  db:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+
+  job-db:
+    image: mongo
+    volumes:
+      - mongo-data:/data
+
+  service:
+    image: dainst/cilantro-service:latest
+    volumes:
+      - data:/data
+      - /opt/cilantro/config:/config
+    working_dir: /app
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      <<: *env-jobdb
+      DB_HOST: "db"
+    networks:
+      - default
+      - web
+    deploy:
+      labels:
+        - "traefik.docker.network=web"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:workbench.test.idai.world; PathPrefixStrip:/api"
+        - "traefik.port=5000"
+
+  default-worker:
+    user: ${UID}
+    image: dainst/cilantro-default-worker:latest
+    working_dir: /app
+    volumes:
+      - data:/data
+      - /opt/cilantro/config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      <<: *env-ojs
+      <<: *env-jobdb
+      <<: *env-arachne
+      <<: *env-archaeocloud
+      DB_HOST: "db"
+    secrets:
+      - workbench_ojs_auth_key
+      - workbench_arachne_db_password
+
+  convert-worker:
+    user: ${UID}
+    image: dainst/cilantro-convert-worker:latest
+    working_dir: /app
+    volumes:
+      - data:/data
+      - /opt/cilantro/config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      DB_HOST: "db"
+
+  nlp-worker:
+    user: ${UID}
+    image: dainst/cilantro-nlp-worker:latest
+    working_dir: /app
+    volumes:
+      - data:/data
+      - /opt/cilantro/config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      DB_HOST: "db"
+
+  monitor:
+    image: dainst/cilantro-monitor:stable
+    environment:
+      <<: *env-broker
+
+  frontend:
+    image: dainst/cilantro-frontend:latest
+    environment:
+      <<: *env-ojs
+      <<: *env-frontend-uris
+    networks:
+      - default
+      - web
+    deploy:
+      labels:
+        - "traefik.docker.network=web"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:workbench.test.idai.world"
+        - "traefik.port=80"
+
+secrets:
+  workbench_ojs_auth_key:
+    external: true
+  workbench_arachne_db_password:
+    external: true
+
+volumes:
+  mongo-data:
+  redis-data:
+  data:
+    name: cilantro_repository_data
+
+networks:
+  web:
+    external: true
