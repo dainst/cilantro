@@ -68,7 +68,7 @@ services:
     image: dainst/cilantro-service:latest
     volumes:
       - data:/data
-      - /opt/cilantro/config:/config
+      - config:/config
     working_dir: /app
     environment:
       <<: *env-dirs
@@ -91,7 +91,7 @@ services:
     working_dir: /app
     volumes:
       - data:/data
-      - /opt/cilantro/config:/config
+      - config:/config
     environment:
       <<: *env-dirs
       <<: *env-broker
@@ -110,7 +110,7 @@ services:
     working_dir: /app
     volumes:
       - data:/data
-      - /opt/cilantro/config:/config
+      - config:/config
     environment:
       <<: *env-dirs
       <<: *env-broker
@@ -122,7 +122,7 @@ services:
     working_dir: /app
     volumes:
       - data:/data
-      - /opt/cilantro/config:/config
+      - config:/config
     environment:
       <<: *env-dirs
       <<: *env-broker
@@ -159,6 +159,7 @@ volumes:
   redis-data:
   data:
     name: cilantro_repository_data
+  config:
 
 networks:
   web:
