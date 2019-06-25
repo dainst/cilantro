@@ -21,15 +21,6 @@ angular.module('workbench')
 			else return settings.load();
 		}
 
-
-	    settings.devMode = function() {
-	        return (typeof settings.password !== "undefined");
-	    };
-
-	    settings.testMode = function() {
-	      return (typeof settings.test !== "undefined") && settings.test;
-	    };
-
 		return settings;
 
 	}]);
