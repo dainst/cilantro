@@ -1,6 +1,5 @@
 FROM nginx:1.14
 
-# dependencies
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get -y install git apt-transport-https nano gnupg wget
 # we need a newer node version to get npm
@@ -16,12 +15,10 @@ WORKDIR /usr/share/nginx/html
 RUN npm update -g \
     && npm install
 
-#write startup-script (which creates settings.json)
 RUN touch /startup.sh \
     && echo "#!/bin/bash\n" >> /startup.sh \
     && echo "cd /usr/share/nginx/html/config\n" >> /startup.sh \
     && echo "nginx -g 'daemon off;'" >> /startup.sh \
     && chmod a+x /startup.sh
 
-# startup script
 ENTRYPOINT ["/startup.sh"]
