@@ -12,7 +12,6 @@ RUN wget https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
 
 RUN rm -R /usr/share/nginx/html/
 COPY frontend /usr/share/nginx/html
-COPY config/create_settings_from_env.sh /create_settings_from_env.sh
 WORKDIR /usr/share/nginx/html
 RUN npm update -g \
     && npm install
@@ -21,10 +20,8 @@ RUN npm update -g \
 RUN touch /startup.sh \
     && echo "#!/bin/bash\n" >> /startup.sh \
     && echo "cd /usr/share/nginx/html/config\n" >> /startup.sh \
-    && echo "/create_settings_from_env.sh" >> /startup.sh \
     && echo "nginx -g 'daemon off;'" >> /startup.sh \
-    && chmod a+x /startup.sh \
-    && chmod a+x /create_settings_from_env.sh
+    && chmod a+x /startup.sh
 
 # startup script
 ENTRYPOINT ["/startup.sh"]
