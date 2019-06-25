@@ -1,6 +1,6 @@
 angular.module("workbench.models")
 
-    .factory("journalIssue", ['editables', 'settings', function(editables, settings) {
+    .factory("journalIssue", ['editables', function(editables) {
         /*
          * refactor plans :
          * looking for a more generic datamodel-model,
