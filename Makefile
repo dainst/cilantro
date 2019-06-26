@@ -7,6 +7,13 @@ run-detached:
 stop:
 	docker-compose stop
 
+start:
+	docker-compose start
+	docker-compose logs -f
+
+start-detached:
+	docker-compose start
+
 down:
 	docker-compose down
 
