@@ -5,8 +5,6 @@ LABEL maintainer="Deutsches Archäologisches Institut: dev@dainst.de"
 EXPOSE 80
 USER root
 
-ARG GITHUB_ACCESS_TOKEN
-
 ENV admin_user=admin
 ENV admin_password="password"
 ENV admin_email="email@adress.xx"
