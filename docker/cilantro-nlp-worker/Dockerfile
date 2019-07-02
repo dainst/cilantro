@@ -29,11 +29,11 @@ RUN mkdir /opt/bin
 RUN mkdir $TREETAGGER_ROOT
 WORKDIR $TREETAGGER_ROOT
 
-RUN wget http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tree-tagger-linux-3.2.1.tar.gz
-RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/tagger-scripts.tar.gz
-RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/german.par.gz
-RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/english.par.gz
-RUN wget http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/install-tagger.sh
+RUN wget --no-verbose http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tree-tagger-linux-3.2.1.tar.gz
+RUN wget --no-verbose http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/tagger-scripts.tar.gz
+RUN wget --no-verbose http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/german.par.gz
+RUN wget --no-verbose http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/english.par.gz
+RUN wget --no-verbose http://www.cis.uni-muenchen.de/%7Eschmid/tools/TreeTagger/data/install-tagger.sh
 RUN sh install-tagger.sh
 
 # Install Stanford NER  for nlp_components
@@ -43,20 +43,20 @@ ENV STANFORD_MODELS=$STANFORDHOME/models:$STANFORDHOME/classifiers
 RUN mkdir $STANFORDHOME
 
 WORKDIR /tmp
-RUN wget https://nlp.stanford.edu/software/stanford-ner-2015-12-09.zip
+RUN wget --no-verbose https://nlp.stanford.edu/software/stanford-ner-2015-12-09.zip
 RUN unzip stanford-ner-2015-12-09.zip
 RUN mv stanford-ner-2015-12-09/* $STANFORDHOME
 RUN rm stanford-ner-2015-12-09.zip
 
-RUN wget http://nlp.dainst.org/html/nerclass/english.all.3class.distsim.crf.ser.gz -P $STANFORDHOME/classifiers
-RUN wget http://nlp.dainst.org/html/nerclass/german.hgc_175m_600.crf.ser.gz -P $STANFORDHOME/classifiers
-RUN wget http://nlp.dainst.org/html/nerclass/ner-ita-nogpe-noiob_gaz_wikipedia_sloppy.ser.gz -P $STANFORDHOME/classifiers
-RUN wget http://nlp.dainst.org/html/nerclass/spanish.ancora.distsim.s512.crf.ser.gz -P $STANFORDHOME/classifiers
+RUN wget --no-verbose http://nlp.dainst.org/html/nerclass/english.all.3class.distsim.crf.ser.gz -P $STANFORDHOME/classifiers
+RUN wget --no-verbose http://nlp.dainst.org/html/nerclass/german.hgc_175m_600.crf.ser.gz -P $STANFORDHOME/classifiers
+RUN wget --no-verbose http://nlp.dainst.org/html/nerclass/ner-ita-nogpe-noiob_gaz_wikipedia_sloppy.ser.gz -P $STANFORDHOME/classifiers
+RUN wget --no-verbose http://nlp.dainst.org/html/nerclass/spanish.ancora.distsim.s512.crf.ser.gz -P $STANFORDHOME/classifiers
 
 # Install Geoparser for nlp_components
 ## ATTENTION: The geoparser home folder is currently hardcoded in nlp_components
 ENV GEOPARSER_HOME=/opt/nlp
-RUN wget http://nlp.dainst.org/html/geo/geoparser-march2016.zip
+RUN wget --no-verbose http://nlp.dainst.org/html/geo/geoparser-march2016.zip
 RUN unzip geoparser-march2016.zip
 RUN rm geoparser-march2016.zip
 RUN mv geoparser-march2016 $GEOPARSER_HOME
