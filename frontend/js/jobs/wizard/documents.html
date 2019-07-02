@@ -69,13 +69,34 @@
 			        <div ng-style="{width: progress +'%'}" ng-bind="progress + '%'"></div>
 			    </span>
 
-                    <br><span  ng-show="uploadedFiles.length > 0">Files:</span>
-                    <ul>
-                        <li ng-repeat="folderOrFile in uploadedFoldersAndFiles track by $index">{{folderOrFile}}</li>
-                    </ul>
-                    <div ng-show="errorMsg" class="alert alert-danger" ng-bind-html="errorMsg | trustHtml"></div>
-                    <div ng-show="warningsMsg.length >  0" ng-repeat="warning in warningsMsg track by $index" class="alert alert-warning">{{warning}}</div>
-                    <div ng-show="invalidFiles" class="alert alert-warning">Wrong Filetype</div>
+
+                <div ng-show="uploadedFiles.length > 0">
+                    <table class="table table-condensed">
+                        <tr>
+                            <th>Files successfully staged:</th>
+                        </tr>
+                        <tr class="success" ng-repeat="file in uploadedFiles">
+                            <td style="text-align:left">{{file}}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div ng-show="Utils.keys(failedStagingFiles).length > 0">
+
+                    <table ng-repeat="(error_key, group) in failedStagingFiles"
+                           class="table table-condensed">
+                        <tr>
+                            <th>Files failed staging ({{error_key}}):</th>
+                        </tr>
+                        <tr class="danger" ng-repeat="file in group">
+                            <td style="text-align:left">{{file}}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div ng-show="errorMsg" class="alert alert-danger" ng-bind-html="errorMsg | trustHtml"></div>
+                <div ng-show="warningsMsg.length >  0" ng-repeat="warning in warningsMsg track by $index" class="alert alert-warning">{{warning}}</div>
+                <div ng-show="invalidFiles" class="alert alert-warning">Wrong Filetype</div>
                 </div>
             </div>
         </div>

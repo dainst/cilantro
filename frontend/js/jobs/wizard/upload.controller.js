@@ -4,7 +4,11 @@ angular.module('workbench.jobs.wizard')
         function ($scope, $rootScope, Upload, $timeout, settings, webservice, messenger, stagingDir) {
 
             $scope.uploadedFiles = [];
+            $scope.failedStagingFiles = {};
             $scope.uploadedFoldersAndFiles = [];
+            $rootScope.Utils = {
+                keys : Object.keys
+            };
 
             function updateUploadedFoldersAndFiles(files){
                 let folders = [];
@@ -25,8 +29,23 @@ angular.module('workbench.jobs.wizard')
                 console.log(f);
             };
 
-            $scope.uploadFiles = function(files, uploadTask, callback) {
+            $scope.evaluateStagingResponse = function(result) {
+                for(let filename in result){
+                    if(result[filename].success === true){
+                        $scope.uploadedFiles.push(filename);
+                    }
+                    else{
+                        let errorCode = result[filename].error.code;
+                        if(errorCode in $scope.failedStagingFiles){
+                            $scope.failedStagingFiles[errorCode].push(filename);
+                        } else {
+                            $scope.failedStagingFiles[errorCode] = [filename];
+                        }
+                    }
+                }
+            };
 
+            $scope.uploadFiles = function(files, uploadTask, callback) {
                 if (!files || !files.length) {
                     $scope.invalidFiles = true;
                     return;
@@ -45,12 +64,12 @@ angular.module('workbench.jobs.wizard')
                     data: files,
                 }).success(function(data, status, headers, config){
                     $scope.progress = 0;
-                    $scope.uploadedFiles = $scope.uploadedFiles.concat(files);
-                    updateUploadedFoldersAndFiles(files);
-                    $scope.invalidFiles = false;
-                    console.log("files", files);
+                    $scope.evaluateStagingResponse(data.result);
+
+                    //updateUploadedFoldersAndFiles(files);
+                    //$scope.invalidFiles = false;
+
                     webservice.get('staging').then((stagingFolder) => {
-                        console.log("stagingFolder", stagingFolder);
                         $scope.stagingDir.update(stagingFolder);
                         $rootScope.$broadcast('refreshView');
                     });
