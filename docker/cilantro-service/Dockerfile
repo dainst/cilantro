@@ -24,4 +24,6 @@ EXPOSE 5000
 
 ENV FLASK_APP service/run_service.py
 
+COPY docker/cilantro-service/VERSION .
+
 ENTRYPOINT sh /entrypoint.sh

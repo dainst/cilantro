@@ -32,3 +32,5 @@ COPY docker/cilantro-test/Pipfile Pipfile
 
 RUN pip3 install pipenv
 RUN set -ex && pipenv lock && pipenv install --deploy --system
+
+COPY docker/cilantro-test/VERSION .

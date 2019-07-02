@@ -16,20 +16,19 @@ Images can be built by
 
     docker-compose build <image-name>
 
-If `image-name` is blank it builds all images. 
+If `image-name` is blank it builds all images.
 
 Alternative:
 
 This includes the push to dockerhub.
 To build a new image or to rebuild it run the build script
 
-    ./build.sh <image-name> <tag>
+    ./build.sh <image-name>
 
-Tag defaults to stable.
+The script will also push the built image to Docker Hub, using the 'latest'
+tag.
+Additionally it will push a tag using the version string of the container which
+is kept in the file 'VERSION' in the container's subdirectory. Before building
+the content of the file is automatically incremented by one.
 
-You should use your own tag for developing, e.g. the name of your feature branch.
 You can append `--no-cache` option if you don't want to use your docker cache.
-This may avoid some unexpected behavior and may be considered if errors occur.
-
-New repositories are automatically created on dockerhub if your permissions are sufficient.
-Make sure to provide a description for them at dockerhub!

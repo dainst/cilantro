@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 name=${1}
-tag=${2-latest}
-nocache=${3}
+nocache=${2}
 token=$(grep GITHUB_ACCESS_TOKEN .env | xargs)
 token=${token#*=}
 
@@ -17,7 +16,12 @@ if [ -z "${nocache}" ]
         nocache=""
 fi
 
-docker image build -t ${name}:${tag} -f docker/${name}/Dockerfile . --build-arg GITHUB_ACCESS_TOKEN=${token} ${nocache}
-docker tag ${name}:${tag} dainst/${name}:${tag}
-docker push dainst/${name}:${tag}
-exit
+# bump version in VERSION file
+awk -F'.' '{print $1"."$2"."$3+1}' docker/${name}/VERSION > docker/${name}/VERSION.tmp
+mv docker/${name}/VERSION.tmp docker/${name}/VERSION
+version=`cat docker/${name}/VERSION`
+
+docker image build -t dainst/${name}:${version} -f docker/${name}/Dockerfile . --build-arg GITHUB_ACCESS_TOKEN=${token} ${nocache}
+
+docker push dainst/${name}:latest
+docker push dainst/${name}:${version}
