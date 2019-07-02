@@ -268,7 +268,7 @@ def _process_file(file, username):
         return _generate_error_result(
             file,
             "extension_not_allowed",
-            f"File extension .{_get_file_extension(file.filename)}"
+            f"File extension '{_get_file_extension(file.filename)}'"
             f" is not allowed.")
 
 
@@ -293,9 +293,11 @@ def _upload_file(file, username):
 
 
 def _is_allowed_file(filename):
-    return '.' in filename and \
-           _get_file_extension(filename) in allowed_extensions
+    return _get_file_extension(filename) in allowed_extensions
 
 
 def _get_file_extension(filename):
-    return filename.rsplit('.', 1)[1].lower()
+    if '.' not in filename:
+        return ""
+    else:
+        return filename.rsplit('.', 1)[1].lower()
