@@ -1,36 +1,39 @@
 angular.module('workbench.jobs')
 
     .factory("webservice", ['$http', '$rootScope', 'settings', 'messenger',
-        function ($http, $rootScope, settings, messenger) {
+        function($http, $rootScope, settings, messenger) {
 
             const webservice = {};
 
-            webservice.userData = {'username': null, 'btoa': null, 'uriComponent':null};
-            webservice.authenticateUser = function (username, password) {
+            webservice.userData = {
+                'username': null,
+                'btoa': null,
+                'uriComponent': null
+            };
+            webservice.authenticateUser = function(username, password) {
                 webservice.setUserData(username, password);
                 return webservice.get('user/' + username, 'GET', null);
             };
-            webservice.setUserData = function (username, password){
-
+            webservice.setUserData = function(username, password) {
                 webservice.userData.username = username;
                 webservice.userData.btoa = window.btoa(username + ":" + password);
-                webservice.userData.uriComponent =encodeURIComponent(username)+":"+encodeURIComponent(password);
+                webservice.userData.uriComponent = encodeURIComponent(username) + ":" + encodeURIComponent(password);
             };
-            webservice.logUserOut = function () {
-                webservice.userData = {'username': null, 'password': null};
+            webservice.logUserOut = function() {
+                webservice.userData = {
+                    'username': null,
+                    'password': null
+                };
             };
-            webservice.isLoggedIn = function () {
+            webservice.isLoggedIn = function() {
                 return webservice.userData.username && webservice.userData.btoa;
             };
 
-            webservice.get = function (endpoint, method, data) {
-
+            webservice.get = function(endpoint, method, data) {
                 return settings.get().then(settings => {
-
                     const params = {
-                        url: angular.isArray(endpoint)
-                            ? settings[endpoint[0]] + endpoint[1]
-                            : settings.server_url + endpoint,
+                        url: angular.isArray(endpoint) ?
+                            settings[endpoint[0]] + endpoint[1] : settings.server_url + endpoint,
                         method: method || "get",
                         data: data || {}
                     };
@@ -65,6 +68,6 @@ angular.module('workbench.jobs')
                 });
             };
 
-
             return webservice;
-        }]);
+        }
+    ]);
