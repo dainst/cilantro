@@ -45,33 +45,32 @@
                 </div>
             </div>
 
-            <div 	ng-controller="upload"
-                    class="panel panel-default"
-                    ngf-drop="uploadFiles($files)"
-                    ng-model="files"
-                    ngf-multiple="true"
-                    ngf-pattern="pattern"
-                    ngf-accept="application/pdf, application/csv"
-                    ngf-drag-over-class="'dragOver'"
-                    ngf-validate="{pattern: '.pdf,.csv'}"
-                    ngf-keep="false"
-                    ngf-allow-dir="true"
-                    ngf-include-dir="true"
-                    ngf-drop-available="dropAvailable"
-                    id="upload-area">
+            <div ng-controller="upload"
+                 class="panel panel-default"
+                 ng-model="files"
+                 id="upload-area"
+                 ngf-select="uploadFiles($files)"
+                 ngf-drop="uploadFiles($files)"
+                 ngf-drag-over-class="'dragOver'"
+                 ngf-multiple="true"
+                 ngf-keep="false"
+                 ngf-allow-dir="true"
+                 ngf-include-dir="true"
+                 ngf-drop-available="dropAvailable"
+                 multiple>
 
                 <div class="panel-heading">Upload PDF or CSV file</div>
                 <div class="panel-body">
-                    <button id="uploadFileSelect"
-                            class="btn btn-sm" ngf-select="uploadFiles($files)" multiple
-                            accept="application/pdf, application/csv">Select files to upload from your hard disk
-                    </button>
-                    <span ng-show="dropAvailable"> or just drop a File or Folder into this Box.</span>
+                    <div id="uploadFileSelect"
+                            >Select files to upload from your hard disk
+                        <span ng-show="dropAvailable"> or just drop a File or Folder into this Box.</span>
+                    </div>
+
                     <br>
 
-                    <span class="progressbar">
-			        <div ng-style="{width: progress +'%'}" ng-bind="progress + '%'"></div>
-			    </span>
+                    <div class="progressbar">
+			            <div ng-style="{width: progress +'%'}" ng-bind="progress + '%'"></div>
+			        </div>
 
                 <h3 ng-show="uploadStatus">
                     {{uploadStatusMessage}}<span ng-if="uploadStatus!==200"> (status code {{uploadStatus}})</span>
@@ -100,6 +99,7 @@
                         </tr>
                     </table>
                 </div>
+
             </div>
         </div>
         </div>

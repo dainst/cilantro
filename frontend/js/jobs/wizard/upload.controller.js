@@ -44,7 +44,7 @@ angular.module('workbench.jobs.wizard')
             };
 
             $scope.uploadFiles = function(files, uploadTask, callback) {
-
+                // No files got selected, keep the previous upload's output and do nothing.
                 if(files.length === 0) return;
 
                 const headers = {"Content-Type" : 'multipart/form-data'};
