@@ -17,7 +17,6 @@ angular.module("workbench.jobs")
         const dataset = {};
 
         dataset.reset = () => {
-            console.log('reset dataset');
             dataset.data = new model.MainObjectPrototype(dataset);  // metadata for the imported issue (mainObject)
             dataset.subobjects = [];                                  // collection of articles to import
             dataset.loadedFiles = {};                               // files loaded into pdf.js

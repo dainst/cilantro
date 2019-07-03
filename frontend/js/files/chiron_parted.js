@@ -12,17 +12,12 @@ angular.module('workbench.files')
 
         chironPartedHandler.description = "Specialized File handler for Chiron Documents (not supported currently)";
         chironPartedHandler.fileTypes = ["pdf"];
-
         chironPartedHandler.handleFile = file => pdfFileManager.loadFiles(file).then(files => files.forEach(file2Articles));
-
         chironPartedHandler.createThumbnail = pdfFileManager.createThumbnail;
 
         function file2Articles(fileO) {
-
             const file = fileManager.loadedFiles[fileO.path];
-
             const pdf = pdfFileManager.files[fileName].pdf;
-
             const article = new dataset.Subobject();
              // special data for raw articles
             article.filepath.value.value =  pdfFileManager.files[fileName].url;
@@ -37,9 +32,7 @@ angular.module('workbench.files')
 
             dataset.subobjects.push(article);
 
-
             function getPage(pdf, pageIdx) {
-                console.log('get page' + pageIdx);
                 pageIdx = pageIdx || 1;
                 pdf.getPage(pageIdx).then(function(page) {
 
@@ -81,8 +74,6 @@ angular.module('workbench.files')
 
                         }
 
-                        //console.log(article._.tmp);
-
                         if (article._.tmp.length < 5) {
                             console.log('not enough text content');
                         }
@@ -96,15 +87,12 @@ angular.module('workbench.files')
                             let b = 0;
                             author = article._.tmp[2].str || '';
                             pageNr = article._.tmp[1].str;
-                            console.log('alter');
                         }
 
 
                         for (let y = 3 + b; y < article._.tmp.length - 1; y++) {
                             title += article._.tmp[y].str;
                         }
-
-                        console.log(title, author, pageNr);
 
                         article.title 	= editables.text(title.trim());
                         article.author 	= editables.authorlist(caseCorrection(author).split("–"));
@@ -122,10 +110,8 @@ angular.module('workbench.files')
                         fileManager.stats.analyzed += 1
                     }); //getTextContent
 
-                    /* refresh */
                     $rootScope.$broadcast('refreshView');
 
-                    /* thumbnail */
                     pdfFileManager.createThumbnail(page,  article._.id)
 
 

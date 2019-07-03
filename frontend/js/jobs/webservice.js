@@ -44,7 +44,6 @@ angular.module('workbench.jobs')
                     }
 
                     return $http(params).then(response => {
-                        console.log("response", response);
                         if (response.data.success === false) {
                             messenger.error(response.message);
                             $rootScope.$broadcast('refreshView');
@@ -54,7 +53,6 @@ angular.module('workbench.jobs')
                             return response.data;
                         }
                     }, err => {
-                        console.log(err);
                         let errText = endpoint + ": " + err.status + " " + err.statusText;
                         if (angular.isDefined(err.data) && (err.data !== null)) {
                             if (angular.isDefined(err.data.warnings)) err.data.warnings.forEach(messenger.warning);

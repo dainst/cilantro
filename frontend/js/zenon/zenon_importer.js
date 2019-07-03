@@ -21,7 +21,6 @@ angular.module('workbench.zenon')
                     request.params.type = "Title";
                     request.params.sort = "relevence";
                 } else {
-                    console.log("zenon search for id ", id, term);
                     request.url = zenonEndpoint + 'record';
                     request.params.id = id || term
                 }
@@ -35,11 +34,9 @@ angular.module('workbench.zenon')
             zenonImporter.get = (term, id, page) => new Promise((resolve, reject) => {
                 $http(createRequestParams(term, id, page)).then(
                     response => {
-                        console.log('success', response);
                         resolve(response.data);
                     },
                     err => {
-                        console.error(err);
                         messenger.error('No Result from Zenon!');
                         reject(err);
                     }
@@ -56,7 +53,6 @@ angular.module('workbench.zenon')
                 const setOfEditables = {};
                 Object.keys(zenonRecord).forEach(rowName => {
                     const rowValue = zenonRecord[rowName];
-                    //console.log("XXX", rowName, rowValue);
                     switch (rowName) {
                         case "title":
                             setOfEditables[rowName] = new editables.Base(rowValue);
@@ -66,8 +62,7 @@ angular.module('workbench.zenon')
                             setOfEditables[rowName].setAuthors(
                                 Object.keys(rowValue.primary || [])
                                 .concat(Object.keys(rowValue.secondary || []))
-                                .concat(Object.keys(rowValue.corporate || []))
-                            , 1);
+                                .concat(Object.keys(rowValue.corporate || [])), 1);
                             break;
                         case "summary":
                             setOfEditables[rowName] = editables.text(rowValue);
@@ -89,7 +84,6 @@ angular.module('workbench.zenon')
                 });
                 return setOfEditables;
             };
-
 
             return zenonImporter;
 
