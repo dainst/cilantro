@@ -20,7 +20,7 @@ angular.module('workbench.files')
                 article.title.value.value = !angular.isUndefined(fileInfo.meta.Title) ? fileInfo.meta.Title : '';
                 article.abstract.value.value = !angular.isUndefined(fileInfo.meta.Subject) ? fileInfo.meta.Subject : '';
                 article.author.setAuthors(fileInfo.meta.Author);
-                article.pages.value.startPdf = 1 ;
+                article.pages.value.startPdf = 1;
                 article.pages.value.endPdf = fileInfo.pagecontext.maximum;
                 article.pages.context = fileInfo.pagecontext;
 
@@ -33,15 +33,13 @@ angular.module('workbench.files')
 
                 dataset.subobjects.push(article);
                 fileManager.stats.analyzed += 1;
-                console.log(article);
                 article._.createThumbnail();
-
-                console.log("found title: " + fileInfo.meta.Title);
-
             }
 
             return (defaultPdfHandler);
         }
     ])
 
-    .run(function(defaultPdfHandler) {defaultPdfHandler.register()});
+    .run(function(defaultPdfHandler) {
+        defaultPdfHandler.register()
+    });

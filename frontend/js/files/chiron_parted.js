@@ -75,7 +75,7 @@ angular.module('workbench.files')
                         }
 
                         if (article._.tmp.length < 5) {
-                            console.log('not enough text content');
+                            console.warn('not enough text content');
                         }
 
                         let b = 1;

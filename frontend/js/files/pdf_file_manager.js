@@ -8,23 +8,17 @@ angular.module('workbench.files')
             const requirePdfJs = new Promise(resolve => {
                 require.config({paths: {'pdfjs-dist': './node_modules/pdfjs-dist'}});
                 require(['pdfjs-dist/build/pdf'], pdfjs => {
-                    console.log('required pdf.js', pdfjs);
-
                     pdfFileManager.pdfjs = pdfjs;
-
                     // pdfFileManager.PDF.global.PDFJS.workerSrc = 'js/other/pdfjs_worker_loader.js';
                     resolve();
                 });
             });
 
             const loadFiles = filesToLoad => {
-
                 pdfFileManager.ready = false;
-
                 const loadFilePromises = [];
 
                 for (let fileid in filesToLoad) {
-
                     const reqestParams = {url: settings.files_url + filesToLoad[fileid].path};
 
                     if (webservice.isLoggedIn()) {
@@ -62,7 +56,6 @@ angular.module('workbench.files')
                                         url: fileInfo.url,
                                         pagecontext: fileInfo.pagecontext,
                                     };
-                                    console.log('document: ' + fileInfo.url + ' loaded');
                                     fileManager.stats.loaded += 1;
                                     refreshView();
                                     resolve();
@@ -70,7 +63,6 @@ angular.module('workbench.files')
 
                                 Promise.all([promise1, promise2]).then(metadataLoaded, metadataLoaded);
                                 // if metadata could not be loaded, it's no reason not to continue, therefore we don't fail
-
                             },
 
                             reason => {
@@ -85,8 +77,6 @@ angular.module('workbench.files')
             };
 
             pdfFileManager.loadFiles = file => {
-                console.log("Load File: ", file);
-
                 const filesToLoad = (file.type === 'directory') ? flatten(file.contents) : [file];
                 fileManager.ready = false;
                 fileManager.stats.files += filesToLoad.length;
@@ -133,7 +123,6 @@ angular.module('workbench.files')
                     };
 
                     page.render(renderContext).then(function(){
-                        console.log("thumbnail created");
                         ctx.globalCompositeOperation = "destination-over";
                         ctx.fillStyle = "#123456";
                         ctx.fillRect(0, 0, canvas.width, canvas.height);

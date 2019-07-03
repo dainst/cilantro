@@ -37,7 +37,6 @@ angular.module('workbench.zenon')
                         scope.searchTimeout = false;
                         if (!scope.search || !scope.search.term) return;
                         if (more) scope.page++;
-                        console.log('Zenon search for term: ', scope.search);
 
                         zenonImporter.get(scope.search.term, scope.search.id, scope.page).then(
                             data => {
