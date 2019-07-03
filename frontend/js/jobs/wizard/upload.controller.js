@@ -2,32 +2,12 @@ angular.module('workbench.jobs.wizard')
 
     .controller('upload', ['$scope', '$rootScope','Upload', '$timeout', 'settings', 'webservice', 'messenger', 'stagingDir',
         function ($scope, $rootScope, Upload, $timeout, settings, webservice, messenger, stagingDir) {
-
-            $scope.uploadedFiles = [];
-            $scope.failedStagingFiles = {};
-            $scope.uploadedFoldersAndFiles = [];
             $rootScope.Utils = {
                 keys : Object.keys
             };
 
-            function updateUploadedFoldersAndFiles(files){
-                let folders = [];
-                files.forEach(function(file){
-                    if (file.path){
-                        let folderName = file.path.split('/',1)[0];
-                        if (!folders.includes(folderName)){
-                            folders.push(folderName);
-                            $scope.uploadedFoldersAndFiles.push("[DIR] " + folderName);
-                        }
-                    } else {
-                        $scope.uploadedFoldersAndFiles.push(file.name);
-                    }
-                });
-            }
-
-            $scope.dropFile = function(f)  {
-                console.log(f);
-            };
+            $scope.uploadedFiles = [];
+            $scope.failedStagingFiles = {};
 
             $scope.evaluateStagingResponse = function(result) {
                 for(let filename in result){
@@ -45,16 +25,34 @@ angular.module('workbench.jobs.wizard')
                 }
             };
 
-            $scope.uploadFiles = function(files, uploadTask, callback) {
-                if (!files || !files.length) {
-                    $scope.invalidFiles = true;
-                    return;
+            $scope.resetUploadStatus = function(){
+                $scope.uploadStatusCode = null;
+                $scope.uploadStatusMessage = null;
+            };
+
+            $scope.setUploadStatus = function(code){
+                $scope.uploadStatusCode = code;
+                // TODO: Add additional status messages for different codes?
+                switch (code){
+                    case 200:
+                        $scope.uploadStatusMessage = "Upload successful";
+                        break;
+                    default:
+                        $scope.uploadStatusMessage = "Upload failed";
+                        break;
                 }
+            };
+
+            $scope.uploadFiles = function(files, uploadTask, callback) {
 
                 const headers = {"Content-Type" : 'multipart/form-data'};
                 if (webservice.isLoggedIn()) {
                     headers.Authorization = "Basic " + webservice.userData.btoa;
                 }
+
+                $scope.uploadedFiles = [];
+                $scope.failedStagingFiles = {};
+                $scope.resetUploadStatus();
 
                 //working with ngFileUpload directive
                 Upload.upload({
@@ -64,10 +62,9 @@ angular.module('workbench.jobs.wizard')
                     data: files,
                 }).success(function(data, status, headers, config){
                     $scope.progress = 0;
+                    $scope.uploadStatus = status;
                     $scope.evaluateStagingResponse(data.result);
-
-                    //updateUploadedFoldersAndFiles(files);
-                    //$scope.invalidFiles = false;
+                    $scope.setUploadStatus(status);
 
                     webservice.get('staging').then((stagingFolder) => {
                         $scope.stagingDir.update(stagingFolder);
@@ -75,20 +72,13 @@ angular.module('workbench.jobs.wizard')
                     });
 
                 }).error(function(data, status, headers, config){
-                    messenger.error("Upload failed.");
+                    $scope.uploadStatus = status;
                     $scope.progress = 0;
-                    console.log("Upload failed with Status ", status);
-                    console.log("Upload headers:", headers);
+                    $scope.setUploadStatus(status);
 
                 }).progress(function(event){
-                    $scope.progress = Math.min(100, parseInt(100.0 * event.loaded / event.total));
+                    $scope.progress = Math.min(100, Math.floor(100.0 * event.loaded / event.total));
                 });
             };
 
-    }])
-
-    .filter('trustHtml', function($sce) {
-        return function(val) {
-            return $sce.trustAsHtml(val);
-        };
-    });
+    }]);

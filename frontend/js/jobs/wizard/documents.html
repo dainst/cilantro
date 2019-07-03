@@ -62,13 +62,20 @@
 
                 <div class="panel-heading">Upload PDF or CSV file</div>
                 <div class="panel-body">
-                    <button id="uploadFileSelect" class="btn btn-sm" ngf-select="uploadFiles($files)" multiple accept="application/pdf, application/csv">Select files to upload from your hard disk</button><span ng-show="dropAvailable"> or just drop a File or Folder into this Box.</span>
+                    <button id="uploadFileSelect"
+                            class="btn btn-sm" ngf-select="uploadFiles($files)" multiple
+                            accept="application/pdf, application/csv">Select files to upload from your hard disk
+                    </button>
+                    <span ng-show="dropAvailable"> or just drop a File or Folder into this Box.</span>
                     <br>
 
                     <span class="progressbar">
 			        <div ng-style="{width: progress +'%'}" ng-bind="progress + '%'"></div>
 			    </span>
 
+                <h3 ng-show="uploadStatus">
+                    {{uploadStatusMessage}}<span ng-if="uploadStatus!==200"> (status code {{uploadStatus}})</span>
+                </h3>
 
                 <div ng-show="uploadedFiles.length > 0">
                     <table class="table table-condensed">
@@ -93,14 +100,9 @@
                         </tr>
                     </table>
                 </div>
-
-                <div ng-show="errorMsg" class="alert alert-danger" ng-bind-html="errorMsg | trustHtml"></div>
-                <div ng-show="warningsMsg.length >  0" ng-repeat="warning in warningsMsg track by $index" class="alert alert-warning">{{warning}}</div>
-                <div ng-show="invalidFiles" class="alert alert-warning">Wrong Filetype</div>
-                </div>
             </div>
         </div>
-
+        </div>
 
         <div class="col-md-6">
             <div class="panel panel-default" id="file-handler-selection">
