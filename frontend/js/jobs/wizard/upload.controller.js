@@ -45,6 +45,8 @@ angular.module('workbench.jobs.wizard')
 
             $scope.uploadFiles = function(files, uploadTask, callback) {
 
+                if(files.length === 0) return;
+
                 const headers = {"Content-Type" : 'multipart/form-data'};
                 if (webservice.isLoggedIn()) {
                     headers.Authorization = "Basic " + webservice.userData.btoa;
