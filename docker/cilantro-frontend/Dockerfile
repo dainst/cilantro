@@ -21,4 +21,6 @@ RUN touch /startup.sh \
     && echo "nginx -g 'daemon off;'" >> /startup.sh \
     && chmod a+x /startup.sh
 
+COPY docker/cilantro-frontend/VERSION .
+
 ENTRYPOINT ["/startup.sh"]

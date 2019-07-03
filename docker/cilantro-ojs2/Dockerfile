@@ -5,8 +5,6 @@ LABEL maintainer="Deutsches Archäologisches Institut: dev@dainst.de"
 EXPOSE 80
 USER root
 
-ARG GITHUB_ACCESS_TOKEN
-
 ENV admin_user=admin
 ENV admin_password="password"
 ENV admin_email="email@adress.xx"
@@ -98,4 +96,7 @@ RUN sed -i "s/\$_this->_baseUrl = \$_this->getProtocol() . ':\/\/'/\$_this->_bas
 # startup script
 RUN echo "#!/bin/bash\nfind /var/lib/mysql -type f -exec touch {} \;\nservice mysql start\napachectl -DFOREGROUND" >> /root/startup.sh  \
   && chmod a+x /root/startup.sh
+
+COPY docker/cilantro-ojs2/VERSION .
+
 ENTRYPOINT ["/root/startup.sh"]

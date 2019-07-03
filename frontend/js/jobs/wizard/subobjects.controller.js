@@ -82,7 +82,6 @@ angular.module('workbench.jobs.wizard')
             };
 
             $scope.confirmArticle = () => {
-                console.log('Confirm Article ' + $scope.currentArticle);
                 if (angular.isUndefined(dataset.subobjects[$scope.currentArticle])) return;
 
                 dataset.subobjects[$scope.currentArticle]._.confirmed = true;
@@ -96,7 +95,6 @@ angular.module('workbench.jobs.wizard')
             };
 
             $scope.dismissArticle = () => {
-                console.log('Dismiss Article ' + $scope.currentArticle);
                 if (angular.isUndefined(dataset.subobjects[$scope.currentArticle])) return;
 
                 dataset.subobjects[$scope.currentArticle]._.confirmed = false;
@@ -109,7 +107,6 @@ angular.module('workbench.jobs.wizard')
             };
 
             $scope.undeleteArticle = () => {
-                console.log('Undelete Article ' + $scope.currentArticle);
                 if (angular.isUndefined(dataset.subobjects[$scope.currentArticle])) return;
 
                 dataset.subobjects[$scope.currentArticle]._.confirmed = undefined;

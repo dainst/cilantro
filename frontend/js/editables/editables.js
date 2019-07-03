@@ -42,12 +42,10 @@ angular.module("workbench.editables")
 
             obj.addRow = function() {
                 obj.value.push(new editables.types.Author);
-                console.log("Add author");
             }
 
             obj.delRow = function(k) {
                 obj.value.splice(k,1);
-                console.log("Delete author " + k);
             }
 
             obj.format = (typeof format === "undefined") ? 0 : format;
@@ -61,16 +59,11 @@ angular.module("workbench.editables")
                 return this.value
             }
 
-
-
             obj.setAuthors = function(authors, format) {
                 obj.value = [];
                 authors = (!angular.isArray(authors)) ? [authors] : authors;
                 format = (angular.isUndefined(format)) ? 0 : format;
                 angular.forEach(authors, function(author) {
-
-                    //console.log("author", author);
-
                     if (!author) {
                         return;
                     }
@@ -83,22 +76,17 @@ angular.module("workbench.editables")
                     // create author from string
                     var split = author.trim().match(obj.formats[format][0]);
 
-                    //console.log("split", split);
-
                     if (!split) {
                         return;
                     }
 
                     obj.value.push(editables.types.Author(split[obj.formats[format][1]], split[obj.formats[format][2]]));
-
                 });
-
             }
 
             obj.set = obj.setAuthors;
 
             obj.check = function() {
-
                 var error = false;
 
                 if (!obj.value || obj.value.length === 0) {
@@ -114,17 +102,13 @@ angular.module("workbench.editables")
                 });
 
                 return error;
-
             }
-
 
             obj.compare = function(that) {
                 let a = (typeof this.value[0] !== "undefined") ? this.value[0].lastname : "";
                 let b = (typeof that.value[0] !== "undefined") ? that.value[0].lastname : "";
-
                 return (a.localeCompare(b));
             }
-
 
             obj.setAuthors(seed, format)
 
@@ -135,7 +119,7 @@ angular.module("workbench.editables")
             d = d || {offset:0, maximum: -1};
             const context = {"offset": d.offset || 0, "maximum": d.maximum || -1};
             if (angular.isDefined(d.path)) {
-             context.path = d.path;
+                context.path = d.path;
             }
             return context;
         };
@@ -277,7 +261,6 @@ angular.module("workbench.editables")
             return obj;
         };
 
-
         editables.text = function(seed, mandatory) {
             const obj = new editables.Base(seed, mandatory);
             obj.type = "text";
@@ -287,7 +270,6 @@ angular.module("workbench.editables")
             obj.set(seed);
             return obj;
         };
-
 
         editables.defaultLocales = ["de_DE", "en_US", "fr_FR", "it_IT", "es_ES"];
 
@@ -310,9 +292,7 @@ angular.module("workbench.editables")
                 obj.locales = angular.copy(editables.defaultLocales);
             }
 
-
             obj.set = value => {
-
                 if (angular.isUndefined(value)) value = "";
 
                 if (!/^[a-z][a-z]_[A-Z][A-Z]$/g.test(value))  {
@@ -323,7 +303,6 @@ angular.module("workbench.editables")
                         if (applicableLocales.length) value = applicableLocales[0];
                     }
                 }
-
                 obj.value.value = value;
             };
 
@@ -414,7 +393,6 @@ angular.module("workbench.editables")
                 return obj.locales.filter(function(x) {
                     return ul.indexOf(x) === -1
                 })
-
             }
 
             obj.getUsedLocales = function() {
@@ -447,8 +425,6 @@ angular.module("workbench.editables")
                 if (errorLocales.length > 0) {
                     return "These locales are not supported by selected journal: " + errorLocales.join(", ");
                 }
-
-
                 return false;
             }
 
@@ -456,9 +432,7 @@ angular.module("workbench.editables")
             obj.compare = function(second) {
                 return (this.value.value.localeCompare(second.value.value));
             }
-
             return obj;
-
         }
 
         editables.number = function(seed, mandatory) {

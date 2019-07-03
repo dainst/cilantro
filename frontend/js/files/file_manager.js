@@ -51,7 +51,7 @@ angular.module('workbench.files')
 
         /* fileHandler prototype */
         file_manager.FileHandler = function(id) {
-            console.log('create new file_handler ' + id);
+            console.debug('create new file_handler ' + id);
             if (typeof id === "undefined") {
                 console.error("file_handler id needed");
             }

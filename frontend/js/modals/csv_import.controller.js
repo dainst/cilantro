@@ -68,7 +68,6 @@ angular.module('workbench.modals')
             $scope.toggleParseOptions = () => $scope.state.parseOptions = !$scope.state.parseOptions;
 
             $scope.selectField = (field, columnId) => {
-                console.log(field);
                 if (field === '_dismiss') {
                     return;
                 }
@@ -88,7 +87,6 @@ angular.module('workbench.modals')
                 }
                 return false
             };
-
 
             $scope.guessDelimiter = () => {
                 $scope.options.guessedDelimiter = guessDelimiter($scope.raw_csv);
@@ -210,7 +208,6 @@ angular.module('workbench.modals')
                 $scope.state.unequalFieldsWarning = !equal_length;
             }
 
-
             // from https://www.bennadel.com/blog/1504-ask-ben-parsing-csv-strings-with-javascript-exec-regular-expression-command.htm
             function CSVToArray(strData, strDelimiter) {
                 strDelimiter = (strDelimiter || ",");
@@ -331,7 +328,6 @@ angular.module('workbench.modals')
                 return Promise.all(articlePromises);
             }
 
-
             function guessDelimiter(strData) {
                 return Object.keys($scope.delimiters)
                     .map(function(key) {
@@ -349,10 +345,7 @@ angular.module('workbench.modals')
                 return term.toLowerCase().replace(/[^a-z]/g, '');
             }
 
-
             /* LOAD MODAL WITH DATA */
             $scope.raw_csv = file;
             $scope.guessDelimiter();
-
-
     }]);

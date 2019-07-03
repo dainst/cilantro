@@ -24,7 +24,9 @@ angular.module('workbench.jobs.wizard')
             /* tools & buttons */
 
             $scope.addArticle = function() {
-                const a = new dataset.Subobject({title: 'Article ' + (dataset.subobjects.length+1)});
+                const a = new dataset.Subobject({
+                    title: 'Article ' + (dataset.subobjects.length + 1)
+                });
                 dataset.subobjects.push(a);
             };
 
@@ -35,9 +37,8 @@ angular.module('workbench.jobs.wizard')
 
             // open file externally
             $scope.openDocument = function(article) {
-                console.log("Open Document: " + article.filepath.value.value);
                 let split = settings.files_url.split(/\/\//, 2);
-                window.open("http://"+split[1] + article.filepath.value.value);
+                window.open("http://" + split[1] + article.filepath.value.value);
             };
 
             /* merging articles */
@@ -51,7 +52,7 @@ angular.module('workbench.jobs.wizard')
                     return;
                 }
 
-                if (!$scope.selectedToMerge)  {
+                if (!$scope.selectedToMerge) {
                     mergeMessage = messenger.push('Select another article to put it at the end of »' + article.title.get() + '«', "urgent", true);
                     $scope.selectedToMerge = article;
                 } else {
@@ -60,7 +61,6 @@ angular.module('workbench.jobs.wizard')
                     if (confirm('Really attach article »' + article2.title.get() + '« to the end of »' + article.title.get() + "« ?")) {
                         mergeArticles(article, article2);
                     } else {
-                        console.log("cancelled merging");
                         mergeMessage.text = "Merging Canceled";
                         mergeMessage.type = "info";
                         $scope.selectedToMerge = false;
@@ -69,17 +69,14 @@ angular.module('workbench.jobs.wizard')
 
             };
 
-
-            function mergeArticles(main, attach)  {
-
-                console.log('merge!', main, attach);
+            function mergeArticles(main, attach) {
                 $scope.selectedToMerge = false;
 
                 main.attached.push({
                     file: attach.filepath.value.value,
                     from: attach.pages.value.startPdf,
                     to:   attach.pages.value.endPdf
-                });// we could add from and to, but we use the whole file anyway!
+                }); // we could add from and to, but we use the whole file anyway!
 
                 $scope.removeArticle(attach);
 
@@ -88,7 +85,6 @@ angular.module('workbench.jobs.wizard')
                 $scope.selectedToMerge = false;
             }
 
-            /* delete */
             $scope.removeArticle = function(article) {
                 //dataset.deleteArticle(article)
                 article._.confirmed = false;
@@ -96,14 +92,20 @@ angular.module('workbench.jobs.wizard')
 
             /* thumbnail enlargement */
             $scope.selectedThumb = -1;
-            $scope.selectThumb = i => {$scope.selectedThumb = (i === $scope.selectedThumb) ? -1 : i};
+            $scope.selectThumb = i => {
+                $scope.selectedThumb = (i === $scope.selectedThumb) ? -1 : i
+            };
 
             /* sort */
-            $scope.updateOrder = (orderBy, asc) => {dataset.sortSubObjects(orderBy, asc)};
+            $scope.updateOrder = (orderBy, asc) => {
+                dataset.sortSubObjects(orderBy, asc)
+            };
 
             $scope.moveArticle = (article, up) => {
-                angular.forEach(dataset.subobjects, (a, i) => {a.order.value.value = (i + 1)  * 10});
-                article.order.value.value += up ? - 15 : 15;
+                angular.forEach(dataset.subobjects, (a, i) => {
+                    a.order.value.value = (i + 1) * 10
+                });
+                article.order.value.value += up ? -15 : 15;
                 dataset.sortSubObjects('order');
             };
 

@@ -32,14 +32,11 @@ angular.module('workbench.zenon')
                         scope.selected = -1;
                     };
 
-
                     scope.doSearch = function(more) {
-
                         if (!more) scope.resetResults();
                         scope.searchTimeout = false;
                         if (!scope.search || !scope.search.term) return;
                         if (more) scope.page++;
-                        console.log('Zenon search for term: ', scope.search);
 
                         zenonImporter.get(scope.search.term, scope.search.id, scope.page).then(
                             data => {
@@ -55,8 +52,6 @@ angular.module('workbench.zenon')
                                 $rootScope.$broadcast('refreshView');
                             }
                         );
-
-
                     };
 
                     scope.select = index => {
@@ -89,7 +84,6 @@ angular.module('workbench.zenon')
 
                     scope.estimateWidth = content => ({minWidth: Math.min(25, content && content.split("/n")[0].split("")
                         .reduce((sum, char) => sum + ((smallLetters.indexOf(char) > 0) ? 0.1 : 0.9), 0)) + "em"});
-
                 }
             }
         }
