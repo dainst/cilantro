@@ -3,6 +3,7 @@ FROM ubuntu:18.04
 MAINTAINER Deutsches Archäologisches Institut "dev@dainst.de"
 
 ARG GITHUB_ACCESS_TOKEN
+RUN export GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN
 
 RUN apt-get update && apt-get upgrade -y && \
       apt-get install -y \
