@@ -1,9 +1,0 @@
-<div class="form-check">
-    <div ng-show="(warning = item.check()) && (warning !== false)" class='alert alert-warning'>{{warning}}</div>
-    <div>
-        <div ng-repeat="(entry, caption) in item.list" style="display:inline; text-align:left; margin-right: 0.5em;">
-            <input id="{{id}}-{{entry}}" class="form-check-input" type="checkbox" ng-model="item.value[entry]">
-            <label for="{{id}}-{{entry}}" class="form-check-label">{{caption}}</label>
-        </div>
-    </div>
-</div>

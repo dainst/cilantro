@@ -1,8 +1,0 @@
-{
-  "files_url": "http://localhost:5000/staging/",
-  "server_url": "http://localhost:5000/",
-  "ojs_url": "http://localhost:4444/ojs/plugins/generic/ojs-cilantro-plugin/api/",
-  "zenon_url": "https://zenon.dainst.org/api/v1/",
-  "server_user": "test_user",
-  "server_pass": "test_password"
-}
