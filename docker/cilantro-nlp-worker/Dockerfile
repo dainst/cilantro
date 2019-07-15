@@ -2,9 +2,6 @@ FROM ubuntu:18.04
 
 MAINTAINER Deutsches Archäologisches Institut "dev@dainst.de"
 
-ARG GITHUB_ACCESS_TOKEN
-RUN export GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN
-
 RUN apt-get update && apt-get upgrade -y && \
       apt-get install -y \
       wget \
@@ -74,6 +71,10 @@ RUN pip3 install \
 RUN python3 -m nltk.downloader -d /usr/local/share/nltk_data punkt
 
 ENV PYLIB /usr/local/lib/python3.6/dist-packages
+
+ARG GITHUB_ACCESS_TOKEN
+RUN export GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN
+
 RUN git clone https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/dainst/nlp_components.git $PYLIB/nlp_components
 RUN cp -R $PYLIB/nlp_components/idai_journals $PYLIB/idai_journals
 # Kind of ugly, need to find a better way for adding a path to python
