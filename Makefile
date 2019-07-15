@@ -21,7 +21,7 @@ create-data-dir:
 	mkdir -p archaeocloud_test_dir
 
 install-frontend-deps:
-    npm install --prefix frontend
+	npm install --prefix frontend
 
 build-image:
 	./docker_image_build.sh ${IMAGE} ${TAG}
