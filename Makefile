@@ -10,7 +10,7 @@ stop:
 down:
 	docker-compose down
 
-init: create-data-dir cp-dev-config fix-docker-user #install-frontend-deps
+init: create-data-dir cp-dev-config fix-docker-user # install-frontend-deps
 
 create-data-dir:
 	mkdir -p data
@@ -20,8 +20,8 @@ create-data-dir:
 	mkdir -p data/workspace
 	mkdir -p archaeocloud_test_dir
 
-# install-frontend-deps:
-# 	npm install --prefix frontend
+install-frontend-deps:
+    npm install --prefix frontend
 
 build-image:
 	./docker_image_build.sh ${IMAGE} ${TAG}
@@ -48,7 +48,7 @@ rm-ds-store:
 cp-dev-config:
 	cp .env-default .env
 	cp config/users.yml-default config/users.yml
-	mkdir -p frontend/config
+	# mkdir -p frontend/config
 	# cp frontend/config/settings.default.json frontend/config/settings.json
 
 fix-docker-user:
