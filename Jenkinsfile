@@ -21,12 +21,14 @@ pipeline {
                 sh 'make test-backend'
             }
         }
+        /*
         stage('Test frontend (e2e)') {
             steps {
                 echo 'Testing frontend (e2e)..'
                 sh 'xvfb-run make test-e2e'
             }
         }
+        */
         stage('Build code documentation') {
             when{
                 branch 'master'
