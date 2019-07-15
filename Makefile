@@ -20,8 +20,8 @@ create-data-dir:
 	mkdir -p data/workspace
 	mkdir -p archaeocloud_test_dir
 
-install-frontend-deps:
-	npm install --prefix frontend
+# install-frontend-deps:
+# 	npm install --prefix frontend
 
 build-image:
 	./docker_image_build.sh ${IMAGE} ${TAG}
@@ -49,7 +49,7 @@ cp-dev-config:
 	cp .env-default .env
 	cp config/users.yml-default config/users.yml
 	mkdir -p frontend/config
-	cp frontend/config/settings.default.json frontend/config/settings.json
+	# cp frontend/config/settings.default.json frontend/config/settings.json
 
 fix-docker-user:
 	$(shell sed -i 's/user_id_placeholder/$(shell id -u)/g' .env)
