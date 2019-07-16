@@ -10,7 +10,7 @@ stop:
 down:
 	docker-compose down
 
-init: create-data-dir cp-dev-config fix-docker-user # install-frontend-deps
+init: create-data-dir cp-dev-config fix-docker-user
 
 create-data-dir:
 	mkdir -p data
@@ -19,9 +19,6 @@ create-data-dir:
 	mkdir -p data/repository
 	mkdir -p data/workspace
 	mkdir -p archaeocloud_test_dir
-
-install-frontend-deps:
-	npm install --prefix frontend
 
 build-image:
 	./docker_image_build.sh ${IMAGE} ${TAG}
@@ -35,9 +32,6 @@ test-backend:
 	docker exec cilantro_test python -m unittest discover test.unit -vf
 	docker exec cilantro_test python -m unittest discover test.integration -vf
 
-test-e2e:
-	npm run --prefix frontend e2e
-
 fix-permissions:
 	sudo chown -R $(whoami):$(whoami) data/
 	sudo chown -R $(whoami):$(whoami) archaeocloud_test_dir/
@@ -48,8 +42,6 @@ rm-ds-store:
 cp-dev-config:
 	cp .env-default .env
 	cp config/users.yml-default config/users.yml
-	# mkdir -p frontend/config
-	# cp frontend/config/settings.default.json frontend/config/settings.json
 
 fix-docker-user:
 	$(shell sed -i 's/user_id_placeholder/$(shell id -u)/g' .env)
