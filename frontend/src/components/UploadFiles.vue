@@ -1,0 +1,108 @@
+<template>
+    <section>
+        <b-field>
+            <b-upload v-model="dropFiles"
+                      multiple
+                      drag-drop>
+                <section class="section">
+                    <div class="content has-text-centered">
+                        <p>
+                            <b-icon
+                                icon="upload"
+                                size="is-large">
+                            </b-icon>
+                        </p>
+                        <p>Drop your files here or click to upload</p>
+                    </div>
+                </section>
+            </b-upload>
+        </b-field>
+
+        <h3>Selected Files:</h3>
+        <div class="tags section">
+            <span v-for="(file, index) in dropFiles"
+                  :key="index"
+                  class="tag is-primary">
+                {{file.name}}
+                <button class="delete is-small"
+                        type="button"
+                        @click="deleteDropFile(index)">
+                </button>
+            </span>
+        </div>
+        <b-button @click="upload" :disabled="running">
+            Upload
+        </b-button>
+        <p>
+            <span v-if="running">Upload is running! {{processedFiles}} of {{dropFiles.length}} uploaded</span>
+        </p>
+    </section>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import store from '@/store'
+import axios from 'axios'
+
+    @Component
+export default class UploadFiles extends Vue {
+        dropFiles: File[] = []
+        processedFiles: number = 0;
+        running: boolean = false
+
+        deleteDropFile (index: number) {
+            this.dropFiles.splice(index, 1)
+        }
+
+        upload () {
+            this.running = true
+            for (let file of this.dropFiles) {
+                let formData = new FormData()
+                formData.append('file', file)
+                // TODO: store url in .env (in cilantro dir, not frontend)
+                axios.post('http://localhost:5000/staging',
+                    formData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        },
+                        auth: {
+                            username: store.state.user,
+                            password: store.state.password
+                        }
+                    }
+                ).then(() => {
+                    this.changeUploadStatus()
+                    this.$snackbar.open({
+                        message: 'Upload of ' + file.name + ' successful!',
+                        queue: false
+                    })
+                }).catch((error) => {
+                    this.changeUploadStatus()
+                    if (error.response === undefined) {
+                        console.log('Application Error', error)
+                    } else {
+                        console.log('Invalid Server Response:', error.response)
+                    }
+                    this.$snackbar.open({
+                        message: 'Upload of ' + file.name + ' failed!',
+                        type: 'is-danger',
+                        queue: false
+                    })
+                })
+            }
+        }
+
+        changeUploadStatus () {
+            this.processedFiles++
+            if (this.processedFiles === this.dropFiles.length) {
+                this.$toast.open({
+                    message: 'Upload of all files completed!',
+                    queue: false
+                })
+                this.running = false
+            }
+        }
+}
+
+</script>
