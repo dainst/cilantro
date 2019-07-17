@@ -39,20 +39,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+    import { Component, Prop, Vue } from 'vue-property-decorator'
 
-@Component
-export default class HelloWorld extends Vue {
-    @Prop() private msg!: string;
+    @Component
+    export default class HelloWorld extends Vue {
+        @Prop() private msg!: string;
 
-    buefyToast() {
-        this.$toast.open({
-            message: 'Buefy is installed!',
-            position: 'is-top-right',
-            type: 'is-success'
-        })
+        buefyToast() {
+            this.$toast.open({
+                message: 'Buefy is installed!',
+                position: 'is-top-right',
+                type: 'is-success'
+            })
+        }
     }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
