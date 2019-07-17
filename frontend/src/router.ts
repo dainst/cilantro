@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import UploadFiles from '@/components/UploadFiles.vue'
+import UploadFiles from '@/views/UploadFiles.vue'
 
 Vue.use(Router)
 
