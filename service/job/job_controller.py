@@ -152,7 +152,6 @@ def job_create(job_type):
                 "year": 2018,
                 "number": "",
                 "description": "[PDFs teilweise verfugbar]",
-                "importFilePath": "test.pdf",
                 "identification": "year"
             },
             "files": [{

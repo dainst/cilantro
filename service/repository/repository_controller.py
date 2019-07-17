@@ -77,7 +77,6 @@ def get_object(object_id):
             "metadata": {
                 "description": "[PDFs teilweise verfugbar]",
                 "identification": "year",
-                "importFilePath": "e2e-testing.pdf",
                 "number": "",
                 "ojs_id": "issue-test-188",
                 "volume": "",

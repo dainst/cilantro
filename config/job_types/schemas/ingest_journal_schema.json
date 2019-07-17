@@ -29,7 +29,7 @@
         "metadata": {
             "type": "object",
             "required": ["volume", "year", "number", "description",
-                         "importFilePath", "identification"],
+                         "identification"],
             "additionalProperties": false,
             "properties": {
                 "volume": {
@@ -42,9 +42,6 @@
                     "type": "string"
                 },
                 "description": {
-                    "type": "string"
-                },
-                "importFilePath": {
                     "type": "string"
                 },
                 "identification": {
