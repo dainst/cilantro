@@ -70,6 +70,7 @@ services:
       - ./mongo-data:/data
 
   service:
+    image: dainst/cilantro-service:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-service/Dockerfile
@@ -89,6 +90,7 @@ services:
       CILANTRO_ENV: development
 
   default-worker:
+    image: dainst/cilantro-default-worker:latest
     user: ${UID}
     build:
       context: .
@@ -111,6 +113,7 @@ services:
       BACKEND_URI: ${BACKEND_URI}
 
   convert-worker:
+    image: dainst/cilantro-convert-worker:latest
     user: ${UID}
     build:
       context: .
@@ -127,6 +130,7 @@ services:
       CILANTRO_ENV: development
 
   nlp-worker:
+    image: dainst/cilantro-nlp-worker:latest
     user: ${UID}
     build:
       context: .
@@ -145,6 +149,7 @@ services:
       CILANTRO_ENV: development
 
   monitor:
+    image: dainst/cilantro-monitor:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-test/Dockerfile
@@ -154,6 +159,7 @@ services:
       <<: *env-broker
 
   ojs2:
+    image: dainst/cilantro-ojs2:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-ojs2/Dockerfile
