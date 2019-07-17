@@ -167,8 +167,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/cilantro-frontend/Dockerfile
-    volumes:
-        - ./frontend:/usr/share/nginx/html
     ports:
       - "7777:80"
     environment:
