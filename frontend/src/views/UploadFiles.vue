@@ -47,6 +47,7 @@ import axios from 'axios'
 export default class UploadFiles extends Vue {
     dropFiles: File[] = []
     processedFiles: number = 0
+    successfulFiles: number = 0
     running: boolean = false
 
     deleteDropFile(index: number) {
@@ -71,13 +72,13 @@ export default class UploadFiles extends Vue {
                     }
                 }
             ).then(() => {
-                this.changeUploadStatus()
+                this.successfulFiles++
                 this.$snackbar.open({
                     message: 'Upload of ' + file.name + ' successful!',
                     queue: false
                 })
-            }).catch((error) => {
                 this.changeUploadStatus()
+            }).catch((error) => {
                 if (error.response === undefined) {
                     console.log('Application Error', error)
                 } else {
@@ -88,6 +89,7 @@ export default class UploadFiles extends Vue {
                     type: 'is-danger',
                     queue: false
                 })
+                this.changeUploadStatus()
             })
         }
     }
@@ -95,11 +97,23 @@ export default class UploadFiles extends Vue {
     changeUploadStatus() {
         this.processedFiles++
         if (this.processedFiles === this.dropFiles.length) {
-            this.$toast.open({
-                message: 'Upload of all files completed!',
-                queue: false
-            })
+            if (this.successfulFiles === this.processedFiles) {
+                this.$toast.open({
+                    message: 'Upload of all files completed!',
+                    type: 'is-success',
+                    queue: false
+                })
+            } else {
+                this.$toast.open({
+                    message: 'At least one file upload failed!',
+                    type: 'is-danger',
+                    queue: false
+                })
+            }
             this.running = false
+            this.successfulFiles = 0
+            this.processedFiles = 0
+            this.dropFiles = []
         }
     }
 }
