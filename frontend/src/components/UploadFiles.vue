@@ -59,6 +59,13 @@ export default class UploadFiles extends Vue {
     upload() {
         this.running = true
         for (let file of this.dropFiles) {
+            this.uploadFile(file)
+        }
+    }
+
+    uploadFile(file: File) {
+        const ext = file.name.split('.').pop()
+        if (ext === 'csv' || ext === 'pdf') {
             let formData = new FormData()
             formData.append('file', file)
             axios.post(store.state.backendURI + 'staging',
@@ -93,6 +100,13 @@ export default class UploadFiles extends Vue {
                 })
                 this.changeUploadStatus()
             })
+        } else {
+            this.$snackbar.open({
+                message: 'Upload of ' + file.name + ' failed, invalid file extension ' + ext,
+                type: 'is-danger',
+                queue: false
+            })
+            this.changeUploadStatus()
         }
     }
 
