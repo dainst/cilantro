@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Home from '@/views/Home.vue'
 import Dashboard from '@/views/Dashboard.vue'
-import UploadFiles from '@/views/UploadFiles.vue'
+import StagingArea from '@/views/StagingArea.vue'
 
 Vue.use(Router)
 
@@ -26,7 +26,7 @@ export default new Router({
         {
             path: '/staging',
             name: 'staging',
-            component: UploadFiles
+            component: StagingArea
         }
     ]
 })

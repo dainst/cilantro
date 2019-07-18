@@ -29,7 +29,7 @@
                 </button>
             </span>
         </div>
-        <b-button @click="upload" :disabled="running">
+        <b-button @click="upload" :disabled="running || this.dropFiles.length === 0">
             Upload
         </b-button>
         <p>
@@ -40,6 +40,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+
+import stagingStore from '@/stagingStore'
 import store from '@/store'
 import axios from 'axios'
 
@@ -59,8 +61,7 @@ export default class UploadFiles extends Vue {
         for (let file of this.dropFiles) {
             let formData = new FormData()
             formData.append('file', file)
-            // TODO: store url in .env (in cilantro dir, not frontend)
-            axios.post('http://localhost:5000/staging',
+            axios.post(store.state.backendURI + 'staging',
                 formData,
                 {
                     headers: {
@@ -78,6 +79,7 @@ export default class UploadFiles extends Vue {
                     queue: false
                 })
                 this.changeUploadStatus()
+                stagingStore.commit('refresh')
             }).catch((error) => {
                 if (error.response === undefined) {
                     console.log('Application Error', error)
@@ -99,13 +101,13 @@ export default class UploadFiles extends Vue {
         if (this.processedFiles === this.dropFiles.length) {
             if (this.successfulFiles === this.processedFiles) {
                 this.$toast.open({
-                    message: 'Upload of all files completed!',
+                    message: 'Upload of ' + this.successfulFiles + ' files completed!',
                     type: 'is-success',
                     queue: false
                 })
             } else {
                 this.$toast.open({
-                    message: 'At least one file upload failed!',
+                    message: 'Upload of ' + (this.processedFiles - this.successfulFiles) + ' failed!',
                     type: 'is-danger',
                     queue: false
                 })
