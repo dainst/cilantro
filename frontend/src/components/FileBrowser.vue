@@ -9,7 +9,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import store from '@/store'
 import stagingStore from '@/stagingStore'
 import axios from 'axios'
 
@@ -31,11 +30,11 @@ export default class FileBrowser extends Vue {
 
     fetchFiles() {
         axios.get(
-            store.state.backendURI + 'staging',
+            this.$store.state.backendURI + 'staging',
             {
                 auth: {
-                    username: store.state.user,
-                    password: store.state.password
+                    username: this.$store.state.authentification.credentials.name,
+                    password: this.$store.state.authentification.credentials.password
                 }
             }
         ).then((response) => {

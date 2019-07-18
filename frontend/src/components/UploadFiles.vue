@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section v-show="isLoggedIn">
         <b-field>
             <b-upload v-model="dropFiles"
                       multiple
@@ -40,10 +40,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-
-import stagingStore from '@/stagingStore'
-import store from '@/store'
 import axios from 'axios'
+import stagingStore from '@/stagingStore'
 
 @Component
 export default class UploadFiles extends Vue {
@@ -52,6 +50,9 @@ export default class UploadFiles extends Vue {
     successfulFiles: number = 0
     running: boolean = false
 
+    get isLoggedIn(){
+        return this.$store.state.authentification.authentificated
+    }
     deleteDropFile(index: number) {
         this.dropFiles.splice(index, 1)
     }
@@ -68,15 +69,15 @@ export default class UploadFiles extends Vue {
         if (ext === 'csv' || ext === 'pdf') {
             let formData = new FormData()
             formData.append('file', file)
-            axios.post(store.state.backendURI + 'staging',
+            axios.post(this.$store.state.backendURI + 'staging',
                 formData,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
                     auth: {
-                        username: store.state.user,
-                        password: store.state.password
+                        username: this.$store.state.authentification.credentials.name,
+                        password: this.$store.state.authentification.credentials.password
                     }
                 }
             ).then(() => {
