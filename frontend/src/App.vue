@@ -4,9 +4,11 @@
         <div id="nav">
             <router-link to="/">Dashboard</router-link>
             |
-            <router-link to="/about">About</router-link>
-            |
             <router-link to="/staging">Staging Area</router-link>
+            |
+            <router-link to="/JournalImport">Journal Import</router-link>
+            |
+            <router-link to="/help">Help</router-link>
         </div>
         <router-view/>
     </div>
