@@ -1,8 +1,6 @@
 <template>
     <div>
-        <b-button class="is-fullwidth" v-if="!isAuthentificated" @click="login()">Login</b-button>
-        <b-button class="is-fullwidth" v-if="isAuthentificated" @click="logout()">Logout</b-button>
-        <br>
+        <Login />
         <b-menu>
             <b-menu-list label="Menu">
                 <b-menu-item icon="information-outline" label="Info"></b-menu-item>
@@ -37,24 +35,13 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator'
-@Component
-export default class MainMenu extends Vue {
-    get isAuthentificated () {
-        return this.$store.state.authentification.authentificated
-    };
-    login() {
-        this.$store.commit({
-            type: 'login',
-            name: 'u',
-            password: 'p'
-        })
+import { Component, Vue } from 'vue-property-decorator'
+import Login from '@/components/Login.vue'
 
-    };
-    logout(){
-        this.$store.commit({
-            type: 'logout'
-        })
+@Component({
+    components: {
+        Login
     }
-}
+})
+export default class MainMenu extends Vue { }
 </script>
