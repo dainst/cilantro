@@ -19,18 +19,18 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator'
-    import MainMenu from '@/components/MainMenu.vue' // @ is an alias to /src
-    import RunningJobsList from "@/components/RunningJobsList.vue";
-    import StartJobSelection from "@/components/StartJobSelection.vue";
+import { Component, Vue } from 'vue-property-decorator'
+import MainMenu from '@/components/MainMenu.vue'
+import RunningJobsList from '@/components/RunningJobsList.vue'
+import StartJobSelection from '@/components/StartJobSelection.vue'
 
-    @Component({
-        components: {
-            MainMenu,
-            RunningJobsList,
-            StartJobSelection
-        }
-    })
-    export default class Dashboard extends Vue {
+@Component({
+    components: {
+        MainMenu,
+        RunningJobsList,
+        StartJobSelection
     }
+})
+export default class Dashboard extends Vue {
+}
 </script>

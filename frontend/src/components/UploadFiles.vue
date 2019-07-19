@@ -50,7 +50,7 @@ export default class UploadFiles extends Vue {
     successfulFiles: number = 0
     running: boolean = false
 
-    get isLoggedIn(){
+    get isLoggedIn() {
         return this.$store.state.authentification.authentificated
     }
     deleteDropFile(index: number) {

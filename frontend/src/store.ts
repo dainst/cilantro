@@ -12,14 +12,14 @@ export default new Vuex.Store({
         authentification: {
             authentificated: false,
             credentials: {
-                name: "",
-                password: ""
+                name: '',
+                password: ''
             }
         }
     },
     mutations: {
         login: (state, payload) => {
-            axios.get(state.backendURI + "user/" + payload.name, {
+            axios.get(state.backendURI + 'user/' + payload.name, {
                 auth: {
                     username: payload.name,
                     password: payload.password
@@ -32,7 +32,6 @@ export default new Vuex.Store({
             }).catch((error) => {
                 console.log(error)
             })
-
         },
         logout: state => {
             state.authentification.credentials.name = ''
