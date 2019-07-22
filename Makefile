@@ -10,7 +10,7 @@ stop:
 down:
 	docker-compose down
 
-init: create-data-dir cp-dev-config fix-docker-user
+init: create-data-dir cp-dev-config fix-docker-user install-frontend-deps
 
 create-data-dir:
 	mkdir -p data
@@ -20,13 +20,19 @@ create-data-dir:
 	mkdir -p data/workspace
 	mkdir -p archaeocloud_test_dir
 
+install-frontend-deps:
+	npm install --prefix frontend
+
 build-image:
 	./docker_image_build.sh ${IMAGE} ${TAG}
 
 build-doc:
 	docker exec cilantro_test doc/build-doc.sh
 
-test: run-detached test-backend test-e2e stop
+test: run-detached test-backend test-frontend stop
+
+test-frontnend:
+	cd frontend; npm run test:unit
 
 test-backend:
 	docker exec cilantro_test python -m unittest discover test.unit -vf
