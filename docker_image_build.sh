@@ -21,14 +21,6 @@ awk -F'.' '{print $1"."$2"."$3+1}' docker/${name}/VERSION > docker/${name}/VERSI
 mv docker/${name}/VERSION.tmp docker/${name}/VERSION
 version=`cat docker/${name}/VERSION`
 
-if [[ $name  = "cilantro-frontend" ]]
-then
-    cd frontend
-    npm install
-    npm run build
-    cd ..
-fi
-
 docker image build -t dainst/${name}:${version} -f docker/${name}/Dockerfile . --build-arg GITHUB_ACCESS_TOKEN=${token} ${nocache}
 
 docker push dainst/${name}:latest
