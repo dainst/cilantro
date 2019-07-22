@@ -31,7 +31,7 @@ build-doc:
 
 test: run-detached test-backend test-frontend stop
 
-test-frontnend:
+test-frontend:
 	cd frontend; npm run test:unit
 
 test-backend:
