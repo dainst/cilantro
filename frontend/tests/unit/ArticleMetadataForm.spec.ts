@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils'
+import { mount, createLocalVue } from '@vue/test-utils'
 import Buefy from 'buefy'
 import ArticleMetadataForm from '@/components/forms/ArticleMetadataForm.vue'
 
@@ -14,12 +14,13 @@ describe('ArticleMetadataForm.vue', () => {
         default_create_frontpage: '',
         allow_upload_without_file: ''
     }
-    const wrapper = shallowMount(ArticleMetadataForm, {
+    const wrapper = mount(ArticleMetadataForm, {
         localVue,
         propsData: { initialArticle: article }
     })
 
     it('renders input element', () => {
-        expect(wrapper.contains('input')).toBe(true)
+        const el = wrapper.find('input')
+        expect(el.is('input')).toBe(true)
     })
 })
