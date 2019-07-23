@@ -8,7 +8,14 @@
             |
             <router-link to="/JournalImport">Journal Import</router-link>
         </div>
-        <router-view/>
+        <router-view id="main_content"/>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                  This is the Footer....
+                </p>
+            </div>
+        </footer>
     </div>
 </template>
 
@@ -19,6 +26,9 @@
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
+
+        position: relative;
+        min-height: 100vh;
     }
 
     #nav {
@@ -32,5 +42,16 @@
                 color: #42b983;
             }
         }
+    }
+
+    #main_content {
+      padding-bottom: 10rem;  /* Footer height */
+    }
+
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 0.5rem;     /* Footer height */
     }
 </style>
