@@ -41,7 +41,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import axios from 'axios'
-import stagingStore from '@/stagingStore'
+import stagingStore from './stagingStore'
 
 @Component
 export default class UploadFiles extends Vue {

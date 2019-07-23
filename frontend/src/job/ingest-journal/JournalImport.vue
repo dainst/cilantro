@@ -24,9 +24,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import JournalMetadataForm from '@/components/forms/JournalMetadataForm.vue'
-import FilesAndRangesForm from '@/components/forms/FilesAndRangesForm.vue'
-import PublishingForm from '@/components/forms/PublishingForm.vue'
+import JournalMetadataForm from './forms/JournalMetadataForm.vue'
+import FilesAndRangesForm from './forms/FilesAndRangesForm.vue'
+import PublishingForm from './forms/PublishingForm.vue'
 
 @Component({
     components: {

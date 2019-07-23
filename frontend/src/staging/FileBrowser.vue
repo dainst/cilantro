@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import stagingStore from '@/stagingStore'
+import stagingStore from './stagingStore'
 import axios from 'axios'
 
 @Component

@@ -9,8 +9,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import UploadFiles from '@/components/UploadFiles.vue'
-import FileBrowser from '@/components/FileBrowser.vue'
+import UploadFiles from './UploadFiles.vue'
+import FileBrowser from './FileBrowser.vue'
 
 @Component({
     components: {

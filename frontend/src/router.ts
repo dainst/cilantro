@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Dashboard from '@/views/Dashboard.vue'
-import JournalImport from './views/JournalImport.vue'
-import StagingArea from '@/views/StagingArea.vue'
+import Dashboard from './dashboard/Dashboard.vue'
+import JournalImport from './job/ingest-journal/JournalImport.vue'
+import StagingArea from './staging/StagingArea.vue'
 
 Vue.use(Router)
 
