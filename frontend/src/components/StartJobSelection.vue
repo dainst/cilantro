@@ -7,6 +7,9 @@
                     <p class="title">Journal import</p>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque
                         tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.</p>
+                    <b-button @click="startJournalImport">
+                        Start
+                    </b-button>
                 </div>
                 <div class="tile is-child box">
                     <p class="title">Book import</p>
@@ -20,7 +23,6 @@
                         Morbi maximus, leo sit amet vehicula eleifend, nunc dui porta orci, quis semper odio felis ut
                         quam.</p>
                 </div>
-                <!-- usw. -->
             </div>
         </div>
     </div>
@@ -31,5 +33,18 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component
 export default class StartJobSelection extends Vue {
+
+    startJournalImport() {
+        this.$toast.open({
+            message: 'Journal Import Job Started',
+            position: 'is-top-right',
+            type: 'is-info'
+        })
+        this.$store.commit({
+            type: 'startJob',
+            name: 'Journal Import'
+        })
+        this.$router.push({ path: 'JournalImport' })
+    }
 }
 </script>

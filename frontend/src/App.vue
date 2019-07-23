@@ -6,7 +6,7 @@
             |
             <router-link to="/staging">Staging Area</router-link>
             |
-            <router-link to="/JournalImport">Journal Import</router-link>
+            <router-link to="/JournalImport">Job Config</router-link>
         </div>
         <router-view id="main_content"/>
         <footer class="footer">

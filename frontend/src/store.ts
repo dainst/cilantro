@@ -15,6 +15,10 @@ export default new Vuex.Store({
                 name: '',
                 password: ''
             }
+        },
+
+        job: {
+            type: undefined
         }
     },
     mutations: {
@@ -37,6 +41,9 @@ export default new Vuex.Store({
             state.authentification.credentials.name = ''
             state.authentification.credentials.password = ''
             state.authentification.authentificated = false
+        },
+        startJob: (state, payload) => {
+            state.job.type = payload.name
         }
     }
 })
