@@ -1,6 +1,6 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import Buefy from 'buefy'
-import JournalMetadataForm from '@/components/forms/JournalMetadataForm.vue'
+import JournalMetadataForm from '@/job/ingest-journal/forms/JournalMetadataForm.vue'
 
 const localVue = createLocalVue()
 localVue.use(Buefy)
