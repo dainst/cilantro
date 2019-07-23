@@ -7,8 +7,6 @@
             <router-link to="/staging">Staging Area</router-link>
             |
             <router-link to="/JournalImport">Journal Import</router-link>
-            |
-            <router-link to="/help">Help</router-link>
         </div>
         <router-view/>
     </div>
