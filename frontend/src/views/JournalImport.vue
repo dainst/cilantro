@@ -1,8 +1,23 @@
 <template>
     <div class="tile is-ancestor">
-        <div class="tile is-vertical is-parent">
-            <JournalMetadataForm class="tile is-child" />
-            <FilesAndRangesForm class="tile is-child" />
+        <div v-if="jobType" class="tile is-vertical is-parent">
+            <p class="tile is-child">{{ jobType }}</p>
+
+            <b-steps v-model="activeStep" :animated="isAnimated" :has-navigation="hasNavigation">
+                <b-step-item label="Journal Metadaten" :clickable="isStepsClickable">
+                    Metadaten für das Journal
+                    <JournalMetadataForm class="tile is-child" />
+                </b-step-item>
+                <b-step-item label="Artikelgrenzen und Metadaten" :clickable="isStepsClickable">
+                    Geben sie hier den Ursprung und die Metadaten für die Artikel ein
+                    <FilesAndRangesForm class="tile is-child" />
+                </b-step-item>
+                <b-step-item label="Publizierung" :clickable="isStepsClickable">
+                    Daten zur Publizierung in OJS
+                    <PublishingForm class="tile is-child" />
+                </b-step-item>
+            </b-steps>
+
         </div>
     </div>
 </template>
@@ -11,17 +26,34 @@
 import { Component, Vue } from 'vue-property-decorator'
 import JournalMetadataForm from '@/components/forms/JournalMetadataForm.vue'
 import FilesAndRangesForm from '@/components/forms/FilesAndRangesForm.vue'
+import PublishingForm from '@/components/forms/PublishingForm.vue'
 
 @Component({
     components: {
         JournalMetadataForm,
-        FilesAndRangesForm
+        FilesAndRangesForm,
+        PublishingForm
     }
 })
-export default class JournalImport extends Vue { }
+export default class JournalImport extends Vue {
+    data() {
+        return {
+            jobType: this.$store.state.job.type,
+
+            activeStep: 0,
+            isAnimated: true,
+            hasNavigation: false,
+            isStepsClickable: true
+        }
+    }
+}
 </script>
 
 <style scoped lang="scss">
-    FilesAndRangesForm {}
+    div.step-item {
+        font-style: italic;
+        font-size: x-large;
+
+    }
 
 </style>
