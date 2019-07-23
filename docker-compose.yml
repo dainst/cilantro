@@ -169,18 +169,6 @@ services:
     ports:
       - "4444:80"
 
-  frontend:
-    build:
-      context: .
-      dockerfile: ./docker/cilantro-frontend/Dockerfile
-    ports:
-      - "7777:80"
-    environment:
-      <<: *env-ojs
-      BACKEND_URI: ${BACKEND_URI}
-      ZENON_URI: ${ZENON_URI}
-      OJS_URI: ${OJS_URI}
-
   test:
     container_name: cilantro_test
     user: ${UID}
