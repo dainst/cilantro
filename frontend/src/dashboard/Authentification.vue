@@ -1,0 +1,88 @@
+<template>
+    <div>
+        <div v-if="!isAuthentificated">
+            <b-notification
+                type="is-warning"
+                :active.sync="errorActive"
+                auto-close
+                aria-close-label="Close notification"
+                role="alert"
+            >{{errorMessage}}</b-notification>
+            <b-field>
+                <b-input placeholder="Name" minlength="1" type="text" required v-model="name"></b-input>
+            </b-field>
+            <b-field>
+                <b-input
+                    placeholder="Password"
+                    minlength="1"
+                    type="password"
+                    required
+                    v-model="password"
+                ></b-input>
+            </b-field>
+            <b-button
+                :disabled="missingInput"
+                class="button is-fullwidth"
+                @click="login()"
+            >Login</b-button>
+        </div>
+        <b-button class="is-fullwidth" v-if="isAuthentificated" @click="logout()">Logout</b-button>
+    </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import axios from "axios";
+
+@Component
+export default class Authentification extends Vue {
+    name: string = "";
+    password: string = "";
+    showInputs: boolean = false;
+    errorActive: boolean = false;
+    errorMessage: string = "";
+
+    get isAuthentificated() {
+        return this.$store.state.authentification.authentificated;
+    }
+
+    get missingInput() {
+        return this.name.length == 0 || this.password.length == 0;
+    }
+
+    login() {
+        axios
+            .get(this.$store.state.backendURI + "user/" + this.name, {
+                auth: {
+                    username: this.name,
+                    password: this.password
+                }
+            })
+            .then(data => {
+                this.$store.commit({
+                    type: "login",
+                    name: this.name,
+                    password: this.password
+                });
+            })
+            .catch(error => {
+                if (error.response.status == 401) {
+                    this.errorMessage =
+                        "Your credentials seem to be invalid, please try again.";
+                    this.errorActive = true;
+                } else {
+                    console.error("Invalid Server Response:", error.response);
+                }
+            });
+    }
+
+    logout() {
+        this.name = "";
+        this.password = "";
+
+        this.$store.commit({
+            type: "logout"
+        });
+    }
+}
+</script>

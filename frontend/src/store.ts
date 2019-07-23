@@ -5,6 +5,7 @@ import axios from 'axios'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+    strict: process.env.NODE_ENV !== 'production',
     state: {
         // TODO: store url in .env (in cilantro dir, not frontend)
         backendURI: 'http://localhost:5000/',
@@ -23,19 +24,9 @@ export default new Vuex.Store({
     },
     mutations: {
         login: (state, payload) => {
-            axios.get(state.backendURI + 'user/' + payload.name, {
-                auth: {
-                    username: payload.name,
-                    password: payload.password
-                }
-            }
-            ).then((data) => {
-                state.authentification.credentials.name = payload.name
-                state.authentification.credentials.password = payload.password
-                state.authentification.authentificated = true
-            }).catch((error) => {
-                console.log(error)
-            })
+            state.authentification.credentials.name = payload.name
+            state.authentification.credentials.password = payload.password
+            state.authentification.authentificated = true
         },
         logout: state => {
             state.authentification.credentials.name = ''
