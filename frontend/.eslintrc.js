@@ -4,6 +4,7 @@ module.exports = {
         node: true
     },
     'extends': [
+        'airbnb',
         'plugin:vue/essential',
         '@vue/standard',
         '@vue/typescript'
