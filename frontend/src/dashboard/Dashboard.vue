@@ -4,7 +4,7 @@
             <div class="tile is-4 is-vertical is-parent">
                 <div class="tile is-child">
                     <MainMenu />
-                    <hr>
+                    <hr v-if="$store.state.authentication.authenticated">
                     <JobList />
                 </div>
             </div>
