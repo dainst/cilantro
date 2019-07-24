@@ -50,7 +50,7 @@ export default class UploadFiles extends Vue {
         @Prop() totalFiles!: number
 
         get isLoggedIn() {
-            return this.$store.state.authentification.authentificated
+            return this.$store.state.authentication.authenticated
         }
 
         deleteFileToUpload(index: number) {

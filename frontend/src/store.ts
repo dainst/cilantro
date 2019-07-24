@@ -10,8 +10,8 @@ export default new Vuex.Store({
         // TODO: store url in .env (in cilantro dir, not frontend)
         backendURI: 'http://localhost:5000/',
 
-        authentification: {
-            authentificated: false,
+        authentication: {
+            authenticated: false,
             credentials: {
                 name: '',
                 password: ''
@@ -24,14 +24,14 @@ export default new Vuex.Store({
     },
     mutations: {
         login: (state, payload) => {
-            state.authentification.credentials.name = payload.name
-            state.authentification.credentials.password = payload.password
-            state.authentification.authentificated = true
+            state.authentication.credentials.name = payload.name
+            state.authentication.credentials.password = payload.password
+            state.authentication.authenticated = true
         },
         logout: state => {
-            state.authentification.credentials.name = ''
-            state.authentification.credentials.password = ''
-            state.authentification.authentificated = false
+            state.authentication.credentials.name = ''
+            state.authentication.credentials.password = ''
+            state.authentication.authenticated = false
         },
         startJob: (state, payload) => {
             state.job.type = payload.name

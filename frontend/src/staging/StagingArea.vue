@@ -44,8 +44,8 @@ export default class StagingArea extends Vue {
                 this.$store.state.backendURI + 'staging',
                 {
                     auth: {
-                        username: this.$store.state.authentification.credentials.name,
-                        password: this.$store.state.authentification.credentials.password
+                        username: this.$store.state.authentication.credentials.name,
+                        password: this.$store.state.authentication.credentials.password
                     }
                 }
             ).then((response) => {
@@ -94,8 +94,8 @@ export default class StagingArea extends Vue {
                         'Content-Type': 'multipart/form-data'
                     },
                     auth: {
-                        username: this.$store.state.authentification.credentials.name,
-                        password: this.$store.state.authentification.credentials.password
+                        username: this.$store.state.authentication.credentials.name,
+                        password: this.$store.state.authentication.credentials.password
                     }
                 }
             ).then(() => {

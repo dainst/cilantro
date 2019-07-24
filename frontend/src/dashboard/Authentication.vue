@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!isAuthentificated">
+        <div v-if="!isAuthenticated">
             <b-notification
                 :type="errorType"
                 :active.sync="errorActive"
@@ -26,7 +26,7 @@
                 @click="login()"
             >Login</b-button>
         </div>
-        <b-button class="is-fullwidth" v-if="isAuthentificated" @click="logout()">Logout</b-button>
+        <b-button class="is-fullwidth" v-if="isAuthenticated" @click="logout()">Logout</b-button>
     </div>
 </template>
 
@@ -35,7 +35,7 @@ import { Component, Vue } from "vue-property-decorator";
 import axios from "axios";
 
 @Component
-export default class Authentification extends Vue {
+export default class Authentication extends Vue {
     name: string = "";
     password: string = "";
     showInputs: boolean = false;
@@ -43,8 +43,8 @@ export default class Authentification extends Vue {
     errorMessage: string = "";
     errorType: string = ""
 
-    get isAuthentificated() {
-        return this.$store.state.authentification.authentificated;
+    get isAuthenticated() {
+        return this.$store.state.authentication.authenticated;
     }
 
     get missingInput() {
@@ -59,7 +59,7 @@ export default class Authentification extends Vue {
                     password: this.password
                 }
             })
-            .then(data => {
+            .then((data) => {
                 this.$store.commit({
                     type: "login",
                     name: this.name,

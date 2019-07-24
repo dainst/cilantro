@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isAuthentificated">
+    <div v-if="isAuthenticated">
         <h3 class="is-size-5">Your active jobs</h3>
         <div v-for="job in jobList" :key="job['job_id']">
             <router-link class="message" :to="{ name: 'job', query: { id: job['job_id'] }}">
@@ -30,11 +30,11 @@ import axios from "axios";
 export default class JobList extends Vue {
     jobList: object[] = [];
 
-    get isAuthentificated() {
-        if (this.$store.state.authentification.authentificated) {
+    get isAuthenticated() {
+        if (this.$store.state.authentication.authenticated) {
             this.updateJobList();
         }
-        return this.$store.state.authentification.authentificated;
+        return this.$store.state.authentication.authenticated;
     }
     iconAttributesForState(state: string) {
         if (state == "new") {
@@ -52,9 +52,9 @@ export default class JobList extends Vue {
         axios
             .get(this.$store.state.backendURI + "job/jobs", {
                 auth: {
-                    username: this.$store.state.authentification.credentials
+                    username: this.$store.state.authentication.credentials
                         .name,
-                    password: this.$store.state.authentification.credentials
+                    password: this.$store.state.authentication.credentials
                         .password
                 }
             })
