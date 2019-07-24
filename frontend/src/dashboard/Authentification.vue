@@ -2,7 +2,7 @@
     <div>
         <div v-if="!isAuthentificated">
             <b-notification
-                type="is-warning"
+                :type="errorType"
                 :active.sync="errorActive"
                 auto-close
                 aria-close-label="Close notification"
@@ -41,6 +41,7 @@ export default class Authentification extends Vue {
     showInputs: boolean = false;
     errorActive: boolean = false;
     errorMessage: string = "";
+    errorType: string = ""
 
     get isAuthentificated() {
         return this.$store.state.authentification.authentificated;
@@ -66,9 +67,17 @@ export default class Authentification extends Vue {
                 });
             })
             .catch(error => {
+                if (error.response == undefined){
+                    this.errorMessage =
+                        "Failed to connect to server.";
+                    this.errorType = "is-danger"
+                    this.errorActive = true;
+                }
                 if (error.response.status == 401) {
                     this.errorMessage =
                         "Your credentials seem to be invalid, please try again.";
+
+                    this.errorType = "is-warning"
                     this.errorActive = true;
                 } else {
                     console.error("Invalid Server Response:", error.response);
