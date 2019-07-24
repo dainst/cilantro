@@ -24,7 +24,8 @@ module.exports = {
         ],
         'class-methods-use-this': [
             'error', {'exceptMethods': ['data'] }
-        ]
+        ],
+        'semi': ["error", "always"]
     },
     parserOptions: {
         parser: '@typescript-eslint/parser'
