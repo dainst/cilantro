@@ -1,6 +1,9 @@
 run:
 	docker-compose up
 
+run-frontend:
+	cd frontend; npm run serve
+
 run-detached:
 	docker-compose up -d
 

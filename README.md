@@ -21,12 +21,16 @@ Run this command after first checking out the code:
 
 Then generate an access token at https://github.com/settings/tokens/new, and add the token to your local .env file.
 
-Run all docker containers with:
+Run all docker containers with backend services:
 
     make run
 
+Start the frontend locally:
+
+    make run-frontend
+
 Code changes should be immediatly reflected in the corresponding containers.
-The frontend can be accessed under http://localhost:7777/.
+The frontend can be accessed under http://localhost:8080/.
 
 To stop the application run:
 
