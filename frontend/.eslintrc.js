@@ -21,6 +21,9 @@ module.exports = {
                     'state', // for vuex state
                 ]
             }
+        ],
+        'class-methods-use-this': [
+            'error', {'exceptMethods': ['data'] }
         ]
     },
     parserOptions: {
