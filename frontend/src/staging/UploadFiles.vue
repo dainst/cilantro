@@ -1,7 +1,7 @@
 <template>
     <section v-show="isLoggedIn">
         <b-field>
-            <b-upload v-model="dropFiles"
+            <b-upload v-model="filesToUpload"
                       multiple
                       drag-drop>
                 <section class="section">
@@ -18,121 +18,49 @@
         </b-field>
 
         <h3>Selected Files:</h3>
+        <span v-if="filesToUpload.length === 0">Select a file to upload</span>
         <div class="tags section">
-            <span v-for="(file, index) in dropFiles"
+            <span v-for="(file, index) in filesToUpload"
                   :key="index"
                   class="tag is-primary">
                 {{file.name}}
                 <button class="delete is-small"
                         type="button"
-                        @click="deleteDropFile(index)">
+                        @click="deleteFileToUpload(index)">
                 </button>
             </span>
         </div>
-        <b-button @click="upload" :disabled="running || this.dropFiles.length === 0">
+        <b-button @click="upload" :disabled="running || filesToUpload.length === 0">
             Upload
         </b-button>
         <p>
-            <span v-if="running">Upload is running! {{processedFiles}} of {{dropFiles.length}} uploaded</span>
+            <span v-if="running">Upload is running! {{uploadedFiles}} of {{totalFiles}} uploaded</span>
         </p>
     </section>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import axios from 'axios'
-import stagingStore from './stagingStore'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component
 export default class UploadFiles extends Vue {
-    dropFiles: File[] = []
-    processedFiles: number = 0
-    successfulFiles: number = 0
-    running: boolean = false
+        filesToUpload: File[] = []
+        @Prop() running!: boolean
+        @Prop() uploadedFiles!: number
+        @Prop() totalFiles!: number
 
-    get isLoggedIn() {
-        return this.$store.state.authentification.authentificated
-    }
-    deleteDropFile(index: number) {
-        this.dropFiles.splice(index, 1)
-    }
-
-    upload() {
-        this.running = true
-        for (let file of this.dropFiles) {
-            this.uploadFile(file)
+        get isLoggedIn() {
+            return this.$store.state.authentification.authentificated
         }
-    }
 
-    uploadFile(file: File) {
-        const ext = file.name.split('.').pop()
-        if (ext === 'csv' || ext === 'pdf') {
-            let formData = new FormData()
-            formData.append('file', file)
-            axios.post(this.$store.state.backendURI + 'staging',
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    auth: {
-                        username: this.$store.state.authentification.credentials.name,
-                        password: this.$store.state.authentification.credentials.password
-                    }
-                }
-            ).then(() => {
-                this.successfulFiles++
-                this.$snackbar.open({
-                    message: 'Upload of ' + file.name + ' successful!',
-                    queue: false
-                })
-                this.changeUploadStatus()
-                stagingStore.commit('refresh')
-            }).catch((error) => {
-                if (error.response === undefined) {
-                    console.log('Application Error', error)
-                } else {
-                    console.log('Invalid Server Response:', error.response)
-                }
-                this.$snackbar.open({
-                    message: 'Upload of ' + file.name + ' failed!',
-                    type: 'is-danger',
-                    queue: false
-                })
-                this.changeUploadStatus()
-            })
-        } else {
-            this.$snackbar.open({
-                message: 'Upload of ' + file.name + ' failed, invalid file extension ' + ext,
-                type: 'is-danger',
-                queue: false
-            })
-            this.changeUploadStatus()
+        deleteFileToUpload(index: number) {
+            this.filesToUpload.splice(index, 1)
         }
-    }
 
-    changeUploadStatus() {
-        this.processedFiles++
-        if (this.processedFiles === this.dropFiles.length) {
-            if (this.successfulFiles === this.processedFiles) {
-                this.$toast.open({
-                    message: 'Upload of ' + this.successfulFiles + ' files completed!',
-                    type: 'is-success',
-                    queue: false
-                })
-            } else {
-                this.$toast.open({
-                    message: 'Upload of ' + (this.processedFiles - this.successfulFiles) + ' failed!',
-                    type: 'is-danger',
-                    queue: false
-                })
-            }
-            this.running = false
-            this.successfulFiles = 0
-            this.processedFiles = 0
-            this.dropFiles = []
+        upload() {
+            this.$emit('uploadTriggered', this.filesToUpload)
+            this.filesToUpload = []
         }
-    }
 }
 
 </script>
