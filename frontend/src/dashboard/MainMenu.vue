@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import Authentication from "./Authentication.vue";
+import { Component, Vue } from 'vue-property-decorator';
+import Authentication from './Authentication.vue';
 
 @Component({
     components: {

@@ -4,6 +4,7 @@
             <div class="tile is-4 is-vertical is-parent">
                 <div class="tile is-child">
                     <MainMenu />
+                    <hr>
                     <JobList />
                 </div>
             </div>
@@ -17,10 +18,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import MainMenu from "./MainMenu.vue";
-import JobList from "./JobList.vue";
-import StartJobSelection from "./StartJobSelection.vue";
+import { Component, Vue } from 'vue-property-decorator';
+import MainMenu from './MainMenu.vue';
+import JobList from './JobList.vue';
+import StartJobSelection from './StartJobSelection.vue';
 
 @Component({
     components: {

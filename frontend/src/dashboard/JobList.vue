@@ -23,8 +23,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import axios from "axios";
+import { Component, Vue } from 'vue-property-decorator';
+import axios from 'axios';
 
 @Component
 export default class JobList extends Vue {
@@ -36,21 +36,21 @@ export default class JobList extends Vue {
         }
         return this.$store.state.authentication.authenticated;
     }
-    iconAttributesForState(state: string) {
-        if (state == "new") {
-            return [{ icon: "alarm" }];
-        } else if (state == "started") {
-            return [{ type: "is-warning" }, { icon: "cogs" }];
-        } else if (state == "success") {
-            return [{ type: "is-success" }, { icon: "check" }];
-        } else {
-            return [{ type: "is-danger" }, { icon: "alert" }];
+
+    iconAttributesForState = (state : string) => {
+        if (state === 'new') {
+            return [{ icon: 'alarm' }];
+        } if (state === 'started') {
+            return [{ type: 'is-warning' }, { icon: 'cogs' }];
+        } if (state === 'success') {
+            return [{ type: 'is-success' }, { icon: 'check' }];
         }
+        return [{ type: 'is-danger' }, { icon: 'alert' }];
     }
 
     updateJobList() {
         axios
-            .get(this.$store.state.backendURI + "job/jobs", {
+            .get(`${this.$store.state.backendURI}job/jobs`, {
                 auth: {
                     username: this.$store.state.authentication.credentials
                         .name,
@@ -58,13 +58,12 @@ export default class JobList extends Vue {
                         .password
                 }
             })
-            .then(response => {
+            .then((response) => {
                 this.jobList = response.data;
             })
-            .catch(error => {
-                console.error("Invalid Server Response:", error.response);
-            })
-            .then();
+            .catch((error) => {
+                console.error('Invalid Server Response:', error.response);
+            });
     }
 }
 </script>

@@ -9,7 +9,8 @@
                 role="alert"
             >{{errorMessage}}</b-notification>
             <b-field>
-                <b-input placeholder="Name" minlength="1" type="text" required v-model="name"></b-input>
+                <b-input placeholder="Name" minlength="1" type="text" required v-model="name">
+                </b-input>
             </b-field>
             <b-field>
                 <b-input
@@ -31,29 +32,29 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import axios from "axios";
+import { Component, Vue } from 'vue-property-decorator';
+import axios from 'axios';
 
 @Component
 export default class Authentication extends Vue {
-    name: string = "";
-    password: string = "";
+    name: string = '';
+    password: string = '';
     showInputs: boolean = false;
     errorActive: boolean = false;
-    errorMessage: string = "";
-    errorType: string = ""
+    errorMessage: string = '';
+    errorType: string = ''
 
     get isAuthenticated() {
         return this.$store.state.authentication.authenticated;
     }
 
     get missingInput() {
-        return this.name.length == 0 || this.password.length == 0;
+        return this.name.length === 0 || this.password.length === 0;
     }
 
     login() {
         axios
-            .get(this.$store.state.backendURI + "user/" + this.name, {
+            .get(`${this.$store.state.backendURI}user/${this.name}`, {
                 auth: {
                     username: this.name,
                     password: this.password
@@ -61,36 +62,36 @@ export default class Authentication extends Vue {
             })
             .then((data) => {
                 this.$store.commit({
-                    type: "login",
+                    type: 'login',
                     name: this.name,
                     password: this.password
                 });
             })
-            .catch(error => {
-                if (error.response == undefined){
+            .catch((error) => {
+                if (error.response === undefined) {
                     this.errorMessage =
-                        "Failed to connect to server.";
-                    this.errorType = "is-danger"
+                        'Failed to connect to server.';
+                    this.errorType = 'is-danger';
                     this.errorActive = true;
                 }
-                if (error.response.status == 401) {
+                if (error.response.status === 401) {
                     this.errorMessage =
-                        "Your credentials seem to be invalid, please try again.";
+                        'Your credentials seem to be invalid, please try again.';
 
-                    this.errorType = "is-warning"
+                    this.errorType = 'is-warning';
                     this.errorActive = true;
                 } else {
-                    console.error("Invalid Server Response:", error.response);
+                    console.error('Invalid Server Response:', error.response);
                 }
             });
     }
 
     logout() {
-        this.name = "";
-        this.password = "";
+        this.name = '';
+        this.password = '';
 
         this.$store.commit({
-            type: "logout"
+            type: 'logout'
         });
     }
 }
