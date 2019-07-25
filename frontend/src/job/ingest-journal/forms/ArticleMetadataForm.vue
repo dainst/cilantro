@@ -24,16 +24,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component
 export default class ArticleMetadataForm extends Vue {
-    @Prop() private initialArticle!: Object
+    @Prop() private initialData!: Object
 
     data() {
         return {
-            article: this.$props.initialArticle
-        }
+            article: this.$props.initialData
+        };
     }
 }
 </script>

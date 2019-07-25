@@ -5,23 +5,18 @@
             <div class="tile is-parent">
                 <div class="tile is-child box">
                     <p class="title">Journal import</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque
-                        tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.</p>
+                    <p>Job Type Description</p>
                     <b-button @click="startJournalImport">
                         Start
                     </b-button>
                 </div>
                 <div class="tile is-child box">
                     <p class="title">Book import</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque
-                        tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.</p>
+                    <p>Job Type Description</p>
                 </div>
                 <div class="tile is-child box">
                     <p class="title">NLP Processing</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam semper diam at erat pulvinar, at
-                        pulvinar felis blandit. Vestibulum volutpat tellus diam, consequat gravida libero rhoncus ut.
-                        Morbi maximus, leo sit amet vehicula eleifend, nunc dui porta orci, quis semper odio felis ut
-                        quam.</p>
+                    <p>Job Type Description</p>
                 </div>
             </div>
         </div>
@@ -29,11 +24,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class StartJobSelection extends Vue {
-
     startJournalImport() {
         this.$toast.open({
             message: 'Journal Import Job Started',
@@ -44,7 +38,8 @@ export default class StartJobSelection extends Vue {
             type: 'startJob',
             name: 'Journal Import'
         })
-        this.$router.push({ path: 'JournalImport' })
+        });
+        this.$router.push({ path: 'JournalImport' });
     }
 }
 </script>

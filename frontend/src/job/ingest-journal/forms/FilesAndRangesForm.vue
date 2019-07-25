@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import ArticleMetadataForm from './ArticleMetadataForm.vue'
-import store from '@/store'
+import { Component, Vue } from 'vue-property-decorator';
+import ArticleMetadataForm from './ArticleMetadataForm.vue';
+import store from '@/store';
 
 @Component({
     components: {
@@ -29,7 +29,7 @@ export default class FilesAndRangesForm extends Vue {
             message: 'Adding new article...',
             position: 'is-top-right',
             type: 'is-success'
-        })
+        });
         this.articles.push({
             ojs_journal_code: 'test_code',
             ojs_user: '',
@@ -37,7 +37,7 @@ export default class FilesAndRangesForm extends Vue {
             default_publish_articles: true,
             default_create_frontpage: '',
             allow_upload_without_file: ''
-        })
+        });
     }
 }
 </script>
