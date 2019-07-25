@@ -30,6 +30,13 @@ module.exports = {
             'error', 'always', { exceptAfterSingleLine: true }
         ]
     },
+    settings: {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx", ".ts", ".tsx"]
+            }
+        }
+    },
     parserOptions: {
         parser: '@typescript-eslint/parser'
     },
