@@ -3,21 +3,21 @@
         <div class=columns>
             <div class=column>
                 <b-field label="volume" :label-position="labelPosition">
-                    <b-input v-model="volume"></b-input>
+                    <b-input v-model="metadata.volume"></b-input>
                 </b-field>
                 <b-field label="year" :label-position="labelPosition">
-                    <b-input v-model="year"></b-input>
+                    <b-input v-model="metadata.year"></b-input>
                 </b-field>
                 <b-field label="number" :label-position="labelPosition">
-                    <b-input v-model="number" type="number"></b-input>
+                    <b-input v-model="metadata.number" type="number"></b-input>
                 </b-field>
             </div>
             <div class=column>
                 <b-field label="description" :label-position="labelPosition">
-                    <b-input v-model="description"></b-input>
+                    <b-input v-model="metadata.description"></b-input>
                 </b-field>
                 <b-field label="identification" :label-position="labelPosition">
-                    <b-input v-model="identification"></b-input>
+                    <b-input v-model="metadata.identification"></b-input>
                 </b-field>
             </div>
         </div>
@@ -26,20 +26,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component
 export default class JournalMetadataForm extends Vue {
-    data() {
-        return {
-            labelPosition: 'on-border',
+    @Prop() private metadata!: Object
 
-            volume: '',
-            year: '',
-            number: '',
-            description: '',
-            identification: ''
-        }
-    }
+    labelPosition: String = 'on-border';
 }
 </script>

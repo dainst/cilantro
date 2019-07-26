@@ -1,51 +1,131 @@
 <template>
     <div class="tile is-ancestor">
-        <div v-if="jobType" class="tile is-vertical is-parent">
-            <p class="tile is-child">{{ jobType }}</p>
-
+        <div class="tile is-vertical is-parent">
             <b-steps v-model="activeStep" :animated="isAnimated" :has-navigation="hasNavigation">
                 <b-step-item label="Journal Metadaten" :clickable="isStepsClickable">
-                    Metadaten für das Journal
-                    <JournalMetadataForm class="tile is-child" />
+                    Journal Metadata
+                    <b-button class="tile is-child" @click="saveAndContinue">
+                        Continue
+                    </b-button>
+                    <JournalMetadataForm class="tile is-child"
+                                         v-bind:metadata="journalMetadata" />
                 </b-step-item>
                 <b-step-item label="Artikelgrenzen und Metadaten" :clickable="isStepsClickable">
-                    Geben sie hier den Ursprung und die Metadaten für die Artikel ein
+                    Article Sources and Metadata
+                    <b-button class="tile is-child" @click="saveAndContinue">
+                        Continue
+                    </b-button>
                     <FilesAndRangesForm class="tile is-child" />
                 </b-step-item>
                 <b-step-item label="Publizierung" :clickable="isStepsClickable">
-                    Daten zur Publizierung in OJS
-                    <PublishingForm class="tile is-child" />
+                    Publishing Parameters
+                    <b-button class="tile is-child" @click="saveAndContinue">
+                        Continue
+                    </b-button>
+                    <PublishingForm class="tile is-child" v-bind:initialData="publishingData"/>
+                </b-step-item>
+                <b-step-item label="Other Settings" :clickable="isStepsClickable">
+                    Other Job Settings
+                    <b-button class="tile is-child" @click="startJob">Start Job</b-button>
+                    <OtherJobSettingsForm class="tile is-child"
+                                          v-bind:metadata="otherSettings"/>
                 </b-step-item>
             </b-steps>
-
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import JournalMetadataForm from './forms/JournalMetadataForm.vue'
-import FilesAndRangesForm from './forms/FilesAndRangesForm.vue'
-import PublishingForm from './forms/PublishingForm.vue'
+import { Component, Vue } from 'vue-property-decorator';
+import axios from 'axios';
+
+import JournalMetadataForm from './forms/JournalMetadataForm.vue';
+import FilesAndRangesForm from './forms/FilesAndRangesForm.vue';
+import PublishingForm from './forms/PublishingForm.vue';
+import OtherJobSettingsForm from './forms/OtherJobSettingsForm.vue';
+import { JobParameters, JournalMetadata, OJSMetadata } from './JobParameters';
 
 @Component({
     components: {
         JournalMetadataForm,
         FilesAndRangesForm,
-        PublishingForm
+        PublishingForm,
+        OtherJobSettingsForm
     }
 })
 export default class JournalImport extends Vue {
-    data() {
-        return {
-            jobType: this.$store.state.job.type,
+    jobParameters: JobParameters = initJobParams();
 
-            activeStep: 0,
-            isAnimated: true,
-            hasNavigation: false,
-            isStepsClickable: true
-        }
+    journalMetadata: JournalMetadata = this.jobParameters.metadata;
+    publishingData: OJSMetadata = this.jobParameters.ojs_metadata;
+    otherSettings: Object = {
+        nlp_language: this.jobParameters.nlp_params.lang,
+        do_ocr: this.jobParameters.do_ocr,
+        keep_ratio: this.jobParameters.keep_ratio
     }
+
+    activeStep: number = 0;
+    isAnimated: boolean = true;
+    hasNavigation: boolean = false;
+    isStepsClickable: boolean = true;
+
+    saveAndContinue() {
+        this.activeStep += 1;
+    }
+
+    startJob() {
+        axios.post(
+            `${this.$store.state.backendURI}job/ingest_journal`,
+            this.jobParameters,
+            {
+                auth: {
+                    username: this.$store.state.authentication.credentials.name,
+                    password: this.$store.state.authentication.credentials.password
+                }
+            }
+        )
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+}
+
+function initJobParams(): JobParameters {
+    const journalMetadata = {
+        volume: '',
+        year: 2018,
+        number: '',
+        description: '[PDFs teilweise verf\u00fcgbar]',
+        identification: 'year'
+    };
+
+    const ojsMetadata = {
+        ojs_journal_code: 'test',
+        ojs_user: 'ojs_user',
+        auto_publish_issue: true,
+        default_publish_articles: true,
+        default_create_frontpage: true,
+        allow_upload_without_file: false
+    };
+
+    const nlpParams = {
+        lang: 'eu'
+    };
+
+    const params = {
+        metadata: journalMetadata,
+        files: [],
+        parts: [],
+        ojs_metadata: ojsMetadata,
+        do_ocr: false,
+        keep_ratio: true,
+        nlp_params: nlpParams
+    };
+
+    return params;
 }
 </script>
 
@@ -53,7 +133,5 @@ export default class JournalImport extends Vue {
     div.step-item {
         font-style: italic;
         font-size: x-large;
-
     }
-
 </style>

@@ -1,6 +1,6 @@
 <template>
     <section>
-        <b-collapse :open="false" aria-id="publishing">
+        <b-collapse :open="false" aria-id="publishing" class="card">
             <button slot="trigger" aria-controls="contentIdForA11y1">
                 Automatisches Veröffentlichen nach dem Import
             </button>
@@ -21,5 +21,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component
-export default class PublishingForm extends Vue { }
+export default class PublishingForm extends Vue {
+    @Prop() private initialData!: Object
+}
 </script>

@@ -16,25 +16,18 @@ export default new Vuex.Store({
                 name: '',
                 password: ''
             }
-        },
-
-        job: {
-            type: undefined
         }
     },
     mutations: {
         login: (state, payload) => {
-            state.authentication.credentials.name = payload.name
-            state.authentication.credentials.password = payload.password
-            state.authentication.authenticated = true
+            state.authentication.credentials.name = payload.name;
+            state.authentication.credentials.password = payload.password;
+            state.authentication.authenticated = true;
         },
-        logout: state => {
-            state.authentication.credentials.name = ''
-            state.authentication.credentials.password = ''
-            state.authentication.authenticated = false
-        },
-        startJob: (state, payload) => {
-            state.job.type = payload.name
+        logout: (state) => {
+            state.authentication.credentials.name = '';
+            state.authentication.credentials.password = '';
+            state.authentication.authenticated = false;
         }
     }
 });
