@@ -30,14 +30,8 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component
 export default class JournalMetadataForm extends Vue {
-    @Prop() private initialMetadata!: Object
+    @Prop() private metadata!: Object
 
-    data() {
-        return {
-            labelPosition: 'on-border',
-
-            metadata: this.$props.initialMetadata
-        };
-    }
+    labelPosition: String = 'on-border';
 }
 </script>

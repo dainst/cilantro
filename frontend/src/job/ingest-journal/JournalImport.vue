@@ -8,7 +8,7 @@
                         Continue
                     </b-button>
                     <JournalMetadataForm class="tile is-child"
-                                         v-bind:initialMetadata="journalMetadata" />
+                                         v-bind:metadata="journalMetadata" />
                 </b-step-item>
                 <b-step-item label="Artikelgrenzen und Metadaten" :clickable="isStepsClickable">
                     Article Sources and Metadata
@@ -28,7 +28,7 @@
                     Other Job Settings
                     <b-button class="tile is-child" @click="startJob">Start Job</b-button>
                     <OtherJobSettingsForm class="tile is-child"
-                                          v-bind:initialData="otherSettings"/>
+                                          v-bind:metadata="otherSettings"/>
                 </b-step-item>
             </b-steps>
         </div>
@@ -63,17 +63,13 @@ export default class JournalImport extends Vue {
         keep_ratio: this.jobParameters.keep_ratio
     }
 
-    data() {
-        return {
-            activeStep: 0,
-            isAnimated: true,
-            hasNavigation: false,
-            isStepsClickable: true
-        };
-    }
+    activeStep: number = 0;
+    isAnimated: boolean = true;
+    hasNavigation: boolean = false;
+    isStepsClickable: boolean = true;
 
     saveAndContinue() {
-        this.$data.activeStep += 1;
+        this.activeStep += 1;
     }
 
     startJob() {
