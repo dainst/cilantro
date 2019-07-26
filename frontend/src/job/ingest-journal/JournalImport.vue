@@ -43,7 +43,7 @@ import JournalMetadataForm from './forms/JournalMetadataForm.vue';
 import FilesAndRangesForm from './forms/FilesAndRangesForm.vue';
 import PublishingForm from './forms/PublishingForm.vue';
 import OtherJobSettingsForm from './forms/OtherJobSettingsForm.vue';
-import JobParameters from './JobParameters';
+import { JobParameters, JournalMetadata, OJSMetadata } from './JobParameters';
 
 @Component({
     components: {
@@ -54,9 +54,10 @@ import JobParameters from './JobParameters';
     }
 })
 export default class JournalImport extends Vue {
-    jobParameters: JobParameters = new JobParameters();
-    journalMetadata: Object = this.jobParameters.metadata;
-    publishingData: Object = this.jobParameters.ojs_metadata;
+    jobParameters: JobParameters = initJobParams();
+
+    journalMetadata: JournalMetadata = this.jobParameters.metadata;
+    publishingData: OJSMetadata = this.jobParameters.ojs_metadata;
     otherSettings: Object = {
         nlp_language: this.jobParameters.nlp_params.lang,
         do_ocr: this.jobParameters.do_ocr,
@@ -90,6 +91,41 @@ export default class JournalImport extends Vue {
                 console.log(error);
             });
     }
+}
+
+function initJobParams(): JobParameters {
+    const journalMetadata = {
+        volume: '',
+        year: 2018,
+        number: '',
+        description: '[PDFs teilweise verf\u00fcgbar]',
+        identification: 'year'
+    };
+
+    const ojsMetadata = {
+        ojs_journal_code: 'test',
+        ojs_user: 'ojs_user',
+        auto_publish_issue: true,
+        default_publish_articles: true,
+        default_create_frontpage: true,
+        allow_upload_without_file: false
+    };
+
+    const nlpParams = {
+        lang: 'eu'
+    };
+
+    const params = {
+        metadata: journalMetadata,
+        files: [],
+        parts: [],
+        ojs_metadata: ojsMetadata,
+        do_ocr: false,
+        keep_ratio: true,
+        nlp_params: nlpParams
+    };
+
+    return params;
 }
 </script>
 
