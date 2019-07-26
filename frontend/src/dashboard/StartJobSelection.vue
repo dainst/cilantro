@@ -33,13 +33,12 @@ export default class StartJobSelection extends Vue {
             message: 'Journal Import Job Started',
             position: 'is-top-right',
             type: 'is-info'
-        })
+        });
         this.$store.commit({
             type: 'startJob',
             name: 'Journal Import'
-        })
         });
         this.$router.push({ path: 'JournalImport' });
-    }
+    };
 }
 </script>
