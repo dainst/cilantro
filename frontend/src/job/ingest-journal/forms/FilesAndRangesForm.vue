@@ -13,7 +13,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import ArticleMetadataForm from './ArticleMetadataForm.vue';
-import store from '@/store';
 
 @Component({
     components: {
