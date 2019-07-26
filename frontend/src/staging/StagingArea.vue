@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>File Browser</h2>
-        <FileBrowser :files-to-show="stagedFiles"/>
+        <FileBrowser :dirToShow="'staging'"/>
         <h2>Upload File</h2>
         <UploadFiles :running="running" :uploadedFiles="numberOfProcessedFiles"
                      :totalFiles="numberOfFilesToUpload" @uploadTriggered="uploadFiles"/>
