@@ -17,28 +17,26 @@ module.exports = {
         'no-param-reassign': [
             'error',
             {
-                props: true, ignorePropertyModificationsFor: [
-                    'state', // for vuex state
-                ]
+                props: true, ignorePropertyModificationsFor: ['state']
             }
         ],
         'class-methods-use-this': [
-            'error', {'exceptMethods': ['data'] }
+            'error', { exceptMethods: ['data'] }
         ],
-        'semi': ["error", "always"],
+        'semi': ['error', 'always'],
         'lines-between-class-members': [
             'error', 'always', { exceptAfterSingleLine: true }
         ]
     },
     settings: {
-        "import/resolver": {
-            "node": {
-                "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        'import/resolver': {
+            node: {
+                extensions: ['.js', '.jsx', '.ts', '.tsx']
             }
         }
     },
     parserOptions: {
         parser: '@typescript-eslint/parser'
     },
-    'plugins': ['html']
-}
+    plugins: ['html']
+};

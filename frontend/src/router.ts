@@ -1,11 +1,11 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Dashboard from './dashboard/Dashboard.vue'
-import JournalImport from './job/ingest-journal/JournalImport.vue'
-import StagingArea from './staging/StagingArea.vue'
-import JobDetails from './job/JobDetails.vue'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Dashboard from './dashboard/Dashboard.vue';
+import JournalImport from './job/ingest-journal/JournalImport.vue';
+import StagingArea from './staging/StagingArea.vue';
+import JobDetails from './job/JobDetails.vue';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
     mode: 'history',
@@ -32,4 +32,4 @@ export default new Router({
             component: JobDetails
         }
     ]
-})
+});
