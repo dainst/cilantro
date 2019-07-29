@@ -5,7 +5,7 @@ import axios from 'axios';
 Vue.use(Vuex);
 
 export enum AuthenticationStatus {
-    In, Out, Pending, Error
+    In, Out, Pending, Error, Prompt
 }
 
 export default new Vuex.Store({
@@ -23,6 +23,9 @@ export default new Vuex.Store({
         }
     },
     mutations: {
+        auth_prompt: (state) => {
+            state.authentication.status = AuthenticationStatus.Prompt
+        },
         auth_request: (state) => {
             state.authentication.status = AuthenticationStatus.Pending
         },
@@ -34,6 +37,7 @@ export default new Vuex.Store({
         auth_error: (state) => {
             state.authentication.status = AuthenticationStatus.Error
         },
+
         logout: (state) => {
             state.authentication.status = AuthenticationStatus.Out
         },
@@ -67,6 +71,12 @@ export default new Vuex.Store({
                 localStorage.removeItem('username')
                 localStorage.removeItem('password')
                 delete axios.defaults.headers.common['Authorization']
+                resolve()
+            })
+        },
+        promptLogin: ({ commit }) => {
+            return new Promise((resolve, reject) => {
+                commit('auth_prompt')
                 resolve()
             })
         }

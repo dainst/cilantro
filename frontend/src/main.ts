@@ -19,7 +19,6 @@ const password = localStorage.getItem('password')
 
 if (username && password) {
     store.dispatch('login', { name: username, password: password })
-        .then(() => console.log('Success!'))
         .catch(err => console.log(err));
 }
 
@@ -29,7 +28,8 @@ router.beforeEach((to, from, next) => {
             next()
         }
         else {
-            // TODO: Display warning, there is currently no visible feedback for the redirects
+            store.dispatch('promptLogin')
+                .catch(err => console.error(err));
             next('/')
         }
     } else {

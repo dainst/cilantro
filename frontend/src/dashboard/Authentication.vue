@@ -58,7 +58,6 @@ export default class Authentication extends Vue {
         const { password } = this;
 
         this.$store.dispatch('login', { name, password })
-            .then(() => console.log('Logged in!'))
             .catch(err => console.log(err));
     }
 
@@ -67,7 +66,6 @@ export default class Authentication extends Vue {
         this.password = '';
 
         this.$store.dispatch('logout')
-            .then(() => console.log('Logged in!'))
             .catch(err => console.log(err));
     }
 
@@ -80,7 +78,7 @@ export default class Authentication extends Vue {
                     this.errorMessage = 'Login successful';
                     this.errorActive = true;
                 } else if (newValue === AuthenticationStatus.Out) {
-                    this.errorType = 'is-success';
+                    this.errorType = '';
                     this.errorMessage = 'Logout successful';
                     this.errorActive = true;
                 } else if (newValue === AuthenticationStatus.Pending) {
@@ -90,6 +88,10 @@ export default class Authentication extends Vue {
                 } else if (newValue === AuthenticationStatus.Error) {
                     this.errorType = 'is-danger';
                     this.errorMessage = 'Login failed';
+                    this.errorActive = true;
+                } else if (newValue === AuthenticationStatus.Prompt) {
+                    this.errorType = 'is-warning';
+                    this.errorMessage = 'Please login';
                     this.errorActive = true;
                 }
             }
