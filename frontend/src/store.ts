@@ -84,5 +84,6 @@ export default new Vuex.Store({
     getters: {
         isAuthenticated: state => (state.authentication.status === AuthenticationStatus.In),
         authStatus: state => state.authentication.status,
+        username: state => state.authentication.credentials.name
     }
 });
