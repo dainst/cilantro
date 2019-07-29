@@ -30,7 +30,8 @@ router.beforeEach((to, from, next) => {
         else {
             store.dispatch('promptLogin')
                 .catch(err => console.error(err));
-            next('/')
+            // next('/') // redirects if not authenticated
+            next()
         }
     } else {
         next()
