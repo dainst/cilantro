@@ -19,17 +19,26 @@ export default new Router({
         {
             path: '/staging',
             name: 'staging',
-            component: StagingArea
+            component: StagingArea,
+            meta: {
+                requiresAuth: true
+            }
         },
         {
             path: '/JournalImport',
             name: 'JournalImport',
-            component: JournalImport
+            component: JournalImport,
+            meta: {
+                requiresAuth: true
+            }
         },
         {
             path: '/job',
             name: 'job',
-            component: JobDetails
+            component: JobDetails,
+            meta: {
+                requiresAuth: true
+            }
         }
     ]
-});
+})

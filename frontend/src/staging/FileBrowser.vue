@@ -30,13 +30,7 @@ export default class FileBrowser extends Vue {
 
     fetchFiles() {
         axios.get(
-            `${this.$store.state.backendURI}${this.dirToShow}`,
-            {
-                auth: {
-                    username: this.$store.state.authentication.credentials.name,
-                    password: this.$store.state.authentication.credentials.password
-                }
-            }
+            `${this.$store.state.backendURI}${this.dirToShow}`
         ).then((response) => {
             this.filesToShow = response.data;
         }).catch((error) => {

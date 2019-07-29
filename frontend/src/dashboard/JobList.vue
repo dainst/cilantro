@@ -1,6 +1,10 @@
 <template>
-    <div v-if="isAuthenticated">
-        <h3 class="is-size-5">Your active jobs</h3>
+    <div v-if="this.$store.getters.isAuthenticated">
+        <h3 class="is-size-5">
+            Your active jobs
+             <a @click="updateJobList"><b-icon icon="refresh" size="is-small">
+            </b-icon></a>
+        </h3>
         <div v-for="job in jobList" :key="job['job_id']">
             <router-link class="message" :to="{ name: 'job', query: { id: job['job_id'] }}">
                 <div class="message-header">
@@ -30,13 +34,6 @@ import axios from 'axios';
 export default class JobList extends Vue {
     jobList: object[] = [];
 
-    get isAuthenticated() {
-        if (this.$store.state.authentication.authenticated) {
-            this.updateJobList();
-        }
-        return this.$store.state.authentication.authenticated;
-    }
-
     iconAttributesForState = (state : string) => {
         if (state === 'new') {
             return [{ icon: 'alarm' }];
@@ -50,20 +47,28 @@ export default class JobList extends Vue {
 
     updateJobList() {
         axios
-            .get(`${this.$store.state.backendURI}job/jobs`, {
-                auth: {
-                    username: this.$store.state.authentication.credentials
-                        .name,
-                    password: this.$store.state.authentication.credentials
-                        .password
-                }
-            })
+            .get(`${this.$store.state.backendURI}job/jobs`)
             .then((response) => {
                 this.jobList = response.data;
             })
             .catch((error) => {
                 console.error('Invalid Server Response:', error.response);
             });
+    }
+
+    mounted() {
+        if (this.$store.getters.isAuthenticated) {
+            this.updateJobList();
+        }
+
+        this.$store.watch(
+            (state, getters) => getters.isAuthenticated,
+            (newValue: boolean, oldValue: boolean) => {
+                if (newValue) {
+                    this.updateJobList();
+                }
+            }
+        );
     }
 }
 </script>

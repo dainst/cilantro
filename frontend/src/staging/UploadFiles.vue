@@ -1,5 +1,5 @@
 <template>
-    <section v-show="isLoggedIn">
+    <section v-show="this.$store.getters.isAuthenticated">
         <b-field>
             <b-upload v-model="filesToUpload"
                       multiple
@@ -48,10 +48,6 @@ export default class UploadFiles extends Vue {
         @Prop() running!: boolean
         @Prop() uploadedFiles!: number
         @Prop() totalFiles!: number
-
-        get isLoggedIn() {
-            return this.$store.state.authentication.authenticated
-        }
 
         deleteFileToUpload(index: number) {
             this.filesToUpload.splice(index, 1)
