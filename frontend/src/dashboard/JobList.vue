@@ -45,15 +45,13 @@ export default class JobList extends Vue {
         return [{ type: 'is-danger' }, { icon: 'alert' }];
     }
 
-    updateJobList() {
-        axios
-            .get(`${this.$store.state.backendURI}job/jobs`)
-            .then((response) => {
-                this.jobList = response.data;
-            })
-            .catch((error) => {
-                console.error('Invalid Server Response:', error.response);
-            });
+    async updateJobList() {
+        try {
+            const response = await axios.get(`${this.$store.state.backendURI}job/jobs`)
+            this.jobList = response.data;
+        } catch (error) {
+            console.error('Invalid Server Response:', error.response);
+        }
     }
 
     mounted() {

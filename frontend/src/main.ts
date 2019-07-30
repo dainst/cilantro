@@ -18,18 +18,19 @@ const username = localStorage.getItem('username');
 const password = localStorage.getItem('password');
 
 if (username && password) {
-    store.dispatch('login', { name: username, password })
-        .catch(err => console.log(err));
+    try {
+        store.dispatch('login', { name: username, password })
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (store.getters.isAuthenticated) {
             next();
         } else {
-            store.dispatch('promptLogin')
-                .catch(err => console.error(err));
-            // next('/') // redirects if not authenticated
+            store.dispatch('promptLogin');
             next();
         }
     } else {

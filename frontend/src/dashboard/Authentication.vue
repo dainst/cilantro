@@ -47,17 +47,13 @@ export default class Authentication extends Vue {
     login() {
         const { name } = this;
         const { password } = this;
-
-        this.$store.dispatch('login', { name, password })
-            .catch(err => console.log(err));
+        this.$store.dispatch('login', { name, password });
     }
 
     logout() {
         this.name = '';
         this.password = '';
-
-        this.$store.dispatch('logout')
-            .catch(err => console.log(err));
+        this.$store.dispatch('logout');
     }
 }
 </script>
