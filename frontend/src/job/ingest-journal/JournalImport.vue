@@ -32,7 +32,7 @@
                     <b-button class="tile is-child" @click="saveAndContinue">
                         Continue
                     </b-button>
-                    <PublishingForm class="tile is-child" v-bind:initialData="publishingData"/>
+                    <PublishingForm class="tile is-child" v-bind:publishingData="publishingData"/>
                 </b-step-item>
                 <b-step-item label="Other Settings" :clickable="isStepsClickable">
                     Other Job Settings
