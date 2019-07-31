@@ -18,7 +18,7 @@ export interface OJSMetadata {
 }
 
 export interface FileRange {
-    file: String;
+    file: string;
     range: number[];
 }
 
