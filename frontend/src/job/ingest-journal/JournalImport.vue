@@ -76,13 +76,7 @@ export default class JournalImport extends Vue {
     startJob() {
         axios.post(
             `${this.$store.state.backendURI}job/ingest_journal`,
-            this.jobParameters,
-            {
-                auth: {
-                    username: this.$store.state.authentication.credentials.name,
-                    password: this.$store.state.authentication.credentials.password
-                }
-            }
+            this.jobParameters
         )
             .then((response) => {
                 console.log(response);

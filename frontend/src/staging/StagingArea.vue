@@ -42,13 +42,7 @@ export default class StagingArea extends Vue {
 
         fetchFiles() {
             axios.get(
-                `${this.$store.state.backendURI}staging`,
-                {
-                    auth: {
-                        username: this.$store.state.authentication.credentials.name,
-                        password: this.$store.state.authentication.credentials.password
-                    }
-                }
+                `${this.$store.state.backendURI}staging`
             ).then((response) => {
                 this.stagedFiles = response.data;
             }).catch((error) => {
@@ -93,10 +87,6 @@ export default class StagingArea extends Vue {
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data'
-                    },
-                    auth: {
-                        username: this.$store.state.authentication.credentials.name,
-                        password: this.$store.state.authentication.credentials.password
                     }
                 }
             ).then(() => {
