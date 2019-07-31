@@ -1,6 +1,6 @@
 <template>
     <div class="tile is-ancestor">
-        <FileBrowser :files-to-show="stagedFiles" v-bind:selectedFile.sync="selectedFile"/>
+        <FileBrowser :files-to-show="stagedFiles" v-bind:initialSelected.sync="selectedFile"/>
         <div v-if="isFileSelected" class="tile is-parent">
             <span class="tile is-child">
                 {{ selectedFile.name }}
