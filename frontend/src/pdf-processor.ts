@@ -1,41 +1,39 @@
 import * as PDFJS from 'pdfjs-dist/webpack';
 import { PDFDocumentProxy } from 'pdfjs-dist';
 
-export default class PDFProcessor {
-    private static async toUint8Array(file: File) {
-        const buffer = await new Response(file).arrayBuffer();
-        return new Uint8Array(buffer);
+export async function processFilePath(pdfPath: string, full = true) {
+    const content = await PDFJS.getDocument(pdfPath).promise;
+
+    let details = {};
+    if (full === true) {
+        details = getDetails(content);
     }
+    return { content, details };
+}
 
-    private static async getDetails(proxy: PDFDocumentProxy) {
-        const destinations = await proxy.getDestinations();
-        const js = await proxy.getJavaScript();
-        const meta = await proxy.getMetadata();
-        const outline = await proxy.getOutline();
+export async function processFileObject(pdfFile: File, full = true) {
+    const arr = await toUint8Array(pdfFile);
+    const content = await PDFJS.getDocument({ data: arr }).promise;
 
-        return {
-            destinations, js, meta, outline
-        };
+    let details = {};
+    if (full === true) {
+        details = await getDetails(content);
     }
+    return { content, details };
+}
 
-    static async processFilePath(pdfPath: string, full = true) {
-        const content = await PDFJS.getDocument(pdfPath).promise;
+async function toUint8Array(file: File) {
+    const buffer = await new Response(file).arrayBuffer();
+    return new Uint8Array(buffer);
+}
 
-        let details = {};
-        if (full === true) {
-            details = this.getDetails(content);
-        }
-        return { content, details };
-    }
+async function getDetails(proxy: PDFDocumentProxy) {
+    const destinations = await proxy.getDestinations();
+    const js = await proxy.getJavaScript();
+    const meta = await proxy.getMetadata();
+    const outline = await proxy.getOutline();
 
-    static async processFileObject(pdfFile: File, full = true) {
-        const arr = await this.toUint8Array(pdfFile);
-        const content = await PDFJS.getDocument({ data: arr }).promise;
-
-        let details = {};
-        if (full === true) {
-            details = await this.getDetails(content);
-        }
-        return { content, details };
-    }
+    return {
+        destinations, js, meta, outline
+    };
 }
