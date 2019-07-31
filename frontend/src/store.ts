@@ -43,28 +43,29 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        login: ({ commit }, user) => new Promise(async (resolve, reject) => {
+        login: ({ commit }, user) => new Promise((resolve, reject) => {
             commit('auth_request');
-            try {
-                const response = await axios({
-                    url: `http://localhost:5000/user/${user.name}`,
-                    auth: { username: user.name, password: user.password },
-                    method: 'GET'
-                });
-                localStorage.setItem('username', user.name);
-                localStorage.setItem('password', user.password);
+            const response = axios({
+                url: `http://localhost:5000/user/${user.name}`,
+                auth: { username: user.name, password: user.password },
+                method: 'GET'
+            }).then(
+                (resp) => {
+                    localStorage.setItem('username', user.name);
+                    localStorage.setItem('password', user.password);
 
-                const basicAuth = btoa(`${user.name}:${user.password}`);
-                axios.defaults.headers.common.Authorization = `Basic ${basicAuth}`;
+                    const basicAuth = btoa(`${user.name}:${user.password}`);
+                    axios.defaults.headers.common.Authorization = `Basic ${basicAuth}`;
 
-                commit('auth_success', user.name, user.password);
-                resolve(response);
-            } catch (err) {
-                commit('auth_error');
-                localStorage.removeItem('username');
-                localStorage.removeItem('password');
-                reject(err);
-            }
+                    commit('auth_success', user.name, user.password);
+                    resolve(response);
+                }, (err) => {
+                    commit('auth_error');
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('password');
+                    reject(err);
+                }
+            );
         }),
         logout: ({ commit }) => new Promise((resolve, reject) => {
             commit('logout');
