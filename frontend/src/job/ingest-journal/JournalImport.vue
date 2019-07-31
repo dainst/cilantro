@@ -2,6 +2,16 @@
     <div class="tile is-ancestor">
         <div class="tile is-vertical is-parent">
             <b-steps v-model="activeStep" :animated="isAnimated" :has-navigation="hasNavigation">
+
+                <b-step-item label="Journal Files" :clickable="isStepsClickable">
+                    Journal Files
+                    <b-button class="tile is-child" @click="saveAndContinue">
+                        Continue
+                    </b-button>
+                    <JournalFilesForm class="tile is-child"
+                                      v-bind:filesParam.sync="journalFiles"/>
+                </b-step-item>
+
                 <b-step-item label="Journal Metadaten" :clickable="isStepsClickable">
                     Journal Metadata
                     <b-button class="tile is-child" @click="saveAndContinue">
@@ -40,13 +50,15 @@ import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
+import JournalFilesForm from './forms/JournalFilesForm.vue';
 import FilesAndRangesForm from './forms/FilesAndRangesForm.vue';
 import PublishingForm from './forms/PublishingForm.vue';
 import OtherJobSettingsForm from './forms/OtherJobSettingsForm.vue';
-import { JobParameters, JournalMetadata, OJSMetadata } from './JobParameters';
+import { JobParameters, FileRange, JournalMetadata, OJSMetadata } from './JobParameters';
 
 @Component({
     components: {
+        JournalFilesForm,
         JournalMetadataForm,
         FilesAndRangesForm,
         PublishingForm,
@@ -56,6 +68,7 @@ import { JobParameters, JournalMetadata, OJSMetadata } from './JobParameters';
 export default class JournalImport extends Vue {
     jobParameters: JobParameters = initJobParams();
 
+    journalFiles = this.jobParameters.files;
     journalMetadata: JournalMetadata = this.jobParameters.metadata;
     publishingData: OJSMetadata = this.jobParameters.ojs_metadata;
     otherSettings: Object = {
