@@ -54,8 +54,9 @@ export default new Vuex.Store({
                 localStorage.setItem('username', user.name);
                 localStorage.setItem('password', user.password);
 
-                const basicAuth = `Basic ${btoa(`${user.name}:${user.password}`)}`;
-                axios.defaults.headers.common.Authorization = basicAuth;
+                const basicAuth = btoa(`${user.name}:${user.password}`);
+                axios.defaults.headers.common.Authorization = `Basic ${basicAuth}`;
+
                 commit('auth_success', user.name, user.password);
                 resolve(response);
             } catch (err) {
