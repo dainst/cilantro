@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Axios from 'axios'
+import Axios from 'axios';
 import Buefy from 'buefy';
 import router from './router';
 import store from './store';
@@ -14,32 +14,32 @@ Vue.use(Buefy, {
 Vue.config.productionTip = false;
 
 Vue.prototype.$http = Axios;
-const username = localStorage.getItem('username')
-const password = localStorage.getItem('password')
+const username = localStorage.getItem('username');
+const password = localStorage.getItem('password');
 
 if (username && password) {
-    store.dispatch('login', { name: username, password: password })
-        .catch(err => console.log(err));
+    try {
+        store.dispatch('login', { name: username, password })
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (store.getters.isAuthenticated) {
-            next()
-        }
-        else {
-            store.dispatch('promptLogin')
-                .catch(err => console.error(err));
-            // next('/') // redirects if not authenticated
-            next()
+            next();
+        } else {
+            store.dispatch('promptLogin');
+            next();
         }
     } else {
-        next()
+        next();
     }
-})
+});
 
 new Vue({
     router,
     store,
     render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
