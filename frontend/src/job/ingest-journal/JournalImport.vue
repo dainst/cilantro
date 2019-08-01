@@ -111,7 +111,7 @@ function initJobParams(): JobParameters {
         number: '',
         description: '[PDFs teilweise verf\u00fcgbar]',
         identification: 'year'
-    };
+    } as JournalMetadata;
 
     const ojsMetadata = {
         ojs_journal_code: 'test',
@@ -120,11 +120,11 @@ function initJobParams(): JobParameters {
         default_publish_articles: true,
         default_create_frontpage: true,
         allow_upload_without_file: false
-    };
+    } as OJSMetadata;
 
     const nlpParams = {
-        lang: 'eu'
-    };
+        lang: 'de'
+    } as NLPParams;
 
     const params = {
         metadata: journalMetadata,
@@ -134,7 +134,7 @@ function initJobParams(): JobParameters {
         do_ocr: false,
         keep_ratio: true,
         nlp_params: nlpParams
-    };
+    } as JobParameters;
 
     return params;
 }
