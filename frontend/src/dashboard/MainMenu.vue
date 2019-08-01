@@ -5,13 +5,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import Authentication from "../authentication/Authentication.vue";
+import { Component, Vue } from 'vue-property-decorator';
+import Authentication from '../authentication/Authentication.vue';
 
 @Component({
-  components: {
-    Authentication
-  }
+    components: {
+        Authentication
+    }
 })
 export default class MainMenu extends Vue {}
 </script>
