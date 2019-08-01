@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <Authentication />
-  </div>
+    <div>
+        <Authentication />
+    </div>
 </template>
 
 <script lang="ts">
@@ -13,5 +13,5 @@ import Authentication from '../authentication/Authentication.vue';
         Authentication
     }
 })
-export default class MainMenu extends Vue {}
+export default class MainMenu extends Vue { }
 </script>

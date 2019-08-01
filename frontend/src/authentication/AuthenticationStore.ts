@@ -33,7 +33,7 @@ export default class AuthenticationStore extends VuexModule {
     }
 
     @Mutation
-    setSuccess(user: any) {
+    setSuccess(user: User) {
         this.authentication.status = AuthenticationStatus.In;
         this.authentication.credentials.name = user.name;
         this.authentication.credentials.password = user.password;
@@ -78,8 +78,8 @@ export default class AuthenticationStore extends VuexModule {
     };
 
     @Action
-    promptLogin(context: any) {
-        context.commit('showPrompt');
+    promptLogin() {
+        this.context.commit('showPrompt');
     };
 
     get isAuthenticated() {
