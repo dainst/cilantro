@@ -12,7 +12,7 @@
                                       v-bind:filesParam.sync="journalFiles"/>
                 </b-step-item>
 
-                <b-step-item label="Journal Metadaten" :clickable="isStepsClickable">
+                <b-step-item label="Journal Metadata" :clickable="isStepsClickable">
                     Journal Metadata
                     <b-button class="tile is-child" @click="saveAndContinue">
                         Continue
@@ -20,7 +20,7 @@
                     <JournalMetadataForm class="tile is-child"
                                          v-bind:metadata="journalMetadata" />
                 </b-step-item>
-                <b-step-item label="Artikelgrenzen und Metadaten" :clickable="isStepsClickable">
+                <b-step-item label="Article Files and Metadata" :clickable="isStepsClickable">
                     Article Sources and Metadata
                     <b-button class="tile is-child" @click="saveAndContinue">
                         Continue
@@ -29,7 +29,7 @@
                                         v-bind:initialData="articleFilesAndRanges"
                                         v-bind:availableFiles="journalFiles" />
                 </b-step-item>
-                <b-step-item label="Publizierung" :clickable="isStepsClickable">
+                <b-step-item label="Publishing" :clickable="isStepsClickable">
                     Publishing Parameters
                     <b-button class="tile is-child" @click="saveAndContinue">
                         Continue
