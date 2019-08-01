@@ -78,13 +78,7 @@ export default class JournalFilesForm extends Vue {
 
     fetchFiles() { // TODO refactor 'then'
         axios.get(
-            `${this.$store.state.backendURI}staging`,
-            {
-                auth: {
-                    username: this.$store.state.authentication.credentials.name,
-                    password: this.$store.state.authentication.credentials.password
-                }
-            }
+            `${this.$store.state.backendURI}staging`
         ).then((response) => {
             this.stagedFiles = response.data;
         }).catch((error) => {
