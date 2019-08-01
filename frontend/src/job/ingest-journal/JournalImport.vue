@@ -56,7 +56,9 @@ import JournalFilesForm from './forms/JournalFilesForm.vue';
 import FilesAndRangesForm from './forms/FilesAndRangesForm.vue';
 import PublishingForm from './forms/PublishingForm.vue';
 import OtherJobSettingsForm from './forms/OtherJobSettingsForm.vue';
-import { JobParameters, FileRange, JournalMetadata, OJSMetadata } from './JobParameters';
+import {
+    JobParameters, FileRange, JournalMetadata, OJSMetadata, Part, NLPParams
+} from './JobParameters';
 
 @Component({
     components: {
