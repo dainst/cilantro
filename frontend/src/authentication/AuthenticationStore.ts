@@ -17,36 +17,36 @@ export default class AuthenticationStore extends VuexModule {
     };
 
     @Mutation
-    auth_prompt() {
+    showPrompt() {
         this.authentication.status = AuthenticationStatus.Prompt;
     }
 
     @Mutation
-    auth_request() {
+    setPending() {
         this.authentication.status = AuthenticationStatus.Pending;
     }
 
     @Mutation
-    auth_success(user: any) {
+    setSuccess(user: any) {
         this.authentication.status = AuthenticationStatus.In;
         this.authentication.credentials.name = user.name;
         this.authentication.credentials.password = user.password;
     }
 
     @Mutation
-    auth_error() {
+    setError() {
         this.authentication.status = AuthenticationStatus.Error;
     }
 
     @Mutation
-    logged_out() {
+    setLoggedOut() {
         this.authentication.status = AuthenticationStatus.Out;
     }
 
     @Action
     async login(user: any) {
 
-        this.context.commit('auth_request');
+        this.context.commit('setPending');
 
         try {
 
@@ -62,11 +62,11 @@ export default class AuthenticationStore extends VuexModule {
             const basicAuth = btoa(`${user.name}:${user.password}`);
             axios.defaults.headers.common.Authorization = `Basic ${basicAuth}`;
 
-            this.context.commit('auth_success', user);
+            this.context.commit('setSuccess', user);
 
         } catch (err) {
             console.error(err);
-            this.context.commit('auth_error');
+            this.context.commit('setError');
             localStorage.removeItem('username');
             localStorage.removeItem('password');
         }
@@ -74,7 +74,7 @@ export default class AuthenticationStore extends VuexModule {
 
     @Action
     logout() {
-        this.context.commit('logged_out');
+        this.context.commit('setLoggedOut');
         localStorage.removeItem('username');
         localStorage.removeItem('password');
         delete axios.defaults.headers.common.Authorization;
@@ -82,7 +82,7 @@ export default class AuthenticationStore extends VuexModule {
 
     @Action
     promptLogin(context: any) {
-        context.commit('auth_prompt');
+        context.commit('showPrompt');
     };
 
     get isAuthenticated() {
