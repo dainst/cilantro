@@ -23,14 +23,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { getModule } from 'vuex-module-decorators';
+import { mapGetters } from 'vuex';
 import AuthenticationStatus from './AuthenticationStatus';
 import AuthenticationStore from './AuthenticationStore';
 
 const authenticationStore = getModule(AuthenticationStore);
 
-@Component
+@Component({
+    computed: mapGetters(['authStatus'])
+})
 export default class Authentication extends Vue {
     name: string = '';
     password: string = '';
@@ -51,34 +54,30 @@ export default class Authentication extends Vue {
         authenticationStore.logout();
     }
 
-    created() {
-        this.$store.watch(
-            (state, getters) => getters.authStatus,
-            (newValue: AuthenticationStatus, oldValue: AuthenticationStatus) => {
-                let message = '';
-                let type = '';
-                switch (newValue) {
-                case AuthenticationStatus.In:
-                    message = 'Login successful.';
-                    type = 'is-success';
-                    break;
-                case AuthenticationStatus.Out:
-                    message = 'Logout successful.';
-                    type = 'is-success';
-                    break;
-                case AuthenticationStatus.Prompt:
-                    message = 'Please login.';
-                    type = 'is-warning';
-                    break;
-                case AuthenticationStatus.Error:
-                    message = 'Login failed!';
-                    type = 'is-danger';
-                    break;
-                default:
-                }
-                if (message) this.$toast.open({ message, type });
-            }
-        );
+    @Watch('authStatus')
+    onAuthStatusChanged(status: AuthenticationStatus) {
+        let message = '';
+        let type = '';
+        switch (status) {
+        case AuthenticationStatus.In:
+            message = 'Login successful.';
+            type = 'is-success';
+            break;
+        case AuthenticationStatus.Out:
+            message = 'Logout successful.';
+            type = 'is-success';
+            break;
+        case AuthenticationStatus.Prompt:
+            message = 'Please login.';
+            type = 'is-warning';
+            break;
+        case AuthenticationStatus.Error:
+            message = 'Login failed!';
+            type = 'is-danger';
+            break;
+        default:
+        }
+        if (message) this.$toast.open({ message, type });
     }
 }
 </script>
