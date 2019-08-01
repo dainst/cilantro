@@ -50,5 +50,35 @@ export default class Authentication extends Vue {
         this.password = '';
         authenticationStore.logout();
     }
+
+    created() {
+        this.$store.watch(
+            (state, getters) => getters.authStatus,
+            (newValue: AuthenticationStatus, oldValue: AuthenticationStatus) => {
+                let message = '';
+                let type = '';
+                switch (newValue) {
+                case AuthenticationStatus.In:
+                    message = 'Login successful.';
+                    type = 'is-success';
+                    break;
+                case AuthenticationStatus.Out:
+                    message = 'Logout successful.';
+                    type = 'is-success';
+                    break;
+                case AuthenticationStatus.Prompt:
+                    message = 'Please login.';
+                    type = 'is-warning';
+                    break;
+                case AuthenticationStatus.Error:
+                    message = 'Login failed!';
+                    type = 'is-danger';
+                    break;
+                default:
+                }
+                if (message) this.$toast.open({ message, type });
+            }
+        );
+    }
 }
 </script>
