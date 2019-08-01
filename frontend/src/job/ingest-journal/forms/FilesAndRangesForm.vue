@@ -57,8 +57,8 @@ export default class FilesAndRangesForm extends Vue {
             abstract: '',
             author: [author],
             pages,
-            date_published: '',
-            language: '',
+            date_published: '2018--',
+            language: 'de_DE',
             zenonId: '',
             auto_publish: true,
             create_frontpage: false
