@@ -25,7 +25,9 @@
                     <b-button class="tile is-child" @click="saveAndContinue">
                         Continue
                     </b-button>
-                    <FilesAndRangesForm class="tile is-child" />
+                    <FilesAndRangesForm class="tile is-child"
+                                        v-bind:initialData="articleFilesAndRanges"
+                                        v-bind:availableFiles="journalFiles" />
                 </b-step-item>
                 <b-step-item label="Publizierung" :clickable="isStepsClickable">
                     Publishing Parameters
@@ -67,9 +69,9 @@ import { JobParameters, FileRange, JournalMetadata, OJSMetadata } from './JobPar
 })
 export default class JournalImport extends Vue {
     jobParameters: JobParameters = initJobParams();
-
     journalFiles = this.jobParameters.files;
     journalMetadata: JournalMetadata = this.jobParameters.metadata;
+    articleFilesAndRanges: Part[] = this.jobParameters.parts;
     publishingData: OJSMetadata = this.jobParameters.ojs_metadata;
     otherSettings: Object = {
         nlp_language: this.jobParameters.nlp_params.lang,

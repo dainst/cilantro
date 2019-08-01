@@ -3,16 +3,21 @@
         <b-button @click="newArticle">New Article</b-button>
         <b-button>Import CSV</b-button>
         <ul id="article_list">
-            <li v-for="article in articles">
-                <ArticleMetadataForm v-bind:metadata="article" />
+            <li v-for="(article, index) in articles" v-bind:key="article">
+                <ArticleMetadataForm v-bind:initialData="article"
+                                     v-bind:availableFiles="availableFiles" />
+                 <b-button @click="deleteArticle(index)">Delete Article</b-button>
             </li>
         </ul>
     </section>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import ArticleMetadataForm from './ArticleMetadataForm.vue';
+import {
+    Part, ArticleMetadata, FileRange, Author, Pages
+} from '../JobParameters';
 
 @Component({
     components: {
@@ -20,7 +25,14 @@ import ArticleMetadataForm from './ArticleMetadataForm.vue';
     }
 })
 export default class FilesAndRangesForm extends Vue {
-    articles: Object[] = []
+    @Prop() initialData!: Part[]
+    @Prop() availableFiles!: FileRange[]
+
+    articles: Part[] = this.initialData;
+
+    deleteArticle(index: number) {
+        this.articles.splice(index, 1);
+    }
 
     newArticle() {
         this.$toast.open({
@@ -28,14 +40,41 @@ export default class FilesAndRangesForm extends Vue {
             position: 'is-top-right',
             type: 'is-success'
         });
-        this.articles.push({
-            ojs_journal_code: 'test_code',
-            ojs_user: '',
-            auto_publish_issue: false,
-            default_publish_articles: true,
-            default_create_frontpage: '',
-            allow_upload_without_file: ''
-        });
+
+        const pages = {
+            showndesc: '',
+            startPrint: 1,
+            endPrint: 2
+        } as Pages;
+
+        const author = {
+            firstname: '',
+            lastname: ''
+        } as Author;
+
+        const metadata = {
+            title: 'test-title',
+            abstract: '',
+            author,
+            pages,
+            date_published: '',
+            language: '',
+            zenonId: '',
+            auto_publish: true,
+            create_frontpage: false
+        } as ArticleMetadata;
+
+        const files = {
+            file: '',
+            range: [1, 3]
+        } as FileRange;
+
+        const part = {
+            metadata,
+            files
+        } as Part;
+
+        this.articles.push(part);
     }
 }
 </script>
@@ -44,5 +83,9 @@ export default class FilesAndRangesForm extends Vue {
     li {
       display: inline-block;
       margin: 0 10px;
+    }
+
+    #article_list section {
+        border-style: solid;
     }
 </style>
