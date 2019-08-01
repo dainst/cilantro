@@ -1,83 +1,100 @@
 import AuthenticationStatus from './AuthenticationStatus';
 import axios from 'axios';
+import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 
-const AuthenticationStore = {
+@Module
+export default class AuthenticationStore extends VuexModule {
 
-    state: {
-        // TODO: store url in .env (in cilantro dir, not frontend)
-        backendURI: 'http://localhost:5000/',
+    // TODO: store url in .env (in cilantro dir, not frontend)
+    backendURI = 'http://localhost:5000/';
 
-        authentication: {
-            status: AuthenticationStatus.Out,
-            credentials: {
-                name: localStorage.getItem('username') || '',
-                password: localStorage.getItem('password') || ''
-            }
+    authentication = {
+        status: AuthenticationStatus.Out,
+        credentials: {
+            name: localStorage.getItem('username') || '',
+            password: localStorage.getItem('password') || ''
         }
-    },
-    mutations: {
-        auth_prompt: (state: any) => {
-            state.authentication.status = AuthenticationStatus.Prompt;
-        },
-        auth_request: (state: any) => {
-            state.authentication.status = AuthenticationStatus.Pending;
-        },
-        auth_success: (state: any, user: any) => {
-            state.authentication.status = AuthenticationStatus.In;
-            state.authentication.credentials.name = user.name;
-            state.authentication.credentials.password = user.password;
-        },
-        auth_error: (state: any) => {
-            state.authentication.status = AuthenticationStatus.Error;
-        },
+    };
 
-        logout: (state: any) => {
-            state.authentication.status = AuthenticationStatus.Out;
-        }
-    },
-    actions: {
-        login: (context: any, user: any) => new Promise((resolve, reject) => {
-            context.commit('auth_request');
-            const response = axios({
+    @Mutation
+    auth_prompt() {
+        this.authentication.status = AuthenticationStatus.Prompt;
+    }
+
+    @Mutation
+    auth_request() {
+        this.authentication.status = AuthenticationStatus.Pending;
+    }
+
+    @Mutation
+    auth_success(user: any) {
+        this.authentication.status = AuthenticationStatus.In;
+        this.authentication.credentials.name = user.name;
+        this.authentication.credentials.password = user.password;
+    }
+
+    @Mutation
+    auth_error() {
+        this.authentication.status = AuthenticationStatus.Error;
+    }
+
+    @Mutation
+    logged_out() {
+        this.authentication.status = AuthenticationStatus.Out;
+    }
+
+    @Action
+    async login(user: any) {
+
+        this.context.commit('auth_request');
+
+        try {
+
+            const response = await axios({
                 url: `http://localhost:5000/user/${user.name}`,
                 auth: { username: user.name, password: user.password },
                 method: 'GET'
-            }).then(
-                (resp) => {
-                    localStorage.setItem('username', user.name);
-                    localStorage.setItem('password', user.password);
+            });
 
-                    const basicAuth = btoa(`${user.name}:${user.password}`);
-                    axios.defaults.headers.common.Authorization = `Basic ${basicAuth}`;
+            localStorage.setItem('username', user.name);
+            localStorage.setItem('password', user.password);
 
-                    context.commit('auth_success', user);
-                    resolve(response);
-                }, (err) => {
-                    context.commit('auth_error');
-                    localStorage.removeItem('username');
-                    localStorage.removeItem('password');
-                    reject(err);
-                }
-            );
-        }),
-        logout: (context: any) => new Promise((resolve, reject) => {
-            context.commit('logout');
+            const basicAuth = btoa(`${user.name}:${user.password}`);
+            axios.defaults.headers.common.Authorization = `Basic ${basicAuth}`;
+
+            this.context.commit('auth_success', user);
+
+        } catch (err) {
+            console.error(err);
+            this.context.commit('auth_error');
             localStorage.removeItem('username');
             localStorage.removeItem('password');
-            delete axios.defaults.headers.common.Authorization;
-            resolve();
-        }),
-        promptLogin: (context: any) => new Promise((resolve, reject) => {
-            context.commit('auth_prompt');
-            resolve();
-        })
-    },
-    getters: {
-        isAuthenticated: (state: any) => (state.authentication.status === AuthenticationStatus.In),
-        authStatus: (state: any) => state.authentication.status,
-        username: (state: any) => state.authentication.credentials.name
+        }
+    };
+
+    @Action
+    logout() {
+        this.context.commit('logged_out');
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
+        delete axios.defaults.headers.common.Authorization;
+    };
+
+    @Action
+    promptLogin(context: any) {
+        context.commit('auth_prompt');
+    };
+
+    get isAuthenticated() {
+        return this.authentication.status === AuthenticationStatus.In;
+    };
+
+    get authStatus() {
+        return this.authentication.status
+    };
+
+    get username() {
+        return this.authentication.credentials.name
     }
 
 }
-
-export default AuthenticationStore;
