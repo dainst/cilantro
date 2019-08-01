@@ -29,51 +29,51 @@
 
                 <b-field tile is-child>
                     <b-field label="title">
-                        <b-input v-model="initialData.metadata.title"></b-input>
+                        <b-input v-model="articleData.metadata.title"></b-input>
                     </b-field>
                     <b-field label="abstract">
-                        <b-input v-model="initialData.metadata.abstract"></b-input>
+                        <b-input v-model="articleData.metadata.abstract"></b-input>
                     </b-field>
                 </b-field>
 
                 <b-field tile is-child>
                     <b-field label="Author">
                         <b-field label="First Name">
-                            <b-input v-model="initialData.metadata.author.firstname"></b-input>
+                            <b-input v-model="articleData.metadata.author.firstname"></b-input>
                         </b-field>
                         <b-field label="Last Name">
-                            <b-input v-model="initialData.metadata.author.lastname"></b-input>
+                            <b-input v-model="articleData.metadata.author.lastname"></b-input>
                         </b-field>
                     </b-field>
 
                     <b-field label="Pages">
                         <b-field label="showndesc">
-                            <b-input v-model="initialData.metadata.pages.showndesc"></b-input>
+                            <b-input v-model="articleData.metadata.pages.showndesc"></b-input>
                         </b-field>
                         <b-field label="startPrint">
-                            <b-input v-model="initialData.metadata.pages.startPrint"></b-input>
+                            <b-input v-model="articleData.metadata.pages.startPrint"></b-input>
                         </b-field>
                         <b-field label="endPrint">
-                            <b-input v-model="initialData.metadata.pages.endPrint"></b-input>
+                            <b-input v-model="articleData.metadata.pages.endPrint"></b-input>
                         </b-field>
                     </b-field>
                 </b-field>
 
                 <b-field tile is-child>
                     <b-field label="date_published">
-                        <b-switch v-model="initialData.metadata.date_published"></b-switch>
+                        <b-switch v-model="articleData.metadata.date_published"></b-switch>
                     </b-field>
                     <b-field label="language">
-                        <b-input v-model="initialData.metadata.language"></b-input>
+                        <b-input v-model="articleData.metadata.language"></b-input>
                     </b-field>
                     <b-field label="zenonId">
-                        <b-input v-model="initialData.metadata.zenonId"></b-input>
+                        <b-input v-model="articleData.metadata.zenonId"></b-input>
                     </b-field>
                     <b-field label="auto_publish">
-                        <b-switch v-model="initialData.metadata.auto_publish"></b-switch>
+                        <b-switch v-model="articleData.metadata.auto_publish"></b-switch>
                     </b-field>
                     <b-field label="create_frontpage">
-                        <b-switch v-model="initialData.metadata.create_frontpage"></b-switch>
+                        <b-switch v-model="articleData.metadata.create_frontpage"></b-switch>
                     </b-field>
                 </b-field>
             </div>
@@ -87,7 +87,7 @@ import { Part, FileRange } from '../JobParameters';
 
 @Component
 export default class ArticleMetadataForm extends Vue {
-    @Prop() private initialData!: Part
+    @Prop() private articleData!: Part
     @Prop() private availableFiles!: FileRange
 
     updateFile(index: number, event: any, file: FileRange) {
