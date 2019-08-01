@@ -67,14 +67,14 @@ export default class AuthenticationStore extends VuexModule {
         } catch (err) {
             console.error(err);
             this.context.commit('setError');
-            removeUser();
+            forgetUser();
         }
     };
 
     @Action
     logout() {
         this.context.commit('setLoggedOut');
-        removeUser();
+        forgetUser();
     };
 
     @Action
@@ -103,7 +103,7 @@ function persistUser(user: User) {
     axios.defaults.headers.common.Authorization = `Basic ${basicAuth}`;
 }
 
-function removeUser() {
+function forgetUser() {
     localStorage.removeItem('username');
     localStorage.removeItem('password');
     delete axios.defaults.headers.common.Authorization;
