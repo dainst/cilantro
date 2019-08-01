@@ -48,14 +48,14 @@ export default class FilesAndRangesForm extends Vue {
         } as Pages;
 
         const author = {
-            firstname: '',
-            lastname: ''
+            firstname: 'author_first',
+            lastname: 'author_last'
         } as Author;
 
         const metadata = {
             title: 'test-title',
             abstract: '',
-            author,
+            author: [author],
             pages,
             date_published: '',
             language: '',

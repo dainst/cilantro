@@ -37,15 +37,22 @@
                 </b-field>
 
                 <b-field tile is-child>
-                    <b-field label="Author">
-                        <b-field label="First Name">
-                            <b-input v-model="articleData.metadata.author.firstname"></b-input>
-                        </b-field>
-                        <b-field label="Last Name">
-                            <b-input v-model="articleData.metadata.author.lastname"></b-input>
-                        </b-field>
-                    </b-field>
+                    <ul>
+                        <li v-for="(author, index) in articleData.metadata.author">
+                            <b-field label="Author">
+                                <b-field label="First Name">
+                                    <b-input v-model="author.firstname"></b-input>
+                                </b-field>
+                                <b-field label="Last Name">
+                                    <b-input v-model="author.lastname"></b-input>
+                                </b-field>
+                            </b-field>
+                        </li>
+                    </ul>
+                    <b-button icon-left="file-plus" @click="addAuthor">Add Author</b-button>
+                </b-field>
 
+                <b-field tile is-child>
                     <b-field label="Pages">
                         <b-field label="showndesc">
                             <b-input v-model="articleData.metadata.pages.showndesc"></b-input>
@@ -83,7 +90,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Part, FileRange } from '../JobParameters';
+import { Part, FileRange, Author } from '../JobParameters';
 
 @Component
 export default class ArticleMetadataForm extends Vue {
@@ -101,6 +108,14 @@ export default class ArticleMetadataForm extends Vue {
             range: [0, 0]
         } as FileRange;
         this.articleData.files.push(file);
+    }
+
+    addAuthor() {
+        const author = {
+            firstname: '',
+            lastname: ''
+        } as Author;
+        this.articleData.metadata.author.push(author);
     }
 }
 </script>
