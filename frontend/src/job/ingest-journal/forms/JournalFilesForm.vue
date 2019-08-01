@@ -6,10 +6,10 @@
                 {{ selectedFile.name }}
             </span>
             <b-field label="Start Page" :label-position="labelPosition" class="tile is-child">
-                <b-input v-model="pageStart"></b-input>
+                <b-numberinput v-model="pageStart"></b-numberinput>
             </b-field>
             <b-field label="End Page" :label-position="labelPosition" class="tile is-child">
-                <b-input v-model="pageEnd"></b-input>
+                <b-numberinput v-model="pageEnd"></b-numberinput>
             </b-field>
             <b-button class="tile is-child" @click="saveFileRange">Save</b-button>
             <b-button class="tile is-child" @click="cancelFileRange">Cancel</b-button>

@@ -15,10 +15,10 @@
                         </b-select>
                     </b-field>
                     <b-field label="Start Page">
-                        <b-input v-model="initialData.files.range[0]"></b-input>
+                        <b-numberinput v-model="initialData.files.range[0]"></b-numberinput>
                     </b-field>
                     <b-field label="End Page">
-                        <b-input v-model="initialData.files.range[1]"></b-input>
+                        <b-numberinput v-model="initialData.files.range[1]"></b-numberinput>
                     </b-field>
                 </b-field>
 
