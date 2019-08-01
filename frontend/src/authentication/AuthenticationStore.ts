@@ -2,6 +2,7 @@ import AuthenticationStatus from './AuthenticationStatus';
 import axios from 'axios';
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import store from '@/store';
+import User from './User';
 
 @Module({
     dynamic: true,
@@ -49,7 +50,7 @@ export default class AuthenticationStore extends VuexModule {
     }
 
     @Action
-    async login(user: any) {
+    async login(user: User) {
 
         this.context.commit('setPending');
 
@@ -95,7 +96,7 @@ export default class AuthenticationStore extends VuexModule {
 
 }
 
-function persistUser(user: any) {
+function persistUser(user: User) {
     localStorage.setItem('username', user.name);
     localStorage.setItem('password', user.password);
     const basicAuth = btoa(`${user.name}:${user.password}`);
