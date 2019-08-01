@@ -4,7 +4,7 @@
             <div class="tile is-parent is-vertical">
 
                 <b-field tile is-child>
-                    <ul id="article_list">
+                    <ul>
                         <li v-for="(file, index) in articleData.files">
                             <b-field label="File">
                                 <b-select placeholder="Select a file"
