@@ -60,29 +60,20 @@ export default class AuthenticationStore extends VuexModule {
                 auth: { username: user.name, password: user.password },
                 method: 'GET'
             });
-
-            localStorage.setItem('username', user.name);
-            localStorage.setItem('password', user.password);
-
-            const basicAuth = btoa(`${user.name}:${user.password}`);
-            axios.defaults.headers.common.Authorization = `Basic ${basicAuth}`;
-
+            persistUser(user);
             this.context.commit('setSuccess', user);
 
         } catch (err) {
             console.error(err);
             this.context.commit('setError');
-            localStorage.removeItem('username');
-            localStorage.removeItem('password');
+            removeUser();
         }
     };
 
     @Action
     logout() {
         this.context.commit('setLoggedOut');
-        localStorage.removeItem('username');
-        localStorage.removeItem('password');
-        delete axios.defaults.headers.common.Authorization;
+        removeUser();
     };
 
     @Action
@@ -102,4 +93,17 @@ export default class AuthenticationStore extends VuexModule {
         return this.authentication.credentials.name
     }
 
+}
+
+function persistUser(user: any) {
+    localStorage.setItem('username', user.name);
+    localStorage.setItem('password', user.password);
+    const basicAuth = btoa(`${user.name}:${user.password}`);
+    axios.defaults.headers.common.Authorization = `Basic ${basicAuth}`;
+}
+
+function removeUser() {
+    localStorage.removeItem('username');
+    localStorage.removeItem('password');
+    delete axios.defaults.headers.common.Authorization;
 }
