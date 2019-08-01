@@ -1,8 +1,13 @@
 import AuthenticationStatus from './AuthenticationStatus';
 import axios from 'axios';
-import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators';
+import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
+import store from '@/store';
 
-@Module
+@Module({
+    dynamic: true,
+    name: 'AuthenticationStore',
+    store
+})
 export default class AuthenticationStore extends VuexModule {
 
     // TODO: store url in .env (in cilantro dir, not frontend)

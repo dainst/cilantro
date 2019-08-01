@@ -5,8 +5,5 @@ import AuthenticationStore from './authentication/AuthenticationStore'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    strict: process.env.NODE_ENV !== 'production',
-    modules: {
-        AuthenticationStore
-    }
+    strict: process.env.NODE_ENV !== 'production'
 });

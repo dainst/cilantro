@@ -17,7 +17,8 @@
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.3",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vuex-module-decorators": "^0.9.9"
   },
   "devDependencies": {
     "@types/jest": "^23.1.4",
@@ -42,7 +43,6 @@
     "sass-loader": "^7.1.0",
     "ts-jest": "^23.0.0",
     "typescript": "^3.4.3",
-    "vue-template-compiler": "^2.6.10",
-    "vuex-module-decorators": "^0.9.9"
+    "vue-template-compiler": "^2.6.10"
   }
 }

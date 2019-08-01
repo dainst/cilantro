@@ -24,7 +24,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { getModule } from 'vuex-module-decorators';
 import AuthenticationStatus from './AuthenticationStatus';
+import AuthenticationStore from './AuthenticationStore';
+
+const authenticationStore = getModule(AuthenticationStore);
 
 @Component
 export default class Authentication extends Vue {
@@ -38,13 +42,13 @@ export default class Authentication extends Vue {
     login() {
         const { name } = this;
         const { password } = this;
-        this.$store.dispatch('login', { name, password });
+        authenticationStore.login({ name, password });
     }
 
     logout() {
         this.name = '';
         this.password = '';
-        this.$store.dispatch('logout');
+        authenticationStore.logout();
     }
 }
 </script>
