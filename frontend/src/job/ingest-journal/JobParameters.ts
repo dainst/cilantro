@@ -36,7 +36,7 @@ export interface Pages {
 export interface ArticleMetadata {
     title: string;
     author: Author;
-    pasges: Pages;
+    pages: Pages;
     date_published: string;
     language: string;
     zenonId: string;
