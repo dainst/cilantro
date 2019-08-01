@@ -14,7 +14,7 @@ describe('ArticleMetadataForm.vue', () => {
     const wrapper = mount(ArticleMetadataForm, {
         localVue,
         propsData: {
-            initialData: article,
+            articleData: article,
             availableFiles
         }
     });
