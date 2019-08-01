@@ -66,12 +66,12 @@ export default class FilesAndRangesForm extends Vue {
 
         const files = {
             file: '',
-            range: [1, 3]
+            range: [0, 0]
         } as FileRange;
 
         const part = {
             metadata,
-            files
+            files: [files]
         } as Part;
 
         this.articles.push(part);

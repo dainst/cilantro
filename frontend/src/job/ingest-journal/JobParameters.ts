@@ -46,7 +46,7 @@ export interface ArticleMetadata {
 
 export interface Part {
     metadata: ArticleMetadata;
-    files: FileRange;
+    files: FileRange[];
 }
 
 export interface NLPParams {

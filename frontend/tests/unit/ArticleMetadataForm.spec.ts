@@ -56,7 +56,7 @@ function createExampleArticle() {
 
     const part = {
         metadata,
-        files
+        files: [files]
     } as Part;
 
     return part;

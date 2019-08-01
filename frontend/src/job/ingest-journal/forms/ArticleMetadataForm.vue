@@ -4,22 +4,27 @@
             <div class="tile is-parent is-vertical">
 
                 <b-field tile is-child>
-                    <b-field label="File">
-                        <b-select placeholder="Select a file">
-                            <option
-                                v-for="file in availableFiles"
-                                :value="file.file"
-                                :key="file.file">
-                                {{ file.file }}
-                            </option>
-                        </b-select>
-                    </b-field>
-                    <b-field label="Start Page">
-                        <b-numberinput v-model="initialData.files.range[0]"></b-numberinput>
-                    </b-field>
-                    <b-field label="End Page">
-                        <b-numberinput v-model="initialData.files.range[1]"></b-numberinput>
-                    </b-field>
+                    <ul id="article_list">
+                        <li v-for="(file, index) in articleData.files">
+                            <b-field label="File">
+                                <b-select placeholder="Select a file"
+                                          @input="updateFile(index, $event, file)">
+                                    <option v-for="file in availableFiles"
+                                            :value="file.file"
+                                            :key="file.file">
+                                        {{ file.file }}
+                                    </option>
+                                </b-select>
+                            </b-field>
+                            <b-field label="Start Page">
+                                <b-numberinput v-model="file.range[0]"></b-numberinput>
+                            </b-field>
+                            <b-field label="End Page">
+                                <b-numberinput v-model="file.range[1]"></b-numberinput>
+                            </b-field>
+                        </li>
+                    </ul>
+                    <b-button icon-left="file-plus" @click="addFile">Add File</b-button>
                 </b-field>
 
                 <b-field tile is-child>
@@ -84,5 +89,18 @@ import { Part, FileRange } from '../JobParameters';
 export default class ArticleMetadataForm extends Vue {
     @Prop() private initialData!: Part
     @Prop() private availableFiles!: FileRange
+
+    updateFile(index: number, event: any, file: FileRange) {
+        this.articleData.files[index].file = event;
+        this.articleData.files[index].range = file.range;
+    }
+
+    addFile() {
+        const file = {
+            file: '',
+            range: [0, 0]
+        } as FileRange;
+        this.articleData.files.push(file);
+    }
 }
 </script>
