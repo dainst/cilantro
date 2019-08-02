@@ -11,8 +11,7 @@ import User from './User';
 })
 export default class AuthenticationStore extends VuexModule {
 
-    // TODO: store url in .env (in cilantro dir, not frontend)
-    backendURI = 'http://localhost:5000/';
+    backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
 
     authentication = {
         status: AuthenticationStatus.Out,
@@ -57,7 +56,7 @@ export default class AuthenticationStore extends VuexModule {
         try {
 
             const response = await axios({
-                url: `http://localhost:5000/user/${user.name}`,
+                url: `${this.backendUri}/user/${user.name}`,
                 auth: { username: user.name, password: user.password },
                 method: 'GET'
             });

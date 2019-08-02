@@ -2,8 +2,9 @@
     <div v-if="this.$store.getters.isAuthenticated">
         <h3 class="is-size-5">
             Your active jobs
-             <a @click="updateJobList"><b-icon icon="refresh" size="is-small">
-            </b-icon></a>
+            <a @click="updateJobList">
+                <b-icon icon="refresh" size="is-small"></b-icon>
+            </a>
         </h3>
         <div v-for="job in jobList" :key="job['job_id']">
             <router-link class="message" :to="{ name: 'job', query: { id: job['job_id'] }}">
@@ -32,9 +33,11 @@ import axios from 'axios';
 
 @Component
 export default class JobList extends Vue {
+    backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
+
     jobList: object[] = [];
 
-    iconAttributesForState = (state : string) => {
+    iconAttributesForState = (state: string) => {
         if (state === 'new') {
             return [{ icon: 'alarm' }];
         } if (state === 'started') {
@@ -47,7 +50,7 @@ export default class JobList extends Vue {
 
     async updateJobList() {
         try {
-            const response = await axios.get(`${this.$store.state.backendURI}job/jobs`)
+            const response = await axios.get(`${this.backendUri}/job/jobs`);
             this.jobList = response.data;
         } catch (error) {
             console.error('Invalid Server Response:', error.response);
