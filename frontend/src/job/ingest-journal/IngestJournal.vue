@@ -4,31 +4,23 @@
             <b-steps v-model="activeStep" :animated="isAnimated" :has-navigation="hasNavigation">
                 <b-step-item label="Journal Metadaten" :clickable="isStepsClickable">
                     Journal Metadata
-                    <b-button class="tile is-child" @click="saveAndContinue">
-                        Continue
-                    </b-button>
-                    <JournalMetadataForm class="tile is-child"
-                                         v-bind:metadata="journalMetadata" />
+                    <b-button class="tile is-child" @click="saveAndContinue">Continue</b-button>
+                    <JournalMetadataForm class="tile is-child" v-bind:metadata="journalMetadata" />
                 </b-step-item>
                 <b-step-item label="Artikelgrenzen und Metadaten" :clickable="isStepsClickable">
                     Article Sources and Metadata
-                    <b-button class="tile is-child" @click="saveAndContinue">
-                        Continue
-                    </b-button>
+                    <b-button class="tile is-child" @click="saveAndContinue">Continue</b-button>
                     <FilesAndRangesForm class="tile is-child" />
                 </b-step-item>
                 <b-step-item label="Publizierung" :clickable="isStepsClickable">
                     Publishing Parameters
-                    <b-button class="tile is-child" @click="saveAndContinue">
-                        Continue
-                    </b-button>
-                    <PublishingForm class="tile is-child" v-bind:initialData="publishingData"/>
+                    <b-button class="tile is-child" @click="saveAndContinue">Continue</b-button>
+                    <PublishingForm class="tile is-child" v-bind:initialData="publishingData" />
                 </b-step-item>
                 <b-step-item label="Other Settings" :clickable="isStepsClickable">
                     Other Job Settings
                     <b-button class="tile is-child" @click="startJob">Start Job</b-button>
-                    <OtherJobSettingsForm class="tile is-child"
-                                          v-bind:metadata="otherSettings"/>
+                    <OtherJobSettingsForm class="tile is-child" v-bind:metadata="otherSettings" />
                 </b-step-item>
             </b-steps>
         </div>
@@ -53,7 +45,7 @@ import { JobParameters, JournalMetadata, OJSMetadata } from './JobParameters';
         OtherJobSettingsForm
     }
 })
-export default class JournalImport extends Vue {
+export default class IngestJournal extends Vue {
     jobParameters: JobParameters = initJobParams();
 
     journalMetadata: JournalMetadata = this.jobParameters.metadata;
@@ -124,8 +116,8 @@ function initJobParams(): JobParameters {
 </script>
 
 <style scoped lang="scss">
-    div.step-item {
-        font-style: italic;
-        font-size: x-large;
-    }
+div.step-item {
+    font-style: italic;
+    font-size: x-large;
+}
 </style>
