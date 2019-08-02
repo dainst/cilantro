@@ -1,11 +1,12 @@
 <template>
     <section>
         <b-collapse :open="false" aria-id="publishing">
-            <button slot="trigger" aria-controls="contentIdForA11y1">
-                Automatisches Veröffentlichen nach dem Import
-            </button>
+            <button
+                slot="trigger"
+                aria-controls="contentIdForA11y1"
+            >Automatisches Veröffentlichen nach dem Import</button>
             <div class="columns">
-                <div class=column>
+                <div class="column">
                     <b-field label="ojs_journal_code">
                         <b-input v-model="publishingData.ojs_journal_code"></b-input>
                     </b-field>
@@ -16,7 +17,7 @@
                         <b-switch v-model="publishingData.auto_publish_issue"></b-switch>
                     </b-field>
                 </div>
-                <div class=column>
+                <div class="column">
                     <b-field label="default_publish_articles">
                         <b-switch v-model="publishingData.default_publish_articles"></b-switch>
                     </b-field>
@@ -34,9 +35,10 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import { OJSMetadata } from '../JobParameters';
 
 @Component
 export default class PublishingForm extends Vue {
-    @Prop() private publishingData!: Object
+    @Prop() private publishingData!: OJSMetadata
 }
 </script>
