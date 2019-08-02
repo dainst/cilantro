@@ -16,9 +16,10 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import { ArticleMetadata } from '../JobParameters';
 
 @Component
 export default class ArticleMetadataForm extends Vue {
-    @Prop() private metadata!: Object
+    @Prop() private metadata!: ArticleMetadata
 }
 </script>
