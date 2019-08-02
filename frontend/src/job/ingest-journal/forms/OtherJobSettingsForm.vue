@@ -2,7 +2,7 @@
     <section>
         <b-field grouped group-multiline>
             <b-field label="nlp_language">
-                <b-input v-model="metadata.nlp_language"></b-input>
+                <b-input v-model="metadata.nlp_params.lang"></b-input>
             </b-field>
             <b-field label="do_ocr">
                 <b-switch v-model="metadata.do_ocr"></b-switch>
@@ -16,10 +16,10 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { ArticleMetadata } from '../JobParameters';
+import { JobParameters } from '../JobParameters';
 
 @Component
-export default class ArticleMetadataForm extends Vue {
-    @Prop() private metadata!: ArticleMetadata
+export default class OtherJobSettingsForm extends Vue {
+    @Prop() private metadata!: JobParameters
 }
 </script>
