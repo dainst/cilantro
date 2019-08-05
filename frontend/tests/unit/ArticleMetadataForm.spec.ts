@@ -1,22 +1,22 @@
 import { mount, createLocalVue } from '@vue/test-utils';
 import Buefy from 'buefy';
 import ArticleMetadataForm from '@/job/ingest-journal/forms/ArticleMetadataForm.vue';
+import {
+    Part, FileRange, ArticleMetadata, Author, Pages
+} from '@/job/ingest-journal/JobParameters.ts';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);
 
 describe('ArticleMetadataForm.vue', () => {
-    const article = {
-        ojs_journal_code: 'test_code',
-        ojs_user: '',
-        auto_publish_issue: false,
-        default_publish_articles: true,
-        default_create_frontpage: '',
-        allow_upload_without_file: ''
-    };
+    const article: Part = createExampleArticle();
+    const availableFiles: FileRange[] = [];
     const wrapper = mount(ArticleMetadataForm, {
         localVue,
-        propsData: { metadata: article }
+        propsData: {
+            articleData: article,
+            availableFiles
+        }
     });
 
     it('renders input element', () => {
@@ -24,3 +24,40 @@ describe('ArticleMetadataForm.vue', () => {
         expect(el.is('input')).toBe(true);
     });
 });
+
+function createExampleArticle() {
+    const pages = {
+        showndesc: '',
+        startPrint: 1,
+        endPrint: 2
+    } as Pages;
+
+    const author = {
+        firstname: 'author_first',
+        lastname: 'author_last'
+    } as Author;
+
+    const metadata = {
+        title: 'test-title',
+        abstract: '',
+        author: [author],
+        pages,
+        date_published: '',
+        language: '',
+        zenonId: '',
+        auto_publish: true,
+        create_frontpage: false
+    } as ArticleMetadata;
+
+    const files = {
+        file: 'file dummy',
+        range: [1, 3]
+    } as FileRange;
+
+    const part = {
+        metadata,
+        files: [files]
+    } as Part;
+
+    return part;
+}

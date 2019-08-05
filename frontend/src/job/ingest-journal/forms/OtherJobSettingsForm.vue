@@ -16,9 +16,15 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import { JobParameters } from '../JobParameters';
 
 @Component
-export default class ArticleMetadataForm extends Vue {
-    @Prop() private metadata!: Object
+export default class OtherJobSettingsForm extends Vue {
+    @Prop() private metadata!: {
+        /* eslint-disable camelcase */
+        nlp_language: string,
+        do_ocr: boolean,
+        keep_ratio: boolean
+    }
 }
 </script>

@@ -2,20 +2,30 @@
     <div class="tile is-ancestor">
         <div class="tile is-vertical is-parent">
             <b-steps v-model="activeStep" :animated="isAnimated" :has-navigation="hasNavigation">
-                <b-step-item label="Journal Metadaten" :clickable="isStepsClickable">
+                <b-step-item label="Journal Files" :clickable="isStepsClickable">
+                    Journal Files
+                    <b-button class="tile is-child" @click="saveAndContinue">Continue</b-button>
+                    <JournalFilesForm class="tile is-child" v-bind:filesParam.sync="journalFiles" />
+                </b-step-item>
+
+                <b-step-item label="Journal Metadata" :clickable="isStepsClickable">
                     Journal Metadata
                     <b-button class="tile is-child" @click="saveAndContinue">Continue</b-button>
                     <JournalMetadataForm class="tile is-child" v-bind:metadata="journalMetadata" />
                 </b-step-item>
-                <b-step-item label="Artikelgrenzen und Metadaten" :clickable="isStepsClickable">
+                <b-step-item label="Article Files and Metadata" :clickable="isStepsClickable">
                     Article Sources and Metadata
                     <b-button class="tile is-child" @click="saveAndContinue">Continue</b-button>
-                    <FilesAndRangesForm class="tile is-child" />
+                    <FilesAndRangesForm
+                        class="tile is-child"
+                        v-bind:initialData="articleFilesAndRanges"
+                        v-bind:availableFiles="journalFiles"
+                    />
                 </b-step-item>
-                <b-step-item label="Publizierung" :clickable="isStepsClickable">
+                <b-step-item label="Publishing" :clickable="isStepsClickable">
                     Publishing Parameters
                     <b-button class="tile is-child" @click="saveAndContinue">Continue</b-button>
-                    <PublishingForm class="tile is-child" v-bind:initialData="publishingData"/>
+                    <PublishingForm class="tile is-child" v-bind:publishingData="publishingData" />
                 </b-step-item>
                 <b-step-item label="Other Settings" :clickable="isStepsClickable">
                     Other Job Settings
@@ -32,13 +42,17 @@ import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
+import JournalFilesForm from './forms/JournalFilesForm.vue';
 import FilesAndRangesForm from './forms/FilesAndRangesForm.vue';
 import PublishingForm from './forms/PublishingForm.vue';
 import OtherJobSettingsForm from './forms/OtherJobSettingsForm.vue';
-import { JobParameters, JournalMetadata, OJSMetadata } from './JobParameters';
+import {
+    JobParameters, FileRange, JournalMetadata, OJSMetadata, Part, NLPParams
+} from './JobParameters';
 
 @Component({
     components: {
+        JournalFilesForm,
         JournalMetadataForm,
         FilesAndRangesForm,
         PublishingForm,
@@ -47,8 +61,9 @@ import { JobParameters, JournalMetadata, OJSMetadata } from './JobParameters';
 })
 export default class IngestJournal extends Vue {
     jobParameters: JobParameters = initJobParams();
-
+    journalFiles = this.jobParameters.files;
     journalMetadata: JournalMetadata = this.jobParameters.metadata;
+    articleFilesAndRanges: Part[] = this.jobParameters.parts;
     publishingData: OJSMetadata = this.jobParameters.ojs_metadata;
     otherSettings: Object = {
         nlp_language: this.jobParameters.nlp_params.lang,
@@ -86,7 +101,7 @@ function initJobParams(): JobParameters {
         number: '',
         description: '[PDFs teilweise verf\u00fcgbar]',
         identification: 'year'
-    };
+    } as JournalMetadata;
 
     const ojsMetadata = {
         ojs_journal_code: 'test',
@@ -95,11 +110,11 @@ function initJobParams(): JobParameters {
         default_publish_articles: true,
         default_create_frontpage: true,
         allow_upload_without_file: false
-    };
+    } as OJSMetadata;
 
     const nlpParams = {
-        lang: 'eu'
-    };
+        lang: 'de'
+    } as NLPParams;
 
     const params = {
         metadata: journalMetadata,
@@ -109,15 +124,15 @@ function initJobParams(): JobParameters {
         do_ocr: false,
         keep_ratio: true,
         nlp_params: nlpParams
-    };
+    } as JobParameters;
 
     return params;
 }
 </script>
 
 <style scoped lang="scss">
-    div.step-item {
-        font-style: italic;
-        font-size: x-large;
-    }
+div.step-item {
+    font-style: italic;
+    font-size: x-large;
+}
 </style>

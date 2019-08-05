@@ -18,7 +18,7 @@ export interface OJSMetadata {
 }
 
 export interface FileRange {
-    file: String;
+    file: string;
     range: number[];
 }
 
@@ -35,8 +35,8 @@ export interface Pages {
 
 export interface ArticleMetadata {
     title: string;
-    author: Author;
-    pasges: Pages;
+    author: Author[];
+    pages: Pages;
     date_published: string;
     language: string;
     zenonId: string;
@@ -46,7 +46,7 @@ export interface ArticleMetadata {
 
 export interface Part {
     metadata: ArticleMetadata;
-    files: FileRange;
+    files: FileRange[];
 }
 
 export interface NLPParams {
