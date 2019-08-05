@@ -60,6 +60,8 @@ import {
     }
 })
 export default class IngestJournal extends Vue {
+    backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
+
     jobParameters: JobParameters = initJobParams();
     journalFiles = this.jobParameters.files;
     journalMetadata: JournalMetadata = this.jobParameters.metadata;
@@ -82,7 +84,7 @@ export default class IngestJournal extends Vue {
 
     startJob() {
         axios.post(
-            `${this.$store.state.backendURI}job/ingest_journal`,
+            `${this.backendUri}/job/ingest_journal`,
             this.jobParameters
         )
             .then((response) => {
