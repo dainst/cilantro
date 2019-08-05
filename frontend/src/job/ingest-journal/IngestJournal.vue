@@ -59,7 +59,7 @@ import {
         OtherJobSettingsForm
     }
 })
-export default class JournalImport extends Vue {
+export default class IngestJournal extends Vue {
     jobParameters: JobParameters = initJobParams();
     journalFiles = this.jobParameters.files;
     journalMetadata: JournalMetadata = this.jobParameters.metadata;

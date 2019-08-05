@@ -1,18 +1,22 @@
 <template>
     <div>
         <h2>File Browser</h2>
-        <FileBrowser :files-to-show="stagedFiles"/>
+        <FileBrowser :files-to-show="stagedFiles" />
         <h2>Upload File</h2>
-        <UploadFiles :running="running" :uploadedFiles="numberOfProcessedFiles"
-                     :totalFiles="numberOfFilesToUpload" @uploadTriggered="uploadFiles"/>
+        <UploadFiles
+            :running="running"
+            :uploadedFiles="numberOfProcessedFiles"
+            :totalFiles="numberOfFilesToUpload"
+            @uploadTriggered="uploadFiles"
+        />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
-import UploadFiles from '@/staging/UploadFiles.vue';
-import FileBrowser from '@/staging/FileBrowser.vue';
+import UploadFiles from './UploadFiles.vue';
+import FileBrowser from './FileBrowser.vue';
 
 @Component({
     components: {
@@ -21,114 +25,115 @@ import FileBrowser from '@/staging/FileBrowser.vue';
     }
 })
 export default class StagingArea extends Vue {
-        stagedFiles: File[] = []
-        filesToUpload: File[] = []
+    backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
 
-        uploadSuccessFiles: File[] = []
-        uploadFailedFiles: File[] = []
-        running: boolean = false
+    stagedFiles: File[] = []
+    filesToUpload: File[] = []
 
-        mounted() {
-            this.fetchFiles();
-        }
+    uploadSuccessFiles: File[] = []
+    uploadFailedFiles: File[] = []
+    running: boolean = false
 
-        get numberOfFilesToUpload() {
-            return this.filesToUpload.length;
-        }
+    mounted() {
+        this.fetchFiles();
+    }
 
-        get numberOfProcessedFiles() {
-            return this.uploadFailedFiles.length + this.uploadSuccessFiles.length;
-        }
+    get numberOfFilesToUpload() {
+        return this.filesToUpload.length;
+    }
 
-        fetchFiles() {
-            axios.get(
-                `${this.$store.state.backendURI}staging`
-            ).then((response) => {
-                this.stagedFiles = response.data;
-            }).catch((error) => {
-                if (error.response === undefined) {
-                    console.log('Application Error', error);
-                } else {
-                    console.log('Invalid Server Response:', error.response);
-                }
-                this.$toast.open({
-                    message: 'No filesToShow fetched from Backend',
-                    type: 'is-danger',
-                    queue: false
-                });
-            });
-        }
+    get numberOfProcessedFiles() {
+        return this.uploadFailedFiles.length + this.uploadSuccessFiles.length;
+    }
 
-        uploadFiles(filesToUpload: File[]) {
-            this.running = true;
-            this.filesToUpload = filesToUpload;
-            for (let file of filesToUpload) {
-                this.uploadFile(file);
-            }
-        }
-
-        uploadFile(file: File) {
-            const ext = file.name.split('.').pop();
-            if (ext !== 'csv' && ext !== 'pdf') {
-                this.$snackbar.open({
-                    message: `Upload of ${file.name} failed, invalid file extension ${ext}`,
-                    type: 'is-danger',
-                    queue: false
-                });
-                this.uploadFailedFiles.push(file);
-                this.checkUploadStatus();
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('file', file);
-            axios.post(`${this.$store.state.backendURI}staging`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }
-            ).then(() => {
-                this.$snackbar.open({
-                    message: `Upload of ${file.name} successful!`,
-                    queue: false
-                });
-                this.uploadSuccessFiles.push(file);
-                this.checkUploadStatus();
-            }).catch((error) => {
-                console.error('An Error occurred while uploading file', file.name, error);
-                this.$snackbar.open({
-                    message: `Upload of ${file.name} failed!`,
-                    type: 'is-danger',
-                    queue: false
-                });
-                this.uploadFailedFiles.push(file);
-                this.checkUploadStatus();
-            });
-        }
-
-        checkUploadStatus() {
-            if (this.numberOfFilesToUpload !== this.numberOfProcessedFiles) return;
-
-            this.fetchFiles();
-            if (this.uploadFailedFiles.length === 0) {
-                this.$toast.open({
-                    message: 'Upload of all files succeeded',
-                    type: 'is-success',
-                    queue: false
-                });
+    fetchFiles() {
+        axios.get(
+            `${this.backendUri}/staging`
+        ).then((response) => {
+            this.stagedFiles = response.data;
+        }).catch((error) => {
+            if (error.response === undefined) {
+                console.log('Application Error', error);
             } else {
-                this.$toast.open({
-                    message: `Upload of ${this.uploadFailedFiles.length} files failed`,
-                    type: 'is-success',
-                    queue: false
-                });
+                console.log('Invalid Server Response:', error.response);
             }
-            this.filesToUpload = [];
-            this.uploadSuccessFiles = [];
-            this.uploadFailedFiles = [];
-            this.running = false;
+            this.$toast.open({
+                message: 'No filesToShow fetched from Backend',
+                type: 'is-danger',
+                queue: false
+            });
+        });
+    }
+
+    uploadFiles(filesToUpload: File[]) {
+        this.running = true;
+        this.filesToUpload = filesToUpload;
+        for (const file of filesToUpload) {
+            this.uploadFile(file);
         }
+    }
+
+    uploadFile(file: File) {
+        const ext = file.name.split('.').pop();
+        if (ext !== 'csv' && ext !== 'pdf') {
+            this.$snackbar.open({
+                message: `Upload of ${file.name} failed, invalid file extension ${ext}`,
+                type: 'is-danger',
+                queue: false
+            });
+            this.uploadFailedFiles.push(file);
+            this.checkUploadStatus();
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        axios.post(`${this.backendUri}/staging`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(() => {
+            this.$snackbar.open({
+                message: `Upload of ${file.name} successful!`,
+                queue: false
+            });
+            this.uploadSuccessFiles.push(file);
+            this.checkUploadStatus();
+        }).catch((error) => {
+            console.error('An Error occurred while uploading file', file.name, error);
+            this.$snackbar.open({
+                message: `Upload of ${file.name} failed!`,
+                type: 'is-danger',
+                queue: false
+            });
+            this.uploadFailedFiles.push(file);
+            this.checkUploadStatus();
+        });
+    }
+
+    checkUploadStatus() {
+        if (this.numberOfFilesToUpload !== this.numberOfProcessedFiles) return;
+
+        this.fetchFiles();
+        if (this.uploadFailedFiles.length === 0) {
+            this.$toast.open({
+                message: 'Upload of all files succeeded',
+                type: 'is-success',
+                queue: false
+            });
+        } else {
+            this.$toast.open({
+                message: `Upload of ${this.uploadFailedFiles.length} files failed`,
+                type: 'is-success',
+                queue: false
+            });
+        }
+        this.filesToUpload = [];
+        this.uploadSuccessFiles = [];
+        this.uploadFailedFiles = [];
+        this.running = false;
+    }
 }
 </script>

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Dashboard from './dashboard/Dashboard.vue';
-import JournalImport from './job/ingest-journal/JournalImport.vue';
+import IngestJournal from './job/ingest-journal/IngestJournal.vue';
 import StagingArea from './staging/StagingArea.vue';
 import JobDetails from './job/JobDetails.vue';
 
@@ -25,9 +25,9 @@ export default new Router({
             }
         },
         {
-            path: '/JournalImport',
-            name: 'JournalImport',
-            component: JournalImport,
+            path: '/ingest-journal',
+            name: 'ingest-journal',
+            component: IngestJournal,
             meta: {
                 requiresAuth: true
             }

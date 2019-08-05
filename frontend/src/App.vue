@@ -1,19 +1,18 @@
 <template>
     <div id="app">
-        <link rel="stylesheet" href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css">
+        <link
+            rel="stylesheet"
+            href="https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css"
+        />
         <div id="nav">
-            <router-link to="/">Dashboard</router-link>
-            |
-            <router-link to="/staging">Staging Area</router-link>
-            |
-            <router-link to="/JournalImport">Job Config</router-link>
+            <router-link to="/">Dashboard</router-link>|
+            <router-link to="/staging">Staging Area</router-link>|
+            <router-link to="/ingest-journal">Job Config</router-link>
         </div>
         <router-view id="main_content"/>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p>
-                  This is the Footer....
-                </p>
+                <p>This is the Footer....</p>
             </div>
         </footer>
     </div>
@@ -57,7 +56,7 @@ export default class App extends Vue {
 
 <style lang="scss">
     #app {
-        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
