@@ -35,8 +35,8 @@ import { FileRange } from '@/job/ingest-journal/JobParameters';
 export default class JournalFilesForm extends Vue {
     @Prop() private filesParam!: FileRange[]
 
+    backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
     labelPosition: String = 'on-border';
-
     stagedFiles: File[] = []
     selectedFile: FileObject = {};
     pageStart: number = 0;
@@ -78,7 +78,7 @@ export default class JournalFilesForm extends Vue {
 
     fetchFiles() { // TODO refactor 'then'
         axios.get(
-            `${this.$store.state.backendURI}staging`
+            `${this.backendUri}/staging`
         ).then((response) => {
             this.stagedFiles = response.data;
         }).catch((error) => {
