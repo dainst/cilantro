@@ -3,7 +3,7 @@
         <b-button @click="newArticle">New Article</b-button>
         <b-button>Import CSV</b-button>
         <ul id="article_list">
-            <li v-for="(article, index) in articles" v-bind:key="index">
+            <li v-for="(article, index) in articles">
                 <ArticleMetadataForm v-bind:articleData="article"
                                      v-bind:availableFiles="availableFiles" />
                  <b-button @click="deleteArticle(index)">Delete Article</b-button>

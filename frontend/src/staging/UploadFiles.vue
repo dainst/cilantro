@@ -21,7 +21,6 @@
         <span v-if="filesToUpload.length === 0">Select a file to upload</span>
         <div class="tags section">
             <span v-for="(file, index) in filesToUpload"
-                  :key="index"
                   class="tag is-primary">
                 {{file.name}}
                 <button class="delete is-small"
