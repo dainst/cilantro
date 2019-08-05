@@ -15,7 +15,7 @@
                 <b-step-item label="Publizierung" :clickable="isStepsClickable">
                     Publishing Parameters
                     <b-button class="tile is-child" @click="saveAndContinue">Continue</b-button>
-                    <PublishingForm class="tile is-child" v-bind:initialData="publishingData" />
+                    <PublishingForm class="tile is-child" v-bind:initialData="publishingData"/>
                 </b-step-item>
                 <b-step-item label="Other Settings" :clickable="isStepsClickable">
                     Other Job Settings
@@ -116,8 +116,8 @@ function initJobParams(): JobParameters {
 </script>
 
 <style scoped lang="scss">
-div.step-item {
-    font-style: italic;
-    font-size: x-large;
-}
+    div.step-item {
+        font-style: italic;
+        font-size: x-large;
+    }
 </style>

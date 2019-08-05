@@ -6,12 +6,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Authentication from './Authentication.vue';
+import Authentication from '../authentication/Authentication.vue';
 
 @Component({
     components: {
         Authentication
     }
 })
-export default class MainMenu extends Vue {}
+export default class MainMenu extends Vue { }
 </script>
