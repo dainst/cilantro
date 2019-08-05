@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { AuthenticationStatus } from './store';
+import AuthenticationStatus from './authentication/AuthenticationStatus';
 
 @Component
 export default class App extends Vue {
