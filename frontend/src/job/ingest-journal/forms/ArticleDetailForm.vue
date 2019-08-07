@@ -2,7 +2,6 @@
     <section>
         <div class="tile is-ancestor">
             <div class="tile is-parent is-vertical">
-
                 <b-field tile is-child>
                     <ul>
                         <li v-for="(file, index) in articleData.files">
@@ -26,7 +25,6 @@
                     </ul>
                     <b-button icon-left="file-plus" @click="addFile">Add File</b-button>
                 </b-field>
-
                 <b-field tile is-child>
                     <b-field label="title">
                         <b-input v-model="articleData.metadata.title"></b-input>
@@ -35,7 +33,6 @@
                         <b-input v-model="articleData.metadata.abstract"></b-input>
                     </b-field>
                 </b-field>
-
                 <b-field tile is-child>
                     <ul>
                         <li v-for="(author, index) in articleData.metadata.author">
@@ -51,7 +48,6 @@
                     </ul>
                     <b-button icon-left="file-plus" @click="addAuthor">Add Author</b-button>
                 </b-field>
-
                 <b-field tile is-child>
                     <b-field label="Pages">
                         <b-field label="showndesc">
@@ -65,7 +61,6 @@
                         </b-field>
                     </b-field>
                 </b-field>
-
                 <b-field tile is-child>
                     <b-field label="date_published">
                         <b-switch v-model="articleData.metadata.date_published"></b-switch>
@@ -93,7 +88,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { Part, FileRange, Author } from '../JobParameters';
 
 @Component
-export default class ArticleMetadataForm extends Vue {
+export default class ArticleDetailForm extends Vue {
     @Prop() private articleData!: Part
     @Prop() private availableFiles!: FileRange
 

@@ -13,27 +13,27 @@
             </b-step-item>
         </b-steps>
 
-        <div>
-            <b-button @click="saveAndContinue">Continue</b-button>
-        </div>
-        <br>
         <div v-if="activeStep === 0">
+            <b-button @click="saveAndContinue">Continue</b-button>
             <JournalFilesForm v-bind:filesParam.sync="journalFiles" />
         </div>
-
         <div v-if="activeStep === 1">
+            <b-button @click="saveAndContinue">Continue</b-button>
             <JournalMetadataForm v-bind:metadata="journalMetadata" />
         </div>
-
         <div v-if="activeStep === 2">
-            <FilesAndRangesForm
+            <b-button @click="saveAndContinue">Continue</b-button>
+            <ArticlesForm
                 v-bind:initialData="articleFilesAndRanges"
                 v-bind:availableFiles="journalFiles"/>
         </div>
-
         <div v-if="activeStep === 3">
-            <b-button @click="startJob">Start Job</b-button>
+            <b-button @click="saveAndContinue">Continue</b-button>
             <PublishingForm v-bind:publishingData="publishingData" />
+        </div>
+        <div v-if="activeStep === 4">
+            <b-button @click="startJob">Start Job</b-button>
+            <OtherJobSettingsForm v-bind:metadata="otherSettings" />
         </div>
     </div>
 </template>
@@ -44,7 +44,7 @@ import axios from 'axios';
 
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
 import JournalFilesForm from './forms/JournalFilesForm.vue';
-import FilesAndRangesForm from './forms/FilesAndRangesForm.vue';
+import ArticlesForm from './forms/ArticlesForm.vue';
 import PublishingForm from './forms/PublishingForm.vue';
 import OtherJobSettingsForm from './forms/OtherJobSettingsForm.vue';
 import {
@@ -55,7 +55,7 @@ import {
     components: {
         JournalFilesForm,
         JournalMetadataForm,
-        FilesAndRangesForm,
+        ArticlesForm,
         PublishingForm,
         OtherJobSettingsForm
     }

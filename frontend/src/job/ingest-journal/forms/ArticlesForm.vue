@@ -4,7 +4,7 @@
         <b-button>Import CSV</b-button>
         <ul id="article_list">
             <li v-for="(article, index) in articles">
-                <ArticleMetadataForm v-bind:articleData="article"
+                <ArticleDetailForm v-bind:articleData="article"
                                      v-bind:availableFiles="availableFiles" />
                  <b-button @click="deleteArticle(index)">Delete Article</b-button>
             </li>
@@ -14,17 +14,17 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import ArticleMetadataForm from './ArticleMetadataForm.vue';
+import ArticleDetailForm from './ArticleDetailForm.vue';
 import {
     Part, ArticleMetadata, FileRange, Author, Pages
 } from '../JobParameters';
 
 @Component({
     components: {
-        ArticleMetadataForm
+        ArticleDetailForm
     }
 })
-export default class FilesAndRangesForm extends Vue {
+export default class ArticlesForm extends Vue {
     @Prop() initialData!: Part[]
     @Prop() availableFiles!: FileRange[]
 

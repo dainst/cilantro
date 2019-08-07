@@ -1,6 +1,6 @@
 import { mount, createLocalVue } from '@vue/test-utils';
 import Buefy from 'buefy';
-import ArticleMetadataForm from '@/job/ingest-journal/forms/ArticleMetadataForm.vue';
+import ArticleDetailForm from '@/job/ingest-journal/forms/ArticleDetailForm.vue';
 import {
     Part, FileRange, ArticleMetadata, Author, Pages
 } from '@/job/ingest-journal/JobParameters.ts';
@@ -8,10 +8,10 @@ import {
 const localVue = createLocalVue();
 localVue.use(Buefy);
 
-describe('ArticleMetadataForm.vue', () => {
+describe('ArticleDetailForm.vue', () => {
     const article: Part = createExampleArticle();
     const availableFiles: FileRange[] = [];
-    const wrapper = mount(ArticleMetadataForm, {
+    const wrapper = mount(ArticleDetailForm, {
         localVue,
         propsData: {
             articleData: article,
@@ -20,8 +20,7 @@ describe('ArticleMetadataForm.vue', () => {
     });
 
     it('renders input element', () => {
-        const el = wrapper.find('input');
-        expect(el.is('input')).toBe(true);
+        expect(wrapper.find('input').is('input')).toBe(true);
     });
 });
 
