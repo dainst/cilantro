@@ -1,6 +1,8 @@
-import AuthenticationStatus from './AuthenticationStatus';
 import axios from 'axios';
-import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
+import {
+    Module, VuexModule, Mutation, Action
+} from 'vuex-module-decorators';
+import AuthenticationStatus from './AuthenticationStatus';
 import store from '@/store';
 import User from './User';
 
@@ -10,7 +12,6 @@ import User from './User';
     store
 })
 export default class AuthenticationStore extends VuexModule {
-
     backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
 
     authentication = {
@@ -50,11 +51,9 @@ export default class AuthenticationStore extends VuexModule {
 
     @Action
     async login(user: User) {
-
         this.context.commit('setPending');
 
         try {
-
             const response = await axios({
                 url: `${this.backendUri}/user/${user.name}`,
                 auth: { username: user.name, password: user.password },
@@ -62,37 +61,35 @@ export default class AuthenticationStore extends VuexModule {
             });
             persistUser(user);
             this.context.commit('setSuccess', user);
-
         } catch (err) {
             console.error(err);
             this.context.commit('setError');
             forgetUser();
         }
-    };
+    }
 
     @Action
     logout() {
         this.context.commit('setLoggedOut');
         forgetUser();
-    };
+    }
 
     @Action
     promptLogin() {
         this.context.commit('showPrompt');
-    };
+    }
 
     get isAuthenticated() {
         return this.authentication.status === AuthenticationStatus.In;
-    };
-
-    get authStatus() {
-        return this.authentication.status
-    };
-
-    get username() {
-        return this.authentication.credentials.name
     }
 
+    get authStatus() {
+        return this.authentication.status;
+    }
+
+    get username() {
+        return this.authentication.credentials.name;
+    }
 }
 
 function persistUser(user: User) {
