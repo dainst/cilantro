@@ -4,6 +4,7 @@ import {
 } from 'vuex-module-decorators';
 import AuthenticationStatus from './AuthenticationStatus';
 import store from '@/store';
+import router from '@/router';
 import User from './User';
 
 @Module({
@@ -103,4 +104,6 @@ function forgetUser() {
     localStorage.removeItem('username');
     localStorage.removeItem('password');
     delete axios.defaults.headers.common.Authorization;
+
+    router.push({ path: 'login' });
 }

@@ -4,13 +4,23 @@ import Dashboard from './dashboard/Dashboard.vue';
 import IngestJournal from './job/ingest-journal/IngestJournal.vue';
 import StagingArea from './staging/StagingArea.vue';
 import JobDetails from './job/JobDetails.vue';
+import Login from './Login.vue';
+import store from './store';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
     routes: [
+        {
+            path: '/login',
+            name: 'login',
+            component: Login,
+            meta: {
+                noAuth: true
+            }
+        },
         {
             path: '/',
             name: 'dashboard',
@@ -19,26 +29,32 @@ export default new Router({
         {
             path: '/staging',
             name: 'staging',
-            component: StagingArea,
-            meta: {
-                requiresAuth: true
-            }
+            component: StagingArea
         },
         {
             path: '/ingest-journal',
             name: 'ingest-journal',
-            component: IngestJournal,
-            meta: {
-                requiresAuth: true
-            }
+            component: IngestJournal
         },
         {
             path: '/job',
             name: 'job',
-            component: JobDetails,
-            meta: {
-                requiresAuth: true
-            }
+            component: JobDetails
         }
     ]
-})
+});
+
+router.beforeEach(async (to, from, next) => {
+    if (!to.matched.some(record => record.meta.noAuth)) {
+        if (store.getters.isAuthenticated) {
+            next();
+        } else {
+            next({ name: 'login', params: { back: to.path } });
+        }
+    } else {
+        next();
+    }
+});
+
+export default router;
+

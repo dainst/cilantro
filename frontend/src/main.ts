@@ -19,24 +19,11 @@ const password = localStorage.getItem('password');
 
 if (username && password) {
     try {
-        store.dispatch('login', { name: username, password })
+        store.dispatch('login', { name: username, password });
     } catch (err) {
         console.log(err);
     }
 }
-
-router.beforeEach(async (to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (store.getters.isAuthenticated) {
-            next();
-        } else {
-            store.dispatch('promptLogin');
-            next();
-        }
-    } else {
-        next();
-    }
-});
 
 new Vue({
     router,
