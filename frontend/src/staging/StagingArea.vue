@@ -25,7 +25,7 @@ import FileBrowser from './FileBrowser.vue';
     }
 })
 export default class StagingArea extends Vue {
-    backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
+    backendUri = this.$store.state.AuthenticationStore.backendUri;
 
     stagedFiles: File[] = []
     filesToUpload: File[] = []

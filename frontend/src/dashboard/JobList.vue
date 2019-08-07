@@ -33,7 +33,7 @@ import axios from 'axios';
 
 @Component
 export default class JobList extends Vue {
-    backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
+    backendUri = this.$store.state.AuthenticationStore.backendUri;
 
     jobList: object[] = [];
 

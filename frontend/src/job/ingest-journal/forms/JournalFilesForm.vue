@@ -34,6 +34,7 @@ import axios from 'axios';
 import FileBrowser from '@/staging/FileBrowser.vue';
 import { FileRange } from '@/job/ingest-journal/JobParameters';
 import ProcessedPDF, { byFilePath } from '@/pdf-processor';
+import store from '@/store'
 
 @Component({
     components: {
@@ -43,7 +44,7 @@ import ProcessedPDF, { byFilePath } from '@/pdf-processor';
 export default class JournalFilesForm extends Vue {
     @Prop() private filesParam!: FileRange[]
 
-    backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
+    backendUri = this.$store.state.AuthenticationStore.backendUri;
     labelPosition: String = 'on-border';
     stagedFiles: File[] = [];
     isLoading: boolean = false;

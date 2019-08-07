@@ -61,7 +61,7 @@ import {
     }
 })
 export default class IngestJournal extends Vue {
-    backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
+    backendUri = this.$store.state.AuthenticationStore.backendUri;
 
     jobParameters: JobParameters = initJobParams();
     journalFiles = this.jobParameters.files;
