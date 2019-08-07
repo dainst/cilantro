@@ -1,31 +1,39 @@
 <template>
-    <div class="tile is-ancestor">
-        <FileBrowser :files-to-show="stagedFiles" v-bind:initialSelected.sync="selectedFile"/>
-        <div v-if="isFileSelected" class="tile is-parent">
-            <span class="tile is-child">
-                {{ selectedFile.name }}
-            </span>
-            <b-field label="Start Page" :label-position="labelPosition" class="tile is-child">
-                <b-numberinput v-model="pageStart"></b-numberinput>
-            </b-field>
-            <b-field label="End Page" :label-position="labelPosition" class="tile is-child">
-                <b-numberinput v-model="pageEnd"></b-numberinput>
-            </b-field>
-            <b-button class="tile is-child" @click="saveFileRange">Save</b-button>
-            <b-button class="tile is-child" @click="cancelFileRange">Cancel</b-button>
+    <div>
+        <div class="is-size-4">Staged files:</div>
+        <div style="padding-top:10px; padding-bottom:10px">
+            <FileBrowser :files-to-show="stagedFiles"
+            v-bind:initialSelected.sync="selectedFile"/>
         </div>
-        <div v-if="addedFiles.length > 0" class="tile is-parent">
-            Selected files:
-            <b-table :data="addedFiles" :columns="columns" class="tile is-child" />
+        <div v-if="isFileSelected && (selectedFile.name in this.processedPDFs)">
+            <div class="is-size-4">Which pages do you want to use of the selected file?</div>
+            <b-field grouped>
+                <b-field label="Start Page" horizontal>
+                    <b-numberinput v-model="pageStart"></b-numberinput>
+                </b-field>
+                <b-field label="End Page" horizontal>
+                    <b-numberinput v-model="pageEnd"></b-numberinput>
+                </b-field>
+                <b-button @click="saveFileRange">Ok</b-button>
+                <b-button @click="cancelFileRange">Cancel</b-button>
+            </b-field>
         </div>
+        <div v-if="filesParam.length > 0">
+            <span class="is-size-4">Files to be processed:</span>
+            <b-table :data="filesParam" :columns="columns"  />
+        </div>
+        <b-loading :is-full-page="false" :active.sync="isLoading"></b-loading>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import {
+    Component, Vue, Prop, Watch
+} from 'vue-property-decorator';
 import axios from 'axios';
 import FileBrowser from '@/staging/FileBrowser.vue';
 import { FileRange } from '@/job/ingest-journal/JobParameters';
+import ProcessedPDF, { byFilePath } from '@/pdf-processor';
 
 @Component({
     components: {
@@ -37,11 +45,12 @@ export default class JournalFilesForm extends Vue {
 
     backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
     labelPosition: String = 'on-border';
-    stagedFiles: File[] = []
+    stagedFiles: File[] = [];
+    isLoading: boolean = false;
+    processedPDFs: { [ name: string ] : ProcessedPDF } = {};
     selectedFile: FileObject = {};
-    pageStart: number = 0;
-    pageEnd: number = 0;
-    addedFiles: FileRange[] = [];
+    pageStart: number = 1;
+    pageEnd: number = -1;
     columns: object[] = [
         {
             field: 'file',
@@ -64,7 +73,6 @@ export default class JournalFilesForm extends Vue {
         };
         this.filesParam.push(fileRange);
         this.$emit('update:filesParam', this.filesParam);
-        this.addedFiles.push(fileRange);
         this.selectedFile = {};
     }
 
@@ -94,13 +102,29 @@ export default class JournalFilesForm extends Vue {
             });
         });
     }
+
+    updateInputs(name: string) {
+        this.pageEnd = this.processedPDFs[name].numPages;
+    }
+
+    @Watch('selectedFile')
+    async onSelectedFileChanged(value: FileObject, oldValue: FileObject) {
+        if (value.name === undefined) return;
+
+        if (value.name.toLowerCase().endsWith('.pdf') && !(value.name in this.processedPDFs)) {
+            this.isLoading = true;
+            const filePath = this.stagedFiles.filter(file => file.name === value.name)[0].name;
+            this.processedPDFs[value.name] = await byFilePath(
+                `${this.backendUri}/staging/${filePath}`,
+                axios.defaults.headers.common.Authorization
+            );
+            this.isLoading = false;
+        }
+        this.updateInputs(value.name);
+    }
 }
 
 interface FileObject {
     name?: string;
 }
 </script>
-
-<style scoped lang="scss">
-
-</style>

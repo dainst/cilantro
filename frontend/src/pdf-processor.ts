@@ -1,39 +1,58 @@
 import * as PDFJS from 'pdfjs-dist/webpack';
-import { PDFDocumentProxy } from 'pdfjs-dist';
+import {
+    PDFDocumentProxy, PDFInfo, PDFMetadata, PDFTreeNode
+} from 'pdfjs-dist';
 
-export async function processFilePath(pdfPath: string, full = true) {
-    const content = await PDFJS.getDocument(pdfPath).promise;
+export default class ProcessedPDF {
+    private proxy: PDFDocumentProxy;
+    private destinations?: any[];
+    private meta?: { info: PDFInfo; metadata: PDFMetadata; };
+    private outline?: PDFTreeNode[];
 
-    let details = {};
-    if (full === true) {
-        details = getDetails(content);
+    constructor(proxy: PDFDocumentProxy) {
+        this.proxy = proxy;
     }
-    return { content, details };
+
+    async getDetails() {
+        this.destinations = await this.proxy.getDestinations();
+        this.meta = await this.proxy.getMetadata();
+        this.outline = await this.proxy.getOutline();
+    }
+
+    get numPages(): number {
+        return this.proxy.numPages;
+    }
+
+    get metaData(): any {
+        if (this.meta === undefined) return {};
+        return this.meta.info;
+    }
 }
 
-export async function processFileObject(pdfFile: File, full = true) {
+export async function byFilePath(pdfPath: string, auth: string, full = true) {
+    const content = await PDFJS.getDocument(
+        { url: pdfPath, httpHeaders: { Authorization: auth } }
+    ).promise;
+
+    const result = new ProcessedPDF(content);
+    if (full) {
+        await result.getDetails();
+    }
+    return result;
+}
+
+export async function byFileObject(pdfFile: File, full = true) {
     const arr = await toUint8Array(pdfFile);
     const content = await PDFJS.getDocument({ data: arr }).promise;
 
-    let details = {};
-    if (full === true) {
-        details = await getDetails(content);
+    const result = new ProcessedPDF(content);
+    if (full) {
+        await result.getDetails();
     }
-    return { content, details };
+    return result;
 }
 
 async function toUint8Array(file: File) {
     const buffer = await new Response(file).arrayBuffer();
     return new Uint8Array(buffer);
-}
-
-async function getDetails(proxy: PDFDocumentProxy) {
-    const destinations = await proxy.getDestinations();
-    const js = await proxy.getJavaScript();
-    const meta = await proxy.getMetadata();
-    const outline = await proxy.getOutline();
-
-    return {
-        destinations, js, meta, outline
-    };
 }
