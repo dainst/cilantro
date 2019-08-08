@@ -5,7 +5,7 @@
             <b-button @click="search">Search</b-button>
         </b-field>
 
-        <b-table :data="searchResults">
+        <b-table v-if="searchResults.length > 0" :data="searchResults">
             <template slot-scope="props">
                 <b-table-column label="ID" numeric>
                     {{ props.row.id }}
