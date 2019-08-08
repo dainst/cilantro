@@ -34,7 +34,7 @@ export interface ZenonRecord {
     subjects: string[];
 }
 
-interface ZenonAuthors {
+export interface ZenonAuthors {
     primary: object;
     secondary: object;
     corporate: object;

@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/jest": "^23.1.4",
     "@types/pdfjs-dist": "^2.0.1",
+    "@types/sinon": "^7.0.13",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-eslint": "^3.9.0",
     "@vue/cli-plugin-typescript": "^3.9.0",
