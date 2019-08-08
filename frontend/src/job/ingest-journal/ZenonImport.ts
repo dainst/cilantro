@@ -29,7 +29,7 @@ export interface ZenonRecord {
     title: string;
     authors: ZenonAuthors;
     formats: string[];
-    languages: boolean[];
+    languages: string[];
     series: object[];
     subjects: string[];
 }
