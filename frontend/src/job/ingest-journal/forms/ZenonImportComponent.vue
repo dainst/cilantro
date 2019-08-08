@@ -2,7 +2,7 @@
     <section>
         <b-field label="Zenon Search">
             <b-input v-model="searchTerm"></b-input>
-            <b-button @click="search">Search</b-button>
+            <b-button :disabled="searchTerm.length < 1" @click="search">Search</b-button>
         </b-field>
 
         <b-table v-if="searchResults.length > 0" :data="searchResults">
