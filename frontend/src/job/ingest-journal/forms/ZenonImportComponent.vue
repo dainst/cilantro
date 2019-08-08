@@ -33,15 +33,16 @@
 </template>
 
 <script lang="ts">
-// TODO prefill search with title
 // TODO add-all-Zenon-data button
 
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import search, { ZenonRecord } from '../ZenonImport';
 
 @Component
 export default class ZenonImportComponent extends Vue {
-    searchTerm: string = '';
+    @Prop() articleTitle!: string
+
+    searchTerm: string = this.articleTitle || '';
     searchResults: ZenonRecord[] = [];
 
     async search() {

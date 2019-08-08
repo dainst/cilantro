@@ -81,7 +81,8 @@
                         <b-switch v-model="articleData.metadata.create_frontpage"></b-switch>
                     </b-field>
                 </b-field>
-                <ZenonImportComponent v-on:addZenonID="addZenonID"/>
+                <ZenonImportComponent v-on:addZenonID="addZenonID"
+                                      :articleTitle="articleData.metadata.title" />
             </div>
         </div>
     </section>
