@@ -44,6 +44,9 @@
                                     <b-input v-model="author.lastname"></b-input>
                                 </b-field>
                             </b-field>
+                            <b-button @click="articleData.metadata.author.splice(index,1)">
+                                Remove Author
+                            </b-button>
                         </li>
                     </ul>
                     <b-button icon-left="file-plus" @click="addAuthor">Add Author</b-button>
