@@ -2,10 +2,10 @@ import axios from 'axios';
 
 const zenonSearchUri = 'https://zenon.dainst.org/api/v1/search';
 
-export default async function search(term: string): Promise<ZenonRecord[]> {
     const params = {
         lookfor: term
     };
+export default async function search(term: string): Promise<ZenonResultData> {
 
     try {
         const response = await axios.get(
@@ -20,8 +20,16 @@ export default async function search(term: string): Promise<ZenonRecord[]> {
         return response.data.records;
     } catch (err) {
         console.error(err);
-        return [];
+        return {
+            resultCount: 0,
+            records: []
+        };
     }
+}
+
+export interface ZenonResultData {
+    resultCount: number;
+    records: ZenonRecord[];
 }
 
 export interface ZenonRecord {

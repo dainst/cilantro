@@ -5,7 +5,7 @@
             <b-button :disabled="searchTerm.length < 1" @click="search">Search</b-button>
         </b-field>
 
-        <b-table v-if="searchResults.length > 0" :data="searchResults">
+        <b-table v-if="searchResultRecords.length > 0" :data="searchResultRecords">
             <template slot-scope="props">
                 <b-table-column label="ID" numeric>
                     {{ props.row.id }}
@@ -36,17 +36,22 @@
 // TODO add-all-Zenon-data button
 
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import search, { ZenonRecord } from '../ZenonImport';
+import search, { ZenonRecord, ZenonResultData } from '../ZenonImport';
 
 @Component
 export default class ZenonImportComponent extends Vue {
     @Prop() articleTitle!: string
 
     searchTerm: string = this.articleTitle || '';
-    searchResults: ZenonRecord[] = [];
+    searchResultRecords: ZenonRecord[] = [];
 
     async search() {
-        this.searchResults = await search(this.searchTerm);
+        const searchResult: ZenonResultData = await search(this.searchTerm);
+        if (searchResult.resultCount > 0) {
+            this.searchResultRecords = searchResult.records;
+        } else {
+            this.searchResultRecords = [];
+        }
     }
 }
 </script>
