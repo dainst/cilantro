@@ -66,7 +66,7 @@ describe('ZenonImportComponent', () => {
         expect(wrapper.find('table').exists()).toBe(false);
 
         wrapper.setData({
-            searchResults: [testSearchResults]
+            searchResultRecords: [testSearchResults]
         });
 
         wrapper.vm.$nextTick(() => {
