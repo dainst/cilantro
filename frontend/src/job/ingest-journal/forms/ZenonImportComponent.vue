@@ -5,6 +5,8 @@
             <b-button :disabled="searchTerm.length < 1" @click="search">Search</b-button>
         </b-field>
 
+        <div>{{ searchStatus }}</div>
+
         <b-table v-if="searchResultRecords.length > 0" :data="searchResultRecords">
             <template slot-scope="props">
                 <b-table-column label="ID" numeric>
@@ -44,12 +46,15 @@ export default class ZenonImportComponent extends Vue {
 
     searchTerm: string = this.articleTitle || '';
     searchResultRecords: ZenonRecord[] = [];
+    searchStatus: string = 'No Search initiated...'
 
     async search() {
         const searchResult: ZenonResultData = await search(this.searchTerm);
         if (searchResult.resultCount > 0) {
+            this.searchStatus = 'Search Results';
             this.searchResultRecords = searchResult.records;
         } else {
+            this.searchStatus = 'No results';
             this.searchResultRecords = [];
         }
     }
