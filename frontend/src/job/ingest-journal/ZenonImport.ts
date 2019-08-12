@@ -1,31 +1,32 @@
 import axios from 'axios';
 
-const zenonBaseURL: string = 'https://zenon.dainst.org/api/v1/';
+const zenonBaseURL: string = 'https://zenon.dainst.org/';
+const zenonAPIURL: string = 'api/v1/';
 
-function isId(term: string) {
-    return !!term.match(/^\w?\w?\d{9}$/);
 }
 
 export default async function search(term: string): Promise<ZenonResultData> {
-    let apiEndpoint: string = '';
-    let params: object = {};
-    if (!isId(term)) {
-        apiEndpoint = 'search';
-        params = {
-            lookfor: term,
-            type: 'title'
-        };
-    } else {
-        apiEndpoint = 'record';
-        params = {
-            id: term
-        };
-    }
+    const url: string = `${zenonBaseURL}${zenonAPIURL}search`;
+    const params: object = {
+        lookfor: term,
+        type: 'title'
+    };
+    return makeRequest(url, params);
+}
 
+function getRecord(zenonID: string): Promise<ZenonResultData> {
+    const url: string = `${zenonBaseURL}${zenonAPIURL}record`;
+    const params: object = {
+        id: zenonID
+    };
+    return makeRequest(url, params);
+}
+
+async function makeRequest(url: string, params: object): Promise<ZenonResultData> {
     try {
         const response = await axios({
             method: 'get',
-            url: `${zenonBaseURL}${apiEndpoint}`,
+            url,
             params,
             transformRequest: [(data, headers) => {
                 delete headers.common.Authorization; // eslint-disable-line no-param-reassign
