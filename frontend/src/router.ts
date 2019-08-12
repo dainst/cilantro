@@ -44,7 +44,7 @@ const router = new Router({
     ]
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async(to, from, next) => {
     if (!to.matched.some(record => record.meta.noAuth)) {
         if (store.getters.isAuthenticated) {
             next();
@@ -57,4 +57,3 @@ router.beforeEach(async (to, from, next) => {
 });
 
 export default router;
-

@@ -5,32 +5,30 @@
     </div>
     <div class="columns is-centered">
         <form class="column is-narrow login" @submit.prevent="login">
-            <div v-if="!this.$store.getters.isAuthenticated">
-                <b-field>
-                    <b-input
-                        placeholder="Name"
-                        minlength="1"
-                        type="text"
-                        required
-                        v-model="name"
-                    ></b-input>
-                </b-field>
-                <b-field>
-                    <b-input
-                        placeholder="Password"
-                        minlength="1"
-                        type="password"
-                        required
-                        v-model="password"
-                    ></b-input>
-                </b-field>
-                <b-button
-                    :disabled="missingInput"
-                    type="submit"
-                    class="button is-fullwidth"
-                    @click="login()"
-                >Login</b-button>
-            </div>
+            <b-field>
+                <b-input
+                    placeholder="Name"
+                    minlength="1"
+                    type="text"
+                    required
+                    v-model="name"
+                ></b-input>
+            </b-field>
+            <b-field>
+                <b-input
+                    placeholder="Password"
+                    minlength="1"
+                    type="password"
+                    required
+                    v-model="password"
+                ></b-input>
+            </b-field>
+            <b-button
+                :disabled="missingInput"
+                type="submit"
+                class="button is-fullwidth"
+                @click="login()"
+            >Login</b-button>
         </form>
     </div>
     </div>
@@ -87,19 +85,13 @@ export default class Login extends Vue {
         if (message) this.$toast.open({ message, type });
     }
 
-    redirect() {
-        if (this.$route.params.back) {
-            this.$router.push({ path: this.$route.params.back });
-        } else {
-            this.$router.push({ path: '/' });
-        }
-    }
-
     @Watch('authStatus')
     onAuthStatusChanged(status: AuthenticationStatus) {
         this.toastTheToast(status);
         if (status === AuthenticationStatus.In) {
-            this.redirect();
+            this.$route.params.back
+                ? this.$router.push({ path: this.$route.params.back })
+                : this.$router.push({ path: '/' });
         }
     }
 }
