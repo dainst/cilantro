@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import AuthenticationStore from './authentication/AuthenticationStore'
 
 Vue.use(Vuex);
 
