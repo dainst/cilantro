@@ -3,6 +3,13 @@
         <b-field label="Zenon Search">
             <b-input v-model="searchTerm"></b-input>
             <b-button :disabled="searchTerm.length < 1" @click="search">Search</b-button>
+            <b-field label="Search Scope" :label-position="'on-border'">
+                <b-select v-model="searchScope">
+                    <option value="AllFields">All Fields</option>
+                    <option value="title">Title</option>
+                    <option value="author">Author</option>
+                </b-select>
+            </b-field>
         </b-field>
 
         <div>{{ searchStatus }}</div>
@@ -45,11 +52,12 @@ export default class ZenonImportComponent extends Vue {
     @Prop() articleTitle!: string
 
     searchTerm: string = this.articleTitle || '';
+    searchScope: string = 'AllFields';
     searchResultRecords: ZenonRecord[] = [];
     searchStatus: string = 'No Search initiated...'
 
     async search() {
-        const searchResult: ZenonResultData = await search(this.searchTerm);
+        const searchResult: ZenonResultData = await search(this.searchTerm, this.searchScope);
         if (searchResult.resultCount > 0) {
             this.searchStatus = 'Search Results';
             this.searchResultRecords = searchResult.records;

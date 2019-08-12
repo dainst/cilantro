@@ -5,11 +5,11 @@ const zenonAPIURL: string = 'api/v1/';
 
 }
 
-export default async function search(term: string): Promise<ZenonResultData> {
+export default async function search(term: string, scope: string): Promise<ZenonResultData> {
     const url: string = `${zenonBaseURL}${zenonAPIURL}search`;
     const params: object = {
         lookfor: term,
-        type: 'title'
+        type: scope
     };
     return makeRequest(url, params);
 }
