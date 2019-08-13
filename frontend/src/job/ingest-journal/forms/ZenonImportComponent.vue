@@ -1,6 +1,6 @@
 <template>
     <section>
-        <b-field label="zenonId" :type="zenonValidationStatus">
+        <b-field label="Zenon ID" :type="zenonValidationStatus">
             <b-input v-model="articleMetadata.zenonId"></b-input>
             <b-button :disabled="articleMetadata.zenonId < 1"
                       @click="validateZenonRecord">
