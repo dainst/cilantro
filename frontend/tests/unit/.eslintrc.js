@@ -1,6 +1,9 @@
 module.exports = {
+    extends: '../../.eslintrc.js',
     env: {
         jest: true
     },
-    "import/no-extraneous-dependencies": [error, { devDependencies: true }]
+    rules: {
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
+    }
 };
