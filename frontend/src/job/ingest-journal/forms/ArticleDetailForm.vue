@@ -78,8 +78,7 @@
                         <b-switch v-model="articleData.metadata.create_frontpage"></b-switch>
                     </b-field>
                 </b-field>
-                <ZenonImportComponent v-on:addZenonData="addZenonData"
-                                      :articleMetadata="articleData.metadata" />
+                <ZenonImportComponent :articleMetadata="articleData.metadata" />
             </div>
         </div>
     </section>
@@ -98,10 +97,6 @@ import ZenonImportComponent from './ZenonImportComponent.vue';
 export default class ArticleDetailForm extends Vue {
     @Prop() private articleData!: Part
     @Prop() private availableFiles!: FileRange
-
-    addZenonID(id: string) {
-        this.articleData.metadata.zenonId = id;
-    }
 
     updateFile(index: number, event: any, file: FileRange) {
         this.articleData.files[index].file = event;
