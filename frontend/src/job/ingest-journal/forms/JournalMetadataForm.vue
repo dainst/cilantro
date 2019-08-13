@@ -32,6 +32,6 @@ import { JournalMetadata } from '../JobParameters';
 export default class JournalMetadataForm extends Vue {
     @Prop() private metadata!: JournalMetadata
 
-    labelPosition: String = 'on-border';
+    labelPosition: string = 'on-border';
 }
 </script>
