@@ -5,7 +5,7 @@ const zenonAPIURL: string = 'api/v1/';
 
 }
 
-export default async function search(term: string, scope: string): Promise<ZenonResultData> {
+export async function search(term: string, scope: string): Promise<ZenonResultData> {
     const url: string = `${zenonBaseURL}${zenonAPIURL}search`;
     const params: object = {
         lookfor: term,
@@ -14,7 +14,7 @@ export default async function search(term: string, scope: string): Promise<Zenon
     return makeRequest(url, params);
 }
 
-function getRecord(zenonID: string): Promise<ZenonResultData> {
+export function getRecord(zenonID: string): Promise<ZenonResultData> {
     const url: string = `${zenonBaseURL}${zenonAPIURL}record`;
     const params: object = {
         id: zenonID

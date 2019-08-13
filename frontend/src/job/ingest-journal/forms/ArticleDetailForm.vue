@@ -71,9 +71,6 @@
                     <b-field label="language">
                         <b-input v-model="articleData.metadata.language"></b-input>
                     </b-field>
-                    <b-field label="zenonId">
-                        <b-input v-model="articleData.metadata.zenonId"></b-input>
-                    </b-field>
                     <b-field label="auto_publish">
                         <b-switch v-model="articleData.metadata.auto_publish"></b-switch>
                     </b-field>
@@ -81,8 +78,8 @@
                         <b-switch v-model="articleData.metadata.create_frontpage"></b-switch>
                     </b-field>
                 </b-field>
-                <ZenonImportComponent v-on:addZenonID="addZenonID"
-                                      :articleTitle="articleData.metadata.title" />
+                <ZenonImportComponent v-on:addZenonData="addZenonData"
+                                      :articleMetadata="articleData.metadata" />
             </div>
         </div>
     </section>

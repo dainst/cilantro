@@ -1,5 +1,13 @@
 <template>
     <section>
+        <b-field label="zenonId" :type="zenonValidationStatus">
+            <b-input v-model="articleMetadata.zenonId"></b-input>
+            <b-button :disabled="articleMetadata.zenonId < 1"
+                      @click="validateZenonRecord">
+                Validate
+            </b-button>
+        </b-field>
+
         <b-field label="Zenon Search">
             <b-input v-model="searchTerm"></b-input>
             <b-button :disabled="searchTerm.length < 1" @click="search">Search</b-button>
@@ -31,8 +39,8 @@
                 <b-table-column label="Subjects">
                     {{ props.row.subjects.join(', ') }}
                 </b-table-column>
-                <b-button @click="$emit('addZenonID', props.row.id)">Add Zenon-ID</b-button>
                 <b-button>Add all Zenon data</b-button>
+                <b-button @click="articleMetadata.zenonId = props.row.id">Add Zenon-ID</b-button>
                 <a class="button" v-bind:href="`https://zenon.dainst.org/Record/${props.row.id}`" target="_blank">
                     View in Zenon
                 </a>
@@ -45,16 +53,20 @@
 // TODO add-all-Zenon-data button
 
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import search, { ZenonRecord, ZenonResultData } from '../ZenonImport';
+import { ArticleMetadata } from '../JobParameters';
+import {
+    search, getRecord, downloadJSONRecord, ZenonRecord, ZenonResultData
+} from '../ZenonImport';
 
 @Component
 export default class ZenonImportComponent extends Vue {
-    @Prop() articleTitle!: string
+    @Prop() articleMetadata!: ArticleMetadata
 
-    searchTerm: string = this.articleTitle || '';
+    searchTerm: string = this.articleMetadata.title || '';
     searchScope: string = 'AllFields';
     searchResultRecords: ZenonRecord[] = [];
     searchStatus: string = 'No Search initiated...'
+    zenonValidationStatus: string = 'is-info';
 
     async search() {
         const searchResult: ZenonResultData = await search(this.searchTerm, this.searchScope);
@@ -64,6 +76,19 @@ export default class ZenonImportComponent extends Vue {
         } else {
             this.searchStatus = 'No results';
             this.searchResultRecords = [];
+        }
+    }
+
+    async validateZenonRecord() {
+        const searchResult: ZenonResultData = await getRecord(this.articleMetadata.zenonId);
+        if (searchResult.resultCount > 0) {
+            this.searchStatus = 'Zenon record found';
+            this.searchResultRecords = searchResult.records;
+            this.zenonValidationStatus = 'is-success';
+        } else {
+            this.searchStatus = 'Zenon Record not found!';
+            this.searchResultRecords = [];
+            this.zenonValidationStatus = 'is-danger';
         }
     }
 }
