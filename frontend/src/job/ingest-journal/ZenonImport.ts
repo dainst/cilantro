@@ -3,6 +3,27 @@ import axios from 'axios';
 const zenonBaseURL: string = 'https://zenon.dainst.org/';
 const zenonAPIURL: string = 'api/v1/';
 
+export async function downloadCSLJSONRecord(id: string): Promise<cslJSONRecord> {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: `${zenonBaseURL}Record/${id}/Export?style=CSL-JSON`,
+            transformRequest: [(data, headers) => {
+                delete headers.common.Authorization; // eslint-disable-line no-param-reassign
+                return data;
+            }]
+        });
+        return response.data;
+    } catch (err) {
+        console.error(err);
+        return {
+            id: '',
+            type: '',
+            title: '',
+            author: [],
+            issued: { raw: '' }
+        };
+    }
 }
 
 export async function search(term: string, scope: string): Promise<ZenonResultData> {
@@ -62,4 +83,16 @@ export interface ZenonAuthors {
     primary: object;
     secondary: object;
     corporate: object;
+}
+
+export interface cslJSONRecord {
+  id: string;
+  type: string;
+  title: string;
+  author: object[];
+  issued: cslJSONIssuedObject;
+}
+
+interface cslJSONIssuedObject {
+    raw: string;
 }

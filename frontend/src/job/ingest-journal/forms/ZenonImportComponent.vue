@@ -39,8 +39,8 @@
                 <b-table-column label="Subjects">
                     {{ props.row.subjects.join(', ') }}
                 </b-table-column>
-                <b-button>Add all Zenon data</b-button>
                 <b-button @click="articleMetadata.zenonId = props.row.id">Add Zenon-ID</b-button>
+                <b-button @click="addZenonData(props.row.id)">Add all Zenon data</b-button>
                 <a class="button" v-bind:href="`https://zenon.dainst.org/Record/${props.row.id}`" target="_blank">
                     View in Zenon
                 </a>
@@ -55,7 +55,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ArticleMetadata } from '../JobParameters';
 import {
-    search, getRecord, downloadJSONRecord, ZenonRecord, ZenonResultData
+    search, getRecord, ZenonRecord, ZenonResultData, downloadCSLJSONRecord, cslJSONRecord
 } from '../ZenonImport';
 
 @Component
@@ -90,6 +90,39 @@ export default class ZenonImportComponent extends Vue {
             this.searchResultRecords = [];
             this.zenonValidationStatus = 'is-danger';
         }
+    }
+
+    async addZenonData(index: number) {
+        const cslRecord: cslJSONRecord = await downloadCSLJSONRecord(index.toString());
+
+        const wasMetadataModified: boolean = (this.articleMetadata.title !== '') ||
+                                             (this.articleMetadata.date_published !== '') ||
+                                             (this.articleMetadata.author.length > 0);
+
+        this.articleMetadata.title = cslRecord.title;
+        this.articleMetadata.date_published = cslRecord.issued.raw;
+        this.articleMetadata.zenonId = cslRecord.id;
+
+        this.articleMetadata.author = [];
+        cslRecord.author.forEach((author: any) => {
+            this.articleMetadata.author.push({
+                firstname: author.given,
+                lastname: author.family
+            });
+        });
+
+        const toastConfig: any = {
+            position: 'is-bottom-right',
+            duration: 5000
+        };
+        if (wasMetadataModified) {
+            toastConfig.message = 'Zenon data imported - existing values were overwritten!';
+            toastConfig.type = 'is-warning';
+        } else {
+            toastConfig.message = 'Zenon data imported';
+            toastConfig.type = 'is-success';
+        }
+        this.$toast.open(toastConfig);
     }
 }
 </script>
