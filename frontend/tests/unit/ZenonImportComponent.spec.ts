@@ -3,6 +3,7 @@ import Buefy from 'buefy';
 import sinon from 'sinon';
 import ZenonImportComponent from '@/job/ingest-journal/forms/ZenonImportComponent.vue';
 import { ZenonRecord, ZenonAuthors } from '@/job/ingest-journal/ZenonImport.ts';
+import { ArticleMetadata } from '@/job/ingest-journal/JobParameters.ts';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);
@@ -12,8 +13,25 @@ describe('ZenonImportComponent', () => {
     let wrapper = initWrapper();
 
     function initWrapper() {
+        const articleMetadata: ArticleMetadata = {
+            title: '',
+            author: [],
+            pages: {
+                showndesc: '',
+                startPrint: 0,
+                endPrint: 0
+            },
+            date_published: '',
+            language: '',
+            zenonId: '',
+            auto_publish: false,
+            create_frontpage: false
+        };
         return mount<ZenonImportComponent>(ZenonImportComponent, {
             localVue,
+            propsData: {
+                articleMetadata
+            },
             methods: {
                 search: searchMock
             }
@@ -26,13 +44,13 @@ describe('ZenonImportComponent', () => {
 
     it('renders search field and button', () => {
         expect(wrapper.find('input').exists()).toBe(true);
-        expect(wrapper.find('button').exists()).toBe(true);
+        expect(wrapper.find('.zenonSearchButton').exists()).toBe(true);
     });
 
     it('search button disabled before term entered', () => {
-        expect(wrapper.find('button').attributes('disabled')).toBe('disabled');
+        expect(wrapper.find('.zenonSearchButton').attributes('disabled')).toBe('disabled');
         wrapper.setData({ searchTerm: 'aa' });
-        expect(wrapper.find('button').attributes('disabled')).toBe(undefined);
+        expect(wrapper.find('.zenonSearchButton').attributes('disabled')).toBe(undefined);
     });
 
     it('search only called when searchTerm available and button clicked', () => {
@@ -40,11 +58,11 @@ describe('ZenonImportComponent', () => {
         expect(searchMock.called).toBe(false);
 
         // button disabled
-        wrapper.find('button').trigger('click');
+        wrapper.find('.zenonSearchButton').trigger('click');
         expect(searchMock.called).toBe(false);
 
         wrapper.setData({ searchTerm: 'aa' });
-        wrapper.find('button').trigger('click');
+        wrapper.find('.zenonSearchButton').trigger('click');
         expect(searchMock.called).toBe(true);
     });
 

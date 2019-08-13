@@ -10,7 +10,7 @@
 
         <b-field label="Zenon Search">
             <b-input v-model="searchTerm"></b-input>
-            <b-button :disabled="searchTerm.length < 1" @click="search">Search</b-button>
+            <b-button class="zenonSearchButton" :disabled="searchTerm.length < 1" @click="search">Search</b-button>
             <b-field label="Search Scope" :label-position="'on-border'">
                 <b-select v-model="searchScope">
                     <option value="AllFields">All Fields</option>
