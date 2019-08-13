@@ -66,7 +66,7 @@
                 </b-field>
                 <b-field tile is-child>
                     <b-field label="date_published">
-                        <b-switch v-model="articleData.metadata.date_published"></b-switch>
+                        <b-input v-model="articleData.metadata.date_published"></b-input>
                     </b-field>
                     <b-field label="language">
                         <b-input v-model="articleData.metadata.language"></b-input>
