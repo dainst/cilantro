@@ -90,7 +90,7 @@ export default class Login extends Vue {
         this.toastTheToast(status);
         if (status === AuthenticationStatus.In) {
             this.$route.params.back
-                ? this.$router.push({ path: this.$route.params.back })
+                ? this.$router.push({ path: this.$route.params.back, query: this.$route.query })
                 : this.$router.push({ path: '/' });
         }
     }
