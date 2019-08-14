@@ -1,10 +1,72 @@
 <template>
-    <div>Todo: Show status of given job</div>
+    <div>
+        <div class="container">
+            <b-field label="ID">
+                <b-input v-model="job.job_id" readonly />
+            </b-field>
+            <b-field label="Name">
+                <b-input v-model="job.name" readonly />
+            </b-field>
+            <b-field label="Type">
+                <b-input v-model="job.job_type" readonly />
+            </b-field>
+            <b-field label="Status">
+                <b-input v-model="job.state" readonly />
+            </b-field>
+            <b-field label="User">
+                <b-input v-model="job.user" readonly />
+            </b-field>
+            <b-field label="Created">
+                <b-input v-model="job.created" readonly />
+            </b-field>
+            <b-field label="Last Updated">
+                <b-input v-model="job.updated" readonly />
+            </b-field>
+
+            <b-collapse :open="false" aria-id="job-params">
+                <button class="button" slot="trigger" aria-controls="job-params">
+                    Show Job Parameters
+                </button>
+                <div>
+                    {{ job.params }}
+                </div>
+            </b-collapse>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import axios from 'axios';
+import { Job } from './Job';
 
 @Component
-export default class JobDetails extends Vue {}
+export default class JobDetails extends Vue {
+    labelPosition: string = '';
+    backendUri = this.$store.state.AuthenticationStore.backendUri;
+
+    jobID: string = '';
+    job: Job = {} as any;
+
+    mounted() {
+        this.jobID = this.$route.query.id as string;
+        this.getJobDetails();
+    }
+
+    async getJobDetails() {
+        try {
+            const response = await axios.get(`${this.backendUri}/job/${this.jobID}`);
+            this.job = response.data;
+        } catch (error) {
+            console.error('Invalid Server Response:', error.response);
+        }
+    }
+}
 </script>
+
+<style lang="scss">
+    .container {
+        text-align: left;
+    }
+
+</style>
