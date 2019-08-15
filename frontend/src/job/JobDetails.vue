@@ -1,5 +1,6 @@
 <template>
     <div>
+        <b-button @click="gotoJobsView">View All Jobs</b-button>
         <div class="container">
             <b-field label="ID">
                 <b-input v-model="job.job_id" readonly />
@@ -51,6 +52,10 @@ export default class JobDetails extends Vue {
     mounted() {
         this.jobID = this.$route.query.id as string;
         this.getJobDetails();
+    }
+
+    gotoJobsView() {
+        this.$router.push({ path: 'jobs' });
     }
 
     async getJobDetails() {
