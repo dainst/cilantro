@@ -35,6 +35,6 @@ export default class StartJobSelection extends Vue {
             type: 'is-info'
         });
         this.$router.push({ path: 'JournalImport' });
-    };
+    }
 }
 </script>

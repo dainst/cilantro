@@ -33,13 +33,15 @@
             Upload
         </b-button>
         <p>
-            <span v-if="running">Upload is running! {{uploadedFiles}} of {{totalFiles}} uploaded</span>
+            <span v-if="running">
+                Upload is running! {{uploadedFiles}} of {{totalFiles}} uploaded
+            </span>
         </p>
     </section>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class UploadFiles extends Vue {
@@ -49,12 +51,12 @@ export default class UploadFiles extends Vue {
         @Prop() totalFiles!: number
 
         deleteFileToUpload(index: number) {
-            this.filesToUpload.splice(index, 1)
+            this.filesToUpload.splice(index, 1);
         }
 
         upload() {
-            this.$emit('uploadTriggered', this.filesToUpload)
-            this.filesToUpload = []
+            this.$emit('uploadTriggered', this.filesToUpload);
+            this.filesToUpload = [];
         }
 }
 
