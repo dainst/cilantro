@@ -16,7 +16,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { JobParameters } from '../JournalImportParameters';
 
 @Component
 export default class OtherJobSettingsForm extends Vue {

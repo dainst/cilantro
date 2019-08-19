@@ -48,7 +48,7 @@ import ArticlesForm from './forms/ArticlesForm.vue';
 import PublishingForm from './forms/PublishingForm.vue';
 import OtherJobSettingsForm from './forms/OtherJobSettingsForm.vue';
 import {
-    JobParameters, FileRange, JournalMetadata, OJSMetadata, Part, NLPParams
+    JournalImportParameters, FileRange, JournalMetadata, OJSMetadata, Part, NLPParams
 } from './JournalImportParameters';
 
 @Component({
@@ -63,7 +63,7 @@ import {
 export default class IngestJournal extends Vue {
     backendUri = this.$store.state.AuthenticationStore.backendUri;
 
-    jobParameters: JobParameters = initJobParams();
+    jobParameters: JournalImportParameters = initJobParams();
     journalFiles = this.jobParameters.files;
     journalMetadata: JournalMetadata = this.jobParameters.metadata;
     articleFilesAndRanges: Part[] = this.jobParameters.parts;
@@ -97,7 +97,7 @@ export default class IngestJournal extends Vue {
     }
 }
 
-function initJobParams(): JobParameters {
+function initJobParams(): JournalImportParameters {
     const journalMetadata = {
         volume: '',
         year: 2018,
@@ -127,7 +127,7 @@ function initJobParams(): JobParameters {
         do_ocr: false,
         keep_ratio: true,
         nlp_params: nlpParams
-    } as JobParameters;
+    } as JournalImportParameters;
 
     return params;
 }

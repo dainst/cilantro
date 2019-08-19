@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { ArticleMetadata } from '../JobParameters';
+import { ArticleMetadata } from '../JournalImportParameters';
 import {
     search, getRecord, ZenonRecord, ZenonResultData, downloadCSLJSONRecord, cslJSONRecord
 } from '../ZenonImport';

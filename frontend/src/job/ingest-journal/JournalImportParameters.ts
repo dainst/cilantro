@@ -53,7 +53,7 @@ export interface NLPParams {
     lang: string;
 }
 
-export interface JobParameters {
+export interface JournalImportParameters {
     metadata: JournalMetadata;
     files: FileRange[];
     parts: Part[];
