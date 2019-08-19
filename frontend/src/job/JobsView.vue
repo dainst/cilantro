@@ -21,7 +21,7 @@
                     {{ props.row.updated }}
                 </b-table-column>
                 <b-table-column>
-                    <b-button @click="gotoSingleView(props.row.job_id)">Single View</b-button>
+                    <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props">
@@ -55,7 +55,7 @@ export default class JobsView extends Vue {
         this.updateJobList();
     }
 
-    gotoSingleView(id: string) {
+    goToSingleView(id: string) {
         this.$router.push({
             path: 'job',
             query: { id }
