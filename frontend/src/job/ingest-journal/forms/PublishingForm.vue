@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { OJSMetadata } from '../JobParameters';
+import { OJSMetadata } from '../JournalImportParameters';
 
 @Component
 export default class PublishingForm extends Vue {

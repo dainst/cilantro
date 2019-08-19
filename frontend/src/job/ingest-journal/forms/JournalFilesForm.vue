@@ -32,7 +32,7 @@ import {
 } from 'vue-property-decorator';
 import axios from 'axios';
 import FileBrowser from '@/staging/FileBrowser.vue';
-import { FileRange } from '@/job/ingest-journal/JobParameters';
+import { FileRange } from '@/job/ingest-journal/JournalImportParameters';
 import ProcessedPDF, { byFilePath } from '@/pdf-processor';
 import store from '@/store'
 

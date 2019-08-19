@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { JournalMetadata } from '../JobParameters';
+import { JournalMetadata } from '../JournalImportParameters';
 
 @Component
 export default class JournalMetadataForm extends Vue {

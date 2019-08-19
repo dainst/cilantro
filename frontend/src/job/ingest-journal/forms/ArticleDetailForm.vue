@@ -88,7 +88,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Part, FileRange, Author } from '../JobParameters';
+import { Part, FileRange, Author } from '../JournalImportParameters';
 
 @Component
 export default class ArticleDetailForm extends Vue {
