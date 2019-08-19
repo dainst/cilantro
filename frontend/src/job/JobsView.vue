@@ -72,6 +72,3 @@ export default class JobsView extends Vue {
     }
 }
 </script>
-
-<style lang="scss">
-</style>
