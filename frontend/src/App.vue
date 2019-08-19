@@ -6,6 +6,7 @@
         />
         <div id="nav">
             <router-link to="/">Dashboard</router-link>|
+            <router-link to="/jobs">Jobs</router-link>|
             <router-link to="/staging">Staging Area</router-link>|
             <router-link to="/ingest-journal">Job Config</router-link>
         </div>

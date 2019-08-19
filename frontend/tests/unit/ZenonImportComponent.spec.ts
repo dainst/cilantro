@@ -3,7 +3,7 @@ import Buefy from 'buefy';
 import sinon from 'sinon';
 import ZenonImportComponent from '@/job/ingest-journal/forms/ZenonImportComponent.vue';
 import { ZenonRecord, ZenonAuthors } from '@/job/ingest-journal/ZenonImport.ts';
-import { ArticleMetadata } from '@/job/ingest-journal/JobParameters.ts';
+import { ArticleMetadata } from '@/job/ingest-journal/JournalImportParameters.ts';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);

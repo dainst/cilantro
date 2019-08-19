@@ -4,6 +4,7 @@ import Dashboard from './dashboard/Dashboard.vue';
 import IngestJournal from './job/ingest-journal/IngestJournal.vue';
 import StagingArea from './staging/StagingArea.vue';
 import JobDetails from './job/JobDetails.vue';
+import JobsView from './job/JobsView.vue';
 import Login from './Login.vue';
 import store from './store';
 
@@ -25,6 +26,11 @@ const router = new Router({
             path: '/',
             name: 'dashboard',
             component: Dashboard
+        },
+        {
+            path: '/jobs',
+            name: 'jobs',
+            component: JobsView
         },
         {
             path: '/staging',
