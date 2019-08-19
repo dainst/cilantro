@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/jest": "^23.1.4",
     "@types/pdfjs-dist": "^2.0.1",
+    "@types/sinon": "^7.0.13",
     "@vue/cli-plugin-babel": "^3.9.0",
     "@vue/cli-plugin-eslint": "^3.9.0",
     "@vue/cli-plugin-typescript": "^3.9.0",
@@ -41,6 +42,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "sass": "^1.18.0",
     "sass-loader": "^7.1.0",
+    "sinon": "^7.4.1",
     "ts-jest": "^23.0.0",
     "typescript": "^3.4.3",
     "vue-template-compiler": "^2.6.10"
