@@ -3,7 +3,7 @@ import Buefy from 'buefy';
 import ArticleDetailForm from '@/job/ingest-journal/forms/ArticleDetailForm.vue';
 import {
     Part, FileRange, ArticleMetadata, Author, Pages
-} from '@/job/ingest-journal/JobParameters.ts';
+} from '@/job/ingest-journal/JournalImportParameters.ts';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);

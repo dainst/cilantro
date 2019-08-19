@@ -49,7 +49,13 @@ router.beforeEach(async(to, from, next) => {
         if (store.getters.isAuthenticated) {
             next();
         } else {
-            next({ name: 'login', params: { back: to.path } });
+            next({
+                name: 'login',
+                params: {
+                    back: to.path
+                },
+                query: to.query
+            });
         }
     } else {
         next();

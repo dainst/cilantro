@@ -17,7 +17,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import ArticleDetailForm from './ArticleDetailForm.vue';
 import {
     Part, ArticleMetadata, FileRange, Author, Pages
-} from '../JobParameters';
+} from '../JournalImportParameters';
 
 @Component({
     components: {

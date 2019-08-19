@@ -66,7 +66,7 @@
                 </b-field>
                 <b-field tile is-child>
                     <b-field label="date_published">
-                        <b-input v-model="articleData.metadata.date_published"></b-input>
+                        <b-switch v-model="articleData.metadata.date_published"></b-switch>
                     </b-field>
                     <b-field label="language">
                         <b-input v-model="articleData.metadata.language"></b-input>
@@ -86,7 +86,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Part, FileRange, Author } from '../JobParameters';
+import { Part, FileRange, Author } from '../JournalImportParameters';
 import ZenonImportComponent from './ZenonImportComponent.vue';
 
 @Component({

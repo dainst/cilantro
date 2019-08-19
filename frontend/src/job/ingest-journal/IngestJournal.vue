@@ -49,7 +49,7 @@ import PublishingForm from './forms/PublishingForm.vue';
 import OtherJobSettingsForm from './forms/OtherJobSettingsForm.vue';
 import {
     JobParameters, FileRange, JournalMetadata, OJSMetadata, Part, NLPParams
-} from './JobParameters';
+} from './JournalImportParameters';
 
 @Component({
     components: {

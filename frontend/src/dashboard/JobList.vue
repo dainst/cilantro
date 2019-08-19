@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.$store.getters.isAuthenticated">
+    <section class="job-shortlist">
         <h3 class="is-size-5">
             Your active jobs
             <a @click="updateJobList">
@@ -14,17 +14,17 @@
                 </div>
                 <div class="message-body has-text-left">
                     <div>
-                        <span class="has-text-weight-semibold">Name</span>
+                        <span class="has-text-weight-semibold">Name: </span>
                         {{job['name']}}
                     </div>
                     <div>
-                        <span class="has-text-weight-semibold">Created</span>
+                        <span class="has-text-weight-semibold">Created: </span>
                         {{job['created']}}
                     </div>
                 </div>
             </router-link>
         </div>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">
@@ -39,7 +39,7 @@ export default class JobList extends Vue {
 
     iconAttributesForState = (state: string) => {
         if (state === 'new') {
-            return [{ icon: 'alarm' }];
+            return [{ type: 'is-info' }, { icon: 'alarm' }];
         } if (state === 'started') {
             return [{ type: 'is-warning' }, { icon: 'cogs' }];
         } if (state === 'success') {
@@ -58,18 +58,21 @@ export default class JobList extends Vue {
     }
 
     mounted() {
-        if (this.$store.getters.isAuthenticated) {
-            this.updateJobList();
-        }
-
-        this.$store.watch(
-            (state, getters) => getters.isAuthenticated,
-            (newValue: boolean, oldValue: boolean) => {
-                if (newValue) {
-                    this.updateJobList();
-                }
-            }
-        );
+        this.updateJobList();
     }
 }
 </script>
+
+<style lang="scss">
+    .job-shortlist {
+        padding: 15px;
+        border: solid;
+        border-width: 1px;
+    }
+
+    .message .message-body {
+        background-color: lightgray;
+        margin-bottom: 10px;
+    }
+
+</style>
