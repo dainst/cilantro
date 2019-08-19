@@ -71,9 +71,6 @@
                     <b-field label="language">
                         <b-input v-model="articleData.metadata.language"></b-input>
                     </b-field>
-                    <b-field label="zenonId">
-                        <b-input v-model="articleData.metadata.zenonId"></b-input>
-                    </b-field>
                     <b-field label="auto_publish">
                         <b-switch v-model="articleData.metadata.auto_publish"></b-switch>
                     </b-field>
@@ -81,6 +78,7 @@
                         <b-switch v-model="articleData.metadata.create_frontpage"></b-switch>
                     </b-field>
                 </b-field>
+                <ZenonImportComponent :articleMetadata="articleData.metadata" />
             </div>
         </div>
     </section>
@@ -88,9 +86,14 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { Part, FileRange, Author } from '../JobParameters';
+import { Part, FileRange, Author } from '../JournalImportParameters';
+import ZenonImportComponent from './ZenonImportComponent.vue';
 
-@Component
+@Component({
+    components: {
+        ZenonImportComponent
+    }
+})
 export default class ArticleDetailForm extends Vue {
     @Prop() private articleData!: Part
     @Prop() private availableFiles!: FileRange

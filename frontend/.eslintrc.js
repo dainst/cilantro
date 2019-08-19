@@ -3,7 +3,7 @@ module.exports = {
     env: {
         node: true
     },
-    'extends': [
+    extends: [
         'airbnb',
         'plugin:vue/essential',
         '@vue/standard',
@@ -12,7 +12,7 @@ module.exports = {
     rules: {
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-        'indent': ['error', 4],
+        indent: ['error', 4],
         'space-before-function-paren': ['error', 'never'],
         'no-param-reassign': [
             'error',
@@ -23,7 +23,7 @@ module.exports = {
         'class-methods-use-this': [
             'error', { exceptMethods: ['data'] }
         ],
-        'semi': ['error', 'always'],
+        semi: ['error', 'always'],
         'lines-between-class-members': [
             'error', 'always', { exceptAfterSingleLine: true }
         ]
