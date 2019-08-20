@@ -32,8 +32,10 @@ export async function sendRequest(
         return response.data;
     } catch (error) {
         let errorMessage: string = '';
-        if (error.response) {
+        if (error.response.data.error) {
             errorMessage = `<b>${error.response.statusText}</b><br><br>${error.response.data.error.message}`;
+        } else if (error.response) {
+            errorMessage = `<b>${error.response.statusText}</b><br><br>${error.response.data}`;
         } else if (error.request) {
             errorMessage = 'No Response from Server';
         }
