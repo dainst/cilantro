@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import axios from 'axios';
+import startJob from '@/util/WorkbenchClient';
 
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
 import JournalFilesForm from './forms/JournalFilesForm.vue';
@@ -84,16 +84,7 @@ export default class IngestJournal extends Vue {
     }
 
     startJob() {
-        axios.post(
-            `${this.backendUri}/job/ingest_journal`,
-            this.jobParameters
-        )
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        startJob('ingest_journal', this.jobParameters, this);
     }
 }
 

@@ -29,13 +29,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import axios from 'axios';
+import { getJobList } from '@/util/WorkbenchClient';
+import { Job } from '@/job/Job';
 
 @Component
 export default class JobList extends Vue {
-    backendUri = this.$store.state.AuthenticationStore.backendUri;
-
-    jobList: object[] = [];
+    jobList: Job[] = [];
 
     iconAttributesForState = (state: string) => {
         if (state === 'new') {
@@ -49,12 +48,7 @@ export default class JobList extends Vue {
     }
 
     async updateJobList() {
-        try {
-            const response = await axios.get(`${this.backendUri}/job/jobs`);
-            this.jobList = response.data;
-        } catch (error) {
-            console.error('Invalid Server Response:', error.response);
-        }
+        this.jobList = await getJobList(this);
     }
 
     mounted() {

@@ -57,7 +57,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ArticleMetadata } from '../JournalImportParameters';
 import {
     search, getRecord, ZenonRecord, ZenonResultData, downloadCSLJSONRecord, cslJSONRecord
-} from '../ZenonImport';
+} from '@/util/ZenonClient';
 
 @Component
 export default class ZenonImportComponent extends Vue {
@@ -70,7 +70,7 @@ export default class ZenonImportComponent extends Vue {
     zenonValidationStatus: string = 'is-info';
 
     async search() {
-        const searchResult: ZenonResultData = await search(this.searchTerm, this.searchScope);
+        const searchResult: ZenonResultData = await search(this.searchTerm, this.searchScope, this);
         if (searchResult.resultCount > 0) {
             this.searchStatus = 'Search Results';
             this.searchResultRecords = searchResult.records;
@@ -81,7 +81,7 @@ export default class ZenonImportComponent extends Vue {
     }
 
     async validateZenonRecord() {
-        const searchResult: ZenonResultData = await getRecord(this.articleMetadata.zenonId);
+        const searchResult: ZenonResultData = await getRecord(this.articleMetadata.zenonId, this);
         if (searchResult.resultCount > 0) {
             this.searchStatus = 'Zenon record found';
             this.searchResultRecords = searchResult.records;
@@ -94,7 +94,7 @@ export default class ZenonImportComponent extends Vue {
     }
 
     async addZenonData(index: number) {
-        const cslRecord: cslJSONRecord = await downloadCSLJSONRecord(index.toString());
+        const cslRecord: cslJSONRecord = await downloadCSLJSONRecord(index.toString(), this);
 
         const wasMetadataModified: boolean = (this.articleMetadata.title !== '') ||
                                              (this.articleMetadata.date_published !== '') ||
