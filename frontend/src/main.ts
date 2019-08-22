@@ -13,16 +13,11 @@ Vue.use(Buefy, {
 
 Vue.config.productionTip = false;
 
-Vue.prototype.$http = Axios;
 const username = localStorage.getItem('username');
 const password = localStorage.getItem('password');
 
 if (username && password) {
-    try {
-        store.dispatch('login', { name: username, password });
-    } catch (err) {
-        console.log(err);
-    }
+    store.dispatch('login', { name: username, password });
 }
 
 new Vue({
