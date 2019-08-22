@@ -58,6 +58,8 @@ import { ArticleMetadata } from '../JournalImportParameters';
 import {
     search, getRecord, ZenonRecord, ZenonResultData, downloadCSLJSONRecord, cslJSONRecord
 } from '@/util/ZenonClient';
+import { RequestResult } from '@/util/HTTPClient';
+import { showError, showSuccess, showWarning } from '@/util/Notifier.ts';
 
 @Component
 export default class ZenonImportComponent extends Vue {
@@ -70,60 +72,70 @@ export default class ZenonImportComponent extends Vue {
     zenonValidationStatus: string = 'is-info';
 
     async search() {
-        const searchResult: ZenonResultData = await search(this.searchTerm, this.searchScope, this);
-        if (searchResult.resultCount > 0) {
-            this.searchStatus = 'Search Results';
-            this.searchResultRecords = searchResult.records;
+        const response: RequestResult = await search(this.searchTerm, this.searchScope);
+        if (response.status === 'success') {
+            const searchResult = response.payload;
+            if (searchResult.resultCount > 0) {
+                this.searchStatus = 'Search Results';
+                this.searchResultRecords = searchResult.records;
+            } else {
+                this.searchStatus = 'No results';
+                this.searchResultRecords = [];
+            }
         } else {
-            this.searchStatus = 'No results';
-            this.searchResultRecords = [];
+            showError(response.payload, this);
         }
     }
 
     async validateZenonRecord() {
-        const searchResult: ZenonResultData = await getRecord(this.articleMetadata.zenonId, this);
-        if (searchResult.resultCount > 0) {
-            this.searchStatus = 'Zenon record found';
-            this.searchResultRecords = searchResult.records;
-            this.zenonValidationStatus = 'is-success';
+
+        const response: RequestResult = await search(this.searchTerm, this.searchScope);
+        if (response.status === 'success') {
+            const searchResult = response.payload;
+            if (searchResult.resultCount > 0) {
+                this.searchStatus = 'Zenon record found';
+                this.searchResultRecords = searchResult.records;
+                this.zenonValidationStatus = 'is-success';
+            } else {
+                this.searchStatus = 'Zenon Record not found!';
+                this.searchResultRecords = [];
+                this.zenonValidationStatus = 'is-danger';
+            }
         } else {
-            this.searchStatus = 'Zenon Record not found!';
-            this.searchResultRecords = [];
-            this.zenonValidationStatus = 'is-danger';
+            showError(response.payload, this);
         }
     }
 
     async addZenonData(index: number) {
-        const cslRecord: cslJSONRecord = await downloadCSLJSONRecord(index.toString(), this);
 
-        const wasMetadataModified: boolean = (this.articleMetadata.title !== '') ||
-                                             (this.articleMetadata.date_published !== '') ||
-                                             (this.articleMetadata.author.length > 0);
+        const response: RequestResult = await downloadCSLJSONRecord(index.toString());
+        if (response.status === 'success') {
+            const cslRecord: cslJSONRecord = response.payload;
 
-        this.articleMetadata.title = cslRecord.title;
-        this.articleMetadata.date_published = cslRecord.issued.raw;
-        this.articleMetadata.zenonId = cslRecord.id;
+            const wasMetadataModified: boolean = (this.articleMetadata.title !== '') ||
+                                                 (this.articleMetadata.date_published !== '') ||
+                                                 (this.articleMetadata.author.length > 0);
 
-        this.articleMetadata.author = [];
-        cslRecord.author.forEach((author: any) => {
-            this.articleMetadata.author.push({
-                firstname: author.given,
-                lastname: author.family
+            this.articleMetadata.title = cslRecord.title;
+            this.articleMetadata.date_published = cslRecord.issued.raw;
+            this.articleMetadata.zenonId = cslRecord.id;
+
+            this.articleMetadata.author = [];
+            cslRecord.author.forEach((author: any) => {
+                this.articleMetadata.author.push({
+                    firstname: author.given,
+                    lastname: author.family
+                });
             });
-        });
 
-        const toastConfig: any = {
-            position: 'is-bottom-right',
-            duration: 5000
-        };
-        if (wasMetadataModified) {
-            toastConfig.message = 'Zenon data imported - existing values were overwritten!';
-            toastConfig.type = 'is-warning';
+            if (wasMetadataModified) {
+                showWarning('Zenon data imported - existing values were overwritten!', this);
+            } else {
+                showSuccess('Zenon data imported', this);
+            }
         } else {
-            toastConfig.message = 'Zenon data imported';
-            toastConfig.type = 'is-success';
+            showError(response.payload, this);
         }
-        this.$toast.open(toastConfig);
     }
 }
 </script>

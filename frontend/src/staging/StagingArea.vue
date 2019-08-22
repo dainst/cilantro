@@ -17,6 +17,9 @@ import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 import UploadFiles from './UploadFiles.vue';
 import FileBrowser from './FileBrowser.vue';
+import { getStagingFiles, uploadFileToStaging } from '@/util/WorkbenchClient';
+import { RequestResult } from '@/util/HTTPClient';
+import { showSuccess, showError } from '@/util/Notifier.ts';
 
 @Component({
     components: {
@@ -46,23 +49,13 @@ export default class StagingArea extends Vue {
         return this.uploadFailedFiles.length + this.uploadSuccessFiles.length;
     }
 
-    fetchFiles() {
-        axios.get(
-            `${this.backendUri}/staging`
-        ).then((response) => {
-            this.stagedFiles = response.data;
-        }).catch((error) => {
-            if (error.response === undefined) {
-                console.log('Application Error', error);
-            } else {
-                console.log('Invalid Server Response:', error.response);
-            }
-            this.$toast.open({
-                message: 'No filesToShow fetched from Backend',
-                type: 'is-danger',
-                queue: false
-            });
-        });
+    async fetchFiles() {
+        const response: RequestResult = await getStagingFiles();
+        if (response.status === 'success') {
+            this.stagedFiles = response.payload;
+        } else {
+            showError(response.payload, this);
+        }
     }
 
     uploadFiles(filesToUpload: File[]) {
@@ -73,14 +66,10 @@ export default class StagingArea extends Vue {
         }
     }
 
-    uploadFile(file: File) {
+    async uploadFile(file: File) {
         const ext = file.name.split('.').pop();
         if (ext !== 'csv' && ext !== 'pdf') {
-            this.$snackbar.open({
-                message: `Upload of ${file.name} failed, invalid file extension ${ext}`,
-                type: 'is-danger',
-                queue: false
-            });
+            showError(`Upload of ${file.name} failed, invalid file extension ${ext}`, this);
             this.uploadFailedFiles.push(file);
             this.checkUploadStatus();
             return;
@@ -88,29 +77,16 @@ export default class StagingArea extends Vue {
 
         const formData = new FormData();
         formData.append('file', file);
-        axios.post(`${this.backendUri}/staging`,
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(() => {
-            this.$snackbar.open({
-                message: `Upload of ${file.name} successful!`,
-                queue: false
-            });
+
+        if (await uploadFileToStaging(formData)) {
+            showSuccess(`Upload of ${file.name} successful!`, this);
             this.uploadSuccessFiles.push(file);
             this.checkUploadStatus();
-        }).catch((error) => {
-            console.error('An Error occurred while uploading file', file.name, error);
-            this.$snackbar.open({
-                message: `Upload of ${file.name} failed!`,
-                type: 'is-danger',
-                queue: false
-            });
+        } else {
+            showError(`Upload of ${file.name} failed!`, this);
             this.uploadFailedFiles.push(file);
             this.checkUploadStatus();
-        });
+        }
     }
 
     checkUploadStatus() {
@@ -118,17 +94,9 @@ export default class StagingArea extends Vue {
 
         this.fetchFiles();
         if (this.uploadFailedFiles.length === 0) {
-            this.$toast.open({
-                message: 'Upload of all files succeeded',
-                type: 'is-success',
-                queue: false
-            });
+            showSuccess('Upload of all files succeeded', this);
         } else {
-            this.$toast.open({
-                message: `Upload of ${this.uploadFailedFiles.length} files failed`,
-                type: 'is-success',
-                queue: false
-            });
+            showError(`Upload of ${this.uploadFailedFiles.length} files failed`, this);
         }
         this.filesToUpload = [];
         this.uploadSuccessFiles = [];

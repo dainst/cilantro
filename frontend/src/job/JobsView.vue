@@ -43,7 +43,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { getJobList } from '@/util/WorkbenchClient';
+import { RequestResult } from '@/util/HTTPClient';
 import { Job } from './Job';
+import { showError } from '@/util/Notifier.ts';
 
 @Component
 export default class JobsView extends Vue {
@@ -63,7 +65,12 @@ export default class JobsView extends Vue {
     }
 
     async updateJobList() {
-        this.jobList = await getJobList(this);
+        const response: RequestResult = await getJobList();
+        if (response.status === 'success') {
+            this.jobList = response.payload as Job[];
+        } else {
+            showError(response.payload, this);
+        }
     }
 }
 </script>

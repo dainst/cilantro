@@ -1,60 +1,29 @@
 import Vue from 'vue';
-import { sendRequest, showErrorMessage, isHTTPError } from './HTTPClient';
+import { sendRequest, RequestResult } from './HTTPClient';
 
 const zenonBaseURL: string = 'https://zenon.dainst.org/';
 const zenonAPIURL: string = 'api/v1/';
 
-export async function search(
-    term: string,
-    scope: string,
-    vueInstance: Vue
-): Promise<ZenonResultData> {
+export async function search(term: string, scope: string): Promise<RequestResult> {
     const url: string = `${zenonBaseURL}${zenonAPIURL}search`;
     const params: object = {
         lookfor: term,
         type: scope
     };
-    const response: any = await sendRequest('get', url, params, true);
-    if (isHTTPError(response)) {
-        showErrorMessage(response, vueInstance);
-        return {
-            resultCount: 0,
-            records: []
-        } as ZenonResultData;
-    }
-    return response as ZenonResultData;
+    return sendRequest('get', url, params, true);
 }
 
-export async function getRecord(zenonID: string, vueInstance: Vue): Promise<ZenonResultData> {
+export async function getRecord(zenonID: string): Promise<RequestResult> {
     const url: string = `${zenonBaseURL}${zenonAPIURL}record`;
     const params: object = {
         id: zenonID
     };
-    const response: any = await sendRequest('get', url, params, true);
-    if (isHTTPError(response)) {
-        showErrorMessage(response, vueInstance);
-        return {
-            resultCount: 0,
-            records: []
-        } as ZenonResultData;
-    }
-    return response as ZenonResultData;
+    return sendRequest('get', url, params, true);
 }
 
-export async function downloadCSLJSONRecord(id: string, vueInstance: Vue): Promise<cslJSONRecord> {
+export async function downloadCSLJSONRecord(id: string): Promise<RequestResult> {
     const url: string = `${zenonBaseURL}Record/${id}/Export?style=CSL-JSON`;
-    const response: any = await sendRequest('get', url, {}, true);
-    if (isHTTPError(response)) {
-        showErrorMessage(response, vueInstance);
-        return {
-            id: '',
-            type: '',
-            title: '',
-            author: [],
-            issued: { raw: '' }
-        } as cslJSONRecord;
-    }
-    return response as cslJSONRecord;
+    return sendRequest('get', url, {}, true);
 }
 
 export interface ZenonResultData {

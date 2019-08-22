@@ -1,13 +1,14 @@
 import axios from 'axios';
 import Vue from 'vue';
 
+/* eslint-disable import/prefer-default-export */
 export async function sendRequest(
     requestType: string,
     url: string,
     params: object,
     disableAuthHeader: boolean,
     otherSettings: object = {}
-): Promise<any> {
+): Promise<RequestResult> {
     const axiosConfig: any = {
         method: requestType,
         url,
@@ -29,7 +30,10 @@ export async function sendRequest(
 
     try {
         const response = await axios(axiosConfig);
-        return response.data;
+        return {
+            status: 'success',
+            payload: response.data
+        } as RequestResult;
     } catch (error) {
         let errorMessage: string = '';
         if (error.response.data.error) {
@@ -40,25 +44,13 @@ export async function sendRequest(
             errorMessage = 'No Response from Server';
         }
         return {
-            errorMessage
-        } as HTTPError;
+            status: 'error',
+            payload: errorMessage
+        } as RequestResult;
     }
 }
 
-export function showErrorMessage(errorObject: HTTPError, vueInstance: Vue) {
-    vueInstance.$snackbar.open({
-        message: errorObject.errorMessage,
-        type: 'is-danger',
-        position: 'is-top',
-        indefinite: true,
-        queue: false
-    });
-}
-
-export function isHTTPError(arg: any): arg is HTTPError { // TODO move to http
-    return arg.errorMessage !== undefined;
-}
-
-interface HTTPError {
-    errorMessage: string;
+export interface RequestResult {
+    status: string;
+    payload: any;
 }

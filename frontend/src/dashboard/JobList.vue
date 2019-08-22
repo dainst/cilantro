@@ -30,7 +30,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { getJobList } from '@/util/WorkbenchClient';
+import { RequestResult } from '@/util/HTTPClient';
 import { Job } from '@/job/Job';
+import { showError } from '@/util/Notifier.ts';
 
 @Component
 export default class JobList extends Vue {
@@ -48,7 +50,12 @@ export default class JobList extends Vue {
     }
 
     async updateJobList() {
-        this.jobList = await getJobList(this);
+        const response: RequestResult = await getJobList();
+        if (response.status === 'success') {
+            this.jobList = response.payload;
+        } else {
+            showError(response.payload, this);
+        }
     }
 
     mounted() {
