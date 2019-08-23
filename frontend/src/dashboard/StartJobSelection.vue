@@ -25,15 +25,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { showInfo } from '@/util/Notifier.ts';
 
 @Component
 export default class StartJobSelection extends Vue {
     startJournalImport() {
-        this.$toast.open({
-            message: 'Journal Import Job Started',
-            position: 'is-top-right',
-            type: 'is-info'
-        });
+        showInfo('Journal Import Job Started', this);
         this.$router.push({ path: 'JournalImport' });
     }
 }

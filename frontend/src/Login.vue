@@ -40,6 +40,7 @@ import { getModule } from 'vuex-module-decorators';
 import { mapGetters } from 'vuex';
 import AuthenticationStatus from './authentication/AuthenticationStatus';
 import AuthenticationStore from './authentication/AuthenticationStore';
+import { showSuccess, showError, showWarning } from '@/util/Notifier.ts';
 
 @Component({
     computed: mapGetters(['authStatus'])
@@ -61,28 +62,21 @@ export default class Login extends Vue {
     }
 
     toastTheToast(status: AuthenticationStatus) {
-        let message = '';
-        let type = '';
         switch (status) {
         case AuthenticationStatus.In:
-            message = 'Login successful.';
-            type = 'is-success';
+            showSuccess('Login successful', this);
             break;
         case AuthenticationStatus.Out:
-            message = 'Logout successful.';
-            type = 'is-success';
+            showSuccess('Logout successful', this);
             break;
         case AuthenticationStatus.Prompt:
-            message = 'Please login.';
-            type = 'is-warning';
+            showWarning('Please login', this);
             break;
         case AuthenticationStatus.Error:
-            message = 'Login failed!';
-            type = 'is-danger';
+            showError('Login failed', this);
             break;
         default:
         }
-        if (message) this.$toast.open({ message, type });
     }
 
     @Watch('authStatus')

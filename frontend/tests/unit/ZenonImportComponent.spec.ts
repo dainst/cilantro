@@ -2,7 +2,7 @@ import { mount, createLocalVue } from '@vue/test-utils';
 import Buefy from 'buefy';
 import sinon from 'sinon';
 import ZenonImportComponent from '@/job/ingest-journal/forms/ZenonImportComponent.vue';
-import { ZenonRecord, ZenonAuthors } from '@/job/ingest-journal/ZenonImport.ts';
+import { ZenonRecord, ZenonAuthors } from '@/util/ZenonClient.ts';
 import { ArticleMetadata } from '@/job/ingest-journal/JournalImportParameters.ts';
 
 const localVue = createLocalVue();

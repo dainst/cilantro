@@ -6,6 +6,8 @@ import AuthenticationStatus from './AuthenticationStatus';
 import store from '@/store';
 import router from '@/router';
 import User from './User';
+import { sendRequest } from '@/util/HTTPClient';
+import { RequestResult } from '@/util/HTTPClient';
 
 @Module({
     dynamic: true,
@@ -54,16 +56,13 @@ export default class AuthenticationStore extends VuexModule {
     async login(user: User) {
         this.context.commit('setPending');
 
-        try {
-            const response = await axios({
-                url: `${this.backendUri}/user/${user.name}`,
-                auth: { username: user.name, password: user.password },
-                method: 'GET'
-            });
+        const url: string = `${this.backendUri}/user/${user.name}`;
+        const auth = { auth: { username: user.name, password: user.password } };
+        const response = await sendRequest('get', url, {}, false, auth);
+        if (response.status === 'success') {
             persistUser(user);
             this.context.commit('setSuccess', user);
-        } catch (err) {
-            console.error(err);
+        } else {
             this.context.commit('setError');
             forgetUser();
         }

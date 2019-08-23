@@ -35,12 +35,6 @@ export default class ArticlesForm extends Vue {
     }
 
     newArticle() {
-        this.$toast.open({
-            message: 'Adding new article...',
-            position: 'is-top-right',
-            type: 'is-success'
-        });
-
         const pages = {
             showndesc: '',
             startPrint: 1,

@@ -34,6 +34,9 @@ import axios from 'axios';
 import FileBrowser from '@/staging/FileBrowser.vue';
 import { FileRange } from '@/job/ingest-journal/JournalImportParameters';
 import ProcessedPDF, { byFilePath } from '@/pdf-processor';
+import { getStagingFiles } from '@/util/WorkbenchClient';
+import { RequestResult } from '@/util/HTTPClient';
+import { showError } from '@/util/Notifier.ts';
 
 @Component({
     components: {
@@ -84,23 +87,13 @@ export default class JournalFilesForm extends Vue {
         this.fetchFiles();
     }
 
-    fetchFiles() { // TODO refactor 'then'
-        axios.get(
-            `${this.backendUri}/staging`
-        ).then((response) => {
-            this.stagedFiles = response.data;
-        }).catch((error) => {
-            if (error.response === undefined) {
-                console.log('Application Error', error);
-            } else {
-                console.log('Invalid Server Response:', error.response);
-            }
-            this.$toast.open({
-                message: 'No filesToShow fetched from Backend',
-                type: 'is-danger',
-                queue: false
-            });
-        });
+    async fetchFiles() {
+        const response: RequestResult = await getStagingFiles();
+        if (response.status === 'success') {
+            this.stagedFiles = response.payload;
+        } else {
+            showError(response.payload, this);
+        }
     }
 
     updateInputs(name: string) {

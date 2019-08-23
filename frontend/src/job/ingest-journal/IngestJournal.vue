@@ -40,7 +40,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import axios from 'axios';
+import { startJob } from '@/util/WorkbenchClient';
+import { RequestResult } from '@/util/HTTPClient';
 
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
 import JournalFilesForm from './forms/JournalFilesForm.vue';
@@ -50,6 +51,7 @@ import OtherJobSettingsForm from './forms/OtherJobSettingsForm.vue';
 import {
     JournalImportParameters, FileRange, JournalMetadata, OJSMetadata, Part, NLPParams
 } from './JournalImportParameters';
+import { showError, showSuccess } from '@/util/Notifier.ts';
 
 @Component({
     components: {
@@ -83,17 +85,13 @@ export default class IngestJournal extends Vue {
         this.activeStep += 1;
     }
 
-    startJob() {
-        axios.post(
-            `${this.backendUri}/job/ingest_journal`,
-            this.jobParameters
-        )
-            .then((response) => {
-                console.log(response);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+    async startJob() {
+        const response = await startJob('ingest_journal', this.jobParameters);
+        if (response.status === 'success') {
+            showSuccess('Job started successfully', this);
+        } else {
+            showError(response.payload, this);
+        }
     }
 }
 
