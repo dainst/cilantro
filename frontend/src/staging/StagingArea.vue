@@ -28,8 +28,6 @@ import { showSuccess, showError } from '@/util/Notifier.ts';
     }
 })
 export default class StagingArea extends Vue {
-    backendUri = this.$store.state.AuthenticationStore.backendUri;
-
     stagedFiles: File[] = []
     filesToUpload: File[] = []
 

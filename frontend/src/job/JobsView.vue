@@ -49,8 +49,6 @@ import { showError } from '@/util/Notifier.ts';
 
 @Component
 export default class JobsView extends Vue {
-    backendUri = this.$store.state.AuthenticationStore.backendUri;
-
     jobList: Job[] = [];
 
     mounted() {

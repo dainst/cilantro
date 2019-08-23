@@ -63,8 +63,6 @@ import { showError, showSuccess } from '@/util/Notifier.ts';
     }
 })
 export default class IngestJournal extends Vue {
-    backendUri = this.$store.state.AuthenticationStore.backendUri;
-
     jobParameters: JournalImportParameters = initJobParams();
     journalFiles = this.jobParameters.files;
     journalMetadata: JournalMetadata = this.jobParameters.metadata;
