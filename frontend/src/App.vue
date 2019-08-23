@@ -8,7 +8,8 @@
             <router-link to="/">Dashboard</router-link>|
             <router-link to="/jobs">Jobs</router-link>|
             <router-link to="/staging">Staging Area</router-link>|
-            <router-link to="/ingest-journal">Job Config</router-link>
+            <router-link to="/ingest-journal">Journal Job</router-link>|
+            <router-link to="/ingest-book">Book Job</router-link>
         </div>
         <router-view id="main_content"/>
         <footer class="footer">

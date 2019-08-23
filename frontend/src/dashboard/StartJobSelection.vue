@@ -13,6 +13,9 @@
                 <div class="tile is-child box">
                     <p class="title">Book import</p>
                     <p>Job Type Description</p>
+                    <b-button @click="startBookImport">
+                        Start
+                    </b-button>
                 </div>
                 <div class="tile is-child box">
                     <p class="title">NLP Processing</p>
@@ -32,6 +35,10 @@ export default class StartJobSelection extends Vue {
     startJournalImport() {
         showInfo('Journal Import Job Started', this);
         this.$router.push({ path: 'JournalImport' });
+    }
+    startBookImport() {
+        showInfo('Book Import Job Started', this);
+        this.$router.push({ path: 'BookImport' });
     }
 }
 </script>
