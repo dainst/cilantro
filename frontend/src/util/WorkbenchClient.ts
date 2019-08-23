@@ -14,6 +14,10 @@ export async function getJobList(): Promise<RequestResult> {
     return sendRequest('get', `${backendUri}/job/jobs`, {}, false);
 }
 
+export async function getJobDetails(jobID: string): Promise<RequestResult> {
+    return sendRequest('get', `${backendUri}/job/${jobID}`, {}, false);
+}
+
 export async function getStagingFiles(): Promise<RequestResult> {
     return sendRequest('get', `${backendUri}/staging`, {}, false);
 }

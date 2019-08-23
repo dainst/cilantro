@@ -40,6 +40,9 @@
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 import { Job } from './Job';
+import { getJobDetails } from '@/util/WorkbenchClient';
+import { RequestResult } from '@/util/HTTPClient';
+import { showError } from '@/util/Notifier.ts';
 
 @Component
 export default class JobDetails extends Vue {
@@ -59,11 +62,11 @@ export default class JobDetails extends Vue {
     }
 
     async getJobDetails() {
-        try {
-            const response = await axios.get(`${this.backendUri}/job/${this.jobID}`);
-            this.job = response.data;
-        } catch (error) {
-            console.error('Invalid Server Response:', error.response);
+        const response: RequestResult = await getJobDetails(this.jobID);
+        if (response.status === 'success') {
+            this.job = response.payload;
+        } else {
+            showError(response.payload, this);
         }
     }
 }
