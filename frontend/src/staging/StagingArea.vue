@@ -65,8 +65,9 @@ export default class StagingArea extends Vue {
     }
 
     async uploadFile(file: File) {
-        const ext = file.name.split('.').pop();
-        if (ext !== 'csv' && ext !== 'pdf') {
+        const allowedExtensions: string[] = process.env.VUE_APP_ALLOWED_FILE_EXTENSIONS.split(', ');
+        const ext = file.name.split('.').pop() as string;
+        if (!allowedExtensions.includes(ext)) {
             showError(`Upload of ${file.name} failed, invalid file extension ${ext}`, this);
             this.uploadFailedFiles.push(file);
             this.checkUploadStatus();
