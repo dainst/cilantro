@@ -17,7 +17,7 @@
         </div>
         <div v-if="activeStep === 1">
             <b-button @click="saveAndContinue">Continue</b-button>
-            <BookMetadataForm v-bind:objectId="objectId"
+            <BookMetadataForm v-bind:objectID.sync="objectID"
                               v-bind:metadata="bookMetadata" />
         </div>
         <div v-if="activeStep === 2">
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { startJob } from '@/util/WorkbenchClient';
 import { RequestResult } from '@/util/HTTPClient';
 import BookFilesForm from './forms/BookFilesForm.vue';
@@ -51,7 +51,7 @@ import { showError, showSuccess } from '@/util/Notifier.ts';
 export default class IngestBook extends Vue {
     jobParameters: BookImportParameters = initBookJobParams();
 
-    objectId: string = this.jobParameters.object_id;
+    objectID: string = this.jobParameters.object_id;
     bookFiles = this.jobParameters.files;
     bookMetadata: BookMetadata = this.jobParameters.metadata;
     bookParts: BookPart[] = this.jobParameters.parts;
@@ -73,6 +73,11 @@ export default class IngestBook extends Vue {
             showError(response.payload, this);
         }
     }
+
+    @Watch('objectID')
+    onobjectIDChanged() {
+        this.jobParameters.object_id = this.objectID;
+    }
 }
 
 function initBookJobParams(): BookImportParameters {
@@ -87,7 +92,7 @@ function initBookJobParams(): BookImportParameters {
     } as BookMetadata;
 
     const params = {
-        object_id: 'test ID',
+        object_id: '',
         metadata: bookMetadata,
         files: [],
         parts: []

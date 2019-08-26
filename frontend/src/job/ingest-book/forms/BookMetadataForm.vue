@@ -3,7 +3,8 @@
         <div class="columns">
             <div class="column">
                 <b-field label="objectID" :label-position="labelPosition">
-                    <b-input v-model="objectID"></b-input>
+                    <b-input v-model="localObjectID" @blur="saveObjectID"></b-input>
+                    <!-- <b-input v-model="localObjectID"></b-input> -->
                 </b-field>
                 <b-field label="title" :label-position="labelPosition">
                     <b-input v-model="metadata.title"></b-input>
@@ -66,6 +67,8 @@ export default class BookMetadataForm extends Vue {
     @Prop() private objectID!: string
     @Prop() private metadata!: BookMetadata
 
+    localObjectID: string = this.objectID;
+
     labelPosition: string = 'on-border';
 
     addAuthor() {
@@ -78,6 +81,10 @@ export default class BookMetadataForm extends Vue {
 
     addIdentifier() {
         this.metadata.identifiers.push('');
+    }
+
+    saveObjectID() {
+        this.$emit('update:objectID', this.localObjectID);
     }
 }
 </script>
