@@ -1,6 +1,7 @@
 <template>
     <section>
-        <b-table :data="jobList" detailed detail-key="job_id" default-sort="created">
+        <b-table :data="jobList" detailed detail-key="job_id"
+                 default-sort="created" :default-sort-direction="'desc'">
             <template slot-scope="props">
                 <b-table-column field="job_id" label="ID" sortable>
                     {{ props.row.job_id }}

@@ -52,7 +52,7 @@ export default class JobList extends Vue {
     async updateJobList() {
         const response: RequestResult = await getJobList();
         if (response.status === 'success') {
-            this.jobList = response.payload;
+            this.jobList = response.payload.reverse();
         } else {
             showError(response.payload, this);
         }
