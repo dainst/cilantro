@@ -65,7 +65,8 @@
             }
         },
         "object_id": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
         },
         "parts": {
             "type": "array",
