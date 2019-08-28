@@ -24,6 +24,8 @@ jsonschema = "*"
 mysql-connector = "*"
 Sphinx = "*"
 sphinxcontrib-httpdomain = "*"
+# workaround for https://github.com/pypa/pipenv/issues/3865
+docutils = "==0.15"
 
 [dev-packages]
 
