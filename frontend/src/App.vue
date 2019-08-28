@@ -12,7 +12,12 @@
         <footer class="footer">
             <div class="content has-text-centered">
                 <p>
-                  This is the Footer....
+                  v{{version}}
+                  <small>(
+                      <b-tooltip :label="githash">
+                        {{githash.substr(0, 7)}}
+                      </b-tooltip>
+                  )</small>
                 </p>
             </div>
         </footer>
@@ -25,6 +30,10 @@ import { AuthenticationStatus } from './store';
 
 @Component
 export default class App extends Vue {
+
+    version: string = process.env.VUE_APP_VERSION;
+    githash: string = process.env.VUE_APP_GITHASH;
+
     mounted() {
         this.$store.watch(
             (state, getters) => getters.authStatus,
