@@ -1,5 +1,8 @@
 FROM node:12.6.0-alpine as builder
 
+RUN apk update && apk upgrade && \
+    apk add --no-cache git
+
 COPY frontend .
 RUN npm install
 RUN npm run build
