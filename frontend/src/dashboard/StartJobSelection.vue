@@ -6,16 +6,16 @@
                 <div class="tile is-child box">
                     <p class="title">Journal import</p>
                     <p>Job Type Description</p>
-                    <b-button @click="startJournalImport">
+                    <router-link to="ingest-journal" tag="b-button">
                         Start
-                    </b-button>
+                    </router-link>
                 </div>
                 <div class="tile is-child box">
                     <p class="title">Book import</p>
                     <p>Job Type Description</p>
-                    <b-button @click="startBookImport">
+                    <router-link to="ingest-book" tag="b-button">
                         Start
-                    </b-button>
+                    </router-link>
                 </div>
                 <div class="tile is-child box">
                     <p class="title">NLP Processing</p>
@@ -28,17 +28,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { showInfo } from '@/util/Notifier.ts';
 
 @Component
 export default class StartJobSelection extends Vue {
-    startJournalImport() {
-        showInfo('Journal Import Job Started', this);
-        this.$router.push({ path: 'JournalImport' });
-    }
-    startBookImport() {
-        showInfo('Book Import Job Started', this);
-        this.$router.push({ path: 'BookImport' });
-    }
+    
 }
 </script>
