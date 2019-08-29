@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import MainMenu from './MainMenu.vue';
-import JobList from './JobList.vue';
+import JobList from '@/job/JobList.vue';
 import StartJobSelection from './StartJobSelection.vue';
 
 @Component({

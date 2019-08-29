@@ -31,7 +31,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { getJobList } from '@/util/WorkbenchClient';
 import { RequestResult } from '@/util/HTTPClient';
-import { Job } from '@/job/Job';
+import { Job } from './Job';
 import { showError } from '@/util/Notifier.ts';
 
 @Component
