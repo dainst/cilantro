@@ -64,8 +64,7 @@ export default class JobDetails extends Vue {
         try {
             this.job = await getJobDetails(this.jobID);
         } catch (e) {
-            showError('Failed to retrieve job details from server!', this);
-            console.error(e);
+            showError('Failed to retrieve job details from server!', this, e);
         }
     }
 }

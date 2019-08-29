@@ -50,8 +50,7 @@ export default class StagingArea extends Vue {
         try {
             this.stagedFiles = await getStagingFiles();
         } catch (e) {
-            showError("Failed to retrieve file list from server!", this);
-            console.error(e);
+            showError("Failed to retrieve file list from server!", this, e);
         }
     }
 
@@ -81,8 +80,7 @@ export default class StagingArea extends Vue {
             showSuccess(`Upload of ${file.name} successful!`, this);
             this.uploadSuccessFiles.push(file);
         } catch (e) {
-            showError(`Upload of ${file.name} failed!`, this);
-            console.error(e);
+            showError(`Upload of ${file.name} failed!`, this, e);
             this.uploadFailedFiles.push(file);
         }
         this.checkUploadStatus();

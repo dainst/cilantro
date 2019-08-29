@@ -68,8 +68,7 @@ export default class IngestBook extends Vue {
         try {
             await startJob('ingest_book', this.jobParameters);
         } catch (e) {
-            showError('Failed to start job!', this);
-            console.error(e);
+            showError('Failed to start job!', this, e);
         }
     }
 

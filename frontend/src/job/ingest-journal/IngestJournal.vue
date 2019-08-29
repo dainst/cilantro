@@ -86,8 +86,7 @@ export default class IngestJournal extends Vue {
         try {
             await startJob('ingest_journal', this.jobParameters);
         } catch (e) {
-            showError('Failed to start job', this);
-            console.error(e);
+            showError('Failed to start job', this, e);
         }
     }
 }
