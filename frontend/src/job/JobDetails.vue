@@ -41,7 +41,6 @@ import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 import { Job } from './Job';
 import { getJobDetails } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component
@@ -62,11 +61,11 @@ export default class JobDetails extends Vue {
     }
 
     async getJobDetails() {
-        const response: RequestResult = await getJobDetails(this.jobID);
-        if (response.status === 'success') {
-            this.job = response.payload;
-        } else {
-            showError(response.payload, this);
+        try {
+            this.job = await getJobDetails(this.jobID);
+        } catch (e) {
+            showError('Failed to retrieve job details from server!', this);
+            console.error(e);
         }
     }
 }

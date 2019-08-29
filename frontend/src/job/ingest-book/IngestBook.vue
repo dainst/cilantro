@@ -33,7 +33,6 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { startJob } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
 import BookFilesForm from './forms/BookFilesForm.vue';
 import BookMetadataForm from './forms/BookMetadataForm.vue';
 import BookPartsForm from './forms/BookPartsForm.vue';
@@ -66,11 +65,11 @@ export default class IngestBook extends Vue {
     }
 
     async startJob() {
-        const response = await startJob('ingest_book', this.jobParameters);
-        if (response.status === 'success') {
-            showSuccess('Job started successfully', this);
-        } else {
-            showError(response.payload, this);
+        try {
+            await startJob('ingest_book', this.jobParameters);
+        } catch (e) {
+            showError('Failed to start job!', this);
+            console.error(e);
         }
     }
 

@@ -30,7 +30,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { getJobList } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
 import { Job } from './Job';
 import { showError } from '@/util/Notifier.ts';
 
@@ -50,12 +49,13 @@ export default class JobList extends Vue {
     }
 
     async updateJobList() {
-        const response: RequestResult = await getJobList();
-        if (response.status === 'success') {
-            this.jobList = response.payload.reverse();
-        } else {
-            showError(response.payload, this);
+        try {
+            this.jobList = await getJobList();
+        } catch (e) {
+            showError('Failed to load job list from server', this);
+            console.error(e);
         }
+        this.jobList.reverse();
     }
 
     mounted() {

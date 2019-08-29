@@ -24,7 +24,6 @@ import {
 import { FileParam } from '../BookImportParameters';
 import FileBrowser from '@/staging/FileBrowser.vue';
 import { getStagingFiles } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component({
@@ -66,11 +65,11 @@ export default class BookFilesForm extends Vue {
     }
 
     async fetchFiles() {
-        const response: RequestResult = await getStagingFiles();
-        if (response.status === 'success') {
-            this.stagedFiles = response.payload;
-        } else {
-            showError(response.payload, this);
+        try {
+            this.stagedFiles = await getStagingFiles();
+        } catch (e) {
+            showError("Failed to retrieve file list from server!", this);
+            console.error(e);
         }
     }
 }

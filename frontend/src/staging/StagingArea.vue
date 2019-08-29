@@ -18,7 +18,6 @@ import axios from 'axios';
 import UploadFiles from './UploadFiles.vue';
 import FileBrowser from './FileBrowser.vue';
 import { getStagingFiles, uploadFileToStaging } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
 import { showSuccess, showError } from '@/util/Notifier.ts';
 
 @Component({
@@ -48,11 +47,11 @@ export default class StagingArea extends Vue {
     }
 
     async fetchFiles() {
-        const response: RequestResult = await getStagingFiles();
-        if (response.status === 'success') {
-            this.stagedFiles = response.payload;
-        } else {
-            showError(response.payload, this);
+        try {
+            this.stagedFiles = await getStagingFiles();
+        } catch (e) {
+            showError("Failed to retrieve file list from server!", this);
+            console.error(e);
         }
     }
 
@@ -77,15 +76,16 @@ export default class StagingArea extends Vue {
         const formData = new FormData();
         formData.append('file', file);
 
-        if (await uploadFileToStaging(formData)) {
+        try {
+            await uploadFileToStaging(formData);
             showSuccess(`Upload of ${file.name} successful!`, this);
             this.uploadSuccessFiles.push(file);
-            this.checkUploadStatus();
-        } else {
+        } catch (e) {
             showError(`Upload of ${file.name} failed!`, this);
+            console.error(e);
             this.uploadFailedFiles.push(file);
-            this.checkUploadStatus();
         }
+        this.checkUploadStatus();
     }
 
     checkUploadStatus() {

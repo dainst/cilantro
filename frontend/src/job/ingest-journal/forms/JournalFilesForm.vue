@@ -35,7 +35,6 @@ import FileBrowser from '@/staging/FileBrowser.vue';
 import { FileRange } from '@/job/ingest-journal/JournalImportParameters';
 import ProcessedPDF, { byFilePath } from '@/pdf-processor';
 import { getStagingFiles } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component({
@@ -88,11 +87,11 @@ export default class JournalFilesForm extends Vue {
     }
 
     async fetchFiles() {
-        const response: RequestResult = await getStagingFiles();
-        if (response.status === 'success') {
-            this.stagedFiles = response.payload;
-        } else {
-            showError(response.payload, this);
+        try {
+            this.stagedFiles = await getStagingFiles();
+        } catch (e) {
+            showError("Failed to retrieve file list from server!", this);
+            console.error(e);
         }
     }
 

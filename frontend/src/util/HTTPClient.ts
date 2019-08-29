@@ -36,17 +36,14 @@ export async function sendRequest(
         } as RequestResult;
     } catch (error) {
         let errorMessage: string = '';
-        if (error.response.data.error) {
-            errorMessage = `<b>${error.response.statusText}</b><br><br>${error.response.data.error.message}`;
+        if (error.response && error.response.data.error) {
+            errorMessage = `${error.response.statusText}: ${error.response.data.error.message}`;
         } else if (error.response) {
-            errorMessage = `<b>${error.response.statusText}</b><br><br>${error.response.data}`;
+            errorMessage = `${error.response.statusText}: ${error.response.data}`;
         } else if (error.request) {
             errorMessage = 'No Response from Server';
         }
-        return {
-            status: 'error',
-            payload: errorMessage
-        } as RequestResult;
+        throw errorMessage;
     }
 }
 

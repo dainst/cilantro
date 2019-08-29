@@ -41,7 +41,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { startJob } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
 
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
 import JournalFilesForm from './forms/JournalFilesForm.vue';
@@ -84,11 +83,11 @@ export default class IngestJournal extends Vue {
     }
 
     async startJob() {
-        const response = await startJob('ingest_journal', this.jobParameters);
-        if (response.status === 'success') {
-            showSuccess('Job started successfully', this);
-        } else {
-            showError(response.payload, this);
+        try {
+            await startJob('ingest_journal', this.jobParameters);
+        } catch (e) {
+            showError('Failed to start job', this);
+            console.error(e);
         }
     }
 }
