@@ -37,33 +37,6 @@ export default class App extends Vue {
     version: string = process.env.VUE_APP_VERSION;
     githash: string = process.env.VUE_APP_GITHASH;
 
-    mounted() {
-        this.$store.watch(
-            (state, getters) => getters.authStatus,
-            (newValue : AuthenticationStatus, oldValue : AuthenticationStatus) => {
-                if (newValue === AuthenticationStatus.In) {
-                    this.$toast.open({
-                        message: 'Login successful.',
-                        type: 'is-success'
-                    });
-                } else if (newValue === AuthenticationStatus.Out) {
-                    this.$toast.open({
-                        message: 'Logout successful.'
-                    });
-                } else if (newValue === AuthenticationStatus.Error) {
-                    this.$toast.open({
-                        message: 'Login failed!',
-                        type: 'is-danger'
-                    });
-                } else if (newValue === AuthenticationStatus.Prompt) {
-                    this.$toast.open({
-                        message: 'Please login.',
-                        type: 'is-warning'
-                    });
-                }
-            }
-        );
-    }
 }
 </script>
 
