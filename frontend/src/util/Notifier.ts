@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { SnackbarProgrammatic as Snackbar } from 'buefy'
 
 export function showError(msg: string, consoleMessage?: string) {
