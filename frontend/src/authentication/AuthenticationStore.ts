@@ -6,7 +6,7 @@ import AuthenticationStatus from './AuthenticationStatus';
 import store from '@/store';
 import router from '@/router';
 import User from './User';
-import { sendRequest } from '@/util/HTTPClient';
+import { checkLogin } from '@/util/WorkbenchClient';
 
 @Module({
     dynamic: true,
@@ -55,10 +55,8 @@ export default class AuthenticationStore extends VuexModule {
     async login(user: User) {
         this.context.commit('setPending');
 
-        const url: string = `${this.backendUri}/user/${user.name}`;
-        const auth = { auth: { username: user.name, password: user.password } };
         try {
-            sendRequest('get', url, {}, false, auth);
+            checkLogin(user);
             persistUser(user);
             this.context.commit('setSuccess', user);
         } catch (e) {

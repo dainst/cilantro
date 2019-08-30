@@ -3,6 +3,7 @@ import { JournalImportParameters } from '@/job/ingest-journal/JournalImportParam
 import { BookImportParameters } from '@/job/ingest-book/BookImportParameters';
 import { sendRequest } from './HTTPClient';
 import { Job } from '@/job/Job';
+import User from '@/authentication/User';
 
 const backendUri = process.env.VUE_APP_BACKEND_URI;
 
@@ -28,4 +29,10 @@ export async function getStagingFiles(): Promise<File[]> {
 export async function uploadFileToStaging(params: FormData): Promise<boolean> {
     const additionalHeaders = { headers: { 'Content-Type': 'multipart/form-data' } };
     return sendRequest('post', `${backendUri}/staging`, params, false, additionalHeaders);
+}
+
+export async function checkLogin(user: User): Promise<boolean> {
+    const url: string = `${backendUri}/user/${user.name}`;
+    const auth = { auth: { username: user.name, password: user.password } };
+    return sendRequest('get', url, {}, false, auth);
 }
