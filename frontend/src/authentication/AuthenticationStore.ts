@@ -7,7 +7,6 @@ import store from '@/store';
 import router from '@/router';
 import User from './User';
 import { sendRequest } from '@/util/HTTPClient';
-import { RequestResult } from '@/util/HTTPClient';
 
 @Module({
     dynamic: true,
@@ -58,12 +57,13 @@ export default class AuthenticationStore extends VuexModule {
 
         const url: string = `${this.backendUri}/user/${user.name}`;
         const auth = { auth: { username: user.name, password: user.password } };
-        const response = await sendRequest('get', url, {}, false, auth);
-        if (response.status === 'success') {
+        try {
+            sendRequest('get', url, {}, false, auth);
             persistUser(user);
             this.context.commit('setSuccess', user);
-        } else {
+        } catch (e) {
             this.context.commit('setError');
+            console.error(e);
             forgetUser();
         }
     }

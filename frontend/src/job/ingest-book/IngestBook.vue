@@ -1,14 +1,10 @@
 <template>
     <div class="container">
         <b-steps v-model="activeStep" :animated="isAnimated" :has-navigation="hasNavigation">
-            <b-step-item label="Book Files" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Book Metadata" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Parts" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Other Settings" :clickable="isStepsClickable">
-            </b-step-item>
+            <b-step-item label="Book Files" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Book Metadata" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Parts" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Other Settings" :clickable="isStepsClickable"></b-step-item>
         </b-steps>
 
         <div v-if="activeStep === 0">
@@ -17,8 +13,7 @@
         </div>
         <div v-if="activeStep === 1">
             <b-button @click="saveAndContinue">Continue</b-button>
-            <BookMetadataForm v-bind:objectID.sync="objectID"
-                              v-bind:metadata="bookMetadata" />
+            <BookMetadataForm v-bind:objectID.sync="objectID" v-bind:metadata="bookMetadata" />
         </div>
         <div v-if="activeStep === 2">
             <b-button @click="saveAndContinue">Continue</b-button>
@@ -68,7 +63,7 @@ export default class IngestBook extends Vue {
         try {
             await startJob('ingest_book', this.jobParameters);
         } catch (e) {
-            showError('Failed to start job!', this, e);
+            showError(e, this);
         }
     }
 

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Vue from 'vue';
 
 /* eslint-disable import/prefer-default-export */
 export async function sendRequest(
@@ -8,7 +7,7 @@ export async function sendRequest(
     params: object,
     disableAuthHeader: boolean,
     otherSettings: object = {}
-): Promise<RequestResult> {
+): Promise<any> {
     const axiosConfig: any = {
         method: requestType,
         url,
@@ -30,10 +29,7 @@ export async function sendRequest(
 
     try {
         const response = await axios(axiosConfig);
-        return {
-            status: 'success',
-            payload: response.data
-        } as RequestResult;
+        return response.data;
     } catch (error) {
         let errorMessage: string = '';
         if (error.response && error.response.data.error) {
@@ -45,9 +41,4 @@ export async function sendRequest(
         }
         throw errorMessage;
     }
-}
-
-export interface RequestResult {
-    status: string;
-    payload: any;
 }

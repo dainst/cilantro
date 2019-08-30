@@ -1,16 +1,11 @@
 <template>
     <div class="container">
         <b-steps v-model="activeStep" :animated="isAnimated" :has-navigation="hasNavigation">
-            <b-step-item label="Journal Files" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Journal Metadata" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Article Files and Metadata" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Publishing" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Other Settings" :clickable="isStepsClickable">
-            </b-step-item>
+            <b-step-item label="Journal Files" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Journal Metadata" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Article Files and Metadata" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Publishing" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Other Settings" :clickable="isStepsClickable"></b-step-item>
         </b-steps>
 
         <div v-if="activeStep === 0">
@@ -25,7 +20,8 @@
             <b-button @click="saveAndContinue">Continue</b-button>
             <ArticlesForm
                 v-bind:initialData="articleFilesAndRanges"
-                v-bind:availableFiles="journalFiles"/>
+                v-bind:availableFiles="journalFiles"
+            />
         </div>
         <div v-if="activeStep === 3">
             <b-button @click="saveAndContinue">Continue</b-button>
@@ -86,7 +82,7 @@ export default class IngestJournal extends Vue {
         try {
             await startJob('ingest_journal', this.jobParameters);
         } catch (e) {
-            showError('Failed to start job', this, e);
+            showError(e, this);
         }
     }
 }
