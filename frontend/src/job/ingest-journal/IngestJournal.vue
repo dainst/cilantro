@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { startJob } from '@/util/WorkbenchClient';
+import { startJob } from '../JobClient';
 
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
 import JournalFilesForm from './forms/JournalFilesForm.vue';

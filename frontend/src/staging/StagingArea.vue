@@ -17,7 +17,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 import UploadFiles from './UploadFiles.vue';
 import FileBrowser from './FileBrowser.vue';
-import { getStagingFiles, uploadFileToStaging } from '@/util/WorkbenchClient';
+import { getStagingFiles, uploadFileToStaging } from './StagingClient';
 import { showSuccess, showError } from '@/util/Notifier.ts';
 
 @Component({
@@ -50,7 +50,7 @@ export default class StagingArea extends Vue {
         try {
             this.stagedFiles = await getStagingFiles();
         } catch (e) {
-            showError("Failed to retrieve file list from server!", this, e);
+            showError('Failed to retrieve file list from server!', this, e);
         }
     }
 

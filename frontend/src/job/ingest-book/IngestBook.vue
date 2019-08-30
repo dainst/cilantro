@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import { startJob } from '@/util/WorkbenchClient';
+import { startJob } from '../JobClient';
 import BookFilesForm from './forms/BookFilesForm.vue';
 import BookMetadataForm from './forms/BookMetadataForm.vue';
 import BookPartsForm from './forms/BookPartsForm.vue';

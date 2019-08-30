@@ -2,8 +2,7 @@
     <div>
         <div class="is-size-4">Staged files:</div>
         <div style="padding-top:10px; padding-bottom:10px">
-            <FileBrowser :files-to-show="stagedFiles"
-            v-bind:initialSelected.sync="selectedFile"/>
+            <FileBrowser :files-to-show="stagedFiles" v-bind:initialSelected.sync="selectedFile" />
         </div>
         <div v-if="isFileSelected">
             {{ selectedFile.name }}
@@ -11,7 +10,7 @@
         </div>
         <div v-if="filesParam.length > 0">
             <span class="is-size-4">Files to be processed:</span>
-            <b-table :data="filesParam" :columns="columns"  />
+            <b-table :data="filesParam" :columns="columns" />
         </div>
         <b-loading :is-full-page="false" :active.sync="isLoading"></b-loading>
     </div>
@@ -23,7 +22,7 @@ import {
 } from 'vue-property-decorator';
 import { FileParam } from '../BookImportParameters';
 import FileBrowser from '@/staging/FileBrowser.vue';
-import { getStagingFiles } from '@/util/WorkbenchClient';
+import { getStagingFiles } from '@/staging/StagingClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component({
@@ -68,7 +67,7 @@ export default class BookFilesForm extends Vue {
         try {
             this.stagedFiles = await getStagingFiles();
         } catch (e) {
-            showError("Failed to retrieve file list from server!", this, e);
+            showError('Failed to retrieve file list from server!', this, e);
         }
     }
 }

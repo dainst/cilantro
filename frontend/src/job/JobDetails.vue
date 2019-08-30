@@ -25,12 +25,8 @@
             </b-field>
 
             <b-collapse :open="false" aria-id="job-params">
-                <button class="button" slot="trigger" aria-controls="job-params">
-                    Show Job Parameters
-                </button>
-                <div>
-                    {{ job.params }}
-                </div>
+                <button class="button" slot="trigger" aria-controls="job-params">Show Job Parameters</button>
+                <div>{{ job.params }}</div>
             </b-collapse>
         </div>
     </div>
@@ -40,7 +36,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 import { Job } from './Job';
-import { getJobDetails } from '@/util/WorkbenchClient';
+import { getJobDetails } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component
@@ -71,8 +67,7 @@ export default class JobDetails extends Vue {
 </script>
 
 <style lang="scss">
-    .container {
-        text-align: left;
-    }
-
+.container {
+    text-align: left;
+}
 </style>

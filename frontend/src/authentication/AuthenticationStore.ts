@@ -6,7 +6,7 @@ import AuthenticationStatus from './AuthenticationStatus';
 import store from '@/store';
 import router from '@/router';
 import User from './User';
-import { checkLogin } from '@/util/WorkbenchClient';
+import { checkLogin } from './AuthenticationClient';
 
 @Module({
     dynamic: true,

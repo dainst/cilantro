@@ -14,11 +14,11 @@
                 </div>
                 <div class="message-body has-text-left">
                     <div>
-                        <span class="has-text-weight-semibold">Name: </span>
+                        <span class="has-text-weight-semibold">Name:</span>
                         {{job['name']}}
                     </div>
                     <div>
-                        <span class="has-text-weight-semibold">Created: </span>
+                        <span class="has-text-weight-semibold">Created:</span>
                         {{job['created']}}
                     </div>
                 </div>
@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { getJobList } from '@/util/WorkbenchClient';
+import { getJobList } from './JobClient';
 import { Job } from './Job';
 import { showError } from '@/util/Notifier.ts';
 
@@ -64,15 +64,14 @@ export default class JobList extends Vue {
 </script>
 
 <style lang="scss">
-    .job-shortlist {
-        padding: 15px;
-        border: solid;
-        border-width: 1px;
-    }
+.job-shortlist {
+    padding: 15px;
+    border: solid;
+    border-width: 1px;
+}
 
-    .message .message-body {
-        background-color: lightgray;
-        margin-bottom: 10px;
-    }
-
+.message .message-body {
+    background-color: lightgray;
+    margin-bottom: 10px;
+}
 </style>
