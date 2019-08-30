@@ -2,8 +2,7 @@
     <div>
         <div class="is-size-4">Staged files:</div>
         <div style="padding-top:10px; padding-bottom:10px">
-            <FileBrowser :files-to-show="stagedFiles"
-            v-bind:initialSelected.sync="selectedFile"/>
+            <FileBrowser :files-to-show="stagedFiles" v-bind:initialSelected.sync="selectedFile" />
         </div>
         <div v-if="isFileSelected && (selectedFile.name in this.processedPDFs)">
             <div class="is-size-4">Which pages do you want to use of the selected file?</div>
@@ -20,7 +19,7 @@
         </div>
         <div v-if="filesParam.length > 0">
             <span class="is-size-4">Files to be processed:</span>
-            <b-table :data="filesParam" :columns="columns"  />
+            <b-table :data="filesParam" :columns="columns" />
         </div>
         <b-loading :is-full-page="false" :active.sync="isLoading"></b-loading>
     </div>
@@ -34,8 +33,7 @@ import axios from 'axios';
 import FileBrowser from '@/staging/FileBrowser.vue';
 import { FileRange } from '@/job/ingest-journal/JournalImportParameters';
 import ProcessedPDF, { byFilePath } from '@/pdf-processor';
-import { getStagingFiles } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
+import { getStagingFiles } from '@/staging/StagingClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component({
@@ -50,7 +48,7 @@ export default class JournalFilesForm extends Vue {
     labelPosition: String = 'on-border';
     stagedFiles: File[] = [];
     isLoading: boolean = false;
-    processedPDFs: { [ name: string ] : ProcessedPDF } = {};
+    processedPDFs: { [name: string]: ProcessedPDF } = {};
     selectedFile: FileObject = {};
     pageStart: number = 1;
     pageEnd: number = -1;
@@ -88,11 +86,10 @@ export default class JournalFilesForm extends Vue {
     }
 
     async fetchFiles() {
-        const response: RequestResult = await getStagingFiles();
-        if (response.status === 'success') {
-            this.stagedFiles = response.payload;
-        } else {
-            showError(response.payload, this);
+        try {
+            this.stagedFiles = await getStagingFiles();
+        } catch (e) {
+            showError('Failed to retrieve file list from server!', e);
         }
     }
 

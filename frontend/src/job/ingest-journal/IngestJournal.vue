@@ -1,16 +1,11 @@
 <template>
     <div class="container">
         <b-steps v-model="activeStep" :animated="isAnimated" :has-navigation="hasNavigation">
-            <b-step-item label="Journal Files" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Journal Metadata" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Article Files and Metadata" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Publishing" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Other Settings" :clickable="isStepsClickable">
-            </b-step-item>
+            <b-step-item label="Journal Files" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Journal Metadata" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Article Files and Metadata" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Publishing" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Other Settings" :clickable="isStepsClickable"></b-step-item>
         </b-steps>
 
         <div v-if="activeStep === 0">
@@ -25,7 +20,8 @@
             <b-button @click="saveAndContinue">Continue</b-button>
             <ArticlesForm
                 v-bind:initialData="articleFilesAndRanges"
-                v-bind:availableFiles="journalFiles"/>
+                v-bind:availableFiles="journalFiles"
+            />
         </div>
         <div v-if="activeStep === 3">
             <b-button @click="saveAndContinue">Continue</b-button>
@@ -40,8 +36,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { startJob } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
+import { startJob } from '../JobClient';
 
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
 import JournalFilesForm from './forms/JournalFilesForm.vue';
@@ -84,11 +79,10 @@ export default class IngestJournal extends Vue {
     }
 
     async startJob() {
-        const response = await startJob('ingest_journal', this.jobParameters);
-        if (response.status === 'success') {
-            showSuccess('Job started successfully', this);
-        } else {
-            showError(response.payload, this);
+        try {
+            await startJob('ingest_journal', this.jobParameters);
+        } catch (e) {
+            showError(e);
         }
     }
 }

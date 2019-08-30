@@ -3,8 +3,6 @@
         <div class="tile is-ancestor">
             <div class="tile is-4 is-vertical is-parent">
                 <div class="tile is-child">
-                    <MainMenu />
-                    <hr v-if="this.$store.getters.isAuthenticated">
                     <JobList />
                 </div>
             </div>
@@ -19,13 +17,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import MainMenu from './MainMenu.vue';
-import JobList from './JobList.vue';
+import JobList from '@/job/JobList.vue';
 import StartJobSelection from './StartJobSelection.vue';
 
 @Component({
     components: {
-        MainMenu,
         JobList,
         StartJobSelection
     }

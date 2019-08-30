@@ -25,12 +25,8 @@
             </b-field>
 
             <b-collapse :open="false" aria-id="job-params">
-                <button class="button" slot="trigger" aria-controls="job-params">
-                    Show Job Parameters
-                </button>
-                <div>
-                    {{ job.params }}
-                </div>
+                <button class="button" slot="trigger" aria-controls="job-params">Show Job Parameters</button>
+                <div>{{ job.params }}</div>
             </b-collapse>
         </div>
     </div>
@@ -40,8 +36,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import axios from 'axios';
 import { Job } from './Job';
-import { getJobDetails } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
+import { getJobDetails } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component
@@ -62,19 +57,17 @@ export default class JobDetails extends Vue {
     }
 
     async getJobDetails() {
-        const response: RequestResult = await getJobDetails(this.jobID);
-        if (response.status === 'success') {
-            this.job = response.payload;
-        } else {
-            showError(response.payload, this);
+        try {
+            this.job = await getJobDetails(this.jobID);
+        } catch (e) {
+            showError('Failed to retrieve job details from server!', e);
         }
     }
 }
 </script>
 
 <style lang="scss">
-    .container {
-        text-align: left;
-    }
-
+.container {
+    text-align: left;
+}
 </style>

@@ -1,36 +1,30 @@
 <template>
-<div>
-    <div class="columns is-centered">
-        <div class="column is-size-4">Please login</div>
-    </div>
-    <div class="columns is-centered">
-        <form class="column is-narrow login" @submit.prevent="login">
-            <b-field>
-                <b-input
-                    placeholder="Name"
-                    minlength="1"
-                    type="text"
-                    required
-                    v-model="name"
-                ></b-input>
-            </b-field>
-            <b-field>
-                <b-input
-                    placeholder="Password"
-                    minlength="1"
-                    type="password"
-                    required
-                    v-model="password"
-                ></b-input>
-            </b-field>
-            <b-button
-                :disabled="missingInput"
-                type="submit"
-                class="button is-fullwidth"
-                @click="login()"
-            >Login</b-button>
-        </form>
-    </div>
+    <div>
+        <div class="columns is-centered">
+            <div class="column is-size-4">Please login</div>
+        </div>
+        <div class="columns is-centered">
+            <form class="column is-narrow login" @submit.prevent="login">
+                <b-field>
+                    <b-input placeholder="Name" minlength="1" type="text" required v-model="name"></b-input>
+                </b-field>
+                <b-field>
+                    <b-input
+                        placeholder="Password"
+                        minlength="1"
+                        type="password"
+                        required
+                        v-model="password"
+                    ></b-input>
+                </b-field>
+                <b-button
+                    :disabled="missingInput"
+                    native-type="submit"
+                    class="button is-fullwidth"
+                    @click="login()"
+                >Login</b-button>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -61,28 +55,11 @@ export default class Login extends Vue {
         this.authenticationStore.login({ name, password });
     }
 
-    toastTheToast(status: AuthenticationStatus) {
-        switch (status) {
-        case AuthenticationStatus.In:
-            showSuccess('Login successful', this);
-            break;
-        case AuthenticationStatus.Out:
-            showSuccess('Logout successful', this);
-            break;
-        case AuthenticationStatus.Prompt:
-            showWarning('Please login', this);
-            break;
-        case AuthenticationStatus.Error:
-            showError('Login failed', this);
-            break;
-        default:
-        }
-    }
-
     @Watch('authStatus')
     onAuthStatusChanged(status: AuthenticationStatus) {
-        this.toastTheToast(status);
-        if (status === AuthenticationStatus.In) {
+        if (status === AuthenticationStatus.Error) {
+            showError('Login failed');
+        } else if (status === AuthenticationStatus.In) {
             this.$route.params.back
                 ? this.$router.push({ path: this.$route.params.back, query: this.$route.query })
                 : this.$router.push({ path: '/' });

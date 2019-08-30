@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Vue from 'vue';
 
 /* eslint-disable import/prefer-default-export */
 export async function sendRequest(
@@ -8,7 +7,7 @@ export async function sendRequest(
     params: object,
     disableAuthHeader: boolean,
     otherSettings: object = {}
-): Promise<RequestResult> {
+): Promise<any> {
     const axiosConfig: any = {
         method: requestType,
         url,
@@ -30,27 +29,16 @@ export async function sendRequest(
 
     try {
         const response = await axios(axiosConfig);
-        return {
-            status: 'success',
-            payload: response.data
-        } as RequestResult;
+        return response.data;
     } catch (error) {
         let errorMessage: string = '';
-        if (error.response.data.error) {
-            errorMessage = `<b>${error.response.statusText}</b><br><br>${error.response.data.error.message}`;
+        if (error.response && error.response.data.error) {
+            errorMessage = `${error.response.statusText}: ${error.response.data.error.message}`;
         } else if (error.response) {
-            errorMessage = `<b>${error.response.statusText}</b><br><br>${error.response.data}`;
+            errorMessage = `${error.response.statusText}: ${error.response.data}`;
         } else if (error.request) {
             errorMessage = 'No Response from Server';
         }
-        return {
-            status: 'error',
-            payload: errorMessage
-        } as RequestResult;
+        throw errorMessage;
     }
-}
-
-export interface RequestResult {
-    status: string;
-    payload: any;
 }

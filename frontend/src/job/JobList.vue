@@ -14,11 +14,11 @@
                 </div>
                 <div class="message-body has-text-left">
                     <div>
-                        <span class="has-text-weight-semibold">Name: </span>
+                        <span class="has-text-weight-semibold">Name:</span>
                         {{job['name']}}
                     </div>
                     <div>
-                        <span class="has-text-weight-semibold">Created: </span>
+                        <span class="has-text-weight-semibold">Created:</span>
                         {{job['created']}}
                     </div>
                 </div>
@@ -29,9 +29,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { getJobList } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
-import { Job } from '@/job/Job';
+import { getJobList } from './JobClient';
+import { Job } from './Job';
 import { showError } from '@/util/Notifier.ts';
 
 @Component
@@ -50,12 +49,12 @@ export default class JobList extends Vue {
     }
 
     async updateJobList() {
-        const response: RequestResult = await getJobList();
-        if (response.status === 'success') {
-            this.jobList = response.payload.reverse();
-        } else {
-            showError(response.payload, this);
+        try {
+            this.jobList = await getJobList();
+        } catch (e) {
+            showError('Failed to load job list from server', e);
         }
+        this.jobList.reverse();
     }
 
     mounted() {
@@ -65,15 +64,14 @@ export default class JobList extends Vue {
 </script>
 
 <style lang="scss">
-    .job-shortlist {
-        padding: 15px;
-        border: solid;
-        border-width: 1px;
-    }
+.job-shortlist {
+    padding: 15px;
+    border: solid;
+    border-width: 1px;
+}
 
-    .message .message-body {
-        background-color: lightgray;
-        margin-bottom: 10px;
-    }
-
+.message .message-body {
+    background-color: lightgray;
+    margin-bottom: 10px;
+}
 </style>

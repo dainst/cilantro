@@ -1,14 +1,10 @@
 <template>
     <div class="container">
         <b-steps v-model="activeStep" :animated="isAnimated" :has-navigation="hasNavigation">
-            <b-step-item label="Book Files" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Book Metadata" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Parts" :clickable="isStepsClickable">
-            </b-step-item>
-            <b-step-item label="Other Settings" :clickable="isStepsClickable">
-            </b-step-item>
+            <b-step-item label="Book Files" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Book Metadata" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Parts" :clickable="isStepsClickable"></b-step-item>
+            <b-step-item label="Other Settings" :clickable="isStepsClickable"></b-step-item>
         </b-steps>
 
         <div v-if="activeStep === 0">
@@ -17,8 +13,7 @@
         </div>
         <div v-if="activeStep === 1">
             <b-button @click="saveAndContinue">Continue</b-button>
-            <BookMetadataForm v-bind:objectID.sync="objectID"
-                              v-bind:metadata="bookMetadata" />
+            <BookMetadataForm v-bind:objectID.sync="objectID" v-bind:metadata="bookMetadata" />
         </div>
         <div v-if="activeStep === 2">
             <b-button @click="saveAndContinue">Continue</b-button>
@@ -32,8 +27,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import { startJob } from '@/util/WorkbenchClient';
-import { RequestResult } from '@/util/HTTPClient';
+import { startJob } from '../JobClient';
 import BookFilesForm from './forms/BookFilesForm.vue';
 import BookMetadataForm from './forms/BookMetadataForm.vue';
 import BookPartsForm from './forms/BookPartsForm.vue';
@@ -66,11 +60,10 @@ export default class IngestBook extends Vue {
     }
 
     async startJob() {
-        const response = await startJob('ingest_book', this.jobParameters);
-        if (response.status === 'success') {
-            showSuccess('Job started successfully', this);
-        } else {
-            showError(response.payload, this);
+        try {
+            await startJob('ingest_book', this.jobParameters);
+        } catch (e) {
+            showError(e);
         }
     }
 
