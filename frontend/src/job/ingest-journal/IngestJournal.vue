@@ -82,7 +82,7 @@ export default class IngestJournal extends Vue {
         try {
             await startJob('ingest_journal', this.jobParameters);
         } catch (e) {
-            showError(e, this);
+            showError(e);
         }
     }
 }

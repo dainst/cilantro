@@ -50,7 +50,7 @@ export default class StagingArea extends Vue {
         try {
             this.stagedFiles = await getStagingFiles();
         } catch (e) {
-            showError('Failed to retrieve file list from server!', this, e);
+            showError('Failed to retrieve file list from server!', e);
         }
     }
 
@@ -66,7 +66,7 @@ export default class StagingArea extends Vue {
         const allowedExtensions: string[] = process.env.VUE_APP_ALLOWED_FILE_EXTENSIONS.split(', ');
         const ext = file.name.split('.').pop() as string;
         if (!allowedExtensions.includes(ext)) {
-            showError(`Upload of ${file.name} failed, invalid file extension ${ext}`, this);
+            showError(`Upload of ${file.name} failed, invalid file extension ${ext}`);
             this.uploadFailedFiles.push(file);
             this.checkUploadStatus();
             return;
@@ -77,10 +77,10 @@ export default class StagingArea extends Vue {
 
         try {
             await uploadFileToStaging(formData);
-            showSuccess(`Upload of ${file.name} successful!`, this);
+            showSuccess(`Upload of ${file.name} successful!`);
             this.uploadSuccessFiles.push(file);
         } catch (e) {
-            showError(`Upload of ${file.name} failed!`, this, e);
+            showError(`Upload of ${file.name} failed!`, e);
             this.uploadFailedFiles.push(file);
         }
         this.checkUploadStatus();
@@ -91,9 +91,9 @@ export default class StagingArea extends Vue {
 
         this.fetchFiles();
         if (this.uploadFailedFiles.length === 0) {
-            showSuccess('Upload of all files succeeded', this);
+            showSuccess('Upload of all files succeeded');
         } else {
-            showError(`Upload of ${this.uploadFailedFiles.length} files failed`, this);
+            showError(`Upload of ${this.uploadFailedFiles.length} files failed`);
         }
         this.filesToUpload = [];
         this.uploadSuccessFiles = [];

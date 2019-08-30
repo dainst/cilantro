@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { SnackbarProgrammatic as Snackbar } from 'buefy'
 
-export function showError(msg: string, vueInstance: Vue, consoleMessage?: string) {
+export function showError(msg: string, consoleMessage?: string) {
     Snackbar.open({
         message: msg,
         type: 'is-danger',
@@ -12,7 +12,7 @@ export function showError(msg: string, vueInstance: Vue, consoleMessage?: string
     if (consoleMessage) console.error(consoleMessage);
 }
 
-export function showSuccess(msg: string, vueInstance: Vue) {
+export function showSuccess(msg: string) {
     Snackbar.open({
         message: msg,
         type: 'is-success',
@@ -22,7 +22,7 @@ export function showSuccess(msg: string, vueInstance: Vue) {
     });
 }
 
-export function showWarning(msg: string, vueInstance: Vue) {
+export function showWarning(msg: string) {
     Snackbar.open({
         message: msg,
         type: 'is-warning',
@@ -32,7 +32,7 @@ export function showWarning(msg: string, vueInstance: Vue) {
     });
 }
 
-export function showInfo(msg: string, vueInstance: Vue) {
+export function showInfo(msg: string) {
     Snackbar.open({
         message: msg,
         type: 'is-info',

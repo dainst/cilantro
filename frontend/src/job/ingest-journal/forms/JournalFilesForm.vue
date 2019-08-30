@@ -89,7 +89,7 @@ export default class JournalFilesForm extends Vue {
         try {
             this.stagedFiles = await getStagingFiles();
         } catch (e) {
-            showError('Failed to retrieve file list from server!', this, e);
+            showError('Failed to retrieve file list from server!', e);
         }
     }
 

@@ -73,7 +73,7 @@ export default class ZenonImportComponent extends Vue {
                 this.searchResultRecords = [];
             }
         } catch (e) {
-            showError(e, this);
+            showError(e);
         }
     }
 
@@ -90,7 +90,7 @@ export default class ZenonImportComponent extends Vue {
                 this.zenonValidationStatus = 'is-danger';
             }
         } catch (e) {
-            showError(e, this);
+            showError(e);
         }
     }
 
@@ -115,12 +115,12 @@ export default class ZenonImportComponent extends Vue {
             });
 
             if (wasMetadataModified) {
-                showWarning('Zenon data imported - existing values were overwritten!', this);
+                showWarning('Zenon data imported - existing values were overwritten!');
             } else {
-                showSuccess('Zenon data imported', this);
+                showSuccess('Zenon data imported');
             }
         } catch (e) {
-            showError(e, this);
+            showError(e);
         }
     }
 }

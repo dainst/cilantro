@@ -6,13 +6,7 @@
         <div class="columns is-centered">
             <form class="column is-narrow login" @submit.prevent="login">
                 <b-field>
-                    <b-input
-                        placeholder="Name"
-                        minlength="1"
-                        type="text"
-                        required
-                        v-model="name"
-                    ></b-input>
+                    <b-input placeholder="Name" minlength="1" type="text" required v-model="name"></b-input>
                 </b-field>
                 <b-field>
                     <b-input
@@ -64,7 +58,7 @@ export default class Login extends Vue {
     @Watch('authStatus')
     onAuthStatusChanged(status: AuthenticationStatus) {
         if (status === AuthenticationStatus.Error) {
-            showError('Login failed', this);
+            showError('Login failed');
         } else if (status === AuthenticationStatus.In) {
             this.$route.params.back
                 ? this.$router.push({ path: this.$route.params.back, query: this.$route.query })

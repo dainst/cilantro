@@ -55,7 +55,7 @@ export default class JobsView extends Vue {
         try {
             this.jobList = await getJobList();
         } catch (e) {
-            showError('Failed to load job list from server!', this, e);
+            showError('Failed to load job list from server!', e);
         }
     }
 }
