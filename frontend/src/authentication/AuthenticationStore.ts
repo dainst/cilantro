@@ -56,7 +56,7 @@ export default class AuthenticationStore extends VuexModule {
         this.context.commit('setPending');
 
         try {
-            checkLogin(user);
+            await checkLogin(user);
             persistUser(user);
             this.context.commit('setSuccess', user);
         } catch (e) {
