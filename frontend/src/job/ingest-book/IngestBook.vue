@@ -8,19 +8,19 @@
         </b-steps>
 
         <div v-if="activeStep === 0">
-            <b-button @click="saveAndContinue">Continue</b-button>
             <BookFilesForm v-bind:filesParam.sync="bookFiles" />
+            <ContinueButton @click="saveAndContinue"></ContinueButton>
         </div>
         <div v-if="activeStep === 1">
-            <b-button @click="saveAndContinue">Continue</b-button>
             <BookMetadataForm v-bind:objectID.sync="objectID" v-bind:metadata="bookMetadata" />
+            <ContinueButton @click="saveAndContinue"></ContinueButton>
         </div>
         <div v-if="activeStep === 2">
-            <b-button @click="saveAndContinue">Continue</b-button>
             <BookPartsForm v-bind:initialData="bookParts" />
+            <ContinueButton @click="saveAndContinue"></ContinueButton>
         </div>
         <div v-if="activeStep === 3">
-            <b-button @click="startJob">Start Job</b-button>
+            <StartJobButton @click="startJob"></StartJobButton>
         </div>
     </div>
 </template>
@@ -36,10 +36,16 @@ import {
     BookImportParameters, BookPartMetadata, Author, BookPart, FileParam, BookMetadata
 } from './BookImportParameters';
 import { showError, showSuccess } from '@/util/Notifier.ts';
+import ContinueButton from '@/util/ContinueButton.vue';
+import StartJobButton from '@/util/StartJobButton.vue';
 
 @Component({
     components: {
-        BookFilesForm, BookMetadataForm, BookPartsForm
+        BookFilesForm,
+        BookMetadataForm,
+        BookPartsForm,
+        ContinueButton,
+        StartJobButton
     }
 })
 export default class IngestBook extends Vue {

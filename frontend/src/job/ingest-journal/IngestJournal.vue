@@ -9,27 +9,27 @@
         </b-steps>
 
         <div v-if="activeStep === 0">
-            <b-button @click="saveAndContinue">Continue</b-button>
             <JournalFilesForm v-bind:filesParam.sync="journalFiles" />
+            <ContinueButton @click="saveAndContinue"></ContinueButton>
         </div>
         <div v-if="activeStep === 1">
-            <b-button @click="saveAndContinue">Continue</b-button>
             <JournalMetadataForm v-bind:metadata="journalMetadata" />
+            <ContinueButton @click="saveAndContinue"></ContinueButton>
         </div>
         <div v-if="activeStep === 2">
-            <b-button @click="saveAndContinue">Continue</b-button>
             <ArticlesForm
                 v-bind:initialData="articleFilesAndRanges"
                 v-bind:availableFiles="journalFiles"
             />
+            <ContinueButton @click="saveAndContinue"></ContinueButton>
         </div>
         <div v-if="activeStep === 3">
-            <b-button @click="saveAndContinue">Continue</b-button>
             <PublishingForm v-bind:publishingData="publishingData" />
+            <ContinueButton @click="saveAndContinue"></ContinueButton>
         </div>
         <div v-if="activeStep === 4">
-            <b-button @click="startJob">Start Job</b-button>
             <OtherJobSettingsForm v-bind:metadata="otherSettings" />
+            <StartJobButton @click="startJob"></StartJobButton>
         </div>
     </div>
 </template>
@@ -47,6 +47,8 @@ import {
     JournalImportParameters, FileRange, JournalMetadata, OJSMetadata, Part, NLPParams
 } from './JournalImportParameters';
 import { showError, showSuccess } from '@/util/Notifier.ts';
+import ContinueButton from '@/util/ContinueButton.vue';
+import StartJobButton from '@/util/StartJobButton.vue';
 
 @Component({
     components: {
@@ -54,7 +56,9 @@ import { showError, showSuccess } from '@/util/Notifier.ts';
         JournalMetadataForm,
         ArticlesForm,
         PublishingForm,
-        OtherJobSettingsForm
+        OtherJobSettingsForm,
+        ContinueButton,
+        StartJobButton
     }
 })
 export default class IngestJournal extends Vue {
