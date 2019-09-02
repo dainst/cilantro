@@ -8,10 +8,10 @@
             <div class="is-size-4">Which pages do you want to use of the selected file?</div>
             <b-field grouped>
                 <b-field label="Start Page" horizontal>
-                    <b-numberinput v-model="pageStart"></b-numberinput>
+                    <b-numberinput v-model="pageStart" min="1" :max="pageEnd"></b-numberinput>
                 </b-field>
                 <b-field label="End Page" horizontal>
-                    <b-numberinput v-model="pageEnd"></b-numberinput>
+                    <b-numberinput v-model="pageEnd" :min="pageStart" :max="maxPages"></b-numberinput>
                 </b-field>
                 <b-button @click="saveFileRange">Ok</b-button>
                 <b-button @click="cancelFileRange">Cancel</b-button>
@@ -52,6 +52,7 @@ export default class JournalFilesForm extends Vue {
     selectedFile: FileObject = {};
     pageStart: number = 1;
     pageEnd: number = -1;
+    maxPages: number = -1;
     columns: object[] = [
         {
             field: 'file',
@@ -95,6 +96,7 @@ export default class JournalFilesForm extends Vue {
 
     updateInputs(name: string) {
         this.pageEnd = this.processedPDFs[name].numPages;
+        this.maxPages = this.processedPDFs[name].numPages;
     }
 
     @Watch('selectedFile')
