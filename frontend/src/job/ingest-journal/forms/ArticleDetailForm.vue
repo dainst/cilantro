@@ -27,7 +27,7 @@
                 </b-field>
                 <b-field tile is-child>
                     <b-field label="title">
-                        <b-input v-model="articleData.metadata.title"></b-input>
+                        <b-input v-model="articleData.metadata.title" required></b-input>
                     </b-field>
                     <b-field label="abstract">
                         <b-input v-model="articleData.metadata.abstract"></b-input>
@@ -38,10 +38,10 @@
                         <li v-for="(author, index) in articleData.metadata.author">
                             <b-field label="Author">
                                 <b-field label="First Name">
-                                    <b-input v-model="author.firstname"></b-input>
+                                    <b-input v-model="author.firstname" required></b-input>
                                 </b-field>
                                 <b-field label="Last Name">
-                                    <b-input v-model="author.lastname"></b-input>
+                                    <b-input v-model="author.lastname" required></b-input>
                                 </b-field>
                             </b-field>
                             <b-button @click="articleData.metadata.author.splice(index,1)">
@@ -54,22 +54,22 @@
                 <b-field tile is-child>
                     <b-field label="Pages">
                         <b-field label="showndesc">
-                            <b-input v-model="articleData.metadata.pages.showndesc"></b-input>
+                            <b-input v-model="articleData.metadata.pages.showndesc" required></b-input>
                         </b-field>
                         <b-field label="startPrint">
-                            <b-input v-model="articleData.metadata.pages.startPrint"></b-input>
+                            <b-input v-model="articleData.metadata.pages.startPrint" required></b-input>
                         </b-field>
                         <b-field label="endPrint">
-                            <b-input v-model="articleData.metadata.pages.endPrint"></b-input>
+                            <b-input v-model="articleData.metadata.pages.endPrint" required></b-input>
                         </b-field>
                     </b-field>
                 </b-field>
                 <b-field tile is-child>
                     <b-field label="date_published">
-                        <b-switch v-model="articleData.metadata.date_published"></b-switch>
+                        <b-switch v-model="articleData.metadata.date_published" required></b-switch>
                     </b-field>
                     <b-field label="language">
-                        <b-input v-model="articleData.metadata.language"></b-input>
+                        <b-input v-model="articleData.metadata.language" required></b-input>
                     </b-field>
                     <b-field label="auto_publish">
                         <b-switch v-model="articleData.metadata.auto_publish"></b-switch>

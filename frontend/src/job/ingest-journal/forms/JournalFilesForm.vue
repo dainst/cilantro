@@ -8,10 +8,10 @@
             <div class="is-size-4">Which pages do you want to use of the selected file?</div>
             <b-field grouped>
                 <b-field label="Start Page" horizontal>
-                    <b-numberinput v-model="pageStart" min="1" :max="pageEnd"></b-numberinput>
+                    <b-numberinput v-model="pageStart" min="1" :max="pageEnd" required></b-numberinput>
                 </b-field>
                 <b-field label="End Page" horizontal>
-                    <b-numberinput v-model="pageEnd" :min="pageStart" :max="maxPages"></b-numberinput>
+                    <b-numberinput v-model="pageEnd" :min="pageStart" :max="maxPages" required></b-numberinput>
                 </b-field>
                 <b-button @click="saveFileRange">Ok</b-button>
                 <b-button @click="cancelFileRange">Cancel</b-button>

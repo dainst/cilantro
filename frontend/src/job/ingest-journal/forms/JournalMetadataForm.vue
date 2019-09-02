@@ -3,21 +3,21 @@
         <div class="columns">
             <div class="column">
                 <b-field label="volume" :label-position="labelPosition">
-                    <b-input v-model="metadata.volume"></b-input>
+                    <b-input v-model="metadata.volume" required></b-input>
                 </b-field>
                 <b-field label="year" :label-position="labelPosition">
-                    <b-input v-model="metadata.year" type="number"></b-input>
+                    <b-input v-model="metadata.year" type="number" required></b-input>
                 </b-field>
                 <b-field label="number" :label-position="labelPosition">
-                    <b-input v-model="metadata.number" type="number" min="0"></b-input>
+                    <b-input v-model="metadata.number" type="number" min="0" required></b-input>
                 </b-field>
             </div>
             <div class="column">
                 <b-field label="description" :label-position="labelPosition">
-                    <b-input v-model="metadata.description"></b-input>
+                    <b-input v-model="metadata.description" required></b-input>
                 </b-field>
                 <b-field label="identification" :label-position="labelPosition">
-                    <b-input v-model="metadata.identification"></b-input>
+                    <b-input v-model="metadata.identification" required></b-input>
                 </b-field>
             </div>
         </div>
