@@ -6,10 +6,10 @@
                     <b-input v-model="metadata.volume"></b-input>
                 </b-field>
                 <b-field label="year" :label-position="labelPosition">
-                    <b-input v-model="metadata.year"></b-input>
+                    <b-input v-model="metadata.year" type="number"></b-input>
                 </b-field>
                 <b-field label="number" :label-position="labelPosition">
-                    <b-input v-model="metadata.number" type="number"></b-input>
+                    <b-input v-model="metadata.number" type="number" min="0"></b-input>
                 </b-field>
             </div>
             <div class="column">
@@ -33,5 +33,6 @@ export default class JournalMetadataForm extends Vue {
     @Prop() private metadata!: JournalMetadata
 
     labelPosition: string = 'on-border';
+
 }
 </script>

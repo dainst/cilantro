@@ -39,7 +39,7 @@
                     "type": "number"
                 },
                 "number": {
-                    "type": "string"
+                    "type": "number"
                 },
                 "description": {
                     "type": "string"
