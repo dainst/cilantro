@@ -3,7 +3,7 @@
         <div class="tile is-ancestor">
             <div class="tile is-parent is-vertical">
                 <b-field tile is-child label="title">
-                    <b-input v-model="partData.title"></b-input>
+                    <b-input v-model="partData.title" required></b-input>
                 </b-field>
             </div>
         </div>

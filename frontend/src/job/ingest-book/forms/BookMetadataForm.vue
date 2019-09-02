@@ -7,30 +7,30 @@
                     <!-- <b-input v-model="localObjectID"></b-input> -->
                 </b-field>
                 <b-field label="title" :label-position="labelPosition">
-                    <b-input v-model="metadata.title"></b-input>
+                    <b-input v-model="metadata.title" required></b-input>
                 </b-field>
                 <b-field label="abstract" :label-position="labelPosition">
-                    <b-input v-model="metadata.abstract"></b-input>
+                    <b-input v-model="metadata.abstract" required></b-input>
                 </b-field>
                 <b-field label="description" :label-position="labelPosition">
-                    <b-input v-model="metadata.description"></b-input>
+                    <b-input v-model="metadata.description" required></b-input>
                 </b-field>
                 <b-field label="type" :label-position="labelPosition">
-                    <b-input v-model="metadata.type"></b-input>
+                    <b-input v-model="metadata.type" required></b-input>
                 </b-field>
             </div>
             <div class="column">
                 <b-field label="created" :label-position="labelPosition">
-                    <b-input v-model="metadata.created"></b-input>
+                    <b-input v-model="metadata.created" required></b-input>
                 </b-field>
                 <ul>
                     <li v-for="(author, index) in metadata.author">
                         <b-field label="Author">
                             <b-field label="First Name">
-                                <b-input v-model="author.firstname"></b-input>
+                                <b-input v-model="author.firstname" required></b-input>
                             </b-field>
                             <b-field label="Last Name">
-                                <b-input v-model="author.lastname"></b-input>
+                                <b-input v-model="author.lastname" required></b-input>
                             </b-field>
                         </b-field>
                         <b-button @click="metadata.author.splice(index,1)">
@@ -43,7 +43,7 @@
                 <b-field label="identifiers" :label-position="labelPosition">
                     <ul>
                         <li v-for="(identifier, index) in metadata.identifiers" :key="identifier">
-                            <b-input v-model="metadata.identifiers[index]"></b-input>
+                            <b-input v-model="metadata.identifiers[index]" required></b-input>
                             <b-button @click="metadata.identifiers.splice(index,1)">
                                 Remove Identifier
                             </b-button>
