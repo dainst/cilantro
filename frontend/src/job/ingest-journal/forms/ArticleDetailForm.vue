@@ -16,10 +16,10 @@
                                 </b-select>
                             </b-field>
                             <b-field label="Start Page">
-                                <b-numberinput v-model="file.range[0]"></b-numberinput>
+                                <b-numberinput v-model="file.range[0]" min="0" :max="file.range[1]" ></b-numberinput>
                             </b-field>
                             <b-field label="End Page">
-                                <b-numberinput v-model="file.range[1]"></b-numberinput>
+                                <b-numberinput v-model="file.range[1]" :min="file.range[0]"></b-numberinput>
                             </b-field>
                         </li>
                     </ul>
