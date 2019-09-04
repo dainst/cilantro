@@ -108,6 +108,10 @@ this:
 
 After that re-run the tests and they may succeed.
 
+In case of duplicate entries in the database clean your test containers with:
+
+    docker-compose down
+
 ## Code style
 
 ### Python
