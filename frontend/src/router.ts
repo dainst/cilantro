@@ -5,7 +5,7 @@ import IngestJournal from './job/ingest-journal/IngestJournal.vue';
 import IngestBook from './job/ingest-book/IngestBook.vue';
 import StagingArea from './staging/StagingArea.vue';
 import JobDetails from './job/JobDetails.vue';
-import JobsView from './job/JobsView.vue';
+import JobList from './job/JobList.vue';
 import Login from './Login.vue';
 import store from './store';
 
@@ -31,7 +31,7 @@ const router = new Router({
         {
             path: '/jobs',
             name: 'jobs',
-            component: JobsView
+            component: JobList
         },
         {
             path: '/staging',
@@ -56,7 +56,7 @@ const router = new Router({
     ]
 });
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     if (!to.matched.some(record => record.meta.noAuth)) {
         if (store.getters.isAuthenticated) {
             next();

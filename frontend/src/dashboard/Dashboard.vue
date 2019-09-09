@@ -3,7 +3,7 @@
         <div class="tile is-ancestor">
             <div class="tile is-4 is-vertical is-parent">
                 <div class="tile is-child">
-                    <JobList />
+                    <JobListCompact />
                 </div>
             </div>
             <div class="tile is-vertical is-parent">
@@ -17,12 +17,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import JobList from '@/job/JobList.vue';
+import JobListCompact from '@/job/JobListCompact.vue';
 import StartJobSelection from './StartJobSelection.vue';
 
 @Component({
     components: {
-        JobList,
+        JobListCompact,
         StartJobSelection
     }
 })

@@ -1,29 +1,32 @@
 <template>
-    <section class="job-shortlist">
-        <h3 class="is-size-5">
-            Your active jobs
-            <a @click="updateJobList">
-                <b-icon icon="refresh" size="is-small"></b-icon>
-            </a>
-        </h3>
-        <div v-for="job in jobList" :key="job['job_id']">
-            <router-link class="message" :to="{ name: 'job', query: { id: job['job_id'] }}">
-                <div class="message-header">
-                    <b-icon v-bind="iconAttributesForState(job['state'])"></b-icon>
-                    {{job['job_id']}}
+    <section>
+        <b-table
+            :data="jobList"
+            detailed
+            detail-key="job_id"
+            default-sort="created"
+            :default-sort-direction="'desc'"
+        >
+            <template slot-scope="props">
+                <b-table-column field="job_id" label="ID" sortable>{{ props.row.job_id }}</b-table-column>
+                <b-table-column field="name" label="Name" sortable>{{ props.row.name }}</b-table-column>
+                <b-table-column field="job_type" label="Type" sortable>{{ props.row.job_type }}</b-table-column>
+                <b-table-column field="state" label="Status" sortable v-bind="classForJobState">{{ props.row.state }}</b-table-column>
+                <b-table-column field="created" label="Created" sortable>{{ props.row.created }}</b-table-column>
+                <b-table-column field="updated" label="Updated" sortable>{{ props.row.updated }}</b-table-column>
+                <b-table-column>
+                    <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
+                </b-table-column>
+            </template>
+            <template slot="detail" slot-scope="props">
+                <div>
+                    <b-field label="Job Parameters">{{ props.row.params }}</b-field>
                 </div>
-                <div class="message-body has-text-left">
-                    <div>
-                        <span class="has-text-weight-semibold">Name:</span>
-                        {{job['name']}}
-                    </div>
-                    <div>
-                        <span class="has-text-weight-semibold">Created:</span>
-                        {{job['created']}}
-                    </div>
+                <div v-if="props.row.errors.length > 0">
+                    <b-field label="Error Details">{{ props.row.errors }}</b-field>
                 </div>
-            </router-link>
-        </div>
+            </template>
+        </b-table>
     </section>
 </template>
 
@@ -37,41 +40,27 @@ import { showError } from '@/util/Notifier.ts';
 export default class JobList extends Vue {
     jobList: Job[] = [];
 
-    iconAttributesForState = (state: string) => {
-        if (state === 'new') {
-            return [{ type: 'is-info' }, { icon: 'alarm' }];
-        } if (state === 'started') {
-            return [{ type: 'is-warning' }, { icon: 'cogs' }];
-        } if (state === 'success') {
-            return [{ type: 'is-success' }, { icon: 'check' }];
-        }
-        return [{ type: 'is-danger' }, { icon: 'alert' }];
+    mounted() {
+        this.updateJobList();
+    }
+
+    classForJobState = (state: string) => {
+        
+    }
+
+    goToSingleView(id: string) {
+        this.$router.push({
+            path: 'job',
+            query: { id }
+        });
     }
 
     async updateJobList() {
         try {
             this.jobList = await getJobList();
         } catch (e) {
-            showError('Failed to load job list from server', e);
+            showError('Failed to load job list from server!', e);
         }
-        this.jobList.reverse();
-    }
-
-    mounted() {
-        this.updateJobList();
     }
 }
 </script>
-
-<style lang="scss">
-.job-shortlist {
-    padding: 15px;
-    border: solid;
-    border-width: 1px;
-}
-
-.message .message-body {
-    background-color: lightgray;
-    margin-bottom: 10px;
-}
-</style>
