@@ -182,6 +182,63 @@ def get_path(path):
                        f"No resource was found under the path {path}", 404)
 
 
+@staging_controller.route('/folder', methods=['POST'],
+                          strict_slashes=False)
+@auth.login_required
+def create_folder():
+    """
+    Create folders in the staging area.
+
+    Can be passed folders with subfolders separated by slashes.
+
+    .. :quickref: Staging Controller; Upload files to the staging area
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      POST /staging/folder HTTP/1.1
+
+        {
+            "folderpath": "test-folder/subfolder"
+        }
+
+    **Example response SUCCESS**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+        {
+            "success": true
+        }
+
+    :reqheader Accept: application/json
+    :<json string folderpath: folders to be created
+
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
+    :return: A JSON object containing the status of the operation
+    """
+    if not request.data:
+        raise ApiError("no_payload_found", "No request payload found")
+    params = request.get_json(force=True)
+    if not params['folderpath']:
+        raise ApiError("param_not found", "Missing folderpath parameter")
+    folderpath = params['folderpath']
+    try:
+        os.makedirs(os.path.join(staging_dir, auth.username(), folderpath),
+                    exist_ok=True)
+        return {"success": True}
+    except Exception as e:
+        return _generate_error_result(
+            folderpath,
+            "folder_creation_failed",
+            "An unknown error occurred.",
+            e)
+
+
 @staging_controller.route('', methods=['POST'], strict_slashes=False)
 @auth.login_required
 def upload_to_staging():
@@ -190,6 +247,9 @@ def upload_to_staging():
 
     If the names of the given files contain folders, these are created in the
     staging area if not already present.
+
+    Alternatively you can pass an extra argument 'target_folder' which is
+    prepended to all passed file names.
 
     The upload endpoint is able to handle single and multiple files provided
     under any key.
@@ -232,6 +292,7 @@ def upload_to_staging():
 
     :reqheader Accept: multipart/form-data
     :formparam file: file to be uploaded
+    :formparam target_folder: (optional) target folder for all files
 
     :resheader Content-Type: application/json
     :>json dict: operation result
@@ -244,9 +305,16 @@ def upload_to_staging():
     log.debug(f"Uploading {len(request.files)} files")
     results = {}
 
+    is_target_folder_param_present = 'target_folder' in request.form
+    print(is_target_folder_param_present)
+    if (is_target_folder_param_present):
+        target_folder = request.form['target_folder']
+
     if request.files:
         for key in request.files:
             for file in request.files.getlist(key):
+                if (is_target_folder_param_present):
+                    file.filename = f"{target_folder}/{file.filename}"
                 results[file.filename] = _process_file(file, auth.username())
         return jsonify({"result": results}), 200
     raise ApiError("no_files_provided",
