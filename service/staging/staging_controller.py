@@ -366,8 +366,8 @@ def _upload_file(file, username):
     file.save(os.path.join(full_path, secure_filename(filename)))
 
 
-def _file_already_exists(filename, dir):
-    return os.path.exists(os.path.join(dir, secure_filename(filename)))
+def _file_already_exists(filename, target_dir):
+    return os.path.exists(os.path.join(target_dir, secure_filename(filename)))
 
 
 def _is_allowed_file_extension(filename):
