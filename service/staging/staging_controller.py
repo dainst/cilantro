@@ -254,7 +254,19 @@ def upload_to_staging():
 
 
 def _process_file(file, username):
-    if _is_allowed_file(file.filename):
+    if not _is_allowed_file_extension(file.filename):
+        return _generate_error_result(
+            file,
+            "extension_not_allowed",
+            f"File extension '{_get_file_extension(file.filename)}'"
+            f" is not allowed.")
+    elif _file_already_exists(file.filename,
+                              os.path.join(staging_dir, username)):
+        return _generate_error_result(
+            file,
+            "file_already_exists",
+            f"File already exists in folder.")
+    else:
         try:
             _upload_file(file, username)
             return {"success": True}
@@ -264,12 +276,6 @@ def _process_file(file, username):
                 "upload_failed",
                 "An unknown error occurred.",
                 e)
-    else:
-        return _generate_error_result(
-            file,
-            "extension_not_allowed",
-            f"File extension '{_get_file_extension(file.filename)}'"
-            f" is not allowed.")
 
 
 def _generate_error_result(file, code, message, e=None):
@@ -292,7 +298,11 @@ def _upload_file(file, username):
     file.save(os.path.join(full_path, secure_filename(filename)))
 
 
-def _is_allowed_file(filename):
+def _file_already_exists(filename, dir):
+    return os.path.exists(os.path.join(dir, secure_filename(filename)))
+
+
+def _is_allowed_file_extension(filename):
     return _get_file_extension(filename) in allowed_extensions
 
 
