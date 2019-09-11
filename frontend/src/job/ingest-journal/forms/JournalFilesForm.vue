@@ -2,7 +2,7 @@
     <div>
         <div class="is-size-4">Staged files:</div>
         <div style="padding-top:10px; padding-bottom:10px">
-            <FileBrowser v-bind:initialSelected.sync="selectedFile" />
+            <StagingFileBrowser v-bind:initialSelected.sync="selectedFile" />
         </div>
         <div v-if="isFileSelected && (selectedFile.name in this.processedPDFs)">
             <div class="is-size-4">
@@ -32,17 +32,17 @@ import {
     Component, Vue, Prop, Watch, Provide
 } from 'vue-property-decorator';
 import axios from 'axios';
-import FileBrowser from '@/staging/FileBrowser.vue';
+import StagingFileBrowser from '@/staging/StagingFileBrowser.vue';
 import { FileRange } from '@/job/ingest-journal/JournalImportParameters';
 import ProcessedPDF, { byFilePath } from '@/pdf-processor';
 import {
-    getStagingFiles, uploadFileToStaging, deleteFileFromStaging, createFolderInStaging
+    getStagingFiles, uploadFileToStaging, deleteFileFromStaging, createFolderInStaging, WorkbenchFile
 } from '@/staging/StagingClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component({
     components: {
-        FileBrowser
+        StagingFileBrowser
     }
 })
 export default class JournalFilesForm extends Vue {
@@ -55,7 +55,7 @@ export default class JournalFilesForm extends Vue {
 
     backendUri = this.$store.state.AuthenticationStore.backendUri;
     labelPosition: String = 'on-border';
-    stagedFiles: File[] = [];
+    stagedFiles: WorkbenchFile[] = [];
     isLoading: boolean = false;
     processedPDFs: { [name: string]: ProcessedPDF } = {};
 

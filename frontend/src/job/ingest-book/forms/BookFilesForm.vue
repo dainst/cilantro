@@ -2,7 +2,7 @@
     <div>
         <div class="is-size-4">Staged files:</div>
         <div style="padding-top:10px; padding-bottom:10px">
-            <FileBrowser v-bind:initialSelected.sync="selectedFile" />
+            <StagingFileBrowser v-bind:initialSelected.sync="selectedFile" />
         </div>
         <div v-if="isFileSelected">
             {{ selectedFile.name }}
@@ -21,15 +21,15 @@ import {
     Component, Vue, Prop, Provide
 } from 'vue-property-decorator';
 import { FileParam } from '../BookImportParameters';
-import FileBrowser from '@/staging/FileBrowser.vue';
+import StagingFileBrowser from '@/staging/StagingFileBrowser.vue';
 import {
-    getStagingFiles, uploadFileToStaging, deleteFileFromStaging, createFolderInStaging
+    getStagingFiles, uploadFileToStaging, deleteFileFromStaging, createFolderInStaging, WorkbenchFile
 } from '@/staging/StagingClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component({
     components: {
-        FileBrowser
+        StagingFileBrowser
     }
 })
 export default class BookFilesForm extends Vue {
@@ -43,7 +43,7 @@ export default class BookFilesForm extends Vue {
     labelPosition: String = 'on-border';
     isLoading: boolean = false;
 
-    stagedFiles: File[] = [];
+    stagedFiles: WorkbenchFile[] = [];
     selectedFile: FileObject = {};
 
     columns: object[] = [

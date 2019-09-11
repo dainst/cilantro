@@ -1,25 +1,19 @@
 <template>
     <div>
-        <FileBrowser />
+        <StagingFileBrowser />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator';
-import FileBrowser from './FileBrowser.vue';
-import {
-    getStagingFiles, uploadFileToStaging, deleteFileFromStaging, createFolderInStaging
-} from './StagingClient';
+import StagingFileBrowser from './StagingFileBrowser.vue';
 
 @Component({
     components: {
-        FileBrowser
+        StagingFileBrowser
     }
 })
 export default class StagingArea extends Vue {
-    @Provide() fetchFunction = getStagingFiles
-    @Provide() uploadFunction = uploadFileToStaging
-    @Provide() deleteFunction = deleteFileFromStaging
-    @Provide() createFolderFunction = createFolderInStaging
+
 }
 </script>
