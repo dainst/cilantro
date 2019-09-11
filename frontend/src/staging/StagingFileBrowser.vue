@@ -23,7 +23,7 @@
         </b-button>
         <div v-if="filesToShow.length !== 0">
             <b-table :data="filesToShow" focusable
-                     :selected.sync="initialSelected">
+                     :selected.sync="selectedFile">
                 <template slot-scope="props">
                     <b-table-column>
                         <b-button v-if="props.row.type === 'directory'"
