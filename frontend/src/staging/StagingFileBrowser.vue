@@ -23,7 +23,7 @@
         </b-button>
         <div v-if="filesToShow.length !== 0">
             <b-table :data="filesToShow" focusable
-                     :selected.sync="selectedFile">
+                     :selected.sync="initialSelected">
                 <template slot-scope="props">
                     <b-table-column>
                         <b-button v-if="props.row.type === 'directory'"
@@ -57,16 +57,15 @@ import {
     Component, Prop, Vue, Watch, Inject
 } from 'vue-property-decorator';
 import { showSuccess, showWarning, showError } from '@/util/Notifier.ts';
+import {
+    getStagingFiles, uploadFileToStaging, deleteFileFromStaging,
+    createFolderInStaging, WorkbenchFile
+} from './StagingClient';
 
 const parentFolderName: string = '..';
 
 @Component
-export default class FileBrowser extends Vue {
-    @Inject() fetchFunction!: Function
-    @Inject() uploadFunction!: Function
-    @Inject() deleteFunction!: Function
-    @Inject() createFolderFunction!: Function
-
+export default class StagingFileBrowser extends Vue {
     @Prop() initialSelected!: WorkbenchFile
 
     // needs to be on component to be usable in template
@@ -88,7 +87,7 @@ export default class FileBrowser extends Vue {
                 maxlength: 20
             },
             onConfirm: (folderName) => {
-                this.createFolderFunction(this.getFilePath(folderName));
+                createFolderInStaging(this.getFilePath(folderName));
                 this.fetchFiles();
             }
         });
@@ -100,7 +99,7 @@ export default class FileBrowser extends Vue {
 
     async fetchFiles() {
         try {
-            this.filesToShow = await this.fetchFunction();
+            this.filesToShow = await getStagingFiles();
             this.filesToShow.sort(compareFileEntries);
 
             // go to original folder
@@ -175,7 +174,7 @@ export default class FileBrowser extends Vue {
         }
         const filePath = this.getFilePath(file.name);
         try {
-            const response: any = await this.uploadFunction(formData);
+            const response: any = await uploadFileToStaging(formData);
             if (response.result[filePath].success) {
                 showSuccess(`Upload of ${filePath} successful!`);
                 this.fetchFiles();
@@ -194,7 +193,7 @@ export default class FileBrowser extends Vue {
             onConfirm: async() => {
                 try {
                     const filePath: string = this.getFilePath(file.name);
-                    await this.deleteFunction(filePath);
+                    await deleteFileFromStaging(filePath);
                     showSuccess(`${filePath} deleted!`);
                     this.fetchFiles();
                 } catch (e) {
@@ -235,11 +234,5 @@ function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
 
 function getFolderIcon(folder: any): string {
     return folder.name === parentFolderName ? 'folder-upload' : 'folder-open';
-}
-
-interface WorkbenchFile {
-    name: string;
-    type: string;
-    contents: WorkbenchFile[]
 }
 </script>
