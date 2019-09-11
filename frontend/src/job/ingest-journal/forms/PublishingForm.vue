@@ -18,9 +18,6 @@
                     </b-field>
                 </div>
                 <div class="column">
-                    <b-field label="default_publish_articles">
-                        <b-switch v-model="publishingData.default_publish_articles"></b-switch>
-                    </b-field>
                     <b-field label="default_create_frontpage">
                         <b-switch v-model="publishingData.default_create_frontpage"></b-switch>
                     </b-field>

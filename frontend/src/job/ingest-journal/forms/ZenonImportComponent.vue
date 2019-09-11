@@ -2,9 +2,7 @@
     <section>
         <b-field label="Zenon ID" :type="zenonValidationStatus">
             <b-input v-model="articleMetadata.zenonId"></b-input>
-            <b-button :disabled="articleMetadata.zenonId < 1" @click="validateZenonRecord">
-                Validate
-            </b-button>
+            <b-button :disabled="articleMetadata.zenonId < 1" @click="validateZenonRecord">Validate</b-button>
         </b-field>
 
         <b-field label="Zenon Search">
@@ -29,26 +27,19 @@
             <template slot-scope="props">
                 <b-table-column label="ID" numeric>{{ props.row.id }}</b-table-column>
                 <b-table-column label="Title">{{ props.row.title }}</b-table-column>
-                <b-table-column label="Authors">
-                    {{ Object.keys(props.row.authors.primary).join(', ') }}
-                </b-table-column>
-                <b-table-column label="Languages">
-                    {{ props.row.languages.join(', ') }}
-                </b-table-column>
-                <b-table-column label="Subjects">
-                    {{ props.row.subjects.join(', ') }}
-                </b-table-column>
-                <b-table-column label="">
-                    <b-button @click="articleMetadata.zenonId = props.row.id">
-                        Add Zenon-ID
-                    </b-button>
-                    <b-button @click="addZenonData(props.row.id)">
-                        Add all Zenon data
-                    </b-button>
-                    <a class="button" v-bind:href="`https://zenon.dainst.org/Record/${props.row.id}`"
-                        target="_blank">
-                        View in Zenon
-                    </a>
+                <b-table-column
+                    label="Authors"
+                >{{ Object.keys(props.row.authors.primary).join(', ') }}</b-table-column>
+                <b-table-column label="Languages">{{ props.row.languages.join(', ') }}</b-table-column>
+                <b-table-column label="Subjects">{{ props.row.subjects.join(', ') }}</b-table-column>
+                <b-table-column label>
+                    <b-button @click="articleMetadata.zenonId = props.row.id">Add Zenon-ID</b-button>
+                    <b-button @click="addZenonData(props.row.id)">Add all Zenon data</b-button>
+                    <a
+                        class="button"
+                        v-bind:href="`https://zenon.dainst.org/Record/${props.row.id}`"
+                        target="_blank"
+                    >View in Zenon</a>
                 </b-table-column>
             </template>
         </b-table>
@@ -57,7 +48,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { ArticleMetadata } from '../JournalImportParameters';
 import {
     search, getRecord, ZenonRecord, ZenonResultData, downloadCSLJSONRecord, cslJSONRecord
 } from '@/util/ZenonClient';
@@ -65,7 +55,7 @@ import { showError, showSuccess, showWarning } from '@/util/Notifier.ts';
 
 @Component
 export default class ZenonImportComponent extends Vue {
-    @Prop() articleMetadata!: ArticleMetadata
+    @Prop() articleMetadata!: any;
 
     searchTerm: string = this.articleMetadata.title || '';
     searchScope: string = 'AllFields';

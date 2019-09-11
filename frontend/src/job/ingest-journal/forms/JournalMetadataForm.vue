@@ -26,11 +26,11 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { JournalMetadata } from '../JournalImportParameters';
+import { JournalIssueMetadata } from '../JournalImportParameters';
 
 @Component
 export default class JournalMetadataForm extends Vue {
-    @Prop() private metadata!: JournalMetadata
+    @Prop() private metadata!: JournalIssueMetadata
 
     labelPosition: string = 'on-border';
 }
