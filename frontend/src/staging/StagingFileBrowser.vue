@@ -27,8 +27,12 @@
                             @click.stop="openFolder(props.row.name)"
                         />
                     </b-table-column>
-                    <b-table-column field="name" label="Filename">{{ props.row.name }}</b-table-column>
-                    <b-table-column label="Type">{{ props.row.type }}</b-table-column>
+                    <b-table-column field="name" label="Filename">
+                        {{ props.row.name }}
+                    </b-table-column>
+                    <b-table-column label="Type">
+                        {{ props.row.type }}
+                    </b-table-column>
                     <b-table-column label>
                         <b-button
                             v-if="props.row.name !== parentFolderName"
@@ -182,7 +186,7 @@ export default class StagingFileBrowser extends Vue {
     deleteFile(file: WorkbenchFile) {
         this.$buefy.dialog.confirm({
             message: file.type === 'file' ? 'Delete file?' : 'Delete folder?',
-            onConfirm: async () => {
+            onConfirm: async() => {
                 try {
                     const filePath: string = this.getFilePath(file.name);
                     await deleteFileFromStaging(filePath);

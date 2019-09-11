@@ -37,7 +37,8 @@ import StagingFileBrowser from '@/staging/StagingFileBrowser.vue';
 import { FileRange } from '@/job/ingest-journal/JournalImportParameters';
 import ProcessedPDF, { byFilePath } from '@/pdf-processor';
 import {
-    getStagingFiles, uploadFileToStaging, deleteFileFromStaging, createFolderInStaging, WorkbenchFile
+    getStagingFiles, uploadFileToStaging, deleteFileFromStaging,
+    createFolderInStaging, WorkbenchFile
 } from '@/staging/StagingClient';
 import { showError } from '@/util/Notifier.ts';
 
