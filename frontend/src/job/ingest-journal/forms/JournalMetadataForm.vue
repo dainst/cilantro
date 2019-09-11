@@ -1,23 +1,24 @@
 <template>
     <section>
-        <div class="columns">
+        <div class="columns" v-for="issue in issues" :key="issue.path">
+            <h1>{{issue.path}}</h1>
             <div class="column">
                 <b-field label="volume" :label-position="labelPosition">
-                    <b-input v-model="metadata.volume"></b-input>
+                    <b-input v-model="issue.metadata.volume"></b-input>
                 </b-field>
                 <b-field label="year" :label-position="labelPosition">
-                    <b-input v-model="metadata.year"></b-input>
+                    <b-input v-model="issue.metadata.year"></b-input>
                 </b-field>
                 <b-field label="number" :label-position="labelPosition">
-                    <b-input v-model="metadata.number" type="number"></b-input>
+                    <b-input v-model="issue.metadata.number" type="number"></b-input>
                 </b-field>
             </div>
             <div class="column">
                 <b-field label="description" :label-position="labelPosition">
-                    <b-input v-model="metadata.description"></b-input>
+                    <b-input v-model="issue.metadata.description"></b-input>
                 </b-field>
                 <b-field label="identification" :label-position="labelPosition">
-                    <b-input v-model="metadata.identification"></b-input>
+                    <b-input v-model="issue.metadata.identification"></b-input>
                 </b-field>
             </div>
         </div>
@@ -26,11 +27,11 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { JournalIssueMetadata } from '../JournalImportParameters';
+import { JournalIssueMetadata, JournalIssue } from '../JournalImportParameters';
 
 @Component
 export default class JournalMetadataForm extends Vue {
-    @Prop() private metadata!: JournalIssueMetadata
+    @Prop() private issues!: JournalIssue[];
 
     labelPosition: string = 'on-border';
 }

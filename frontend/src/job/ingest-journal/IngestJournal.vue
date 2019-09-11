@@ -8,11 +8,11 @@
         </b-steps>
 
         <div v-if="activeStep === 0">
-            <JournalFilesForm v-bind:filesParam.sync="jobParameters.objects" />
+            <JournalFilesForm :issues.sync="jobParameters.objects" />
             <ContinueButton @click="saveAndContinue"></ContinueButton>
         </div>
         <div v-if="activeStep === 1">
-            <JournalMetadataForm v-bind:metadata="jobParameters.objects" />
+            <JournalMetadataForm :issues.sync="jobParameters.objects" />
             <ContinueButton @click="saveAndContinue"></ContinueButton>
         </div>
         <div v-if="activeStep === 2">
@@ -55,7 +55,6 @@ import { JobParameters } from '../JobParameters';
 })
 export default class IngestJournal extends Vue {
     jobParameters: JournalImportParameters = initJobParams();
-
     activeStep: number = 0;
     isAnimated: boolean = true;
     hasNavigation: boolean = false;

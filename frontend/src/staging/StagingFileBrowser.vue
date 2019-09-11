@@ -18,7 +18,12 @@
         <div>Active directory: /{{workingDirectory}}</div>
         <b-button icon-right="folder-plus" @click="createFolder()">New folder</b-button>
         <div v-if="filesToShow.length !== 0">
-            <b-table :data="filesToShow" focusable :selected.sync="selectedFile">
+            <b-table
+                :data="filesToShow"
+                checkable
+                :checked-rows="checkedFiles"
+                v-on:check="onCheck"
+            >
                 <template slot-scope="props">
                     <b-table-column>
                         <b-button
@@ -27,12 +32,8 @@
                             @click.stop="openFolder(props.row.name)"
                         />
                     </b-table-column>
-                    <b-table-column field="name" label="Filename">
-                        {{ props.row.name }}
-                    </b-table-column>
-                    <b-table-column label="Type">
-                        {{ props.row.type }}
-                    </b-table-column>
+                    <b-table-column field="name" label="Filename">{{ props.row.name }}</b-table-column>
+                    <b-table-column label="Type">{{ props.row.type }}</b-table-column>
                     <b-table-column label>
                         <b-button
                             v-if="props.row.name !== parentFolderName"
@@ -64,22 +65,23 @@ const parentFolderName: string = '..';
 
 @Component
 export default class StagingFileBrowser extends Vue {
+    @Prop() selectedFiles!: string[];
+
     // needs to be on component to be usable in template
     parentFolderName: string = parentFolderName;
     getFolderIcon: Function = getFolderIcon;
-
-    selectedFile?: WorkbenchFile = {
-        name: '',
-        type: '',
-        contents: []
-    };
-
-    workingDirectory: string = ''
-
-    filesToShow: WorkbenchFile[] = []; // TODO type
-
+    workingDirectory: string = '';
+    filesToShow: WorkbenchFile[] = [];
     uploadRunning: boolean = false;
     filesToUpload: File[] = [];
+
+    get checkedFiles() {
+        return this.filesToShow.filter(file => this.selectedFiles.includes(file.name));
+    }
+
+    onCheck(checkedFiles: WorkbenchFile[]) {
+        this.$emit('files-selected', checkedFiles.map(file => file.name));
+    }
 
     createFolder(folderPath: string) {
         this.$buefy.dialog.prompt({
@@ -114,11 +116,6 @@ export default class StagingFileBrowser extends Vue {
         } catch (e) {
             showError('Failed to retrieve file list from server!', e);
         }
-    }
-
-    @Watch('selectedFile')
-    onSelectedFileChanged(value: string, oldValue: string) {
-        this.$emit('file-selected', value);
     }
 
     openFolder(folderName: string) {
@@ -186,7 +183,7 @@ export default class StagingFileBrowser extends Vue {
     deleteFile(file: WorkbenchFile) {
         this.$buefy.dialog.confirm({
             message: file.type === 'file' ? 'Delete file?' : 'Delete folder?',
-            onConfirm: async() => {
+            onConfirm: async () => {
                 try {
                     const filePath: string = this.getFilePath(file.name);
                     await deleteFileFromStaging(filePath);
