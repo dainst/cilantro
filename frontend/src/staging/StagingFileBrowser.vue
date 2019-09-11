@@ -4,51 +4,50 @@
             <b-upload v-model="filesToUpload" multiple drag-drop @input="uploadFiles">
                 <section class="section">
                     <div class="content has-text-centered">
-                        <p><b-icon icon="upload" size="is-large"></b-icon></p>
+                        <p>
+                            <b-icon icon="upload" size="is-large"></b-icon>
+                        </p>
                         <p>Drop your files here or click to upload</p>
                     </div>
                 </section>
             </b-upload>
         </b-field>
         <p>
-            <span v-if="uploadRunning">
-                Upload in progress!
-            </span>
+            <span v-if="uploadRunning">Upload in progress!</span>
         </p>
-        <div>
-            Active directory: /{{workingDirectory}}
-        </div>
-        <b-button icon-right="folder-plus" @click="createFolder()">
-            New folder
-        </b-button>
+        <div>Active directory: /{{workingDirectory}}</div>
+        <b-button icon-right="folder-plus" @click="createFolder()">New folder</b-button>
         <div v-if="filesToShow.length !== 0">
+<<<<<<< HEAD
             <b-table :data="filesToShow" focusable
                      :selected.sync="selectedFile">
+=======
+            <b-table :data="filesToShow" focusable :selected.sync="selectedFile">
+>>>>>>> Simplify handling of selected file
                 <template slot-scope="props">
                     <b-table-column>
-                        <b-button v-if="props.row.type === 'directory'"
-                                  v-bind:icon-right="getFolderIcon(props.row)"
-                                  @click.stop="openFolder(props.row.name)" />
+                        <b-button
+                            v-if="props.row.type === 'directory'"
+                            v-bind:icon-right="getFolderIcon(props.row)"
+                            @click.stop="openFolder(props.row.name)"
+                        />
                     </b-table-column>
-                    <b-table-column field="name" label="Filename">
-                        {{ props.row.name }}
-                    </b-table-column>
-                    <b-table-column label="Type">
-                        {{ props.row.type }}
-                    </b-table-column>
-                    <b-table-column label="">
-                        <b-button v-if="props.row.name !== parentFolderName"
-                                  icon-right="delete" @click="deleteFile(props.row)" />
+                    <b-table-column field="name" label="Filename">{{ props.row.name }}</b-table-column>
+                    <b-table-column label="Type">{{ props.row.type }}</b-table-column>
+                    <b-table-column label>
+                        <b-button
+                            v-if="props.row.name !== parentFolderName"
+                            icon-right="delete"
+                            @click="deleteFile(props.row)"
+                        />
                     </b-table-column>
                 </template>
-                 <template slot="detail" slot-scope="props">
-                     <p>{{ props.row.name }}</p>
-                 </template>
+                <template slot="detail" slot-scope="props">
+                    <p>{{ props.row.name }}</p>
+                </template>
             </b-table>
         </div>
-        <div v-else>
-            No files found!
-        </div>
+        <div v-else>No files found!</div>
     </section>
 </template>
 
@@ -66,13 +65,16 @@ const parentFolderName: string = '..';
 
 @Component
 export default class StagingFileBrowser extends Vue {
-    @Prop() initialSelected!: WorkbenchFile
-
     // needs to be on component to be usable in template
     parentFolderName: string = parentFolderName;
     getFolderIcon: Function = getFolderIcon;
 
-    selectedFile: WorkbenchFile = this.initialSelected || null;
+    selectedFile?: WorkbenchFile = {
+        name: '',
+        type: '',
+        contents: []
+    };
+
     workingDirectory: string = ''
 
     filesToShow: WorkbenchFile[] = []; // TODO type
@@ -117,12 +119,7 @@ export default class StagingFileBrowser extends Vue {
 
     @Watch('selectedFile')
     onSelectedFileChanged(value: string, oldValue: string) {
-        this.$emit('update:initialSelected', this.selectedFile);
-    }
-
-    @Watch('initialSelected')
-    oninitialSelectedChanged(value: string, oldValue: string) {
-        this.selectedFile = this.initialSelected;
+        this.$emit('file-selected', value);
     }
 
     openFolder(folderName: string) {

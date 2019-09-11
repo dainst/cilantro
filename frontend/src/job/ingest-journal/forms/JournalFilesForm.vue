@@ -2,11 +2,12 @@
     <div>
         <div class="is-size-4">Staged files:</div>
         <div style="padding-top:10px; padding-bottom:10px">
-            <StagingFileBrowser v-bind:initialSelected.sync="selectedFile" />
+            <StagingFileBrowser v-on:file-selected="selectedFile = $event" />
         </div>
         <div v-if="isFileSelected && (selectedFile.name in this.processedPDFs)">
             <div class="is-size-4">
-                Which pages do you want to use of the selected file <i>{{selectedFile.name}}</i>?
+                Which pages do you want to use of the selected file
+                <i>{{selectedFile.name}}</i>?
             </div>
             <b-field grouped>
                 <b-field label="Start Page" horizontal>
