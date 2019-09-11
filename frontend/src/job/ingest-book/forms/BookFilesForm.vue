@@ -2,7 +2,7 @@
     <div>
         <div class="is-size-4">Staged files:</div>
         <div style="padding-top:10px; padding-bottom:10px">
-            <StagingFileBrowser v-bind:initialSelected.sync="selectedFile" />
+            <StagingFileBrowser v-on:file-selected="selectedFile = $event" />
         </div>
         <div v-if="isFileSelected">
             {{ selectedFile.name }}
