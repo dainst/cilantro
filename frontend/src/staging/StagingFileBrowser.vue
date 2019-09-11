@@ -18,12 +18,7 @@
         <div>Active directory: /{{workingDirectory}}</div>
         <b-button icon-right="folder-plus" @click="createFolder()">New folder</b-button>
         <div v-if="filesToShow.length !== 0">
-<<<<<<< HEAD
-            <b-table :data="filesToShow" focusable
-                     :selected.sync="selectedFile">
-=======
             <b-table :data="filesToShow" focusable :selected.sync="selectedFile">
->>>>>>> Simplify handling of selected file
                 <template slot-scope="props">
                     <b-table-column>
                         <b-button
@@ -187,7 +182,7 @@ export default class StagingFileBrowser extends Vue {
     deleteFile(file: WorkbenchFile) {
         this.$buefy.dialog.confirm({
             message: file.type === 'file' ? 'Delete file?' : 'Delete folder?',
-            onConfirm: async() => {
+            onConfirm: async () => {
                 try {
                     const filePath: string = this.getFilePath(file.name);
                     await deleteFileFromStaging(filePath);
