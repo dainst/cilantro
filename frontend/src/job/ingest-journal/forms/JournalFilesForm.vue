@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import {
-    Component, Vue, Prop, Watch, Provide
+    Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import axios from 'axios';
 import StagingFileBrowser from '@/staging/StagingFileBrowser.vue';
@@ -47,11 +47,6 @@ import { showError } from '@/util/Notifier.ts';
 })
 export default class JournalFilesForm extends Vue {
     @Prop() private filesParam!: FileRange[]
-
-    @Provide() fetchFunction = getStagingFiles
-    @Provide() uploadFunction = uploadFileToStaging
-    @Provide() deleteFunction = deleteFileFromStaging
-    @Provide() createFolderFunction = createFolderInStaging
 
     backendUri = this.$store.state.AuthenticationStore.backendUri;
     labelPosition: String = 'on-border';

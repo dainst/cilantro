@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import {
-    Component, Prop, Vue, Watch, Inject
+    Component, Prop, Vue, Watch
 } from 'vue-property-decorator';
 import { showSuccess, showWarning, showError } from '@/util/Notifier.ts';
 import {

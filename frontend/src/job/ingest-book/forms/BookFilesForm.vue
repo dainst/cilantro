@@ -18,12 +18,13 @@
 
 <script lang="ts">
 import {
-    Component, Vue, Prop, Provide
+    Component, Vue, Prop
 } from 'vue-property-decorator';
 import { FileParam } from '../BookImportParameters';
 import StagingFileBrowser from '@/staging/StagingFileBrowser.vue';
 import {
-    getStagingFiles, uploadFileToStaging, deleteFileFromStaging, createFolderInStaging, WorkbenchFile
+    getStagingFiles, uploadFileToStaging, deleteFileFromStaging,
+    createFolderInStaging, WorkbenchFile
 } from '@/staging/StagingClient';
 import { showError } from '@/util/Notifier.ts';
 
@@ -34,11 +35,6 @@ import { showError } from '@/util/Notifier.ts';
 })
 export default class BookFilesForm extends Vue {
     @Prop() private filesParam!: FileParam[]
-
-    @Provide() fetchFunction = getStagingFiles
-    @Provide() uploadFunction = uploadFileToStaging
-    @Provide() deleteFunction = deleteFileFromStaging
-    @Provide() createFolderFunction = createFolderInStaging
 
     labelPosition: String = 'on-border';
     isLoading: boolean = false;
