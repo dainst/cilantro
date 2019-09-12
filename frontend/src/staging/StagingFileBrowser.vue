@@ -1,21 +1,5 @@
 <template>
     <section>
-        <b-field>
-            <b-upload v-model="filesToUpload" multiple drag-drop @input="uploadFiles">
-                <section class="section">
-                    <div class="content has-text-centered">
-                        <p>
-                            <b-icon icon="upload" size="is-large"></b-icon>
-                        </p>
-                        <p>Drop your files here or click to upload</p>
-                    </div>
-                </section>
-            </b-upload>
-        </b-field>
-        <p>
-            <span v-if="uploadRunning">Upload in progress!</span>
-        </p>
-
         <div class="level">
             <div class="level-left">
                 <div class="level-item">
@@ -71,7 +55,23 @@
                 </template>
             </b-table>
         </div>
-        <div v-else>No files found!</div>
+        <div v-else>Folder is empty ...</div>
+
+        <b-field>
+            <b-upload v-model="filesToUpload" multiple drag-drop @input="uploadFiles">
+                <section class="section">
+                    <div class="content has-text-centered">
+                        <p>
+                            <b-icon icon="upload" size="is-large"></b-icon>
+                        </p>
+                        <p>Drop your files here or click to upload</p>
+                    </div>
+                </section>
+            </b-upload>
+        </b-field>
+        <p>
+            <span v-if="uploadRunning">Upload in progress!</span>
+        </p>
     </section>
 </template>
 
@@ -218,3 +218,13 @@ function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
 }
 
 </script>
+
+<style lang="scss">
+.upload,
+.upload .upload-draggable {
+    width: 100%;
+}
+.upload .section {
+    padding: 1rem;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="is-size-4">Staged files:</div>
+        <div class="is-size-4">Select the folders representing journal issues:</div>
         <div style="padding-top:10px; padding-bottom:10px">
             <StagingFileBrowser
                 :selected-files="selectedFiles"
