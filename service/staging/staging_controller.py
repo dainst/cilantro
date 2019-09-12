@@ -17,7 +17,7 @@ allowed_extensions = ['xml', 'pdf', 'tif', 'tiff', 'json', 'csv']
 log = logging.getLogger(__name__)
 
 
-def _list_dir(dir_path):
+def _list_dir(dir_path, recursive=False):
     tree = []
     for entry in sorted(os.scandir(dir_path), key=lambda e: e.name):
         if entry.is_file():
@@ -27,8 +27,10 @@ def _list_dir(dir_path):
         else:
             tree.append({
                 "type": "directory",
-                "name": entry.name,
-                "contents": _list_dir(os.path.join(dir_path, entry.name))})
+                "name": entry.name})
+            if recursive:
+                path = os.path.join(dir_path, entry.name)
+                tree[-1]["contents"] = _list_dir(path)
     return tree
 
 
@@ -124,7 +126,7 @@ def list_staging():
     :return: JSON array containing objects for files and folders
     """
     try:
-        tree = _list_dir(os.path.join(staging_dir, auth.username()))
+        tree = _list_dir(os.path.join(staging_dir, auth.username()), True)
     except FileNotFoundError:
         log.warning(f"List staging called on not-existing folder: "
                     f"{os.path.join(staging_dir, auth.username())}")
@@ -139,7 +141,7 @@ def get_path(path):
     """
     Retrieve a file or folder content from the staging folder.
 
-    Returns A JSON array containing all file names, if it's a directory or
+    Returns A JSON array containing all files, if it's a directory or
     the file's content if it's a file.
 
     .. :quickref: Staging Controller; Retrieve file/folder from staging folder
@@ -174,7 +176,7 @@ def get_path(path):
     """
     abs_path = os.path.join(staging_dir, auth.username(), path)
     if os.path.isdir(abs_path):
-        return jsonify(os.listdir(abs_path))
+        return jsonify(_list_dir(abs_path))
     elif os.path.isfile(abs_path):
         return send_file(abs_path)
     else:
