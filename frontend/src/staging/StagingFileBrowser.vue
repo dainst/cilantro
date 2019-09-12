@@ -112,8 +112,7 @@ export default class StagingFileBrowser extends Vue {
                 maxlength: 20
             },
             onConfirm: (folderName) => {
-                createFolderInStaging(this.getFilePath(folderName));
-                this.fetchFiles();
+                createFolderInStaging(this.getFilePath(folderName)).then(() => this.fetchFiles());
             }
         });
     }
