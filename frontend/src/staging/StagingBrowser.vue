@@ -15,7 +15,7 @@
                 hoverable
                 :checked-rows="checkedFiles"
                 @check="onCheck"
-                @click="$event.type === 'directory' && openFolder(workingDirectory + '/' + $event.name)"
+                @click="fileClicked"
             >
                 <template slot-scope="props">
                     <b-table-column width="25">
@@ -107,6 +107,12 @@ export default class StagingBrowser extends Vue {
             this.$emit('files-selected', []);
         } catch (e) {
             showError('Failed to retrieve file list from server!', e);
+        }
+    }
+
+    fileClicked(file: WorkbenchFile) {
+        if (file.type === 'directory') {
+            this.openFolder(`${this.workingDirectory}/${file.name}`);
         }
     }
 
