@@ -60,7 +60,7 @@ interface Record {
 }
 
 function extractZenonId(path: string) {
-    const result = path.match(/JOURNAL-ZID(\d+)/);
+    const result = path.match(/.*JOURNAL-ZID(\d+)/);
     if (!result || result.length < 1) throw Error('Invalid name');
     return result[1];
 }

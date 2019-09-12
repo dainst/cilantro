@@ -53,13 +53,16 @@ import StagingBrowserUpload from './StagingBrowserUpload.vue';
     }
 })
 export default class StagingBrowser extends Vue {
-    @Prop({ default: () => [] }) selectedFiles!: string[];
+    @Prop({ default: () => [] }) selectedPaths!: string[];
 
     workingDirectory: string = '';
     filesToShow: WorkbenchFile[] = [];
 
     get checkedFiles(): WorkbenchFile[] {
-        return this.filesToShow.filter(file => this.selectedFiles.includes(file.name));
+        return this.filesToShow.filter((file) => {
+            const path = getFilePath(this.workingDirectory, file.name);
+            return this.selectedPaths.includes(path);
+        });
     }
 
     mounted() {
@@ -67,8 +70,8 @@ export default class StagingBrowser extends Vue {
     }
 
     onCheck(checkedFiles: WorkbenchFile[]): void {
-        const basePath = (this.workingDirectory) ? `${this.workingDirectory}/` : '';
-        this.$emit('files-selected', checkedFiles.map(file => `${basePath}${file.name}`));
+        const paths = checkedFiles.map(file => getFilePath(this.workingDirectory, file.name));
+        this.$emit('paths-selected', paths);
     }
 
     createFolder(): void {

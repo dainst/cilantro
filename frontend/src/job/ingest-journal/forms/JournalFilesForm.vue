@@ -2,7 +2,7 @@
     <div>
         <div class="is-size-4">Select the folders representing journal issues:</div>
         <div style="padding-top:10px; padding-bottom:10px">
-            <StagingBrowser :selected-files="selectedFiles" v-on:files-selected="onFilesSelected" />
+            <StagingBrowser :selected-paths="selectedPaths" v-on:paths-selected="onPathsSelected" />
         </div>
     </div>
 </template>
@@ -22,12 +22,12 @@ import { JournalIssue } from '../JournalImportParameters';
 export default class JournalFilesForm extends Vue {
     @Prop() private issues!: JournalIssue[];
 
-    get selectedFiles() {
+    get selectedPaths(): string[] {
         return this.issues.map(issue => issue.path);
     }
 
-    onFilesSelected(files: string[]) {
-        this.$emit('update:issues', files.map(file => initIssue(file)));
+    onPathsSelected(files: string[]) {
+        this.$emit('update:issues', files.map(path => initIssue(path)));
     }
 }
 
