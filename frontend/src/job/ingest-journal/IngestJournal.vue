@@ -1,15 +1,15 @@
 <template>
     <div class="container">
-        <b-steps v-model="activeStep" :animated="isAnimated" :has-navigation="hasNavigation">
-            <b-step-item label="Journal Files" :clickable="isStepsClickable"></b-step-item>
-            <b-step-item label="Journal Metadata" :clickable="isStepsClickable"></b-step-item>
-            <b-step-item label="Publishing" :clickable="isStepsClickable"></b-step-item>
-            <b-step-item label="Other Settings" :clickable="isStepsClickable"></b-step-item>
+        <b-steps v-model="activeStep" :has-navigation="false">
+            <b-step-item label="Journal Files"></b-step-item>
+            <b-step-item label="Journal Metadata"></b-step-item>
+            <b-step-item label="Publishing"></b-step-item>
+            <b-step-item label="Other Settings"></b-step-item>
         </b-steps>
 
         <div v-if="activeStep === 0">
             <JournalFilesForm :issues.sync="jobParameters.objects" />
-            <ContinueButton @click="saveAndContinue"></ContinueButton>
+            <ContinueButton @click="saveAndContinue" :disabled="!issuesSelected"></ContinueButton>
         </div>
         <div v-if="activeStep === 1">
             <JournalMetadataForm :issues.sync="jobParameters.objects" />
@@ -56,9 +56,10 @@ import { JobParameters } from '../JobParameters';
 export default class IngestJournal extends Vue {
     jobParameters: JournalImportParameters = initJobParams();
     activeStep: number = 0;
-    isAnimated: boolean = true;
-    hasNavigation: boolean = false;
-    isStepsClickable: boolean = true;
+
+    get issuesSelected(): boolean {
+        return this.jobParameters.objects.length > 0;
+    }
 
     saveAndContinue() {
         this.activeStep += 1;
