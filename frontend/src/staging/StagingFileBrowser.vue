@@ -87,7 +87,7 @@ import {
 
 @Component
 export default class StagingFileBrowser extends Vue {
-    @Prop() selectedFiles!: string[];
+    @Prop({ default: () => [] }) selectedFiles!: string[];
 
     workingDirectory: string = '';
     filesToShow: WorkbenchFile[] = [];
