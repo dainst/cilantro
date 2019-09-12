@@ -3,6 +3,7 @@ import { JobParameters, JobObject } from '../JobParameters';
 /* eslint-disable camelcase */
 
 export interface JournalIssueMetadata {
+    zenon_id: number;
     volume: string;
     year: number;
     number: string;

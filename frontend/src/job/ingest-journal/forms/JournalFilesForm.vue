@@ -38,6 +38,7 @@ function initIssue(path: string) {
     return {
         path,
         metadata: {
+            zenon_id: 0,
             volume: '',
             year: 0,
             number: '',
