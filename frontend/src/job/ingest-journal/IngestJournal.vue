@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <b-steps v-model="activeStep" :has-navigation="false">
+        <b-steps v-model="activeStep" :has-navigation="(false)">
             <b-step-item label="Journal Files"></b-step-item>
             <b-step-item label="Journal Metadata"></b-step-item>
             <b-step-item label="Publishing"></b-step-item>
