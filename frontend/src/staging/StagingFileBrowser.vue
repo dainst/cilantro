@@ -15,31 +15,49 @@
         <p>
             <span v-if="uploadRunning">Upload in progress!</span>
         </p>
-        <div>Active directory: /{{workingDirectory}}</div>
-        <b-button icon-right="folder-plus" @click="createFolder()">New folder</b-button>
+
+        <div class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <nav class="breadcrumb">
+                        <ul>
+                            <li
+                                v-for="(dir, index) in workingDirectoryArray"
+                                :key="index + dir"
+                                :class="{ 'is-active': index >= workingDirectoryArray.length - 1}"
+                            >
+                                <a
+                                    @click="openFolder(workingDirectoryArray.slice(0, index + 1).join('/'))"
+                                >
+                                    <b-icon icon="home" v-if="index == 0"></b-icon>
+                                    <span v-if="index > 0">{{ dir }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="level-item">
+                    <b-tooltip label="Create folder">
+                        <b-button type="is-text" icon-right="folder-plus" @click="createFolder()"></b-button>
+                    </b-tooltip>
+                </div>
+            </div>
+        </div>
+
         <div v-if="filesToShow.length !== 0">
-            <b-table
-                :data="filesToShow"
-                checkable
-                :checked-rows="checkedFiles"
-                v-on:check="onCheck"
-            >
+            <b-table :data="filesToShow" checkable :checked-rows="checkedFiles" @check="onCheck">
                 <template slot-scope="props">
                     <b-table-column>
                         <b-button
+                            icon-right="folder-open"
                             v-if="props.row.type === 'directory'"
-                            v-bind:icon-right="getFolderIcon(props.row)"
-                            @click.stop="openFolder(props.row.name)"
+                            @click.stop="openFolder(workingDirectory + '/' + props.row.name)"
                         />
                     </b-table-column>
                     <b-table-column field="name" label="Filename">{{ props.row.name }}</b-table-column>
                     <b-table-column label="Type">{{ props.row.type }}</b-table-column>
                     <b-table-column label>
-                        <b-button
-                            v-if="props.row.name !== parentFolderName"
-                            icon-right="delete"
-                            @click="deleteFile(props.row)"
-                        />
+                        <b-button icon-right="delete" @click="deleteFile(props.row)" />
                     </b-table-column>
                 </template>
                 <template slot="detail" slot-scope="props">
@@ -61,29 +79,33 @@ import {
     createFolderInStaging, WorkbenchFile
 } from './StagingClient';
 
-const parentFolderName: string = '..';
-
 @Component
 export default class StagingFileBrowser extends Vue {
     @Prop() selectedFiles!: string[];
 
-    // needs to be on component to be usable in template
-    parentFolderName: string = parentFolderName;
-    getFolderIcon: Function = getFolderIcon;
     workingDirectory: string = '';
     filesToShow: WorkbenchFile[] = [];
     uploadRunning: boolean = false;
     filesToUpload: File[] = [];
 
-    get checkedFiles() {
+    get checkedFiles(): WorkbenchFile[] {
         return this.filesToShow.filter(file => this.selectedFiles.includes(file.name));
     }
 
-    onCheck(checkedFiles: WorkbenchFile[]) {
-        this.$emit('files-selected', checkedFiles.map(file => file.name));
+    get workingDirectoryArray(): string[] {
+        return this.workingDirectory.split('/');
     }
 
-    createFolder(folderPath: string) {
+    mounted() {
+        this.fetchFiles();
+    }
+
+    onCheck(checkedFiles: WorkbenchFile[]): void {
+        const basePath = (this.workingDirectory) ? `${this.workingDirectory}/` : '';
+        this.$emit('files-selected', checkedFiles.map(file => `${basePath}${file.name}`));
+    }
+
+    createFolder(): void {
         this.$buefy.dialog.prompt({
             message: `Enter the folder name or path`,
             inputAttrs: {
@@ -96,51 +118,18 @@ export default class StagingFileBrowser extends Vue {
         });
     }
 
-    mounted() {
-        this.fetchFiles();
-    }
-
-    async fetchFiles() {
+    async fetchFiles(): Promise<void> {
         try {
-            this.filesToShow = await getStagingFiles();
+            this.filesToShow = await getStagingFiles(this.workingDirectory);
             this.filesToShow.sort(compareFileEntries);
-
-            // go to original folder
-            const oldWorkingDir = this.workingDirectory;
-            const folderArray = this.workingDirectory.split('/');
-            folderArray.shift(); // ignore root folder
-            folderArray.forEach((item) => {
-                this.openFolder(item);
-            });
-            this.workingDirectory = oldWorkingDir;
         } catch (e) {
             showError('Failed to retrieve file list from server!', e);
         }
     }
 
-    openFolder(folderName: string) {
-        const oldWorkingDir: WorkbenchFile[] = this.filesToShow;
-        const dir =
-            this.filesToShow.find(element => element.name === folderName) || { contents: [] };
-        this.filesToShow = dir.contents as WorkbenchFile[];
-        const isParentFolderPresent =
-            this.filesToShow.find(element => element.name === parentFolderName) !== undefined;
-
-        if (folderName !== parentFolderName) {
-            this.workingDirectory += `/${folderName}`;
-
-            if (!isParentFolderPresent) {
-                const parentFolder = {
-                    name: parentFolderName,
-                    type: 'directory',
-                    contents: oldWorkingDir
-                } as WorkbenchFile;
-                this.filesToShow.push(parentFolder);
-            }
-        } else {
-            this.workingDirectory = this.workingDirectory.slice(0, this.workingDirectory.lastIndexOf('/'));
-        }
-        this.filesToShow.sort(compareFileEntries);
+    openFolder(path: string) {
+        this.workingDirectory = path;
+        this.fetchFiles();
     }
 
     uploadFiles() {
@@ -183,7 +172,7 @@ export default class StagingFileBrowser extends Vue {
     deleteFile(file: WorkbenchFile) {
         this.$buefy.dialog.confirm({
             message: file.type === 'file' ? 'Delete file?' : 'Delete folder?',
-            onConfirm: async () => {
+            onConfirm: async() => {
                 try {
                     const filePath: string = this.getFilePath(file.name);
                     await deleteFileFromStaging(filePath);
@@ -210,12 +199,6 @@ function convertArrayToObject(arr: any[]) {
 }
 
 function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
-    if (a.name === parentFolderName) {
-        return -1;
-    }
-    if (b.name === parentFolderName) {
-        return 1;
-    }
     if (a.type === 'directory' && b.type !== 'directory') {
         return -1;
     }
@@ -225,7 +208,4 @@ function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
     return 0;
 }
 
-function getFolderIcon(folder: any): string {
-    return folder.name === parentFolderName ? 'folder-upload' : 'folder-open';
-}
 </script>

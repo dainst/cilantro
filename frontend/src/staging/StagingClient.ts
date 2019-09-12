@@ -22,5 +22,5 @@ export async function createFolderInStaging(folderPath: string): Promise<boolean
 export interface WorkbenchFile {
     name: string;
     type: string;
-    contents: WorkbenchFile[]
+    contents?: WorkbenchFile[]
 }
