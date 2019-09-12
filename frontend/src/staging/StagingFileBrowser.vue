@@ -42,23 +42,29 @@
                     </b-tooltip>
                 </div>
             </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <b-tooltip label="Remove selected">
+                        <b-button type="is-danger" icon-right="delete" @click="deleteSelected()"></b-button>
+                    </b-tooltip>
+                </div>
+            </div>
         </div>
 
         <div v-if="filesToShow.length !== 0">
-            <b-table :data="filesToShow" checkable :checked-rows="checkedFiles" @check="onCheck">
+            <b-table
+                :data="filesToShow"
+                checkable
+                hoverable
+                :checked-rows="checkedFiles"
+                @check="onCheck"
+                @click="$event.type === 'directory' && openFolder(workingDirectory + '/' + $event.name)"
+            >
                 <template slot-scope="props">
-                    <b-table-column>
-                        <b-button
-                            icon-right="folder-open"
-                            v-if="props.row.type === 'directory'"
-                            @click.stop="openFolder(workingDirectory + '/' + props.row.name)"
-                        />
+                    <b-table-column width="25">
+                        <b-icon :icon="getFileIcon(props.row)" />
                     </b-table-column>
-                    <b-table-column field="name" label="Filename">{{ props.row.name }}</b-table-column>
-                    <b-table-column label="Type">{{ props.row.type }}</b-table-column>
-                    <b-table-column label>
-                        <b-button icon-right="delete" @click="deleteFile(props.row)" />
-                    </b-table-column>
+                    <b-table-column field="name" label="Name">{{ props.row.name }}</b-table-column>
                 </template>
                 <template slot="detail" slot-scope="props">
                     <p>{{ props.row.name }}</p>
@@ -121,6 +127,7 @@ export default class StagingFileBrowser extends Vue {
         try {
             this.filesToShow = await getStagingFiles(this.workingDirectory);
             this.filesToShow.sort(compareFileEntries);
+            this.$emit('files-selected', []);
         } catch (e) {
             showError('Failed to retrieve file list from server!', e);
         }
@@ -168,24 +175,27 @@ export default class StagingFileBrowser extends Vue {
         }
     }
 
-    deleteFile(file: WorkbenchFile) {
+    deleteSelected() {
         this.$buefy.dialog.confirm({
-            message: file.type === 'file' ? 'Delete file?' : 'Delete folder?',
-            onConfirm: async() => {
-                try {
+            message: `Delete ${this.checkedFiles.length} items?`,
+            onConfirm: () => {
+                const deletions = this.checkedFiles.map((file) => {
                     const filePath: string = this.getFilePath(file.name);
-                    await deleteFileFromStaging(filePath);
-                    showSuccess(`${filePath} deleted!`);
-                    this.fetchFiles();
-                } catch (e) {
-                    showError('Failed to delete file!', e);
-                }
+                    return deleteFileFromStaging(filePath)
+                        .catch(e => showError(`Failed to delete ${file.name}!`, e));
+                });
+                Promise.all(deletions).then(() => this.fetchFiles());
             }
         });
     }
 
     getFilePath(filename: string): string {
         return this.workingDirectory !== '' ? `${this.workingDirectory.slice(1)}/${filename}` : filename;
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getFileIcon(file: WorkbenchFile) {
+        return (file.type === 'directory') ? 'folder' : 'file';
     }
 }
 
