@@ -1,16 +1,16 @@
 <template>
     <div>
-        <StagingFileBrowser />
+        <StagingBrowser />
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import StagingFileBrowser from './StagingFileBrowser.vue';
+import StagingBrowser from './StagingBrowser.vue';
 
 @Component({
     components: {
-        StagingFileBrowser
+        StagingBrowser
     }
 })
 export default class StagingArea extends Vue {

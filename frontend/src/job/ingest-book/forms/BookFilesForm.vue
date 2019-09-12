@@ -2,7 +2,7 @@
     <div>
         <div class="is-size-4">Staged files:</div>
         <div style="padding-top:10px; padding-bottom:10px">
-            <StagingFileBrowser v-on:file-selected="selectedFile = $event" />
+            <StagingBrowser v-on:file-selected="selectedFile = $event" />
         </div>
         <div v-if="isFileSelected">
             {{ selectedFile.name }}
@@ -21,7 +21,7 @@ import {
     Component, Vue, Prop
 } from 'vue-property-decorator';
 import { FileParam } from '../BookImportParameters';
-import StagingFileBrowser from '@/staging/StagingFileBrowser.vue';
+import StagingBrowser from '@/staging/StagingBrowser.vue';
 import {
     getStagingFiles, uploadFileToStaging, deleteFileFromStaging,
     createFolderInStaging, WorkbenchFile
@@ -30,7 +30,7 @@ import { showError } from '@/util/Notifier.ts';
 
 @Component({
     components: {
-        StagingFileBrowser
+        StagingBrowser
     }
 })
 export default class BookFilesForm extends Vue {
