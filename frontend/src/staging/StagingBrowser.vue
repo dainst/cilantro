@@ -30,41 +30,26 @@
         </div>
         <div v-else>Folder is empty ...</div>
 
-        <b-field>
-            <b-upload
-                v-model="filesToUpload"
-                multiple
-                drag-drop
-                @input="uploadFiles"
-                :loading="uploadRunning"
-            >
-                <section class="section">
-                    <div class="content has-text-centered">
-                        <p>
-                            <b-icon icon="upload" size="is-large"></b-icon>
-                        </p>
-                        <p>Drop your files here or click to upload</p>
-                    </div>
-                </section>
-            </b-upload>
-        </b-field>
+        <StagingBrowserUpload :working-directory="workingDirectory" @upload-finished="fetchFiles" />
     </section>
 </template>
 
 <script lang="ts">
 import {
-    Component, Prop, Vue, Watch
+    Component, Prop, Vue
 } from 'vue-property-decorator';
 import { showSuccess, showWarning, showError } from '@/util/Notifier.ts';
 import {
-    getStagingFiles, uploadFileToStaging, deleteFileFromStaging,
+    getStagingFiles, deleteFileFromStaging,
     createFolderInStaging, WorkbenchFile
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
+import StagingBrowserUpload from './StagingBrowserUpload.vue';
 
 @Component({
     components: {
-        StagingBrowserNav
+        StagingBrowserNav,
+        StagingBrowserUpload
     }
 })
 export default class StagingBrowser extends Vue {
@@ -72,8 +57,6 @@ export default class StagingBrowser extends Vue {
 
     workingDirectory: string = '';
     filesToShow: WorkbenchFile[] = [];
-    uploadRunning: boolean = false;
-    filesToUpload: File[] = [];
 
     get checkedFiles(): WorkbenchFile[] {
         return this.filesToShow.filter(file => this.selectedFiles.includes(file.name));
@@ -95,7 +78,8 @@ export default class StagingBrowser extends Vue {
                 maxlength: 20
             },
             onConfirm: (folderName) => {
-                createFolderInStaging(this.getFilePath(folderName)).then(() => this.fetchFiles());
+                createFolderInStaging(getFilePath(this.workingDirectory, folderName))
+                    .then(() => this.fetchFiles());
             }
         });
     }
@@ -121,47 +105,12 @@ export default class StagingBrowser extends Vue {
         this.fetchFiles();
     }
 
-    uploadFiles() {
-        this.uploadRunning = true;
-        const uploads = this.filesToUpload.map((file: File) => this.uploadFile(file));
-        Promise.all(uploads).then(() => {
-            this.filesToUpload = [];
-            this.uploadRunning = false;
-            this.fetchFiles();
-        });
-    }
-
-    async uploadFile(file: File) {
-        const allowedExtensions: string[] = process.env.VUE_APP_ALLOWED_FILE_EXTENSIONS.split(', ');
-        const ext = file.name.split('.').pop() as string;
-        if (!allowedExtensions.includes(ext)) {
-            showError(`Upload of ${file.name} failed<br>Invalid file extension "${ext}"`);
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', file);
-        if (this.workingDirectory !== '') {
-            formData.append('target_folder', this.workingDirectory.slice(1));
-        }
-        const filePath = this.getFilePath(file.name);
-        try {
-            const response: any = await uploadFileToStaging(formData);
-            if (!response.result[filePath].success) {
-                showError(`Upload of ${filePath} failed!<br>${response.result[filePath].error.message}`,
-                    response.result[filePath].error.message);
-            }
-        } catch (e) {
-            showError(`Upload of ${filePath} failed!`, e);
-        }
-    }
-
     deleteSelected() {
         this.$buefy.dialog.confirm({
             message: `Delete ${this.checkedFiles.length} items?`,
             onConfirm: () => {
                 const deletions = this.checkedFiles.map((file) => {
-                    const filePath: string = this.getFilePath(file.name);
+                    const filePath: string = getFilePath(this.workingDirectory, file.name);
                     return deleteFileFromStaging(filePath)
                         .catch(e => showError(`Failed to delete ${file.name}!`, e));
                 });
@@ -170,14 +119,14 @@ export default class StagingBrowser extends Vue {
         });
     }
 
-    getFilePath(filename: string): string {
-        return this.workingDirectory !== '' ? `${this.workingDirectory.slice(1)}/${filename}` : filename;
-    }
-
     // eslint-disable-next-line class-methods-use-this
     getFileIcon(file: WorkbenchFile) {
         return (file.type === 'directory') ? 'folder' : 'file';
     }
+}
+
+export function getFilePath(baseDir: string, filename: string): string {
+    return baseDir !== '' ? `${baseDir.slice(1)}/${filename}` : filename;
 }
 
 function convertArrayToObject(arr: any[]) {
@@ -199,13 +148,3 @@ function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
 }
 
 </script>
-
-<style lang="scss">
-.upload,
-.upload .upload-draggable {
-    width: 100%;
-}
-.upload .section {
-    padding: 1rem;
-}
-</style>
