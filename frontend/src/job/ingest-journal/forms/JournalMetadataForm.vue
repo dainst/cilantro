@@ -45,8 +45,7 @@ export default class JournalMetadataForm extends Vue {
             });
         });
         Promise.all(updates).then((updatedIssues) => {
-            console.log(updatedIssues); // DOING
-            this.$emit('issues:update', updatedIssues);
+            this.$emit('update:issues', updatedIssues);
         });
     }
 
