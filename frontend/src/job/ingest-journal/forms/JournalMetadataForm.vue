@@ -45,7 +45,8 @@ export default class JournalMetadataForm extends Vue {
             });
         });
         Promise.all(updates).then((updatedIssues) => {
-            this.$emit('update:issues', updatedIssues);
+            const validIssues = updatedIssues.filter(issue => issue.metadata.zenon_id > 0);
+            this.$emit('update:issues', validIssues);
         });
     }
 
