@@ -1,44 +1,12 @@
 <template>
     <section>
-        <div class="level">
-            <div class="level-left">
-                <div class="level-item">
-                    <nav class="breadcrumb">
-                        <ul>
-                            <li
-                                v-for="(dir, index) in workingDirectoryArray"
-                                :key="index + dir"
-                                :class="{ 'is-active': index >= workingDirectoryArray.length - 1}"
-                            >
-                                <a
-                                    @click="openFolder(workingDirectoryArray.slice(0, index + 1).join('/'))"
-                                >
-                                    <b-icon icon="home" v-if="index == 0"></b-icon>
-                                    <span v-if="index > 0">{{ dir }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="level-item">
-                    <b-tooltip label="Create folder">
-                        <b-button type="is-text" icon-right="folder-plus" @click="createFolder()"></b-button>
-                    </b-tooltip>
-                </div>
-            </div>
-            <div class="level-right">
-                <div class="level-item">
-                    <b-tooltip label="Remove selected">
-                        <b-button
-                            type="is-danger"
-                            icon-right="delete"
-                            @click="deleteSelected()"
-                            :disabled="checkedFiles.length == 0"
-                        ></b-button>
-                    </b-tooltip>
-                </div>
-            </div>
-        </div>
+        <StagingBrowserNav
+            :working-directory="workingDirectory"
+            :is-file-selected="checkedFiles.length == 0"
+            @delete-selected="deleteSelected"
+            @open-folder="openFolder"
+            @create-folder="createFolder"
+        />
 
         <div v-if="filesToShow.length !== 0">
             <b-table
@@ -92,8 +60,13 @@ import {
     getStagingFiles, uploadFileToStaging, deleteFileFromStaging,
     createFolderInStaging, WorkbenchFile
 } from './StagingClient';
+import StagingBrowserNav from './StagingBrowserNav.vue';
 
-@Component
+@Component({
+    components: {
+        StagingBrowserNav
+    }
+})
 export default class StagingBrowser extends Vue {
     @Prop({ default: () => [] }) selectedFiles!: string[];
 
@@ -104,10 +77,6 @@ export default class StagingBrowser extends Vue {
 
     get checkedFiles(): WorkbenchFile[] {
         return this.filesToShow.filter(file => this.selectedFiles.includes(file.name));
-    }
-
-    get workingDirectoryArray(): string[] {
-        return this.workingDirectory.split('/');
     }
 
     mounted() {
