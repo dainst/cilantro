@@ -12,7 +12,8 @@
             <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
         </div>
         <div v-if="activeStep === 1">
-            <JournalMetadataForm :issues.sync="issues" />
+            <ContinueButton @click="continueToOptions"></ContinueButton>
+            <JournalMetadataForm :selected-paths="selectedPaths" @issues-updated="onIssuesUpdated" />
             <ContinueButton @click="continueToOptions"></ContinueButton>
         </div>
         <div v-if="activeStep === 2">
@@ -32,7 +33,7 @@ import JournalFilesForm from './forms/JournalFilesForm.vue';
 import ArticlesForm from './forms/ArticlesForm.vue';
 import JournalOptionsForm from './forms/JournalOptionsForm.vue';
 import {
-    JournalImportParameters, JournalIssue, JournalImportOptions, initOptions, initIssue
+    JournalImportParameters, JournalIssue, JournalImportOptions, initOptions
 } from './JournalImportParameters';
 import { showError, showSuccess } from '@/util/Notifier.ts';
 import ContinueButton from '@/util/ContinueButton.vue';
@@ -55,8 +56,11 @@ export default class IngestJournal extends Vue {
     activeStep: number = 0;
 
     continueToMetadata() {
-        this.issues = this.selectedPaths.map(initIssue);
         this.activeStep = 1;
+    }
+
+    onIssuesUpdated(issues: JournalIssue[]) {
+        this.issues = issues.filter(issue => issue.metadata.zenon_id > 0);
     }
 
     continueToOptions() {

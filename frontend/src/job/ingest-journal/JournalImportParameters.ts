@@ -39,7 +39,7 @@ export interface JournalImportParameters extends JobParameters {
     options: JournalImportOptions;
 }
 
-export function initIssue(path: string) {
+export function initIssue(path: string): JournalIssue {
     return {
         path,
         metadata: {

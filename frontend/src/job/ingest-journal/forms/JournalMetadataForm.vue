@@ -1,7 +1,7 @@
 <template>
     <section>
         <div class="tile is-ancestor record-container">
-            <div class="tile is-parent is-3" v-for="record in records" :key="record.id">
+            <div class="tile is-parent is-3 record" v-for="record in records" :key="record.id">
                 <div
                     class="tile is-child notification"
                     v-bind:class="{ 'is-danger': record.error, 'is-success': record.zenonRecord }"
@@ -26,18 +26,19 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { JournalIssueMetadata, JournalIssue } from '../JournalImportParameters';
+import { JournalIssueMetadata, JournalIssue, initIssue } from '../JournalImportParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 
 @Component
 export default class JournalMetadataForm extends Vue {
-    @Prop() private issues!: JournalIssue[];
+    @Prop({ required: true }) private selectedPaths!: string[];
 
     records: Record[] = [];
 
     mounted() {
-        const updates = this.issues.map((issue) => {
-            const record = { id: issue.path, issue };
+        const updates = this.selectedPaths.map((path) => {
+            const issue = initIssue(path);
+            const record = { id: path, issue };
             const i = this.records.push(record) - 1;
             return populateZenonRecord(record).then((populatedRecord) => {
                 Vue.set(this.records, i, populatedRecord);
@@ -45,8 +46,7 @@ export default class JournalMetadataForm extends Vue {
             });
         });
         Promise.all(updates).then((updatedIssues) => {
-            const validIssues = updatedIssues.filter(issue => issue.metadata.zenon_id > 0);
-            this.$emit('update:issues', validIssues);
+            this.$emit('issues-updated', updatedIssues);
         });
     }
 
@@ -99,5 +99,6 @@ async function populateZenonRecord(record: Record): Promise<Record> {
 <style lang="scss" scoped>
 .record-container {
     flex-wrap: wrap;
+    padding-bottom: 2rem;
 }
 </style>
