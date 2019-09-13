@@ -15,7 +15,7 @@
                 <b-table-column
                     field="issue.metadata.description"
                     label="Description"
-                >{{ props.row.issue.metadata.description || '-' }}</b-table-column>
+                >{{ props.row.issue.metadata.description || '-' | truncate(80) }}</b-table-column>
                 <b-table-column
                     field="issue.metadata.volume"
                     label="Volume"
@@ -44,7 +44,15 @@ import {
 import { JournalIssueMetadata, JournalIssue, initIssue } from '../JournalImportParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 
-@Component
+@Component({
+    filters: {
+        truncate(value: string, length: number) {
+            return value.length > length
+                ? `${value.substr(0, length)}...`
+                : value;
+        }
+    }
+})
 export default class JournalMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
 
