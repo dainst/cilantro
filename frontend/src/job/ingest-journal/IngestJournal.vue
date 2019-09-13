@@ -12,9 +12,9 @@
             <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
         </div>
         <div v-if="activeStep === 1">
-            <ContinueButton @click="continueToOptions"></ContinueButton>
+            <ContinueButton @click="continueToOptions" :disabled="this.issues.length == 0"></ContinueButton>
             <JournalMetadataForm :selected-paths="selectedPaths" @issues-updated="onIssuesUpdated" />
-            <ContinueButton @click="continueToOptions"></ContinueButton>
+            <ContinueButton @click="continueToOptions" :disabled="this.issues.length == 0"></ContinueButton>
         </div>
         <div v-if="activeStep === 2">
             <StartJobButton @click="startJob"></StartJobButton>
