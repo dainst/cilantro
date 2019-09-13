@@ -1,24 +1,39 @@
 <template>
     <section>
-        <div class="tile is-ancestor record-container">
-            <div class="tile is-parent is-3 record" v-for="record in records" :key="record.id">
-                <div
-                    class="tile is-child notification"
-                    v-bind:class="{ 'is-danger': record.error, 'is-success': record.zenonRecord }"
-                >
-                    <p class="subtitle">
-                        <b-icon v-if="record.zenonRecord" icon="check"></b-icon>
-                        <b-icon v-if="record.error" icon="alert-circle"></b-icon>
-                        {{record.id}}
-                    </p>
-                    <div
-                        v-if="record.zenonRecord"
-                        class="content"
-                    >{{ record.issue.metadata.description }}</div>
-                    <div v-if="record.error" class="content">{{ record.error }}</div>
-                </div>
-            </div>
-        </div>
+        <b-table :data="records" detailed detail-key="id" :row-class="getRowClass">
+            <template slot-scope="props">
+                <b-table-column width="25">
+                    <b-icon v-if="props.row.zenonRecord" icon="check" type="is-success" />
+                    <b-icon v-if="props.row.error" icon="alert-circle" type="is-danger" />
+                    <b-icon
+                        v-if="!props.row.error && !props.row.zenonRecord"
+                        icon="loading"
+                        custom-class="mdi-spin"
+                    />
+                </b-table-column>
+                <b-table-column field="id" label="Path">{{ props.row.id }}</b-table-column>
+                <b-table-column
+                    field="issue.metadata.description"
+                    label="Description"
+                >{{ props.row.issue.metadata.description || '-' }}</b-table-column>
+                <b-table-column
+                    field="issue.metadata.volume"
+                    label="Volume"
+                >{{ props.row.issue.metadata.volume || '-' }}</b-table-column>
+                <b-table-column
+                    field="issue.metadata.year"
+                    label="Year"
+                >{{ props.row.issue.metadata.year || '-' }}</b-table-column>
+                <b-table-column
+                    field="issue.metadata.number"
+                    label="Number"
+                >{{ props.row.issue.metadata.number || '-' }}</b-table-column>
+            </template>
+            <template slot="detail" slot-scope="props">
+                <pre v-if="props.row.zenonRecord">{{ props.row.zenonRecord }}</pre>
+                <p v-if="props.row.error">{{ props.row.error }}</p>
+            </template>
+        </b-table>
     </section>
 </template>
 
@@ -50,6 +65,18 @@ export default class JournalMetadataForm extends Vue {
         });
     }
 
+    // eslint-disable-next-line class-methods-use-this
+    getRowClass(record: Record) {
+        if (record.error) return 'is-danger';
+        if (record.zenonRecord) return 'is-success';
+        return '';
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getTableField(field: any) {
+        return field || '-';
+    }
+
     labelPosition: string = 'on-border';
 }
 
@@ -70,28 +97,32 @@ async function populateZenonRecord(record: Record): Promise<Record> {
     try {
         const zenonId = extractZenonId(record.issue.path);
         const zenonRecord = await getRecord(zenonId);
-        return {
-            id: record.id,
-            issue: {
-                path: record.issue.path,
-                metadata: {
-                    zenon_id: parseInt(zenonId, 10),
-                    volume: '?',
-                    year: 0,
-                    number: '?',
-                    description: zenonRecord.title,
-                    identification: '?'
-                }
-            },
-            zenonRecord
-        };
+        return initRecord(record.id, record.issue.path, zenonRecord);
     } catch (error) {
-        return {
-            id: record.id,
-            issue: record.issue,
-            error
-        };
+        return initError(record.id, record.issue, error);
     }
+}
+
+function initRecord(id: string, path: string, zenonRecord: ZenonRecord) {
+    return {
+        id,
+        issue: {
+            path,
+            metadata: {
+                zenon_id: parseInt(zenonRecord.id, 10),
+                volume: '',
+                year: 0,
+                number: '',
+                description: zenonRecord.title,
+                identification: ''
+            }
+        },
+        zenonRecord
+    };
+}
+
+function initError(id: string, issue: JournalIssue, error: string) {
+    return { id, issue, error };
 }
 
 </script>
