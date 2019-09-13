@@ -38,3 +38,34 @@ export interface JournalImportParameters extends JobParameters {
     objects: JournalIssue[];
     options: JournalImportOptions;
 }
+
+export function initIssue(path: string) {
+    return {
+        path,
+        metadata: {
+            zenon_id: 0,
+            volume: '',
+            year: 0,
+            number: '',
+            description: '',
+            identification: ''
+        }
+    };
+}
+
+export function initOptions(): JournalImportOptions {
+    return {
+        ojs_metadata: {
+            ojs_journal_code: 'test',
+            ojs_user: 'ojs_user',
+            auto_publish_issue: true,
+            default_create_frontpage: true,
+            allow_upload_without_file: false
+        },
+        do_ocr: false,
+        keep_ratio: true,
+        nlp_params: {
+            lang: 'de'
+        }
+    };
+}

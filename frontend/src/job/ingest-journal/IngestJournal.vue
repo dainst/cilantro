@@ -3,24 +3,19 @@
         <b-steps v-model="activeStep" :has-navigation="(false)">
             <b-step-item label="Journal Files"></b-step-item>
             <b-step-item label="Journal Metadata"></b-step-item>
-            <b-step-item label="Publishing"></b-step-item>
-            <b-step-item label="Other Settings"></b-step-item>
+            <b-step-item label="Start Import"></b-step-item>
         </b-steps>
 
         <div v-if="activeStep === 0">
-            <JournalFilesForm :issues.sync="jobParameters.objects" />
-            <ContinueButton @click="saveAndContinue" :disabled="!issuesSelected"></ContinueButton>
+            <JournalFilesForm :selected-paths.sync="selectedPaths" />
+            <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
         </div>
         <div v-if="activeStep === 1">
-            <JournalMetadataForm :issues.sync="jobParameters.objects" />
-            <ContinueButton @click="saveAndContinue"></ContinueButton>
+            <JournalMetadataForm :issues.sync="issues" />
+            <ContinueButton @click="continueToOptions"></ContinueButton>
         </div>
         <div v-if="activeStep === 2">
-            <PublishingForm v-bind:publishingData="jobParameters.options" />
-            <ContinueButton @click="saveAndContinue"></ContinueButton>
-        </div>
-        <div v-if="activeStep === 3">
-            <OtherJobSettingsForm v-bind:metadata="jobParameters.options" />
+            <JournalOptionsForm @options-updated="options = $event" />
             <StartJobButton @click="startJob"></StartJobButton>
         </div>
     </div>
@@ -33,10 +28,9 @@ import { startJob } from '../JobClient';
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
 import JournalFilesForm from './forms/JournalFilesForm.vue';
 import ArticlesForm from './forms/ArticlesForm.vue';
-import PublishingForm from './forms/PublishingForm.vue';
-import OtherJobSettingsForm from './forms/OtherJobSettingsForm.vue';
+import JournalOptionsForm from './forms/JournalOptionsForm.vue';
 import {
-    JournalImportParameters, JournalIssue
+    JournalImportParameters, JournalIssue, JournalImportOptions, initOptions, initIssue
 } from './JournalImportParameters';
 import { showError, showSuccess } from '@/util/Notifier.ts';
 import ContinueButton from '@/util/ContinueButton.vue';
@@ -47,51 +41,41 @@ import { JobParameters } from '../JobParameters';
     components: {
         JournalFilesForm,
         JournalMetadataForm,
-        PublishingForm,
-        OtherJobSettingsForm,
+        JournalOptionsForm,
         ContinueButton,
         StartJobButton
     }
 })
 export default class IngestJournal extends Vue {
-    jobParameters: JournalImportParameters = initJobParams();
+    selectedPaths: string[] = [];
+    issues: JournalIssue[] = [];
+    options: JournalImportOptions = initOptions();
     activeStep: number = 0;
 
-    get issuesSelected(): boolean {
-        return this.jobParameters.objects.length > 0;
+    continueToMetadata() {
+        this.issues = this.selectedPaths.map(initIssue);
+        this.activeStep = 1;
     }
 
-    saveAndContinue() {
-        this.activeStep += 1;
+    continueToOptions() {
+        this.activeStep = 2;
     }
 
     async startJob() {
+        const params = this.buildJobParams();
         try {
-            await startJob('ingest_journal', this.jobParameters);
+            await startJob('ingest_journal', params);
         } catch (e) {
             showError(e);
         }
     }
-}
 
-function initJobParams(): JournalImportParameters {
-    return {
-        objects: [],
-        options: {
-            ojs_metadata: {
-                ojs_journal_code: 'test',
-                ojs_user: 'ojs_user',
-                auto_publish_issue: true,
-                default_create_frontpage: true,
-                allow_upload_without_file: false
-            },
-            do_ocr: false,
-            keep_ratio: true,
-            nlp_params: {
-                lang: 'de'
-            }
-        }
-    };
+    buildJobParams(): JournalImportParameters {
+        return {
+            objects: this.issues,
+            options: this.options
+        };
+    }
 }
 </script>
 
