@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <section>
         <div class="is-size-4">Select the folders representing journal issues:</div>
         <div style="padding-top:10px; padding-bottom:10px">
             <StagingBrowser
@@ -7,7 +7,7 @@
                 v-on:paths-selected="onPathsSelected"
             />
         </div>
-    </div>
+    </section>
 </template>
 
 <script lang="ts">

@@ -7,6 +7,7 @@
         </b-steps>
 
         <div v-if="activeStep === 0">
+            <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
             <JournalFilesForm :selected-paths.sync="selectedPaths" />
             <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
         </div>
@@ -15,6 +16,7 @@
             <ContinueButton @click="continueToOptions"></ContinueButton>
         </div>
         <div v-if="activeStep === 2">
+            <StartJobButton @click="startJob"></StartJobButton>
             <JournalOptionsForm @options-updated="options = $event" />
             <StartJobButton @click="startJob"></StartJobButton>
         </div>
