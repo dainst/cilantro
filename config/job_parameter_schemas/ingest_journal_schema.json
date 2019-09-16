@@ -10,10 +10,32 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["path"],
+                "required": ["path", "metadata"],
                 "properties": {
                     "path": {
                         "type": "string"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": ["volume", "year", "number", "description", "identification"],
+                        "properties": {
+                            "volume": {
+                                "type": "string"
+                            },
+                            "year": {
+                                "type": "number"
+                            },
+                            "number": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "identification": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             }
