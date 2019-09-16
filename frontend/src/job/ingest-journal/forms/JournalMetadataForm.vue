@@ -95,19 +95,24 @@ interface Record {
     error?: string;
 }
 
-function extractZenonId(path: string) {
+function extractZenonId(path: string): string | null {
     const result = path.match(/.*JOURNAL-ZID(\d+)/);
-    if (!result || result.length < 1) throw Error('Invalid name');
+    if (!result || result.length < 1) return null;
     return result[1];
 }
 
 async function populateZenonRecord(record: Record): Promise<Record> {
+    const zenonId = extractZenonId(record.issue.path);
+    if (!zenonId) {
+        const msg = 'Invalid name. The folder path does not match the pattern "JOURNAL-ZIDxxxxxxx".';
+        return initError(record.id, record.issue, msg);
+    }
     try {
-        const zenonId = extractZenonId(record.issue.path);
         const zenonRecord = await getRecord(zenonId);
         return initRecord(record.id, record.issue.path, zenonRecord);
     } catch (error) {
-        return initError(record.id, record.issue, error);
+        const msg = `No Record with the extracted ID "${zenonId}" found.`;
+        return initError(record.id, record.issue, msg);
     }
 }
 
@@ -118,8 +123,8 @@ function initRecord(id: string, path: string, zenonRecord: ZenonRecord) {
             path,
             metadata: {
                 zenon_id: parseInt(zenonRecord.id, 10),
-                volume: '',
-                year: 0,
+                volume: zenonRecord.containerReference,
+                year: zenonRecord.publicationDates[0],
                 number: '',
                 description: zenonRecord.title,
                 identification: ''

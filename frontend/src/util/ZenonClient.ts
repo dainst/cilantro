@@ -39,6 +39,8 @@ export interface ZenonRecord {
     languages: string[];
     series: object[];
     subjects: string[];
+    containerReference: string;
+    publicationDates: string[];
 }
 
 export interface ZenonAuthors {
