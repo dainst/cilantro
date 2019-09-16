@@ -8,6 +8,7 @@ from flask import Blueprint, url_for, jsonify, request
 from service.errors import ApiError
 from utils.celery_client import celery_app
 from service.user.user_service import auth
+from service.job.job import Job
 from utils import job_db
 from utils import json_validation
 
@@ -109,202 +110,176 @@ def job_list():
     return jsonify(response)
 
 
-@job_controller.route('/<job_type>', methods=['POST'])
+@job_controller.route('/ingest_journal', methods=['POST'])
 @auth.login_required
-def job_create(job_type):
+def journal_job_create():
     """
-    Create a job of the specified job type.
+        Create a journal import job.
 
-    A task chain is constructed as defined in the corresponding job type
-    definition YAML file and executed.
+        Parameters can be provided as JSON as part of the request body
+        and must match the job parameter schema.
 
-    Parameters can be provided as JSON objects as part of the request body
-    and must match the parameters defined in the corresponding job config YAML.
+        Valid user credential have to be given via HTTP basic authentication.
 
-    Valid user credential have to be given via HTTP basic authentication.
+        Also adds the job to the job database.
 
-    Also adds the job to the job database.
+        .. :quickref: Job Controller; Create a job of the specified job type
 
-    .. :quickref: Job Controller; Create a job of the specified job type
+        **Example request**:
 
-    **Example request**:
+        .. sourcecode:: http
 
-    .. sourcecode:: http
+          POST /job/<job-type> HTTP/1.1
 
-      POST /job/<job-type> HTTP/1.1
-
-        {
-            "metadata": {
-                "volume": "",
-                "year": 2018,
-                "number": "",
-                "description": "[PDFs teilweise verfugbar]",
-                "identification": "year"
-            },
-            "files": [{
-                "file": "test.pdf",
-                "range": [
-                    1,
-                    5
-                ]
-            }],
-            "parts": [{
-                    "metadata": {
-                        "title": "Ein kleines Musterdokument",
-                        "abstract": "Bachelorarbeit",
-                        "author": [{
-                            "firstname": "Erich ",
-                            "lastname": "Mustermann"
-                        }],
-                        "pages": {
-                            "showndesc": "101320",
-                            "startPrint": 1,
-                            "endPrint": 2
-                        },
-                        "date_published": "2018--",
-                        "language": "de_DE",
-                        "zenonId": "",
-                        "auto_publish": true,
-                        "create_frontpage": false
-                    },
-                    "files": [{
-                        "file": "test.pdf",
-                        "range": [
-                            1,
-                            2
-                        ]
-                    }]
-                },
-                {
-                    "metadata": {
-                        "title": "Titel 2",
-                        "author": [{
-                            "firstname": "Autor",
-                            "lastname": "Dererste"
-                        }],
-                        "pages": {
-                            "showndesc": "2101327",
-                            "startPrint": 21,
-                            "endPrint": 23
-                        },
-                        "date_published": "2018--",
-                        "language": "de_DE",
-                        "zenonId": "",
-                        "auto_publish": true,
-                        "create_frontpage": false
-                    },
-                    "files": [{
-                        "file": "test.pdf",
-                        "range": [
-                            21,
-                            23
-                        ]
-                    }]
+          {
+            "objects": [{
+                "path": "some_tiffs",
+                "metadata": {
+                    "volume": "",
+                    "year": 2018,
+                    "number": "",
+                    "description": "[PDFs teilweise verf\u00fcgbar]",
+                    "identification": "year"
                 }
-            ],
-            "nlp_params": {
-                "lang": "de"
-            },
-            "ojs_metadata": {
-                "ojs_journal_code": "test",
-                "ojs_user": "ojs_user",
-                "auto_publish_issue": false,
-                "default_publish_articles": true,
-                "default_create_frontpage": true,
-                "allow_upload_without_file": false
-            },
-            "do_ocr": false
-        }
+            }],
+            "options": {
+                "ojs_metadata": {
+                    "ojs_journal_code": "test",
+                    "ojs_user": "ojs_user",
+                    "auto_publish_issue": true,
+                    "default_create_frontpage": true,
+                    "allow_upload_without_file": false
+                },
+                "do_ocr": false,
+                "nlp_params": {
+                    "lang": "de"
+                }
+            }
+          }
 
 
-    **Example response SUCCESS**:
+        **Example response SUCCESS**:
 
-    .. sourcecode:: http
+        .. sourcecode:: http
 
-        HTTP/1.1 200 OK
-
-        {
-            "success": true,
-            "job_id": "010819cc-dc4d-11e8-b152-0242ac130008",
-            "status": "Accepted",
-            "task_ids": [
-                "9331a617-d35f-4b1a-be24-ec7a970c480e",
-                "f012ef11-1ac0-4810-986a-c31335b918fb",
-                "628abc60-2767-484a-a5c3-0b5a9c1a1ef6",
-                "c2a97fd1-28d2-4e97-b41f-67b6f70d91df",
-                "85cd98a7-fe3f-4e42-91f8-504c074be263",
-                "5af3a39c-f837-41df-8a5e-ecdc55a2bef6",
-                "2576d860-b694-4d41-8190-092f45837c37",
-                "8b7e956a-2fc1-446f-9cc8-9f1d63471b2a",
-                "d2d337a7-f346-4b7e-b1f8-4ee4942716f5",
-                "94304191-45fd-45f0-937c-02a6b13fb64c",
-                "b283d505-4174-4a46-909a-1f742dad6047",
-                "010819cc-dc4d-11e8-b152-0242ac130008"
-            ]
-        }
-
-    **Example response ERROR**:
-
-    .. sourcecode:: http
-
-        HTTP/1.1 400 BAD REQUEST
+            HTTP/1.1 200 OK
 
             {
-                "error": {
-                    "code": "bad_request",
-                    "message": "400 Bad Request: The browser (or proxy)
-                                sent a request that this server could
-                                not understand."
-                },
-                "success": false
+                "success": true,
+                "job_id": "010819cc-dc4d-11e8-b152-0242ac130008",
+                "status": "Accepted",
+                "task_ids": [
+                    "9331a617-d35f-4b1a-be24-ec7a970c480e",
+                    "f012ef11-1ac0-4810-986a-c31335b918fb",
+                    "628abc60-2767-484a-a5c3-0b5a9c1a1ef6",
+                    "c2a97fd1-28d2-4e97-b41f-67b6f70d91df",
+                    "85cd98a7-fe3f-4e42-91f8-504c074be263",
+                ]
             }
 
-    :reqheader Accept: application/json
-    :param str job_type: name of the job type
-    :<json dict metadata: descriptive data of the issue/book
-    :<json dict files: files containing the raw data
-    :<json dict parts: metadata for sub-parts
-    :<json dict nlp_params: NLP instructions
-    :<json dict ojs_metadata: OJS specific metadata
-    :<json string do_ocr: switch for OCR execution
+        **Example response ERROR**:
 
-    :resheader Content-Type: application/json
-    :>json dict: operation result
-    :status 200: OK
+        .. sourcecode:: http
 
-    :return: A JSON object containing the status, the job id and the task ids
-        of every subtask in the chain
+            HTTP/1.1 400 BAD REQUEST
+
+                {
+                    "error": {
+                        "code": "bad_request",
+                        "message": "400 Bad Request: The browser (or proxy)
+                                    sent a request that this server could
+                                    not understand."
+                    },
+                    "success": false
+                }
+
+        :reqheader Accept: application/json
+        :param str job_type: name of the job type
+        :<json dict objects: issue file path and metadata
+        :<json dict options: job chain options
+
+        :resheader Content-Type: application/json
+        :>json dict: operation result
+        :status 200: OK
+
+        :return: A JSON object containing the status, the job id and the task
+            ids of every subtask in the chain
     """
     if not request.data:
         raise ApiError("invalid_job_params", "No request payload found")
     params = request.get_json(force=True)
-    if not os.path.isfile(os.path.join(os.environ['CONFIG_DIR'],
-                                       'job_types', job_type + '.yml')):
-        raise ApiError("unknown_job_type", "No job definition file found", 404)
+    user = auth.username()
+
     try:
-        json_validation.validate_params(params, job_type)
+        json_validation.validate_params(params, 'ingest_journal')
     except FileNotFoundError as e:
         raise ApiError("unknown_job_type", str(e), 404)
     except jsonschema.exceptions.ValidationError as e:
         raise ApiError("invalid_job_params", str(e), 400)
-    user = auth.username()
-    job = get_job_config().generate_job(job_type, user, params)
-    task = job.run()
-    logger = logging.getLogger(__name__)
-    logger.info(f"created job with id: {task.id}")
 
-    job_id = task.id
-    task_ids = _get_task_ids(task)
+    user_param = {'user': user}
 
-    job_db.add_job(job_id, user, job_type, task_ids, params)
+    job_ids = []
+
+    for issue_object in params['objects']:
+        task_params = {**issue_object, **user_param}
+        task_params['initial_representation'] = 'tif'
+        chain = celery_app.signature('create_object', kwargs=task_params)
+
+        chain |= celery_app.signature('generate_xml',
+                                      kwargs={
+                                          'template_file':
+                                              'ojs_template_no_articles.xml',
+                                          'target_filename': 'ojs_import.xml',
+                                          'ojs_metadata':
+                                              params['options']['ojs_metadata']
+                                          })
+
+        chain |= celery_app.signature('convert.tif_to_jpg')
+
+        chain |= celery_app.signature('convert.scale_image',
+                                      kwargs={
+                                          'max_width': 50,
+                                          'max_height': 50,
+                                          'target_rep': 'jpg_thumbnails'
+                                          })
+
+        chain |= celery_app.signature('generate_xml',
+                                      kwargs={
+                                          'template_file':
+                                              'mets_template_no_articles.xml',
+                                          'target_filename': 'mets.xml',
+                                          'schema_file': 'mets.xsd'
+                                          })
+
+        chain |= celery_app.signature('publish_to_ojs', kwargs={
+            'ojs_metadata': params['options']['ojs_metadata']
+            })
+        chain |= celery_app.signature('publish_to_repository')
+        chain |= celery_app.signature('cleanup_workdir')
+        chain |= celery_app.signature('finish_job')
+
+        job = Job(chain)
+        task = job.run()
+        logger = logging.getLogger(__name__)
+        logger.info(f"created job with id: {task.id}")
+
+        job_id = task.id
+        task_ids = _get_task_ids(task)
+
+        job_db.add_job(job_id, user, 'ingest_journal', task_ids, issue_object)
+        job_ids.append(job_id)
+
+    # job_db.add_job(job_id, user, job_type, task_ids, params) # TODO bulk job?
 
     body = jsonify({
         'success': True,
         'status': 'Accepted',
-        'job_id': job_id,
-        'task_ids': task_ids
+        # 'job_id': job_id,
+        # 'task_ids': task_ids,
+        'job_ids': job_ids
         })
-    headers = {'Location': url_for('job.job_status', job_id=task.id)}
+    headers = {'Location': url_for('job.job_status', job_id=task.id)} # TODO wozu?
     return body, 202, headers
 
 
