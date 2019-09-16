@@ -22,7 +22,7 @@ class PublishToOJSTask(ObjectTask):
 
     def process_object(self, obj):
         work_path = self.get_work_path()
-        ojs_metadata = self.get_param(self.get_param('params'))
+        ojs_metadata = self.get_param('ojs_metadata')
 
         _, result = publish(os.path.join(work_path, 'ojs_import.xml'),
                             ojs_metadata['ojs_journal_code'])
