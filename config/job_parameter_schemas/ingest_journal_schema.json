@@ -7,23 +7,26 @@
     "additionalProperties": false,
     "properties": {
         "objects": {
-            "type": "object",
-            "required": ["path"],
-            "properties": {
-                "path": {
-                    "type": "string"
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["path"],
+                "properties": {
+                    "path": {
+                        "type": "string"
+                    }
                 }
             }
         },
         "options": {
             "type": "object",
-            "required": ["ojs_metadata", "do_ocr", "keep_ratio", "nlp_params"],
+            "required": ["ojs_metadata", "do_ocr", "nlp_params"],
             "additionalProperties": false,
             "properties": {
                 "ojs_metadata": {
                     "type": "object",
                     "required": ["ojs_journal_code", "ojs_user", "auto_publish_issue",
-                                 "default_publish_articles", "default_create_frontpage",
+                                 "default_create_frontpage",
                                  "allow_upload_without_file"],
                     "additionalProperties": false,
                     "properties": {
@@ -34,9 +37,6 @@
                             "type": "string"
                         },
                         "auto_publish_issue": {
-                            "type": "boolean"
-                        },
-                        "default_publish_articles": {
                             "type": "boolean"
                         },
                         "default_create_frontpage": {
@@ -55,9 +55,6 @@
                 },
                 "ocr_lang": {
                     "type": "string"
-                },
-                "keep_ratio": {
-                    "type": "boolean"
                 },
                 "nlp_params": {
                     "type": "object",
