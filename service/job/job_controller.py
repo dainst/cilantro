@@ -283,6 +283,132 @@ def journal_job_create():
     return body, 202, headers
 
 
+@job_controller.route('/<job_type>', methods=['GET'])
+def get_job_param_schema(job_type):
+    """
+    Serve the contents of the JSON parameter schema for the given job type.
+
+    .. :quickref: Job Controller; Contents of the job param schema file
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      GET /job/<job_type> HTTP/1.1
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+        {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "additionalProperties": false,
+            "description": "Used to validate ingest-journal job parameters",
+            "properties": {
+                "objects": {
+                    "items": {
+                        "properties": {
+                            "path": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "path"
+                        ],
+                        "type": "object"
+                    },
+                    "type": "array"
+                },
+                "options": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "do_nlp": {
+                            "type": "boolean"
+                        },
+                        "do_ocr": {
+                            "type": "boolean"
+                        },
+                        "nlp_params": {
+                            "additionalProperties": false,
+                            "properties": {
+                                "lang": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "lang"
+                            ],
+                            "type": "object"
+                        },
+                        "ocr_lang": {
+                            "type": "string"
+                        },
+                        "ojs_metadata": {
+                            "additionalProperties": false,
+                            "properties": {
+                                "allow_upload_without_file": {
+                                    "type": "boolean"
+                                },
+                                "auto_publish_issue": {
+                                    "type": "boolean"
+                                },
+                                "default_create_frontpage": {
+                                    "type": "boolean"
+                                },
+                                "ojs_journal_code": {
+                                    "type": "string"
+                                },
+                                "ojs_user": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "ojs_journal_code",
+                                "ojs_user",
+                                "auto_publish_issue",
+                                "default_create_frontpage",
+                                "allow_upload_without_file"
+                            ],
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "ojs_metadata",
+                        "do_ocr",
+                        "nlp_params"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "objects",
+                "options"
+            ],
+            "title": "Ingest Journal schema",
+            "type": "object"
+        }
+
+    :reqheader Accept: application/json
+    :param str job_type: Name of the job type
+
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
+
+    :return: JSON file content of the job parameter schema
+    """
+    try:
+        schema = json_validation.get_schema(job_type)
+        return jsonify(schema)
+    except FileNotFoundError:
+        raise ApiError(
+            "job_type_not_found",
+            f"No definition for given job type '{job_type}' found",
+            404)
+
+
 @job_controller.route('/<job_id>', methods=['GET'])
 def job_status(job_id):
     """
