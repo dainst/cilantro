@@ -123,8 +123,8 @@ function initRecord(id: string, path: string, zenonRecord: ZenonRecord) {
             path,
             metadata: {
                 zenon_id: parseInt(zenonRecord.id, 10),
-                volume: '',
-                year: 0,
+                volume: zenonRecord.containerReference,
+                year: zenonRecord.publicationDates[0],
                 number: '',
                 description: zenonRecord.title,
                 identification: ''
