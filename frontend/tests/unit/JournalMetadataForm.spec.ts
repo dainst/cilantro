@@ -8,6 +8,7 @@ localVue.use(Buefy);
 
 describe('JournalMetadataForm.vue', () => {
     const journalMetadata: JournalIssueMetadata = {
+        zenon_id: 12345,
         volume: '',
         year: 2018,
         number: '',
