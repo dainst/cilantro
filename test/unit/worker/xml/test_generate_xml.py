@@ -28,7 +28,6 @@ class GenerateXMLTest(unittest.TestCase):
                 "ojs_journal_code": "test",
                 "ojs_user": "ojs_user",
                 "auto_publish_issue": False,
-                "default_publish_articles": True,
                 "default_create_frontpage": True,
                 "allow_upload_without_file": False}}
 
