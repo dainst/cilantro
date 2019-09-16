@@ -66,6 +66,30 @@ class StagingControllerTest(unittest.TestCase):
                          "extension_not_allowed")
         self.assertEqual(response.status_code, 200)
 
+    def test_upload_file_already_present(self):
+        file_path = os.path.join(self.resource_dir, parent_folder,
+                                 test_object, test_file)
+        try:
+            file = (open(file_path, 'rb'), test_file)
+            response = self._upload_to_staging({'file': file})
+            self.assertEqual(response.status_code, 200)
+            json = response.get_json()
+            for key in json['result']:
+                if key == file[1]:
+                    found_file_in_response = True
+            self.assertTrue(found_file_in_response)
+
+            file = (open(file_path, 'rb'), test_file)
+            response = self._upload_to_staging({'file': file})
+            self.assertEqual(response.status_code, 200)
+            json = response.get_json()
+            self.assertFalse(json['result'][test_file]['success'])
+            self.assertEqual(json['result'][test_file]['error']['code'],
+                             "file_already_exists")
+        finally:
+            if file:
+                file[0].close()
+
     def test_upload_file_no_files_provided(self):
         response = self._upload_to_staging({})
         self.assertEqual(response.status_code, 400)

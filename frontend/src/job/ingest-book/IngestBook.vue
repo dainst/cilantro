@@ -68,6 +68,8 @@ export default class IngestBook extends Vue {
     async startJob() {
         try {
             await startJob('ingest_book', this.jobParameters);
+            showSuccess('Job started');
+            this.$router.push({ path: '/' });
         } catch (e) {
             showError(e);
         }

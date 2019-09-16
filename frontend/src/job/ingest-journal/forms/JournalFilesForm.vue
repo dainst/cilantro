@@ -2,10 +2,13 @@
     <div>
         <div class="is-size-4">Staged files:</div>
         <div style="padding-top:10px; padding-bottom:10px">
-            <FileBrowser :files-to-show="stagedFiles" v-bind:initialSelected.sync="selectedFile" />
+            <StagingFileBrowser v-on:file-selected="selectedFile = $event" />
         </div>
         <div v-if="isFileSelected && (selectedFile.name in this.processedPDFs)">
-            <div class="is-size-4">Which pages do you want to use of the selected file?</div>
+            <div class="is-size-4">
+                Which pages do you want to use of the selected file
+                <i>{{selectedFile.name}}</i>?
+            </div>
             <b-field grouped>
                 <b-field label="Start Page" horizontal>
                     <b-numberinput v-model="pageStart"></b-numberinput>
@@ -30,15 +33,18 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import axios from 'axios';
-import FileBrowser from '@/staging/FileBrowser.vue';
+import StagingFileBrowser from '@/staging/StagingFileBrowser.vue';
 import { FileRange } from '@/job/ingest-journal/JournalImportParameters';
 import ProcessedPDF, { byFilePath } from '@/pdf-processor';
-import { getStagingFiles } from '@/staging/StagingClient';
+import {
+    getStagingFiles, uploadFileToStaging, deleteFileFromStaging,
+    createFolderInStaging, WorkbenchFile
+} from '@/staging/StagingClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component({
     components: {
-        FileBrowser
+        StagingFileBrowser
     }
 })
 export default class JournalFilesForm extends Vue {
@@ -46,10 +52,12 @@ export default class JournalFilesForm extends Vue {
 
     backendUri = this.$store.state.AuthenticationStore.backendUri;
     labelPosition: String = 'on-border';
-    stagedFiles: File[] = [];
+    stagedFiles: WorkbenchFile[] = [];
     isLoading: boolean = false;
     processedPDFs: { [name: string]: ProcessedPDF } = {};
-    selectedFile: FileObject = {};
+
+    selectedFile: File = {} as File;
+
     pageStart: number = 1;
     pageEnd: number = -1;
     columns: object[] = [
@@ -64,7 +72,7 @@ export default class JournalFilesForm extends Vue {
     ]
 
     get isFileSelected() {
-        return Object.keys(this.selectedFile).length !== 0;
+        return Object.keys(this.selectedFile).length !== 0 && this.selectedFile.type !== 'directory';
     }
 
     saveFileRange() {
@@ -74,11 +82,11 @@ export default class JournalFilesForm extends Vue {
         };
         this.filesParam.push(fileRange);
         this.$emit('update:filesParam', this.filesParam);
-        this.selectedFile = {};
+        this.selectedFile = {} as File;
     }
 
     cancelFileRange() {
-        this.selectedFile = {};
+        this.selectedFile = {} as File;
     }
 
     mounted() {
@@ -98,8 +106,8 @@ export default class JournalFilesForm extends Vue {
     }
 
     @Watch('selectedFile')
-    async onSelectedFileChanged(value: FileObject, oldValue: FileObject) {
-        if (value.name === undefined) return;
+    async onSelectedFileChanged(value: File, oldValue: File) {
+        if (value.name === undefined || value.type === 'directory') return;
 
         if (value.name.toLowerCase().endsWith('.pdf') && !(value.name in this.processedPDFs)) {
             this.isLoading = true;
@@ -112,9 +120,5 @@ export default class JournalFilesForm extends Vue {
         }
         this.updateInputs(value.name);
     }
-}
-
-interface FileObject {
-    name?: string;
 }
 </script>
