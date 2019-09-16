@@ -1,0 +1,26 @@
+{% set metadata = obj.metadata.to_dict() %}
+{% set ojs_metadata = params['ojs_metadata'] %}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE issues PUBLIC "-//PKP//OJS Articles and Issues XML//EN" "http://pkp.sfu.ca/ojs/dtds/2.4.8/native.dtd">
+<issues>
+    <issue identification="{{metadata['identification']}}" published="{{ojs_metadata['auto_publish_issue']|lower}}">
+
+        {% if metadata['description'] %}
+        <description>{{metadata['description']}}</description>
+        {% endif %}
+
+        {% if metadata['volume'] %}
+        <volume>{{metadata['volume']}}</volume>
+        {% endif -%}
+
+        {% if metadata['number'] %}
+        <number>{{metadata['number']}}</number>
+        {% endif -%}
+
+        {% if metadata['year'] %}
+        <year>{{metadata['year']}}</year>
+        {% endif -%}
+
+        <section></section>
+    </issue>
+</issues>
