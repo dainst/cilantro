@@ -3,26 +3,13 @@ import jsonschema
 import os
 import datetime
 
-from flask import Blueprint, url_for, jsonify, request, g
+from flask import Blueprint, url_for, jsonify, request
 
 from service.errors import ApiError
 from utils.celery_client import celery_app
-from service.job.job_config import JobConfig
 from service.user.user_service import auth
 from utils import job_db
 from utils import json_validation
-
-
-def get_job_config():
-    """
-    Get the job config singleton or creates it if it does not exist already.
-
-    :return JobConfig:
-    """
-    job_config = getattr(g, '_job_config', None)
-    if job_config is None:
-        job_config = g._job_config = JobConfig()
-    return job_config
 
 
 job_controller = Blueprint('job', __name__)

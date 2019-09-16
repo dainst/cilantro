@@ -69,8 +69,6 @@ class Object:
     """
 
     INITIAL_REPRESENTATION = "origin"
-    PART_PREFIX = "part_"
-    PARTS_DIR = "parts"
     DATA_DIR = "data"
 
     path: str
@@ -173,48 +171,6 @@ class Object:
         self.metadata = ObjectMetadata.from_dict(d)
         self.write()
 
-    def add_part(self):
-        """
-        Add a sub-object to this object.
-
-        Creates a new part_XXXX folder under parts. Also creates the parts
-        folder if it does not exist already.
-
-        :return: Object:
-        """
-        if not os.path.exists(self.get_parts_dir()):
-            os.makedirs(self.get_parts_dir())
-            path = os.path.join(self.get_parts_dir(),
-                                f"{self.PART_PREFIX}0001")
-            return Object(path)
-        part_no = len(os.listdir(self.get_parts_dir())) + 1
-        return self.get_part(part_no)
-
-    def get_part(self, index: int):
-        """
-        Get a sub-object of this object by index.
-
-        :param index:
-        :return Object:
-        """
-        return Object(self._get_part_dir_for_index(index))
-
-    def get_parts(self):
-        """
-        Get all sub-objects of this object.
-
-        :return List[Object]:
-        """
-        sub_objects = []
-        if os.path.isdir(self.get_parts_dir()):
-            for d in [d for d in os.listdir(self.get_parts_dir()) if
-                      os.path.isdir(os.path.join(self.get_parts_dir(), d))]:
-                if _is_part_dir_format(d):
-                    sub_objects.append(
-                        Object(os.path.join(self.get_parts_dir(), d)))
-        sub_objects.sort(key=lambda obj: obj.path)
-        return sub_objects
-
     def copy(self, path):
         """
         Copy the whole contents of this object to a new location.
@@ -223,14 +179,6 @@ class Object:
         :return Object: A new object instance representing the copy
         """
         copy_tree(self.path, path)
-
-    def get_parts_dir(self):
-        """
-        Return the path to the parts directory.
-
-        :return str:
-        """
-        return os.path.join(self.path, self.PARTS_DIR)
 
     def get_data_dir(self):
         """
@@ -248,18 +196,3 @@ class Object:
         :return str:
         """
         return os.path.join(self.get_data_dir(), representation)
-
-    def _get_part_dir_for_index(self, index: int):
-        part_name = f"{Object.PART_PREFIX}{str(index).zfill(4)}"
-        return os.path.join(self.get_parts_dir(), part_name)
-
-    def get_parent(self):
-        """Return the parent Object if this is a part."""
-        if "parts/part_" in self.path:
-            return Object(Path(self.path).parents[1])
-        else:
-            return None
-
-
-def _is_part_dir_format(dir_name):
-    return Object.PART_PREFIX in dir_name
