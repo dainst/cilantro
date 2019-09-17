@@ -1,5 +1,7 @@
 <template>
     <section>
+        <b-loading :is-full-page="true" :active="operationInProgress"></b-loading>
+
         <StagingBrowserNav
             :working-directory="workingDirectory"
             :is-file-selected="checkedFiles.length == 0"
@@ -55,6 +57,7 @@ import StagingBrowserUpload from './StagingBrowserUpload.vue';
 export default class StagingBrowser extends Vue {
     @Prop({ default: () => [] }) selectedPaths!: string[];
 
+    operationInProgress: boolean = false;
     workingDirectory: string = '';
     filesToShow: WorkbenchFile[] = [];
 
@@ -89,9 +92,11 @@ export default class StagingBrowser extends Vue {
 
     async fetchFiles(): Promise<void> {
         try {
+            this.operationInProgress = true;
             this.filesToShow = await getStagingFiles(this.workingDirectory);
             this.filesToShow.sort(compareFileEntries);
             this.$emit('files-selected', []);
+            this.operationInProgress = false;
         } catch (e) {
             showError('Failed to retrieve file list from server!', e);
         }
@@ -112,6 +117,7 @@ export default class StagingBrowser extends Vue {
         this.$buefy.dialog.confirm({
             message: `Delete ${this.checkedFiles.length} items?`,
             onConfirm: () => {
+                this.operationInProgress = true;
                 const deletions = this.checkedFiles.map((file) => {
                     const filePath: string = getFilePath(this.workingDirectory, file.name);
                     return deleteFileFromStaging(filePath)
