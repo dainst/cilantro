@@ -123,7 +123,10 @@ export default class StagingBrowser extends Vue {
                     return deleteFileFromStaging(filePath)
                         .catch(e => showError(`Failed to delete ${file.name}!`, e));
                 });
-                Promise.all(deletions).then(() => this.fetchFiles());
+                Promise.all(deletions).then(() => {
+                    this.$emit('update:selected-paths', []);
+                    this.fetchFiles();
+                });
             }
         });
     }
