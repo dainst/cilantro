@@ -3,8 +3,8 @@
         <div class="is-size-4">Select the folders representing journal issues:</div>
         <div style="padding-top:10px; padding-bottom:10px">
             <StagingBrowser
-                :selected-paths.sync="selectedPaths"
-                v-on:paths-selected="onPathsSelected"
+                :selected-paths="selectedPaths"
+                v-on:update:selected-paths="$emit('update:selected-paths', $event)"
             />
         </div>
     </section>
@@ -23,10 +23,6 @@ import { JournalIssue } from '../JournalImportParameters';
     }
 })
 export default class JournalFilesForm extends Vue {
-    @Prop({ default: () => [] }) private selectedPaths!: JournalIssue[];
-
-    onPathsSelected(files: string[]) {
-        this.$emit('update:selected-paths', files);
-    }
+    @Prop({ default: () => [] }) private selectedPaths!: string[];
 }
 </script>

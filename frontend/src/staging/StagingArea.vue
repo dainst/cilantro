@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <StagingBrowser />
+    <div class="container">
+        <StagingBrowser :selected-paths.sync="selectedPaths" />
     </div>
 </template>
 
@@ -14,6 +14,6 @@ import StagingBrowser from './StagingBrowser.vue';
     }
 })
 export default class StagingArea extends Vue {
-
+    selectedPaths: string[] = [];
 }
 </script>

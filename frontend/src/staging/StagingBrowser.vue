@@ -71,7 +71,7 @@ export default class StagingBrowser extends Vue {
 
     onCheck(checkedFiles: WorkbenchFile[]): void {
         const paths = checkedFiles.map(file => getFilePath(this.workingDirectory, file.name));
-        this.$emit('paths-selected', paths);
+        this.$emit('update:selected-paths', paths);
     }
 
     createFolder(): void {
