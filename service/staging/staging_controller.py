@@ -323,6 +323,69 @@ def upload_to_staging():
                    f"The request did not contain any files")
 
 
+@staging_controller.route('/move', methods=['POST'],
+                          strict_slashes=False)
+@auth.login_required
+def move():
+    """
+    Move a file or folder inside the staging area.
+
+    Folders inside the target path must already exist.
+
+    Uses :py:func:~os.rename.
+
+    .. :quickref: Staging Controller; Move files inside the staging area
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      POST /staging/move HTTP/1.1
+
+        {
+            "source": "test-folder/file.txt",
+            "target": "test-folder2/subfolder/"
+        }
+
+    **Example response SUCCESS**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+        {
+            "success": true
+        }
+
+    :reqheader Accept: application/json
+    :<json string source: path of the file to be moved
+    :<json string target: new path of the file to be moved
+
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
+    :return: A JSON object containing the status of the operation
+    """
+    if not request.data:
+        raise ApiError("no_payload_found", "No request payload found")
+    params = request.get_json(force=True)
+    if not params['source']:
+        raise ApiError("param_not found", "Missing source parameter")
+    if not params['target']:
+        raise ApiError("param_not found", "Missing target parameter")
+    source = os.path.join(staging_dir, auth.username(), params['source'])
+    target = os.path.join(staging_dir, auth.username(), params['target'])
+    try:
+        os.rename(source, target)
+        return {"success": True}
+    except Exception as e:
+        return _generate_error_result(
+            source,
+            "move_failed",
+            "An unknown error occurred.",
+            e)
+
+
 def _process_file(file, username):
     if not _is_allowed_file_extension(file.filename):
         return _generate_error_result(

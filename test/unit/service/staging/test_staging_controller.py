@@ -159,6 +159,29 @@ class StagingControllerTest(unittest.TestCase):
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 404)
 
+    def test_move_file(self):
+        os.makedirs(os.path.join(self.staging_dir, test_user), exist_ok=True)
+        open(os.path.join(self.staging_dir, test_user, 'test_file'), 'w') \
+            .close()
+        data = '{ "source": "test_file", "target": "test_file_moved" }'
+        response = self.client.post(f'/staging/move', data=data,
+                                    headers=get_auth_header())
+        self.assertEqual(response.status_code, 200)
+        self._assert_file_in_staging('test_file_moved')
+        self._remove_file_from_staging('test_file_moved')
+
+    def test_move_file_to_folder(self):
+        os.makedirs(os.path.join(self.staging_dir, test_user, 'folder'),
+                    exist_ok=True)
+        open(os.path.join(self.staging_dir, test_user, 'test_file'), 'w') \
+            .close()
+        data = '{ "source": "test_file", "target": "folder/test_file" }'
+        response = self.client.post(f'/staging/move', data=data,
+                                    headers=get_auth_header())
+        self.assertEqual(response.status_code, 200)
+        self._assert_file_in_staging('folder/test_file')
+        self._remove_dir_from_staging('folder')
+
     def _upload_folder_to_staging(self, obj):
         object_path = os.path.join(self.resource_dir, parent_folder, obj)
         files = []
