@@ -97,35 +97,6 @@ class ObjectTest(unittest.TestCase):
         self.assertIsInstance(file, BytesIO)
         self.assertGreater(file.getbuffer().nbytes, 0)
 
-    def test_add_child(self):
-        obj = Object(test_object_working_path)
-        subobj = obj.add_part()
-        subobj.metadata.title = "A test object"
-        subobj.add_file('jpg', test_file_path)
-        obj.write()
-
-        expected_file_path = os.path.join(test_object_working_path, 'parts',
-                                          'part_0001', 'data', 'jpg',
-                                          test_file_name)
-        self.assertTrue(os.path.isfile(expected_file_path))
-        meta_path = os.path.join(test_object_working_path, 'parts',
-                                 'part_0001', 'meta.json')
-        self.assertTrue(os.path.isfile(meta_path))
-
-    def test_get_children(self):
-        _copy_test_object()
-        obj = Object(test_object_working_path)
-        children = obj.get_parts()
-
-        subobj = children[0]
-        file = subobj.get_representation('jpg').__next__()
-        self.assertIsInstance(file, BytesIO)
-        self.assertGreater(file.getbuffer().nbytes, 0)
-
-        subobj = children[1]
-        self.assertIsInstance(subobj.metadata, ObjectMetadata)
-        self.assertEqual(subobj.metadata.title, "[Attic geometric Pyxis].")
-
     def test_copy(self):
         _copy_test_object()
         obj = Object(test_object_working_path)

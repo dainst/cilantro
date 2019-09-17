@@ -15,6 +15,7 @@ class JobControllerTest(unittest.TestCase):
     test_resource_dir = 'test/resources'
 
     def setUp(self):
+        """Prepare test setup."""
         app.testing = True
         self.client = app.test_client()
 

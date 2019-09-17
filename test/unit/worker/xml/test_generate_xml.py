@@ -21,7 +21,7 @@ class GenerateXMLTest(unittest.TestCase):
         checks.
         """
         obj = Object(f'{self.resource_dir}/objects/a_journal')
-        template_file = 'ojs_template.xml'
+        template_file = 'mets_template_no_articles.xml'
         target_file_path = os.path.join(obj.path, 'test_ojsxml.xml')
         params = {
             "ojs_metadata": {
