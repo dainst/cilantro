@@ -5,9 +5,10 @@
         <StagingBrowserNav
             :working-directory="workingDirectory"
             :is-file-selected="checkedFiles.length == 0"
-            @delete-selected="deleteSelected"
+            @delete-selected="showDeleteDialog"
             @open-folder="openFolder"
             @create-folder="createFolder"
+            @move-selected="showMoveModal"
         />
 
         <div v-if="filesToShow.length !== 0">
@@ -43,15 +44,17 @@ import {
 import { showSuccess, showWarning, showError } from '@/util/Notifier.ts';
 import {
     getStagingFiles, deleteFileFromStaging,
-    createFolderInStaging, WorkbenchFile
+    createFolderInStaging, WorkbenchFile, moveInStaging
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';
+import StagingBrowserFolderSelection from './StagingBrowserFolderSelection.vue';
 
 @Component({
     components: {
         StagingBrowserNav,
-        StagingBrowserUpload
+        StagingBrowserUpload,
+        StagingBrowserFolderSelection
     }
 })
 export default class StagingBrowser extends Vue {
@@ -113,21 +116,46 @@ export default class StagingBrowser extends Vue {
         this.fetchFiles();
     }
 
-    deleteSelected() {
+    showDeleteDialog() {
         this.$buefy.dialog.confirm({
             message: `Delete ${this.checkedFiles.length} items?`,
-            onConfirm: () => {
-                this.operationInProgress = true;
-                const deletions = this.checkedFiles.map((file) => {
-                    const filePath: string = getFilePath(this.workingDirectory, file.name);
-                    return deleteFileFromStaging(filePath)
-                        .catch(e => showError(`Failed to delete ${file.name}!`, e));
-                });
-                Promise.all(deletions).then(() => {
-                    this.$emit('update:selected-paths', []);
-                    this.fetchFiles();
-                });
+            onConfirm: this.deleteSelected
+        });
+    }
+
+    deleteSelected() {
+        this.operationInProgress = true;
+        const deletions = this.checkedFiles.map((file) => {
+            const filePath: string = getFilePath(this.workingDirectory, file.name);
+            return deleteFileFromStaging(filePath)
+                .catch(e => showError(`Failed to delete ${file.name}!`, e));
+        });
+        Promise.all(deletions).then(() => {
+            this.$emit('update:selected-paths', []);
+            this.fetchFiles();
+        });
+    }
+
+    showMoveModal() {
+        this.$buefy.modal.open({
+            parent: this,
+            component: StagingBrowserFolderSelection,
+            events: {
+                ok: this.moveSelected
             }
+        });
+    }
+
+    moveSelected(targetPath: string) {
+        this.operationInProgress = true;
+        const moveOperations = this.checkedFiles.map((file) => {
+            const sourcePath = getFilePath(this.workingDirectory, file.name);
+            return moveInStaging(sourcePath, getFilePath(targetPath, file.name))
+                .catch(e => showError(`Failed to move ${file.name}!`, e));
+        });
+        Promise.all(moveOperations).then(() => {
+            this.$emit('update:selected-paths', []);
+            this.fetchFiles();
         });
     }
 
@@ -141,12 +169,8 @@ export function getFilePath(baseDir: string, filename: string): string {
     return baseDir !== '' ? `${baseDir.slice(1)}/${filename}` : filename;
 }
 
-function convertArrayToObject(arr: any[]) {
-    const obj = arr.reduce((acc, cur, i) => {
-        acc[cur.name] = cur; // eslint-disable-line no-param-reassign
-        return acc;
-    }, {});
-    return obj;
+export function getFileName(path: string): string {
+    return path.replace(/^.*\//, '');
 }
 
 function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {

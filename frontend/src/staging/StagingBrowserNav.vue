@@ -25,19 +25,32 @@
                         @click="$emit('create-folder')"
                     ></b-button>
                 </b-tooltip>
+                <b-field>
+                    <p class="control">
+                        <b-tooltip label="Move selected">
+                            <b-button
+                                type="is-text"
+                                icon-right="folder-move"
+                                @click="$emit('move-selected')"
+                                :disabled="isFileSelected"
+                            ></b-button>
+                        </b-tooltip>
+                    </p>
+                    <p class="control">
+                        <b-tooltip label="Remove selected">
+                            <b-button
+                                type="is-text"
+                                icon-right="delete"
+                                @click="$emit('delete-selected')"
+                                :disabled="isFileSelected"
+                            ></b-button>
+                        </b-tooltip>
+                    </p>
+                </b-field>
             </div>
         </div>
         <div class="level-right">
-            <div class="level-item">
-                <b-tooltip label="Remove selected">
-                    <b-button
-                        type="is-danger"
-                        icon-right="delete"
-                        @click="$emit('delete-selected')"
-                        :disabled="isFileSelected"
-                    ></b-button>
-                </b-tooltip>
-            </div>
+            <div class="level-item"></div>
         </div>
     </div>
 </template>
