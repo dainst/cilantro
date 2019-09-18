@@ -42,7 +42,7 @@
         },
         "options": {
             "type": "object",
-            "required": ["ojs_metadata", "do_ocr", "nlp_params"],
+            "required": ["ojs_metadata"],
             "additionalProperties": false,
             "properties": {
                 "ojs_metadata": {
