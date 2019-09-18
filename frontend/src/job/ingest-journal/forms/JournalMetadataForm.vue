@@ -116,7 +116,7 @@ async function populateZenonRecord(record: Record): Promise<Record> {
     }
 }
 
-function initRecord(id: string, path: string, zenonRecord: ZenonRecord) {
+function initRecord(id: string, path: string, zenonRecord: ZenonRecord): Record {
     return {
         id,
         issue: {
@@ -124,7 +124,7 @@ function initRecord(id: string, path: string, zenonRecord: ZenonRecord) {
             metadata: {
                 zenon_id: parseInt(zenonRecord.id, 10),
                 volume: zenonRecord.containerReference,
-                year: zenonRecord.publicationDates[0],
+                year: parseInt(zenonRecord.publicationDates[0], 10),
                 number: '',
                 description: zenonRecord.title,
                 identification: ''
