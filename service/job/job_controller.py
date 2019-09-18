@@ -280,7 +280,7 @@ def journal_job_create():
     return body, 202, headers
 
 
-@job_controller.route('/<job_type>', methods=['GET'])
+@job_controller.route('/param_schema/<job_type>', methods=['GET'])
 def get_job_param_schema(job_type):
     """
     Serve the contents of the JSON parameter schema for the given job type.

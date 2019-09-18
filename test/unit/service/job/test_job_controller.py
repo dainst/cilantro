@@ -21,7 +21,7 @@ class JobControllerTest(unittest.TestCase):
 
     def test_get_job_type_schema(self):
         """Test if a ingest-journal schema is returned when requested."""
-        url = '/job/ingest_journal'
+        url = '/job/param_schema/ingest_journal'
         response_text = self.client.get(url).get_data(as_text=True)
         self.assertTrue("{\"$schema\"" in response_text)
 
