@@ -221,43 +221,40 @@ def journal_job_create():
 
     job_ids = []
 
+    task = celery_app.signature
+
     for issue_object in params['objects']:
-        task_params = {**issue_object, **user_param}
-        task_params['initial_representation'] = 'tif'
-        chain = celery_app.signature('create_object', kwargs=task_params)
+        task_params = dict(**issue_object, **user_param,
+                           initial_representation='tif')
 
-        chain |= celery_app.signature('generate_xml',
-                                      kwargs={
-                                          'template_file':
-                                              'ojs_template_no_articles.xml',
-                                          'target_filename': 'ojs_import.xml',
-                                          'ojs_metadata':
-                                              params['options']['ojs_metadata']
-                                          })
+        chain = task('create_object', **task_params)
 
-        chain |= celery_app.signature('convert.tif_to_jpg')
+        chain |= task('generate_xml',
+                      template_file='ojs_template_no_articles.xml',
+                      target_filename='ojs_import.xml',
+                      ojs_metadata=params['options']['ojs_metadata']
+                      )
 
-        chain |= celery_app.signature('convert.scale_image',
-                                      kwargs={
-                                          'max_width': 50,
-                                          'max_height': 50,
-                                          'target_rep': 'jpg_thumbnails'
-                                          })
+        chain |= task('convert.tif_to_jpg')
 
-        chain |= celery_app.signature('generate_xml',
-                                      kwargs={
-                                          'template_file':
-                                              'mets_template_no_articles.xml',
-                                          'target_filename': 'mets.xml',
-                                          'schema_file': 'mets.xsd'
-                                          })
+        chain |= task('convert.scale_image',
+                      max_width=50,
+                      max_height=50,
+                      target_rep='jpg_thumbnails'
+                      )
 
-        chain |= celery_app.signature('publish_to_ojs', kwargs={
-            'ojs_metadata': params['options']['ojs_metadata']
-            })
-        chain |= celery_app.signature('publish_to_repository')
-        chain |= celery_app.signature('cleanup_workdir')
-        chain |= celery_app.signature('finish_job')
+        chain |= task('generate_xml',
+                      template_file='mets_template_no_articles.xml',
+                      target_filename='mets.xml',
+                      schema_file='mets.xsd'
+                      )
+
+        chain |= task('publish_to_ojs',
+                      ojs_metadata=params['options']['ojs_metadata']
+                      )
+        chain |= task('publish_to_repository')
+        chain |= task('cleanup_workdir')
+        chain |= task('finish_job')
 
         job = Job(chain)
         task = job.run()
