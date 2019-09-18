@@ -4,7 +4,7 @@
         <div style="padding-top:10px; padding-bottom:10px">
             <StagingBrowser
                 :selected-paths="selectedPaths"
-                v-on:update:selected-paths="$emit('update:selected-paths', $event)"
+                @update:selected-paths="$emit('update:selected-paths', $event)"
             />
         </div>
     </section>

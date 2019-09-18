@@ -13,7 +13,7 @@
         </div>
         <div v-if="activeStep === 1">
             <ContinueButton @click="continueToOptions" :disabled="this.issues.length == 0"></ContinueButton>
-            <JournalMetadataForm :selected-paths="selectedPaths" @issues-updated="onIssuesUpdated" />
+            <JournalMetadataForm :selected-paths="selectedPaths" @update:issues="onIssuesUpdated" />
             <ContinueButton @click="continueToOptions" :disabled="this.issues.length == 0"></ContinueButton>
         </div>
         <div v-if="activeStep === 2">

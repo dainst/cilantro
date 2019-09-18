@@ -64,26 +64,18 @@ export default class JournalMetadataForm extends Vue {
             const record = { id: path, issue };
             const i = this.records.push(record) - 1;
             return populateZenonRecord(record).then((populatedRecord) => {
-                Vue.set(this.records, i, populatedRecord);
+                this.$set(this.records, i, populatedRecord);
                 return populatedRecord.issue;
             });
         });
-        Promise.all(updates).then((updatedIssues) => {
-            this.$emit('issues-updated', updatedIssues);
+        Promise.all(updates).then((updatedIssues: JournalIssue[]) => {
+            this.$emit('update:issues', updatedIssues);
         });
     }
 
-    // eslint-disable-next-line class-methods-use-this
-    getRowClass(record: Record) {
-        if (record.error) return 'is-danger';
-        if (record.zenonRecord) return 'is-success';
-        return '';
-    }
+    getRowClass = getRowClass;
 
-    // eslint-disable-next-line class-methods-use-this
-    getTableField(field: any) {
-        return field || '-';
-    }
+    getTableField = getTableField;
 
     labelPosition: string = 'on-border';
 }
@@ -116,6 +108,16 @@ async function populateZenonRecord(record: Record): Promise<Record> {
     }
 }
 
+function getRowClass(record: Record) {
+    if (record.error) return 'is-danger';
+    if (record.zenonRecord) return 'is-success';
+    return '';
+}
+
+function getTableField(field: any) {
+    return field || '-';
+}
+
 function initRecord(id: string, path: string, zenonRecord: ZenonRecord): Record {
     return {
         id,
@@ -134,7 +136,7 @@ function initRecord(id: string, path: string, zenonRecord: ZenonRecord): Record 
     };
 }
 
-function initError(id: string, issue: JournalIssue, error: string) {
+function initError(id: string, issue: JournalIssue, error: string): Record {
     return { id, issue, error };
 }
 
