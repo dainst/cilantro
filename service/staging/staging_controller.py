@@ -232,7 +232,7 @@ def create_folder():
     try:
         os.makedirs(os.path.join(staging_dir, auth.username(), folderpath),
                     exist_ok=True)
-        return {"success": True}
+        return jsonify({"success": True}), 200
     except Exception as e:
         return _generate_error_result(
             folderpath,
@@ -377,7 +377,7 @@ def move():
     target = os.path.join(staging_dir, auth.username(), params['target'])
     try:
         os.rename(source, target)
-        return {"success": True}
+        return jsonify({"success": True}), 200
     except Exception as e:
         return _generate_error_result(
             source,
