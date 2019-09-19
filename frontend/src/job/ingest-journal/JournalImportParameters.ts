@@ -9,6 +9,7 @@ export interface JournalIssueMetadata {
     number: string;
     description: string;
     identification: string;
+    ojs_journal_code: string;
 }
 
 export interface OJSMetadata {
@@ -39,7 +40,8 @@ export function initIssue(path: string): JournalIssue {
             year: 0,
             number: '',
             description: '',
-            identification: ''
+            identification: '',
+            ojs_journal_code: ''
         }
     };
 }

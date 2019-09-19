@@ -41,6 +41,7 @@ export interface ZenonRecord {
     subjects: string[];
     containerReference: string;
     publicationDates: string[];
+    parentId?: string;
 }
 
 export interface ZenonAuthors {

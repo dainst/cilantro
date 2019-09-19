@@ -13,7 +13,8 @@ describe('JournalMetadataForm.vue', () => {
         year: 2018,
         number: '',
         description: '[PDFs teilweise verf\u00fcgbar]',
-        identification: 'year'
+        identification: 'year',
+        ojs_journal_code: 'aa'
     };
     const wrapper = mount(JournalMetadataForm, {
         localVue,
