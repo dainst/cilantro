@@ -44,7 +44,7 @@ import {
 import { JournalIssueMetadata, JournalIssue, initIssue } from '../JournalImportParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 
-const ojsZenonMapping: { [index: string]: string} = {
+const ojsZenonMapping: { [index: string]: string } = {
     '000054957': 'aa',
     '000055021': 'brgk',
     '000098143': 'chiron',
@@ -53,7 +53,7 @@ const ojsZenonMapping: { [index: string]: string} = {
     '000054792': 'ger',
     '000055658': 'mm',
     '000814258': 'rm'
-}
+};
 
 @Component({
     filters: {
@@ -115,13 +115,13 @@ async function populateZenonRecord(record: Record): Promise<Record> {
         if (!zenonRecord.parentId) {
             const msg = `Zenon record has no parent id. Can't determine which Journal this issue belongs to.`;
             return initError(record.id, record.issue, msg);
-        } else if(!(zenonRecord.parentId in ojsZenonMapping)) {
+        }
+        if (!(zenonRecord.parentId in ojsZenonMapping)) {
             const msg = `Missing OJS Journal code for Journal with Zenon-ID '${zenonRecord.parentId}'.`;
             return initError(record.id, record.issue, msg);
-        } else {
-            const ojsJournalCode = ojsZenonMapping[zenonRecord.parentId];
-            return initRecord(record.id, record.issue.path, zenonRecord, ojsJournalCode);
         }
+        const ojsJournalCode = ojsZenonMapping[zenonRecord.parentId];
+        return initRecord(record.id, record.issue.path, zenonRecord, ojsJournalCode);
     } catch (error) {
         const msg = `No Record with the extracted ID "${zenonId}" found.`;
         return initError(record.id, record.issue, msg);
