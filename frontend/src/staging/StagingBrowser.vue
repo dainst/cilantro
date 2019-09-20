@@ -88,7 +88,8 @@ export default class StagingBrowser extends Vue {
             },
             onConfirm: (folderName) => {
                 createFolderInStaging(getFilePath(this.workingDirectory, folderName))
-                    .then(() => this.fetchFiles());
+                    .then(() => this.fetchFiles())
+                    .catch(e => showError('Failed to create folder!', e));
             }
         });
     }
