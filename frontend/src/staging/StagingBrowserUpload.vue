@@ -6,17 +6,24 @@
                     <div class="content">
                         <div
                             class="columns"
-                            v-for="(percentage, filePath) of uploadPercentage"
+                            v-for="(status, filePath) of uploadStatus"
                             :key="filePath"
                         >
                             <div class="column">{{ filePath }}</div>
                             <div class="column">
                                 <b-progress
-                                    :value="percentage"
+                                    :value="getValue(status)"
                                     show-value
                                     format="percent"
-                                    :type="percentage >= 100 ? 'is-success' : 'is-primary'"
-                                />
+                                    :type="status.complete ? 'is-success' : 'is-primary'"
+                                >
+                                    <span
+                                        v-if="status.percentage >= 100 && !status.complete"
+                                    >Postprocessing ...</span>
+                                    <span v-if="status.percentage >= 100 && status.complete">
+                                        <b-icon icon="check" size="is-small"></b-icon>
+                                    </span>
+                                </b-progress>
                             </div>
                         </div>
                     </div>
@@ -51,13 +58,14 @@ import {
 import { showError } from '@/util/Notifier';
 import { getFilePath } from './StagingBrowser.vue';
 import { uploadFileToStaging } from './StagingClient';
+import { allowedFileExtensions } from '@/config';
 
 @Component
 export default class StagingBrowserUpload extends Vue {
     @Prop({ default: '' }) workingDirectory!: string;
 
     uploadRunning: boolean = false;
-    uploadPercentage: { [index: string]: number } = {};
+    uploadStatus: { [index: string]: Status } = {};
     filesToUpload: File[] = [];
 
     uploadFiles() {
@@ -66,15 +74,14 @@ export default class StagingBrowserUpload extends Vue {
         Promise.all(uploads).then(() => {
             this.filesToUpload = [];
             this.uploadRunning = false;
-            this.uploadPercentage = {};
+            this.uploadStatus = {};
             this.$emit('upload-finished');
         });
     }
 
     async uploadFile(file: File) {
-        const allowedExtensions: string[] = process.env.VUE_APP_ALLOWED_FILE_EXTENSIONS.split(', ');
         const ext = file.name.split('.').pop() as string;
-        if (!allowedExtensions.includes(ext)) {
+        if (!allowedFileExtensions.includes(ext)) {
             showError(`Upload of ${file.name} failed<br>Invalid file extension "${ext}"`);
             return;
         }
@@ -85,9 +92,11 @@ export default class StagingBrowserUpload extends Vue {
             formData.append('target_folder', this.workingDirectory.slice(1));
         }
         const filePath = getFilePath(this.workingDirectory, file.name);
-        this.$set(this.uploadPercentage, filePath, 0);
+        const status = this.$set(this.uploadStatus, filePath, { percentage: 0, complete: false });
         try {
-            const response: any = await uploadFileToStaging(formData, this.updateUploadPercentage(filePath));
+            const response: any = await uploadFileToStaging(formData,
+                this.updateUploadPercentage(filePath));
+            this.$set(this.uploadStatus, filePath, { percentage: 100, complete: true });
             if (!response.result[filePath].success) {
                 showError(`Upload of ${filePath} failed!<br>${response.result[filePath].error.message}`,
                     response.result[filePath].error.message);
@@ -99,10 +108,23 @@ export default class StagingBrowserUpload extends Vue {
 
     updateUploadPercentage(filePath: string) {
         return (percentage: number) => {
-            this.$set(this.uploadPercentage, filePath, percentage);
+            this.$set(this.uploadStatus, filePath, { percentage, complete: false });
         };
     }
+
+    getValue = getValue;
 }
+
+interface Status {
+    percentage: number;
+    complete: boolean;
+}
+
+function getValue(status: Status) {
+    if (status.percentage >= 100 && !status.complete) return undefined;
+    return status.percentage;
+}
+
 </script>
 
 <style lang="scss">

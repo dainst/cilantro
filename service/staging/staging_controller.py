@@ -1,6 +1,7 @@
 import os
 import logging
 import shutil
+import zipfile
 
 from flask import Blueprint, jsonify, request, send_file
 from werkzeug.utils import secure_filename
@@ -12,7 +13,7 @@ staging_controller = Blueprint('staging', __name__)
 
 staging_dir = os.environ['STAGING_DIR']
 
-allowed_extensions = ['xml', 'pdf', 'tif', 'tiff', 'json', 'csv']
+allowed_extensions = ['pdf', 'tif', 'tiff', 'zip']
 
 log = logging.getLogger(__name__)
 
@@ -309,13 +310,13 @@ def upload_to_staging():
 
     is_target_folder_param_present = 'target_folder' in request.form
     print(is_target_folder_param_present)
-    if (is_target_folder_param_present):
+    if is_target_folder_param_present:
         target_folder = request.form['target_folder']
 
     if request.files:
         for key in request.files:
             for file in request.files.getlist(key):
-                if (is_target_folder_param_present):
+                if is_target_folder_param_present:
                     file.filename = f"{target_folder}/{file.filename}"
                 results[file.filename] = _process_file(file, auth.username())
         return jsonify({"result": results}), 200
@@ -401,7 +402,9 @@ def _process_file(file, username):
             f"File already exists in folder.")
     else:
         try:
-            _upload_file(file, username)
+            full_path = _upload_file(file, username)
+            if _get_file_extension(file.filename) == "zip":
+                _unzip_file(full_path)
             return {"success": True}
         except Exception as e:
             return _generate_error_result(
@@ -428,7 +431,16 @@ def _upload_file(file, username):
     folders = list(map(secure_filename, path.split("/")))
     full_path = os.path.join(staging_dir, username, *folders)
     os.makedirs(full_path, exist_ok=True)
-    file.save(os.path.join(full_path, secure_filename(filename)))
+    full_file_path = os.path.join(full_path, secure_filename(filename))
+    file.save(full_file_path)
+    return full_file_path
+
+
+def _unzip_file(path):
+    target_path = os.path.dirname(path)
+    with zipfile.ZipFile(path, 'r') as zip_ref:
+        zip_ref.extractall(target_path)
+        os.remove(path)
 
 
 def _file_already_exists(filename, target_dir):

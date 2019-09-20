@@ -9,3 +9,5 @@ export const ojsZenonMapping = {
     '000055658': 'mm',
     '000814258': 'rm'
 } as { [index: string]: string };
+
+export const allowedFileExtensions = ['pdf', 'tif', 'tiff', 'zip'];
