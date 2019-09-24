@@ -6,11 +6,11 @@ x-env-dirs: &env-dirs
   STAGING_DIR: /data/staging
   CONFIG_DIR: /config
 
-x-env-ojs: &env-ojs
-  OJS_SERVER: test.publications.dainst.org
-  OJS_PORT: 80
-  OJS_PATH: journals
-  OJS_AUTH_KEY: /run/secrets/workbench_ojs_auth_key
+x-env-ojs3: &env-ojs3
+  MYSQL_USER: /run/secrets/ojs_mysql_user
+  MYSQL_PASSWORD: /run/secrets/ojs_mysql_password
+  ADMIN_USER: /run/secrets/ojs_admin_user
+  ADMIN_PASSWORD: /run/secrets/ojs_admin_password
 
 x-env-broker: &env-broker
   BROKER_HOST: "broker"
@@ -95,7 +95,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
-      <<: *env-ojs
+      <<: *env-ojs3
       <<: *env-jobdb
       <<: *env-arachne
       <<: *env-archaeocloud
@@ -136,7 +136,7 @@ services:
   frontend:
     image: dainst/cilantro-frontend:latest
     environment:
-      <<: *env-ojs
+      <<: *env-ojs3
       <<: *env-frontend-uris
     networks:
       - default
@@ -149,9 +149,15 @@ services:
         - "traefik.port=80"
 
 secrets:
-  workbench_ojs_auth_key:
-    external: true
   workbench_arachne_db_password:
+    external: true
+  ojs_mysql_user:
+    external: true
+  ojs_mysql_password:
+    external: true
+  ojs_admin_user:
+    external: true
+  ojs_admin_password:
     external: true
 
 volumes:

@@ -6,12 +6,6 @@ x-env-dirs: &env-dirs
   STAGING_DIR: /data/staging
   CONFIG_DIR: /config
 
-x-env-ojs: &env-ojs
-  OJS_SERVER: ${OJS_SERVER}
-  OJS_PORT: ${OJS_PORT}
-  OJS_PATH: ${OJS_PATH}
-  OJS_AUTH_KEY: ${OJS_AUTH_KEY}
-
 x-env-ojs3: &env-ojs3
   MYSQL_USER: ${OJS3_MYSQL_USER}
   MYSQL_PASSWORD: ${OJS3_MYSQL_PASSWORD}
@@ -110,7 +104,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
-      <<: *env-ojs
+      <<: *env-ojs3
       <<: *env-jobdb
       <<: *env-arachne
       <<: *env-archaeocloud
@@ -164,21 +158,10 @@ services:
     environment:
       <<: *env-broker
 
-  ojs2:
-    image: dainst/cilantro-ojs2:latest
-    build:
-      context: .
-      dockerfile: ./docker/cilantro-ojs2/Dockerfile
-    volumes:
-      - ./test/resources:/test/resources
-      - ./data:/data
-    ports:
-      - "4444:80"
-
   ojs3:
     image: dainst/cilantro-ojs3:latest
     ports:
-      - "4445:8000"
+      - "4444:8000"
     environment:
       <<: *env-ojs3
     build:
@@ -202,7 +185,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
-      <<: *env-ojs
+      <<: *env-ojs3
       <<: *test-timeouts
       <<: *env-jobdb
       <<: *env-app-config
