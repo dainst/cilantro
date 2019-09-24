@@ -12,6 +12,12 @@ x-env-ojs: &env-ojs
   OJS_PATH: ${OJS_PATH}
   OJS_AUTH_KEY: ${OJS_AUTH_KEY}
 
+x-env-ojs3: &env-ojs3
+  MYSQL_USER: ${OJS3_MYSQL_USER}
+  MYSQL_PASSWORD: ${OJS3_MYSQL_PASSWORD}
+  ADMIN_USER: ${OJS3_ADMIN_USER}
+  ADMIN_PASSWORD: ${OJS3_ADMIN_PASSWORD}
+
 x-env-broker: &env-broker
   BROKER_HOST: "broker"
   BROKER_USER: &broker-user user
@@ -168,6 +174,18 @@ services:
       - ./data:/data
     ports:
       - "4444:80"
+
+  ojs3:
+    image: dainst/cilantro-ojs3:latest
+    ports:
+      - "4445:8000"
+    environment:
+      <<: *env-ojs3
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-ojs3/Dockerfile
+      args:
+        <<: *env-ojs3
 
   test:
     container_name: cilantro_test
