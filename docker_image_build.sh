@@ -17,11 +17,13 @@ if [ -z "${nocache}" ]
 fi
 
 # bump version in VERSION file
-awk -F'.' '{print $1"."$2"."$3+1}' docker/${name}/VERSION > docker/${name}/VERSION.tmp
-mv docker/${name}/VERSION.tmp docker/${name}/VERSION
-version=`cat docker/${name}/VERSION`
+awk -F'.' '{print $1"."$2"."$3+1}' docker/cilantro-${name}/VERSION > docker/cilantro-${name}/VERSION.tmp
+mv docker/cilantro-${name}/VERSION.tmp docker/cilantro-${name}/VERSION
+version=`cat docker/cilantro-${name}/VERSION`
 
-docker image build -t dainst/${name}:${version} -f docker/${name}/Dockerfile . --build-arg GITHUB_ACCESS_TOKEN=${token} ${nocache}
+docker-compose build ${name} ${nocache}
 
-docker push dainst/${name}:latest
-docker push dainst/${name}:${version}
+docker tag dainst/cilantro-${name}:latest dainst/cilantro-${name}:${version}
+
+docker push dainst/cilantro-${name}:latest
+docker push dainst/cilantro-${name}:${version}
