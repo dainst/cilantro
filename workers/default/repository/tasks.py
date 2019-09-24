@@ -1,12 +1,12 @@
 import os
 import shutil
+import glob
 
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask, ObjectTask
 from utils.object import Object
-from utils import job_db
-from workers.convert.convert_pdf import split_merge_pdf
 from utils.repository import generate_repository_path
+from utils import job_db
 
 repository_dir = os.environ['REPOSITORY_DIR']
 working_dir = os.environ['WORKING_DIR']
@@ -17,27 +17,17 @@ class CreateObjectTask(ObjectTask):
     """
     Create a Cilantro-Object, the metadatas and the data files in it.
 
-    Split and merge pdf given files.
-
-    TaskParams:
-    -str user: user ID
-    -dic metadata: The metadata of the object
-    -list files: the file informations for the object
-    -list parts: the list of the subchild objects of the object.
-
     Preconditions:
     -files in staging
 
     Creates:
     -An Object in the working dir
     """
-
     name = "create_object"
 
     def process_object(self, obj):
         job_db.update_job(self.job_id, 'started')
-        user = self.get_param('user')
-        _initialize_object(obj, self.params, user)
+        _initialize_object(obj, self.params)
         return {'object_id': self._get_object_id()}
 
     def _get_object_id(self):
@@ -45,54 +35,31 @@ class CreateObjectTask(ObjectTask):
             object_id = self.get_param('object_id')
         except KeyError:
             object_id = self.job_id
-        if not object_id:
-            object_id = self.job_id
         return object_id
 
 
 CreateObjectTask = celery_app.register_task(CreateObjectTask())
 
 
-def _initialize_object(obj, params, user):
+def _get_work_path(params):
+    abs_path = os.path.join(working_dir, params['work_path'])
+    if not os.path.exists(abs_path):
+        os.mkdir(abs_path)
+    return abs_path
+
+
+def _initialize_object(obj, params):
     obj.set_metadata_from_dict(params['metadata'])
-    if 'fix_metadata' in params and params['fix_metadata'] is True:
-        _fix_metadata(obj, params)
-    if 'files' in params:
-        _add_files(obj, params['files'], user)
-    if 'parts' in params and 'create_subobjects' in params and \
-            params['create_subobjects'] is True:
-        for part in params['parts']:
-            _initialize_object(obj.add_part(), part, user)
+    _initialize_files(obj, params['path'], params['user'],
+                      params['initial_representation'])
 
 
-def _fix_metadata(obj, params):
-    if not 'author' in params['metadata']:
-        author_list = []
-        for part in params['parts']:
-            author_list += part['metadata']['author']
-        obj.metadata.author = author_list
-    if not 'title' in params['metadata'] and 'ojs_journal_code' in params['ojs_metadata']:
-        obj.metadata.title = params['ojs_metadata']['ojs_journal_code']
-    if not 'object_id' in params['metadata'] and 'object_id' in params:
-        obj.metadata.object_id = params['object_id']
-    obj.write()
+def _initialize_files(obj, path, user, init_rep):
+    file_list_pattern = os.path.join(staging_dir, user, path, "*.tif") # TODO type tiff?
 
-
-def _add_files(obj, files, user):
-    pdf_files = []
-    for file in files:
-        suffix = (file['file']).split('.')[-1]
-
-        src = os.path.join(staging_dir, user, file['file'])
-        if suffix == 'pdf':
-            pdf_files.append({'file': src, 'range': file['range']})
-        else:
-            obj.add_file(Object.INITIAL_REPRESENTATION, src)
-        obj.add_file(suffix, src)
-
-    if len(pdf_files) > 0:
-        rep_dir = obj.get_representation_dir(Object.INITIAL_REPRESENTATION)
-        split_merge_pdf(pdf_files, rep_dir)
+    for file_name in glob.iglob(file_list_pattern):
+        obj.add_file(Object.INITIAL_REPRESENTATION, file_name)
+        obj.add_file(init_rep, file_name)
 
 
 class PublishToRepositoryTask(BaseTask):

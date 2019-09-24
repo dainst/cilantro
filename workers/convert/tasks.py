@@ -1,7 +1,8 @@
 import os
+import glob
 
 from utils.celery_client import celery_app
-from workers.base_task import BaseTask, FileTask
+from workers.base_task import BaseTask, FileTask, ObjectTask
 from utils.object import Object
 from workers.convert.convert_image import convert_tif_to_jpg, \
     convert_jpg_to_pdf, tif_to_txt, convert_tif_to_ptif
@@ -72,7 +73,7 @@ class JpgToPdfTask(FileTask):
         convert_jpg_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
 
 
-class TifToJpgTask(FileTask):
+class TifToJpgTask(ObjectTask):
     """
     Create a jpg file from a tif.
 
@@ -89,8 +90,14 @@ class TifToJpgTask(FileTask):
 
     name = "convert.tif_to_jpg"
 
-    def process_file(self, file, target_dir):
-        convert_tif_to_jpg(file, _get_target_file(file, target_dir, 'jpg'))
+    def process_object(self, obj):
+        target_dir = obj.get_representation_dir('jpg')
+        os.makedirs(target_dir)
+
+        pattern = os.path.join(obj.get_representation_dir('tif'), '*.*')
+        for tif_file in glob.iglob(pattern):
+            convert_tif_to_jpg(tif_file,
+                               _get_target_file(tif_file, target_dir, 'jpg'))
 
 
 class PdfToTxtTask(FileTask):
@@ -159,36 +166,35 @@ class TifToTxtTask(FileTask):
         tif_to_txt(file, _get_target_file(file, target_dir, 'txt'), lang)
 
 
-class ScaleImageTask(FileTask):
+class ScaleImageTask(ObjectTask):
     """
-    Create copies of image files with new proportions.
+        Create copies of image files with new proportions.
 
-    If selected the ratio will be kept.
+        If selected the ratio will be kept.
 
-    TaskParams:
-    -str image_max_width: width of the generated image file
-    -str image_max_height: height of the generated image file
-    -bool keep_ratio: keeps the ratio of the generated image file
+        TaskParams:
+        -str image_max_width: width of the generated image file
+        -str image_max_height: height of the generated image file
 
-    Preconditions:
-    - image files existing in format JPEG or TIFF
+        Preconditions:
+        - image files existing in format JPEG or TIFF
 
-    Creates:
-    - scaled copies of images
+        Creates:
+        - scaled copies of images
     """
 
     name = "convert.scale_image"
 
-    def process_file(self, file, target_dir):
-        """Read parameters and call the actual function."""
-        max_width = int(self.get_param('max_width'))
-        max_height = int(self.get_param('max_height'))
-        try:
-            keep_ratio = self.get_param('keep_ratio')
-        except KeyError:
-            keep_ratio = None
+    def process_object(self, obj):
+        max_width = int(self.params['max_width'])
+        max_height = int(self.params['max_height'])
 
-        scale_image(file, target_dir, max_width, max_height, keep_ratio)
+        target_dir = obj.get_representation_dir(self.params['target_rep'])
+        os.makedirs(target_dir)
+
+        pattern = os.path.join(obj.get_representation_dir('jpg'), '*.*')
+        for jpg_file in glob.iglob(pattern):
+            scale_image(jpg_file, target_dir, max_width, max_height)
 
 
 class TifToPTifTask(FileTask):

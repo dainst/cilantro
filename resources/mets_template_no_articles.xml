@@ -1,0 +1,111 @@
+{% set ns = namespace() %}
+{% set metadata = obj.metadata.to_dict() %}
+{% set object_id = params['object_id'] %}
+{% set server_url = environ['BACKEND_URI'] %}
+<?xml version="1.0" encoding="UTF-8"?>
+<mets:mets
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:mets="http://www.loc.gov/METS/"
+    xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns:dv="http://dfg-viewer.de/"
+    xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/mets/mets.xsd
+        http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-2.xsd">
+
+    <mets:metsHdr LASTMODDATE="{{datetime.utcnow().isoformat()}}">
+        <mets:agent ROLE="CREATOR" TYPE="ORGANIZATION">
+            <mets:name>Deutsches Archäologisches Institut</mets:name>
+        </mets:agent>
+    </mets:metsHdr>
+
+    <mets:dmdSec ID="dmd001">
+        <mets:mdWrap MIMETYPE="text/xml" MDTYPE="MODS">
+            <mets:xmlData>
+                <mods:mods>
+                    <mods:titleInfo>
+                        <mods:title>{{metadata['title']}}</mods:title>
+                    </mods:titleInfo>
+                        {% for author in metadata['author'] %}
+                            <mods:name type="personal">
+                                <mods:displayForm>{{author['firstname']}} {{author['lastname']}}</mods:displayForm>
+                                <mods:role>
+                                    <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+                                    <mods:roleTerm type="text">Author</mods:roleTerm>
+                                </mods:role>
+                            </mods:name>
+                        {% endfor %}
+                </mods:mods>
+            </mets:xmlData>
+        </mets:mdWrap>
+    </mets:dmdSec>
+
+    <mets:amdSec ID="amd1">
+        <mets:rightsMD ID="rights1">
+            <mets:mdWrap MIMETYPE="text/xml" MDTYPE="OTHER" OTHERMDTYPE="DVRIGHTS">
+                <mets:xmlData>
+                    <dv:rights>
+                        <dv:owner>Deutsches Archäologisches Institut</dv:owner>
+                        <dv:ownerLogo>https://www.dainst.org/image/company_logo?img_id=11201</dv:ownerLogo>
+                        <dv:ownerSiteURL>https://dainst.org</dv:ownerSiteURL>
+                    </dv:rights>
+                </mets:xmlData>
+            </mets:mdWrap>
+        </mets:rightsMD>
+    </mets:amdSec>
+
+    <mets:fileSec>
+        <mets:fileGrp USE="DEFAULT">
+            {% set ns.id_list = [] %}
+            {% for file_path in glob(obj.get_representation_dir('jpg') + '/*.jpg')|sort() %}
+                {% set ns.id_list = ns.id_list + [loop.index] %}
+                <mets:file ID="file_{{loop.index}}" MIMETYPE="image/jpeg">
+                    {% set new_file_path = path_join(server_url, 'repository', 'file', object_id, 'data', 'jpg', basename(file_path)) %}
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
+                </mets:file>
+            {% endfor %}
+        </mets:fileGrp>
+        <mets:fileGrp USE="THUMBS">
+            {% for file_path in glob(obj.get_representation_dir('jpg_thumbnails') + '/*.jpg')|sort() %}
+                <mets:file ID="thumb_file_{{loop.index}}" MIMETYPE="image/jpeg">
+                    {% set new_file_path = path_join(server_url, 'repository', 'file', object_id, 'data', 'jpg', basename(file_path)) %}
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
+                </mets:file>
+            {% endfor %}
+        </mets:fileGrp>
+        <mets:fileGrp USE="DOWNLOAD">
+            <mets:file ID="PDF1" MIMETYPE="application/pdf">
+                {% for file_path in glob(obj.get_representation_dir('pdf') + '/*.pdf')|sort() %}
+                    <mets:FLocat LOCTYPE="URL" xlink:href="path_join(server_url, 'repository', 'file', object_id, 'data', 'pdf', basename(file_path))"/>
+                {% endfor %}
+            </mets:file>
+        </mets:fileGrp>
+    </mets:fileSec>
+
+    <mets:structMap TYPE="PHYSICAL">
+        <mets:div ID="struct_phys" TYPE="physSequence">
+            <mets:fptr FILEID="PDF1"/>
+            {% for id in ns.id_list %}
+                <mets:div ID="struct_phys_{{id}}" ORDER="{{loop.index}}" ORDERLABEL="{{loop.index}}" TYPE="page">
+                    <mets:fptr FILEID="file_{{ns.id_list[loop.index - 1]}}"/>
+                    <mets:fptr FILEID="thumb_file_{{ns.id_list[loop.index - 1]}}"/>
+                </mets:div>
+            {% endfor %}
+        </mets:div>
+    </mets:structMap>
+
+    <mets:structMap TYPE="LOGICAL">
+        <mets:div ID="struct_log" DMDID="dmd001" ADMID="amd1" TYPE="Monograph">
+            <mets:fptr FILEID="PDF1"/>
+                <mets:div ID="struct_log_1" TYPE="chapter" LABEL="{{metadata['title']}}"></mets:div>
+        </mets:div>
+    </mets:structMap>
+
+    {% if ns.id_list|length > 0 %}
+        <mets:structLink>
+            {% for id in ns.id_list %}
+                <mets:smLink xlink:from="struct_log_1" xlink:to="struct_phys_{{id}}"/>
+            {% endfor %}
+        </mets:structLink>
+    {% endif %}
+
+</mets:mets>

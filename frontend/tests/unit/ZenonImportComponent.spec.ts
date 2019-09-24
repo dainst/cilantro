@@ -3,7 +3,6 @@ import Buefy from 'buefy';
 import sinon from 'sinon';
 import ZenonImportComponent from '@/job/ingest-journal/forms/ZenonImportComponent.vue';
 import { ZenonRecord, ZenonAuthors } from '@/util/ZenonClient.ts';
-import { ArticleMetadata } from '@/job/ingest-journal/JournalImportParameters.ts';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);
@@ -13,7 +12,7 @@ describe('ZenonImportComponent', () => {
     let wrapper = initWrapper();
 
     function initWrapper() {
-        const articleMetadata: ArticleMetadata = {
+        const articleMetadata = {
             title: '',
             author: [],
             pages: {

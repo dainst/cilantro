@@ -1,0 +1,94 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Ingest Journal schema",
+    "description": "Used to validate ingest-journal job parameters",
+    "type": "object",
+    "required": ["objects", "options"],
+    "additionalProperties": false,
+    "properties": {
+        "objects": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["path", "metadata"],
+                "properties": {
+                    "path": {
+                        "type": "string"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": ["volume", "year", "number", "description", "identification"],
+                        "properties": {
+                            "volume": {
+                                "type": "string"
+                            },
+                            "year": {
+                                "type": "number"
+                            },
+                            "number": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "identification": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "options": {
+            "type": "object",
+            "required": ["ojs_metadata"],
+            "additionalProperties": false,
+            "properties": {
+                "ojs_metadata": {
+                    "type": "object",
+                    "required": ["ojs_journal_code", "ojs_user", "auto_publish_issue",
+                                 "default_create_frontpage",
+                                 "allow_upload_without_file"],
+                    "additionalProperties": false,
+                    "properties": {
+                        "ojs_journal_code": {
+                            "type": "string"
+                        },
+                        "ojs_user": {
+                            "type": "string"
+                        },
+                        "auto_publish_issue": {
+                            "type": "boolean"
+                        },
+                        "default_create_frontpage": {
+                            "type": "boolean"
+                        },
+                        "allow_upload_without_file": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "do_ocr": {
+                    "type": "boolean"
+                },
+                "do_nlp": {
+                    "type": "boolean"
+                },
+                "ocr_lang": {
+                    "type": "string"
+                },
+                "nlp_params": {
+                    "type": "object",
+                    "required": ["lang"],
+                    "additionalProperties": false,
+                    "properties": {
+                        "lang": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

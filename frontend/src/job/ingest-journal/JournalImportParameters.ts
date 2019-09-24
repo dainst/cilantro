@@ -1,64 +1,57 @@
+import { JobParameters, JobObject } from '../JobParameters';
+
 /* eslint-disable camelcase */
 
-export interface JournalMetadata {
+export interface JournalIssueMetadata {
+    zenon_id: number;
     volume: string;
     year: number;
     number: string;
     description: string;
     identification: string;
+    ojs_journal_code: string;
 }
 
 export interface OJSMetadata {
-    ojs_journal_code: string;
-    ojs_user: string;
     auto_publish_issue: boolean;
-    default_publish_articles: boolean;
     default_create_frontpage: boolean;
     allow_upload_without_file: boolean;
 }
 
-export interface FileRange {
-    file: string;
-    range: number[];
+export interface JournalIssue extends JobObject {
+    metadata: JournalIssueMetadata;
 }
 
-export interface Author {
-    firstname: string;
-    lastname: string;
-}
-
-export interface Pages {
-    showndesc: string;
-    startPrint: number;
-    endPrint: number;
-}
-
-export interface ArticleMetadata {
-    title: string;
-    author: Author[];
-    pages: Pages;
-    date_published: string;
-    language: string;
-    zenonId: string;
-    auto_publish: boolean;
-    create_frontpage: boolean;
-}
-
-export interface Part {
-    metadata: ArticleMetadata;
-    files: FileRange[];
-}
-
-export interface NLPParams {
-    lang: string;
-}
-
-export interface JournalImportParameters {
-    metadata: JournalMetadata;
-    files: FileRange[];
-    parts: Part[];
+export interface JournalImportOptions {
     ojs_metadata: OJSMetadata;
-    do_ocr: boolean;
-    keep_ratio: boolean;
-    nlp_params: NLPParams;
+}
+
+export interface JournalImportParameters extends JobParameters {
+    objects: JournalIssue[];
+    options: JournalImportOptions;
+}
+
+export function initIssue(path: string): JournalIssue {
+    return {
+        path,
+        metadata: {
+            zenon_id: 0,
+            volume: '',
+            year: 0,
+            number: '',
+            description: '',
+            identification: '',
+            ojs_journal_code: ''
+        }
+    };
+}
+
+export function initOptions(): JournalImportOptions {
+    return {
+        ojs_metadata: {
+            auto_publish_issue: true,
+            default_create_frontpage: true,
+            allow_upload_without_file: false
+        }
+    };
 }

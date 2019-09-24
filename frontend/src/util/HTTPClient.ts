@@ -34,6 +34,8 @@ export async function sendRequest(
         let errorMessage: string = '';
         if (error.response && error.response.data.error) {
             errorMessage = `${error.response.statusText}: ${error.response.data.error.message}`;
+        } else if (error.response && error.response.data.statusMessage) {
+            errorMessage = `${error.response.data.statusMessage}`;
         } else if (error.response) {
             errorMessage = `${error.response.statusText}: ${error.response.data}`;
         } else if (error.request) {

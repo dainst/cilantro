@@ -31,6 +31,8 @@ class GenerateXMLTask(ObjectTask):
     name = "generate_xml"
 
     def process_object(self, obj):
+        params = {**self.params, **{'object_id': self.results['object_id']}}
+
         template_file = self.get_param('template_file')
         target_filepath = os.path.join(obj.path,
                                        self.get_param('target_filename'))
@@ -44,7 +46,7 @@ class GenerateXMLTask(ObjectTask):
             schema_file = None
 
         generated_xml_file = generate_xml(obj, template_file, target_filepath,
-                                          self.params)
+                                          params)
 
         validate_xml(generated_xml_file, dtd_file_path=dtd_file,
                      schema_file_path=schema_file)

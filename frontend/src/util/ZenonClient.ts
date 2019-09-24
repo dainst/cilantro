@@ -18,7 +18,7 @@ export async function getRecord(zenonID: string): Promise<ZenonRecord> {
     const params: object = {
         id: zenonID
     };
-    return sendRequest('get', url, params, true);
+    return sendRequest('get', url, params, true).then(response => response.records[0]);
 }
 
 export async function downloadCSLJSONRecord(id: string): Promise<cslJSONRecord> {
@@ -39,6 +39,9 @@ export interface ZenonRecord {
     languages: string[];
     series: object[];
     subjects: string[];
+    containerReference: string;
+    publicationDates: string[];
+    parentId?: string;
 }
 
 export interface ZenonAuthors {

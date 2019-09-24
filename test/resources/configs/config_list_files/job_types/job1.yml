@@ -1,7 +1,0 @@
-tasks:
-  - retrieve
-  - list_files: "tif"
-    foreach:
-      task: convert
-      quality: high
-  - publish

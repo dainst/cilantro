@@ -1,6 +1,7 @@
 import os
 import logging
 import shutil
+import zipfile
 
 from flask import Blueprint, jsonify, request, send_file
 from werkzeug.utils import secure_filename
@@ -12,12 +13,12 @@ staging_controller = Blueprint('staging', __name__)
 
 staging_dir = os.environ['STAGING_DIR']
 
-allowed_extensions = ['xml', 'pdf', 'tif', 'tiff', 'json', 'csv']
+allowed_extensions = ['pdf', 'tif', 'tiff', 'zip']
 
 log = logging.getLogger(__name__)
 
 
-def _list_dir(dir_path):
+def _list_dir(dir_path, recursive=False):
     tree = []
     for entry in sorted(os.scandir(dir_path), key=lambda e: e.name):
         if entry.is_file():
@@ -27,8 +28,10 @@ def _list_dir(dir_path):
         else:
             tree.append({
                 "type": "directory",
-                "name": entry.name,
-                "contents": _list_dir(os.path.join(dir_path, entry.name))})
+                "name": entry.name})
+            if recursive:
+                path = os.path.join(dir_path, entry.name)
+                tree[-1]["contents"] = _list_dir(path)
     return tree
 
 
@@ -124,7 +127,7 @@ def list_staging():
     :return: JSON array containing objects for files and folders
     """
     try:
-        tree = _list_dir(os.path.join(staging_dir, auth.username()))
+        tree = _list_dir(os.path.join(staging_dir, auth.username()), True)
     except FileNotFoundError:
         log.warning(f"List staging called on not-existing folder: "
                     f"{os.path.join(staging_dir, auth.username())}")
@@ -139,7 +142,7 @@ def get_path(path):
     """
     Retrieve a file or folder content from the staging folder.
 
-    Returns A JSON array containing all file names, if it's a directory or
+    Returns A JSON array containing all files, if it's a directory or
     the file's content if it's a file.
 
     .. :quickref: Staging Controller; Retrieve file/folder from staging folder
@@ -174,7 +177,7 @@ def get_path(path):
     """
     abs_path = os.path.join(staging_dir, auth.username(), path)
     if os.path.isdir(abs_path):
-        return jsonify(os.listdir(abs_path))
+        return jsonify(_list_dir(abs_path))
     elif os.path.isfile(abs_path):
         return send_file(abs_path)
     else:
@@ -230,7 +233,7 @@ def create_folder():
     try:
         os.makedirs(os.path.join(staging_dir, auth.username(), folderpath),
                     exist_ok=True)
-        return {"success": True}
+        return jsonify({"success": True}), 200
     except Exception as e:
         return _generate_error_result(
             folderpath,
@@ -307,18 +310,81 @@ def upload_to_staging():
 
     is_target_folder_param_present = 'target_folder' in request.form
     print(is_target_folder_param_present)
-    if (is_target_folder_param_present):
+    if is_target_folder_param_present:
         target_folder = request.form['target_folder']
 
     if request.files:
         for key in request.files:
             for file in request.files.getlist(key):
-                if (is_target_folder_param_present):
+                if is_target_folder_param_present:
                     file.filename = f"{target_folder}/{file.filename}"
                 results[file.filename] = _process_file(file, auth.username())
         return jsonify({"result": results}), 200
     raise ApiError("no_files_provided",
                    f"The request did not contain any files")
+
+
+@staging_controller.route('/move', methods=['POST'],
+                          strict_slashes=False)
+@auth.login_required
+def move():
+    """
+    Move a file or folder inside the staging area.
+
+    Folders inside the target path must already exist.
+
+    Uses :py:func:~os.rename.
+
+    .. :quickref: Staging Controller; Move files inside the staging area
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      POST /staging/move HTTP/1.1
+
+        {
+            "source": "test-folder/file.txt",
+            "target": "test-folder2/subfolder/"
+        }
+
+    **Example response SUCCESS**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+        {
+            "success": true
+        }
+
+    :reqheader Accept: application/json
+    :<json string source: path of the file to be moved
+    :<json string target: new path of the file to be moved
+
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
+    :return: A JSON object containing the status of the operation
+    """
+    if not request.data:
+        raise ApiError("no_payload_found", "No request payload found")
+    params = request.get_json(force=True)
+    if not params['source']:
+        raise ApiError("param_not found", "Missing source parameter")
+    if not params['target']:
+        raise ApiError("param_not found", "Missing target parameter")
+    source = os.path.join(staging_dir, auth.username(), params['source'])
+    target = os.path.join(staging_dir, auth.username(), params['target'])
+    try:
+        os.rename(source, target)
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return _generate_error_result(
+            source,
+            "move_failed",
+            "An unknown error occurred.",
+            e)
 
 
 def _process_file(file, username):
@@ -336,7 +402,9 @@ def _process_file(file, username):
             f"File already exists in folder.")
     else:
         try:
-            _upload_file(file, username)
+            full_path = _upload_file(file, username)
+            if _get_file_extension(file.filename) == "zip":
+                _unzip_file(full_path)
             return {"success": True}
         except Exception as e:
             return _generate_error_result(
@@ -363,7 +431,16 @@ def _upload_file(file, username):
     folders = list(map(secure_filename, path.split("/")))
     full_path = os.path.join(staging_dir, username, *folders)
     os.makedirs(full_path, exist_ok=True)
-    file.save(os.path.join(full_path, secure_filename(filename)))
+    full_file_path = os.path.join(full_path, secure_filename(filename))
+    file.save(full_file_path)
+    return full_file_path
+
+
+def _unzip_file(path):
+    target_path = os.path.dirname(path)
+    with zipfile.ZipFile(path, 'r') as zip_ref:
+        zip_ref.extractall(target_path)
+        os.remove(path)
 
 
 def _file_already_exists(filename, target_dir):

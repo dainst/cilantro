@@ -41,7 +41,7 @@ def get_job_by_id(job_id):
     return job
 
 
-def add_job(job_id, user, job_type, task_ids, job_params):
+def add_job(job_id, user, job_type, task_ids, issue_object):
     """
     Add a job to the job database.
 
@@ -49,19 +49,19 @@ def add_job(job_id, user, job_type, task_ids, job_params):
     :param str user: username which started the job
     :param str job_type: type of job, i.e. 'ingest_journal'
     :param list task_ids: Cilantro-IDs of all tasks belonging to that job
-    :param dict job_params: Original paramters given when the job was created
+    :param dict issue_object: Issue params
     :return: None
     """
     timestamp = datetime.datetime.now()
     job = {'job_id': job_id,
            'user': user,
            'job_type': job_type,
-           'name': _generate_job_name(job_type, job_params),
+           'name': _generate_job_name(job_type, issue_object),
            'task_ids': task_ids,
            'state': 'new',
            'created': timestamp,
            'updated': timestamp,
-           'params': job_params,
+           'issue_object': issue_object,
            'errors': []
            }
 
@@ -91,7 +91,7 @@ def update_job(job_id, state, error=None):
                             {'$push': {'errors': error}})
 
 
-def _generate_job_name(job_type, job_params):
+def _generate_job_name(job_type, issue_object):
     """
     Generate job name based on job type and (first) file name.
 
@@ -100,11 +100,7 @@ def _generate_job_name(job_type, job_params):
     first part is used.
 
     :param str job_type: type of the job
-    :param list job_params: parameters of the job
+    :param list issue_object: parameters of the issue
     :return str: name of the job
     """
-    if job_params['files']:
-        first_file_name = job_params['files'][0]['file']
-    else:
-        first_file_name = job_params['parts'][0]['files'][0]['file']
-    return f"JOB-{job_type}-{first_file_name}"
+    return f"JOB-{job_type}-{issue_object['path']}"
