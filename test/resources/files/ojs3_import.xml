@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issue xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" published="1" current="1" access_status="1" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+  <id type="internal" advice="ignore">1</id>
+  <issue_identification>
+    <volume>1</volume>
+    <number>1</number>
+    <year>2014</year>
+  </issue_identification>
+  <date_published>2016-02-11</date_published>
+  <last_modified>2016-02-11</last_modified>
+  <sections>
+    <section ref="ART" seq="1" editor_restricted="0" meta_indexed="1" meta_reviewed="1" abstracts_not_required="0" hide_title="0" hide_author="0" abstract_word_count="0">
+      <id type="internal" advice="ignore">1</id>
+      <abbrev locale="en_US">ART</abbrev>
+      <title locale="en_US">Articles</title>
+    </section>
+    <section ref="REV" seq="2" editor_restricted="0" meta_indexed="1" meta_reviewed="1" abstracts_not_required="1" hide_title="0" hide_author="0" abstract_word_count="0">
+      <id type="internal" advice="ignore">2</id>
+      <abbrev locale="en_US">REV</abbrev>
+      <title locale="en_US">Reviews</title>
+    </section>
+  </sections>
+  <issue_galleys xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+    <issue_galley>
+        <label>`PDF`</label>
+        <issue_file>
+            <file_name>
+                dummy.pdf
+            </file_name>
+            <file_type>
+                PDF
+            </file_type>
+            <file_size>1</file_size>
+            <content_type>0</content_type>
+            <original_file_name>
+                dummy.pdf
+            </original_file_name>
+            <date_uploaded>2001-10-26</date_uploaded>
+            <date_modified>2001-10-27</date_modified>
+            <!-- <remote src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"/> -->
+            <!-- <href src="/root/test.pdf"></href> -->
+        </issue_file>
+    </issue_galley>
+</issue_galleys>
+  <articles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+  </articles>
+</issue>
