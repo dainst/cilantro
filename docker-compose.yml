@@ -158,17 +158,22 @@ services:
     environment:
       <<: *env-broker
 
+  ojs3-db:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ojs
+      MYSQL_DATABASE: ojs
+      <<: *env-ojs3
+
   ojs3:
-    image: dainst/cilantro-ojs3:latest
+    image: dainst/ojs3:latest
     ports:
       - "4444:8000"
     environment:
+      ADMIN_EMAIL: dummy@address.local
+      MYSQL_HOST: ojs3-db
+      MYSQL_DATABASE: ojs
       <<: *env-ojs3
-    build:
-      context: .
-      dockerfile: ./docker/cilantro-ojs3/Dockerfile
-      args:
-        <<: *env-ojs3
 
   test:
     container_name: cilantro_test
