@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 
 const backendUri = process.env.VUE_APP_BACKEND_URI;
 
-export async function getStagingFiles(path: string = ''): Promise<WorkbenchFile[]> {
+export async function getStagingFiles(path: string = ''): Promise<WorkbenchFileTree> {
     return sendRequest('get', `${backendUri}/staging${path}`, {}, false);
 }
 
@@ -28,8 +28,10 @@ export async function moveInStaging(source: string, target: string): Promise<boo
 export interface WorkbenchFile {
     name: string;
     type: string;
-    contents?: WorkbenchFile[]
+    contents?: { [index: string]: WorkbenchFile }
 }
+
+export type WorkbenchFileTree = { [index: string]: WorkbenchFile };
 
 function onUploadProgress(onProgressCallback: (n: number) => void) {
     return (progressEvent: { loaded: number, total: number }) => {

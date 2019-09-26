@@ -44,7 +44,7 @@ import {
 import { showSuccess, showWarning, showError } from '@/util/Notifier.ts';
 import {
     getStagingFiles, deleteFileFromStaging,
-    createFolderInStaging, WorkbenchFile, moveInStaging
+    createFolderInStaging, WorkbenchFile, moveInStaging, WorkbenchFileTree
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';
@@ -62,6 +62,7 @@ export default class StagingBrowser extends Vue {
 
     operationInProgress: boolean = false;
     workingDirectory: string = '';
+    stagingFiles: WorkbenchFileTree = {};
     filesToShow: WorkbenchFile[] = [];
 
     get checkedFiles(): WorkbenchFile[] {
@@ -97,8 +98,8 @@ export default class StagingBrowser extends Vue {
     async fetchFiles(): Promise<void> {
         try {
             this.operationInProgress = true;
-            this.filesToShow = await getStagingFiles(this.workingDirectory);
-            this.filesToShow.sort(compareFileEntries);
+            this.stagingFiles = await getStagingFiles();
+            this.filesToShow = getFilesInWorkDir(this.stagingFiles, this.workingDirectory);
             this.$emit('files-selected', []);
             this.operationInProgress = false;
         } catch (e) {
@@ -114,7 +115,7 @@ export default class StagingBrowser extends Vue {
 
     openFolder(path: string) {
         this.workingDirectory = path;
-        this.fetchFiles();
+        this.filesToShow = getFilesInWorkDir(this.stagingFiles, this.workingDirectory);
     }
 
     showDeleteDialog() {
@@ -172,6 +173,15 @@ export function getFilePath(baseDir: string, filename: string): string {
 
 export function getFileName(path: string): string {
     return path.replace(/^.*\//, '');
+}
+
+export function getFilesInWorkDir(files: WorkbenchFileTree, workDir: string): WorkbenchFile[] {
+    const splitPath: string[] = workDir.split('/');
+    let contents = files;
+    splitPath.slice(1).forEach((dir: string) => {
+        contents = contents[dir].contents || {};
+    });
+    return Object.values(contents).sort(compareFileEntries);
 }
 
 function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {

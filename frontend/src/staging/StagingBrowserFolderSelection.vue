@@ -47,11 +47,13 @@
 import {
     Component, Prop, Vue
 } from 'vue-property-decorator';
-import { getStagingFiles, WorkbenchFile } from './StagingClient';
+import { getStagingFiles, WorkbenchFile, WorkbenchFileTree } from './StagingClient';
 import { showError } from '../util/Notifier';
+import { getFilesInWorkDir } from './StagingBrowser.vue';
 
 @Component
 export default class StagingBrowserFolderSelection extends Vue {
+    private stagingFiles: WorkbenchFileTree = {};
     private directories: string[] = [];
     private workingDirectory: string = '';
 
@@ -60,7 +62,7 @@ export default class StagingBrowserFolderSelection extends Vue {
     }
 
     mounted() {
-        this.retrieveDirectories(this.workingDirectory);
+        this.fetchStagingFiles().then(() => this.openDirectory(''));
     }
 
     openBreadcrumbEntry(index: number) {
@@ -70,15 +72,16 @@ export default class StagingBrowserFolderSelection extends Vue {
     async openDirectory(path: string) {
         try {
             this.workingDirectory = path;
-            await this.retrieveDirectories(this.workingDirectory);
+            this.directories = getFilesInWorkDir(this.stagingFiles, this.workingDirectory)
+                .filter(file => file.type === 'directory')
+                .map(file => file.name);
         } catch (e) {
             showError(`Error opening folder '${this.workingDirectory}'`, e);
         }
     }
 
-    async retrieveDirectories(path: string) {
-        const files = await getStagingFiles(path);
-        this.directories = files.filter(file => file.type === 'directory').map(file => file.name);
+    async fetchStagingFiles() {
+        this.stagingFiles = await getStagingFiles();
     }
 }
 </script>
