@@ -1,0 +1,39 @@
+{% set metadata = obj.metadata.to_dict() %}
+{% set ojs_metadata = params['ojs_metadata'] %}
+{% set pdf_file_path = path_join(obj.get_representation_dir('pdf'), 'merged.pdf') %}
+<?xml version="1.0" encoding="UTF-8"?>
+<issue xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" published="1" current="1" access_status="1"
+       xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+    <id type="internal" advice="ignore">1</id>
+    <issue_identification>
+        <volume>{{metadata['volume']}}</volume>
+        <number>{{metadata['number']}}</number>
+        <year>{{metadata['year']}}</year>
+    </issue_identification>
+    <date_published>{{datetime.utcnow().isoformat()}}</date_published>
+    <last_modified>{{datetime.utcnow().isoformat()}}</last_modified>
+    <issue_galleys xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+        <issue_galley>
+            <label>`PDF`</label>
+            <issue_file>
+                <file_name>
+                    merged.pdf
+                </file_name>
+                <file_type>
+                    PDF
+                </file_type>
+                <file_size>
+                    {{getsize(pdf_file_path)}}
+                </file_size>
+                <content_type>1</content_type>
+                <original_file_name>
+                    merged.pdf
+                </original_file_name>
+                <date_uploaded>2001-10-26</date_uploaded>
+                <date_modified>2001-10-27</date_modified>
+                <embed encoding="base64">{{params['pdf_base64']}}</embed>
+            </issue_file>
+        </issue_galley>
+    </issue_galleys>
+    <articles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pkp.sfu.ca native.xsd"></articles>
+</issue>
