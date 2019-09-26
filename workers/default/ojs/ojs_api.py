@@ -4,9 +4,7 @@ import json
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 
-server = os.environ['OJS_SERVER']
-port = os.environ['OJS_PORT']
-path = os.environ['OJS_PATH']
+ojs_api_uri = os.environ['OJS_URI']
 auth_key = os.environ['OJS_AUTH_KEY']
 
 log = logging.getLogger(__name__)
@@ -56,8 +54,7 @@ def publish(import_xml_file_path, journalcode):
 
 
 def _get_api_url():
-    return (f"http://{server}:{port}/{path}"
-            f"/plugins/generic/ojs-cilantro-plugin/api")
+    return ojs_api_uri
 
 
 def _make_request(url, headers, import_data=None):

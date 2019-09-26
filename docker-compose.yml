@@ -111,6 +111,8 @@ services:
       DB_HOST: "db"
       CILANTRO_ENV: development
       BACKEND_URI: ${BACKEND_URI}
+      OJS_URI: ${OJS_URI}
+      OJS_AUTH_KEY: ${OJS_AUTH_KEY}
 
   convert-worker:
     image: dainst/cilantro-convert-worker:latest
