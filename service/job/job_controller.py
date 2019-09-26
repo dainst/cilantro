@@ -228,28 +228,24 @@ def journal_job_create():
         chain = t('create_object', **task_params)
 
         chain |= t('generate_xml',
-                      template_file='ojs_template_no_articles.xml',
-                      target_filename='ojs_import.xml',
-                      ojs_metadata=params['options']['ojs_metadata']
-                      )
+                   template_file='ojs_template_no_articles.xml',
+                   target_filename='ojs_import.xml',
+                   ojs_metadata=params['options']['ojs_metadata'])
 
         chain |= t('convert.tif_to_jpg')
 
         chain |= t('convert.scale_image',
-                      max_width=50,
-                      max_height=50,
-                      target_rep='jpg_thumbnails'
-                      )
+                   max_width=50,
+                   max_height=50,
+                   target_rep='jpg_thumbnails')
 
         chain |= t('generate_xml',
-                      template_file='mets_template_no_articles.xml',
-                      target_filename='mets.xml',
-                      schema_file='mets.xsd'
-                      )
+                   template_file='mets_template_no_articles.xml',
+                   target_filename='mets.xml',
+                   schema_file='mets.xsd')
 
         chain |= t('publish_to_ojs',
-                      ojs_metadata=params['options']['ojs_metadata']
-                      )
+                   ojs_metadata=params['options']['ojs_metadata'])
         chain |= t('publish_to_repository')
         chain |= t('cleanup_workdir')
         chain |= t('finish_job')
