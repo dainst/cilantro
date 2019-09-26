@@ -227,10 +227,8 @@ def journal_job_create():
 
         chain = t('create_object', **task_params)
 
-        chain |= t('generate_xml',
-                   template_file='ojs_template_no_articles.xml',
-                   target_filename='ojs_import.xml',
-                   ojs_metadata=params['options']['ojs_metadata'])
+        chain |= t('convert.tif_to_pdf')
+        chain |= t('convert.merge_converted_pdf')
 
         chain |= t('convert.tif_to_jpg')
 
@@ -238,6 +236,11 @@ def journal_job_create():
                    max_width=50,
                    max_height=50,
                    target_rep='jpg_thumbnails')
+
+        chain |= t('generate_xml',
+                   template_file='ojs3_template_issue.xml',
+                   target_filename='ojs3_import.xml',
+                   ojs_metadata=params['options']['ojs_metadata'])
 
         chain |= t('generate_xml',
                    template_file='mets_template_no_articles.xml',
