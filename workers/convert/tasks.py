@@ -5,7 +5,7 @@ from utils.celery_client import celery_app
 from workers.base_task import BaseTask, FileTask, ObjectTask
 from utils.object import Object
 from workers.convert.convert_image import convert_tif_to_jpg, \
-    convert_jpg_to_pdf, tif_to_txt, convert_tif_to_ptif
+    convert_jpg_to_pdf, tif_to_txt, convert_tif_to_ptif, tif_to_pdf
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf, \
     convert_pdf_to_tif
 from workers.convert.image_scaling import scale_image
@@ -45,8 +45,7 @@ class MergeConvertedPdfTask(BaseTask):
     name = "convert.merge_converted_pdf"
 
     def execute_task(self):
-        rep = self.get_param('representation')
-        rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, rep)
+        rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, 'pdf')
         files = [{'file': os.path.basename(f)}
                  for f in _list_files(rep_dir, '.pdf')]
         split_merge_pdf(files, rep_dir)
@@ -71,6 +70,18 @@ class JpgToPdfTask(FileTask):
 
     def process_file(self, file, target_dir):
         convert_jpg_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
+
+
+class TifToPdfTask(ObjectTask):
+    name = "convert.tif_to_pdf"
+
+    def process_object(self, obj):
+        target_dir = obj.get_representation_dir('pdf')
+        os.makedirs(target_dir)
+
+        pattern = os.path.join(obj.get_representation_dir('tif'), '*.*')
+        for tif_file in glob.iglob(pattern):
+            tif_to_pdf(tif_file, _get_target_file(tif_file, target_dir, 'pdf'))
 
 
 class TifToJpgTask(ObjectTask):

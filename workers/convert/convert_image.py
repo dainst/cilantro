@@ -45,6 +45,16 @@ def convert_jpg_to_pdf(source_file, target_file):
     PilImage.open(source_file).save(target_file, 'PDF', resolution=100.0)
 
 
+def tif_to_pdf(source_file, target_file):
+    """
+    Make a 1 Paged PDF Document from a tif file.
+
+    :param str source_file: path to the jpg
+    :param str target_file: desired output path
+    """
+    PilImage.open(source_file).save(target_file, 'PDF', resolution=100.0)
+
+
 def tif_to_txt(source_file, target_file, language='eng'):
     """
     Extract text from tiff file via OCR and writes to target file.
