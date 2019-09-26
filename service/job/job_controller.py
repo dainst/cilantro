@@ -239,7 +239,7 @@ def journal_job_create():
 
         chain |= t('generate_xml',
                    template_file='ojs3_template_issue.xml',
-                   target_filename='ojs3_import.xml',
+                   target_filename='ojs_import.xml',
                    ojs_metadata=params['options']['ojs_metadata'])
 
         chain |= t('generate_xml',
