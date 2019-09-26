@@ -248,7 +248,8 @@ def journal_job_create():
                    schema_file='mets.xsd')
 
         chain |= t('publish_to_ojs',
-                   ojs_metadata=params['options']['ojs_metadata'])
+                   ojs_metadata=params['options']['ojs_metadata'],
+                   ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
         chain |= t('publish_to_repository')
         chain |= t('cleanup_workdir')
         chain |= t('finish_job')

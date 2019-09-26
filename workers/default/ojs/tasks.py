@@ -23,19 +23,20 @@ class PublishToOJSTask(ObjectTask):
     def process_object(self, obj):
         work_path = self.get_work_path()
         ojs_metadata = self.get_param('ojs_metadata')
+        ojs_journal_code = self.get_param('ojs_journal_code')
 
         _, result = publish(os.path.join(work_path, 'ojs_import.xml'),
-                            ojs_metadata['ojs_journal_code'])
+                            ojs_journal_code)
 
         children = obj.get_parts()
         for i, child in enumerate(children):
             child.metadata.ojs_id = _generate_object_id('article',
-                ojs_metadata['ojs_journal_code'],
+                ojs_journal_code,
                 result['published_articles'][i])
             child.write()
 
         object_id = _generate_object_id('issue',
-                                        ojs_metadata['ojs_journal_code'],
+                                        ojs_journal_code,
                                         result['published_issues'][0])
         obj.metadata.ojs_id = object_id
         obj.metadata.object_id = object_id
