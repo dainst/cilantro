@@ -71,6 +71,8 @@ export default class IngestJournal extends Vue {
         const params = this.buildJobParams();
         try {
             await startJob('ingest_journal', params);
+            showSuccess('Job started');
+            this.$router.push({ path: '/' });
         } catch (e) {
             showError(e);
         }
@@ -81,7 +83,7 @@ export default class IngestJournal extends Vue {
             objects: this.issues,
             options: this.options
         };
-}
+    }
 }
 </script>
 
