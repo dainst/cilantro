@@ -23,7 +23,7 @@ def validate_xml(xml_file_path, dtd_file_path=None, schema_file_path=None):
     :raises etree.DocumentInvalid: if XML document does not adhere to XSD
     :return: None
     """
-    parser = etree.XMLParser()
+    parser = etree.XMLParser(huge_tree=True)
 
     xml_doc = etree.parse(xml_file_path, parser)
     log.info("XML Syntax-Check OK!")
