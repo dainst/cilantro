@@ -28,7 +28,8 @@ class PublishToOJSTask(ObjectTask):
         _, result = publish(os.path.join(work_path, 'ojs_import.xml'),
                             ojs_journal_code)
 
-        if ('issue' in result['warnings'][0]):
+        if (len(result['warnings']) > 0 and
+                'Existing issue' in result['warnings'][0]):
             raise RuntimeError('Issue already exists in OJS')
         else:
             object_id = _generate_object_id('issue',
