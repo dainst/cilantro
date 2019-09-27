@@ -28,13 +28,6 @@ class PublishToOJSTask(ObjectTask):
         _, result = publish(os.path.join(work_path, 'ojs_import.xml'),
                             ojs_journal_code)
 
-        children = obj.get_parts()
-        for i, child in enumerate(children):
-            child.metadata.ojs_id = _generate_object_id('article',
-                ojs_journal_code,
-                result['published_articles'][i])
-            child.write()
-
         object_id = _generate_object_id('issue',
                                         ojs_journal_code,
                                         result['published_issues'][0])
