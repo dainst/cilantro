@@ -28,12 +28,15 @@ class PublishToOJSTask(ObjectTask):
         _, result = publish(os.path.join(work_path, 'ojs_import.xml'),
                             ojs_journal_code)
 
-        object_id = _generate_object_id('issue',
-                                        ojs_journal_code,
-                                        result['published_issues'][0])
-        obj.metadata.ojs_id = object_id
-        obj.metadata.object_id = object_id
-        obj.write()
+        if ('issue' in result['warnings'][0]):
+            raise RuntimeError('Issue already exists in OJS')
+        else:
+            object_id = _generate_object_id('issue',
+                                            ojs_journal_code,
+                                            result['published_issues'][0])
+            obj.metadata.ojs_id = object_id
+            obj.metadata.object_id = object_id
+            obj.write()
 
         return {'object_id': object_id}
 
