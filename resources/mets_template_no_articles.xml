@@ -12,7 +12,7 @@
     xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/mets/mets.xsd
         http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-2.xsd">
 
-    <mets:metsHdr LASTMODDATE="{{datetime.utcnow().isoformat()}}">
+    <mets:metsHdr LASTMODDATE="{{datetime.datetime.utcnow().isoformat()}}">
         <mets:agent ROLE="CREATOR" TYPE="ORGANIZATION">
             <mets:name>Deutsches Archäologisches Institut</mets:name>
         </mets:agent>

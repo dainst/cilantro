@@ -25,7 +25,7 @@ def generate_xml(obj, template_file, target_filepath, params):
         lstrip_blocks=True)
     # Some functions which may be needed in the template (logic)
     env.globals['path_join'] = os.path.join
-    env.globals['datetime'] = datetime.datetime
+    env.globals['datetime'] = datetime
     env.globals['glob'] = glob.glob
     env.globals['basename'] = os.path.basename
     env.globals['splitext'] = os.path.splitext

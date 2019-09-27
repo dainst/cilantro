@@ -10,27 +10,19 @@
         <number>{{metadata['number']}}</number>
         <year>{{metadata['year']}}</year>
     </issue_identification>
-    <date_published>{{datetime.utcnow().isoformat()}}</date_published>
-    <last_modified>{{datetime.utcnow().isoformat()}}</last_modified>
+    <date_published>{{datetime.date.today().isoformat()}}</date_published>
+    <last_modified>{{datetime.date.today().isoformat()}}</last_modified>
     <issue_galleys xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
         <issue_galley>
             <label>`PDF`</label>
             <issue_file>
-                <file_name>
-                    merged.pdf
-                </file_name>
-                <file_type>
-                    PDF
-                </file_type>
-                <file_size>
-                    {{getsize(pdf_file_path)}}
-                </file_size>
+                <file_name>merged.pdf</file_name>
+                <file_type>PDF</file_type>
+                <file_size>{{getsize(pdf_file_path)}}</file_size>
                 <content_type>1</content_type>
-                <original_file_name>
-                    merged.pdf
-                </original_file_name>
-                <date_uploaded>2001-10-26</date_uploaded>
-                <date_modified>2001-10-27</date_modified>
+                <original_file_name>merged.pdf</original_file_name>
+                <date_uploaded>{{datetime.date.today().isoformat()}}</date_uploaded>
+                <date_modified>{{datetime.date.today().isoformat()}}</date_modified>
                 <embed encoding="base64">{{params['pdf_base64']}}</embed>
             </issue_file>
         </issue_galley>
