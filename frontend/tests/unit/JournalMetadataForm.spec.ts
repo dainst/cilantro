@@ -9,11 +9,10 @@ localVue.use(Buefy);
 describe('JournalMetadataForm.vue', () => {
     const journalMetadata: JournalIssueMetadata = {
         zenon_id: 12345,
-        volume: '',
+        volume: 1,
         year: 2018,
-        number: '',
+        number: 0,
         description: '[PDFs teilweise verf\u00fcgbar]',
-        identification: 'year',
         ojs_journal_code: 'aa'
     };
     const wrapper = mount(JournalMetadataForm, {
