@@ -60,18 +60,15 @@ export default class JournalMetadataForm extends Vue {
     records: Record[] = [];
 
     mounted() {
-        const updates = this.selectedPaths.map((path) => {
-            const issue = initIssue(path);
-            const record = { id: path, issue };
+        const records = this.selectedPaths.map(path => initRecord(path));
+        const updates: Promise<JournalIssue>[] = records.map((record) => {
             const i = this.records.push(record) - 1;
             return populateZenonRecord(record).then((populatedRecord) => {
                 this.$set(this.records, i, populatedRecord);
                 return populatedRecord.issue;
             });
         });
-        Promise.all(updates).then((updatedIssues: JournalIssue[]) => {
-            this.$emit('update:issues', updatedIssues);
-        });
+        Promise.all(updates).then(issues => this.$emit('update:issues', issues));
     }
 
     getRowClass = getRowClass;
@@ -98,23 +95,23 @@ async function populateZenonRecord(record: Record): Promise<Record> {
     const zenonId = extractZenonId(record.issue.path);
     if (!zenonId) {
         const msg = 'Invalid name. The folder path does not match the pattern "JOURNAL-ZIDxxxxxxx".';
-        return initError(record.id, record.issue, msg);
+        return buildError(record, msg);
     }
     try {
         const zenonRecord = await getRecord(zenonId);
         if (!zenonRecord.parentId) {
             const msg = `Zenon record has no parent id. Can't determine which Journal this issue belongs to.`;
-            return initError(record.id, record.issue, msg);
+            return buildError(record, msg);
         }
         if (!(zenonRecord.parentId in ojsZenonMapping)) {
             const msg = `Missing OJS Journal code for Journal with Zenon-ID '${zenonRecord.parentId}'.`;
-            return initError(record.id, record.issue, msg);
+            return buildError(record, msg);
         }
         const ojsJournalCode = ojsZenonMapping[zenonRecord.parentId];
-        return initRecord(record.id, record.issue.path, zenonRecord, ojsJournalCode);
+        return buildRecord(record, zenonRecord, ojsJournalCode);
     } catch (error) {
         const msg = `No Record with the extracted ID "${zenonId}" found.`;
-        return initError(record.id, record.issue, msg);
+        return buildError(record, msg);
     }
 }
 
@@ -128,18 +125,21 @@ function getTableField(field: any) {
     return field || '-';
 }
 
-function initRecord(id: string, path: string, zenonRecord: ZenonRecord, ojsJournalCode: string): Record {
+function initRecord(path: string): Record {
+    return { id: path, issue: initIssue(path) };
+}
+
+function buildRecord(record: Record, zenonRecord: ZenonRecord, ojsJournalCode: string): Record {
     return {
-        id,
+        id: record.id,
         issue: {
-            path,
+            path: record.issue.path,
             metadata: {
                 zenon_id: parseInt(zenonRecord.id, 10),
-                volume: zenonRecord.containerReference,
+                volume: 1,
                 year: parseInt(zenonRecord.publicationDates[0], 10),
-                number: '',
+                number: 1,
                 description: zenonRecord.title,
-                identification: '',
                 ojs_journal_code: ojsJournalCode
             }
         },
@@ -147,8 +147,12 @@ function initRecord(id: string, path: string, zenonRecord: ZenonRecord, ojsJourn
     };
 }
 
-function initError(id: string, issue: JournalIssue, error: string): Record {
-    return { id, issue, error };
+function buildError(record: Record, error: string): Record {
+    return {
+        id: record.id,
+        issue: record.issue,
+        error
+    };
 }
 
 </script>

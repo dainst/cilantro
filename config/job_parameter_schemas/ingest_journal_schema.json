@@ -18,16 +18,16 @@
                     "metadata": {
                         "type": "object",
                         "additionalProperties": false,
-                        "required": ["volume", "year", "number", "description", "identification"],
+                        "required": ["volume", "year", "number", "description"],
                         "properties": {
                             "volume": {
-                                "type": "string"
+                                "type": "number"
                             },
                             "year": {
                                 "type": "number"
                             },
                             "number": {
-                                "type": "string"
+                                "type": "number"
                             },
                             "description": {
                                 "type": "string"

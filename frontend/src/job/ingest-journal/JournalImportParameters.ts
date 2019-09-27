@@ -4,11 +4,10 @@ import { JobParameters, JobObject } from '../JobParameters';
 
 export interface JournalIssueMetadata {
     zenon_id: number;
-    volume: string;
+    volume: number;
     year: number;
-    number: string;
+    number: number;
     description: string;
-    identification: string;
     ojs_journal_code: string;
 }
 
@@ -36,11 +35,10 @@ export function initIssue(path: string): JournalIssue {
         path,
         metadata: {
             zenon_id: 0,
-            volume: '',
+            volume: 1,
             year: 0,
-            number: '',
+            number: 1,
             description: '',
-            identification: '',
             ojs_journal_code: ''
         }
     };
