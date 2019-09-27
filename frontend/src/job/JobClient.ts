@@ -1,5 +1,4 @@
 import { JournalImportParameters } from './ingest-journal/JournalImportParameters';
-import { BookImportParameters } from './ingest-book/BookImportParameters';
 import { sendRequest } from '@/util/HTTPClient';
 import { Job } from './Job';
 
@@ -7,7 +6,7 @@ const backendUri = process.env.VUE_APP_BACKEND_URI;
 
 export async function startJob(
     jobType: string,
-    params: JournalImportParameters | BookImportParameters
+    params: JournalImportParameters
 ): Promise<boolean> {
     return sendRequest('post', `${backendUri}/job/${jobType}`, params, false);
 }

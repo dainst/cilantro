@@ -6,16 +6,11 @@
                 <div class="tile is-child box">
                     <p class="title">Journal import</p>
                     <p>Job Type Description</p>
-                    <router-link to="ingest-journal" tag="b-button">
-                        Start
-                    </router-link>
+                    <router-link to="ingest-journal" tag="b-button">Start</router-link>
                 </div>
                 <div class="tile is-child box">
                     <p class="title">Book import</p>
                     <p>Job Type Description</p>
-                    <router-link to="ingest-book" tag="b-button">
-                        Start
-                    </router-link>
                 </div>
                 <div class="tile is-child box">
                     <p class="title">NLP Processing</p>
@@ -31,6 +26,6 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component
 export default class StartJobSelection extends Vue {
-    
+
 }
 </script>
