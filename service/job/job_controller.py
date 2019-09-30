@@ -227,15 +227,24 @@ def journal_job_create():
 
         chain = t('create_object', **task_params)
 
-        chain |= t('convert.tif_to_pdf')
+        chain |= t('list_files',
+                   representation='tif',
+                   target='pdf',
+                   task='convert.tif_to_pdf')
+
         chain |= t('convert.merge_converted_pdf')
 
-        chain |= t('convert.tif_to_jpg')
+        chain |= t('list_files',
+                   representation='tif',
+                   target='jpg',
+                   task='convert.tif_to_jpg')
 
-        chain |= t('convert.scale_image',
+        chain |= t('list_files',
+                   representation='tif',
+                   target='jpg_thumbnails',
+                   task='convert.scale_image',
                    max_width=50,
-                   max_height=50,
-                   target_rep='jpg_thumbnails')
+                   max_height=50)
 
         chain |= t('generate_xml',
                    template_file='ojs3_template_issue.xml',

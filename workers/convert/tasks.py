@@ -1,8 +1,7 @@
 import os
-import glob
 
 from utils.celery_client import celery_app
-from workers.base_task import BaseTask, FileTask, ObjectTask
+from workers.base_task import BaseTask, FileTask
 from utils.object import Object
 from workers.convert.convert_image import convert_tif_to_jpg, \
     convert_jpg_to_pdf, tif_to_txt, convert_tif_to_ptif, tif_to_pdf
@@ -72,19 +71,14 @@ class JpgToPdfTask(FileTask):
         convert_jpg_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
 
 
-class TifToPdfTask(ObjectTask):
+class TifToPdfTask(FileTask):
     name = "convert.tif_to_pdf"
 
-    def process_object(self, obj):
-        target_dir = obj.get_representation_dir('pdf')
-        os.makedirs(target_dir)
-
-        pattern = os.path.join(obj.get_representation_dir('tif'), '*.*')
-        for tif_file in glob.iglob(pattern):
-            tif_to_pdf(tif_file, _get_target_file(tif_file, target_dir, 'pdf'))
+    def process_file(self, file, target_dir):
+        tif_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
 
 
-class TifToJpgTask(ObjectTask):
+class TifToJpgTask(FileTask):
     """
     Create a jpg file from a tif.
 
@@ -101,14 +95,8 @@ class TifToJpgTask(ObjectTask):
 
     name = "convert.tif_to_jpg"
 
-    def process_object(self, obj):
-        target_dir = obj.get_representation_dir('jpg')
-        os.makedirs(target_dir)
-
-        pattern = os.path.join(obj.get_representation_dir('tif'), '*.*')
-        for tif_file in glob.iglob(pattern):
-            convert_tif_to_jpg(tif_file,
-                               _get_target_file(tif_file, target_dir, 'jpg'))
+    def process_file(self, file, target_dir):
+        convert_tif_to_jpg(file, _get_target_file(file, target_dir, 'jpg'))
 
 
 class PdfToTxtTask(FileTask):
@@ -177,7 +165,7 @@ class TifToTxtTask(FileTask):
         tif_to_txt(file, _get_target_file(file, target_dir, 'txt'), lang)
 
 
-class ScaleImageTask(ObjectTask):
+class ScaleImageTask(FileTask):
     """
         Create copies of image files with new proportions.
 
@@ -196,16 +184,10 @@ class ScaleImageTask(ObjectTask):
 
     name = "convert.scale_image"
 
-    def process_object(self, obj):
+    def process_file(self, file, target_dir):
         max_width = int(self.params['max_width'])
         max_height = int(self.params['max_height'])
-
-        target_dir = obj.get_representation_dir(self.params['target_rep'])
-        os.makedirs(target_dir)
-
-        pattern = os.path.join(obj.get_representation_dir('jpg'), '*.*')
-        for jpg_file in glob.iglob(pattern):
-            scale_image(jpg_file, target_dir, max_width, max_height)
+        scale_image(file, target_dir, max_width, max_height)
 
 
 class TifToPTifTask(FileTask):
