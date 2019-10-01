@@ -26,6 +26,8 @@ x-env-app-config: &env-app-config
   OLD_JOBS_THRESHOLD_DAYS: 7
   BACKEND_URI: &backend-uri http://localhost:5000
   CILANTRO_ENV: &cilantro-env development
+  OJS_URI: &ojs-uri ${OJS_URI}
+  OJS_AUTH_KEY: &ojs-auth-key ${OJS_AUTH_KEY}
 
 x-test-timeouts: &test-timeouts
   DEFAULT_TEST_TIMEOUT: ${DEFAULT_TEST_TIMEOUT}
@@ -87,8 +89,8 @@ services:
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
       BACKEND_URI: *backend-uri
-      OJS_URI: ${OJS_URI}
-      OJS_AUTH_KEY: ${OJS_AUTH_KEY}
+      OJS_URI: *ojs-uri
+      OJS_AUTH_KEY: *ojs-auth-key
 
   convert-worker:
     image: dainst/cilantro-convert-worker:latest
