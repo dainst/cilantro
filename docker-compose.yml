@@ -79,14 +79,11 @@ services:
       - .:/app
       - ./data:/data
       - ./config:/config
-      - ./archaeocloud_test_dir:/archaeocloud_test_dir
     environment:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-ojs
       <<: *env-jobdb
-      <<: *env-arachne
-      <<: *env-archaeocloud
       DB_HOST: db
       CILANTRO_ENV: development
       BACKEND_URI: ${BACKEND_URI}
@@ -175,8 +172,6 @@ services:
       <<: *test-timeouts
       <<: *env-jobdb
       <<: *env-app-config
-      <<: *env-arachne
-      <<: *env-archaeocloud
       DB_HOST: db
       TEST_RESOURCE_DIR: "test/resources"
       BACKEND_URI: ${BACKEND_URI}
