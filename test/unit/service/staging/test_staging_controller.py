@@ -106,8 +106,8 @@ class StagingControllerTest(unittest.TestCase):
 
         response = self.client.get('/staging', headers=get_auth_header())
         response_object = response.get_json()
-        self.assertEqual(response_object[0]['name'], 'some_tiffs')
-        contents = response_object[0]['contents']
+        self.assertEqual(response_object['some_tiffs']['type'], 'directory')
+        contents = response_object['some_tiffs']['contents']
         self.assertEqual(len(contents), len(file_names))
 
     def test_get_file(self):
