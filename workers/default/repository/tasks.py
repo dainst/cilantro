@@ -56,9 +56,16 @@ def _initialize_object(obj, params):
 
 
 def _initialize_files(obj, path, user, init_rep):
-    file_list_pattern = os.path.join(staging_dir, user, path, "*.tif") # TODO type tiff?
+    types = ('*.tif', '*.tiff', '*.TIF', '*.TIFF')
+    files_grabbed = []
+    for files in types:
+        files_grabbed.extend(glob.glob(os.path.join(staging_dir, user,
+                                                    path, files)))
 
-    for file_name in glob.iglob(file_list_pattern):
+    if (len(files_grabbed) < 1):
+        raise Exception(f'no valid job files found in {path}')
+
+    for file_name in files_grabbed:
         obj.add_file(Object.INITIAL_REPRESENTATION, file_name)
         obj.add_file(init_rep, file_name)
 
