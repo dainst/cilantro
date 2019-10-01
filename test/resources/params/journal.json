@@ -2,24 +2,19 @@
     "objects": [{
         "path": "test-folder1",
         "metadata": {
-            "volume": "",
-            "year": 2018,
-            "number": "",
-            "description": "[PDFs teilweise verf\u00fcgbar]",
-            "identification": "year"
+            "description": "Archäologischer Anzeiger",
+            "number": 1,
+            "ojs_journal_code": "test",
+            "volume": 1,
+            "year": 2015,
+            "zenon_id": 1449024
         }
     }],
     "options": {
         "ojs_metadata": {
-            "ojs_journal_code": "test",
-            "ojs_user": "ojs_user",
             "auto_publish_issue": true,
             "default_create_frontpage": true,
             "allow_upload_without_file": false
-        },
-        "do_ocr": false,
-        "nlp_params": {
-            "lang": "de"
         }
     }
 }

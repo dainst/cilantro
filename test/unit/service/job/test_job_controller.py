@@ -126,7 +126,7 @@ class JobControllerTest(unittest.TestCase):
     def test_create_job_wrong_param_type(self):
         """Test job creation to fail when a param has the wrong type."""
         job_params = self._read_test_params()
-        job_params['objects'][0]['metadata']['volume'] = 5453
+        job_params['objects'][0]['metadata']['volume'] = "asdf"
         self._make_request('/job/ingest_journal', json.dumps(job_params), 400,
                            'invalid_job_params', 'is not of type')
 
