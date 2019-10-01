@@ -6,11 +6,11 @@ x-env-dirs: &env-dirs
   STAGING_DIR: /data/staging
   CONFIG_DIR: /config
 
-x-env-ojs3: &env-ojs3
+x-env-ojs: &env-ojs
   MYSQL_USER: ojs
-  MYSQL_PASSWORD: ${OJS3_MYSQL_PASSWORD}
+  MYSQL_PASSWORD: ${OJS_MYSQL_PASSWORD}
   ADMIN_USER: admin
-  ADMIN_PASSWORD: ${OJS3_ADMIN_PASSWORD}
+  ADMIN_PASSWORD: ${OJS_ADMIN_PASSWORD}
 
 x-env-broker: &env-broker
   BROKER_HOST: broker
@@ -83,7 +83,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
-      <<: *env-ojs3
+      <<: *env-ojs
       <<: *env-jobdb
       <<: *env-arachne
       <<: *env-archaeocloud
@@ -139,22 +139,22 @@ services:
     environment:
       <<: *env-broker
 
-  ojs3-db:
+  ojs-db:
     image: mariadb:latest
     environment:
       MYSQL_ROOT_PASSWORD: ojs
       MYSQL_DATABASE: ojs
-      <<: *env-ojs3
+      <<: *env-ojs
 
-  ojs3:
+  ojs:
     image: dainst/ojs3:latest
     ports:
       - "4444:80"
     environment:
       ADMIN_EMAIL: dummy@address.local
-      MYSQL_HOST: ojs3-db
+      MYSQL_HOST: ojs-db
       MYSQL_DATABASE: ojs
-      <<: *env-ojs3
+      <<: *env-ojs
 
   test:
     container_name: cilantro_test
@@ -171,7 +171,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
-      <<: *env-ojs3
+      <<: *env-ojs
       <<: *test-timeouts
       <<: *env-jobdb
       <<: *env-app-config
