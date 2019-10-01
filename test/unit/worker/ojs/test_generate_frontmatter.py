@@ -4,6 +4,7 @@ from urllib.error import HTTPError
 from workers.default.ojs.ojs_api import publish, generate_frontmatter
 
 
+@unittest.skip("Generating frontmatters is not implemented in OJS3 yet")
 class GenerateFrontmatterTest(unittest.TestCase):
     """Test the usage of the OJS frontmatter plugin."""
 
@@ -23,7 +24,7 @@ class GenerateFrontmatterTest(unittest.TestCase):
         Therefore the normal test uses the even number IDs and the test
         expecting failure the odd numbers refenrecing txt instead of PDF.
         """
-        ojs_import_file = 'test/resources/files/ojs_import.xml'
+        ojs_import_file = 'test/resources/files/ojs3_import.xml'
         _, response = publish(ojs_import_file, 'test')
         cls.published_articles.extend(response['published_articles'])
         _, response = publish(ojs_import_file, 'test')

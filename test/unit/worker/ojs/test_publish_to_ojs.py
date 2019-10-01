@@ -14,7 +14,7 @@ class PublishToOJSTest(unittest.TestCase):
         Tested are the return code and part of the returned text for a string
         indicating a successful operation.
         """
-        ojs_import_file = 'test/resources/files/ojs_import.xml'
+        ojs_import_file = 'test/resources/files/ojs3_import.xml'
 
         response_status_code, response = publish(ojs_import_file, 'test')
 
