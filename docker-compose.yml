@@ -23,7 +23,9 @@ x-env-jobdb: &env-jobdb
   JOB_DB_NAME: job_database
 
 x-env-app-config: &env-app-config
-  OLD_JOBS_THRESHOLD_DAYS: ${OLD_JOBS_THRESHOLD_DAYS}
+  OLD_JOBS_THRESHOLD_DAYS: 7
+  BACKEND_URI: &backend-uri http://localhost:5000
+  CILANTRO_ENV: &cilantro-env development
 
 x-test-timeouts: &test-timeouts
   DEFAULT_TEST_TIMEOUT: ${DEFAULT_TEST_TIMEOUT}
@@ -66,7 +68,6 @@ services:
       <<: *env-jobdb
       <<: *env-app-config
       DB_HOST: db
-      CILANTRO_ENV: development
 
   default-worker:
     image: dainst/cilantro-default-worker:latest
@@ -82,11 +83,10 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
-      <<: *env-ojs
       <<: *env-jobdb
       DB_HOST: db
-      CILANTRO_ENV: development
-      BACKEND_URI: ${BACKEND_URI}
+      CILANTRO_ENV: *cilantro-env
+      BACKEND_URI: *backend-uri
       OJS_URI: ${OJS_URI}
       OJS_AUTH_KEY: ${OJS_AUTH_KEY}
 
@@ -105,7 +105,7 @@ services:
       <<: *env-dirs
       <<: *env-broker
       DB_HOST: db
-      CILANTRO_ENV: development
+      CILANTRO_ENV: *cilantro-env
 
   nlp-worker:
     image: dainst/cilantro-nlp-worker:latest
@@ -124,7 +124,7 @@ services:
       <<: *env-dirs
       <<: *env-broker
       DB_HOST: db
-      CILANTRO_ENV: development
+      CILANTRO_ENV: *cilantro-env
 
   monitor:
     image: dainst/cilantro-monitor:latest
@@ -174,4 +174,3 @@ services:
       <<: *env-app-config
       DB_HOST: db
       TEST_RESOURCE_DIR: "test/resources"
-      BACKEND_URI: ${BACKEND_URI}
