@@ -7,20 +7,20 @@ x-env-dirs: &env-dirs
   CONFIG_DIR: /config
 
 x-env-ojs3: &env-ojs3
-  MYSQL_USER: ${OJS3_MYSQL_USER}
+  MYSQL_USER: ojs
   MYSQL_PASSWORD: ${OJS3_MYSQL_PASSWORD}
-  ADMIN_USER: ${OJS3_ADMIN_USER}
+  ADMIN_USER: admin
   ADMIN_PASSWORD: ${OJS3_ADMIN_PASSWORD}
 
 x-env-broker: &env-broker
-  BROKER_HOST: "broker"
+  BROKER_HOST: broker
   BROKER_USER: &broker-user user
   BROKER_PASSWORD: &broker-password password
 
 x-env-jobdb: &env-jobdb
-  JOB_DB_URL: ${JOB_DB_URL}
-  JOB_DB_PORT: ${JOB_DB_PORT}
-  JOB_DB_NAME: ${JOB_DB_NAME}
+  JOB_DB_URL: job-db
+  JOB_DB_PORT: 27017
+  JOB_DB_NAME: job_database
 
 x-env-app-config: &env-app-config
   OLD_JOBS_THRESHOLD_DAYS: ${OLD_JOBS_THRESHOLD_DAYS}
@@ -51,21 +51,15 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: *broker-user
       RABBITMQ_DEFAULT_PASS: *broker-password
-    ports:
-      - "5672:5672"
 
   db:
     image: redis:latest
     command: ["redis-server", "--appendonly", "yes"]
-    ports:
-      - "6379:6379"
     volumes:
       - ./redis-data:/data
 
   job-db:
     image: mongo
-    ports:
-      - "27017:27017"
     volumes:
       - ./mongo-data:/data
 
@@ -86,7 +80,7 @@ services:
       <<: *env-broker
       <<: *env-jobdb
       <<: *env-app-config
-      DB_HOST: "db"
+      DB_HOST: db
       CILANTRO_ENV: development
 
   default-worker:
@@ -108,7 +102,7 @@ services:
       <<: *env-jobdb
       <<: *env-arachne
       <<: *env-archaeocloud
-      DB_HOST: "db"
+      DB_HOST: db
       CILANTRO_ENV: development
       BACKEND_URI: ${BACKEND_URI}
       OJS_URI: ${OJS_URI}
@@ -128,7 +122,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
-      DB_HOST: "db"
+      DB_HOST: db
       CILANTRO_ENV: development
 
   nlp-worker:
@@ -147,7 +141,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
-      DB_HOST: "db"
+      DB_HOST: db
       CILANTRO_ENV: development
 
   monitor:
@@ -198,7 +192,7 @@ services:
       <<: *env-app-config
       <<: *env-arachne
       <<: *env-archaeocloud
-      DB_HOST: "db"
+      DB_HOST: db
       TEST_RESOURCE_DIR: "test/resources"
       BACKEND_URI: ${BACKEND_URI}
 
