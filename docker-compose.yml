@@ -5,6 +5,7 @@ x-env-dirs: &env-dirs
   WORKING_DIR: /data/workspace
   STAGING_DIR: /data/staging
   CONFIG_DIR: /config
+  ARCHIVE_DIR: /data/archive
 
 x-env-ojs: &env-ojs
   MYSQL_USER: ojs

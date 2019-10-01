@@ -9,6 +9,7 @@ from utils.repository import generate_repository_path
 from utils import job_db
 
 repository_dir = os.environ['REPOSITORY_DIR']
+archive_dir = os.environ['ARCHIVE_DIR']
 working_dir = os.environ['WORKING_DIR']
 staging_dir = os.environ['STAGING_DIR']
 
@@ -82,7 +83,30 @@ class PublishToRepositoryTask(BaseTask):
                                        generate_repository_path(
                                            self.get_result('object_id')))
         shutil.rmtree(repository_path, ignore_errors=True)
-        shutil.copytree(work_path, repository_path)
+
+        shutil.copytree(os.path.join(work_path, 'data', 'pdf'),
+                        os.path.join(repository_path, 'data', 'pdf'))
+        shutil.copytree(os.path.join(work_path, 'data', 'jpg'),
+                        os.path.join(repository_path, 'data', 'jpg'))
+        shutil.copy(os.path.join(work_path, 'meta.json'), repository_path)
+        shutil.copy(os.path.join(work_path, 'mets.xml'), repository_path)
 
 
 PublishToRepositoryTask = celery_app.register_task(PublishToRepositoryTask())
+
+
+class PublishToArchiveTask(BaseTask):
+    """Copy the given dir-trees from work dir to the archive."""
+
+    name = "publish_to_archive"
+
+    def execute_task(self):
+        work_path = self.get_work_path()
+        archive_path = os.path.join(archive_dir,
+                                    generate_repository_path(
+                                        self.get_result('object_id')))
+        shutil.rmtree(archive_path, ignore_errors=True)
+        shutil.copytree(work_path, archive_path)
+
+
+PublishToArchiveTask = celery_app.register_task(PublishToArchiveTask())

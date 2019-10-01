@@ -20,6 +20,7 @@ create-data-dir:
 	mkdir -p data/staging
 	mkdir -p data/staging/test_user
 	mkdir -p data/repository
+	mkdir -p data/archive
 	mkdir -p data/workspace
 	mkdir -p archaeocloud_test_dir
 
