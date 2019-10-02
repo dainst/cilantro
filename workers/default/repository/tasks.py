@@ -4,7 +4,6 @@ import glob
 
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask, ObjectTask
-from utils.object import Object
 from utils.repository import generate_repository_path
 from utils import job_db
 
@@ -33,7 +32,7 @@ class CreateObjectTask(ObjectTask):
 
     def _get_object_id(self):
         try:
-            object_id = self.get_param('object_id')
+            object_id = self.get_param('id')
         except KeyError:
             object_id = self.job_id
         return object_id
@@ -51,8 +50,10 @@ def _get_work_path(params):
 
 def _initialize_object(obj, params):
     obj.set_metadata_from_dict(params['metadata'])
+    obj.metadata.id = params['id']
     _initialize_files(obj, params['path'], params['user'],
                       params['initial_representation'])
+    obj.write()
 
 
 def _initialize_files(obj, path, user, init_rep):

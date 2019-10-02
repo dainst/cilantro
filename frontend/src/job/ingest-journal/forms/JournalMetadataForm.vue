@@ -169,6 +169,7 @@ function buildRecord(record: Record, zenonRecord: ZenonRecord, ojsJournalCode: s
     return {
         id: record.id,
         issue: {
+            id: record.issue.id,
             path: record.issue.path,
             metadata: {
                 zenon_id: parseInt(zenonRecord.id, 10),
