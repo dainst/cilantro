@@ -60,13 +60,12 @@ def _initialize_files(obj, path, user, init_rep):
     files_grabbed = []
     for files in types:
         files_grabbed.extend(glob.glob(os.path.join(staging_dir, user,
-                                                    path, files)))
+                                                    path, init_rep, files)))
 
     if (len(files_grabbed) < 1):
         raise Exception(f'no valid job files found in {path}')
 
     for file_name in files_grabbed:
-        obj.add_file(Object.INITIAL_REPRESENTATION, file_name)
         obj.add_file(init_rep, file_name)
 
 
