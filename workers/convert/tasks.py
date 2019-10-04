@@ -36,6 +36,7 @@ class MergeConvertedPdfTask(BaseTask):
     -representation: The name of the representation
 
     Preconditions:
+    - Files need to be named in alphabetical order
 
     Creates:
     -merged.pdf in the given representation
@@ -46,7 +47,7 @@ class MergeConvertedPdfTask(BaseTask):
     def execute_task(self):
         rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, 'pdf')
         files = [{'file': os.path.basename(f)}
-                 for f in _list_files(rep_dir, '.pdf')]
+                 for f in sorted(_list_files(rep_dir, '.pdf'))]
         split_merge_pdf(files, rep_dir)
 
 
