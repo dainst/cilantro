@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+
+if test -f "/run/secrets/ojs_auth_key"; then
+    export OJS_AUTH_KEY=$(cat "/run/secrets/ojs_auth_key")
+fi
+
 if [ "$CILANTRO_ENV" = "development" ]
 then
     watchmedo auto-restart -R -d service -d config -d workers -p="*.py;*.yml" -- celery -A workers.default.tasks -Q default,celery worker --loglevel=info
