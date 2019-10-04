@@ -7,9 +7,9 @@ x-env-dirs: &env-dirs
   CONFIG_DIR: /config
 
 x-env-ojs3: &env-ojs3
-  MYSQL_USER: /run/secrets/ojs_mysql_user
+  MYSQL_USER: ojs
   MYSQL_PASSWORD: /run/secrets/ojs_mysql_password
-  ADMIN_USER: /run/secrets/ojs_admin_user
+  ADMIN_USER: admin
   ADMIN_PASSWORD: /run/secrets/ojs_admin_password
 
 x-env-broker: &env-broker

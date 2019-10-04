@@ -31,7 +31,9 @@ export interface JournalImportParameters extends JobParameters {
 }
 
 export function initIssue(path: string): JournalIssue {
+    const id = path.split('/').pop() || '';
     return {
+        id,
         path,
         metadata: {
             zenon_id: 0,

@@ -3,10 +3,14 @@
         <b-table :data="records" detailed detail-key="id" :row-class="getRowClass">
             <template slot-scope="props">
                 <b-table-column width="25">
-                    <b-icon v-if="props.row.zenonRecord" icon="check" type="is-success" />
-                    <b-icon v-if="props.row.error" icon="alert-circle" type="is-danger" />
                     <b-icon
-                        v-if="!props.row.error && !props.row.zenonRecord"
+                        v-if="props.row.zenonRecord && !props.row.errors.length"
+                        icon="check"
+                        type="is-success"
+                    />
+                    <b-icon v-if="props.row.errors.length" icon="alert-circle" type="is-danger" />
+                    <b-icon
+                        v-if="!props.row.errors.length && !props.row.zenonRecord"
                         icon="loading"
                         custom-class="mdi-spin"
                     />
@@ -29,9 +33,12 @@
                     label="Number"
                 >{{ props.row.issue.metadata.number || '-' }}</b-table-column>
             </template>
-            <template slot="detail" slot-scope="props">
-                <pre v-if="props.row.zenonRecord">{{ props.row.zenonRecord }}</pre>
-                <p v-if="props.row.error">{{ props.row.error }}</p>
+            <template slot="detail" slot-scope="props" v-if="props.row.errors.length">
+                <div class="content">
+                    <ul>
+                        <li v-for="error in props.row.errors" :key="error">{{ error }}</li>
+                    </ul>
+                </div>
             </template>
         </b-table>
     </section>
@@ -44,6 +51,7 @@ import {
 import { JournalIssueMetadata, JournalIssue, initIssue } from '../JournalImportParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 import { ojsZenonMapping } from '@/config';
+import { getStagingFiles, WorkbenchFileTree } from '@/staging/StagingClient';
 
 @Component({
     filters: {
@@ -59,16 +67,11 @@ export default class JournalMetadataForm extends Vue {
 
     records: Record[] = [];
 
-    mounted() {
-        const records = this.selectedPaths.map(path => initRecord(path));
-        const updates: Promise<JournalIssue>[] = records.map((record) => {
-            const i = this.records.push(record) - 1;
-            return populateZenonRecord(record).then((populatedRecord) => {
-                this.$set(this.records, i, populatedRecord);
-                return populatedRecord.issue;
-            });
-        });
-        Promise.all(updates).then(issues => this.$emit('update:issues', issues));
+    async mounted() {
+        this.records = this.selectedPaths.map(path => initRecord(path));
+        this.records = await checkFolderStructure(this.records);
+        this.records = await populateZenonRecords(this.records);
+        this.$emit('update:issues', this.records.filter(r => !r.errors.length).map(r => r.issue));
     }
 
     getRowClass = getRowClass;
@@ -82,13 +85,40 @@ interface Record {
     id: string,
     issue: JournalIssue;
     zenonRecord?: ZenonRecord;
-    error?: string;
+    errors: string[];
 }
 
-function extractZenonId(path: string): string | null {
-    const result = path.match(/.*JOURNAL-ZID(\d+)/);
-    if (!result || result.length < 1) return null;
-    return result[1];
+async function checkFolderStructure(records: Record[]) {
+    const stagingFiles = await getStagingFiles();
+    return records.map((record) => {
+        const folder = getStagingFile(stagingFiles, record.id);
+        const msg = validateFolder(folder);
+        if (msg) return buildError(record, msg);
+        return record;
+    });
+}
+
+function getStagingFile(stagingFiles: WorkbenchFileTree, path: string) {
+    return path.split('/').reduce((folderTree, folderName) => {
+        if (folderName in folderTree) {
+            return folderTree[folderName].contents || {};
+        }
+        return {};
+    }, stagingFiles);
+}
+
+function validateFolder(folder: WorkbenchFileTree) {
+    if (Object.keys(folder).length !== 1) return "Folder has more than one entry. Only one subfolder 'tif' is allowed.";
+    if (!('tif' in folder)) return "Folder does not have a subfolder 'tif'.";
+    const tifFolder = folder.tif.contents;
+    if (!tifFolder || Object.keys(tifFolder).length === 0) return "Subfolder 'tif' is empty.";
+    const filesOk = Object.keys(tifFolder).reduce((ok, file) => ok && file.endsWith('.tif'), true);
+    if (!filesOk) return "Subfolder 'tif' does not only contain files ending in '.tif'.";
+    return false;
+}
+
+async function populateZenonRecords(records: Record[]) {
+    return Promise.all(records.map(async record => populateZenonRecord(record)));
 }
 
 async function populateZenonRecord(record: Record): Promise<Record> {
@@ -115,8 +145,14 @@ async function populateZenonRecord(record: Record): Promise<Record> {
     }
 }
 
+function extractZenonId(path: string): string | null {
+    const result = path.match(/.*JOURNAL-ZID(\d+)/);
+    if (!result || result.length < 1) return null;
+    return result[1];
+}
+
 function getRowClass(record: Record) {
-    if (record.error) return 'is-danger';
+    if (record.errors) return 'is-danger';
     if (record.zenonRecord) return 'is-success';
     return '';
 }
@@ -126,13 +162,14 @@ function getTableField(field: any) {
 }
 
 function initRecord(path: string): Record {
-    return { id: path, issue: initIssue(path) };
+    return { id: path, issue: initIssue(path), errors: [] };
 }
 
 function buildRecord(record: Record, zenonRecord: ZenonRecord, ojsJournalCode: string): Record {
     return {
         id: record.id,
         issue: {
+            id: record.issue.id,
             path: record.issue.path,
             metadata: {
                 zenon_id: parseInt(zenonRecord.id, 10),
@@ -143,7 +180,8 @@ function buildRecord(record: Record, zenonRecord: ZenonRecord, ojsJournalCode: s
                 ojs_journal_code: ojsJournalCode
             }
         },
-        zenonRecord
+        zenonRecord,
+        errors: record.errors
     };
 }
 
@@ -151,7 +189,7 @@ function buildError(record: Record, error: string): Record {
     return {
         id: record.id,
         issue: record.issue,
-        error
+        errors: record.errors.concat(error)
     };
 }
 

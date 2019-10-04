@@ -6,7 +6,7 @@ from workers.base_task import ObjectTask
 from workers.default.ojs.ojs_api import publish, generate_frontmatter
 
 
-def _generate_object_id(prefix, journal_code, result_id):
+def _generate_ojs_id(prefix, journal_code, result_id):
     return f"{prefix}-{journal_code}-{result_id}"
 
 
@@ -22,7 +22,6 @@ class PublishToOJSTask(ObjectTask):
 
     def process_object(self, obj):
         work_path = self.get_work_path()
-        ojs_metadata = self.get_param('ojs_metadata')
         ojs_journal_code = self.get_param('ojs_journal_code')
 
         _, result = publish(os.path.join(work_path, 'ojs_import.xml'),
@@ -32,14 +31,11 @@ class PublishToOJSTask(ObjectTask):
                 'Existing issue' in result['warnings'][0]):
             raise RuntimeError('Issue already exists in OJS')
         else:
-            object_id = _generate_object_id('issue',
-                                            ojs_journal_code,
-                                            result['published_issues'][0])
-            obj.metadata.ojs_id = object_id
-            obj.metadata.object_id = object_id
+            ojs_id = _generate_ojs_id('issue',
+                                      ojs_journal_code,
+                                      result['published_issues'][0])
+            obj.metadata.ojs_id = ojs_id
             obj.write()
-
-        return {'object_id': object_id}
 
 
 class GenerateFrontmatterTask(ObjectTask):
