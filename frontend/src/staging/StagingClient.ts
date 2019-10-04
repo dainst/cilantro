@@ -1,7 +1,6 @@
 import { sendRequest } from '@/util/HTTPClient';
 import { AxiosRequestConfig } from 'axios';
-
-const backendUri = process.env.VUE_APP_BACKEND_URI;
+import {backendUri} from "@/config";
 
 export async function getStagingFiles(path: string = ''): Promise<WorkbenchFileTree> {
     return sendRequest('get', `${backendUri}/staging${path}`, {}, false);
