@@ -7,12 +7,6 @@ x-env-dirs: &env-dirs
   CONFIG_DIR: /config
   ARCHIVE_DIR: /data/archive
 
-x-env-ojs: &env-ojs
-  MYSQL_USER: ojs
-  MYSQL_PASSWORD: ${OJS_MYSQL_PASSWORD}
-  ADMIN_USER: admin
-  ADMIN_PASSWORD: ${OJS_ADMIN_PASSWORD}
-
 x-env-broker: &env-broker
   BROKER_HOST: broker
   BROKER_USER: &broker-user user
@@ -27,7 +21,7 @@ x-env-app-config: &env-app-config
   OLD_JOBS_THRESHOLD_DAYS: 7
   BACKEND_URI: &backend-uri http://localhost:5000
   CILANTRO_ENV: &cilantro-env development
-  OJS_URI: &ojs-uri ${OJS_URI}
+  OJS_URI: &ojs-uri http://mock-server:8080/api/ojs/plugins/generic/ojs-cilantro-plugin/api
   OJS_AUTH_KEY: &ojs-auth-key ${OJS_AUTH_KEY}
 
 x-test-timeouts: &test-timeouts
@@ -139,23 +133,6 @@ services:
     environment:
       <<: *env-broker
 
-  ojs-db:
-    image: mariadb:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: ojs
-      MYSQL_DATABASE: ojs
-      <<: *env-ojs
-
-  ojs:
-    image: dainst/ojs3:latest
-    ports:
-      - "4444:80"
-    environment:
-      ADMIN_EMAIL: dummy@address.local
-      MYSQL_HOST: ojs-db
-      MYSQL_DATABASE: ojs
-      <<: *env-ojs
-
   test:
     container_name: cilantro_test
     user: ${UID}
@@ -171,9 +148,17 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
-      <<: *env-ojs
       <<: *test-timeouts
       <<: *env-jobdb
       <<: *env-app-config
       DB_HOST: db
       TEST_RESOURCE_DIR: "test/resources"
+
+  mock-server:
+    image: rodolpheche/wiremock:latest
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./test/wiremock_config:/home/wiremock
+    environment:
+      uid: 1000

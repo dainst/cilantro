@@ -2,22 +2,38 @@ import unittest
 import json
 import os
 import datetime
+import shutil
 
 from pymongo import MongoClient
 
 from service.run_service import app
-from test.unit.service.user.user_utils import get_auth_header
+from test.unit.service.user.user_utils import get_auth_header, test_user
 
 
 class JobControllerTest(unittest.TestCase):
     """Test the job controller to validate the parameter payload."""
 
     test_resource_dir = 'test/resources'
+    staging_dir = os.environ['STAGING_DIR']
 
     def setUp(self):
         """Prepare test setup."""
+        self._stage_test_folder('files', 'some_tiffs')
         app.testing = True
         self.client = app.test_client()
+
+    def tearDown(self):
+        shutil.rmtree(os.path.join(self.staging_dir, test_user, 'some_tiffs'),
+                      ignore_errors=True)
+
+    def _stage_test_folder(self, folder, path):
+        source = os.path.join(self.test_resource_dir, folder, path)
+        target = os.path.join(self.staging_dir, test_user, path)
+        try:
+            if os.path.isdir(source):
+                shutil.copytree(source, target)
+        except FileExistsError:
+            pass
 
     def test_get_job_type_schema(self):
         """Test if a ingest-journal schema is returned when requested."""
@@ -95,7 +111,7 @@ class JobControllerTest(unittest.TestCase):
         self.assertTrue(last_job_json["job_id"])
         self.assertEqual("test_user", last_job_json["user"])
         self.assertEqual("ingest_journal", last_job_json["job_type"])
-        self.assertEqual('JOB-ingest_journal-test-folder1',
+        self.assertEqual('JOB-ingest_journal-some_tiffs',
                          last_job_json["name"])
 
     def test_create_job_no_payload(self):
