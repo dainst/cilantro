@@ -18,7 +18,7 @@ class IngestJournalTest(JobTypeTest):
         self.assertIn('object_id', response['result'])
         object_id = response['result']['object_id']
         journal_code = params['objects'][0]['metadata']['ojs_journal_code']
-        self.assertTrue(object_id.startswith(f"issue-{journal_code}"))
+        self.assertTrue(object_id.startswith("some_tiffs"))
 
         files_generated = [
             'data/pdf/merged.pdf',
