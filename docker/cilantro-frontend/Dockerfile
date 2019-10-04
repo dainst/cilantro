@@ -5,16 +5,11 @@ RUN apk update && apk upgrade && \
 
 COPY . /src
 WORKDIR /src/frontend
-RUN npm install
-RUN npm run build
+RUN npm install && npm run build
 
 
 FROM nginx:1.17-alpine
 
-RUN rm -R /usr/share/nginx/html/
-
-COPY --from=builder /src/frontend/dist /usr/share/nginx/html
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+RUN mkdir /app
+COPY --from=0 /src/frontend/dist /app
+COPY docker/cilantro-frontend/nginx.conf /etc/nginx/nginx.conf

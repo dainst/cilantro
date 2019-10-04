@@ -133,6 +133,16 @@ services:
     environment:
       <<: *env-broker
 
+  frontend:
+    image: dainst/cilantro-frontend:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-frontend/Dockerfile
+    ports:
+      - "8081:80"
+    environment:
+      VUE_APP_BACKEND_URI: *backend-uri
+
   test:
     container_name: cilantro_test
     user: ${UID}
