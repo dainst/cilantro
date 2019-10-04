@@ -1,0 +1,10 @@
+{
+    "request": {
+        "method": "POST",
+        "url": "/api/ojs/plugins/generic/ojs-cilantro-plugin/api/import/test"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"system\":\"ojs2 3.1.2.1\",\"published_articles\":null,\"published_issues\":[1],\"task\":\"import\",\"success\":true,\"warnings\":[]}"
+    }
+}
