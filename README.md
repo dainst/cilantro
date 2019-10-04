@@ -88,6 +88,8 @@ be run with:
 [Flower](https://flower.readthedocs.io/) is included in the docker config and
 is available for debugging under http://localhost:5555.
 
+OJS monitoring under http://localhost:4444
+
 ### Publish Docker Images
 
 To publish a docker image on dockerhub use the buildscript
