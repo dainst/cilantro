@@ -1,5 +1,6 @@
 {
     "objects": [{
+        "id": "some_tiffs",
         "path": "some_tiffs",
         "metadata": {
             "description": "Archäologischer Anzeiger",
