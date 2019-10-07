@@ -14,6 +14,10 @@ class PathDoesNotExist(Exception):
     pass
 
 
+class InvalidObjectIdError(Exception):
+    pass
+
+
 class PagesInfo(SerializableClass):
     """Printing and visualisation information for the document."""
 

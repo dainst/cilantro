@@ -9,7 +9,7 @@ from utils.object import Object, ObjectMetadata
 
 working_dir = os.environ['WORKING_DIR']
 resource_dir = os.environ['TEST_RESOURCE_DIR']
-test_object_name = 'a_book'
+test_object_name = 'BOOK-ZID1234567'
 test_object_working_path = os.path.join(working_dir, test_object_name)
 test_object_resource_path = os.path.join(resource_dir, 'objects',
                                          test_object_name)

@@ -1,8 +1,8 @@
 import os
-import hashlib
 
 from utils.list_dir import list_dir
 from utils.sorting_algorithms import sort_alphanumeric
+from utils.object import InvalidObjectIdError
 
 repository_dir = os.environ['REPOSITORY_DIR']
 
@@ -28,31 +28,21 @@ def generate_repository_path(object_id):
     """
     Generate the path of a cilantro (sub)object in the repository.
 
-    This is based on the md5 checksum of the object_id.
+    This is based on the last 4/2 digits of the object_id, which should
+    be a zenon or atom ID.
 
-    E.g. object_id "foo" is stored under "ac/bd/foo" and the object_id
-    "foo/part_0001" (subobject of "foo") is stored under
-    "ac/bd/foo/parts/part_0001".
+    E.g. object_id "JOURNAL-ZID1234567" is stored under
+    "4567/67/JOURNAL-ZID1234567".
 
-    :param str object_id: The bject_id of the cilantro object, may contain
-        slashes if it is a subobject. Works with any depth.
+    :param str object_id: The object_id of the cilantro object.
     :return str: The path where the object is stored in the repository
     """
-    objects = object_id.split("/")
-    md5 = _generate_md5(objects[0])
-    path = os.path.join(md5[0:2], md5[2:4], objects[0])
-    for seg in objects[1:]:
-        path = os.path.join(path, 'parts', seg)
+    if len(object_id) < 4:
+        raise InvalidObjectIdError(f"object_id '{object_id}' "
+                                   f"has to have at least 4 characters")
+    folder = object_id[-4:]
+    if not folder.isdigit():
+        raise InvalidObjectIdError(f"The last 4 characters of object_id "
+                                   f"'{object_id}' have to be numeric")
+    path = os.path.join(folder, folder[2:4], object_id)
     return path
-
-
-def _generate_md5(string):
-    """
-    Generate the hexadecimal md5 checksum of a string
-
-    :param str string: The string to use
-    :return str: The hexadecimal md5 checksum of the string
-    """
-    m = hashlib.md5()
-    m.update(str.encode(string))
-    return m.hexdigest()

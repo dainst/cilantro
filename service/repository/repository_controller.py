@@ -7,6 +7,7 @@ from service.errors import ApiError
 from utils.repository import generate_repository_path, \
     list_objects_in_repository
 from utils.list_dir import list_dir
+from utils.object import InvalidObjectIdError
 
 repository_controller = Blueprint('repository', __name__)
 
@@ -114,7 +115,11 @@ def get_object(object_id):
     :return: JSON object containing metadata, representations and sub_objects
         of the cilantro (sub)object
     """
-    path = os.path.join(repository_dir, generate_repository_path(object_id))
+    try:
+        path = os.path.join(repository_dir, generate_repository_path(object_id))
+    except InvalidObjectIdError:
+        path = ""
+
     if os.path.isdir(path):
         with open(os.path.join(path, metadata_file)) as json_data:
             metadata = json.load(json_data)
@@ -181,8 +186,11 @@ def get_representation(object_id, rep_name):
     :status 404: representation was not found
     :return: JSON array containing all files of the representation
     """
-    path = os.path.join(repository_dir, generate_repository_path(object_id),
-                        representation_dir, rep_name)
+    try:
+        path = os.path.join(repository_dir, generate_repository_path(object_id),
+                            representation_dir, rep_name)
+    except InvalidObjectIdError:
+        path = ""
     if os.path.isdir(path):
         files = list_dir(path, sorted=True, ignore_not_found=True)
         return jsonify(files)
@@ -237,8 +245,12 @@ def get_file(object_id, rep_name, file):
     :status 404: file was not found
     :return: Downloadable file
     """
-    path = os.path.join(repository_dir, generate_repository_path(object_id),
-                        representation_dir, rep_name, file)
+    try:
+        path = os.path.join(repository_dir, generate_repository_path(object_id),
+                            representation_dir, rep_name, file)
+    except InvalidObjectIdError:
+        path = ""
+
     if os.path.isfile(path):
         return send_file(path)
     else:
@@ -287,8 +299,12 @@ def get_meta_file(object_id, file):
     :status 404: file was not found
     :return: Downloadable file
     """
-    path = os.path.join(repository_dir, generate_repository_path(object_id),
-                        file)
+    try:
+        path = os.path.join(repository_dir, generate_repository_path(object_id),
+                            file)
+    except InvalidObjectIdError:
+        path = ""
+
     if os.path.isfile(path):
         return send_file(path)
     else:
