@@ -3,6 +3,7 @@ import json
 import os
 import datetime
 import shutil
+import time
 
 from pymongo import MongoClient
 
@@ -23,6 +24,7 @@ class JobControllerTest(unittest.TestCase):
         self.client = app.test_client()
 
     def tearDown(self):
+        """Remove test data from staging dir."""
         shutil.rmtree(os.path.join(self.staging_dir, test_user, 'some_tiffs'),
                       ignore_errors=True)
 
@@ -59,6 +61,8 @@ class JobControllerTest(unittest.TestCase):
                                            json.dumps(job_params), 202)
         job_id2 = job2_response.get_json()['job_ids'][0]
         self._make_request('/job/ingest_journal', json.dumps(job_params), 202)
+
+        time.sleep(5)  # wait for the jobs to complete
 
         # hack to change the updated timestamp and job status on some test jobs
         client = MongoClient(os.environ['JOB_DB_URL'],
