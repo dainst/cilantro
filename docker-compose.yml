@@ -166,7 +166,6 @@ services:
 
   mock-server:
     image: rodolpheche/wiremock:latest
-    user: ${UID}
     volumes:
       - ./test/wiremock_config:/home/wiremock
     environment:
