@@ -174,10 +174,11 @@ function buildRecord(record: Record, zenonRecord: ZenonRecord, ojsJournalCode: s
             metadata: {
                 zenon_id: parseInt(zenonRecord.id, 10),
                 volume: 1,
-                year: parseInt(zenonRecord.publicationDates[0], 10),
+                publishing_year: parseInt(zenonRecord.publicationDates[0], 10),
                 number: 1,
                 description: zenonRecord.title,
-                ojs_journal_code: ojsJournalCode
+                ojs_journal_code: ojsJournalCode,
+                reporting_year: parseReportingYear(zenonRecord.containerReference)
             }
         },
         zenonRecord,
@@ -191,6 +192,11 @@ function buildError(record: Record, error: string): Record {
         issue: record.issue,
         errors: record.errors.concat(error)
     };
+}
+
+function parseReportingYear(containerReference: string): number {
+    const match = containerReference.match(/\(.*?\)/g)![0];
+    return parseInt(match.slice(1, -1), 10);
 }
 
 </script>
