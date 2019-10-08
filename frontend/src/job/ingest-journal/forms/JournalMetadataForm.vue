@@ -173,12 +173,14 @@ function buildRecord(record: Record, zenonRecord: ZenonRecord, ojsJournalCode: s
             path: record.issue.path,
             metadata: {
                 zenon_id: parseInt(zenonRecord.id, 10),
-                volume: 1,
+                volume: parseVolumeFromContainerReference(zenonRecord.containerReference),
                 publishing_year: parseInt(zenonRecord.publicationDates[0], 10),
-                number: 1,
+                number: parseNumberFromContainerReference(zenonRecord.containerReference),
                 description: zenonRecord.title,
                 ojs_journal_code: ojsJournalCode,
-                reporting_year: parseReportingYear(zenonRecord.containerReference)
+                reporting_year: parseReportingYearFromContainerReference(
+                    zenonRecord.containerReference
+                )
             }
         },
         zenonRecord,
@@ -194,9 +196,27 @@ function buildError(record: Record, error: string): Record {
     };
 }
 
-function parseReportingYear(containerReference: string): number {
+function parseReportingYearFromContainerReference(containerReference: string): number {
     const match = containerReference.match(/\(.*?\)/g)![0];
     return parseInt(match.slice(1, -1), 10);
+}
+
+function parseNumberFromContainerReference(containerReference: string): number {
+    if (!containerReference.includes(',')) {
+        return 0;
+    }
+    const match = containerReference.match(/,[^(]*/g)![0];
+    return parseInt(match.slice(1), 10);
+}
+
+function parseVolumeFromContainerReference(containerReference: string): number {
+    let match: string = '';
+    if (containerReference.includes(',')) {
+        match = containerReference.match(/[^,]*/g)![0];
+    } else {
+        match = containerReference.match(/[^(]*/g)![0];
+    }
+    return parseInt(match, 10);
 }
 
 </script>
