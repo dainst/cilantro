@@ -23,6 +23,11 @@
             <b-field label="Last Updated">
                 <p>{{job.updated}}</p>
             </b-field>
+            <b-message v-if="job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
+                <b-table :data="job.errors" :columns="[{field: 'task_name',
+                        label: 'Task name'}, {field: 'message',
+                        label: 'Message'}]"></b-table>
+            </b-message>
 
             <b-collapse :open="false" aria-id="job-params">
                 <button class="button" slot="trigger" aria-controls="job-params">Show Job Parameters</button>
