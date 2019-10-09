@@ -81,6 +81,7 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
         else:
             for index in range(pdf.getNumPages()):
                 new_pdf.addPage(pdf.getPage(index))
+        input_stream.close()
 
     with open(os.path.join(path, filename), 'wb+') as stream:
         new_pdf.write(stream)
