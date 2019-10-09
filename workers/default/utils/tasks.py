@@ -86,6 +86,19 @@ class FinishJobTask(BaseTask):
 FinishJobTask = celery_app.register_task(FinishJobTask())
 
 
+class FinishChordTask(BaseTask):
+    """
+    Finish a celery chord task, writes state into the mongo DB.
+    """
+    name = "finish_chord"
+
+    def execute_task(self):
+        job_db.update_job(self.job_id, "success")
+
+
+FinishChordTask = celery_app.register_task(FinishChordTask())
+
+
 class HandleErrorTask(BaseTask):
     """
     Task to handle any errors thrown in other tasks.
@@ -101,7 +114,7 @@ class HandleErrorTask(BaseTask):
             error = {
                 'task_name': self.params['task_name'],
                 'message': self.params['error_message']
-                }
+            }
             job_db.update_job(self.job_id, 'failed', error)
             self.stop_chain_execution()
         except:  # noqa: bare exception is OK here, because any unhandled

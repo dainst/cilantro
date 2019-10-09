@@ -9,6 +9,7 @@ from service.errors import ApiError
 from utils.celery_client import celery_app
 from service.user.user_service import auth
 from service.job.job import Job
+from service.job.job_chord import JobChord
 from utils import job_db
 from utils import json_validation
 
@@ -114,7 +115,7 @@ def job_list():
 @auth.login_required
 def journal_job_create():
     """
-        Create a journal import job.
+        Create a journal batch import job.
 
         Parameters can be provided as JSON as part of the request body
         and must match the job parameter schema.
@@ -132,30 +133,39 @@ def journal_job_create():
           POST /job/<job-type> HTTP/1.1
 
           {
-            "objects": [{
-                "path": "some_tiffs",
-                "metadata": {
-                    "volume": "",
-                    "year": 2018,
-                    "number": "",
-                    "description": "[PDFs teilweise verf\u00fcgbar]",
-                    "identification": "year"
-                }
-            }],
-            "options": {
-                "ojs_metadata": {
-                    "ojs_journal_code": "test",
-                    "ojs_user": "ojs_user",
-                    "auto_publish_issue": true,
-                    "default_create_frontpage": true,
-                    "allow_upload_without_file": false
-                },
-                "do_ocr": false,
-                "nlp_params": {
-                    "lang": "de"
+              "objects": [{
+                   "id": "some_tiffs",
+                   "path": "some_tiffs",
+                   "metadata": {
+                       "description": "Archäologischer Anzeiger",
+                       "number": 1,
+                       "ojs_journal_code": "test",
+                       "volume": 1,
+                       "year": 2015,
+                       "zenon_id": 1449024
+                    }
+                },{
+                    "id": "some_tiffs_2",
+                    "path": "some_tiffs_2",
+                    "metadata": {
+                        "description": "Archäologischer Anzeiger",
+                        "number": 2,
+                        "ojs_journal_code": "test",
+                        "volume": 2,
+                        "year": 2016,
+                        zenon_id": 1449024
+                    }
+                }],
+                "options": {
+                    "ojs_metadata": {
+                        "auto_publish_issue": true,
+                        "default_create_frontpage": true,
+                        "allow_upload_without_file": false
+                    }
                 }
             }
-          }
+
+        Each path ("some_tiffs" and "some_tiffs_2" in the example case, are expected to contain a directory "tif" that contains tif images.) 
 
 
         **Example response SUCCESS**:
@@ -165,15 +175,38 @@ def journal_job_create():
             HTTP/1.1 200 OK
 
             {
-                "success": true,
-                "job_id": "010819cc-dc4d-11e8-b152-0242ac130008",
+                "job_id": "6abf2068-ea88-11e9-9d31-0242ac12000a",
                 "status": "Accepted",
+                "success": true,
                 "task_ids": [
-                    "9331a617-d35f-4b1a-be24-ec7a970c480e",
-                    "f012ef11-1ac0-4810-986a-c31335b918fb",
-                    "628abc60-2767-484a-a5c3-0b5a9c1a1ef6",
-                    "c2a97fd1-28d2-4e97-b41f-67b6f70d91df",
-                    "85cd98a7-fe3f-4e42-91f8-504c074be263",
+                    [
+                        "6ac4447e-ea88-11e9-b5fd-0242ac12000a",
+                        "6ac44e3e-ea88-11e9-8cec-0242ac12000a",
+                        "6ac454b0-ea88-11e9-a491-0242ac12000a",
+                        "6ac45942-ea88-11e9-8429-0242ac12000a",
+                        "6ac45dae-ea88-11e9-a17b-0242ac12000a",
+                        "6ac462a6-ea88-11e9-8706-0242ac12000a",
+                        "6ac46750-ea88-11e9-b93a-0242ac12000a",
+                        "6ac46e18-ea88-11e9-82ad-0242ac12000a",
+                        "6ac47198-ea88-11e9-a826-0242ac12000a",
+                        "6ac47646-ea88-11e9-b820-0242ac12000a",
+                        "6ac47d58-ea88-11e9-b802-0242ac12000a",
+                        "6ac48342-ea88-11e9-aa77-0242ac12000a"
+                    ],
+                    [
+                        "6ac49174-ea88-11e9-9f30-0242ac12000a",
+                        "6ac498c2-ea88-11e9-b61f-0242ac12000a",
+                        "6ac49e4a-ea88-11e9-a941-0242ac12000a",
+                        "6ac4a308-ea88-11e9-96ec-0242ac12000a",
+                        "6ac4a7f6-ea88-11e9-889e-0242ac12000a",
+                        "6ac4ab50-ea88-11e9-bcdd-0242ac12000a",
+                        "6ac4b070-ea88-11e9-bee2-0242ac12000a",
+                        "6ac4b6b8-ea88-11e9-b01b-0242ac12000a",
+                        "6ac4bbde-ea88-11e9-b964-0242ac12000a",
+                        "6ac4bf78-ea88-11e9-9547-0242ac12000a",
+                        "6ac4c190-ea88-11e9-8a13-0242ac12000a",
+                        "6ac4c380-ea88-11e9-9542-0242ac12000a"
+                    ]
                 ]
             }
 
@@ -183,15 +216,15 @@ def journal_job_create():
 
             HTTP/1.1 400 BAD REQUEST
 
-                {
-                    "error": {
-                        "code": "bad_request",
-                        "message": "400 Bad Request: The browser (or proxy)
-                                    sent a request that this server could
-                                    not understand."
-                    },
-                    "success": false
-                }
+            {
+                "error": {
+                    "code": "bad_request",
+                    "message": "400 Bad Request: The browser (or proxy)
+                                sent a request that this server could
+                                not understand."
+                },
+                "success": false
+            }
 
         :reqheader Accept: application/json
         :param str job_type: name of the job type
@@ -203,13 +236,14 @@ def journal_job_create():
         :status 200: OK
 
         :return: A JSON object containing the status, the job id and the task
-            ids of every subtask in the chain
+            ids of every subtask in every chain
     """
+    logger = logging.getLogger(__name__)
+
     if not request.data:
         raise ApiError("invalid_job_params", "No request payload found")
     params = request.get_json(force=True)
     user = auth.username()
-
     try:
         json_validation.validate_params(params, 'ingest_journal')
     except FileNotFoundError as e:
@@ -218,73 +252,73 @@ def journal_job_create():
         raise ApiError("invalid_job_params", str(e), 400)
 
     user_param = {'user': user}
-
-    job_ids = []
+    chains = []
 
     for issue_object in params['objects']:
         task_params = dict(**issue_object, **user_param,
                            initial_representation='tif')
 
-        chain = t('create_object', **task_params)
+        current_chain = t('create_object', **task_params)
 
-        chain |= t('list_files',
-                   representation='tif',
-                   target='pdf',
-                   task='convert.tif_to_pdf')
+        current_chain |= t('list_files',
+                           representation='tif',
+                           target='pdf',
+                           task='convert.tif_to_pdf')
 
-        chain |= t('convert.merge_converted_pdf')
+        current_chain |= t('convert.merge_converted_pdf')
 
-        chain |= t('list_files',
-                   representation='tif',
-                   target='jpg',
-                   task='convert.tif_to_jpg')
+        current_chain |= t('list_files',
+                           representation='tif',
+                           target='jpg',
+                           task='convert.tif_to_jpg')
 
-        chain |= t('list_files',
-                   representation='tif',
-                   target='jpg_thumbnails',
-                   task='convert.scale_image',
-                   max_width=50,
-                   max_height=50)
+        current_chain |= t('list_files',
+                           representation='tif',
+                           target='jpg_thumbnails',
+                           task='convert.scale_image',
+                           max_width=50,
+                           max_height=50)
 
-        chain |= t('generate_xml',
-                   template_file='ojs3_template_issue.xml',
-                   target_filename='ojs_import.xml',
-                   ojs_metadata=params['options']['ojs_metadata'])
+        current_chain |= t('generate_xml',
+                           template_file='ojs3_template_issue.xml',
+                           target_filename='ojs_import.xml',
+                           ojs_metadata=params['options']['ojs_metadata'])
 
-        chain |= t('generate_xml',
-                   template_file='mets_template_no_articles.xml',
-                   target_filename='mets.xml',
-                   schema_file='mets.xsd')
+        current_chain |= t('generate_xml',
+                           template_file='mets_template_no_articles.xml',
+                           target_filename='mets.xml',
+                           schema_file='mets.xsd')
 
-        chain |= t('publish_to_ojs',
-                   ojs_metadata=params['options']['ojs_metadata'],
-                   ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
-        chain |= t('publish_to_repository')
-        chain |= t('publish_to_archive')
-        chain |= t('cleanup_workdir')
-        chain |= t('finish_job')
+        current_chain |= t('publish_to_ojs',
+                           ojs_metadata=params['options']['ojs_metadata'],
+                           ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
+        current_chain |= t('publish_to_repository')
+        current_chain |= t('publish_to_archive')
+        current_chain |= t('cleanup_workdir')
+        current_chain |= t('finish_job')
+        chains.append(current_chain)
 
-        job = Job(chain)
-        task = job.run()
-        logger = logging.getLogger(__name__)
-        logger.info(f"created job with id: {task.id}")
+    jobChord = JobChord(chains)
+    jobChord.run()
 
-        job_id = task.id
-        task_ids = _get_task_ids(task)
+    logger.info(f"created job chord with id: {jobChord.id}: ")
+    for (index, task_ids) in enumerate(jobChord.chordSubtaskIds, 1):
+        logger.info(f'  Chain #{index}:')
+        logger.info(f'  {task_ids}')
 
-        job_db.add_job(job_id, user, 'ingest_journal', task_ids, issue_object)
-        job_ids.append(job_id)
-
-    # job_db.add_job(job_id, user, job_type, task_ids, params) # TODO bulk job?
+    job_db.add_job(jobChord.id, user, 'ingest_journal',
+                   jobChord.chordSubtaskIds, params)
 
     body = jsonify({
         'success': True,
         'status': 'Accepted',
-        # 'job_id': job_id,
-        # 'task_ids': task_ids,
-        'job_ids': job_ids
-        })
-    headers = {'Location': url_for('job.job_status', job_id=task.id)} # TODO wozu?
+        'job_id': jobChord.id,
+        'task_ids': jobChord.chordSubtaskIds
+    })
+
+    headers = {'Location': url_for(
+        'job.job_status', job_id=jobChord.id)}
+
     return body, 202, headers
 
 
@@ -478,11 +512,3 @@ def job_status(job_id):
 
 def t(name, **params):
     return celery_app.signature(name, kwargs=params)
-
-
-def _get_task_ids(task):
-    task_ids = [task.id]
-    while task.parent is not None:
-        task_ids.insert(0, task.parent.id)
-        task = task.parent
-    return task_ids
