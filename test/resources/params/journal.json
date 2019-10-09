@@ -17,6 +17,8 @@
             "auto_publish_issue": true,
             "default_create_frontpage": true,
             "allow_upload_without_file": false
-        }
+        },
+        "do_ocr": true,
+        "ocr_lang": "eng"
     }
 }

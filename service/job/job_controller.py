@@ -234,6 +234,13 @@ def journal_job_create():
 
         chain |= t('convert.merge_converted_pdf')
 
+        if params['options']['do_ocr']:
+            chain |= t('list_files',
+                       representation='tif',
+                       target='txt',
+                       task='convert.tif_to_txt',
+                       ocr_lang=params['options']['ocr_lang'])
+
         chain |= t('list_files',
                    representation='tif',
                    target='jpg',

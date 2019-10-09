@@ -24,6 +24,8 @@ export interface JournalIssue extends JobObject {
 
 export interface JournalImportOptions {
     ojs_metadata: OJSMetadata;
+    do_ocr: boolean;
+    ocr_lang: string;
 }
 
 export interface JournalImportParameters extends JobParameters {
@@ -54,6 +56,8 @@ export function initOptions(): JournalImportOptions {
             auto_publish_issue: true,
             default_create_frontpage: true,
             allow_upload_without_file: false
-        }
+        },
+        do_ocr: false,
+        ocr_lang: 'eng'
     };
 }
