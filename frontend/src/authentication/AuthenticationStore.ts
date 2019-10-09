@@ -14,7 +14,6 @@ import { checkLogin } from './AuthenticationClient';
     store
 })
 export default class AuthenticationStore extends VuexModule {
-    backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
 
     authentication = {
         status: AuthenticationStatus.Out,

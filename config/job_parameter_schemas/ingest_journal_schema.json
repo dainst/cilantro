@@ -18,12 +18,15 @@
                     "metadata": {
                         "type": "object",
                         "additionalProperties": false,
-                        "required": ["volume", "year", "number", "description"],
+                        "required": ["volume", "publishing_year", "reporting_year", "number", "description"],
                         "properties": {
                             "volume": {
                                 "type": "number"
                             },
-                            "year": {
+                            "publishing_year": {
+                                "type": "number"
+                            },
+                            "reporting_year": {
                                 "type": "number"
                             },
                             "number": {

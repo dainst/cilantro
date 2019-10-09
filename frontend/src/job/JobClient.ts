@@ -1,8 +1,7 @@
 import { JournalImportParameters } from './ingest-journal/JournalImportParameters';
 import { sendRequest } from '@/util/HTTPClient';
 import { Job } from './Job';
-
-const backendUri = process.env.VUE_APP_BACKEND_URI;
+import {backendUri} from "@/config";
 
 export async function startJob(
     jobType: string,

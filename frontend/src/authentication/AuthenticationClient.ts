@@ -1,7 +1,6 @@
 import User from './User';
 import { sendRequest } from '@/util/HTTPClient';
-
-const backendUri = process.env.VUE_APP_BACKEND_URI;
+import {backendUri} from "@/config";
 
 export async function checkLogin(user: User): Promise<boolean> {
     const url: string = `${backendUri}/user/${user.name}`;

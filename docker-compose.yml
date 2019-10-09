@@ -133,6 +133,16 @@ services:
     environment:
       <<: *env-broker
 
+  frontend:
+    image: dainst/cilantro-frontend:latest
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-frontend/Dockerfile
+    ports:
+      - "8081:80"
+    environment:
+      VUE_APP_BACKEND_URI: *backend-uri
+
   test:
     container_name: cilantro_test
     user: ${UID}
@@ -156,9 +166,6 @@ services:
 
   mock-server:
     image: rodolpheche/wiremock:latest
-    ports:
-      - "8082:8080"
+    user: ${UID}
     volumes:
       - ./test/wiremock_config:/home/wiremock
-    environment:
-      uid: 1000

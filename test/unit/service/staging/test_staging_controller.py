@@ -30,7 +30,7 @@ class StagingControllerTest(unittest.TestCase):
 
     def test_upload_single_file(self):
         file_path = os.path.join(self.resource_dir, parent_folder,
-                                 test_object, test_file)
+                                 test_object, 'tif', test_file)
         file = False
         try:
             file = (open(file_path, 'rb'), test_file)
@@ -52,9 +52,10 @@ class StagingControllerTest(unittest.TestCase):
                                    test_object)
         response = self._upload_folder_to_staging(test_object)
         self.assertEqual(response.status_code, 200)
-        self._assert_file_in_staging(os.path.join(test_object, test_file))
+        self._assert_file_in_staging(os.path.join(test_object, 'tif',
+                                                  test_file))
         for file_name in os.listdir(object_path):
-            file_path = os.path.join(test_object, file_name)
+            file_path = os.path.join(test_object, 'tif', file_name)
             if os.path.isfile(file_path):
                 self._assert_file_in_staging(file_path)
 
@@ -68,7 +69,7 @@ class StagingControllerTest(unittest.TestCase):
 
     def test_upload_file_already_present(self):
         file_path = os.path.join(self.resource_dir, parent_folder,
-                                 test_object, test_file)
+                                 test_object, 'tif', test_file)
         try:
             file = (open(file_path, 'rb'), test_file)
             response = self._upload_to_staging({'file': file})
@@ -112,7 +113,7 @@ class StagingControllerTest(unittest.TestCase):
 
     def test_get_file(self):
         self._copy_object_to_staging(parent_folder, test_object)
-        response = self.client.get(f'/staging/{test_object}/{test_file}',
+        response = self.client.get(f'/staging/{test_object}/tif/{test_file}',
                                    headers=get_auth_header())
         self.assertEqual(response.status_code, 200)
 
