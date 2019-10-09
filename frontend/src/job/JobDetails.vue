@@ -3,30 +3,30 @@
         <b-button @click="gotoJobsView">View All Jobs</b-button>
         <div class="container">
             <b-field label="ID">
-                <b-input v-model="job.job_id" readonly />
+                <p>{{job.job_id}}</p>
             </b-field>
             <b-field label="Name">
-                <b-input v-model="job.name" readonly />
+                <p>{{job.name}}</p>
             </b-field>
             <b-field label="Type">
-                <b-input v-model="job.job_type" readonly />
+                <p>{{job.job_type}}</p>
             </b-field>
             <b-field label="Status">
-                <b-input v-model="job.state" readonly />
+                <p>{{job.state}}</p>
             </b-field>
             <b-field label="User">
-                <b-input v-model="job.user" readonly />
+                <p>{{job.user}}</p>
             </b-field>
             <b-field label="Created">
-                <b-input v-model="job.created" readonly />
+                <p>{{job.created}}</p>
             </b-field>
             <b-field label="Last Updated">
-                <b-input v-model="job.updated" readonly />
+                <p>{{job.updated}}</p>
             </b-field>
 
             <b-collapse :open="false" aria-id="job-params">
                 <button class="button" slot="trigger" aria-controls="job-params">Show Job Parameters</button>
-                <div>{{ job.params }}</div>
+                <pre><code>{{ job.params }}</code></pre>
             </b-collapse>
         </div>
     </div>
@@ -38,8 +38,10 @@ import axios from 'axios';
 import { Job } from './Job';
 import { getJobDetails } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
-
-@Component
+import BField from "buefy/src/components/field/Field.vue";
+@Component({
+    components: {BField}
+})
 export default class JobDetails extends Vue {
     labelPosition: string = '';
     backendUri = this.$store.state.AuthenticationStore.backendUri;
