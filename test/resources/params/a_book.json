@@ -15,16 +15,16 @@
         ]
     },
     "files": [{
-            "file": "some_tiffs/test.tif"
+            "file": "TIFOBJECT-ZID7654321/test.tif"
         },
         {
-            "file": "some_tiffs/test2.tiff"
+            "file": "TIFOBJECT-ZID7654321/test2.tiff"
         },
         {
-            "file": "some_tiffs/test3.TIF"
+            "file": "TIFOBJECT-ZID7654321/test3.TIF"
         },
         {
-            "file": "some_tiffs/test4.TIFF"
+            "file": "TIFOBJECT-ZID7654321/test4.TIFF"
         }
     ],
     "parts": [{

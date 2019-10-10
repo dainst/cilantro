@@ -8,7 +8,7 @@ from service.run_service import app
 from test.unit.service.user.user_utils import get_auth_header, test_user
 
 parent_folder = 'files'
-test_object = 'some_tiffs'
+test_object = 'TIFOBJECT-ZID7654321'
 test_file = 'test.tif'
 
 
@@ -107,8 +107,8 @@ class StagingControllerTest(unittest.TestCase):
 
         response = self.client.get('/staging', headers=get_auth_header())
         response_object = response.get_json()
-        self.assertEqual(response_object['some_tiffs']['type'], 'directory')
-        contents = response_object['some_tiffs']['contents']
+        self.assertEqual(response_object['TIFOBJECT-ZID7654321']['type'], 'directory')
+        contents = response_object['TIFOBJECT-ZID7654321']['contents']
         self.assertEqual(len(contents), len(file_names))
 
     def test_get_file(self):

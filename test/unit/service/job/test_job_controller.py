@@ -19,13 +19,13 @@ class JobControllerTest(unittest.TestCase):
 
     def setUp(self):
         """Prepare test setup."""
-        self._stage_test_folder('files', 'some_tiffs')
+        self._stage_test_folder('files', 'TIFOBJECT-ZID7654321')
         app.testing = True
         self.client = app.test_client()
 
     def tearDown(self):
         """Remove test data from staging dir."""
-        shutil.rmtree(os.path.join(self.staging_dir, test_user, 'some_tiffs'),
+        shutil.rmtree(os.path.join(self.staging_dir, test_user, 'TIFOBJECT-ZID7654321'),
                       ignore_errors=True)
 
     def _stage_test_folder(self, folder, path):
@@ -115,7 +115,7 @@ class JobControllerTest(unittest.TestCase):
         self.assertTrue(last_job_json["job_id"])
         self.assertEqual("test_user", last_job_json["user"])
         self.assertEqual("ingest_journal", last_job_json["job_type"])
-        self.assertEqual('JOB-ingest_journal-some_tiffs',
+        self.assertEqual('JOB-ingest_journal-TIFOBJECT-ZID7654321',
                          last_job_json["name"])
 
     def test_create_job_no_payload(self):

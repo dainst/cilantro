@@ -3,7 +3,7 @@ import unittest
 from service.run_service import app
 from test.unit.service.user.user_utils import get_auth_header, test_user
 
-test_object = 'some_tiffs'
+test_object = 'TIFOBJECT-ZID7654321'
 test_file = 'test.tif'
 
 

@@ -133,7 +133,7 @@ def journal_job_create():
 
           {
             "objects": [{
-                "path": "some_tiffs",
+                "path": "TIFOBJECT-ZID7654321",
                 "metadata": {
                     "volume": "",
                     "year": 2018,
