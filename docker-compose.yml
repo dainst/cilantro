@@ -169,5 +169,3 @@ services:
     user: ${UID}
     volumes:
       - ./test/wiremock_config:/home/wiremock
-    environment:
-      uid: 1000

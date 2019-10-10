@@ -5,7 +5,6 @@ from lxml import etree
 from workers.default.xml.xml_validator import validate_xml
 
 
-@unittest.skip("TODO: needs to be fixed")
 class ValidateXMLTest(unittest.TestCase):
     """
     Test validation of existing XML documents.
@@ -18,7 +17,7 @@ class ValidateXMLTest(unittest.TestCase):
     ojs_xml_file_faulty = 'test/resources/files/ojs_import_faulty.xml'
     marc_xml_file = 'test/resources/files/marc.xml'
     marc_xml_file_faulty = 'test/resources/files/marc_faulty.xml'
-    dtd_file = 'resources/ojs_import.dtd'
+    dtd_file = 'test/resources/files/ojs_import.dtd'
     marc_schema_file = 'resources/MARC21slim.xsd'
 
     def test_validate_xml(self):

@@ -7,7 +7,8 @@
             "number": 1,
             "ojs_journal_code": "test",
             "volume": 1,
-            "year": 2015,
+            "publishing_year": 2015,
+            "reporting_year": 2011,
             "zenon_id": 1449024
         }
     }],
@@ -16,6 +17,8 @@
             "auto_publish_issue": true,
             "default_create_frontpage": true,
             "allow_upload_without_file": false
-        }
+        },
+        "do_ocr": true,
+        "ocr_lang": "eng"
     }
 }
