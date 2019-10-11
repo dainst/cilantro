@@ -11,6 +11,7 @@
             "items": {
                 "type": "object",
                 "required": ["path", "metadata"],
+                "additionalProperties": false,
                 "properties": {
                     "path": {
                         "type": "string"
