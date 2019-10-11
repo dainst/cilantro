@@ -81,7 +81,7 @@
                 },
                 "ocr_lang": {
                     "type": "string"
-                },
+                }
             }
         }
     }
