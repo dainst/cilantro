@@ -10,9 +10,12 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["path", "metadata"],
+                "required": ["id", "path", "metadata"],
                 "additionalProperties": false,
                 "properties": {
+                    "id": {
+                        "type": "string"
+                    },
                     "path": {
                         "type": "string"
                     },
