@@ -75,22 +75,9 @@
                 "do_ocr": {
                     "type": "boolean"
                 },
-                "do_nlp": {
-                    "type": "boolean"
-                },
                 "ocr_lang": {
                     "type": "string"
                 },
-                "nlp_params": {
-                    "type": "object",
-                    "required": ["lang"],
-                    "additionalProperties": false,
-                    "properties": {
-                        "lang": {
-                            "type": "string"
-                        }
-                    }
-                }
             }
         }
     }
