@@ -33,11 +33,14 @@
                     label="Number"
                 >{{ props.row.issue.metadata.number || '-' }}</b-table-column>
             </template>
-            <template slot="detail" slot-scope="props" v-if="props.row.errors.length">
+            <template slot="detail" slot-scope="props">
                 <div class="content">
-                    <ul>
+                    <ul v-if="props.row.errors.length > 0">
                         <li v-for="error in props.row.errors" :key="error">{{ error }}</li>
                     </ul>
+                    <div v-else>
+                        No problems found for this folder path
+                    </div>
                 </div>
             </template>
         </b-table>

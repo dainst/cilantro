@@ -30,8 +30,10 @@
             </b-message>
 
             <b-collapse :open="false" aria-id="job-params">
-                <button class="button" slot="trigger" aria-controls="job-params">Show Job Parameters</button>
-                <pre><code>{{ job.params }}</code></pre>
+                <button class="button" slot="trigger" aria-controls="job-params">
+                    Show Job Parameters
+                </button>
+                <pre>{{ job.params }}</pre>
             </b-collapse>
         </div>
     </div>
@@ -43,10 +45,8 @@ import axios from 'axios';
 import { Job } from './Job';
 import { getJobDetails } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
-import BField from "buefy/src/components/field/Field.vue";
-@Component({
-    components: {BField}
-})
+
+@Component
 export default class JobDetails extends Vue {
     labelPosition: string = '';
     backendUri = this.$store.state.AuthenticationStore.backendUri;

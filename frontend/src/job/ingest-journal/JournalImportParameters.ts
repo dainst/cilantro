@@ -53,7 +53,7 @@ export function initIssue(path: string): JournalIssue {
 export function initOptions(): JournalImportOptions {
     return {
         ojs_metadata: {
-            auto_publish_issue: true,
+            auto_publish_issue: false,
             default_create_frontpage: true,
             allow_upload_without_file: false
         },
