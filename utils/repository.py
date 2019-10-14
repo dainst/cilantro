@@ -32,7 +32,7 @@ def generate_repository_path(object_id):
     be a zenon or atom ID.
 
     E.g. object_id "JOURNAL-ZID1234567" is stored under
-    "4567/67/JOURNAL-ZID1234567".
+    "4500/4567/JOURNAL-ZID1234567".
 
     :param str object_id: The object_id of the cilantro object.
     :return str: The path where the object is stored in the repository
@@ -44,5 +44,5 @@ def generate_repository_path(object_id):
     if not folder.isdigit():
         raise InvalidObjectIdError(f"The last 4 characters of object_id "
                                    f"'{object_id}' have to be numeric")
-    path = os.path.join(folder, folder[2:4], object_id)
+    path = os.path.join(folder[0:2] + "00", folder, object_id)
     return path
