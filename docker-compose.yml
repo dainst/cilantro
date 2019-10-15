@@ -169,3 +169,10 @@ services:
     user: ${UID}
     volumes:
       - ./test/wiremock_config:/home/wiremock
+
+  pdf-viewer:
+    image: dainst/cilantro-dai-book-viewer:latest
+    ports:
+      - "2222:80"
+    volumes:
+      - ./data/repository:/usr/share/nginx/html/documents
