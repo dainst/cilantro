@@ -45,7 +45,7 @@ services:
   service:
     image: dainst/cilantro-service:0.0.2
     volumes:
-      - data:/data
+      - staging-data:/data/staging
       - config:/config
     working_dir: /app
     environment:
@@ -69,7 +69,10 @@ services:
     image: dainst/cilantro-default-worker:0.0.2
     working_dir: /app
     volumes:
-      - data:/data
+      - staging-data:/data/staging
+      - workspace-data:/data/workspace
+      - archive-data:/data/archive
+      - repository-data:/data/repository
       - config:/config
     environment:
       <<: *env-dirs
@@ -87,7 +90,7 @@ services:
     image: dainst/cilantro-convert-worker:0.0.2
     working_dir: /app
     volumes:
-      - data:/data
+      - workspace-data:/data/workspace
       - config:/config
     environment:
       <<: *env-dirs
@@ -100,7 +103,7 @@ services:
     image: dainst/cilantro-nlp-worker:0.0.2
     working_dir: /app
     volumes:
-      - data:/data
+      - workspace-data:/data/workspace
       - config:/config
     environment:
       <<: *env-dirs
@@ -128,8 +131,15 @@ secrets:
 volumes:
   mongo-data:
   redis-data:
-  data:
-    name: workbench_data
+  workspace-data:
+  repository-data:
+    name: workbench_repository_data
+    external: true
+  archive-data:
+    name: workbench_archive_data
+    external: true
+  staging-data:
+    name: workbench_staging_data
     external: true
   config:
     name: workbench_config
