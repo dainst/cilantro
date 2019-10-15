@@ -38,6 +38,21 @@ def get_job_by_id(job_id):
     :return: job object
     """
     job = db.jobs.find_one({"job_id": job_id}, {'_id': False})
+
+    if 'child_job_ids' in job:
+        children_with_status = []
+        for child_id in job['child_job_ids']:
+            child = db.jobs.find_one({'job_id': child_id}, {'_id': False})
+            children_with_status += [{'job_id': child_id,
+                                      'state': child['state']}]
+
+        del job['child_job_ids']
+
+        job['children'] = children_with_status
+
+    if 'parent_job_id' in job and job['parent_job_id'] == None:
+        del job['parent_job_id']
+
     return job
 
 
