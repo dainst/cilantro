@@ -123,6 +123,13 @@ services:
         - "traefik.frontend.rule=Host:workbench.test.idai.world"
         - "traefik.port=80"
 
+  pdf-viewer:
+    image: dainst/cilantro-dai-book-viewer:latest
+    ports:
+      - "2222:80"
+    volumes:
+      - repository-data:/usr/share/nginx/html/documents
+
 secrets:
   ojs_auth_key:
     external: true
