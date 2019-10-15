@@ -41,7 +41,7 @@ def get_job_by_id(job_id):
     return job
 
 
-def add_job(job_id, user, job_type, task_ids, parameters):
+def add_job(job_id, user, job_type, parent_job_id, child_job_ids, parameters):
     """
     Add a job to the job database.
 
@@ -57,9 +57,11 @@ def add_job(job_id, user, job_type, task_ids, parameters):
            'user': user,
            'job_type': job_type,
            'name': f"{job_type}-{job_id}",
-           'task_ids': task_ids,
+           'parent_job_id': parent_job_id,
+           'child_job_ids': child_job_ids,
            'state': 'new',
            'created': timestamp,
+           'started': None,
            'updated': timestamp,
            'parameters': parameters,
            'errors': []
@@ -84,8 +86,14 @@ def update_job(job_id, state, error=None):
     :return: None
     """
     timestamp = datetime.datetime.now()
+
+    updated_values = {'state': state, 'updated': timestamp}
+
+    if state == 'started':
+        updated_values['started'] = timestamp
+
     db.jobs.update_many({"job_id": job_id},
-                        {'$set': {'state': state, 'updated': timestamp}})
+                        {'$set': updated_values})
     if error:
         db.jobs.update_many({"job_id": job_id},
                             {'$push': {'errors': error}})

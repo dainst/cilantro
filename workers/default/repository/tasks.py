@@ -5,7 +5,6 @@ import glob
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask, ObjectTask
 from utils.repository import generate_repository_path
-from utils import job_db
 
 repository_dir = os.environ['REPOSITORY_DIR']
 archive_dir = os.environ['ARCHIVE_DIR']
@@ -26,7 +25,6 @@ class CreateObjectTask(ObjectTask):
     name = "create_object"
 
     def process_object(self, obj):
-        job_db.update_job(self.job_id, 'started')
         _initialize_object(obj, self.params)
         return {'object_id': self._get_object_id()}
 

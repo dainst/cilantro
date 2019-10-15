@@ -293,20 +293,16 @@ def journal_job_create():
         current_chain |= t('publish_to_repository')
         current_chain |= t('publish_to_archive')
         current_chain |= t('cleanup_workdir')
-        current_chain |= t('finish_job')
+        current_chain |= t('finish_chain')
         chains.append(current_chain)
 
-    job = Job(chains)
+    job = Job(user, 'ingest_journal', chains, params)
     job.run()
-
-    job_db.add_job(job.id, user, 'ingest_journal',
-                   job.chains, params)
 
     body = jsonify({
         'success': True,
         'status': 'Accepted',
-        'job_id': job.id,
-        'chains': job.chains
+        'job_id': job.id
     })
 
     headers = {'Location': url_for(
@@ -483,24 +479,11 @@ def job_status(job_id):
 
     :return: A JSON object containing the status info
     """
-    task = celery_app.AsyncResult(job_id)
     job = job_db.get_job_by_id(job_id)
 
-    if not job:  # simple task, not a job
-        job = {}
-    else:
-        if task.state == 'SUCCESS':
-            end_time = job['updated']
-        else:
-            end_time = datetime.datetime.now()
-        job['duration'] = str(datetime.timedelta(
-            seconds=int((end_time - job['created']).total_seconds())))
-    response = {
-        'status': task.state,
-        **job}
-    if hasattr(task, 'result'):
-        response['result'] = task.result
-    return jsonify(response)
+    job['duration'] = str(datetime.timedelta(
+        seconds=int((job['updated'] - job['created']).total_seconds())))
+    return jsonify(job)
 
 
 def t(name, **params):

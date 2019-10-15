@@ -74,16 +74,16 @@ class CleanupWorkdirTask(BaseTask):
 CleanupWorkdirTask = celery_app.register_task(CleanupWorkdirTask())
 
 
-class FinishJobTask(BaseTask):
+class FinishChainTask(BaseTask):
     """Task to set the job state to success after all other tasks have run."""
 
-    name = "finish_job"
+    name = "finish_chain"
 
     def execute_task(self):
-        job_db.update_job(self.job_id, 'success')
+        job_db.update_job(self.parent_job_id, 'success')
 
 
-FinishJobTask = celery_app.register_task(FinishJobTask())
+FinishChainTask = celery_app.register_task(FinishChainTask())
 
 
 class FinishChordTask(BaseTask):

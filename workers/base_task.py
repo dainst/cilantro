@@ -6,6 +6,7 @@ import traceback
 import celery.signals
 from celery.task import Task
 
+from utils import job_db
 from utils.object import Object
 from utils.setup_logging import setup_logging
 from utils.celery_client import celery_app
@@ -84,6 +85,13 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
+    def on_success(self, retval, task_id, args, kwargs):
+        """
+        Use celery default handler method to write update to our database.
+        https://docs.celeryproject.org/en/latest/userguide/tasks.html#handlers
+        """
+        job_db.update_job(self.job_id, 'success')
+
     def stop_chain_execution(self):
         """
         Stop execution of all tasks in the chain.
@@ -122,6 +130,9 @@ class BaseTask(Task):
         """
         self.results = {}
         self._init_params(params)
+
+        job_db.update_job(self.job_id, 'started')
+
         if prev_result:
             self._add_prev_result_to_results(prev_result)
         # results can also be part of the params array in some cases
@@ -206,6 +217,11 @@ class BaseTask(Task):
             self.work_path = params['work_path']
         except KeyError:
             raise KeyError("work_path has to be set before running a task")
+        try:
+            self.parent_job_id = params['parent_job_id']
+        except KeyError:
+            self.parent_job_id = None
+   
         self.log.debug(f"initialized params: {self.params}")
 
 
