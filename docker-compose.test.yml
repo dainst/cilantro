@@ -125,10 +125,16 @@ services:
 
   pdf-viewer:
     image: dainst/cilantro-dai-book-viewer:latest
-    ports:
-      - "2222:80"
     volumes:
       - repository-data:/usr/share/nginx/html/documents
+  networks:
+    - web
+  deploy:
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:viewer.test.idai.world"
+      - "traefik.port=80"
 
 secrets:
   ojs_auth_key:
