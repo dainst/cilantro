@@ -7,6 +7,7 @@ name = "pypi"
 watchdog = "*"
 celery = "*"
 redis = "*"
+pymongo = "*"
 
 [dev-packages]
 
