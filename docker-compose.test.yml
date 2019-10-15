@@ -43,9 +43,9 @@ services:
       - mongo-data:/data
 
   service:
-    image: dainst/cilantro-service:0.0.2
+    image: dainst/cilantro-service:latest
     volumes:
-      - data:/data
+      - staging-data:/data/staging
       - config:/config
     working_dir: /app
     environment:
@@ -66,10 +66,13 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:0.0.2
+    image: dainst/cilantro-default-worker:latest
     working_dir: /app
     volumes:
-      - data:/data
+      - staging-data:/data/staging
+      - workspace-data:/data/workspace
+      - archive-data:/data/archive
+      - repository-data:/data/repository
       - config:/config
     environment:
       <<: *env-dirs
@@ -84,10 +87,10 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:0.0.2
+    image: dainst/cilantro-convert-worker:latest
     working_dir: /app
     volumes:
-      - data:/data
+      - workspace-data:/data/workspace
       - config:/config
     environment:
       <<: *env-dirs
@@ -97,10 +100,10 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:0.0.2
+    image: dainst/cilantro-nlp-worker:latest
     working_dir: /app
     volumes:
-      - data:/data
+      - workspace-data:/data/workspace
       - config:/config
     environment:
       <<: *env-dirs
@@ -109,7 +112,7 @@ services:
       CILANTRO_ENV: *cilantro-env
 
   frontend:
-    image: dainst/cilantro-frontend:0.0.2
+    image: dainst/cilantro-frontend:latest
     networks:
       - default
       - web
@@ -120,6 +123,19 @@ services:
         - "traefik.frontend.rule=Host:workbench.test.idai.world"
         - "traefik.port=80"
 
+  pdf-viewer:
+    image: dainst/cilantro-dai-book-viewer:latest
+    volumes:
+      - repository-data:/usr/share/nginx/html/documents
+    networks:
+      - web
+    deploy:
+      labels:
+        - "traefik.docker.network=web"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:viewer.test.idai.world"
+        - "traefik.port=80"
+
 secrets:
   ojs_auth_key:
     external: true
@@ -128,8 +144,15 @@ secrets:
 volumes:
   mongo-data:
   redis-data:
-  data:
-    name: workbench_data
+  workspace-data:
+  repository-data:
+    name: workbench_repository_data
+    external: true
+  archive-data:
+    name: workbench_archive_data
+    external: true
+  staging-data:
+    name: workbench_staging_data
     external: true
   config:
     name: workbench_config

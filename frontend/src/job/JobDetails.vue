@@ -25,7 +25,9 @@
             </b-field>
 
             <b-collapse :open="false" aria-id="job-params">
-                <button class="button" slot="trigger" aria-controls="job-params">Show Job Parameters</button>
+                <button class="button" slot="trigger" aria-controls="job-params">
+                    Show Job Parameters
+                </button>
                 <div>{{ job.params }}</div>
             </b-collapse>
         </div>

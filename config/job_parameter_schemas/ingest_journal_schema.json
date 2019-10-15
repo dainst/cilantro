@@ -10,20 +10,27 @@
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["path", "metadata"],
+                "required": ["id", "path", "metadata"],
+                "additionalProperties": false,
                 "properties": {
+                    "id": {
+                        "type": "string"
+                    },
                     "path": {
                         "type": "string"
                     },
                     "metadata": {
                         "type": "object",
                         "additionalProperties": false,
-                        "required": ["volume", "year", "number", "description"],
+                        "required": ["volume", "publishing_year", "reporting_year", "number", "description"],
                         "properties": {
                             "volume": {
                                 "type": "number"
                             },
-                            "year": {
+                            "publishing_year": {
+                                "type": "number"
+                            },
+                            "reporting_year": {
                                 "type": "number"
                             },
                             "number": {
@@ -72,21 +79,8 @@
                 "do_ocr": {
                     "type": "boolean"
                 },
-                "do_nlp": {
-                    "type": "boolean"
-                },
                 "ocr_lang": {
                     "type": "string"
-                },
-                "nlp_params": {
-                    "type": "object",
-                    "required": ["lang"],
-                    "additionalProperties": false,
-                    "properties": {
-                        "lang": {
-                            "type": "string"
-                        }
-                    }
                 }
             }
         }

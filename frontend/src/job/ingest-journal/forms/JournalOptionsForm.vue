@@ -19,6 +19,20 @@
                     >Allow upload without file</b-switch>
                 </b-field>
             </div>
+            <div class="tile is-child box">
+                <p class="title">OCR Options</p>
+                <b-field>
+                    <b-switch
+                        v-model="options.do_ocr"
+                    >Do OCR on image files</b-switch>
+                </b-field>
+                <b-field label="OCR language">
+                    <b-select v-model="options.ocr_lang">
+                        <option value="eng">eng</option>
+                        <option value="deu">deu</option>
+                    </b-select>
+                </b-field>
+            </div>
         </div>
     </section>
 </template>

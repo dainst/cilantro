@@ -5,10 +5,11 @@ import { JobParameters, JobObject } from '../JobParameters';
 export interface JournalIssueMetadata {
     zenon_id: number;
     volume: number;
-    year: number;
+    publishing_year: number;
     number: number;
     description: string;
     ojs_journal_code: string;
+    reporting_year: number;
 }
 
 export interface OJSMetadata {
@@ -23,6 +24,8 @@ export interface JournalIssue extends JobObject {
 
 export interface JournalImportOptions {
     ojs_metadata: OJSMetadata;
+    do_ocr: boolean;
+    ocr_lang: string;
 }
 
 export interface JournalImportParameters extends JobParameters {
@@ -38,7 +41,8 @@ export function initIssue(path: string): JournalIssue {
         metadata: {
             zenon_id: 0,
             volume: 1,
-            year: 0,
+            publishing_year: 0,
+            reporting_year: 0,
             number: 1,
             description: '',
             ojs_journal_code: ''
@@ -49,9 +53,11 @@ export function initIssue(path: string): JournalIssue {
 export function initOptions(): JournalImportOptions {
     return {
         ojs_metadata: {
-            auto_publish_issue: true,
+            auto_publish_issue: false,
             default_create_frontpage: true,
             allow_upload_without_file: false
-        }
+        },
+        do_ocr: false,
+        ocr_lang: 'eng'
     };
 }

@@ -305,7 +305,6 @@ def upload_to_staging():
     results = {}
 
     is_target_folder_param_present = 'target_folder' in request.form
-    print(is_target_folder_param_present)
     if is_target_folder_param_present:
         target_folder = request.form['target_folder']
 

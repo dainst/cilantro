@@ -1,7 +1,9 @@
 import os
 import json
+import logging
+import yaml
 
-from flask import Blueprint, jsonify, send_file
+from flask import Blueprint, jsonify, send_file, request, redirect
 
 from service.errors import ApiError
 from utils.repository import generate_repository_path, \
@@ -15,6 +17,9 @@ metadata_file = 'meta.json'
 representation_dir = 'data'
 sub_object_dir = 'parts'
 
+viewers_config = os.path.join(os.environ['CONFIG_DIR'], "viewers.yml")
+with open(viewers_config, 'r', encoding="utf-8") as viewers_file:
+    viewers = yaml.safe_load(viewers_file)
 
 @repository_controller.route('', methods=['GET'], strict_slashes=False)
 def list_repository():
@@ -227,12 +232,12 @@ def get_file(object_id, rep_name, file):
             "success": false
         }
 
-    :reqheader Accept: application/json
+    :reqheader Accept: *
     :param str object_id: The id of the object
     :param str rep_name: The name of the representation
     :param str file: The name of the file
 
-    :resheader Content-Type: application/json
+    :resheader Content-Type: *
     :status 200: OK
     :status 404: file was not found
     :return: Downloadable file
@@ -240,7 +245,7 @@ def get_file(object_id, rep_name, file):
     path = os.path.join(repository_dir, generate_repository_path(object_id),
                         representation_dir, rep_name, file)
     if os.path.isfile(path):
-        return send_file(path)
+        return handle_file_request(path)
     else:
         raise ApiError("file_not_found",
                        f"No file {file} was found in representation {rep_name}"
@@ -294,3 +299,13 @@ def get_meta_file(object_id, file):
     else:
         raise ApiError("file_not_found",
                        f"No file {file} was found in object {object_id}", 404)
+
+
+def handle_file_request(path):
+    logger = logging.getLogger(__name__)
+    if request.accept_mimetypes.accept_html:
+        ext = os.path.splitext(path)[1][1:]
+        if ext in viewers:
+            url = viewers[ext] + path[len(repository_dir):]
+            return redirect(url, code=302)
+    return send_file(path)

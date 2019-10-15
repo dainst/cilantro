@@ -1,19 +1,25 @@
 <template>
     <section>
-        <b-table
-            :data="jobList"
-            detailed
-            detail-key="job_id"
-            default-sort="created"
-            :default-sort-direction="'desc'"
-        >
+        <b-table :data="jobList" detailed detail-key="job_id"
+            default-sort="created" :default-sort-direction="'desc'">
             <template slot-scope="props">
-                <b-table-column field="job_id" label="ID" sortable>{{ props.row.job_id }}</b-table-column>
-                <b-table-column field="name" label="Name" sortable>{{ props.row.name }}</b-table-column>
-                <b-table-column field="job_type" label="Type" sortable>{{ props.row.job_type }}</b-table-column>
-                <b-table-column field="state" label="Status" sortable v-bind="classForJobState">{{ props.row.state }}</b-table-column>
-                <b-table-column field="created" label="Created" sortable>{{ props.row.created }}</b-table-column>
-                <b-table-column field="updated" label="Updated" sortable>{{ props.row.updated }}</b-table-column>
+                <b-table-column field="job_id" label="ID" sortable>
+                    {{ props.row.job_id }}
+                </b-table-column>
+                <b-table-column field="name" label="Name" sortable>
+                    {{ props.row.name }}</b-table-column>
+                <b-table-column field="job_type" label="Type" sortable>
+                    {{ props.row.job_type }}
+                </b-table-column>
+                <b-table-column field="state" label="Status" sortable>
+                    {{ props.row.state }}
+                </b-table-column>
+                <b-table-column field="created" label="Created" sortable>
+                    {{ props.row.created }}
+                </b-table-column>
+                <b-table-column field="updated" label="Updated" sortable>
+                    {{ props.row.updated }}
+                </b-table-column>
                 <b-table-column>
                     <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
                 </b-table-column>
@@ -42,10 +48,6 @@ export default class JobList extends Vue {
 
     mounted() {
         this.updateJobList();
-    }
-
-    classForJobState = (state: string) => {
-        
     }
 
     goToSingleView(id: string) {

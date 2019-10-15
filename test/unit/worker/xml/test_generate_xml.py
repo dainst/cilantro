@@ -8,7 +8,6 @@ from utils.object import Object
 log = logging.getLogger(__name__)
 
 
-@unittest.skip("TODO: needs to be fixed")
 class GenerateXMLTest(unittest.TestCase):
     """Testing the generation of XML with the jinja templating engine."""
 
