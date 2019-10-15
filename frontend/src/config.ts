@@ -7,7 +7,7 @@ export const ojsZenonMapping = {
     '001376922': 'ejb', // TODO: kein übergeordneter Datensatz in Zenon
     '000054792': 'ger',
     '000055658': 'mm',
-    '000814258': 'rm'
+    '000814258': 'test'
 } as { [index: string]: string };
 
 export const allowedFileExtensions = ['pdf', 'tif', 'tiff', 'zip'];
