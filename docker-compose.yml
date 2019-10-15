@@ -101,6 +101,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
+      <<: *env-jobdb
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
 
@@ -120,6 +121,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
+      <<: *env-jobdb
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
 
