@@ -1,41 +1,61 @@
 import uuid
+import logging
 
+from celery import chord, signature
 
-def _generate_id():
-    return str(uuid.uuid1())
+from utils import job_db
 
 
 class Job:
-    """Wraps a celery task chain and handles ID generation."""
+    """Wraps multiple celery task chains as a celery chord and handles ID generation."""
 
-    def __init__(self, chain):
+    def __init__(self, chains):
         """
-        Create a job and triggers ID generation.
+        Create a job chord and triggers ID generation.
 
-        :param Chain chain: A celery task chain
+        :param List[chain] chains: A list of celery task chains
         """
-        self.chain = chain
-        self.id = _generate_id()
+        logger = logging.getLogger(__name__)
+
+        self.id = str(uuid.uuid1())
+
+        # Once all job chains have finished within this chord, we have to trigger a
+        # callback worker in order to update the database entry for the chord job itself.
+        self.chord = chord(chains, signature(
+            'finish_chord', kwargs={'job_id': self.id, 'work_path': self.id}))
+
+        self.chains = []
+
+        for current_chain in self.chord.tasks:
+            current_chain_links = []
+            current_chain_work_path = str(uuid.uuid1())
+            current_chain.kwargs['work_path'] = current_chain_work_path
+
+            for single_task in current_chain.tasks:
+                task_id = str(uuid.uuid1())
+
+                single_task.kwargs['job_id'] = task_id
+                single_task.kwargs['work_path'] = current_chain_work_path
+                single_task.options['task_id'] = task_id
+
+                current_chain_links += [{'name': single_task.name,
+                                         'task_id': task_id}]
+
+            self.chains += [{'work_path': current_chain_work_path,
+                             'chain': current_chain_links}]
+
+        logger.info(f"created job chord with id: {self.id}: ")
+        for (index, chain) in enumerate(self.chains, 1):
+            logger.info(
+                f'  chain #{index}, work path: {chain["work_path"]}:')
+            for sub_task in chain['sub_tasks']:
+                logger.info(f'    {sub_task["name"]}: {sub_task["task_id"]}')
 
     def run(self):
         """
-        Trigger asynchronous execution of the job chain.
+        Trigger asynchronous execution of the job chord.
 
         :return AsyncResult: Celery result
         """
-        self._set_job_id_for_tasks()
-        return self.chain.apply_async(task_id=self.id)
 
-    def _set_job_id_for_tasks(self):
-        # When there is only one element in the task chain, the tasks property
-        # is not available.
-        # In this case we just take the chain itself as a list as a workaround.
-        if hasattr(self.chain, 'tasks'):
-            task_chain = self.chain.tasks
-        else:
-            task_chain = [self.chain]
-
-        for task in task_chain:
-            task.kwargs['job_id'] = self.id
-            # standard work_path for first level tasks is job_id
-            task.kwargs['work_path'] = self.id
+        return self.chord.apply_async(task_id=self.id)

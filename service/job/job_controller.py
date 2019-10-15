@@ -9,7 +9,6 @@ from service.errors import ApiError
 from utils.celery_client import celery_app
 from service.user.user_service import auth
 from service.job.job import Job
-from service.job.job_chord import JobChord
 from utils import job_db
 from utils import json_validation
 
@@ -238,7 +237,6 @@ def journal_job_create():
         :return: A JSON object containing the status, the job id and the task
             ids of every subtask in every chain
     """
-    logger = logging.getLogger(__name__)
 
     if not request.data:
         raise ApiError("invalid_job_params", "No request payload found")
@@ -298,26 +296,21 @@ def journal_job_create():
         current_chain |= t('finish_job')
         chains.append(current_chain)
 
-    jobChord = JobChord(chains)
-    jobChord.run()
+    job = Job(chains)
+    job.run()
 
-    logger.info(f"created job chord with id: {jobChord.id}: ")
-    for (index, task_ids) in enumerate(jobChord.chordSubtaskIds, 1):
-        logger.info(f'  Chain #{index}:')
-        logger.info(f'  {task_ids}')
-
-    job_db.add_job(jobChord.id, user, 'ingest_journal',
-                   jobChord.chordSubtaskIds, params)
+    job_db.add_job(job.id, user, 'ingest_journal',
+                   job.chains, params)
 
     body = jsonify({
         'success': True,
         'status': 'Accepted',
-        'job_id': jobChord.id,
-        'task_ids': jobChord.chordSubtaskIds
+        'job_id': job.id,
+        'chains': job.chains
     })
 
     headers = {'Location': url_for(
-        'job.job_status', job_id=jobChord.id)}
+        'job.job_status', job_id=job.id)}
 
     return body, 202, headers
 
