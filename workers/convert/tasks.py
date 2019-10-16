@@ -1,7 +1,7 @@
 import os
 
 from utils.celery_client import celery_app
-from workers.base_task import BaseTask, FileTask
+from workers.base_task import ObjectTask, FileTask
 from utils.object import Object
 from workers.convert.convert_image import convert_tif_to_jpg, \
     convert_jpg_to_pdf, tif_to_txt, convert_tif_to_ptif, tif_to_pdf
@@ -28,7 +28,7 @@ def _get_target_file(file, target_dir, target_extension):
     return os.path.join(target_dir, new_name)
 
 
-class MergeConvertedPdfTask(BaseTask):
+class MergeConvertedPdfTask(ObjectTask):
     """
     Merge all pdf files in a representation into one.
 
@@ -44,11 +44,11 @@ class MergeConvertedPdfTask(BaseTask):
 
     name = "convert.merge_converted_pdf"
 
-    def execute_task(self):
+    def process_object(self, obj):
         rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, 'pdf')
         files = [{'file': os.path.basename(f)}
                  for f in sorted(_list_files(rep_dir, '.pdf'))]
-        split_merge_pdf(files, rep_dir)
+        split_merge_pdf(files, rep_dir, f"{obj.metadata.id}.pdf")
 
 
 class JpgToPdfTask(FileTask):
