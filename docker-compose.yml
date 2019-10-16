@@ -21,8 +21,11 @@ x-env-app-config: &env-app-config
   OLD_JOBS_THRESHOLD_DAYS: 7
   BACKEND_URI: &backend-uri http://localhost:5000
   CILANTRO_ENV: &cilantro-env development
-  OJS_URI: &ojs-uri http://mock-server:8080/api/ojs/plugins/generic/ojs-cilantro-plugin/api
+  OJS_URI: &ojs-uri http://mock-server:8080/ojs/plugins/generic/ojs-cilantro-plugin/api
   OJS_AUTH_KEY: &ojs-auth-key ${OJS_AUTH_KEY}
+  ATOM_URI: http://mock-server:8080/atom/
+  ATOM_USER: demo@example.com
+  ATOM_PASSWORD: demo
 
 x-test-timeouts: &test-timeouts
   DEFAULT_TEST_TIMEOUT: ${DEFAULT_TEST_TIMEOUT}

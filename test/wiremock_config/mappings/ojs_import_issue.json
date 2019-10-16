@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "POST",
-        "urlPattern": "/api/ojs/plugins/generic/ojs-cilantro-plugin/api/import/.*"
+        "urlPattern": "/ojs/plugins/generic/ojs-cilantro-plugin/api/import/.*"
     },
     "response": {
         "status": 200,

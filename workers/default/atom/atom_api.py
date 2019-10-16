@@ -3,7 +3,7 @@ import logging
 import requests
 from requests.auth import HTTPBasicAuth
 
-atom_api_uri = os.environ['ATOM_URI']
+atom_uri = os.environ['ATOM_URI']
 atom_user = os.environ['ATOM_USER']
 atom_password = os.environ['ATOM_PASSWORD']
 
@@ -20,7 +20,7 @@ def create_digital_object(obj):
     :param str journalcode: Name of the journal that will be imported to
     :return: Tuple of return code and text of the POST request to OJS
     """
-    url = f"{atom_api_uri}/digitalobjects"
+    url = f"{atom_uri}/api/digitalobjects"
     data = _get_digital_object_data(obj)
     auth = HTTPBasicAuth(atom_user, atom_password)
     response = requests.post(url, data=data, auth=auth)
