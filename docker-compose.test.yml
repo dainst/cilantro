@@ -96,6 +96,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
+      <<: *env-jobdb
       DB_HOST: "celery-db"
       CILANTRO_ENV: *cilantro-env
 
@@ -109,6 +110,7 @@ services:
     environment:
       <<: *env-dirs
       <<: *env-broker
+      <<: *env-jobdb
       DB_HOST: "celery-db"
       CILANTRO_ENV: *cilantro-env
 
