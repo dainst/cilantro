@@ -44,7 +44,8 @@ def get_job_by_id(job_id):
         for child_id in job['child_job_ids']:
             child = db.jobs.find_one({'job_id': child_id}, {'_id': False})
             children_with_status += [{'job_id': child_id,
-                                      'state': child['state']}]
+                                      'state': child['state'],
+                                      'type': child['job_type']}]
 
         del job['child_job_ids']
 
