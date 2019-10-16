@@ -85,12 +85,16 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
-    def on_success(self, retval, task_id, args, kwargs):
+    def after_return(self, status, retval, task_id, args, kwargs, einfo):
         """
         Use celery default handler method to write update to our database.
         https://docs.celeryproject.org/en/latest/userguide/tasks.html#handlers
         """
-        job_db.update_job(self.job_id, 'success')
+        job_db.update_job(self.job_id, status)
+        if status == 'FAILURE' and self.parent_job_id is not None:
+            parent = job_db.get_job_by_id(self.parent_job_id)
+            if parent['job_type'] == 'chain':
+                job_db.update_job(parent['job_id'], status)
 
     def stop_chain_execution(self):
         """
@@ -147,17 +151,10 @@ class BaseTask(Task):
         except ExceptionHandlingException:
             # Error when handling Exception of the task
             raise
-        except Exception as e:  # noqa: ignore bare except
+        except Exception:  # noqa: ignore bare except
             self.log.error(traceback.format_exc())
-            params = self.params.copy()
-            params['job_id'] = self.job_id
-            params['task_name'] = self.__name__
-            params['error_message'] = str(e)
-            kwargs = {}
-            if params:
-                kwargs.update(params)
-            raise self.replace(celery_app.signature('handle_error',
-                                                    kwargs=kwargs))
+            raise
+
         return self._merge_result(task_result)
 
     def get_param(self, key):
@@ -221,7 +218,7 @@ class BaseTask(Task):
             self.parent_job_id = params['parent_job_id']
         except KeyError:
             self.parent_job_id = None
-   
+
         self.log.debug(f"initialized params: {self.params}")
 
 
@@ -232,6 +229,7 @@ class FileTask(BaseTask):
     Subclasses have to override the process_file method that holds the
     actual conversion logic.
     """
+
     def execute_task(self):
         file = self.get_param('work_path')
         try:
@@ -241,7 +239,7 @@ class FileTask(BaseTask):
         target_dir = os.path.join(
             os.path.dirname(os.path.dirname(self.get_work_path())),
             target_rep
-            )
+        )
         os.makedirs(target_dir, exist_ok=True)
         self.process_file(file, target_dir)
 

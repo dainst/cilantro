@@ -95,31 +95,8 @@ class FinishChordTask(BaseTask):
     def execute_task(self):
         job_db.update_job(self.job_id, "success")
 
+    def on_failure(self):
+        job_db.update_job(self.job_id, "FAILURE")
+
 
 FinishChordTask = celery_app.register_task(FinishChordTask())
-
-
-class HandleErrorTask(BaseTask):
-    """
-    Task to handle any errors thrown in other tasks.
-
-    It sets the failed job status in the job database and stops execution of
-    any further tasks.
-    """
-
-    name = "handle_error"
-
-    def execute_task(self):
-        try:
-            error = {
-                'task_name': self.params['task_name'],
-                'message': self.params['error_message']
-            }
-            job_db.update_job(self.job_id, 'failed', error)
-            self.stop_chain_execution()
-        except:  # noqa: bare exception is OK here, because any unhandled
-                # Exception would cause an endless loop
-            raise ExceptionHandlingException()
-
-
-HandleErrorTask = celery_app.register_task(HandleErrorTask())
