@@ -374,7 +374,7 @@ def book_job_create():
         current_chain |= t('publish_to_archive')
 
         current_chain |= t('cleanup_workdir')
-        current_chain |= t('finish_job')
+        current_chain |= t('finish_chain')
 
         chains.append(current_chain)
 
@@ -561,6 +561,7 @@ def job_status(job_id):
 
     :return: A JSON object containing the status info
     """
+ 
     job = job_db.get_job_by_id(job_id)
 
     job['duration'] = str(datetime.timedelta(
