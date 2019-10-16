@@ -46,6 +46,7 @@ services:
     image: dainst/cilantro-service:latest
     volumes:
       - staging-data:/data/staging
+      - repository-data:/data/repository
       - config:/config
     working_dir: /app
     environment:
