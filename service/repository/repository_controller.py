@@ -302,7 +302,6 @@ def get_meta_file(object_id, file):
 
 
 def handle_file_request(path):
-    logger = logging.getLogger(__name__)
     if request.accept_mimetypes.accept_html:
         ext = os.path.splitext(path)[1][1:]
         if ext in viewers:
