@@ -1,5 +1,6 @@
 <template>
     <section>
+        <div v-if="jobList.length > 0">
         <b-table :data="jobList" detailed detail-key="job_id"
             default-sort="created" :default-sort-direction="'desc'">
             <template slot-scope="props">
@@ -33,6 +34,10 @@
                 </div>
             </template>
         </b-table>
+        </div>
+        <div v-else class="container">
+            <b-notification type="is-info" has-icon :closable="false">There are no Jobs yet</b-notification>
+        </div>
     </section>
 </template>
 
