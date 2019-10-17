@@ -26,7 +26,7 @@
             </template>
             <template slot="detail" slot-scope="props">
                 <div>
-                    <b-field label="Job Parameters">{{ props.row.params }}</b-field>
+                    <b-field label="Job Parameters"><pre>{{ props.row.params }}</pre></b-field>
                 </div>
                 <div v-if="props.row.errors.length > 0">
                     <b-field label="Error Details">{{ props.row.errors }}</b-field>
