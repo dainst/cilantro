@@ -1,7 +1,7 @@
 import os
 import datetime
 
-from pymongo import MongoClient, DESCENDING
+from pymongo import MongoClient, DESCENDING, ReturnDocument
 
 client = MongoClient(os.environ['JOB_DB_URL'], int(os.environ['JOB_DB_PORT']))
 db = client[os.environ['JOB_DB_NAME']]
@@ -15,6 +15,26 @@ def create_index():
     """
     db.jobs.create_index([("job_id", DESCENDING),
                           ("user", DESCENDING)])
+
+
+def generate_unique_object_identifier():
+    """
+    Create the unique object identifier.
+
+    This is NOT the whole object id, just the last part to ensure every object
+    is unique and the last characters are digits.
+    :return:
+    """
+    new_id = db.objects.find_one_and_update(
+        {'next_object_id': {'$exists': True}},
+        {'$inc': {'next_object_id': 1}},
+        return_document=ReturnDocument.AFTER
+    )
+    if not new_id:
+        first_object_id = int(os.environ['FIRST_OBJECT_ID'])
+        db.objects.insert_one({'next_object_id': first_object_id})
+        return first_object_id
+    return new_id['next_object_id']
 
 
 def get_jobs_for_user(user):

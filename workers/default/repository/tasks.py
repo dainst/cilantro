@@ -27,15 +27,16 @@ class CreateObjectTask(ObjectTask):
 
     def process_object(self, obj):
         job_db.update_job(self.job_id, 'started')
-        _initialize_object(obj, self.params)
-        return {'object_id': self._get_object_id()}
+        object_id = self._get_object_id()
+        _initialize_object(object_id, obj, self.params)
+        return {'object_id': object_id}
 
     def _get_object_id(self):
         try:
             object_id = self.get_param('id')
         except KeyError:
             object_id = self.job_id
-        return object_id
+        return object_id + f"_{job_db.generate_unique_object_identifier()}"
 
 
 CreateObjectTask = celery_app.register_task(CreateObjectTask())
@@ -48,9 +49,10 @@ def _get_work_path(params):
     return abs_path
 
 
-def _initialize_object(obj, params):
+def _initialize_object(object_id, obj, params):
     obj.set_metadata_from_dict(params['metadata'])
-    obj.metadata.id = params['id']
+    obj.metadata.id = object_id
+    obj.metadata.import_id = params['id']
     _initialize_files(obj, params['path'], params['user'],
                       params['initial_representation'])
     obj.write()
