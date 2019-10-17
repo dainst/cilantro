@@ -302,10 +302,11 @@ def get_meta_file(object_id, file):
 
 
 def handle_file_request(path):
-    logger = logging.getLogger(__name__)
-    if request.accept_mimetypes.accept_html:
+    if request.headers.get('Accept') == '*/*':
+        return send_file(path)
+    elif request.accept_mimetypes.accept_html:
         ext = os.path.splitext(path)[1][1:]
         if ext in viewers:
             url = viewers[ext] + path[len(repository_dir):]
-            return redirect(url, code=302)
+            return redirect(url, code=303)
     return send_file(path)
