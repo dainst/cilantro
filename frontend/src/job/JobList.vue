@@ -84,7 +84,6 @@ export default class JobList extends Vue {
     async updateJobList() {
         try {
             this.jobList = await getJobList();
-            console.log(this.jobList)
         } catch (e) {
             showError('Failed to load job list from server!', e);
         }
