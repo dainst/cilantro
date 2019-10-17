@@ -7,7 +7,6 @@ from service.run_service import app
 from utils.repository import generate_repository_path
 
 test_object = 'a_book'
-test_subobject = 'a_book/part_0001'
 test_representation = 'pdf'
 test_subrepresentation = 'jpg/thumbnails'
 test_jpg = "test.jpg"
@@ -53,12 +52,6 @@ class RepositoryControllerTest(unittest.TestCase):
         self.assertIsInstance(response['representations'], list)
         self.assertIsInstance(response['sub_objects'], list)
 
-    def test_get_subobject(self):
-        response = self._get(f'/repository/object/{test_subobject}')
-        self.assertIsInstance(response['metadata'], dict)
-        self.assertIsInstance(response['representations'], list)
-        self.assertIsInstance(response['sub_objects'], list)
-
     def test_get_object_not_found(self):
         response = self.client.get(f'/repository/object/wrong_object')
         self.assertEqual(response.status_code, 404)
@@ -72,13 +65,6 @@ class RepositoryControllerTest(unittest.TestCase):
             f'/repository/representation/{test_object}/{test_representation}')
         self.assertIsInstance(response, list)
         self.assertIn(test_file, response)
-
-    def test_get_representation_for_subobject(self):
-        response = self._get(
-            f'/repository/representation/{test_subobject}/{test_representation}'
-        )
-        self.assertIsInstance(response, list)
-        self.assertIn(test_subfile, response)
 
     def test_get_representation_not_found(self):
         response = self.client.get(
@@ -95,18 +81,6 @@ class RepositoryControllerTest(unittest.TestCase):
             f'/repository/file/{test_object}/data/{test_representation}/{test_file}')
         self.assertEqual(response.status_code, 200)
 
-    def test_get_file_for_subobject(self):
-        response = self.client.get(
-            f'/repository/file/{test_subobject}/data/{test_representation}/'
-            f'{test_subfile}')
-        self.assertEqual(response.status_code, 200)
-
-    def test_get_file_for_subrepresentation(self):
-        response = self.client.get(
-            f'/repository/file/{test_subobject}/data/{test_subrepresentation}/'
-            f'{test_jpg}')
-        self.assertEqual(response.status_code, 200)
-
     def test_get_file_not_found(self):
         response = self.client.get(
             f'/repository/file/{test_object}/data/{test_representation}/wrong_file')
@@ -119,11 +93,6 @@ class RepositoryControllerTest(unittest.TestCase):
     def test_get_metafile(self):
         response = self.client.get(
             f'/repository/file/{test_object}/{test_metafile}')
-        self.assertEqual(response.status_code, 200)
-
-    def test_get_metafile_for_subobject(self):
-        response = self.client.get(
-            f'/repository/file/{test_subobject}/{test_metafile}')
         self.assertEqual(response.status_code, 200)
 
     def test_get_metafile_not_found(self):
