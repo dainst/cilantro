@@ -295,6 +295,94 @@ def journal_job_create():
     return body, 202, headers
 
 
+@job_controller.route('/ingest_book', methods=['POST'])
+@auth.login_required
+def book_job_create():
+    if not request.data:
+        raise ApiError("invalid_job_params", "No request payload found")
+    params = request.get_json(force=True)
+    user = auth.username()
+
+    try:
+        json_validation.validate_params(params, 'ingest_book')
+    except FileNotFoundError as e:
+        raise ApiError("unknown_job_type", str(e), 404)
+    except jsonschema.exceptions.ValidationError as e:
+        raise ApiError("invalid_job_params", str(e), 400)
+
+    user_param = {'user': user}
+
+    job_ids = []
+
+    for book_object in params['objects']:
+        task_params = dict(**book_object, **user_param,
+                           initial_representation='tif')
+
+        chain = t('create_object', **task_params)
+
+        chain |= t('list_files',
+                   representation='tif',
+                   target='jpg',
+                   task='convert.tif_to_jpg')
+
+        chain |= t('list_files',
+                   representation='jpg',
+                   target='jpg_thumbnails',
+                   task='convert.tif_to_jpg',
+                   max_width=50,
+                   max_height=50)
+
+        chain |= t('list_files',
+                   representation='tif',
+                   target='ptif',
+                   task='convert.tif_to_ptif')
+
+        chain |= t('list_files',
+                   representation='tif',
+                   target='pdf',
+                   task='convert.tif_to_pdf')
+        chain |= t('convert.merge_converted_pdf')
+
+        if params['options']['do_ocr']:
+            chain |= t('list_files',
+                       representation='tif',
+                       target='txt',
+                       task='convert.tif_to_txt',
+                       ocr_lang=params['options']['ocr_lang'])
+
+        chain |= t('generate_xml',
+                   template_file='mets_template_no_articles.xml',
+                   target_filename='mets.xml',
+                   schema_file='mets.xsd')
+
+        chain |= t('publish_to_repository')
+        chain |= t('publish_to_archive')
+
+        chain |= t('cleanup_workdir')
+        chain |= t('finish_job')
+
+        job = Job(chain)
+        task = job.run()
+        logger = logging.getLogger(__name__)
+        logger.info(f"created job with id: {task.id}")
+
+        job_id = task.id
+        task_ids = _get_task_ids(task)
+
+        job_db.add_job(job_id, user, 'ingest_book', task_ids, book_object)
+        job_ids.append(job_id)
+
+    body = jsonify({
+        'success': True,
+        'status': 'Accepted',
+        # 'job_id': job_id,
+        # 'task_ids': task_ids,
+        'job_ids': job_ids
+        })
+    headers = {'Location': url_for('job.job_status', job_id=task.id)}
+    return body, 202, headers
+
+
 @job_controller.route('/param_schema/<job_type>', methods=['GET'])
 def get_job_param_schema(job_type):
     """

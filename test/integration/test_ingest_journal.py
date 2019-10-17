@@ -21,7 +21,7 @@ class IngestJournalTest(JobTypeTest):
         self.assertTrue(object_id.startswith("TIFOBJECT-ZID7654321"))
 
         files_generated = [
-            'data/pdf/merged.pdf',
+            f"data/pdf/{object_id}.pdf",
             'meta.json']
         for file in files_generated:
             self.assert_file_in_repository(object_id, file)

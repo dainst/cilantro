@@ -1,7 +1,7 @@
 import { JournalImportParameters } from './ingest-journal/JournalImportParameters';
 import { sendRequest } from '@/util/HTTPClient';
 import { Job } from './Job';
-import {backendUri} from "@/config";
+import { backendUri } from '@/config';
 
 export async function startJob(
     jobType: string,

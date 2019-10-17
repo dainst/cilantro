@@ -33,8 +33,10 @@ def generate_xml(obj, template_file, target_filepath, params):
     env.globals['environ'] = os.environ
 
     log.info("Generating XML with template: " + template_file)
+    log.info("Object: ", obj)
 
-    pdf_doc = os.path.join(obj.get_representation_dir('pdf'), 'merged.pdf')
+    pdf_doc = os.path.join(obj.get_representation_dir('pdf'),
+                           f"{obj.metadata.id}.pdf")
     with open(pdf_doc, "rb") as pdf_file:
         encoded_string = base64.b64encode(pdf_file.read())
     params['pdf_base64'] = encoded_string.decode('utf-8')

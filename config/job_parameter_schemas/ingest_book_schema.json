@@ -3,95 +3,61 @@
     "title": "Ingest Book schema",
     "description": "Used to validate ingest-book job parameters",
     "type": "object",
-    "required": ["metadata", "files", "object_id"],
+    "required": ["objects", "options"],
     "additionalProperties": false,
     "properties": {
-        "metadata": {
-            "type": "object",
-            "required": ["title", "abstract", "description", "type",
-                         "created", "author", "identifiers"],
-            "additionalProperties": false,
-            "properties": {
-                "title": {
-                    "type": "string"
-                },
-                "abstract": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "created": {
-                    "type": "string"
-                },
-                "author": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": ["firstname", "lastname"],
-                        "additionalProperties": false,
-                        "properties": {
-                            "firstname": {
-                                "type": "string"
-                            },
-                            "lastname": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                },
-                "identifiers": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "files": {
+        "objects": {
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["file"],
+                "required": ["id", "path", "metadata"],
                 "additionalProperties": false,
                 "properties": {
-                    "file": {
+                    "id": {
                         "type": "string"
+                    },
+                    "path": {
+                        "type": "string"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": ["title", "abstract", "created", "author", "zenon_id", "atom_id"],
+                        "properties": {
+                            "title": {
+                                "type": "string"
+                            },
+                            "abstract": {
+                                "type": "string"
+                            },
+                            "created": {
+                                "type": "string"
+                            },
+                            "author": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object"
+                                }
+                            },
+                            "zenon_id": {
+                                "type": "number"
+                            },
+                            "atom_id": {
+                                "type": "number"
+                            }
+                        }
                     }
                 }
             }
         },
-        "object_id": {
-            "type": "string",
-            "minLength": 1
-        },
-        "parts": {
-            "type": "array",
-            "items": {
-                "required": ["metadata", "range"],
-                "additionalProperties": false,
-                "properties": {
-                    "metadata": {
-                        "type": "object",
-                        "required": ["title"],
-                        "additionalProperties": false,
-                        "properties": {
-                            "title": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "range": {
-                        "type": "array",
-                        "items": {
-                          "type": "number"
-                        },
-                        "maxItems": 2,
-                        "minItems": 2
-                    }
+        "options": {
+            "type": "object",
+            "properties": {
+                "do_ocr": {
+                    "type": "boolean"
+                },
+                "ocr_lang": {
+                    "type": "string"
                 }
             }
         }
