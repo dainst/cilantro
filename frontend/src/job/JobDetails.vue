@@ -23,6 +23,10 @@
             <b-field label="Last Updated">
                 <p>{{job.updated}}</p>
             </b-field>
+            <b-field label="Duration">
+                <p v-if="job.state = 'success' || job.errors.length > 0">{{new Date(new Date(job.updated)-new Date(job.created)).toISOString().slice(11, -1)}}</p>
+                <p v-else>In Progress: {{new Date(Date.now()-new Date(job.created)).toISOString().slice(11, -1)}}</p>
+            </b-field>
             <b-message v-if="job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
                 <b-table :data="job.errors" :columns="[{field: 'task_name',
                         label: 'Task name'}, {field: 'message',
@@ -45,8 +49,10 @@ import axios from 'axios';
 import { Job } from './Job';
 import { getJobDetails } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
-
-@Component
+import BField from "buefy/src/components/field/Field.vue";
+@Component({
+    components: {BField}
+})
 export default class JobDetails extends Vue {
     labelPosition: string = '';
     backendUri = this.$store.state.AuthenticationStore.backendUri;
