@@ -46,7 +46,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { getJobList } from './JobClient';
 import { Job } from './Job';
 import { showError } from '@/util/Notifier.ts';
-import moment from 'moment'
+import moment from 'moment';
 
 @Component
 export default class JobList extends Vue {

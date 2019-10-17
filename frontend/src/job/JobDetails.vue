@@ -24,8 +24,8 @@
                 <p>{{job.updated}}</p>
             </b-field>
             <b-field label="Duration">
-                <p v-if="job.state = 'success' || job.errors.length > 0">{{new Date(new Date(job.updated)-new Date(job.created)).toISOString().slice(11, -1)}}</p>
-                <p v-else>In Progress: {{new Date(Date.now()-new Date(job.created)).toISOString().slice(11, -1)}}</p>
+                <p v-if="job.state = 'success' || job.errors.length > 0">{{getDuration(getDateFromGMTString(job.created),getDateFromGMTString(job.updated))}}</p>
+                <p v-else>In Progress: {{getDuration(getDateFromGMTString(job.created),Date.now())}}</p>
             </b-field>
             <b-message v-if="job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
                 <b-table :data="job.errors" :columns="[{field: 'task_name',
@@ -50,6 +50,8 @@ import { Job } from './Job';
 import { getJobDetails } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 import BField from "buefy/src/components/field/Field.vue";
+import moment from 'moment';
+
 @Component({
     components: {BField}
 })
@@ -64,7 +66,13 @@ export default class JobDetails extends Vue {
         this.jobID = this.$route.query.id as string;
         this.getJobDetails();
     }
-
+    getDuration(t1:number,t2:number){
+        var duration = new Date(t2-t1);
+        return duration.toISOString().slice(11, -1);
+    }
+    getDateFromGMTString(d:string) : Date{
+        return moment(d, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+    }
     gotoJobsView() {
         this.$router.push({ path: 'jobs' });
     }
