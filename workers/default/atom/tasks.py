@@ -1,5 +1,3 @@
-import os
-
 from utils.celery_client import celery_app
 
 from workers.base_task import ObjectTask
