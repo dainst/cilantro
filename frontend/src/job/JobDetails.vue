@@ -27,6 +27,19 @@
                 <p v-if="job.state = 'success' || job.errors.length > 0">{{getDuration(getDateFromGMTString(job.created),getDateFromGMTString(job.updated))}}</p>
                 <p v-else>In Progress: {{getDuration(getDateFromGMTString(job.created),Date.now())}}</p>
             </b-field>
+            <b-field label="Children" v-if="job.children.length > 0">
+                    <b-table :data="job.children"
+                             default-sort="created" :default-sort-direction="'asc'">
+                        <template slot-scope="props">
+                            <b-table-column field="type" label="Type">
+                                {{ props.row.type}}
+                            </b-table-column>
+                            <b-table-column field="state" label="Status">
+                                {{ props.row.state}}
+                            </b-table-column>
+                        </template>
+                    </b-table>
+            </b-field>
             <b-message v-if="job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
                 <b-table :data="job.errors" :columns="[{field: 'task_name',
                         label: 'Task name'}, {field: 'message',
@@ -37,7 +50,7 @@
                 <button class="button" slot="trigger" aria-controls="job-params">
                     Show Job Parameters
                 </button>
-                <pre>{{ job.params }}</pre>
+                <pre>{{ job.parameters }}</pre>
             </b-collapse>
         </div>
     </div>

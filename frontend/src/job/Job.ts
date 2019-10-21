@@ -4,7 +4,7 @@ export interface Job {
     job_id: string; // eslint-disable-line camelcase
     job_type: string; // eslint-disable-line camelcase
     name: string;
-    params: object;
+    parameters: object;
     state: string;
     updated: string;
     user: string;

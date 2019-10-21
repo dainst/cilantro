@@ -33,8 +33,21 @@
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props">
+                <div v-if="props.row.children.length > 0">
+                    <b-table :data="props.row.children"
+                             default-sort="created" :default-sort-direction="'asc'">
+                        <template slot-scope="props">
+                            <b-table-column field="type" label="Type">
+                                {{ props.row.type}}
+                            </b-table-column>
+                            <b-table-column field="state" label="Status">
+                                {{ props.row.state}}
+                            </b-table-column>
+                        </template>
+                    </b-table>
+                </div>
                 <div>
-                    <b-field label="Job Parameters"><pre>{{ props.row.params }}</pre></b-field>
+                    <b-field label="Job Parameters"><pre>{{ props.row.parameters }}</pre></b-field>
                 </div>
                 <div v-if="props.row.errors.length > 0">
                     <b-field label="Error Details">{{ props.row.errors }}</b-field>
