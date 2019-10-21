@@ -3,32 +3,41 @@
         <b-button @click="gotoJobsView">View All Jobs</b-button>
         <div class="container">
             <b-field label="ID">
-                <b-input v-model="job.job_id" readonly />
+                <p>{{job.job_id}}</p>
             </b-field>
             <b-field label="Name">
-                <b-input v-model="job.name" readonly />
+                <p>{{job.name}}</p>
             </b-field>
             <b-field label="Type">
-                <b-input v-model="job.job_type" readonly />
+                <p>{{job.job_type}}</p>
             </b-field>
             <b-field label="Status">
-                <b-input v-model="job.state" readonly />
+                <p>{{job.state}}</p>
             </b-field>
             <b-field label="User">
-                <b-input v-model="job.user" readonly />
+                <p>{{job.user}}</p>
             </b-field>
             <b-field label="Created">
-                <b-input v-model="job.created" readonly />
+                <p>{{job.created}}</p>
             </b-field>
             <b-field label="Last Updated">
-                <b-input v-model="job.updated" readonly />
+                <p>{{job.updated}}</p>
             </b-field>
+            <b-field label="Duration">
+                <p v-if="job.state = 'success' || job.errors.length > 0">{{getDuration(getDateFromGMTString(job.created),getDateFromGMTString(job.updated))}}</p>
+                <p v-else>In Progress: {{getDuration(getDateFromGMTString(job.created),Date.now())}}</p>
+            </b-field>
+            <b-message v-if="job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
+                <b-table :data="job.errors" :columns="[{field: 'task_name',
+                        label: 'Task name'}, {field: 'message',
+                        label: 'Message'}]"></b-table>
+            </b-message>
 
             <b-collapse :open="false" aria-id="job-params">
                 <button class="button" slot="trigger" aria-controls="job-params">
                     Show Job Parameters
                 </button>
-                <div>{{ job.params }}</div>
+                <pre>{{ job.params }}</pre>
             </b-collapse>
         </div>
     </div>
@@ -40,8 +49,12 @@ import axios from 'axios';
 import { Job } from './Job';
 import { getJobDetails } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
+import BField from "buefy/src/components/field/Field.vue";
+import moment from 'moment';
 
-@Component
+@Component({
+    components: {BField}
+})
 export default class JobDetails extends Vue {
     labelPosition: string = '';
     backendUri = this.$store.state.AuthenticationStore.backendUri;
@@ -53,7 +66,13 @@ export default class JobDetails extends Vue {
         this.jobID = this.$route.query.id as string;
         this.getJobDetails();
     }
-
+    getDuration(t1:number,t2:number){
+        var duration = new Date(t2-t1);
+        return duration.toISOString().slice(11, -1);
+    }
+    getDateFromGMTString(d:string) : Date{
+        return moment(d, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+    }
     gotoJobsView() {
         this.$router.push({ path: 'jobs' });
     }

@@ -1,7 +1,8 @@
 <template>
     <section>
+        <div v-if="jobList.length > 0">
         <b-table :data="jobList" detailed detail-key="job_id"
-            default-sort="created" :default-sort-direction="'desc'">
+            default-sort="created" :default-sort-direction="'asc'">
             <template slot-scope="props">
                 <b-table-column field="job_id" label="ID" sortable>
                     {{ props.row.job_id }}
@@ -14,10 +15,10 @@
                 <b-table-column field="state" label="Status" sortable>
                     {{ props.row.state }}
                 </b-table-column>
-                <b-table-column field="created" label="Created" sortable>
+                <b-table-column field="created" label="Created" :custom-sort="sortByCreated" sortable>
                     {{ props.row.created }}
                 </b-table-column>
-                <b-table-column field="updated" label="Updated" sortable>
+                <b-table-column field="updated" label="Updated" :custom-sort="sortByUpdated" sortable>
                     {{ props.row.updated }}
                 </b-table-column>
                 <b-table-column>
@@ -26,13 +27,17 @@
             </template>
             <template slot="detail" slot-scope="props">
                 <div>
-                    <b-field label="Job Parameters">{{ props.row.params }}</b-field>
+                    <b-field label="Job Parameters"><pre>{{ props.row.params }}</pre></b-field>
                 </div>
                 <div v-if="props.row.errors.length > 0">
                     <b-field label="Error Details">{{ props.row.errors }}</b-field>
                 </div>
             </template>
         </b-table>
+        </div>
+        <div v-else class="container">
+            <b-notification type="is-info" has-icon :closable="false">There are no Jobs yet</b-notification>
+        </div>
     </section>
 </template>
 
@@ -41,6 +46,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { getJobList } from './JobClient';
 import { Job } from './Job';
 import { showError } from '@/util/Notifier.ts';
+import moment from 'moment';
 
 @Component
 export default class JobList extends Vue {
@@ -55,6 +61,24 @@ export default class JobList extends Vue {
             path: 'job',
             query: { id }
         });
+    }
+
+    sortByUpdated(a:Job, b:Job, isAsc:boolean) {
+        var d1 = moment(a.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        var d2 = moment(b.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        return this.compareDates(d1,d2,isAsc);
+    }
+    sortByCreated(a:Job, b:Job, isAsc:boolean) {
+        var d1 = moment(a.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        var d2 = moment(b.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        return this.compareDates(d1,d2,isAsc);
+    }
+    compareDates(a:Date, b:Date, isAsc:boolean){
+        if (isAsc) {
+            return b.getTime()-a.getTime();
+        } else {
+            return a.getTime() - b.getTime();
+        }
     }
 
     async updateJobList() {
