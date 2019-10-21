@@ -67,8 +67,13 @@ export default class JobDetails extends Vue {
         this.getJobDetails();
     }
     getDuration(t1:number,t2:number){
-        var duration = new Date(t2-t1);
-        return duration.toISOString().slice(11, -1);
+        if(t2 && t1){
+            if(t2-t1 > 0){
+                var duration = new Date(t2-t1);
+                return duration.toISOString().slice(11, -1);
+            }
+        }
+        return "Not available";
     }
     getDateFromGMTString(d:string) : Date{
         return moment(d, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
