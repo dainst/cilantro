@@ -2,6 +2,9 @@
     <div>
         <b-button @click="gotoJobsView">View All Jobs</b-button>
         <div class="container">
+            <div v-if="job.parent_job_id">
+                <b-button @click="goToSingleView(job.parent_job_id)">Go to Parent Job</b-button>
+            </div>
             <b-field label="ID">
                 <p>{{job.job_id}}</p>
             </b-field>
@@ -27,6 +30,7 @@
                 <p v-if="job.state = 'success' || job.errors.length > 0">{{getDuration(getDateFromGMTString(job.created),getDateFromGMTString(job.updated))}}</p>
                 <p v-else>In Progress: {{getDuration(getDateFromGMTString(job.created),Date.now())}}</p>
             </b-field>
+
             <b-field label="Children" v-if="job.children.length > 0">
                     <b-table :data="job.children"
                              default-sort="created" :default-sort-direction="'asc'">
@@ -36,6 +40,12 @@
                             </b-table-column>
                             <b-table-column field="state" label="Status">
                                 {{ props.row.state}}
+                            </b-table-column>
+                            <b-table-column field="job_id" label="ID">
+                                {{ props.row.job_id}}
+                            </b-table-column>
+                            <b-table-column field="job_id" label="">
+                                <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
                             </b-table-column>
                         </template>
                     </b-table>
@@ -79,6 +89,17 @@ export default class JobDetails extends Vue {
         this.jobID = this.$route.query.id as string;
         this.getJobDetails();
     }
+
+    goToSingleView(id: string) {
+        this.$router.push({
+            query: { id }
+        });
+        this.jobID = id;
+        this.getJobDetails();
+        this.$forceUpdate();
+        console.log(this.jobID);
+    }
+
     getDuration(t1:number,t2:number){
         if(t2 && t1){
             if(t2-t1 > 0){
@@ -102,6 +123,7 @@ export default class JobDetails extends Vue {
             showError('Failed to retrieve job details from server!', e);
         }
     }
+
 }
 </script>
 

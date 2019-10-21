@@ -5,6 +5,7 @@ export interface Job {
     job_type: string; // eslint-disable-line camelcase
     name: string;
     parameters: object;
+    children: object[];
     state: string;
     updated: string;
     user: string;

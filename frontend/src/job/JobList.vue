@@ -46,6 +46,9 @@
                             <b-table-column field="state" label="Status">
                                 {{ props.row.state}}
                             </b-table-column>
+                            <b-table-column field="job_id" label="">
+                                <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
+                            </b-table-column>
                         </template>
                     </b-table>
                 </div>
