@@ -49,6 +49,9 @@
                         </template>
                     </b-table>
                 </div>
+                <div v-else>
+                    No childrens for this Job
+                </div>
             </template>
         </b-table>
         </div>
