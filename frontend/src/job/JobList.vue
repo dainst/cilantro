@@ -58,7 +58,7 @@ import moment from 'moment';
 @Component
 export default class JobList extends Vue {
     jobList: Job[] = [];
-    show_all:bool = false;
+    show_all:boolean = false;
     mounted() {
         this.updateJobList();
     }
