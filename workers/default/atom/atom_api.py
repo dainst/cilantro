@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 def create_digital_object(obj):
     """
-    Create a digitial object for a cilantro object in atom
+    Create a digitial object for a cilantro object in atom.
 
     :param str import_xml_file_path: OJS-Import-XML
     :param str journalcode: Name of the journal that will be imported to
