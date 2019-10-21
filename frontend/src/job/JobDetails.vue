@@ -97,7 +97,6 @@ export default class JobDetails extends Vue {
         this.jobID = id;
         this.getJobDetails();
         this.$forceUpdate();
-        console.log(this.jobID);
     }
 
     getDuration(t1:number,t2:number){
