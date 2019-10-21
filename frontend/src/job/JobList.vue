@@ -1,8 +1,12 @@
 <template>
     <section>
+        <div class="navbar-end">
+            <div class="navbar-item">
         <b-switch v-model="show_all" v-on:input="updateJobList">
             Show all
         </b-switch>
+            </div>
+        </div>
         <div v-if="jobList.length > 0">
         <b-table :data="jobList" detailed detail-key="job_id"
             default-sort="created" :default-sort-direction="'asc'">
