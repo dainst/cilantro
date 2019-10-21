@@ -75,8 +75,8 @@ class Job:
 
         :return AsyncResult: Celery result
         """
-        job_db.update_job(self.id, 'started')
+        job_db.update_job_state(self.id, 'started')
         for chain_id in self.chain_ids:
-            job_db.update_job(chain_id, 'started')
+            job_db.update_job_state(chain_id, 'started')
 
         return self.chord.apply_async(task_id=self.id)

@@ -15,16 +15,6 @@ from utils.celery_client import celery_app
 setup_logging()
 
 
-class ExceptionHandlingException(Exception):
-    """Exception to handle errors when handling Exceptions.
-
-    This is to be thrown when an error occurs while handling another exception.
-    This way a loop is avoided.
-    """
-
-    pass
-
-
 @celery.signals.setup_logging.connect
 def on_celery_setup_logging(**_):
     # underscore is a throwaway-variable, to avoid code style warning for
@@ -90,23 +80,14 @@ class BaseTask(Task):
         Use celery default handler method to write update to our database.
         https://docs.celeryproject.org/en/latest/userguide/tasks.html#handlers
         """
-        job_db.update_job(self.job_id, status)
+        job_db.update_job_state(self.job_id, status)
         if status == 'FAILURE' and self.parent_job_id is not None:
             parent = job_db.get_job_by_id(self.parent_job_id)
             if parent['job_type'] == 'chain':
-                job_db.update_job(parent['job_id'], status)
+                job_db.update_job_state(parent['job_id'], status)
 
-    def stop_chain_execution(self):
-        """
-        Stop execution of all tasks in the chain.
-
-        This is obviously for error cases. When an error is thrown and
-        handled, the execution would continue in it erroneous state and
-        throw even more errors.
-        With this the task chain is emptied and execution stops.
-        """
-        self.request.chain = None
-        self.request.chord = None
+        super(BaseTask, self).after_return(
+            status, retval, task_id, args, kwargs, einfo)
 
     def get_work_path(self):
         abs_path = os.path.join(self.working_dir, self.work_path)
@@ -135,7 +116,7 @@ class BaseTask(Task):
         self.results = {}
         self._init_params(params)
 
-        job_db.update_job(self.job_id, 'started')
+        job_db.update_job_state(self.job_id, 'started')
 
         if prev_result:
             self._add_prev_result_to_results(prev_result)
@@ -143,17 +124,7 @@ class BaseTask(Task):
         if 'result' in params:
             self._add_prev_result_to_results(params['result'])
 
-        try:
-            task_result = self.execute_task()
-        except celery.exceptions.Ignore:
-            # Celery-internal Exception thrown when tasks are ignored/replaced
-            raise
-        except ExceptionHandlingException:
-            # Error when handling Exception of the task
-            raise
-        except Exception:  # noqa: ignore bare except
-            self.log.error(traceback.format_exc())
-            raise
+        task_result = self.execute_task()
 
         return self._merge_result(task_result)
 

@@ -86,7 +86,7 @@ def add_job(job_id, user, job_type, parent_job_id, child_job_ids, parameters):
     db.jobs.insert_one(job)
 
 
-def update_job(job_id, state, error=None):
+def update_job_state(job_id, state, error=None):
     """
     Update a job to the job database with new state and updated timestamp.
 
@@ -113,3 +113,12 @@ def update_job(job_id, state, error=None):
     if error:
         db.jobs.update_many({"job_id": job_id},
                             {'$push': {'errors': error}})
+
+
+def set_job_children(job_id, child_job_ids):
+
+    timestamp = datetime.datetime.now()
+
+    updated_values = {'child_job_ids': child_job_ids, 'updated': timestamp}
+    db.jobs.update_many({"job_id": job_id},
+                        {'$set': updated_values})

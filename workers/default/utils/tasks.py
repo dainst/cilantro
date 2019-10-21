@@ -1,12 +1,13 @@
 import shutil
 import os
+import uuid
 import glob
 
 from celery import group
 
 from utils.celery_client import celery_app
 from utils import job_db
-from workers.base_task import BaseTask, ObjectTask, ExceptionHandlingException
+from workers.base_task import BaseTask, ObjectTask
 
 
 class ListFilesTask(ObjectTask):
@@ -33,19 +34,31 @@ class ListFilesTask(ObjectTask):
             files.append(tif_file)
         raise self.replace(self._generate_group_for_files(files, task))
 
+    # TODO: use chord instead of group for callback after subtasks finish
     def _generate_group_for_files(self, files, subtasks):
         group_tasks = []
+        child_ids = []
         for file in files:
             params = self.params.copy()
-            params['job_id'] = self.job_id
+            params['job_id'] = str(uuid.uuid1())
             params['work_path'] = file
+            params['parent_job_id'] = self.job_id
             # workaround for storing results inside params
             # this is necessary since prev_results do not always seem to be
             # passed to subtasks correctly by celery
             params['result'] = self.results
-
             chain = celery_app.signature(subtasks, kwargs=params)
+            chain.options['task_id'] = params['job_id']
+
+            child_ids += [params['job_id']]
+
+            job_db.add_job(job_id=params['job_id'], user=None, job_type=subtasks,
+                           parent_job_id=params['parent_job_id'], child_job_ids=[], parameters=params)
+
             group_tasks.append(chain)
+
+        job_db.set_job_children(self.job_id, child_ids)
+        job_db.update_job_state(self.job_id, "REPLACED")
         return group(group_tasks)
 
 
@@ -80,7 +93,7 @@ class FinishChainTask(BaseTask):
     name = "finish_chain"
 
     def execute_task(self):
-        job_db.update_job(self.parent_job_id, 'success')
+        job_db.update_job_state(self.parent_job_id, 'success')
 
 
 FinishChainTask = celery_app.register_task(FinishChainTask())
@@ -93,10 +106,7 @@ class FinishChordTask(BaseTask):
     name = "finish_chord"
 
     def execute_task(self):
-        job_db.update_job(self.job_id, "success")
-
-    def on_failure(self):
-        job_db.update_job(self.job_id, "FAILURE")
+        job_db.update_job_state(self.job_id, "success")
 
 
 FinishChordTask = celery_app.register_task(FinishChordTask())

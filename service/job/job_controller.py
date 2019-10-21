@@ -336,39 +336,39 @@ def book_job_create():
         current_chain = t('create_object', **task_params)
 
         current_chain |= t('list_files',
-                   representation='tif',
-                   target='jpg',
-                   task='convert.tif_to_jpg')
+                           representation='tif',
+                           target='jpg',
+                           task='convert.tif_to_jpg')
 
         current_chain |= t('list_files',
-                   representation='jpg',
-                   target='jpg_thumbnails',
-                   task='convert.tif_to_jpg',
-                   max_width=50,
-                   max_height=50)
+                           representation='jpg',
+                           target='jpg_thumbnails',
+                           task='convert.tif_to_jpg',
+                           max_width=50,
+                           max_height=50)
 
         current_chain |= t('list_files',
-                   representation='tif',
-                   target='ptif',
-                   task='convert.tif_to_ptif')
+                           representation='tif',
+                           target='ptif',
+                           task='convert.tif_to_ptif')
 
         current_chain |= t('list_files',
-                   representation='tif',
-                   target='pdf',
-                   task='convert.tif_to_pdf')
+                           representation='tif',
+                           target='pdf',
+                           task='convert.tif_to_pdf')
         current_chain |= t('convert.merge_converted_pdf')
 
         if params['options']['do_ocr']:
             current_chain |= t('list_files',
-                       representation='tif',
-                       target='txt',
-                       task='convert.tif_to_txt',
-                       ocr_lang=params['options']['ocr_lang'])
+                               representation='tif',
+                               target='txt',
+                               task='convert.tif_to_txt',
+                               ocr_lang=params['options']['ocr_lang'])
 
         current_chain |= t('generate_xml',
-                   template_file='mets_template_no_articles.xml',
-                   target_filename='mets.xml',
-                   schema_file='mets.xsd')
+                           template_file='mets_template_no_articles.xml',
+                           target_filename='mets.xml',
+                           schema_file='mets.xsd')
 
         current_chain |= t('publish_to_repository')
         current_chain |= t('publish_to_archive')
@@ -377,7 +377,6 @@ def book_job_create():
         current_chain |= t('finish_chain')
 
         chains.append(current_chain)
-
 
     job = Job(user, 'ingest_book', chains, params)
     job.run()
@@ -561,7 +560,7 @@ def job_status(job_id):
 
     :return: A JSON object containing the status info
     """
- 
+
     job = job_db.get_job_by_id(job_id)
 
     job['duration'] = str(datetime.timedelta(
