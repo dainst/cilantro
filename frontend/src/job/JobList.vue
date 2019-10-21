@@ -1,5 +1,8 @@
 <template>
     <section>
+        <b-switch v-model="show_all" v-on:input="updateJobList">
+            Show all
+        </b-switch>
         <div v-if="jobList.length > 0">
         <b-table :data="jobList" detailed detail-key="job_id"
             default-sort="created" :default-sort-direction="'asc'">
@@ -51,7 +54,7 @@ import moment from 'moment';
 @Component
 export default class JobList extends Vue {
     jobList: Job[] = [];
-
+    show_all:bool = false;
     mounted() {
         this.updateJobList();
     }
@@ -83,7 +86,7 @@ export default class JobList extends Vue {
 
     async updateJobList() {
         try {
-            this.jobList = await getJobList();
+            this.jobList = await getJobList(this.show_all);
         } catch (e) {
             showError('Failed to load job list from server!', e);
         }

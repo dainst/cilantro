@@ -50,7 +50,7 @@ export default class JobListCompact extends Vue {
 
     async updateJobList() {
         try {
-            this.jobList = await getJobList();
+            this.jobList = await getJobList(false);
         } catch (e) {
             showError('Failed to load job list from server', e);
         }
