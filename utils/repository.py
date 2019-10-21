@@ -28,6 +28,7 @@ def list_objects_in_repository():
 def generate_repository_path(object_id):
     """
     Generate the path of a cilantro (sub)object in the repository.
+
     This is based on the last 4/2 digits of the object_id, which should
     be a zenon or atom ID.
     E.g. object_id "JOURNAL-ZID1234567" is stored under

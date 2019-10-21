@@ -15,6 +15,12 @@ class PathDoesNotExist(Exception):
 
 
 class InvalidObjectIdError(Exception):
+    """
+    This error is raised if the object ID is invalid.
+
+    This may happen when an object_id is incorrectly formatted, for
+    example when the last 4 characters are no digits.
+    """
     pass
 
 
