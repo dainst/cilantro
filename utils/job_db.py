@@ -26,7 +26,7 @@ def get_jobs_for_user(user):
     """
     job_list = []
     for job in db.jobs.find({"user": user}, {'_id': False}):
-        job_list.append(job)
+        job_list.append(restructured_job(job))
     return job_list
 
 
@@ -37,8 +37,17 @@ def get_job_by_id(job_id):
     :param str job_id: job-id to be queried
     :return: job object
     """
-    job = db.jobs.find_one({"job_id": job_id}, {'_id': False})
+    job = restructured_job(db.jobs.find_one({"job_id": job_id}, {'_id': False}))
+    return job
 
+
+def restructured_job(j):
+    """
+    Gives a restructured job construct for Frontend purposes
+    :param j: job to be restructured
+    :return: job object
+    """
+    job = j
     if 'child_job_ids' in job:
         children_with_status = []
         for child_id in job['child_job_ids']:
@@ -53,7 +62,6 @@ def get_job_by_id(job_id):
 
     if 'parent_job_id' in job and job['parent_job_id'] == None:
         del job['parent_job_id']
-
     return job
 
 
