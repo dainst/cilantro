@@ -4,10 +4,6 @@ from workers.base_task import ObjectTask
 from workers.default.atom.atom_api import create_digital_object
 
 
-def _generate_ojs_id(prefix, journal_code, result_id):
-    return f"{prefix}-{journal_code}-{result_id}"
-
-
 class PublishToAtomTask(ObjectTask):
     """
     Add a digital object for the PDF in the repository to AtoM.
