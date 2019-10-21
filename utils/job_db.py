@@ -25,8 +25,10 @@ def get_jobs_for_user(user):
     :return: list of job objects
     """
     job_list = []
-    for job in db.jobs.find({"user": user}, {'_id': False}):
-        job_list.append(restructured_job(job))
+    for job in db.jobs.find({"user": user, "parent_job_id": None}, {'_id': False}):
+        job_list.append(
+            expand_child_information(job)
+        )
     return job_list
 
 
@@ -37,17 +39,17 @@ def get_job_by_id(job_id):
     :param str job_id: job-id to be queried
     :return: job object
     """
-    job = restructured_job(db.jobs.find_one({"job_id": job_id}, {'_id': False}))
+    job = expand_child_information(db.jobs.find_one(
+        {"job_id": job_id}, {'_id': False}))
     return job
 
 
-def restructured_job(j):
+def expand_child_information(job):
     """
-    Gives a restructured job construct for Frontend purposes
-    :param j: job to be restructured
+    Expand child job information for parent job
+    :param job: Parent job to be expanded
     :return: job object
     """
-    job = j
     if 'child_job_ids' in job:
         children_with_status = []
         for child_id in job['child_job_ids']:
