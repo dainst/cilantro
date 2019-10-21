@@ -287,9 +287,10 @@ def journal_job_create():
                            target_filename='mets.xml',
                            schema_file='mets.xsd')
 
-        current_chain |= t('publish_to_ojs',
-                           ojs_metadata=params['options']['ojs_metadata'],
-                           ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
+        if params['options']['ojs_metadata']['auto_publish_issue']:
+            current_chain |= t('publish_to_ojs',
+                            ojs_metadata=params['options']['ojs_metadata'],
+                            ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
         current_chain |= t('publish_to_repository')
         current_chain |= t('publish_to_archive')
         current_chain |= t('cleanup_workdir')
