@@ -29,7 +29,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { startJob } from '../JobClient';
 
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
-import JournalFilesForm from './forms/JournalFilesForm.vue';
+import JobFilesForm from '../JobFilesForm.vue';
 import ArticlesForm from './forms/ArticlesForm.vue';
 import JournalOptionsForm from './forms/JournalOptionsForm.vue';
 import {
@@ -42,7 +42,7 @@ import { JobParameters } from '../JobParameters';
 
 @Component({
     components: {
-        JournalFilesForm,
+        JobFilesForm,
         JournalMetadataForm,
         JournalOptionsForm,
         ContinueButton,
