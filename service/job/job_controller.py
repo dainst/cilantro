@@ -356,6 +356,7 @@ def book_job_create():
                    schema_file='mets.xsd')
 
         chain |= t('publish_to_repository')
+        chain |= t('publish_to_atom')
         chain |= t('publish_to_archive')
 
         chain |= t('cleanup_workdir')
