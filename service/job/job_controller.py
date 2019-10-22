@@ -8,10 +8,10 @@ from flask import Blueprint, url_for, jsonify, request
 from service.errors import ApiError
 from utils.celery_client import celery_app
 from service.user.user_service import auth
-from service.job.job import Job
 from utils import job_db
 from utils import json_validation
 
+from service.job.jobs import IngestBooksJob, IngestJournalsJob
 
 job_controller = Blueprint('job', __name__)
 
@@ -241,7 +241,7 @@ def journal_job_create():
     if not request.data:
         raise ApiError("invalid_job_params", "No request payload found")
     params = request.get_json(force=True)
-    user = auth.username()
+    user_name = auth.username()
     try:
         json_validation.validate_params(params, 'ingest_journal')
     except FileNotFoundError as e:
@@ -249,55 +249,7 @@ def journal_job_create():
     except jsonschema.exceptions.ValidationError as e:
         raise ApiError("invalid_job_params", str(e), 400)
 
-    user_param = {'user': user}
-    chains = []
-
-    for issue_object in params['objects']:
-        task_params = dict(**issue_object, **user_param,
-                           initial_representation='tif')
-
-        current_chain = t('create_object', **task_params)
-
-        current_chain |= t('list_files',
-                           representation='tif',
-                           target='pdf',
-                           task='convert.tif_to_pdf')
-
-        current_chain |= t('convert.merge_converted_pdf')
-
-        current_chain |= t('list_files',
-                           representation='tif',
-                           target='jpg',
-                           task='convert.tif_to_jpg')
-
-        current_chain |= t('list_files',
-                           representation='tif',
-                           target='jpg_thumbnails',
-                           task='convert.scale_image',
-                           max_width=50,
-                           max_height=50)
-
-        current_chain |= t('generate_xml',
-                           template_file='ojs3_template_issue.xml',
-                           target_filename='ojs_import.xml',
-                           ojs_metadata=params['options']['ojs_metadata'])
-
-        current_chain |= t('generate_xml',
-                           template_file='mets_template_no_articles.xml',
-                           target_filename='mets.xml',
-                           schema_file='mets.xsd')
-
-        if params['options']['ojs_metadata']['auto_publish_issue']:
-            current_chain |= t('publish_to_ojs',
-                            ojs_metadata=params['options']['ojs_metadata'],
-                            ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
-        current_chain |= t('publish_to_repository')
-        current_chain |= t('publish_to_archive')
-        current_chain |= t('cleanup_workdir')
-        current_chain |= t('finish_chain')
-        chains.append(current_chain)
-
-    job = Job(user, 'ingest_journal', chains, params)
+    job = IngestJournalsJob(params, user_name)
     job.run()
 
     body = jsonify({
@@ -318,8 +270,7 @@ def book_job_create():
     if not request.data:
         raise ApiError("invalid_job_params", "No request payload found")
     params = request.get_json(force=True)
-    user = auth.username()
-
+    user_name = auth.username()
     try:
         json_validation.validate_params(params, 'ingest_book')
     except FileNotFoundError as e:
@@ -327,59 +278,7 @@ def book_job_create():
     except jsonschema.exceptions.ValidationError as e:
         raise ApiError("invalid_job_params", str(e), 400)
 
-    user_param = {'user': user}
-    chains = []
-
-    for book_object in params['objects']:
-        task_params = dict(**book_object, **user_param,
-                           initial_representation='tif')
-
-        current_chain = t('create_object', **task_params)
-
-        current_chain |= t('list_files',
-                           representation='tif',
-                           target='jpg',
-                           task='convert.tif_to_jpg')
-
-        current_chain |= t('list_files',
-                           representation='jpg',
-                           target='jpg_thumbnails',
-                           task='convert.tif_to_jpg',
-                           max_width=50,
-                           max_height=50)
-
-        current_chain |= t('list_files',
-                           representation='tif',
-                           target='ptif',
-                           task='convert.tif_to_ptif')
-
-        current_chain |= t('list_files',
-                           representation='tif',
-                           target='pdf',
-                           task='convert.tif_to_pdf')
-        current_chain |= t('convert.merge_converted_pdf')
-
-        if params['options']['do_ocr']:
-            current_chain |= t('list_files',
-                               representation='tif',
-                               target='txt',
-                               task='convert.tif_to_txt',
-                               ocr_lang=params['options']['ocr_lang'])
-
-        current_chain |= t('generate_xml',
-                           template_file='mets_template_no_articles.xml',
-                           target_filename='mets.xml',
-                           schema_file='mets.xsd')
-
-        current_chain |= t('publish_to_repository')
-        current_chain |= t('publish_to_archive')
-
-        current_chain |= t('cleanup_workdir')
-        current_chain |= t('finish_chain')
-
-        chains.append(current_chain)
-
-    job = Job(user, 'ingest_book', chains, params)
+    job = IngestBooksJob(params, user_name)
     job.run()
 
     body = jsonify({
@@ -567,7 +466,3 @@ def job_status(job_id):
     job['duration'] = str(datetime.timedelta(
         seconds=int((job['updated'] - job['created']).total_seconds())))
     return jsonify(job)
-
-
-def t(name, **params):
-    return celery_app.signature(name, kwargs=params)
