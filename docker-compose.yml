@@ -30,8 +30,6 @@ x-env-app-config: &env-app-config
 
 x-env-atom: &env-atom
   ATOM_API_URL: &atomAPIURL http://localhost:8085/index.php/api/informationobjects
-  ATOM_USER: &atom-user ${ATOM_USER}
-  ATOM_PASSWORD: &atom-password ${ATOM_PASSWORD}
 
 
 x-test-timeouts: &test-timeouts
