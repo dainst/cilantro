@@ -18,7 +18,7 @@
         </div>
         <div v-if="activeStep === 2">
             <StartJobButton @click="startJob"></StartJobButton>
-            <JournalOptionsForm @options-updated="options = $event" />
+            <JournalOptionsForm :initialOptions="options" @options-updated="options = $event" />
             <StartJobButton @click="startJob"></StartJobButton>
         </div>
     </div>

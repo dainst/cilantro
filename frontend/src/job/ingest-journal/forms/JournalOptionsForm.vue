@@ -20,7 +20,7 @@
                 </b-field>
             </div>
             <div class="tile is-child box">
-                <JobOptionsForm :options="options"/>
+                <JobOptionsForm :initialOptions="options" @options-updated="options = $event" />
             </div>
         </div>
     </section>
@@ -28,9 +28,9 @@
 
 <script lang="ts">
 import {
-    Component, Vue, Watch
+    Component, Vue, Watch, Prop
 } from 'vue-property-decorator';
-import { JournalImportOptions, initOptions } from '../JournalImportParameters';
+import { JournalImportOptions } from '../JournalImportParameters';
 import JobOptionsForm from '../../JobOptionsForm.vue';
 
 @Component({
@@ -39,9 +39,10 @@ import JobOptionsForm from '../../JobOptionsForm.vue';
     }
 })
 export default class JournalOptionsForm extends Vue {
-    options = initOptions();
+    @Prop({ required: true }) initialOptions!: JournalImportOptions;
+    options: JournalImportOptions = this.initialOptions;
 
-    @Watch('options', { deep: true })
+    @Watch('options')
     onOptionsChanged(options: JournalImportOptions) {
         this.$emit('options-updated', options);
     }

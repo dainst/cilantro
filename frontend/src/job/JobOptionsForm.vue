@@ -24,6 +24,13 @@ import { BookImportOptions } from './ingest-book/BookImportParameters';
 
 @Component
 export default class JobOptionsForm extends Vue {
-    @Prop({ required: true }) options!: BookImportOptions | JournalImportOptions;
+    @Prop({ required: true }) initialOptions!: BookImportOptions | JournalImportOptions;
+
+    options: BookImportOptions | JournalImportOptions = this.initialOptions;
+
+    @Watch('options')
+    onOptionsChanged(options: BookImportOptions) {
+        this.$emit('options-updated', options);
+    }
 }
 </script>
