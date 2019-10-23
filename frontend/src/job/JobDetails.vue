@@ -52,9 +52,12 @@
             <b-message v-if="job.errors && job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
                 <b-table :data="job.errors">
                     <template slot-scope="props">
-                    <b-table-column field="job_name" label="Failed Task">
-                        {{props.row.job_name}}
-                    </b-table-column>
+                        <b-table-column field="job_name" label="Failed task name">
+                            {{props.row.job_name}}
+                        </b-table-column>
+                        <b-table-column field="job_id" label="Failed task ID">
+                            {{props.row.job_id}}
+                        </b-table-column>
                     <b-table-column field="message" label="Error">
                         {{ props.row.message}}
                     </b-table-column>
