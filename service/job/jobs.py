@@ -31,12 +31,6 @@ class BaseJob:
     def _add_to_job_db(self, params, user_name):
         raise NotImplementedError("_add_to_job_db method not implemented")
 
-    def _link(self, name, **params):
-        return celery_app.signature(name, kwargs=params)
-
-    def _generate_id(self):
-        return str(uuid.uuid1())
-
 
 class BatchJob(BaseJob):
     job_type = 'batch_job'
@@ -51,7 +45,7 @@ class BatchJob(BaseJob):
 
         :param List[chain] chains: A list of celery task chains
         """
-        self.id = self._generate_id()
+        self.id = _generate_id()
 
         chains = self._create_chains(params, user_name)
 
@@ -79,12 +73,12 @@ class BatchJob(BaseJob):
 
         for current_chain in self.chord.tasks:
             current_chain_links = []
-            current_chain_id = self._generate_id()
+            current_chain_id = _generate_id()
             current_work_path = current_chain_id
             current_chain.kwargs['work_path'] = current_work_path
 
             for single_task in current_chain.tasks:
-                job_id = self._generate_id()
+                job_id = _generate_id()
 
                 single_task.kwargs['job_id'] = job_id
                 single_task.options['task_id'] = job_id
@@ -128,49 +122,49 @@ class IngestBooksJob(BatchJob):
             task_params = dict(**book_object, **{'user': user_name},
                                initial_representation='tif')
 
-            current_chain = self._link('create_object', **task_params)
+            current_chain = _link('create_object', **task_params)
 
-            current_chain |= self._link('list_files',
+            current_chain |= _link('list_files',
                                         representation='tif',
                                         target='jpg',
                                         task='convert.tif_to_jpg')
 
-            current_chain |= self._link('list_files',
+            current_chain |= _link('list_files',
                                         representation='jpg',
                                         target='jpg_thumbnails',
                                         task='convert.tif_to_jpg',
                                         max_width=50,
                                         max_height=50)
 
-            current_chain |= self._link('list_files',
+            current_chain |= _link('list_files',
                                         representation='tif',
                                         target='ptif',
                                         task='convert.tif_to_ptif')
 
-            current_chain |= self._link('list_files',
+            current_chain |= _link('list_files',
                                         representation='tif',
                                         target='pdf',
                                         task='convert.tif_to_pdf')
-            current_chain |= self._link('convert.merge_converted_pdf')
+            current_chain |= _link('convert.merge_converted_pdf')
 
             if params['options']['do_ocr']:
-                current_chain |= self._link('list_files',
+                current_chain |= _link('list_files',
                                             representation='tif',
                                             target='txt',
                                             task='convert.tif_to_txt',
                                             ocr_lang=params['options']['ocr_lang'])
 
-            current_chain |= self._link('generate_xml',
+            current_chain |= _link('generate_xml',
                                         template_file='mets_template_no_articles.xml',
                                         target_filename='mets.xml',
                                         schema_file='mets.xsd')
 
-            current_chain |= self._link('publish_to_repository')
-            current_chain |= self._link('publish_to_atom')
-            current_chain |= self._link('publish_to_archive')
+            current_chain |= _link('publish_to_repository')
+            current_chain |= _link('publish_to_atom')
+            current_chain |= _link('publish_to_archive')
 
-            current_chain |= self._link('cleanup_workdir')
-            current_chain |= self._link('finish_chain')
+            current_chain |= _link('cleanup_workdir')
+            current_chain |= _link('finish_chain')
 
             chains.append(current_chain)
 
@@ -187,45 +181,51 @@ class IngestJournalsJob(BatchJob):
             task_params = dict(**issue_object, **{'user': user_name},
                                initial_representation='tif')
 
-            current_chain = self._link('create_object', **task_params)
+            current_chain = _link('create_object', **task_params)
 
-            current_chain |= self._link('list_files',
+            current_chain |= _link('list_files',
                                         representation='tif',
                                         target='pdf',
                                         task='convert.tif_to_pdf')
 
-            current_chain |= self._link('convert.merge_converted_pdf')
+            current_chain |= _link('convert.merge_converted_pdf')
 
-            current_chain |= self._link('list_files',
+            current_chain |= _link('list_files',
                                         representation='tif',
                                         target='jpg',
                                         task='convert.tif_to_jpg')
 
-            current_chain |= self._link('list_files',
+            current_chain |= _link('list_files',
                                         representation='tif',
                                         target='jpg_thumbnails',
                                         task='convert.scale_image',
                                         max_width=50,
                                         max_height=50)
 
-            current_chain |= self._link('generate_xml',
+            current_chain |= _link('generate_xml',
                                         template_file='ojs3_template_issue.xml',
                                         target_filename='ojs_import.xml',
                                         ojs_metadata=params['options']['ojs_metadata'])
 
-            current_chain |= self._link('generate_xml',
+            current_chain |= _link('generate_xml',
                                         template_file='mets_template_no_articles.xml',
                                         target_filename='mets.xml',
                                         schema_file='mets.xsd')
 
             if params['options']['ojs_metadata']['auto_publish_issue']:
-                current_chain |= self._link('publish_to_ojs',
+                current_chain |= _link('publish_to_ojs',
                                             ojs_metadata=params['options']['ojs_metadata'],
                                             ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
-            current_chain |= self._link('publish_to_repository')
-            current_chain |= self._link('publish_to_archive')
-            current_chain |= self._link('cleanup_workdir')
-            current_chain |= self._link('finish_chain')
+            current_chain |= _link('publish_to_repository')
+            current_chain |= _link('publish_to_archive')
+            current_chain |= _link('cleanup_workdir')
+            current_chain |= _link('finish_chain')
             chains.append(current_chain)
 
         return chains
+
+def _link(name, **params):
+    return celery_app.signature(name, kwargs=params)
+
+def _generate_id():
+    return str(uuid.uuid1())
