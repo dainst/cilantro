@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop} from 'vue-property-decorator';
-import {getJobDetails, getJobList} from './JobClient';
+import {getJobDetails} from './JobClient';
 import { Job } from './Job';
 import { ChildJob } from './ChildJob';
 import { showError } from '@/util/Notifier.ts';

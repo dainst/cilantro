@@ -80,12 +80,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import axios from 'axios';
 import { Job } from './Job';
 import { getJobDetails } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 import BField from "buefy/src/components/field/Field.vue";
-import moment from 'moment';
 
 @Component({
     components: {BField}
