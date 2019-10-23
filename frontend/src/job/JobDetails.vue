@@ -17,7 +17,7 @@
             <b-field label="Status">
                 <p>{{job.state}}</p>
             </b-field>
-            <b-field label="User">
+            <b-field label="User" v-if="job.user">
                 <p>{{job.user}}</p>
             </b-field>
             <b-field label="Created">
@@ -27,11 +27,10 @@
                 <p>{{job.updated}}</p>
             </b-field>
             <b-field label="Duration">
-                <p v-if="job.state = 'success' || job.errors.length > 0">{{getDuration(getDateFromGMTString(job.created),getDateFromGMTString(job.updated))}}</p>
-                <p v-else>In Progress: {{getDuration(getDateFromGMTString(job.created),Date.now())}}</p>
+                <p>{{job.duration}}</p>
             </b-field>
 
-            <b-field label="Children" v-if="job.children.length > 0">
+            <b-field label="Children" v-if="job.children && job.children.length > 0">
                     <b-table :data="job.children"
                              default-sort="created" :default-sort-direction="'asc'">
                         <template slot-scope="props">
@@ -50,7 +49,7 @@
                         </template>
                     </b-table>
             </b-field>
-            <b-message v-if="job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
+            <b-message v-if="job.errors && job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
                 <b-table :data="job.errors" :columns="[{field: 'task_name',
                         label: 'Task name'}, {field: 'message',
                         label: 'Message'}]"></b-table>
@@ -99,18 +98,6 @@ export default class JobDetails extends Vue {
         this.$forceUpdate();
     }
 
-    getDuration(t1:number,t2:number){
-        if(t2 && t1){
-            if(t2-t1 > 0){
-                var duration = new Date(t2-t1);
-                return duration.toISOString().slice(11, -1);
-            }
-        }
-        return "Not available";
-    }
-    getDateFromGMTString(d:string) : Date{
-        return moment(d, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-    }
     gotoJobsView() {
         this.$router.push({ path: 'jobs' });
     }
