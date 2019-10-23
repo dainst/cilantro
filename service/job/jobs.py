@@ -166,6 +166,7 @@ class IngestBooksJob(BatchJob):
                                         schema_file='mets.xsd')
 
             current_chain |= self._link('publish_to_repository')
+            current_chain |= self._link('publish_to_atom')
             current_chain |= self._link('publish_to_archive')
 
             current_chain |= self._link('cleanup_workdir')
@@ -222,7 +223,6 @@ class IngestJournalsJob(BatchJob):
                                             ojs_metadata=params['options']['ojs_metadata'],
                                             ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
             current_chain |= self._link('publish_to_repository')
-            current_chain |= self._link('publish_to_atom')
             current_chain |= self._link('publish_to_archive')
             current_chain |= self._link('cleanup_workdir')
             current_chain |= self._link('finish_chain')
