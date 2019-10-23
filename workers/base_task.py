@@ -75,19 +75,21 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
+    def _set_parent_failures(self, parent_id):
+        parent = job_db.get_job_by_id(parent_id)
+        job_db.update_job_state(parent['job_id'], 'failure')
+
+        if 'parent_job_id' in parent:
+            self._set_parent_failures(parent['parent_job_id'])
+
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         """
         Use celery default handler method to write update to our database.
         https://docs.celeryproject.org/en/latest/userguide/tasks.html#handlers
         """
-        job_db.update_job_state(self.job_id, status)
+        job_db.update_job_state(self.job_id, status.lower())
         if status == 'FAILURE' and self.parent_job_id is not None:
-            parent = job_db.get_job_by_id(self.parent_job_id)
-            if parent['job_type'] == 'chain':
-                job_db.update_job_state(parent['job_id'], status)
-
-        super(BaseTask, self).after_return(
-            status, retval, task_id, args, kwargs, einfo)
+            self._set_parent_failures(self.parent_job_id)
 
     def get_work_path(self):
         abs_path = os.path.join(self.working_dir, self.work_path)

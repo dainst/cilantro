@@ -58,7 +58,7 @@ class ListFilesTask(ObjectTask):
             group_tasks.append(chain)
 
         job_db.set_job_children(self.job_id, child_ids)
-        job_db.update_job_state(self.job_id, "REPLACED")
+        job_db.update_job_state(self.job_id, "replaced")
         return group(group_tasks)
 
 
@@ -110,3 +110,10 @@ class FinishChordTask(BaseTask):
 
 
 FinishChordTask = celery_app.register_task(FinishChordTask())
+
+
+class FailChordTask(BaseTask):
+    name = "fail_chord"
+
+    def execute_task(self):
+        job_db.update_job_state(self.job_id, "FAILURE")
