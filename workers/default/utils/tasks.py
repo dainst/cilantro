@@ -38,28 +38,31 @@ class ListFilesTask(ObjectTask):
         chord_tasks = []
         child_ids = []
         for file in files:
-            params = self.params.copy()
-            params['job_id'] = str(uuid.uuid1())
-            params['work_path'] = file
-            params['parent_job_id'] = self.job_id
-            # workaround for storing results inside params
-            # this is necessary since prev_results do not always seem to be
-            # passed to subtasks correctly by celery
-            params['result'] = self.results
-            chain = celery_app.signature(subtasks, kwargs=params)
-            chain.options['task_id'] = params['job_id']
-
-            child_ids += [params['job_id']]
-
-            job_db.add_job(job_id=params['job_id'], user=None, job_type=subtasks,
-                           parent_job_id=params['parent_job_id'], child_job_ids=[], parameters=params)
-
+            chain, task_id = self._create_chain(file, subtasks)
+            child_ids += [task_id]
             chord_tasks.append(chain)
 
         job_db.set_job_children(self.job_id, child_ids)
         job_db.update_job_state(self.job_id, "started")
 
         return chord(chord_tasks, signature('finish_chord', kwargs={'job_id': self.job_id, 'work_path': self.job_id}))
+
+    def _create_chain(self, file, subtasks):
+        params = self.params.copy()
+        params['job_id'] = str(uuid.uuid1())
+        params['work_path'] = file
+        params['parent_job_id'] = self.job_id
+        # workaround for storing results inside params
+        # this is necessary since prev_results do not always seem to be
+        # passed to subtasks correctly by celery
+        params['result'] = self.results
+        chain = celery_app.signature(subtasks, kwargs=params)
+        chain.options['task_id'] = params['job_id']
+
+        job_db.add_job(job_id=params['job_id'], user=None, job_type=subtasks,
+                       parent_job_id=params['parent_job_id'], child_job_ids=[], parameters=params)
+
+        return chain, params['job_id']
 
 
 ListFilesTask = celery_app.register_task(ListFilesTask())
