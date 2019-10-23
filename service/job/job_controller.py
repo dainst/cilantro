@@ -283,7 +283,6 @@ def book_job_create():
 
     body = jsonify({
         'success': True,
-        'status': 'Accepted',
         'job_id': job.id
     })
 
