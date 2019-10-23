@@ -14,7 +14,7 @@ class ListFilesTask(ObjectTask):
     """
     Run a task list for every file in a given representation.
 
-    A chain is created for every file. These are run in parellel. The next task
+    A chain is created for every file. These are run in parallel. The next task
     is run when the last file chain has finished.
 
     TaskParams:
@@ -32,10 +32,10 @@ class ListFilesTask(ObjectTask):
         files = []
         for tif_file in glob.iglob(pattern):
             files.append(tif_file)
-        raise self.replace(self._generate_group_for_files(files, task))
+        raise self.replace(self._generate_chord_for_files(files, task))
 
-    def _generate_group_for_files(self, files, subtasks):
-        group_tasks = []
+    def _generate_chord_for_files(self, files, subtasks):
+        chord_tasks = []
         child_ids = []
         for file in files:
             params = self.params.copy()
@@ -54,12 +54,12 @@ class ListFilesTask(ObjectTask):
             job_db.add_job(job_id=params['job_id'], user=None, job_type=subtasks,
                            parent_job_id=params['parent_job_id'], child_job_ids=[], parameters=params)
 
-            group_tasks.append(chain)
+            chord_tasks.append(chain)
 
         job_db.set_job_children(self.job_id, child_ids)
         job_db.update_job_state(self.job_id, "started")
 
-        return chord(group_tasks, signature('finish_chord', kwargs={'job_id': self.job_id, 'work_path': self.job_id}))
+        return chord(chord_tasks, signature('finish_chord', kwargs={'job_id': self.job_id, 'work_path': self.job_id}))
 
 
 ListFilesTask = celery_app.register_task(ListFilesTask())
