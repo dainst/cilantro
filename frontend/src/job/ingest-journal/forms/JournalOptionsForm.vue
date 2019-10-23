@@ -40,7 +40,7 @@ import JobOptionsForm from '../../JobOptionsForm.vue';
 })
 export default class JournalOptionsForm extends Vue {
     @Prop({ required: true }) initialOptions!: JournalImportOptions;
-    options: JournalImportOptions = this.initialOptions;
+    options: JournalImportOptions = JSON.parse(JSON.stringify(this.initialOptions));
 
     @Watch('options')
     onOptionsChanged(options: JournalImportOptions) {
