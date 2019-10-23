@@ -75,12 +75,14 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
-    def _set_parent_failures(self, parent_id):
-        parent = job_db.get_job_by_id(parent_id)
-        job_db.update_job_state(parent['job_id'], 'failure')
 
+    def _propagate_failure_to_ancestors(self, parent_id, error):
+        job_db.update_job_state(parent_id, 'failure')
+        job_db.add_job_error(parent_id, error)
+
+        parent = job_db.get_job_by_id(parent_id)
         if 'parent_job_id' in parent:
-            self._set_parent_failures(parent['parent_job_id'])
+            self._propagate_failure_to_ancestors(parent['parent_job_id'], error)
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         """
@@ -88,8 +90,12 @@ class BaseTask(Task):
         https://docs.celeryproject.org/en/latest/userguide/tasks.html#handlers
         """
         job_db.update_job_state(self.job_id, status.lower())
-        if status == 'FAILURE' and self.parent_job_id is not None:
-            self._set_parent_failures(self.parent_job_id)
+        if status == 'FAILURE':
+            error_object = { 'job_id': self.job_id, 'job_name': self.name, 'message': self.error }
+            job_db.add_job_error( self.job_id, error_object )
+
+            if self.parent_job_id is not None:
+                self._propagate_failure_to_ancestors(self.parent_job_id, error_object)
 
     def get_work_path(self):
         abs_path = os.path.join(self.working_dir, self.work_path)
@@ -126,7 +132,15 @@ class BaseTask(Task):
         if 'result' in params:
             self._add_prev_result_to_results(params['result'])
 
-        task_result = self.execute_task()
+        try:
+            task_result = self.execute_task()
+        except celery.exceptions.Ignore:
+            # Celery-internal Exception thrown when tasks are ignored/replaced
+            raise
+        except Exception as e:  # noqa: ignore bare except
+            self.log.error(traceback.format_exc())
+            self.error = str(e)
+            raise e
 
         return self._merge_result(task_result)
 

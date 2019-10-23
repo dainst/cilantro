@@ -132,3 +132,10 @@ def set_job_children(job_id, child_job_ids):
     updated_values = {'child_job_ids': child_job_ids, 'updated': timestamp}
     db.jobs.update_many({"job_id": job_id},
                         {'$set': updated_values})
+
+
+def add_job_error(job_id, error_message):
+
+    timestamp = datetime.datetime.now()
+    db.jobs.update_many({"job_id": job_id},
+                        {'$push': {'errors': error_message}, '$set': {'updated': timestamp}})
