@@ -1,0 +1,10 @@
+{
+    "request": {
+        "method": "POST",
+        "urlPattern": "/atom/api/digitalobjects"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"id\": 97291, \"slug\": \"test\"}"
+    }
+}
