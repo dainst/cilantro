@@ -11,6 +11,7 @@
                 <div class="tile is-child box">
                     <p class="title">Book import</p>
                     <p>Job Type Description</p>
+                    <router-link to="ingest-book" tag="b-button">Start</router-link>
                 </div>
                 <div class="tile is-child box">
                     <p class="title">NLP Processing</p>

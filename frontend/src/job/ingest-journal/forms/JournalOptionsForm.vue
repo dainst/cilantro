@@ -20,18 +20,7 @@
                 </b-field>
             </div>
             <div class="tile is-child box">
-                <p class="title">OCR Options</p>
-                <b-field>
-                    <b-switch
-                        v-model="options.do_ocr"
-                    >Do OCR on image files</b-switch>
-                </b-field>
-                <b-field label="OCR language">
-                    <b-select v-model="options.ocr_lang">
-                        <option value="eng">eng</option>
-                        <option value="deu">deu</option>
-                    </b-select>
-                </b-field>
+                <JobOptionsForm :initialOptions="options" @options-updated="options = $event" />
             </div>
         </div>
     </section>
@@ -39,18 +28,23 @@
 
 <script lang="ts">
 import {
-    Component, Vue, Prop, Watch
+    Component, Vue, Watch, Prop
 } from 'vue-property-decorator';
-import { JournalImportOptions, initOptions } from '../JournalImportParameters';
+import { JournalImportOptions } from '../JournalImportParameters';
+import JobOptionsForm from '../../JobOptionsForm.vue';
 
-@Component
+@Component({
+    components: {
+        JobOptionsForm
+    }
+})
 export default class JournalOptionsForm extends Vue {
-    options = initOptions();
+    @Prop({ required: true }) initialOptions!: JournalImportOptions;
+    options: JournalImportOptions = JSON.parse(JSON.stringify(this.initialOptions));
 
-    @Watch('options', { deep: true })
+    @Watch('options')
     onOptionsChanged(options: JournalImportOptions) {
         this.$emit('options-updated', options);
     }
 }
-
 </script>

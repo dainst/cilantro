@@ -22,12 +22,9 @@
                     "metadata": {
                         "type": "object",
                         "additionalProperties": false,
-                        "required": ["title", "abstract", "created", "author", "zenon_id", "atom_id"],
+                        "required": ["title", "created", "author", "atom_id"],
                         "properties": {
                             "title": {
-                                "type": "string"
-                            },
-                            "abstract": {
                                 "type": "string"
                             },
                             "created": {
@@ -36,14 +33,11 @@
                             "author": {
                                 "type": "array",
                                 "items": {
-                                    "type": "object"
+                                    "type": "string"
                                 }
                             },
-                            "zenon_id": {
-                                "type": "number"
-                            },
                             "atom_id": {
-                                "type": "number"
+                                "type": "string"
                             }
                         }
                     }

@@ -1,11 +1,11 @@
-import { JournalImportParameters } from './ingest-journal/JournalImportParameters';
+import { JobParameters } from './JobParameters';
 import { sendRequest } from '@/util/HTTPClient';
 import { Job } from './Job';
 import { backendUri } from '@/config';
 
 export async function startJob(
     jobType: string,
-    params: JournalImportParameters
+    params: JobParameters
 ): Promise<boolean> {
     return sendRequest('post', `${backendUri}/job/${jobType}`, params, false);
 }

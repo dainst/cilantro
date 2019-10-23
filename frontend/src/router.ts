@@ -44,6 +44,11 @@ const router = new Router({
             component: IngestJournal
         },
         {
+            path: '/ingest-book',
+            name: 'ingest-book',
+            component: IngestBook
+        },
+        {
             path: '/job',
             name: 'job',
             component: JobDetails
