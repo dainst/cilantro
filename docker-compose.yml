@@ -23,14 +23,11 @@ x-env-app-config: &env-app-config
   CILANTRO_ENV: &cilantro-env development
   OJS_URI: &ojs-uri http://mock-server:8080/ojs/plugins/generic/ojs-cilantro-plugin/api
   OJS_AUTH_KEY: &ojs-auth-key ${OJS_AUTH_KEY}
+  ATOM_API_URL: &atomAPIURL http://localhost:8085/index.php/api/informationobjects
   ATOM_URI: &atom-uri http://mock-server:8080/atom
   ATOM_USER: &atom-user demo@example.com
   ATOM_PASSWORD: &atom-password demo
   REPOSITORY_URI: &repository-uri http://service:5000/repository
-
-x-env-atom: &env-atom
-  ATOM_API_URL: &atomAPIURL http://localhost:8085/index.php/api/informationobjects
-
 
 x-test-timeouts: &test-timeouts
   DEFAULT_TEST_TIMEOUT: ${DEFAULT_TEST_TIMEOUT}
@@ -160,8 +157,6 @@ services:
       VUE_APP_ATOM_API_URL: *atomAPIURL
       VUE_APP_ATOM_USER: *atom-user
       VUE_APP_ATOM_PASSWORD: *atom-password
-
-
 
   test:
     container_name: cilantro_test
