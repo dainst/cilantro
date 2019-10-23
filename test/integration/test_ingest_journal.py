@@ -10,15 +10,12 @@ class IngestJournalTest(JobTypeTest):
 
         data, status_code = self.post_job('ingest_journal', params)
         self.assertEqual(status_code, 202)
-        first_job_id = data['job_ids'][0]
-        self.assertEqual('Accepted', data['status'])
-        self.assert_status(first_job_id, 'SUCCESS', "JOURNAL_TEST_TIMEOUT")
+        first_job_id = data['job_id']
+        self.assertTrue(data['success'])
+        self.assert_state(first_job_id, 'success', "JOURNAL_TEST_TIMEOUT")
 
-        response = self.get_status(first_job_id)
-        self.assertIn('object_id', response['result'])
-        object_id = response['result']['object_id']
-        journal_code = params['objects'][0]['metadata']['ojs_journal_code']
-        self.assertTrue(object_id.startswith("some_tiffs"))
+        response = self.get_job_by_id(first_job_id)
+        object_id = response['parameters']['objects'][0]['id']
 
         files_generated = [
             f"data/pdf/{object_id}.pdf",

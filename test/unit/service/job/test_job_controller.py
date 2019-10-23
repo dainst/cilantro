@@ -56,10 +56,10 @@ class JobControllerTest(unittest.TestCase):
         job_params = self._read_test_params()
         job1_response = self._make_request('/job/ingest_journal',
                                            json.dumps(job_params), 202)
-        job_id1 = job1_response.get_json()['job_ids'][0]
         job2_response = self._make_request('/job/ingest_journal',
                                            json.dumps(job_params), 202)
-        job_id2 = job2_response.get_json()['job_ids'][0]
+        job_id1 = job1_response.get_json()['job_id']
+        job_id2 = job2_response.get_json()['job_id']
         self._make_request('/job/ingest_journal', json.dumps(job_params), 202)
 
         time.sleep(5)  # wait for the jobs to complete
@@ -114,8 +114,8 @@ class JobControllerTest(unittest.TestCase):
 
         self.assertTrue(last_job_json["job_id"])
         self.assertEqual("test_user", last_job_json["user"])
-        self.assertEqual("ingest_journal", last_job_json["job_type"])
-        self.assertEqual('JOB-ingest_journal-some_tiffs',
+        self.assertEqual("ingest_journals", last_job_json["job_type"])
+        self.assertEqual(f'ingest_journals-{last_job_json["job_id"]}',
                          last_job_json["name"])
 
     def test_create_job_no_payload(self):
@@ -159,7 +159,6 @@ class JobControllerTest(unittest.TestCase):
         response_json = response.get_json()
         if str(expected_http_code)[0] == '2':
             self.assertTrue(response_json['success'])
-            self.assertEqual(response_json['status'], 'Accepted')
         else:
             self.assertFalse(response_json['success'])
             self.assertEqual(response_json['error']['code'],

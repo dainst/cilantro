@@ -78,10 +78,10 @@ class JobTypeTest(unittest.TestCase):
         success = False
         while not success:
             for task_id in task_ids:
-                status = self.get_status(task_id)['status']
-                if status == 'FAILURE':
+                state = self.get_job_by_id(task_id)['state']
+                if state == 'failure':
                     raise AssertionError("child task in FAILURE state")
-                elif status == 'SUCCESS':
+                elif state == 'success':
                     success = True
                 else:
                     success = False
@@ -91,35 +91,33 @@ class JobTypeTest(unittest.TestCase):
             except TimeoutError:
                 raise AssertionError(
                     f"experienced timeout ({wait_time / 1000}s) while waiting "
-                    f"for SUCCESS status")
+                    f"for SUCCESS state")
 
-    def assert_status(self, job_id, expected_status,
-                      timeout='DEFAULT_TEST_TIMEOUT'):
+    def assert_state(self, job_id, expected_state,
+                     timeout='DEFAULT_TEST_TIMEOUT'):
         """
-        Assert that a job has a certain status.
+        Assert that a job has a certain state.
 
         :param str job_id: The id of the job
-        :param str expected_status: The expected status of the job
+        :param str expected_state: The expected state of the job
         :param str timeout: Name of timeout in ENV file
         """
         wait_time = _get_wait_time(timeout)
         waited = 0
-        status = self.get_status(job_id)
-        while status != expected_status:
+        state = self.get_job_by_id(job_id)
+        while state != expected_state:
             try:
                 waited = _assert_wait_time(waited, wait_time)
             except TimeoutError:
                 raise AssertionError(
                     f"experienced timeout ({wait_time / 1000}s) while waiting "
-                    f"for status '{expected_status}', last status was "
-                    f"'{status}'")
-            status = self.get_status(job_id)['status']
+                    f"for state '{expected_state}', last state was "
+                    f"'{state}'")
+            state = self.get_job_by_id(job_id)['state']
 
-    def get_status(self, job_id):
+    def get_job_by_id(self, job_id):
         """
-        Get the job status.
-
-        This includes the status string and an optional result object.
+        Get a job by its id.
 
         :param str job_id: The id of the job
         :return dict: The response data
