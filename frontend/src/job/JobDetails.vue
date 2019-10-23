@@ -50,9 +50,19 @@
                     </b-table>
             </b-field>
             <b-message v-if="job.errors && job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
-                <b-table :data="job.errors" :columns="[{field: 'task_name',
-                        label: 'Task name'}, {field: 'message',
-                        label: 'Message'}]"></b-table>
+                <b-table :data="job.errors">
+                    <template slot-scope="props">
+                    <b-table-column field="job_name" label="Failed Task">
+                        {{props.row.job_name}}
+                    </b-table-column>
+                    <b-table-column field="message" label="Error">
+                        {{ props.row.message}}
+                    </b-table-column>
+                    <b-table-column field="job_id" label="">
+                        <b-button @click="goToSingleView(props.row.job_id)">Show Task</b-button>
+                    </b-table-column>
+                    </template>
+                </b-table>
             </b-message>
 
             <b-collapse :open="false" aria-id="job-params">
