@@ -3,7 +3,7 @@ import os
 import uuid
 import glob
 
-from celery import group
+from celery import chord, signature
 
 from utils.celery_client import celery_app
 from utils import job_db
@@ -34,7 +34,6 @@ class ListFilesTask(ObjectTask):
             files.append(tif_file)
         raise self.replace(self._generate_group_for_files(files, task))
 
-    # TODO: use chord instead of group for callback after subtasks finish
     def _generate_group_for_files(self, files, subtasks):
         group_tasks = []
         child_ids = []
@@ -58,8 +57,9 @@ class ListFilesTask(ObjectTask):
             group_tasks.append(chain)
 
         job_db.set_job_children(self.job_id, child_ids)
-        job_db.update_job_state(self.job_id, "replaced")
-        return group(group_tasks)
+        job_db.update_job_state(self.job_id, "started")
+
+        return chord(group_tasks, signature('finish_chord', kwargs={'job_id': self.job_id, 'work_path': self.job_id}))
 
 
 ListFilesTask = celery_app.register_task(ListFilesTask())
@@ -110,10 +110,3 @@ class FinishChordTask(BaseTask):
 
 
 FinishChordTask = celery_app.register_task(FinishChordTask())
-
-
-class FailChordTask(BaseTask):
-    name = "fail_chord"
-
-    def execute_task(self):
-        job_db.update_job_state(self.job_id, "FAILURE")
