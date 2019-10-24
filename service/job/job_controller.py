@@ -171,7 +171,7 @@ def journal_job_create():
             }
 
 
-        Each path ("some_tiffs" and "some_tiffs_2" in the example case, are expected 
+        Each path ("some_tiffs" and "some_tiffs_2" in the example case, are expected
         to contain a directory "tif" that contains tif images.)
 
         **Example response SUCCESS**:
@@ -296,7 +296,7 @@ def book_job_create():
             }
         }
 
-        Each path ("some_tiffs" and "some_tiffs_2" in the example case, are expected to 
+        Each path ("some_tiffs" and "some_tiffs_2" in the example case, are expected to
         contain a directory "tif" that contains tif images.)
 
         **Example response SUCCESS**:
