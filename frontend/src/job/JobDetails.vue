@@ -2,6 +2,9 @@
     <div>
         <b-button @click="gotoJobsView">View All Jobs</b-button>
         <div class="container">
+            <div v-if="job.parent_job_id">
+                <b-button @click="goToSingleView(job.parent_job_id)">Go to Parent Job</b-button>
+            </div>
             <b-field label="ID">
                 <p>{{job.job_id}}</p>
             </b-field>
@@ -14,7 +17,7 @@
             <b-field label="Status">
                 <p>{{job.state}}</p>
             </b-field>
-            <b-field label="User">
+            <b-field label="User" v-if="job.user">
                 <p>{{job.user}}</p>
             </b-field>
             <b-field label="Created">
@@ -23,17 +26,53 @@
             <b-field label="Last Updated">
                 <p>{{job.updated}}</p>
             </b-field>
-            <b-message v-if="job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
-                <b-table :data="job.errors" :columns="[{field: 'task_name',
-                        label: 'Task name'}, {field: 'message',
-                        label: 'Message'}]"></b-table>
+            <b-field label="Duration">
+                <p>{{job.duration}}</p>
+            </b-field>
+
+            <b-field label="Children" v-if="job.children && job.children.length > 0">
+                    <b-table :data="job.children"
+                             default-sort="created" :default-sort-direction="'asc'">
+                        <template slot-scope="props">
+                            <b-table-column field="type" label="Type">
+                                {{ props.row.type}}
+                            </b-table-column>
+                            <b-table-column field="state" label="Status">
+                                {{ props.row.state}}
+                            </b-table-column>
+                            <b-table-column field="job_id" label="ID">
+                                {{ props.row.job_id}}
+                            </b-table-column>
+                            <b-table-column field="job_id" label="">
+                                <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
+                            </b-table-column>
+                        </template>
+                    </b-table>
+            </b-field>
+            <b-message v-if="job.errors && job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
+                <b-table :data="job.errors">
+                    <template slot-scope="props">
+                        <b-table-column field="job_name" label="Failed task name">
+                            {{props.row.job_name}}
+                        </b-table-column>
+                        <b-table-column field="job_id" label="Failed task ID">
+                            {{props.row.job_id}}
+                        </b-table-column>
+                    <b-table-column field="message" label="Error">
+                        {{ props.row.message}}
+                    </b-table-column>
+                    <b-table-column field="job_id" label="">
+                        <b-button @click="goToSingleView(props.row.job_id)">Show Task</b-button>
+                    </b-table-column>
+                    </template>
+                </b-table>
             </b-message>
 
             <b-collapse :open="false" aria-id="job-params">
                 <button class="button" slot="trigger" aria-controls="job-params">
                     Show Job Parameters
                 </button>
-                <pre>{{ job.params }}</pre>
+                <pre>{{ job.parameters }}</pre>
             </b-collapse>
         </div>
     </div>
@@ -41,12 +80,14 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import axios from 'axios';
 import { Job } from './Job';
 import { getJobDetails } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
+import BField from "buefy/src/components/field/Field.vue";
 
-@Component
+@Component({
+    components: {BField}
+})
 export default class JobDetails extends Vue {
     labelPosition: string = '';
     backendUri = this.$store.state.AuthenticationStore.backendUri;
@@ -57,6 +98,15 @@ export default class JobDetails extends Vue {
     mounted() {
         this.jobID = this.$route.query.id as string;
         this.getJobDetails();
+    }
+
+    goToSingleView(id: string) {
+        this.$router.push({
+            query: { id }
+        });
+        this.jobID = id;
+        this.getJobDetails();
+        this.$forceUpdate();
     }
 
     gotoJobsView() {
@@ -70,6 +120,7 @@ export default class JobDetails extends Vue {
             showError('Failed to retrieve job details from server!', e);
         }
     }
+
 }
 </script>
 

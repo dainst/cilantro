@@ -33,7 +33,7 @@ def generate_xml(obj, template_file, target_filepath, params):
     env.globals['environ'] = os.environ
 
     log.info("Generating XML with template: " + template_file)
-    log.info("Object: ", obj)
+    log.info("Object: " + str(obj))
 
     pdf_doc = os.path.join(obj.get_representation_dir('pdf'),
                            f"{obj.metadata.id}.pdf")

@@ -1,15 +1,8 @@
 <template>
     <section>
-        <div class="navbar-end">
-            <div class="navbar-item">
-        <b-switch v-model="show_all" v-on:input="updateJobList">
-            Show all
-        </b-switch>
-            </div>
-        </div>
         <div v-if="jobList.length > 0">
         <b-table :data="jobList" detailed detail-key="job_id"
-            default-sort="created" :default-sort-direction="'asc'">
+            default-sort="created" :default-sort-direction="'asc'" :has-detailed-visible="(row) => { return row.children.length >0 }">
             <template slot-scope="props">
                 <b-table-column field="job_id" label="ID" sortable>
                     {{ props.row.job_id }}
@@ -32,7 +25,7 @@
                     <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
                 </b-table-column>
             </template>
-            <template slot="detail" slot-scope="props">
+            <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
                 <div v-if="props.row.children.length > 0">
                     <SpecificJobsList :job_ids="get_children_ids(props.row.children)"></SpecificJobsList>
                     <!--
@@ -57,37 +50,33 @@
             </template>
         </b-table>
         </div>
-        <div v-else class="container">
-            <b-notification type="is-info" has-icon :closable="false">There are no Jobs yet</b-notification>
-        </div>
     </section>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { getJobList } from './JobClient';
+import { Component, Vue, Prop} from 'vue-property-decorator';
+import {getJobDetails} from './JobClient';
 import { Job } from './Job';
 import { ChildJob } from './ChildJob';
 import { showError } from '@/util/Notifier.ts';
 import moment from 'moment';
-import SpecificJobsList from "@/job/SpecificJobsList.vue";
-@Component({
-    components: {SpecificJobsList}
-})
-export default class JobList extends Vue {
+
+@Component
+export default class SpecificJobsList extends Vue {
+    @Prop(Array) job_ids!: string[];
     jobList: Job[] = [];
     show_all:boolean = false;
     mounted() {
         this.updateJobList();
     }
-
     get_children_ids(children:ChildJob[]){
         let id_list = [];
-        for(let i = 0;i<children.length; i++){
-            id_list.push(children[i]['job_id']);
+        for(var i = 0; i<children.length; i++){
+            id_list.push(children[i].job_id);
         }
         return id_list;
     }
+
     goToSingleView(id: string) {
         this.$router.push({
             path: 'job',
@@ -96,13 +85,13 @@ export default class JobList extends Vue {
     }
 
     sortByUpdated(a:Job, b:Job, isAsc:boolean) {
-        let d1 = moment(a.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-        let d2 = moment(b.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        var d1 = moment(a.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        var d2 = moment(b.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
         return this.compareDates(d1,d2,isAsc);
     }
     sortByCreated(a:Job, b:Job, isAsc:boolean) {
-        let d1 = moment(a.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-        let d2 = moment(b.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        var d1 = moment(a.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        var d2 = moment(b.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
         return this.compareDates(d1,d2,isAsc);
     }
     compareDates(a:Date, b:Date, isAsc:boolean){
@@ -115,7 +104,12 @@ export default class JobList extends Vue {
 
     async updateJobList() {
         try {
-            this.jobList = await getJobList(this.show_all);
+            this.jobList = [];
+            for(var i =0;i<this.job_ids.length; i++){
+                let job = await getJobDetails(this.job_ids[i]);
+                this.jobList.push(job);
+            }
+            this.$forceUpdate();
         } catch (e) {
             showError('Failed to load job list from server!', e);
         }
