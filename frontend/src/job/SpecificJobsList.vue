@@ -44,7 +44,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop} from 'vue-property-decorator';
-import {getJobDetails} from './JobClient';
+import {getJobDetails, getJobList} from './JobClient';
 import { Job } from './Job';
 import { ChildJob } from './ChildJob';
 import { showError } from '@/util/Notifier.ts';
@@ -53,6 +53,7 @@ import moment from 'moment';
 @Component
 export default class SpecificJobsList extends Vue {
     @Prop(Array) job_ids!: string[];
+    @Prop(Array) jobs!: Job[];
     jobList: Job[] = [];
     show_all:boolean = false;
     mounted() {
@@ -103,10 +104,14 @@ export default class SpecificJobsList extends Vue {
 
     async updateJobList() {
         try {
-            this.jobList = [];
-            for(var i =0;i<this.job_ids.length; i++){
-                let job = await getJobDetails(this.job_ids[i]);
-                this.jobList.push(job);
+            if(this.jobs){
+                this.jobList = this.jobs;
+            }else{
+                this.jobList = [];
+                for(var i =0;i<this.job_ids.length; i++){
+                    let job = await getJobDetails(this.job_ids[i]);
+                    this.jobList.push(job);
+                }
             }
             this.$forceUpdate();
         } catch (e) {
