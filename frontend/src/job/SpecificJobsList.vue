@@ -4,16 +4,20 @@
         <b-table :data="jobList" detailed detail-key="job_id"
             default-sort="created" :default-sort-direction="'asc'" :has-detailed-visible="(row) => { return row.children.length >0 }">
             <template slot-scope="props">
-                <b-table-column field="job_id" label="ID" sortable>
-                    {{ props.row.job_id }}
-                </b-table-column>
-                <b-table-column field="name" label="Name" sortable>
-                    {{ props.row.name }}</b-table-column>
                 <b-table-column field="job_type" label="Type" sortable>
                     {{ props.row.job_type }}
                 </b-table-column>
                 <b-table-column field="state" label="Status" sortable>
-                    {{ props.row.state }}
+                    <div class="is-flex">
+                        <b-icon
+                            v-bind="iconAttributesForState(props.row.state)"/>
+                        {{ props.row.state }}
+                    </div>
+                </b-table-column>
+                <b-table-column field="name" label="Name" sortable>
+                    {{ props.row.name }}</b-table-column>
+                <b-table-column field="job_id" label="ID" sortable>
+                    {{ props.row.job_id }}
                 </b-table-column>
                 <b-table-column field="created" label="Created" :custom-sort="sortByCreated" sortable>
                     {{ props.row.created }}
@@ -28,21 +32,6 @@
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
                 <div v-if="props.row.children.length > 0">
                     <SpecificJobsList :job_ids="get_children_ids(props.row.children)"></SpecificJobsList>
-                    <!--
-                    <b-table :data="props.row.children"
-                             default-sort="created" :default-sort-direction="'asc'">
-                        <template slot-scope="props">
-                            <b-table-column field="type" label="Type">
-                                {{ props.row.type}}
-                            </b-table-column>
-                            <b-table-column field="state" label="Status">
-                                {{ props.row.state}}
-                            </b-table-column>
-                            <b-table-column field="job_id" label="">
-                                <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
-                            </b-table-column>
-                        </template>
-                    </b-table> -->
                 </div>
                 <div v-else>
                     No childrens for this Job
@@ -69,6 +58,16 @@ export default class SpecificJobsList extends Vue {
     mounted() {
         this.updateJobList();
     }
+    iconAttributesForState = (state: string) => {
+        if (state === 'new') {
+            return [{ type: 'is-info' }, { icon: 'alarm' }];
+        } if (state === 'failure') {
+            return [{ type: 'is-danger' }, { icon: 'alert' }];
+        } if (state === 'success') {
+            return [{ type: 'is-success' }, { icon: 'check' }];
+        }
+        return [{ type: 'is-warning' }, { icon: 'cogs' }];
+    };
     get_children_ids(children:ChildJob[]){
         let id_list = [];
         for(var i = 0; i<children.length; i++){
