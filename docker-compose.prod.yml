@@ -116,11 +116,6 @@ services:
       <<: *env-broker
       DB_HOST: "db"
 
-  monitor:
-    image: dainst/cilantro-monitor:stable
-    environment:
-      <<: *env-broker
-
   frontend:
     image: dainst/cilantro-frontend:latest
     environment:

@@ -114,16 +114,6 @@ services:
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
 
-  monitor:
-    image: dainst/cilantro-monitor:latest
-    build:
-      context: .
-      dockerfile: ./docker/cilantro-test/Dockerfile
-    ports:
-      - "5555:5555"
-    environment:
-      <<: *env-broker
-
   frontend:
     image: dainst/cilantro-frontend:latest
     build:
