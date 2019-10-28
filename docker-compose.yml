@@ -116,36 +116,6 @@ services:
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
 
-  nlp-worker:
-    image: dainst/cilantro-nlp-worker:latest
-    user: ${UID}
-    build:
-      context: .
-      dockerfile: ./docker/cilantro-nlp-worker/Dockerfile
-      args:
-        GITHUB_ACCESS_TOKEN: ${GITHUB_ACCESS_TOKEN}
-    working_dir: /app
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
-    environment:
-      <<: *env-dirs
-      <<: *env-broker
-      <<: *env-jobdb
-      DB_HOST: db
-      CILANTRO_ENV: *cilantro-env
-
-  monitor:
-    image: dainst/cilantro-monitor:latest
-    build:
-      context: .
-      dockerfile: ./docker/cilantro-test/Dockerfile
-    ports:
-      - "5555:5555"
-    environment:
-      <<: *env-broker
-
   frontend:
     image: dainst/cilantro-frontend:latest
     build:

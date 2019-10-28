@@ -22,6 +22,10 @@ x-env-app-config: &env-app-config
   BACKEND_URI: &backend-uri https://workbench.test.idai.world/api
   CILANTRO_ENV: &cilantro-env test
   OJS_URI: &ojs-uri https://ojs.test.idai.world/plugins/generic/ojs-cilantro-plugin/api
+  ATOM_URI: &atom-uri https://archives.test.idai.world/
+  ATOM_USER: &atom-user demo@example.com
+  ATOM_PASSWORD: &atom-password demo
+  REPOSITORY_URI: &repository-uri https://workbench.test.idai.world/api/repository
 
 services:
 
@@ -89,20 +93,6 @@ services:
   convert-worker:
     user: ${UID}
     image: dainst/cilantro-convert-worker:latest
-    working_dir: /app
-    volumes:
-      - workspace-data:/data/workspace
-      - config:/config
-    environment:
-      <<: *env-dirs
-      <<: *env-broker
-      <<: *env-jobdb
-      DB_HOST: "celery-db"
-      CILANTRO_ENV: *cilantro-env
-
-  nlp-worker:
-    user: ${UID}
-    image: dainst/cilantro-nlp-worker:latest
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
