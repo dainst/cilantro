@@ -211,6 +211,12 @@ class IngestJournalsJob(BatchJob):
                                         template_file='mets_template_no_articles.xml',
                                         target_filename='mets.xml',
                                         schema_file='mets.xsd')
+            if params['options']['do_ocr']:
+                current_chain |= _link('list_files',
+                                            representation='tif',
+                                            target='txt',
+                                            task='convert.tif_to_txt',
+                                            ocr_lang=params['options']['ocr_lang'])
 
             if params['options']['ojs_metadata']['auto_publish_issue']:
                 current_chain |= _link('publish_to_ojs',
