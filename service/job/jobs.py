@@ -21,7 +21,7 @@ class BaseJob:
     @abstractmethod
     def run(self):
         """
-        Trigger asynchronous execution of the job chord.
+        Trigger asynchronous execution of the job.
 
         :return AsyncResult: Celery result
         """
