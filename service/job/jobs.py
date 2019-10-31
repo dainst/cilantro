@@ -49,16 +49,17 @@ class BatchJob(BaseJob):
 
         chains = self._create_chains(params, user_name)
 
-        # Once all job chains have finished within this chord, we have to trigger a
-        # callback worker in order to update the database entry for the chord job itself.
+        # Once all job chains have finished within this chord, we have to
+        # trigger a callback worker in order to update the database entry
+        # for the chord job itself.
         self.chord = chord(chains, signature(
             'finish_chord', kwargs={'job_id': self.id, 'work_path': self.id}))
 
         self.chain_ids = self._add_to_job_db(params, user_name)
 
-        self.logger.info(f"created job chord with id: {self.id}: ")
+        self.logger.debug(f"created job chord with id: {self.id}: ")
         for (index, chain_id) in enumerate(self.chain_ids, 1):
-            self.logger.info(
+            self.logger.debug(
                 f'  chain #{index}, job id: {chain_id}:')
 
     def run(self):
