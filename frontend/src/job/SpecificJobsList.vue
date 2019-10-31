@@ -33,12 +33,7 @@
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
-                <div v-if="props.row.children.length > 0">
                     <SpecificJobsList :jobIDs="getChildrenIDs(props.row.children)" />
-                </div>
-                <div v-else>
-                    No children for this Job
-                </div>
             </template>
         </b-table>
         </div>
