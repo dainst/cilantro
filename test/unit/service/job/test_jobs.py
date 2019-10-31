@@ -13,7 +13,7 @@ class JobsTest(unittest.TestCase):
     def test_import_records_job(self):
         """Test initialization for record batch import."""
         test_params_path = os.path.join(
-            self.test_resource_dir, 'params/book.json')  # TODO
+            self.test_resource_dir, 'params/record.json')
 
         with open(test_params_path, 'r') as params_file:
             job_params = json.loads(params_file.read())
@@ -37,7 +37,7 @@ class JobsTest(unittest.TestCase):
     def test_import_records_job_no_ocr(self):
         """Test OCR option for record batch import."""
         test_params_path = os.path.join(
-            self.test_resource_dir, 'params/book.json')
+            self.test_resource_dir, 'params/record.json')
 
         with open(test_params_path, 'r') as params_file:
             job_params = json.loads(params_file.read())
