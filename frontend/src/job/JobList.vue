@@ -23,9 +23,10 @@ import { Component, Vue } from 'vue-property-decorator';
 import { getJobList } from './JobClient';
 import { Job } from './Job';
 import { showError } from '@/util/Notifier.ts';
-import { SpecificJobsList } from '@/job/SpecificJobsList.vue';
+import SpecificJobsList from '@/job/SpecificJobsList.vue';
+
 @Component({
-    components: SpecificJobsList
+    components: { SpecificJobsList }
 })
 export default class JobList extends Vue {
     jobList: Job[] = [];
