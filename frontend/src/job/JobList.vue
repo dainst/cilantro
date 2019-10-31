@@ -2,7 +2,7 @@
     <section>
         <div class="navbar-end">
             <div class="navbar-item">
-        <b-switch v-model="show_all" v-on:input="updateJobList">
+        <b-switch v-model="showAllJobs" v-on:input="updateJobList">
             Show all
         </b-switch>
             </div>
@@ -11,7 +11,9 @@
             <SpecificJobsList :jobs="this.jobList"></SpecificJobsList>
         </div>
         <div v-else class="container">
-            <b-notification type="is-info" has-icon :closable="false">There are no Jobs yet</b-notification>
+            <b-notification type="is-info" has-icon :closable="false">
+                No jobs found
+            </b-notification>
         </div>
     </section>
 </template>
@@ -21,13 +23,13 @@ import { Component, Vue } from 'vue-property-decorator';
 import { getJobList } from './JobClient';
 import { Job } from './Job';
 import { showError } from '@/util/Notifier.ts';
-import SpecificJobsList from "@/job/SpecificJobsList.vue";
+import { SpecificJobsList } from '@/job/SpecificJobsList.vue';
 @Component({
-    components: {SpecificJobsList}
+    components: SpecificJobsList
 })
 export default class JobList extends Vue {
     jobList: Job[] = [];
-    show_all:boolean = false;
+    showAllJobs:boolean = false;
 
     mounted() {
         this.updateJobList();
@@ -35,7 +37,7 @@ export default class JobList extends Vue {
 
     async updateJobList() {
         try {
-            this.jobList = await getJobList(this.show_all);
+            this.jobList = await getJobList(this.showAllJobs);
         } catch (e) {
             showError('Failed to load job list from server!', e);
         }

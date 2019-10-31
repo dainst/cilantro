@@ -2,7 +2,8 @@
     <section>
         <div v-if="jobList.length > 0">
         <b-table :data="jobList" detailed detail-key="job_id"
-            default-sort="created" :default-sort-direction="'asc'" :has-detailed-visible="(row) => { return row.children.length >0 }">
+            default-sort="created" :default-sort-direction="'asc'"
+            :has-detailed-visible="(row) => { return row.children.length >0 }">
             <template slot-scope="props">
                 <b-table-column field="job_type" label="Type" sortable>
                     {{ props.row.job_type }}
@@ -19,10 +20,12 @@
                 <b-table-column field="job_id" label="ID" sortable>
                     {{ props.row.job_id }}
                 </b-table-column>
-                <b-table-column field="created" label="Created" :custom-sort="sortByCreated" sortable>
+                <b-table-column field="created" label="Created"
+                                :custom-sort="sortByCreated" sortable>
                     {{ props.row.created }}
                 </b-table-column>
-                <b-table-column field="updated" label="Updated" :custom-sort="sortByUpdated" sortable>
+                <b-table-column field="updated" label="Updated"
+                                :custom-sort="sortByUpdated" sortable>
                     {{ props.row.updated }}
                 </b-table-column>
                 <b-table-column>
@@ -31,10 +34,10 @@
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
                 <div v-if="props.row.children.length > 0">
-                    <SpecificJobsList :job_ids="get_children_ids(props.row.children)"></SpecificJobsList>
+                    <SpecificJobsList :jobIDs="getChildrenIDs(props.row.children)" />
                 </div>
                 <div v-else>
-                    No childrens for this Job
+                    No children for this Job
                 </div>
             </template>
         </b-table>
@@ -43,22 +46,23 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop} from 'vue-property-decorator';
-import {getJobDetails, getJobList} from './JobClient';
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import moment from 'moment';
+import { getJobDetails, getJobList } from './JobClient';
 import { Job } from './Job';
 import { ChildJob } from './ChildJob';
 import { showError } from '@/util/Notifier.ts';
-import moment from 'moment';
 
 @Component
 export default class SpecificJobsList extends Vue {
-    @Prop(Array) job_ids!: string[];
+    @Prop(Array) jobIDs!: string[];
     @Prop(Array) jobs!: Job[];
     jobList: Job[] = [];
-    show_all:boolean = false;
+
     mounted() {
         this.updateJobList();
     }
+
     iconAttributesForState = (state: string) => {
         if (state === 'new') {
             return [{ type: 'is-info' }, { icon: 'alarm' }];
@@ -68,13 +72,6 @@ export default class SpecificJobsList extends Vue {
             return [{ type: 'is-success' }, { icon: 'check' }];
         }
         return [{ type: 'is-warning' }, { icon: 'cogs' }];
-    };
-    get_children_ids(children:ChildJob[]){
-        let id_list = [];
-        for(var i = 0; i<children.length; i++){
-            id_list.push(children[i].job_id);
-        }
-        return id_list;
     }
 
     goToSingleView(id: string) {
@@ -85,31 +82,26 @@ export default class SpecificJobsList extends Vue {
     }
 
     sortByUpdated(a:Job, b:Job, isAsc:boolean) {
-        var d1 = moment(a.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-        var d2 = moment(b.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-        return this.compareDates(d1,d2,isAsc);
+        const d1 = moment(a.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        const d2 = moment(b.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        return this.compareDates(d1, d2, isAsc);
     }
+
     sortByCreated(a:Job, b:Job, isAsc:boolean) {
-        var d1 = moment(a.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-        var d2 = moment(b.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-        return this.compareDates(d1,d2,isAsc);
-    }
-    compareDates(a:Date, b:Date, isAsc:boolean){
-        if (isAsc) {
-            return b.getTime()-a.getTime();
-        } else {
-            return a.getTime() - b.getTime();
-        }
+        const d1 = moment(a.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        const d2 = moment(b.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+        return this.compareDates(d1, d2, isAsc);
     }
 
     async updateJobList() {
         try {
-            if(this.jobs){
+            if (this.jobs) {
                 this.jobList = this.jobs;
-            }else{
+            } else {
                 this.jobList = [];
-                for(var i =0;i<this.job_ids.length; i++){
-                    let job = await getJobDetails(this.job_ids[i]);
+                let i = 0;
+                for (i; i < this.jobIDs.length; i += 1) {
+                    let job = await getJobDetails(this.jobIDs[i]);
                     this.jobList.push(job);
                 }
             }
@@ -118,5 +110,21 @@ export default class SpecificJobsList extends Vue {
             showError('Failed to load job list from server!', e);
         }
     }
+}
+
+function getChildrenIDs(children: ChildJob[]) {
+    const idList = [];
+    let i = 0;
+    for (i; i < children.length; i += 1) {
+        idList.push(children[i].job_id);
+    }
+    return idList;
+}
+
+function compareDates(a: Date, b: Date, isAsc: boolean) {
+    if (isAsc) {
+        return b.getTime() - a.getTime();
+    }
+    return a.getTime() - b.getTime();
 }
 </script>
