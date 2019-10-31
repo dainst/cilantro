@@ -76,18 +76,6 @@ export default class SpecificJobsList extends Vue {
         });
     }
 
-    sortByUpdated(a:Job, b:Job, isAsc:boolean) {
-        const d1 = moment(a.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-        const d2 = moment(b.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-        return this.compareDates(d1, d2, isAsc);
-    }
-
-    sortByCreated(a:Job, b:Job, isAsc:boolean) {
-        const d1 = moment(a.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-        const d2 = moment(b.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-        return this.compareDates(d1, d2, isAsc);
-    }
-
     async updateJobList() {
         try {
             if (this.jobs) {
@@ -105,6 +93,18 @@ export default class SpecificJobsList extends Vue {
             showError('Failed to load job list from server!', e);
         }
     }
+}
+
+function sortByUpdated(a:Job, b:Job, isAsc:boolean) {
+    const d1 = moment(a.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+    const d2 = moment(b.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+    return compareDates(d1, d2, isAsc);
+}
+
+function sortByCreated(a:Job, b:Job, isAsc:boolean) {
+    const d1 = moment(a.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+    const d2 = moment(b.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+    return compareDates(d1, d2, isAsc);
 }
 
 function getChildrenIDs(children: ChildJob[]) {
