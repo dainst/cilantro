@@ -53,19 +53,14 @@ export default class SpecificJobsList extends Vue {
     @Prop(Array) jobs!: Job[];
     jobList: Job[] = [];
 
+    sortByCreated = sortByCreated;
+    sortByUpdated = sortByUpdated;
+    getChildrenIDs = getChildrenIDs;
+    compareDates = compareDates;
+    iconAttributesForState = iconAttributesForState;
+
     mounted() {
         this.updateJobList();
-    }
-
-    iconAttributesForState = (state: string) => {
-        if (state === 'new') {
-            return [{ type: 'is-info' }, { icon: 'alarm' }];
-        } if (state === 'failure') {
-            return [{ type: 'is-danger' }, { icon: 'alert' }];
-        } if (state === 'success') {
-            return [{ type: 'is-success' }, { icon: 'check' }];
-        }
-        return [{ type: 'is-warning' }, { icon: 'cogs' }];
     }
 
     goToSingleView(id: string) {
@@ -120,5 +115,16 @@ function compareDates(a: Date, b: Date, isAsc: boolean) {
         return b.getTime() - a.getTime();
     }
     return a.getTime() - b.getTime();
+}
+
+function iconAttributesForState(state: string) {
+    if (state === 'new') {
+        return [{ type: 'is-info' }, { icon: 'alarm' }];
+    } if (state === 'failure') {
+        return [{ type: 'is-danger' }, { icon: 'alert' }];
+    } if (state === 'success') {
+        return [{ type: 'is-success' }, { icon: 'check' }];
+    }
+    return [{ type: 'is-warning' }, { icon: 'cogs' }];
 }
 </script>
