@@ -1,10 +1,8 @@
 import unittest
 import os
-import shutil
 import json
 
-from service.run_service import app
-from service.job.jobs import IngestJournalsJob, IngestBooksJob
+from service.job.jobs import IngestJournalsJob, IngestRecordsJob
 
 
 class JobsTest(unittest.TestCase):
@@ -12,10 +10,10 @@ class JobsTest(unittest.TestCase):
 
     test_resource_dir = 'test/resources'
 
-    def test_import_books_job(self):
-        """Test initialization for book batch import."""
+    def test_import_records_job(self):
+        """Test initialization for record batch import."""
         test_params_path = os.path.join(
-            self.test_resource_dir, 'params/book.json')
+            self.test_resource_dir, 'params/book.json')  # TODO
 
         with open(test_params_path, 'r') as params_file:
             job_params = json.loads(params_file.read())
@@ -23,7 +21,7 @@ class JobsTest(unittest.TestCase):
         additional_object = dict(job_params['objects'][0])
 
         job_params['objects'] += [additional_object]
-        job = IngestBooksJob(job_params, 'test_user')
+        job = IngestRecordsJob(job_params, 'test_user')
 
         self.assertTrue(type(job.id) == str, 'job id should be generated')
         for chain_id in job.chain_ids:
@@ -34,22 +32,22 @@ class JobsTest(unittest.TestCase):
 
         chain_length = len(job.chord.tasks[0].tasks)
         self.assertEqual(chain_length, 13,
-                         'each default book import chain should consist of 13 subtasks.')
+                         'each default record import chain should consist of 13 subtasks.')
 
-    def test_import_books_job_no_ocr(self):
-        """Test OCR option for book batch import."""
+    def test_import_records_job_no_ocr(self):
+        """Test OCR option for record batch import."""
         test_params_path = os.path.join(
             self.test_resource_dir, 'params/book.json')
 
         with open(test_params_path, 'r') as params_file:
             job_params = json.loads(params_file.read())
 
-        job_ocr = IngestBooksJob(job_params, 'test_user')
+        job_ocr = IngestRecordsJob(job_params, 'test_user')
 
         job_params = dict(job_params)
         job_params['options']['do_ocr'] = False
 
-        job_no_ocr = IngestBooksJob(job_params, 'test_user')
+        job_no_ocr = IngestRecordsJob(job_params, 'test_user')
 
         publish_chain_length = len(job_ocr.chord.tasks[0].tasks)
         no_publish_chain_length = len(job_no_ocr.chord.tasks[0].tasks)

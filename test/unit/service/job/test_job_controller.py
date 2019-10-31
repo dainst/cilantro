@@ -38,8 +38,8 @@ class JobControllerTest(unittest.TestCase):
             pass
 
     def test_get_job_type_schema(self):
-        """Test if a ingest-journal schema is returned when requested."""
-        url = '/job/param_schema/ingest_journal'
+        """Test if a ingest-journals schema is returned when requested."""
+        url = '/job/param_schema/ingest_journals'
         response_text = self.client.get(url).get_data(as_text=True)
         self.assertTrue("{\"$schema\"" in response_text)
 
@@ -54,13 +54,13 @@ class JobControllerTest(unittest.TestCase):
         successful are not to show up.
         """
         job_params = self._read_test_params()
-        job1_response = self._make_request('/job/ingest_journal',
+        job1_response = self._make_request('/job/ingest_journals',
                                            json.dumps(job_params), 202)
-        job2_response = self._make_request('/job/ingest_journal',
+        job2_response = self._make_request('/job/ingest_journals',
                                            json.dumps(job_params), 202)
         job_id1 = job1_response.get_json()['job_id']
         job_id2 = job2_response.get_json()['job_id']
-        self._make_request('/job/ingest_journal', json.dumps(job_params), 202)
+        self._make_request('/job/ingest_journals', json.dumps(job_params), 202)
 
         time.sleep(5)  # wait for the jobs to complete
 
@@ -89,7 +89,7 @@ class JobControllerTest(unittest.TestCase):
         self.assertTrue(len((job_list_all_json)) >
                         len((job_list_filtered_json)))
 
-    def test_create_ingest_journal_job(self):
+    def test_create_ingest_journals_job(self):
         """
         Test listing of jobs.
 
@@ -98,7 +98,7 @@ class JobControllerTest(unittest.TestCase):
         the correct job type and job name.
         """
         job_params = self._read_test_params()
-        self._make_request('/job/ingest_journal',
+        self._make_request('/job/ingest_journals',
                            json.dumps(job_params), 202)
 
     def test_list_jobs(self):
@@ -107,7 +107,7 @@ class JobControllerTest(unittest.TestCase):
 
         It is tested if some parameters show up in the job list response.
         """
-        self.test_create_ingest_journal_job()
+        self.test_create_ingest_journals_job()
 
         response = self.client.get('/job/jobs', headers=get_auth_header())
         last_job_json = response.get_json()[-1]
@@ -120,19 +120,19 @@ class JobControllerTest(unittest.TestCase):
 
     def test_create_job_no_payload(self):
         """Job creation has to fail without POST payload."""
-        self._make_request('/job/ingest_journal', None, 400,
+        self._make_request('/job/ingest_journals', None, 400,
                            'invalid_job_params', 'No request payload found')
 
     def test_create_job_invalid_json(self):
         """Test job creation to fail when the POST payload is not JSON."""
-        self._make_request('/job/ingest_journal', 'jkfj,;', 400, 'bad_request')
+        self._make_request('/job/ingest_journals', 'jkfj,;', 400, 'bad_request')
 
     def test_create_job_unknown_param(self):
         """Test job creation to fail when there are unknown params given."""
         job_params = self._read_test_params()
         job_params['bla'] = 'blup'
 
-        self._make_request('/job/ingest_journal', json.dumps(job_params), 400,
+        self._make_request('/job/ingest_journals', json.dumps(job_params), 400,
                            'invalid_job_params',
                            'Additional properties are not allowed')
 
@@ -140,14 +140,14 @@ class JobControllerTest(unittest.TestCase):
         """Test job creation to fail when there are params missing."""
         job_params = self._read_test_params()
         del job_params['objects'][0]['metadata']['volume']
-        self._make_request('/job/ingest_journal', json.dumps(job_params), 400,
+        self._make_request('/job/ingest_journals', json.dumps(job_params), 400,
                            'invalid_job_params', 'is a required property')
 
     def test_create_job_wrong_param_type(self):
         """Test job creation to fail when a param has the wrong type."""
         job_params = self._read_test_params()
         job_params['objects'][0]['metadata']['volume'] = "asdf"
-        self._make_request('/job/ingest_journal', json.dumps(job_params), 400,
+        self._make_request('/job/ingest_journals', json.dumps(job_params), 400,
                            'invalid_job_params', 'is not of type')
 
     def _make_request(self, job_name, payload, expected_http_code,

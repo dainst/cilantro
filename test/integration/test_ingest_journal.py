@@ -8,7 +8,7 @@ class IngestJournalTest(JobTypeTest):
         self.stage_resource('files', 'some_tiffs')
         params = self.load_params_from_file('params', 'journal.json')
 
-        data, status_code = self.post_job('ingest_journal', params)
+        data, status_code = self.post_job('ingest_journals', params)
         self.assertEqual(status_code, 202)
         first_job_id = data['job_id']
         self.assertTrue(data['success'])

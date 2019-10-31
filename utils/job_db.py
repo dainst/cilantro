@@ -73,7 +73,7 @@ def add_job(job_id, user, job_type, parent_job_id, child_job_ids, parameters):
 
     :param str job_id: Cilantro-ID of the job
     :param str user: username which started the job
-    :param str job_type: type of job, i.e. 'ingest_journal'
+    :param str job_type: type of job, i.e. 'ingest_journals'
     :param list task_ids: Cilantro-IDs of all tasks belonging to that job
     :param dict parameters: Issue parameters
     :return: None

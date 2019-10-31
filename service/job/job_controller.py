@@ -11,7 +11,7 @@ from service.user.user_service import auth
 from utils import job_db
 from utils import json_validation
 
-from service.job.jobs import IngestBooksJob, IngestJournalsJob
+from service.job.jobs import IngestRecordsJob, IngestJournalsJob
 
 job_controller = Blueprint('job', __name__)
 
@@ -83,8 +83,8 @@ def job_list():
                 "created": "Wed, 23 Oct 2019 12:59:37 GMT",
                 "errors": [],
                 "job_id": "f7fdf50a-f594-11e9-8f9d-0242ac130009",
-                "job_type": "ingest_books",
-                "name": "ingest_books-f7fdf50a-f594-11e9-8f9d-0242ac130009",
+                "job_type": "ingest_records",
+                "name": "ingest_records-f7fdf50a-f594-11e9-8f9d-0242ac130009",
                 "parameters": {
                     ...
                 },
@@ -114,7 +114,7 @@ def job_list():
     return jsonify(response)
 
 
-@job_controller.route('/ingest_journal', methods=['POST'])
+@job_controller.route('/ingest_journals', methods=['POST'])
 @auth.login_required
 def journal_job_create():
     """
@@ -219,7 +219,7 @@ def journal_job_create():
     params = request.get_json(force=True)
     user_name = auth.username()
     try:
-        json_validation.validate_params(params, 'ingest_journal')
+        json_validation.validate_params(params, 'ingest_journals')
     except FileNotFoundError as e:
         raise ApiError("unknown_job_type", str(e), 404)
     except jsonschema.exceptions.ValidationError as e:
@@ -239,117 +239,117 @@ def journal_job_create():
     return body, 202, headers
 
 
-@job_controller.route('/ingest_book', methods=['POST'])
+@job_controller.route('/ingest_records', methods=['POST'])
 @auth.login_required
-def book_job_create():
+def record_job_create():
     """
-        Create a book batch import job.
+    Create a record batch import job.
 
-        Parameters can be provided as JSON as part of the request body
-        and must match the job parameter schema.
+    Parameters can be provided as JSON as part of the request body
+    and must match the job parameter schema.
 
-        Valid user credential have to be given via HTTP basic authentication.
+    Valid user credential have to be given via HTTP basic authentication.
 
-        Also adds the job to the job database.
+    Also adds the job to the job database.
 
-        .. :quickref: Job Controller; Create a job of the specified job type
+    .. :quickref: Job Controller; Create a job of the specified job type
 
-        **Example request**:
+    **Example request**:
 
-        .. sourcecode:: http
+    .. sourcecode:: http
 
-          POST /job/<job-type> HTTP/1.1
+      POST /job/<job-type> HTTP/1.1
 
-          {
-            "objects": [{
-                "id": "some_tiffs",
-                "path": "some_tiffs",
-                "metadata": {
-                    "title": "54A, Attische Vasen ausser schwarzfigurige und rotfigurige (geometrische; figürliche; Schwarz-Firnis-Keramik, 5. Jhr). Six's Technik (schwarzbunt). Relief-Keramik.",
-                    "abstract": "12 drawings arranged by technique and divided into 4 folders: 1-Attische geometrische (item 001); 2-Figuren und Statuetten Vasen (items 002-004); 3-Schvarzfirnis Keramik (items 005-010); 4-Six´s Technik (schwarzbunt) - Relief Gefässe (items 011-012).",
-                    "created": "1836-1879",
-                    "author": [{
-                        "firstname": "Peter",
-                        "lastname": "Baumeister"
-                        }],
-                    "zenon_id": 1449024,
-                    "atom_id": 1449025
-                }
-            },{
-                "id": "some_tiffs_2",
-                "path": "some_tiffs_2",
-                "metadata": {
-                    "title": "54A, Attische Vasen ausser schwarzfigurige und rotfigurige (geometrische; figürliche; Schwarz-Firnis-Keramik, 5. Jhr). Six's Technik (schwarzbunt). Relief-Keramik.",
-                    "abstract": "12 drawings arranged by technique and divided into 4 folders: 1-Attische geometrische (item 001); 2-Figuren und Statuetten Vasen (items 002-004); 3-Schvarzfirnis Keramik (items 005-010); 4-Six´s Technik (schwarzbunt) - Relief Gefässe (items 011-012).",
-                    "created": "1836-1879",
-                    "author": [{
-                        "firstname": "Peter",
-                        "lastname": "Baumeister"
-                        }],
-                    "zenon_id": 1449024,
-                    "atom_id": 1449025
-                }
-            }],
-            "options": {
-                "do_ocr": true,
-                "ocr_lang": "eng"
+      {
+        "objects": [{
+            "id": "some_tiffs",
+            "path": "some_tiffs",
+            "metadata": {
+                "title": "54A, Attische Vasen ausser schwarzfigurige",
+                "abstract": "12 drawings arranged by technique.",
+                "created": "1836-1879",
+                "author": [{
+                    "firstname": "Peter",
+                    "lastname": "Baumeister"
+                    }],
+                "zenon_id": 1449024,
+                "atom_id": 1449025
             }
+        },{
+            "id": "some_tiffs_2",
+            "path": "some_tiffs_2",
+            "metadata": {
+                "title": "54A, Attische Vasen ausser schwarzfigurige.",
+                "abstract": "12 drawings arranged by technique.",
+                "created": "1836-1879",
+                "author": [{
+                    "firstname": "Peter",
+                    "lastname": "Baumeister"
+                    }],
+                "zenon_id": 1449024,
+                "atom_id": 1449025
+            }
+        }],
+        "options": {
+            "do_ocr": true,
+            "ocr_lang": "eng"
+        }
+    }
+
+    Each path ("some_tiffs" and "some_tiffs_2" in the example case, are
+    expected to contain a directory "tif" that contains tif images.)
+
+    **Example response SUCCESS**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+        {
+            "job_id": "399a5952-f594-11e9-ae9e-0242ac120007",
+            "success": true
         }
 
-        Each path ("some_tiffs" and "some_tiffs_2" in the example case, are expected to
-        contain a directory "tif" that contains tif images.)
+    **Example response ERROR**:
 
-        **Example response SUCCESS**:
+    .. sourcecode:: http
 
-        .. sourcecode:: http
+        HTTP/1.1 400 BAD REQUEST
 
-            HTTP/1.1 200 OK
+        {
+            "error": {
+                "code": "bad_request",
+                "message": "400 Bad Request: The browser (or proxy)
+                            sent a request that this server could
+                            not understand."
+            },
+            "success": false
+        }
 
-            {
-                "job_id": "399a5952-f594-11e9-ae9e-0242ac120007",
-                "success": true
-            }
+    :reqheader Accept: application/json
+    :param str job_type: name of the job type
+    :<json dict objects: records with file path and metadata
+    :<json dict options: job chain options
 
-        **Example response ERROR**:
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
 
-        .. sourcecode:: http
-
-            HTTP/1.1 400 BAD REQUEST
-
-            {
-                "error": {
-                    "code": "bad_request",
-                    "message": "400 Bad Request: The browser (or proxy)
-                                sent a request that this server could
-                                not understand."
-                },
-                "success": false
-            }
-
-        :reqheader Accept: application/json
-        :param str job_type: name of the job type
-        :<json dict objects: issue file path and metadata
-        :<json dict options: job chain options
-
-        :resheader Content-Type: application/json
-        :>json dict: operation result
-        :status 200: OK
-
-        :return: A JSON object containing the status, the job id and the task
-            ids of every subtask in every chain
+    :return: A JSON object containing the status, the job id and the task
+        ids of every subtask in every chain
     """
     if not request.data:
         raise ApiError("invalid_job_params", "No request payload found")
     params = request.get_json(force=True)
     user_name = auth.username()
     try:
-        json_validation.validate_params(params, 'ingest_book')
+        json_validation.validate_params(params, 'ingest_records')
     except FileNotFoundError as e:
         raise ApiError("unknown_job_type", str(e), 404)
     except jsonschema.exceptions.ValidationError as e:
         raise ApiError("invalid_job_params", str(e), 400)
 
-    job = IngestBooksJob(params, user_name)
+    job = IngestRecordsJob(params, user_name)
     job.run()
 
     body = jsonify({

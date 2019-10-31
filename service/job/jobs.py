@@ -112,14 +112,14 @@ class BatchJob(BaseJob):
         return chain_ids
 
 
-class IngestBooksJob(BatchJob):
-    job_type = 'ingest_books'
+class IngestRecordsJob(BatchJob):
+    job_type = 'ingest_records'
 
     def _create_chains(self, params, user_name):
         chains = []
 
-        for book_object in params['objects']:
-            task_params = dict(**book_object, **{'user': user_name},
+        for record_object in params['objects']:
+            task_params = dict(**record_object, **{'user': user_name},
                                initial_representation='tif')
 
             current_chain = _link('create_object', **task_params)
