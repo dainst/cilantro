@@ -44,12 +44,15 @@
                                 {{ props.row.job_id}}
                             </b-table-column>
                             <b-table-column field="job_id" label="">
-                                <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
+                                <b-button @click="goToSingleView(props.row.job_id)">
+                                    Single View
+                                </b-button>
                             </b-table-column>
                         </template>
                     </b-table>
             </b-field>
-            <b-message v-if="job.errors && job.errors.length > 0" title="Errors" type="is-danger" has-icon :closable="false">
+            <b-message v-if="job.errors && job.errors.length > 0"
+                       title="Errors" type="is-danger" has-icon :closable="false">
                 <b-table :data="job.errors">
                     <template slot-scope="props">
                         <b-table-column field="job_name" label="Failed task name">
@@ -80,13 +83,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import BField from 'buefy/src/components/field/Field.vue';
 import { Job } from './Job';
 import { getJobDetails } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
-import BField from "buefy/src/components/field/Field.vue";
 
 @Component({
-    components: {BField}
+    components: { BField }
 })
 export default class JobDetails extends Vue {
     labelPosition: string = '';
@@ -120,7 +123,6 @@ export default class JobDetails extends Vue {
             showError('Failed to retrieve job details from server!', e);
         }
     }
-
 }
 </script>
 
