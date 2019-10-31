@@ -2,16 +2,15 @@
     <section>
         <div v-if="jobList.length > 0">
         <b-table :data="jobList" detailed detail-key="job_id"
-            default-sort="created" :default-sort-direction="'asc'"
-            :has-detailed-visible="(row) => { return row.children.length >0 }">
+                 default-sort="created" :default-sort-direction="'asc'"
+                 :has-detailed-visible="(row) => { return row.children.length >0 }">
             <template slot-scope="props">
                 <b-table-column field="job_type" label="Type" sortable>
                     {{ props.row.job_type }}
                 </b-table-column>
                 <b-table-column field="state" label="Status" sortable>
                     <div class="is-flex">
-                        <b-icon
-                            v-bind="iconAttributesForState(props.row.state)"/>
+                        <b-icon v-bind="iconAttributesForState(props.row.state)"/>
                         {{ props.row.state }}
                     </div>
                 </b-table-column>
@@ -33,7 +32,7 @@
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
-                    <SpecificJobsList :jobIDs="getChildrenIDs(props.row.children)" />
+                <SpecificJobsList :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
         </div>
