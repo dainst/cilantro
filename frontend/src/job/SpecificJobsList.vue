@@ -43,7 +43,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import moment from 'moment';
 import { getJobDetails, getJobList, Job } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
@@ -78,23 +77,20 @@ export default class SpecificJobsList extends Vue {
     }
 }
 
-function sortByUpdated(a:Job, b:Job, isAsc:boolean) {
-    const d1 = moment(a.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-    const d2 = moment(b.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+function sortByUpdated(a: Job, b: Job, isAsc: boolean) { // TODO return value
+    const d1 = new Date(a.updated);
+    const d2 = new Date(b.updated);
     return compareDates(d1, d2, isAsc);
 }
 
-function sortByCreated(a:Job, b:Job, isAsc:boolean) {
-    const d1 = moment(a.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-    const d2 = moment(b.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+function sortByCreated(a: Job, b: Job, isAsc: boolean) {
+    const d1 = new Date(a.created);
+    const d2 = new Date(b.created);
     return compareDates(d1, d2, isAsc);
 }
 
 function compareDates(a: Date, b: Date, isAsc: boolean) {
-    if (isAsc) {
-        return b.getTime() - a.getTime();
-    }
-    return a.getTime() - b.getTime();
+    return isAsc ? b.getTime() - a.getTime() : a.getTime() - b.getTime();
 }
 
 function iconAttributesForState(state: string) {
