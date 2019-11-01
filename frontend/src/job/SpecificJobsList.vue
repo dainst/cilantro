@@ -1,9 +1,9 @@
 <template>
     <section>
-        <div v-if="jobList.length > 0">
         <b-table :data="jobList" detailed detail-key="job_id"
                  default-sort="created" :default-sort-direction="'asc'"
-                 :has-detailed-visible="(row) => { return row.children.length >0 }">
+                 :has-detailed-visible="(row) => { return row.children.length >0 }"
+                 @details-open="(row, index) => loadChildJobs(row)">
             <template slot-scope="props">
                 <b-table-column field="job_type" label="Type" sortable>
                     {{ props.row.job_type }}
@@ -32,10 +32,12 @@
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
-                <SpecificJobsList :jobIDs="getChildrenIDs(props.row.children)" />
+                <SpecificJobsList v-if=childJobsLoaded :jobs="childJobs" />
+                <div v-else>
+                    Loading child jobs...
+                </div>
             </template>
         </b-table>
-        </div>
     </section>
 </template>
 
@@ -47,43 +49,32 @@ import { showError } from '@/util/Notifier.ts';
 
 @Component
 export default class SpecificJobsList extends Vue {
-    @Prop(Array) jobIDs!: string[];
     @Prop(Array) jobs!: Job[];
-    jobList: Job[] = [];
+    jobList: Job[] = this.jobs;
+    childJobs: Job[] = [];
+
+    get childJobsLoaded() {
+        return this.childJobs.length > 0;
+    }
+
+    async loadChildJobs(job: any) {
+        const childJobs: Job[] = [];
+        for await (const child of job.children) { // eslint-disable-line no-restricted-syntax
+            childJobs.push(await getJobDetails(child.job_id));
+        }
+        this.childJobs = childJobs;
+    }
 
     sortByCreated = sortByCreated;
     sortByUpdated = sortByUpdated;
-    getChildrenIDs = getChildrenIDs;
     compareDates = compareDates;
     iconAttributesForState = iconAttributesForState;
-
-    mounted() {
-        this.updateJobList();
-    }
 
     goToSingleView(id: string) {
         this.$router.push({
             path: 'job',
             query: { id }
         });
-    }
-
-    async updateJobList() {
-        try {
-            if (this.jobs) {
-                this.jobList = this.jobs;
-            } else {
-                this.jobList = [];
-                let i = 0;
-                for (i; i < this.jobIDs.length; i += 1) {
-                    let job = await getJobDetails(this.jobIDs[i]);
-                    this.jobList.push(job);
-                }
-            }
-            this.$forceUpdate();
-        } catch (e) {
-            showError('Failed to load job list from server!', e);
-        }
     }
 }
 
@@ -97,15 +88,6 @@ function sortByCreated(a:Job, b:Job, isAsc:boolean) {
     const d1 = moment(a.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
     const d2 = moment(b.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
     return compareDates(d1, d2, isAsc);
-}
-
-function getChildrenIDs(children: ChildJob[]) {
-    const idList = [];
-    let i = 0;
-    for (i; i < children.length; i += 1) {
-        idList.push(children[i].job_id);
-    }
-    return idList;
 }
 
 function compareDates(a: Date, b: Date, isAsc: boolean) {
