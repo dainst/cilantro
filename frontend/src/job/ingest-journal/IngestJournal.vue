@@ -8,7 +8,7 @@
 
         <div v-if="activeStep === 0">
             <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
-            <JournalFilesForm :selected-paths.sync="selectedPaths" />
+            <JobFilesForm :selected-paths.sync="selectedPaths" />
             <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
         </div>
         <div v-if="activeStep === 1">
