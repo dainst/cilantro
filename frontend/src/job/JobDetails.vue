@@ -29,27 +29,26 @@
             <b-field label="Duration">
                 <p>{{job.duration}}</p>
             </b-field>
-
             <b-field label="Children" v-if="job.children && job.children.length > 0">
-                    <b-table :data="job.children"
-                             default-sort="created" :default-sort-direction="'asc'">
-                        <template slot-scope="props">
-                            <b-table-column field="type" label="Type">
-                                {{ props.row.type}}
-                            </b-table-column>
-                            <b-table-column field="state" label="Status">
-                                {{ props.row.state}}
-                            </b-table-column>
-                            <b-table-column field="job_id" label="ID">
-                                {{ props.row.job_id}}
-                            </b-table-column>
-                            <b-table-column field="job_id" label="">
-                                <b-button @click="goToSingleView(props.row.job_id)">
-                                    Single View
-                                </b-button>
-                            </b-table-column>
-                        </template>
-                    </b-table>
+                <b-table :data="job.children"
+                         default-sort="created" :default-sort-direction="'asc'">
+                    <template slot-scope="props">
+                        <b-table-column field="type" label="Type">
+                            {{ props.row.type}}
+                        </b-table-column>
+                        <b-table-column field="state" label="Status">
+                            {{ props.row.state}}
+                        </b-table-column>
+                        <b-table-column field="job_id" label="ID">
+                            {{ props.row.job_id}}
+                        </b-table-column>
+                        <b-table-column field="job_id" label="">
+                            <b-button @click="goToSingleView(props.row.job_id)">
+                                Single View
+                            </b-button>
+                        </b-table-column>
+                    </template>
+                </b-table>
             </b-field>
             <b-message v-if="job.errors && job.errors.length > 0"
                        title="Errors" type="is-danger" has-icon :closable="false">
@@ -70,7 +69,6 @@
                     </template>
                 </b-table>
             </b-message>
-
             <b-collapse :open="false" aria-id="job-params">
                 <button class="button" slot="trigger" aria-controls="job-params">
                     Show Job Parameters
@@ -91,15 +89,12 @@ import { showError } from '@/util/Notifier.ts';
     components: { BField }
 })
 export default class JobDetails extends Vue {
-    labelPosition: string = '';
-    backendUri = this.$store.state.AuthenticationStore.backendUri;
-
     jobID: string = '';
     job: Job = {} as any;
 
     mounted() {
         this.jobID = this.$route.query.id as string;
-        this.getJobDetails();
+        this.loadJobDetails();
     }
 
     goToSingleView(id: string) {
@@ -107,15 +102,14 @@ export default class JobDetails extends Vue {
             query: { id }
         });
         this.jobID = id;
-        this.getJobDetails();
-        this.$forceUpdate();
+        this.loadJobDetails();
     }
 
     gotoJobsView() {
         this.$router.push({ path: 'jobs' });
     }
 
-    async getJobDetails() {
+    async loadJobDetails() {
         try {
             this.job = await getJobDetails(this.jobID);
         } catch (e) {
