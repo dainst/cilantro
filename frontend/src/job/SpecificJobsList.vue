@@ -77,7 +77,7 @@ export default class SpecificJobsList extends Vue {
     }
 }
 
-function sortByUpdated(a: Job, b: Job, isAsc: boolean) { // TODO return value
+function sortByUpdated(a: Job, b: Job, isAsc: boolean) {
     const d1 = new Date(a.updated);
     const d2 = new Date(b.updated);
     return compareDates(d1, d2, isAsc);
