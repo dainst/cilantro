@@ -84,8 +84,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import BField from 'buefy/src/components/field/Field.vue';
-import { Job } from './Job';
-import { getJobDetails } from './JobClient';
+import { getJobDetails, Job } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component({

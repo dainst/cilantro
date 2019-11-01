@@ -20,8 +20,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { getJobList } from './JobClient';
-import { Job } from './Job';
+import { getJobList, Job } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 import SpecificJobsList from '@/job/SpecificJobsList.vue';
 

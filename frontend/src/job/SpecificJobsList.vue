@@ -42,9 +42,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import moment from 'moment';
-import { getJobDetails, getJobList } from './JobClient';
-import { Job } from './Job';
-import { ChildJob } from './ChildJob';
+import { getJobDetails, getJobList, Job } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component
