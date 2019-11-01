@@ -2,9 +2,9 @@
     <section>
         <div class="navbar-end">
             <div class="navbar-item">
-        <b-switch v-model="showAllJobs" v-on:input="updateJobList">
-            Show all
-        </b-switch>
+                <b-switch v-model="showAllJobs" v-on:input="updateJobList">
+                    Show all
+                </b-switch>
             </div>
         </div>
         <div v-if="jobList.length > 0">
@@ -29,7 +29,7 @@ import SpecificJobsList from '@/job/SpecificJobsList.vue';
 })
 export default class JobList extends Vue {
     jobList: Job[] = [];
-    showAllJobs:boolean = false;
+    showAllJobs: boolean = false;
 
     mounted() {
         this.updateJobList();
