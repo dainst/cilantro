@@ -1,9 +1,8 @@
 <template>
     <section>
-        <b-table :data="jobList" detailed detail-key="job_id"
+        <b-table v-if="jobsLoaded" :data="jobs" detailed detail-key="job_id"
                  default-sort="created" :default-sort-direction="'asc'"
-                 :has-detailed-visible="(row) => { return row.children.length >0 }"
-                 @details-open="(row, index) => loadChildJobs(row)">
+                 :has-detailed-visible="(row) => { return row.children.length >0 }">
             <template slot-scope="props">
                 <b-table-column field="job_type" label="Type" sortable>
                     {{ props.row.job_type }}
@@ -32,36 +31,51 @@
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
-                <SpecificJobsList v-if=childJobsLoaded :jobs="childJobs" />
-                <div v-else>
-                    Loading child jobs...
-                </div>
+                <SpecificJobsList :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
+        <div v-else>
+            Loading jobs...
+        </div>
     </section>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import {
+    Component, Vue, Prop, Watch
+} from 'vue-property-decorator';
 import { getJobDetails, getJobList, Job } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component
 export default class SpecificJobsList extends Vue {
-    @Prop(Array) jobs!: Job[];
-    jobList: Job[] = this.jobs;
-    childJobs: Job[] = [];
+    @Prop(Array) jobIDs!: string[];
+    @Prop() showAllJobs!: boolean;
+    jobs: Job[] = [];
 
-    get childJobsLoaded() {
-        return this.childJobs.length > 0;
+    getChildrenIDs = getChildrenIDs;
+
+    mounted() {
+        this.loadJobs();
     }
 
-    async loadChildJobs(job: any) {
-        const childJobs: Job[] = [];
-        for await (const child of job.children) { // eslint-disable-line no-restricted-syntax
-            childJobs.push(await getJobDetails(child.job_id));
+    get jobsLoaded() {
+        return this.jobIDs.length === 0 || this.jobs.length === this.jobIDs.length; // leere liste
+    }
+
+    async loadJobs() {
+        if (this.jobIDs.length === 0) {
+            this.jobs = await getJobList(this.showAllJobs);
+        } else {
+            for await (const id of this.jobIDs) { // eslint-disable-line no-restricted-syntax
+                this.jobs.push(await getJobDetails(id));
+            }
         }
-        this.childJobs = childJobs;
+    }
+
+    @Watch('showAllJobs')
+    onChanged(showAllJobs: boolean) {
+        this.loadJobs();
     }
 
     sortByCreated = sortByCreated;
@@ -75,6 +89,10 @@ export default class SpecificJobsList extends Vue {
             query: { id }
         });
     }
+}
+
+function getChildrenIDs(children: Job[]) {
+    return children.map(child => child.job_id);
 }
 
 function sortByUpdated(a: Job, b: Job, isAsc: boolean) {
