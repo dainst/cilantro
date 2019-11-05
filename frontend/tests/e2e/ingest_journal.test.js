@@ -1,6 +1,6 @@
 import { Selector } from 'testcafe';
 
-fixture(`Index page`).page('http://localhost:8080');
+fixture(`Index page`).page('http://localhost:8081');
 
 test('start ingest journal job with default values', async testController => {
     await testController
