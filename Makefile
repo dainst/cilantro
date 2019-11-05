@@ -37,6 +37,7 @@ test: run-detached test-backend test-frontend stop
 
 test-frontend:
 	npm run test:unit --prefix frontend
+	npm run test:e2e --prefix frontend
 
 test-backend:
 	docker exec cilantro_test python -m unittest discover test.unit -vf
