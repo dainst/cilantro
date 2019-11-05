@@ -1,7 +1,6 @@
 <template>
     <section>
-        <div v-if="jobList.length > 0">
-        <b-table :data="jobList" detailed detail-key="job_id"
+        <b-table v-if="jobsLoaded" :data="jobs" detailed detail-key="job_id"
                  default-sort="created" :default-sort-direction="'asc'"
                  :has-detailed-visible="(row) => { return row.children.length >0 }">
             <template slot-scope="props">
@@ -35,33 +34,54 @@
                 <SpecificJobsList :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
+        <div v-else>
+            Loading jobs...
         </div>
     </section>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import moment from 'moment';
-import { getJobDetails, getJobList } from './JobClient';
-import { Job } from './Job';
-import { ChildJob } from './ChildJob';
+import {
+    Component, Vue, Prop, Watch
+} from 'vue-property-decorator';
+import { getJobDetails, getJobList, Job } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component
 export default class SpecificJobsList extends Vue {
     @Prop(Array) jobIDs!: string[];
-    @Prop(Array) jobs!: Job[];
-    jobList: Job[] = [];
+    @Prop() showAllJobs!: boolean;
+    jobs: Job[] = [];
+
+    getChildrenIDs = getChildrenIDs;
+
+    mounted() {
+        this.loadJobs();
+    }
+
+    get jobsLoaded() {
+        return this.jobIDs.length === 0 || this.jobs.length === this.jobIDs.length; // leere liste
+    }
+
+    async loadJobs() {
+        if (this.jobIDs.length === 0) {
+            this.jobs = await getJobList(this.showAllJobs);
+        } else {
+            for await (const id of this.jobIDs) { // eslint-disable-line no-restricted-syntax
+                this.jobs.push(await getJobDetails(id));
+            }
+        }
+    }
+
+    @Watch('showAllJobs')
+    onChanged(showAllJobs: boolean) {
+        this.loadJobs();
+    }
 
     sortByCreated = sortByCreated;
     sortByUpdated = sortByUpdated;
-    getChildrenIDs = getChildrenIDs;
     compareDates = compareDates;
     iconAttributesForState = iconAttributesForState;
-
-    mounted() {
-        this.updateJobList();
-    }
 
     goToSingleView(id: string) {
         this.$router.push({
@@ -69,52 +89,26 @@ export default class SpecificJobsList extends Vue {
             query: { id }
         });
     }
-
-    async updateJobList() {
-        try {
-            if (this.jobs) {
-                this.jobList = this.jobs;
-            } else {
-                this.jobList = [];
-                let i = 0;
-                for (i; i < this.jobIDs.length; i += 1) {
-                    let job = await getJobDetails(this.jobIDs[i]);
-                    this.jobList.push(job);
-                }
-            }
-            this.$forceUpdate();
-        } catch (e) {
-            showError('Failed to load job list from server!', e);
-        }
-    }
 }
 
-function sortByUpdated(a:Job, b:Job, isAsc:boolean) {
-    const d1 = moment(a.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-    const d2 = moment(b.updated, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+function getChildrenIDs(children: Job[]) {
+    return children.map(child => child.job_id);
+}
+
+function sortByUpdated(a: Job, b: Job, isAsc: boolean) {
+    const d1 = new Date(a.updated);
+    const d2 = new Date(b.updated);
     return compareDates(d1, d2, isAsc);
 }
 
-function sortByCreated(a:Job, b:Job, isAsc:boolean) {
-    const d1 = moment(a.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
-    const d2 = moment(b.created, 'ddd, DD MMM YYYY HH:mm:ss').toDate();
+function sortByCreated(a: Job, b: Job, isAsc: boolean) {
+    const d1 = new Date(a.created);
+    const d2 = new Date(b.created);
     return compareDates(d1, d2, isAsc);
-}
-
-function getChildrenIDs(children: ChildJob[]) {
-    const idList = [];
-    let i = 0;
-    for (i; i < children.length; i += 1) {
-        idList.push(children[i].job_id);
-    }
-    return idList;
 }
 
 function compareDates(a: Date, b: Date, isAsc: boolean) {
-    if (isAsc) {
-        return b.getTime() - a.getTime();
-    }
-    return a.getTime() - b.getTime();
+    return isAsc ? b.getTime() - a.getTime() : a.getTime() - b.getTime();
 }
 
 function iconAttributesForState(state: string) {
