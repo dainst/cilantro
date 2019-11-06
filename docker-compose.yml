@@ -121,14 +121,14 @@ services:
     build:
       context: .
       dockerfile: ./docker/cilantro-frontend/Dockerfile
+      args:
+        VUE_APP_ALLOWED_FILE_EXTENSIONS: "pdf, tif, tiff, zip"
+        VUE_APP_BACKEND_URI: *backend-uri
+        VUE_APP_ATOM_API_URL: *atomAPIURL
+        VUE_APP_ATOM_USER: *atom-user
+        VUE_APP_ATOM_PASSWORD: *atom-password
     ports:
       - "8081:80"
-    # not actually used in dev, since the frontend is started separately
-    environment:
-      VUE_APP_BACKEND_URI: *backend-uri
-      VUE_APP_ATOM_API_URL: *atomAPIURL
-      VUE_APP_ATOM_USER: *atom-user
-      VUE_APP_ATOM_PASSWORD: *atom-password
 
   test:
     container_name: cilantro_test
