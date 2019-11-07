@@ -79,7 +79,7 @@ async function populateAtomRecords(records: ObjectRecord[]) {
 async function populateAtomRecord(record: ObjectRecord): Promise<ObjectRecord> {
     const atomId = extractAtomId(record.object.path);
     if (!atomId) {
-        const msg = 'Invalid name. The folder path does not match the pattern "RECORD-AIDxxxxxxx".';
+        const msg = 'Invalid name. The folder path does not match the pattern "RECORD-AID-xxxxxxx".';
         return buildError(record, msg);
     }
     try {
@@ -115,7 +115,7 @@ function initRecord(path: string): ObjectRecord {
 }
 
 function extractAtomId(path: string): string | null {
-    const result = path.match(/.*RECORD-AID(.+)/);
+    const result = path.match(/.*RECORD-AID-(.+)/);
     if (!result || result.length < 1) return null;
     return result[1];
 }
