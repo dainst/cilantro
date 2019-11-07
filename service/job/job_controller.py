@@ -1,4 +1,3 @@
-import logging
 import jsonschema
 import os
 import datetime
@@ -6,7 +5,6 @@ import datetime
 from flask import Blueprint, url_for, jsonify, request
 
 from service.errors import ApiError
-from utils.celery_client import celery_app
 from service.user.user_service import auth
 from utils import job_db
 from utils import json_validation
@@ -118,102 +116,101 @@ def job_list():
 @auth.login_required
 def journal_job_create():
     """
-        Create a journal batch import job.
+    Create a journal batch import job.
 
-        Parameters can be provided as JSON as part of the request body
-        and must match the job parameter schema.
+    Parameters can be provided as JSON as part of the request body
+    and must match the job parameter schema.
 
-        Valid user credential have to be given via HTTP basic authentication.
+    Valid user credential have to be given via HTTP basic authentication.
 
-        Also adds the job to the job database.
+    Also adds the job to the job database.
 
-        .. :quickref: Job Controller; Create a job of the specified job type
+    .. :quickref: Job Controller; Create a job of the specified job type
 
-        **Example request**:
+    **Example request**:
 
-        .. sourcecode:: http
+    .. sourcecode:: http
 
-          POST /job/<job-type> HTTP/1.1
+      POST /job/<job-type> HTTP/1.1
 
-          {
-                "objects": [{
-                    "id": "some_tiffs",
-                    "path": "some_tiffs",
-                    "metadata": {
-                        "description": "Archäologischer Anzeiger",
-                        "number": 1,
-                        "ojs_journal_code": "test",
-                        "volume": 1,
-                        "publishing_year": 2015,
-                        "reporting_year": 2011,
-                        "zenon_id": 1449024
-                    }
-                },{
-                    "id": "some_tiffs_2",
-                    "path": "some_tiffs_2",
-                    "metadata": {
-                        "description": "Archäologischer Anzeiger",
-                        "number": 1,
-                        "ojs_journal_code": "test",
-                        "volume": 1,
-                        "publishing_year": 2015,
-                        "reporting_year": 2011,
-                        "zenon_id": 1449024
-                    }
-                }],
-                "options": {
-                    "ojs_metadata": {
-                        "auto_publish_issue": true,
-                        "default_create_frontpage": true,
-                        "allow_upload_without_file": false
-                    }
+      {
+            "objects": [{
+                "id": "some_tiffs",
+                "path": "some_tiffs",
+                "metadata": {
+                    "description": "Archäologischer Anzeiger",
+                    "number": 1,
+                    "ojs_journal_code": "test",
+                    "volume": 1,
+                    "publishing_year": 2015,
+                    "reporting_year": 2011,
+                    "zenon_id": 1449024
+                }
+            },{
+                "id": "some_tiffs_2",
+                "path": "some_tiffs_2",
+                "metadata": {
+                    "description": "Archäologischer Anzeiger",
+                    "number": 1,
+                    "ojs_journal_code": "test",
+                    "volume": 1,
+                    "publishing_year": 2015,
+                    "reporting_year": 2011,
+                    "zenon_id": 1449024
+                }
+            }],
+            "options": {
+                "ojs_metadata": {
+                    "auto_publish_issue": true,
+                    "default_create_frontpage": true,
+                    "allow_upload_without_file": false
                 }
             }
+        }
 
 
-        Each path ("some_tiffs" and "some_tiffs_2" in the example case, are expected
-        to contain a directory "tif" that contains tif images.)
+    Each path ("some_tiffs" and "some_tiffs_2" in the example case, are
+    expected to contain a directory "tif" that contains tif images.)
 
-        **Example response SUCCESS**:
+    **Example response SUCCESS**:
 
-        .. sourcecode:: http
+    .. sourcecode:: http
 
-            HTTP/1.1 200 OK
+        HTTP/1.1 200 OK
 
-            {
-                "job_id": "399a5952-f594-11e9-ae9e-0242ac120007",
-                "success": true
-            }
+        {
+            "job_id": "399a5952-f594-11e9-ae9e-0242ac120007",
+            "success": true
+        }
 
-        **Example response ERROR**:
+    **Example response ERROR**:
 
-        .. sourcecode:: http
+    .. sourcecode:: http
 
-            HTTP/1.1 400 BAD REQUEST
+        HTTP/1.1 400 BAD REQUEST
 
-            {
-                "error": {
-                    "code": "bad_request",
-                    "message": "400 Bad Request: The browser (or proxy)
-                                sent a request that this server could
-                                not understand."
-                },
-                "success": false
-            }
+        {
+            "error": {
+                "code": "bad_request",
+                "message": "400 Bad Request: The browser (or proxy)
+                            sent a request that this server could
+                            not understand."
+            },
+            "success": false
+        }
 
-        :reqheader Accept: application/json
-        :param str job_type: name of the job type
-        :<json dict objects: issue file path and metadata
-        :<json dict options: job chain options
+    :reqheader Accept: application/json
+    :param str job_type: name of the job type
+    :<json dict objects: issue file path and metadata
+    :<json dict options: job chain options
 
-        :resheader Content-Type: application/json
-        :>json dict: operation result
-        :status 200: OK
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
 
-        :return: A JSON object containing the status, the job id and the task
-            ids of every subtask in every chain
+    :return: A JSON object containing the status, the job id and the task
+        ids of every subtask in every chain
     """
-
     if not request.data:
         raise ApiError("invalid_job_params", "No request payload found")
     params = request.get_json(force=True)
@@ -230,8 +227,7 @@ def journal_job_create():
 
     body = jsonify({
         'success': True,
-        'job_id': job.id
-    })
+        'job_id': job.id})
 
     headers = {'Location': url_for(
         'job.job_status', job_id=job.id)}
@@ -354,8 +350,7 @@ def record_job_create():
 
     body = jsonify({
         'success': True,
-        'job_id': job.id
-    })
+        'job_id': job.id})
 
     headers = {'Location': url_for(
         'job.job_status', job_id=job.id)}
@@ -601,7 +596,6 @@ def job_status(job_id):
 
     :return: A JSON object containing the status info
     """
-
     job = job_db.get_job_by_id(job_id)
 
     job['duration'] = str(datetime.timedelta(
