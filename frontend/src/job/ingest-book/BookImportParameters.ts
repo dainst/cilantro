@@ -2,6 +2,15 @@ import { JobParameters, JobObject } from '../JobParameters';
 
 /* eslint-disable camelcase */
 
+export interface BookImportParameters extends JobParameters {
+    objects: Book[];
+    options: BookImportOptions;
+}
+
+export interface Book extends JobObject {
+    metadata: BookMetadata;
+}
+
 export interface BookMetadata {
     title: string;
     created: string;
@@ -9,18 +18,9 @@ export interface BookMetadata {
     atom_id: string;
 }
 
-export interface Book extends JobObject {
-    metadata: BookMetadata;
-}
-
 export interface BookImportOptions {
     do_ocr: boolean;
     ocr_lang: string;
-}
-
-export interface BookImportParameters extends JobParameters {
-    objects: Book[];
-    options: BookImportOptions;
 }
 
 export function initBook(path: string): Book {

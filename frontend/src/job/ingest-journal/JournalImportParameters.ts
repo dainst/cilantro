@@ -2,6 +2,15 @@ import { JobParameters, JobObject } from '../JobParameters';
 
 /* eslint-disable camelcase */
 
+export interface JournalImportParameters extends JobParameters {
+    objects: JournalIssue[];
+    options: JournalImportOptions;
+}
+
+export interface JournalIssue extends JobObject {
+    metadata: JournalIssueMetadata;
+}
+
 export interface JournalIssueMetadata {
     zenon_id: number;
     volume: number;
@@ -12,25 +21,16 @@ export interface JournalIssueMetadata {
     reporting_year: number;
 }
 
-export interface OJSMetadata {
-    auto_publish_issue: boolean;
-    default_create_frontpage: boolean;
-    allow_upload_without_file: boolean;
-}
-
-export interface JournalIssue extends JobObject {
-    metadata: JournalIssueMetadata;
-}
-
 export interface JournalImportOptions {
     ojs_metadata: OJSMetadata;
     do_ocr: boolean;
     ocr_lang: string;
 }
 
-export interface JournalImportParameters extends JobParameters {
-    objects: JournalIssue[];
-    options: JournalImportOptions;
+export interface OJSMetadata {
+    auto_publish_issue: boolean;
+    default_create_frontpage: boolean;
+    allow_upload_without_file: boolean;
 }
 
 export function initIssue(path: string): JournalIssue {
