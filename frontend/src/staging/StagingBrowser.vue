@@ -85,7 +85,7 @@ export default class StagingBrowser extends Vue {
         this.$buefy.dialog.prompt({
             message: `Enter the folder name or path`,
             inputAttrs: {
-                maxlength: 20
+                maxlength: 30
             },
             onConfirm: (folderName) => {
                 createFolderInStaging(getFilePath(this.workingDirectory, folderName))
