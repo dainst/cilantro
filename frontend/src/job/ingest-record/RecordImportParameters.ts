@@ -2,28 +2,28 @@ import { JobParameters, JobObject } from '../JobParameters';
 
 /* eslint-disable camelcase */
 
-export interface BookImportParameters extends JobParameters {
-    objects: Book[];
-    options: BookImportOptions;
+export interface RecordImportParameters extends JobParameters {
+    objects: RecordObject[];
+    options: RecordImportOptions;
 }
 
-export interface Book extends JobObject {
-    metadata: BookMetadata;
+export interface RecordObject extends JobObject {
+    metadata: RecordMetadata;
 }
 
-export interface BookMetadata {
+export interface RecordMetadata {
     title: string;
     created: string;
     author: string[];
     atom_id: string;
 }
 
-export interface BookImportOptions {
+export interface RecordImportOptions {
     do_ocr: boolean;
     ocr_lang: string;
 }
 
-export function initBook(path: string): Book {
+export function initRecordObject(path: string): RecordObject {
     const id = path.split('/').pop() || '';
     return {
         id,
@@ -37,7 +37,7 @@ export function initBook(path: string): Book {
     };
 }
 
-export function initOptions(): BookImportOptions {
+export function initOptions(): RecordImportOptions {
     return {
         do_ocr: false,
         ocr_lang: 'eng'

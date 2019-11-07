@@ -20,17 +20,17 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import { JournalImportOptions } from './ingest-journal/JournalImportParameters';
-import { BookImportOptions } from './ingest-book/BookImportParameters';
+import { RecordImportOptions } from './ingest-record/RecordImportParameters';
 
 @Component
 export default class JobOptionsForm extends Vue {
-    @Prop({ required: true }) initialOptions!: BookImportOptions | JournalImportOptions;
+    @Prop({ required: true }) initialOptions!: RecordImportOptions | JournalImportOptions;
 
-    options: BookImportOptions | JournalImportOptions =
+    options: RecordImportOptions | JournalImportOptions =
         JSON.parse(JSON.stringify(this.initialOptions));
 
     @Watch('options')
-    onOptionsChanged(options: BookImportOptions) {
+    onOptionsChanged(options: RecordImportOptions) {
         this.$emit('options-updated', options);
     }
 }

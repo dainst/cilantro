@@ -40,8 +40,8 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { initBook } from '../BookImportParameters';
-import { getRecord, AtomRecord } from '@/util/AtomClient';
+import { initRecordObject } from '../RecordImportParameters';
+import { getAtomRecord, AtomRecord } from '@/util/AtomClient';
 import {
     checkFolderStructure, buildError, getRowClass, getTableField, ObjectRecord
 } from '@/job/JobMetadataFormUtils.ts';
@@ -55,7 +55,7 @@ import {
         }
     }
 })
-export default class BookMetadataForm extends Vue {
+export default class RecordMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
 
     records: ObjectRecord[] = [];
@@ -64,7 +64,7 @@ export default class BookMetadataForm extends Vue {
         this.records = this.selectedPaths.map(path => initRecord(path));
         this.records = await checkFolderStructure(this.records);
         this.records = await populateAtomRecords(this.records);
-        this.$emit('update:books', this.records.filter(r => !r.errors.length).map(r => r.object));
+        this.$emit('update:records', this.records.filter(r => !r.errors.length).map(r => r.object));
     }
 
     getRowClass = getRowClass;
@@ -83,15 +83,15 @@ async function populateAtomRecord(record: ObjectRecord): Promise<ObjectRecord> {
         return buildError(record, msg);
     }
     try {
-        const atomRecord = await getRecord(atomId);
-        return buildBookRecord(record, atomRecord);
+        const atomRecord = await getAtomRecord(atomId);
+        return buildRecordRecord(record, atomRecord);
     } catch (error) {
         const msg = `No Record with the extracted ID "${atomId}" found.`;
         return buildError(record, msg);
     }
 }
 
-async function buildBookRecord(record: ObjectRecord, atomRecord: AtomRecord):
+async function buildRecordRecord(record: ObjectRecord, atomRecord: AtomRecord):
     Promise<ObjectRecord> {
     return {
         id: record.id,
@@ -111,7 +111,7 @@ async function buildBookRecord(record: ObjectRecord, atomRecord: AtomRecord):
 }
 
 function initRecord(path: string): ObjectRecord {
-    return { id: path, object: initBook(path), errors: [] };
+    return { id: path, object: initRecordObject(path), errors: [] };
 }
 
 function extractAtomId(path: string): string | null {

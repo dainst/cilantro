@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { sendRequest } from './HTTPClient';
 import { atomAPIURL, atomUsername, atomPassword } from '@/config';
 
-export async function getRecord(atomID: string): Promise<AtomRecord> {
+export async function getAtomRecord(atomID: string): Promise<AtomRecord> {
     const url: string = `${atomAPIURL}/${atomID}`;
     const authConfig = {
         auth: {

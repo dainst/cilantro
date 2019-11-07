@@ -12,7 +12,7 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { BookImportOptions } from '../BookImportParameters';
+import { RecordImportOptions } from '../RecordImportParameters';
 import JobOptionsForm from '../../JobOptionsForm.vue';
 
 @Component({
@@ -20,12 +20,12 @@ import JobOptionsForm from '../../JobOptionsForm.vue';
         JobOptionsForm
     }
 })
-export default class BookOptionsForm extends Vue {
-    @Prop({ required: true }) initialOptions!: BookImportOptions;
-    options: BookImportOptions = JSON.parse(JSON.stringify(this.initialOptions));
+export default class RecordOptionsForm extends Vue {
+    @Prop({ required: true }) initialOptions!: RecordImportOptions;
+    options: RecordImportOptions = JSON.parse(JSON.stringify(this.initialOptions));
 
     @Watch('options')
-    onOptionsChanged(options: BookImportOptions) {
+    onOptionsChanged(options: RecordImportOptions) {
         this.$emit('options-updated', options);
     }
 }
