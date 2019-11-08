@@ -44,11 +44,13 @@ test('start ingest journal job with default values', async testController => {
         .click('i.mdi-home')
 
     await testController
-        .click('input[type="checkbox"]')
+        .click('.table > tbody:nth-child(2) > tr:nth-child(1) > td:nth-child(1) > label:nth-child(1) > input:nth-child(1)')
         .click('#main_content nav button.button.is-primary')
+        .wait(2000)
         .expect(mainContentSelector.innerText).contains('Volume');
     await testController
         .click('#main_content nav button.button.is-primary')
+        .wait(2000)
         .expect(mainContentSelector.innerText).contains('OJS Options');
 
     const snackbarSelector = new Selector('div.notices div.snackbar');
