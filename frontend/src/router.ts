@@ -7,6 +7,7 @@ import StagingArea from './staging/StagingArea.vue';
 import JobDetails from './job/JobDetails.vue';
 import JobList from './job/JobList.vue';
 import Login from './Login.vue';
+import NotFound from './NotFound.vue';
 import store from './store';
 
 Vue.use(Router);
@@ -52,12 +53,19 @@ const router = new Router({
             path: '/job',
             name: 'job',
             component: JobDetails
+        },
+        {
+            path: '/not-found',
+            name: 'not-found',
+            component: NotFound
         }
     ]
 });
 
-router.beforeEach(async (to, from, next) => {
-    if (!to.matched.some(record => record.meta.noAuth)) {
+router.beforeEach(async(to, from, next) => {
+    if (!to.matched.length) {
+        next('/not-found');
+    } else if (!to.matched.some(record => record.meta.noAuth)) {
         if (store.getters.isAuthenticated) {
             next();
         } else {
