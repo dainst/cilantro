@@ -2,7 +2,7 @@ run:
 	docker-compose up
 
 run-frontend:
-	cd frontend; npm run serve
+	npm run serve --prefix frontend
 
 run-detached:
 	docker-compose up -d
@@ -36,7 +36,8 @@ build-doc:
 test: run-detached test-backend test-frontend stop
 
 test-frontend:
-	cd frontend; npm run test:unit
+	npm run test:unit --prefix frontend
+	npm run test:e2e --prefix frontend
 
 test-backend:
 	docker exec cilantro_test python -m unittest discover test.unit -vf

@@ -12,4 +12,7 @@ export const ojsZenonMapping = {
 
 export const allowedFileExtensions = ['pdf', 'tif', 'tiff', 'zip'];
 
-export const backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
+export const backendUri = process.env.VUE_APP_BACKEND_URI;
+export const atomAPIURL = process.env.VUE_APP_ATOM_API_URL;
+export const atomUsername = process.env.VUE_APP_ATOM_USER;
+export const atomPassword = process.env.VUE_APP_ATOM_PASSWORD;

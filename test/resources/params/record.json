@@ -1,0 +1,16 @@
+{
+    "objects": [{
+        "id": "some_tiffs_1234",
+        "path": "some_tiffs",
+        "metadata": {
+            "title": "54A, Attische Vasen ausser schwarzfigurige und.",
+            "created": "1836-1879",
+            "author": ["Peter Baumeister"],
+            "atom_id": "1449025"
+        }
+    }],
+    "options": {
+        "do_ocr": true,
+        "ocr_lang": "eng"
+    }
+}

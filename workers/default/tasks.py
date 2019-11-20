@@ -5,5 +5,6 @@ celery_app.autodiscover_tasks([
     'workers.default.utils',
     'workers.default.xml',
     'workers.default.ojs',
-    'workers.default.arachne'
+    'workers.default.arachne',
+    'workers.default.atom'
     ], force=True)

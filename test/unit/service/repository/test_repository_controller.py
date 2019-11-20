@@ -6,12 +6,11 @@ from flask import json
 from service.run_service import app
 from utils.repository import generate_repository_path
 
+
 test_object = 'a_book_1234'
 test_representation = 'pdf'
-test_subrepresentation = 'jpg/thumbnails'
 test_jpg = "test.jpg"
 test_file = 'test.pdf'
-test_subfile = 'full.pdf'
 test_metafile = 'meta.json'
 
 
@@ -41,7 +40,8 @@ class RepositoryControllerTest(unittest.TestCase):
         response = self.client.get(path)
         return json.loads(response.get_data(as_text=True))
 
-    def test_list_root(self):
+    def test_list_repository_root(self):
+        """Test if prepared resources are available through endpoint."""
         response = self._get('/repository')
         self.assertIsInstance(response, list)
         self.assertIn(test_object, response)
@@ -50,7 +50,6 @@ class RepositoryControllerTest(unittest.TestCase):
         response = self._get(f'/repository/object/{test_object}')
         self.assertIsInstance(response['metadata'], dict)
         self.assertIsInstance(response['representations'], list)
-        self.assertIsInstance(response['sub_objects'], list)
 
     def test_get_object_not_found(self):
         response = self.client.get(f'/repository/object/wrong_object_1234')

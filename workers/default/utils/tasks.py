@@ -1,19 +1,20 @@
 import shutil
 import os
+import uuid
 import glob
 
-from celery import group
+from celery import chord, signature
 
 from utils.celery_client import celery_app
 from utils import job_db
-from workers.base_task import BaseTask, ObjectTask, ExceptionHandlingException
+from workers.base_task import BaseTask, ObjectTask
 
 
 class ListFilesTask(ObjectTask):
     """
     Run a task list for every file in a given representation.
 
-    A chain is created for every file. These are run in parellel. The next task
+    A chain is created for every file. These are run in parallel. The next task
     is run when the last file chain has finished.
 
     TaskParams:
@@ -31,22 +32,37 @@ class ListFilesTask(ObjectTask):
         files = []
         for tif_file in glob.iglob(pattern):
             files.append(tif_file)
-        raise self.replace(self._generate_group_for_files(files, task))
+        raise self.replace(self._generate_chord_for_files(files, task))
 
-    def _generate_group_for_files(self, files, subtasks):
-        group_tasks = []
+    def _generate_chord_for_files(self, files, subtasks):
+        chord_tasks = []
+        child_ids = []
         for file in files:
-            params = self.params.copy()
-            params['job_id'] = self.job_id
-            params['work_path'] = file
-            # workaround for storing results inside params
-            # this is necessary since prev_results do not always seem to be
-            # passed to subtasks correctly by celery
-            params['result'] = self.results
+            chain, task_id = self._create_chain(file, subtasks)
+            child_ids += [task_id]
+            chord_tasks.append(chain)
 
-            chain = celery_app.signature(subtasks, kwargs=params)
-            group_tasks.append(chain)
-        return group(group_tasks)
+        job_db.set_job_children(self.job_id, child_ids)
+        job_db.update_job_state(self.job_id, "started")
+
+        return chord(chord_tasks, signature('finish_chord', kwargs={'job_id': self.job_id, 'work_path': self.job_id}))
+
+    def _create_chain(self, file, subtasks):
+        params = self.params.copy()
+        params['job_id'] = str(uuid.uuid1())
+        params['work_path'] = file
+        params['parent_job_id'] = self.job_id
+        # workaround for storing results inside params
+        # this is necessary since prev_results do not always seem to be
+        # passed to subtasks correctly by celery
+        params['result'] = self.results
+        chain = celery_app.signature(subtasks, kwargs=params)
+        chain.options['task_id'] = params['job_id']
+
+        job_db.add_job(job_id=params['job_id'], user=None, job_type=subtasks,
+                       parent_job_id=params['parent_job_id'], child_job_ids=[], parameters=params)
+
+        return chain, params['job_id']
 
 
 ListFilesTask = celery_app.register_task(ListFilesTask())
@@ -74,39 +90,26 @@ class CleanupWorkdirTask(BaseTask):
 CleanupWorkdirTask = celery_app.register_task(CleanupWorkdirTask())
 
 
-class FinishJobTask(BaseTask):
+class FinishChainTask(BaseTask):
     """Task to set the job state to success after all other tasks have run."""
 
-    name = "finish_job"
+    name = "finish_chain"
 
     def execute_task(self):
-        job_db.update_job(self.job_id, 'success')
+        job_db.update_job_state(self.parent_job_id, 'success')
 
 
-FinishJobTask = celery_app.register_task(FinishJobTask())
+FinishChainTask = celery_app.register_task(FinishChainTask())
 
 
-class HandleErrorTask(BaseTask):
+class FinishChordTask(BaseTask):
     """
-    Task to handle any errors thrown in other tasks.
-
-    It sets the failed job status in the job database and stops execution of
-    any further tasks.
+    Finish a celery chord task, writes state into the mongo DB.
     """
-
-    name = "handle_error"
+    name = "finish_chord"
 
     def execute_task(self):
-        try:
-            error = {
-                'task_name': self.params['task_name'],
-                'message': self.params['error_message']
-                }
-            job_db.update_job(self.job_id, 'failed', error)
-            self.stop_chain_execution()
-        except:  # noqa: bare exception is OK here, because any unhandled
-                # Exception would cause an endless loop
-            raise ExceptionHandlingException()
+        job_db.update_job_state(self.job_id, "success")
 
 
-HandleErrorTask = celery_app.register_task(HandleErrorTask())
+FinishChordTask = celery_app.register_task(FinishChordTask())

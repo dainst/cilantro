@@ -116,23 +116,6 @@ services:
       <<: *env-broker
       DB_HOST: "db"
 
-  nlp-worker:
-    user: ${UID}
-    image: dainst/cilantro-nlp-worker:latest
-    working_dir: /app
-    volumes:
-      - data:/data
-      - /opt/cilantro/config:/config
-    environment:
-      <<: *env-dirs
-      <<: *env-broker
-      DB_HOST: "db"
-
-  monitor:
-    image: dainst/cilantro-monitor:stable
-    environment:
-      <<: *env-broker
-
   frontend:
     image: dainst/cilantro-frontend:latest
     environment:

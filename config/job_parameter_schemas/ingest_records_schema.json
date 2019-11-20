@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Ingest Book schema",
-    "description": "Used to validate ingest-book job parameters",
+    "title": "Ingest Records schema",
+    "description": "Used to validate ingest-records job parameters",
     "type": "object",
     "required": ["objects", "options"],
     "additionalProperties": false,
@@ -22,12 +22,9 @@
                     "metadata": {
                         "type": "object",
                         "additionalProperties": false,
-                        "required": ["title", "abstract", "created", "author", "zenon_id", "atom_id"],
+                        "required": ["title", "created", "author", "atom_id"],
                         "properties": {
                             "title": {
-                                "type": "string"
-                            },
-                            "abstract": {
                                 "type": "string"
                             },
                             "created": {
@@ -36,14 +33,11 @@
                             "author": {
                                 "type": "array",
                                 "items": {
-                                    "type": "object"
+                                    "type": "string"
                                 }
                             },
-                            "zenon_id": {
-                                "type": "number"
-                            },
                             "atom_id": {
-                                "type": "number"
+                                "type": "string"
                             }
                         }
                     }

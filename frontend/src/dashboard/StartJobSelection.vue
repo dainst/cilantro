@@ -6,11 +6,12 @@
                 <div class="tile is-child box">
                     <p class="title">Journal import</p>
                     <p>Job Type Description</p>
-                    <router-link to="ingest-journal" tag="b-button">Start</router-link>
+                    <router-link to="ingest-journal" tag="b-button" id="start_ingest_journal">Start</router-link>
                 </div>
                 <div class="tile is-child box">
-                    <p class="title">Book import</p>
+                    <p class="title">Record import</p>
                     <p>Job Type Description</p>
+                    <router-link to="ingest-record" tag="b-button" id="start_ingest_record">Start</router-link>
                 </div>
                 <div class="tile is-child box">
                     <p class="title">NLP Processing</p>

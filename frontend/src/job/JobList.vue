@@ -1,68 +1,26 @@
 <template>
     <section>
-        <b-table :data="jobList" detailed detail-key="job_id"
-            default-sort="created" :default-sort-direction="'desc'">
-            <template slot-scope="props">
-                <b-table-column field="job_id" label="ID" sortable>
-                    {{ props.row.job_id }}
-                </b-table-column>
-                <b-table-column field="name" label="Name" sortable>
-                    {{ props.row.name }}</b-table-column>
-                <b-table-column field="job_type" label="Type" sortable>
-                    {{ props.row.job_type }}
-                </b-table-column>
-                <b-table-column field="state" label="Status" sortable>
-                    {{ props.row.state }}
-                </b-table-column>
-                <b-table-column field="created" label="Created" sortable>
-                    {{ props.row.created }}
-                </b-table-column>
-                <b-table-column field="updated" label="Updated" sortable>
-                    {{ props.row.updated }}
-                </b-table-column>
-                <b-table-column>
-                    <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
-                </b-table-column>
-            </template>
-            <template slot="detail" slot-scope="props">
-                <div>
-                    <b-field label="Job Parameters">{{ props.row.params }}</b-field>
-                </div>
-                <div v-if="props.row.errors.length > 0">
-                    <b-field label="Error Details">{{ props.row.errors }}</b-field>
-                </div>
-            </template>
-        </b-table>
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <b-switch v-model="showAllJobs">
+                    Show all
+                </b-switch>
+            </div>
+        </div>
+        <div>
+            <SpecificJobsList :jobIDs="[]" :showAllJobs="showAllJobs"></SpecificJobsList>
+        </div>
     </section>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { getJobList } from './JobClient';
-import { Job } from './Job';
-import { showError } from '@/util/Notifier.ts';
+import SpecificJobsList from '@/job/SpecificJobsList.vue';
 
-@Component
+@Component({
+    components: { SpecificJobsList }
+})
 export default class JobList extends Vue {
-    jobList: Job[] = [];
-
-    mounted() {
-        this.updateJobList();
-    }
-
-    goToSingleView(id: string) {
-        this.$router.push({
-            path: 'job',
-            query: { id }
-        });
-    }
-
-    async updateJobList() {
-        try {
-            this.jobList = await getJobList();
-        } catch (e) {
-            showError('Failed to load job list from server!', e);
-        }
-    }
+    showAllJobs: boolean = false;
 }
 </script>

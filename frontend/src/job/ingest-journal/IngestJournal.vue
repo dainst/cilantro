@@ -8,7 +8,7 @@
 
         <div v-if="activeStep === 0">
             <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
-            <JournalFilesForm :selected-paths.sync="selectedPaths" />
+            <JobFilesForm :selected-paths.sync="selectedPaths" />
             <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
         </div>
         <div v-if="activeStep === 1">
@@ -18,7 +18,7 @@
         </div>
         <div v-if="activeStep === 2">
             <StartJobButton @click="startJob"></StartJobButton>
-            <JournalOptionsForm @options-updated="options = $event" />
+            <JournalOptionsForm :initialOptions="options" @options-updated="options = $event" />
             <StartJobButton @click="startJob"></StartJobButton>
         </div>
     </div>
@@ -29,7 +29,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { startJob } from '../JobClient';
 
 import JournalMetadataForm from './forms/JournalMetadataForm.vue';
-import JournalFilesForm from './forms/JournalFilesForm.vue';
+import JobFilesForm from '../JobFilesForm.vue';
 import ArticlesForm from './forms/ArticlesForm.vue';
 import JournalOptionsForm from './forms/JournalOptionsForm.vue';
 import {
@@ -42,7 +42,7 @@ import { JobParameters } from '../JobParameters';
 
 @Component({
     components: {
-        JournalFilesForm,
+        JobFilesForm,
         JournalMetadataForm,
         JournalOptionsForm,
         ContinueButton,
@@ -70,7 +70,7 @@ export default class IngestJournal extends Vue {
     async startJob() {
         const params = this.buildJobParams();
         try {
-            await startJob('ingest_journal', params);
+            await startJob('ingest_journals', params);
             showSuccess('Job started');
             this.$router.push({ path: '/' });
         } catch (e) {

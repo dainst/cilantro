@@ -12,6 +12,7 @@ PyPDF2 = "*"
 pdftotext = "*"
 Wand = "*"
 pyocr = "*"
+pymongo = "*"
 
 [dev-packages]
 

@@ -22,6 +22,10 @@ x-env-app-config: &env-app-config
   BACKEND_URI: &backend-uri https://workbench.test.idai.world/api
   CILANTRO_ENV: &cilantro-env test
   OJS_URI: &ojs-uri https://ojs.test.idai.world/plugins/generic/ojs-cilantro-plugin/api
+  ATOM_URI: &atom-uri https://archives.test.idai.world/
+  ATOM_USER: &atom-user demo@example.com
+  ATOM_PASSWORD: &atom-password demo
+  REPOSITORY_URI: &repository-uri https://workbench.test.idai.world/api/repository
 
 services:
 
@@ -53,8 +57,10 @@ services:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-jobdb
-      <<: *env-app-config
       DB_HOST: "celery-db"
+      CILANTRO_ENV: *cilantro-env
+      OLD_JOBS_THRESHOLD_DAYS: *old-job-threshold-days
+      BACKEND_URI: *backend-uri
     networks:
       - web
       - default
@@ -83,26 +89,16 @@ services:
       CILANTRO_ENV: *cilantro-env
       BACKEND_URI: *backend-uri
       OJS_URI: *ojs-uri
+      ATOM_URI: *atom-uri
+      ATOM_USER: *atom-user
+      ATOM_PASSWORD: *atom-password
+      REPOSITORY_URI: *repository-uri
     secrets:
       - ojs_auth_key
 
   convert-worker:
     user: ${UID}
     image: dainst/cilantro-convert-worker:latest
-    working_dir: /app
-    volumes:
-      - workspace-data:/data/workspace
-      - config:/config
-    environment:
-      <<: *env-dirs
-      <<: *env-broker
-      <<: *env-jobdb
-      DB_HOST: "celery-db"
-      CILANTRO_ENV: *cilantro-env
-
-  nlp-worker:
-    user: ${UID}
-    image: dainst/cilantro-nlp-worker:latest
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace

@@ -5,7 +5,6 @@ import glob
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask, ObjectTask
 from utils.repository import generate_repository_path
-from utils import job_db
 
 repository_dir = os.environ['REPOSITORY_DIR']
 archive_dir = os.environ['ARCHIVE_DIR']
@@ -16,27 +15,23 @@ staging_dir = os.environ['STAGING_DIR']
 class CreateObjectTask(ObjectTask):
     """
     Create a Cilantro-Object, the metadatas and the data files in it.
-
     Preconditions:
     -files in staging
-
     Creates:
     -An Object in the working dir
     """
     name = "create_object"
 
     def process_object(self, obj):
-        job_db.update_job(self.job_id, 'started')
-        object_id = self._get_object_id()
-        _initialize_object(object_id, obj, self.params)
-        return {'object_id': object_id}
+        _initialize_object(obj, self.params)
+        return {'object_id': self._get_object_id()}
 
     def _get_object_id(self):
         try:
             object_id = self.get_param('id')
         except KeyError:
             object_id = self.job_id
-        return object_id + f"_{job_db.generate_unique_object_identifier()}"
+        return object_id
 
 
 CreateObjectTask = celery_app.register_task(CreateObjectTask())
@@ -49,10 +44,9 @@ def _get_work_path(params):
     return abs_path
 
 
-def _initialize_object(object_id, obj, params):
+def _initialize_object(obj, params):
     obj.set_metadata_from_dict(params['metadata'])
-    obj.metadata.id = object_id
-    obj.metadata.import_id = params['id']
+    obj.metadata.id = params['id']
     _initialize_files(obj, params['path'], params['user'],
                       params['initial_representation'])
     obj.write()

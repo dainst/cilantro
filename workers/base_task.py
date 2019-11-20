@@ -6,22 +6,13 @@ import traceback
 import celery.signals
 from celery.task import Task
 
+from utils import job_db
 from utils.object import Object
 from utils.setup_logging import setup_logging
 from utils.celery_client import celery_app
 
 
 setup_logging()
-
-
-class ExceptionHandlingException(Exception):
-    """Exception to handle errors when handling Exceptions.
-
-    This is to be thrown when an error occurs while handling another exception.
-    This way a loop is avoided.
-    """
-
-    pass
 
 
 @celery.signals.setup_logging.connect
@@ -84,17 +75,27 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
-    def stop_chain_execution(self):
-        """
-        Stop execution of all tasks in the chain.
 
-        This is obviously for error cases. When an error is thrown and
-        handled, the execution would continue in it erroneous state and
-        throw even more errors.
-        With this the task chain is emptied and execution stops.
+    def _propagate_failure_to_ancestors(self, parent_id, error):
+        job_db.update_job_state(parent_id, 'failure')
+        job_db.add_job_error(parent_id, error)
+
+        parent = job_db.get_job_by_id(parent_id)
+        if 'parent_job_id' in parent:
+            self._propagate_failure_to_ancestors(parent['parent_job_id'], error)
+
+    def after_return(self, status, retval, task_id, args, kwargs, einfo):
         """
-        self.request.chain = None
-        self.request.chord = None
+        Use celery default handler method to write update to our database.
+        https://docs.celeryproject.org/en/latest/userguide/tasks.html#handlers
+        """
+        job_db.update_job_state(self.job_id, status.lower())
+        if status == 'FAILURE':
+            error_object = { 'job_id': self.job_id, 'job_name': self.name, 'message': self.error }
+            job_db.add_job_error( self.job_id, error_object )
+
+            if self.parent_job_id is not None:
+                self._propagate_failure_to_ancestors(self.parent_job_id, error_object)
 
     def get_work_path(self):
         abs_path = os.path.join(self.working_dir, self.work_path)
@@ -122,6 +123,9 @@ class BaseTask(Task):
         """
         self.results = {}
         self._init_params(params)
+
+        job_db.update_job_state(self.job_id, 'started')
+
         if prev_result:
             self._add_prev_result_to_results(prev_result)
         # results can also be part of the params array in some cases
@@ -133,20 +137,11 @@ class BaseTask(Task):
         except celery.exceptions.Ignore:
             # Celery-internal Exception thrown when tasks are ignored/replaced
             raise
-        except ExceptionHandlingException:
-            # Error when handling Exception of the task
-            raise
         except Exception as e:  # noqa: ignore bare except
             self.log.error(traceback.format_exc())
-            params = self.params.copy()
-            params['job_id'] = self.job_id
-            params['task_name'] = self.__name__
-            params['error_message'] = str(e)
-            kwargs = {}
-            if params:
-                kwargs.update(params)
-            raise self.replace(celery_app.signature('handle_error',
-                                                    kwargs=kwargs))
+            self.error = str(e)
+            raise e
+
         return self._merge_result(task_result)
 
     def get_param(self, key):
@@ -206,6 +201,11 @@ class BaseTask(Task):
             self.work_path = params['work_path']
         except KeyError:
             raise KeyError("work_path has to be set before running a task")
+        try:
+            self.parent_job_id = params['parent_job_id']
+        except KeyError:
+            self.parent_job_id = None
+
         self.log.debug(f"initialized params: {self.params}")
 
 
@@ -216,6 +216,7 @@ class FileTask(BaseTask):
     Subclasses have to override the process_file method that holds the
     actual conversion logic.
     """
+
     def execute_task(self):
         file = self.get_param('work_path')
         try:
@@ -225,7 +226,7 @@ class FileTask(BaseTask):
         target_dir = os.path.join(
             os.path.dirname(os.path.dirname(self.get_work_path())),
             target_rep
-            )
+        )
         os.makedirs(target_dir, exist_ok=True)
         self.process_file(file, target_dir)
 
