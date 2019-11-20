@@ -7,6 +7,11 @@ client = MongoClient(os.environ['JOB_DB_URL'], int(os.environ['JOB_DB_PORT']))
 db = client[os.environ['JOB_DB_NAME']]
 
 
+def start_db():
+    create_index()
+    set_first_object_id()
+
+
 def create_index():
     """
     Create index for faster lookup in database.
@@ -17,6 +22,12 @@ def create_index():
                           ("user", DESCENDING)])
 
 
+def set_first_object_id():
+    if not db.objects.find_one({'next_object_id': {'$exists': True}}):
+        first_object_id = int(os.environ['FIRST_OBJECT_ID'])
+        db.objects.insert_one({'next_object_id': first_object_id})
+
+
 def generate_unique_object_identifier():
     """
     Create the unique object identifier.
@@ -25,16 +36,15 @@ def generate_unique_object_identifier():
     is unique and the last characters are digits.
     :return:
     """
-    new_id = db.objects.find_one_and_update(
-        {'next_object_id': {'$exists': True}},
-        {'$inc': {'next_object_id': 1}},
-        return_document=ReturnDocument.AFTER
-    )
-    if not new_id:
-        first_object_id = int(os.environ['FIRST_OBJECT_ID'])
-        db.objects.insert_one({'next_object_id': first_object_id})
-        return first_object_id
-    return new_id['next_object_id']
+    try:
+        return db.objects.find_one_and_update(
+            {'next_object_id': {'$exists': True}},
+            {'$inc': {'next_object_id': 1}},
+            return_document=ReturnDocument.AFTER
+        )['next_object_id']
+    except KeyError:
+        raise RuntimeError("The database doesn't seem to be initialized"
+                           "properly")
 
 
 def get_jobs_for_user(user):
