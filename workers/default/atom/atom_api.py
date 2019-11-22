@@ -1,11 +1,9 @@
 import os
 import logging
 import requests
-from requests.auth import HTTPBasicAuth
 
 atom_uri = os.environ['ATOM_URI']
-atom_user = os.environ['ATOM_USER']
-atom_password = os.environ['ATOM_PASSWORD']
+atom_api_key = os.environ['ATOM_API_KEY']
 
 repository_uri = os.environ['REPOSITORY_URI']
 
@@ -21,9 +19,9 @@ def create_digital_object(obj):
     :return: Tuple of return code and text of the POST request to OJS
     """
     url = f"{atom_uri}/api/digitalobjects"
+    headers = {'REST-API-Key': atom_api_key}
     data = _get_digital_object_data(obj)
-    auth = HTTPBasicAuth(atom_user, atom_password)
-    response = requests.post(url, data=data, auth=auth)
+    response = requests.post(url, data=data, headers=headers)
     response.raise_for_status()
 
 
@@ -34,5 +32,4 @@ def _get_digital_object_data(obj):
         'media_type': 'text',
         'mime_type': 'application/pdf',
         'uri': f"{repository_uri}/file/{oid}/data/pdf/{oid}.pdf",
-        'name': f"{oid}.pdf"
-    }
+        'name': f"{oid}.pdf"}
