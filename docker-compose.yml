@@ -25,8 +25,7 @@ x-env-app-config: &env-app-config
   OJS_AUTH_KEY: &ojs-auth-key ${OJS_AUTH_KEY}
   ATOM_API_URL: &atomAPIURL http://localhost:8085/index.php/api/informationobjects
   ATOM_URI: &atom-uri http://mock-server:8080/atom
-  ATOM_USER: &atom-user demo@example.com
-  ATOM_PASSWORD: &atom-password demo
+  ATOM_API_KEY: &atom-api-key ${ATOM_API_KEY}
   REPOSITORY_URI: &repository-uri http://service:5000/repository
 
 x-test-timeouts: &test-timeouts
@@ -94,8 +93,7 @@ services:
       OJS_URI: *ojs-uri
       OJS_AUTH_KEY: *ojs-auth-key
       ATOM_URI: *atom-uri
-      ATOM_USER: *atom-user
-      ATOM_PASSWORD: *atom-password
+      ATOM_API_KEY: *atom-api-key
       REPOSITORY_URI: *repository-uri
 
   convert-worker:
@@ -125,8 +123,7 @@ services:
         VUE_APP_ALLOWED_FILE_EXTENSIONS: "pdf, tif, tiff, zip"
         VUE_APP_BACKEND_URI: *backend-uri
         VUE_APP_ATOM_API_URL: *atomAPIURL
-        VUE_APP_ATOM_USER: *atom-user
-        VUE_APP_ATOM_PASSWORD: *atom-password
+        VUE_APP_ATOM_API_KEY: *atom-api-key
     ports:
       - "8081:80"
 
