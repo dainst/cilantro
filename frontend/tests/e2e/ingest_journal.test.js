@@ -60,6 +60,7 @@ test('start ingest journal job with default values', async testController => {
 
     await testController
         .wait(6000)
+        .resizeWindow(1200, 800)
         .click('nav.navbar div.navbar-menu a[href="/jobs"]')
         .expect(mainContentSelector.innerText).contains('Show all');
 
