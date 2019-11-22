@@ -4,6 +4,7 @@ import axios from 'axios';
 export async function sendRequest(
     requestType: string,
     url: string,
+    headers: object = {},
     params: object,
     disableAuthHeader: boolean,
     otherSettings: object = {}
@@ -11,6 +12,7 @@ export async function sendRequest(
     const axiosConfig: any = {
         method: requestType,
         url,
+        headers,
         ...otherSettings
     };
     if (requestType === 'get') {

@@ -10,7 +10,7 @@ export async function search(term: string, scope: string): Promise<ZenonResultDa
         lookfor: term,
         type: scope
     };
-    return sendRequest('get', url, params, true);
+    return sendRequest('get', url, {}, params, true);
 }
 
 export async function getRecord(zenonID: string): Promise<ZenonRecord> {
@@ -18,12 +18,12 @@ export async function getRecord(zenonID: string): Promise<ZenonRecord> {
     const params: object = {
         id: zenonID
     };
-    return sendRequest('get', url, params, true).then(response => response.records[0]);
+    return sendRequest('get', url, {}, params, true).then(response => response.records[0]);
 }
 
 export async function downloadCSLJSONRecord(id: string): Promise<cslJSONRecord> {
     const url: string = `${zenonBaseURL}Record/${id}/Export?style=CSL-JSON`;
-    return sendRequest('get', url, {}, true);
+    return sendRequest('get', url, {}, {}, true);
 }
 
 export interface ZenonResultData {

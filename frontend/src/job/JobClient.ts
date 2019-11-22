@@ -6,15 +6,15 @@ export async function startJob(
     jobType: string,
     params: JobParameters
 ): Promise<boolean> {
-    return sendRequest('post', `${backendUri}/job/${jobType}`, params, false);
+    return sendRequest('post', `${backendUri}/job/${jobType}`, {}, params, false);
 }
 
 export async function getJobList(getAllJobs: boolean): Promise<Job[]> {
-    return sendRequest('get', `${backendUri}/job/jobs`, { show_all_jobs: getAllJobs }, false);
+    return sendRequest('get', `${backendUri}/job/jobs`, {}, { show_all_jobs: getAllJobs }, false);
 }
 
 export async function getJobDetails(jobID: string): Promise<Job> {
-    return sendRequest('get', `${backendUri}/job/${jobID}`, {}, false);
+    return sendRequest('get', `${backendUri}/job/${jobID}`, {}, {}, false);
 }
 
 export interface Job {

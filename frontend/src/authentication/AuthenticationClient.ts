@@ -5,5 +5,5 @@ import {backendUri} from "@/config";
 export async function checkLogin(user: User): Promise<boolean> {
     const url: string = `${backendUri}/user/${user.name}`;
     const auth = { auth: { username: user.name, password: user.password } };
-    return sendRequest('get', url, {}, false, auth);
+    return sendRequest('get', url, {}, {}, false, auth);
 }

@@ -1,16 +1,10 @@
 import Vue from 'vue';
 import { sendRequest } from './HTTPClient';
-import { atomAPIURL, atomUsername, atomPassword } from '@/config';
+import { atomAPIURL, atomAPIKey } from '@/config';
 
 export async function getAtomRecord(atomID: string): Promise<AtomRecord> {
     const url: string = `${atomAPIURL}/${atomID}`;
-    const authConfig = {
-        auth: {
-            username: atomUsername,
-            password: atomPassword
-        }
-    };
-    return sendRequest('get', url, {}, false, authConfig);
+    return sendRequest('get', url, {'REST-API-Key': atomAPIKey}, {}, false);
 }
 
 export interface AtomRecord {
