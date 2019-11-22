@@ -6,7 +6,7 @@ test('start ingest journal job with default values', async testController => {
     await testController
         .typeText('body #main_content input.input', 'test_user')
         .typeText('body #main_content input[type="password"]', 'test_password')
-        .click('.button[type="submit"]')
+        .click('button')
 
     const startJobSelector = new Selector('#start_ingest_journal');
     await testController.click(startJobSelector)
