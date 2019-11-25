@@ -15,10 +15,8 @@ staging_dir = os.environ['STAGING_DIR']
 class CreateObjectTask(ObjectTask):
     """
     Create a Cilantro-Object, the metadatas and the data files in it.
-
     Preconditions:
     -files in staging
-
     Creates:
     -An Object in the working dir
     """

@@ -6,7 +6,8 @@ from flask import json
 from service.run_service import app
 from utils.repository import generate_repository_path
 
-test_object = 'a_book'
+
+test_object = 'a_book_1234'
 test_representation = 'pdf'
 test_jpg = "test.jpg"
 test_file = 'test.pdf'
@@ -51,7 +52,7 @@ class RepositoryControllerTest(unittest.TestCase):
         self.assertIsInstance(response['representations'], list)
 
     def test_get_object_not_found(self):
-        response = self.client.get(f'/repository/object/wrong_object')
+        response = self.client.get(f'/repository/object/wrong_object_1234')
         self.assertEqual(response.status_code, 404)
 
         response_json = response.get_json()
