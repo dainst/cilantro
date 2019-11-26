@@ -5,8 +5,6 @@ import requests
 atom_uri = os.environ['ATOM_URI']
 atom_api_key = os.environ['ATOM_API_KEY']
 
-repository_uri = os.environ['REPOSITORY_URI']
-
 log = logging.getLogger(__name__)
 
 
@@ -33,6 +31,7 @@ def create_digital_object(obj):
 
 
 def _get_digital_object_data(obj):
+    repository_uri = os.environ['REPOSITORY_URI']
     oid = obj.metadata.id
     return {
         'information_object_slug': obj.metadata.atom_id,
