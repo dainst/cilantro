@@ -13,7 +13,8 @@ log = logging.getLogger(__name__)
 def get_record(atom_id):
     """Get record from AtoM API."""
     url = f"{atom_uri}/api/informationobjects/{atom_id}"
-    response = requests.get(url)
+    headers = {'REST-API-Key': atom_api_key}
+    response = requests.get(url, headers=headers)
     return response.text
 
 
