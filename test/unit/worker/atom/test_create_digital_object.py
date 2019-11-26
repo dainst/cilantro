@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from workers.default.atom.atom_api import create_digital_object
+from utils.atom_api import create_digital_object
 from utils.object import Object
 
 

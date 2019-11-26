@@ -1,7 +1,7 @@
 from flask import Blueprint
 from service.user.user_service import auth
 
-from workers.default.atom.atom_api import get_record
+from utils.atom_api import get_record
 
 atom_controller = Blueprint('atom', __name__)
 
