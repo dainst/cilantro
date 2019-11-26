@@ -6,10 +6,6 @@ RUN apk update && apk upgrade && \
 COPY . /src
 WORKDIR /src/frontend
 
-ARG VUE_APP_BACKEND_URI
-
-RUN echo "VUE_APP_BACKEND_URI = $VUE_APP_BACKEND_URI" > .env
-
 RUN npm install && npm run build
 
 

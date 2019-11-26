@@ -123,8 +123,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/cilantro-frontend/Dockerfile
-      args:
-        VUE_APP_BACKEND_URI: *backend-uri
     ports:
       - "8081:80"
 
