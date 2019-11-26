@@ -3,6 +3,9 @@
 if test -f "/run/secrets/ojs_auth_key"; then
     export OJS_AUTH_KEY=$(cat "/run/secrets/ojs_auth_key")
 fi
+if test -f "/run/secrets/atom_api_key"; then
+    export ATOM_API_KEY=$(cat "/run/secrets/atom_api_key")
+fi
 
 if [ "$CILANTRO_ENV" = "development" ]
 then
