@@ -22,9 +22,8 @@ def create_digital_object(obj):
     """
     Create a digitial object for a cilantro object in atom.
 
-    :param str import_xml_file_path: OJS-Import-XML
-    :param str journalcode: Name of the journal that will be imported to
-    :return: Tuple of return code and text of the POST request to OJS
+    :param Object obj: THE cilantro object
+    :return: None
     """
     url = f"{atom_uri}/api/digitalobjects"
     headers = {'REST-API-Key': atom_api_key}
