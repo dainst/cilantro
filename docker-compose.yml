@@ -124,10 +124,7 @@ services:
       context: .
       dockerfile: ./docker/cilantro-frontend/Dockerfile
       args:
-        VUE_APP_ALLOWED_FILE_EXTENSIONS: "pdf, tif, tiff, zip"
         VUE_APP_BACKEND_URI: *backend-uri
-        VUE_APP_ATOM_API_URL: *atomAPIURL
-        VUE_APP_ATOM_API_KEY: *atom-api-key
     ports:
       - "8081:80"
 
