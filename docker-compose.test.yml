@@ -69,6 +69,8 @@ services:
         - "traefik.enable=true"
         - "traefik.frontend.rule=Host:workbench.test.idai.world; PathPrefixStrip:/api"
         - "traefik.port=5000"
+    secrets:
+      - atom_api_key
 
   default-worker:
     user: ${UID}
