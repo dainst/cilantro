@@ -10,6 +10,13 @@ repository_uri = os.environ['REPOSITORY_URI']
 log = logging.getLogger(__name__)
 
 
+def get_record(atom_id):
+    """Get record from AtoM API."""
+    url = f"{atom_uri}/api/informationobjects/{atom_id}"
+    response = requests.get(url)
+    return response.text
+
+
 def create_digital_object(obj):
     """
     Create a digitial object for a cilantro object in atom.
