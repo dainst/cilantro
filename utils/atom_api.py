@@ -24,7 +24,8 @@ def create_digital_object(obj):
     :return: None
     """
     url = f"{atom_uri}/api/digitalobjects"
-    headers = {'REST-API-Key': atom_api_key}
+    headers = {'REST-API-Key': atom_api_key,
+               'content-type': 'application/json'}
     data = _get_digital_object_data(obj)
     response = requests.post(url, data=data, headers=headers)
     response.raise_for_status()
