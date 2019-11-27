@@ -146,6 +146,8 @@ secrets:
 
 volumes:
   mongo-data:
+    name: workbench_mongo_data
+    external: true
   redis-data:
   workspace-data:
   repository-data:
