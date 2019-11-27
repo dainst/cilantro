@@ -14,3 +14,4 @@ FROM nginx:1.17-alpine
 RUN mkdir /app
 COPY --from=0 /src/frontend/dist /app
 COPY docker/cilantro-frontend/nginx.conf /etc/nginx/nginx.conf
+COPY docker/cilantro-frontend/VERSION .
