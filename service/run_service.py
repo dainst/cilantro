@@ -13,10 +13,11 @@ from service.repository.repository_controller import repository_controller
 from service.user.user_controller import user_controller
 from service.atom.atom_controller import atom_controller
 from service.errors import ApiError
-from utils.job_db import start_db
+from utils.job_db import JobDb
 
 setup_logging()
-start_db()
+job_db = JobDb()
+job_db.start_db()
 
 app = Flask('cilantro')
 CORS(app, supports_credentials=True)

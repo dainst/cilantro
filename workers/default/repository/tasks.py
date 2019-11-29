@@ -5,7 +5,7 @@ import glob
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask, ObjectTask
 from utils.repository import generate_repository_path
-from utils.job_db import generate_unique_object_identifier
+from utils.job_db import JobDb
     
 repository_dir = os.environ['REPOSITORY_DIR']
 archive_dir = os.environ['ARCHIVE_DIR']
@@ -32,7 +32,10 @@ class CreateObjectTask(ObjectTask):
             object_id = self.get_param('id')
         except KeyError:
             object_id = self.job_id
-        return object_id + f"_{generate_unique_object_identifier()}"
+        job_db = JobDb()
+        uid = job_db.generate_unique_object_identifier()
+        job_db.close()
+        return object_id + f"_{uid}"
 
 
 CreateObjectTask = celery_app.register_task(CreateObjectTask())

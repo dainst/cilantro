@@ -6,7 +6,7 @@ import traceback
 import celery.signals
 from celery.task import Task
 
-from utils import job_db
+from utils.job_db import JobDb
 from utils.object import Object
 from utils.setup_logging import setup_logging
 from utils.celery_client import celery_app
@@ -75,12 +75,14 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
+    def __init__(self):
+        self.job_db = JobDb()
 
     def _propagate_failure_to_ancestors(self, parent_id, error):
-        job_db.update_job_state(parent_id, 'failure')
-        job_db.add_job_error(parent_id, error)
+        self.job_db.update_job_state(parent_id, 'failure')
+        self.job_db.add_job_error(parent_id, error)
 
-        parent = job_db.get_job_by_id(parent_id)
+        parent = self.job_db.get_job_by_id(parent_id)
         if 'parent_job_id' in parent:
             self._propagate_failure_to_ancestors(parent['parent_job_id'], error)
 
@@ -89,13 +91,14 @@ class BaseTask(Task):
         Use celery default handler method to write update to our database.
         https://docs.celeryproject.org/en/latest/userguide/tasks.html#handlers
         """
-        job_db.update_job_state(self.job_id, status.lower())
+        self.job_db.update_job_state(self.job_id, status.lower())
         if status == 'FAILURE':
             error_object = { 'job_id': self.job_id, 'job_name': self.name, 'message': self.error }
-            job_db.add_job_error( self.job_id, error_object )
+            self.job_db.add_job_error( self.job_id, error_object )
 
             if self.parent_job_id is not None:
                 self._propagate_failure_to_ancestors(self.parent_job_id, error_object)
+        self.job_db.close()
 
     def get_work_path(self):
         abs_path = os.path.join(self.working_dir, self.work_path)
@@ -124,7 +127,7 @@ class BaseTask(Task):
         self.results = {}
         self._init_params(params)
 
-        job_db.update_job_state(self.job_id, 'started')
+        self.job_db.update_job_state(self.job_id, 'started')
 
         if prev_result:
             self._add_prev_result_to_results(prev_result)
