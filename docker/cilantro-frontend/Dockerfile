@@ -3,8 +3,15 @@ FROM node:12.6.0-alpine as builder
 RUN apk update && apk upgrade && \
     apk add --no-cache git
 
-COPY . /src
+COPY ./.git /src/.git
+COPY ./frontend/package.json /src/frontend/package.json
+COPY ./frontend/package-lock.json /src/frontend/package-lock.json
 WORKDIR /src/frontend
+
+RUN npm install
+
+
+COPY ./frontend /src/frontend
 
 ARG VUE_APP_BACKEND_URI
 ARG VUE_APP_ALLOWED_FILE_EXTENSIONS
@@ -16,7 +23,8 @@ RUN echo "VUE_APP_BACKEND_URI = $VUE_APP_BACKEND_URI\n" \
          "VUE_APP_ATOM_API_URL = $VUE_APP_ATOM_API_URL\n" \
          "VUE_APP_ATOM_API_KEY = $VUE_APP_ATOM_API_KEY\n" > .env
 
-RUN npm install && npm run build
+
+RUN npm run build
 
 
 FROM nginx:1.17-alpine

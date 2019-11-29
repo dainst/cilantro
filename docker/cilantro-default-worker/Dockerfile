@@ -19,17 +19,20 @@ ENV LANG C.UTF-8
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 RUN set -ex && mkdir /app
 
+
+COPY docker/cilantro-default-worker/Pipfile.lock Pipfile.lock
+COPY docker/cilantro-default-worker/Pipfile Pipfile
+RUN pip3 install pipenv
+RUN set -ex && pipenv install --deploy --system
+
 COPY ./service /app/service
 COPY ./utils /app/utils
 COPY ./workers /app/workers
 COPY ./resources /app/resources
 WORKDIR /app
 
-COPY docker/cilantro-default-worker/Pipfile Pipfile
-COPY docker/cilantro-default-worker/entrypoint.sh /entrypoint.sh
 
-RUN pip3 install pipenv
-RUN set -ex && pipenv lock && pipenv install --deploy --system
+COPY docker/cilantro-default-worker/entrypoint.sh /entrypoint.sh
 
 COPY docker/cilantro-default-worker/VERSION .
 
