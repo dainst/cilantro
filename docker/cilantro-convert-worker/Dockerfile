@@ -23,9 +23,9 @@ ENV LANG C.UTF-8
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 RUN set -ex && mkdir /app
 
+RUN pip3 install pipenv
 COPY docker/cilantro-convert-worker/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-convert-worker/Pipfile Pipfile
-RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system
 
 COPY ./service /app/service

@@ -22,9 +22,9 @@ ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
 
+RUN pip3 install pipenv
 COPY docker/cilantro-test/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-test/Pipfile Pipfile
-RUN pip3 install pipenv
 RUN set -ex && pipenv install --deploy --system
 
 COPY ./service /app/service
