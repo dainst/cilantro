@@ -12,8 +12,10 @@ flask-cors = "*"
 Flask-HTTPAuth = "*"
 bcrypt = "*"
 gunicorn = "*"
+gevent = "*"
 pymongo = "*"
 jsonschema = "*"
+requests = "*"
 
 [dev-packages]
 

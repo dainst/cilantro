@@ -1,0 +1,10 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/atom/api/informationobjects/.*"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\r\n    \"parent\": \"gr-d-dai-ath-archiv-nl\",\r\n    \"reference_code\": \"GR D-DAI-ATH-Archiv NL-Duhn\",\r\n    \"title\": \"Nachlass Duhn, Friedrich Carl von\",\r\n    \"publication_status\": \"Draft\",\r\n    \"level_of_description\": \"Subfonds\",\r\n    \"extent_and_medium\": \"1 hellblaue Jurismappe mit losen Bl\u00E4ttern, 21 x 15 cm.\",\r\n    \"dates\": [\r\n        {\r\n            \"date\": \"1877\",\r\n            \"start_date\": \"1877-00-00\",\r\n            \"end_date\": \"1877-00-00\",\r\n            \"type\": \"Creation\"\r\n        }\r\n    ],\r\n    \"creators\": [\r\n        {\r\n            \"authotized_form_of_name\": \"Duhn, Friedrich Carl von (1851\u20131930)\"\r\n        }\r\n    ],\r\n    \"repository\": \"Deutsches Arch\u00E4ologisches Institut, Athen, Archiv\",\r\n    \"repository_inherited_from\": \"Nachl\u00E4sse\",\r\n    \"scope_and_content\": \"Bericht \u00FCber eine Reise im n\u00F6rdlichen Peloponnes gemeinsam mit Habbo Gerhard Lolling. Die Reise begann am 14. April und endete f\u00FCr Duhn am 15. Mai 1877. Das Dokument beschreibt lediglich die Reiseroute (Athen, \u00C4gina, Epidauros, Nafplio, Nemea, Sikyon, Pellene, Aigeira, Aigion, Patras, Megaspilion, Dyme, Olympia, Tripoli, Nafplio, Athen), gibt jedoch keine genaueren Angaben zu den gemachten Funden\/ Entdeckungen. Nur, dass Achaia sehr vernachl\u00E4ssigt ist und wenig Resultate erbracht worden sind, wird bemerkt. Die aufgelisteten Anlagen 1. Skulpturenreste, 2. griechische Inschriften, 3. Dyme, 4. lateinische Inschriften von Patras, 5. Rechnung sind nicht mehr beiliegend.\",\r\n    \"name_access_points\": [\r\n        \"Lolling, Habbo Gerhardus (1848\u20131894)\"\r\n    ]\r\n}"
+    }
+}

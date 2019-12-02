@@ -10,7 +10,6 @@ WORKDIR /src/frontend
 
 RUN npm install
 
-
 COPY ./frontend /src/frontend
 
 ARG VUE_APP_BACKEND_URI
@@ -23,12 +22,11 @@ RUN echo "VUE_APP_BACKEND_URI = $VUE_APP_BACKEND_URI\n" \
          "VUE_APP_ATOM_API_URL = $VUE_APP_ATOM_API_URL\n" \
          "VUE_APP_ATOM_API_KEY = $VUE_APP_ATOM_API_KEY\n" > .env
 
-
 RUN npm run build
-
 
 FROM nginx:1.17-alpine
 
 RUN mkdir /app
 COPY --from=0 /src/frontend/dist /app
 COPY docker/cilantro-frontend/nginx.conf /etc/nginx/nginx.conf
+COPY docker/cilantro-frontend/VERSION .

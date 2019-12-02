@@ -11,6 +11,7 @@ from service.job.job_controller import job_controller
 from service.staging.staging_controller import staging_controller
 from service.repository.repository_controller import repository_controller
 from service.user.user_controller import user_controller
+from service.atom.atom_controller import atom_controller
 from service.errors import ApiError
 from utils.job_db import start_db
 
@@ -25,6 +26,7 @@ app.register_blueprint(job_controller, url_prefix="/job")
 app.register_blueprint(staging_controller, url_prefix="/staging")
 app.register_blueprint(repository_controller, url_prefix="/repository")
 app.register_blueprint(user_controller, url_prefix="/user")
+app.register_blueprint(atom_controller, url_prefix="/atom")
 
 
 @app.errorhandler(ApiError)
