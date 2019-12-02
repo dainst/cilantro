@@ -82,12 +82,12 @@ async function populateAtomRecord(record: ObjectRecord): Promise<ObjectRecord> {
         const msg = 'Invalid name. The folder path does not match the pattern "RECORD-AID-xxxxxxx".';
         return buildError(record, msg);
     }
-    try {
-        const atomRecord = await getAtomRecord(atomId);
-        return buildRecordRecord(record, atomRecord);
-    } catch (error) {
+    const atomRecord = await getAtomRecord(atomId);
+    if (atomRecord.id == 'not-found') {
         const msg = `No Record with the extracted ID "${atomId}" found.`;
         return buildError(record, msg);
+    } else {
+        return buildRecordRecord(record, atomRecord);
     }
 }
 
