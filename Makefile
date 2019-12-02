@@ -56,3 +56,9 @@ cp-dev-config:
 fix-docker-user:
 	$(shell sed -i 's/user_id_placeholder/$(shell id -u)/g' .env)
 	$(shell sed -i 's/user_group_placeholder/$(shell id -g)/g' .env)
+
+lock:
+	cd docker/cilantro-convert-worker && pipenv lock
+	cd docker/cilantro-default-worker && pipenv lock
+	cd docker/cilantro-service && pipenv lock
+	cd docker/cilantro-test && pipenv lock

@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo 'Preparing..'
                 sh 'make init'
-                sh 'docker-compose pull && docker-compose up -d'
+                sh 'docker-compose build && docker-compose up -d'
             }
         }
         stage('Test backend') {
