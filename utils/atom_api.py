@@ -1,6 +1,7 @@
 import os
 import logging
 import requests
+import json
 
 atom_uri = os.environ['ATOM_URI']
 atom_api_key = os.environ['ATOM_API_KEY']
@@ -18,17 +19,19 @@ def get_record(atom_id):
 
 def create_digital_object(obj):
     """
-    Create a digitial object for a cilantro object in atom.
+    Create a digitial object for a cilantro object in AtoM.
 
     :param Object obj: THE cilantro object
-    :return: None
+    :return: str The generated URI for the digital object
     """
     url = f"{atom_uri}/api/digitalobjects"
     headers = {'REST-API-Key': atom_api_key,
                'content-type': 'application/json'}
     data = _get_digital_object_data(obj)
+    log.debug(f"Digital object: {json.dumps(data, indent=4)}")
     response = requests.post(url, data=data, headers=headers)
     response.raise_for_status()
+    return f"{atom_uri}/{response.json()['slug']}"
 
 
 def _get_digital_object_data(obj):
