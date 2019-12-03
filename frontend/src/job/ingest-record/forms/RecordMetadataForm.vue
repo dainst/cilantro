@@ -116,10 +116,16 @@ function initRecord(path: string): ObjectRecord {
     return { id: path, object: initRecordObject(path), errors: [] };
 }
 
+/**
+ * Converts the folder name to an AtoM slug
+ *
+ * AtoM slugs are always lowercase and start with
+ * 'de-' whereas folder names start with 'D-'.
+ */
 function extractAtomId(path: string): string | null {
-    const result = path.match(/.*RECORD-AID-(.+)/);
+    const result = path.match(/.*RECORD-AID-D-(.+)/);
     if (!result || result.length < 1) return null;
-    return result[1];
+    return `de-${result[1].toLowerCase()}`;
 }
 </script>
 
