@@ -18,18 +18,15 @@
                 <b-table-column field="id" label="Path">{{ props.row.id }}</b-table-column>
                 <b-table-column
                     field="object.metadata.title"
-                    label="Title">
-                        {{ props.row.object.metadata.title || '-' | truncate(80) }}
-                </b-table-column>
+                    label="Title"
+                >{{ props.row.object.metadata.title || '-' | truncate(80) }}</b-table-column>
             </template>
             <template slot="detail" slot-scope="props">
                 <div class="content">
                     <ul v-if="props.row.errors.length > 0">
                         <li v-for="error in props.row.errors" :key="error">{{ error }}</li>
                     </ul>
-                    <div v-else>
-                        No problems found for this folder path
-                    </div>
+                    <div v-else>No problems found for this folder path</div>
                 </div>
             </template>
         </b-table>
@@ -44,7 +41,7 @@ import { initRecordObject, RecordMetadata } from '../RecordImportParameters';
 import { getAtomRecord, AtomRecord } from '@/util/AtomClient';
 import {
     checkFolderStructure, buildError, getRowClass, getTableField, ObjectRecord
-} from '@/job/JobMetadataFormUtils.ts';
+} from '@/job/JobMetadataFormUtils';
 
 @Component({
     filters: {
@@ -83,12 +80,11 @@ async function populateAtomRecord(record: ObjectRecord): Promise<ObjectRecord> {
         return buildError(record, msg);
     }
     const atomRecord: any = await getAtomRecord(atomId);
-    if (atomRecord['id'] == 'not-found') {
+    if (atomRecord.id === 'not-found') {
         const msg = `No Record with the extracted ID "${atomId}" found.`;
         return buildError(record, msg);
-    } else {
-        return buildRecordRecord(record, atomRecord);
     }
+    return buildRecordRecord(record, atomRecord);
 }
 
 async function buildRecordRecord(record: ObjectRecord, atomRecord: AtomRecord): Promise<ObjectRecord> {
