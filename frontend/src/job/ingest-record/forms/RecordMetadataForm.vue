@@ -40,7 +40,7 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { initRecordObject } from '../RecordImportParameters';
+import { initRecordObject, RecordMetadata } from '../RecordImportParameters';
 import { getAtomRecord, AtomRecord } from '@/util/AtomClient';
 import {
     checkFolderStructure, buildError, getRowClass, getTableField, ObjectRecord
@@ -91,23 +91,29 @@ async function populateAtomRecord(record: ObjectRecord): Promise<ObjectRecord> {
     }
 }
 
-async function buildRecordRecord(record: ObjectRecord, atomRecord: AtomRecord):
-    Promise<ObjectRecord> {
-    return {
+async function buildRecordRecord(record: ObjectRecord, atomRecord: AtomRecord): Promise<ObjectRecord> {
+    let builtRecord = {
         id: record.id,
         object: {
             id: record.object.id,
             path: record.object.path,
             metadata: {
                 title: atomRecord.title,
-                created: atomRecord.dates[0].date,
                 author: [atomRecord.creators[0].authotized_form_of_name],
                 atom_id: String(atomRecord.reference_code)
-            }
+            } as RecordMetadata
         },
         remoteRecord: atomRecord,
         errors: record.errors
     };
+    if ('date' in atomRecord.dates[0]) {
+        builtRecord.object.metadata.created = String(atomRecord.dates[0].date)
+    } else {
+        if ('start_date' in atomRecord.dates[0] && 'end_date' in atomRecord.dates[0]) {
+            builtRecord.object.metadata.created = atomRecord.dates[0].start_date! + ' - ' + atomRecord.dates[0].end_date!
+        }
+    }
+    return builtRecord;
 }
 
 function initRecord(path: string): ObjectRecord {
