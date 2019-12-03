@@ -84,11 +84,15 @@ async function populateAtomRecord(record: ObjectRecord): Promise<ObjectRecord> {
         const msg = `No Record with the extracted ID "${atomId}" found.`;
         return buildError(record, msg);
     }
-    return buildRecordRecord(record, atomRecord);
+    return buildRecordRecord(record, atomRecord, atomId);
 }
 
-async function buildRecordRecord(record: ObjectRecord, atomRecord: AtomRecord): Promise<ObjectRecord> {
-    let builtRecord = {
+async function buildRecordRecord(
+    record: ObjectRecord,
+    atomRecord: AtomRecord,
+    atomId: string
+): Promise<ObjectRecord> {
+    const builtRecord = {
         id: record.id,
         object: {
             id: record.object.id,
@@ -96,18 +100,16 @@ async function buildRecordRecord(record: ObjectRecord, atomRecord: AtomRecord): 
             metadata: {
                 title: atomRecord.title,
                 author: [atomRecord.creators[0].authotized_form_of_name],
-                atom_id: String(atomRecord.reference_code)
+                atom_id: atomId
             } as RecordMetadata
         },
         remoteRecord: atomRecord,
         errors: record.errors
     };
     if ('date' in atomRecord.dates[0]) {
-        builtRecord.object.metadata.created = String(atomRecord.dates[0].date)
-    } else {
-        if ('start_date' in atomRecord.dates[0] && 'end_date' in atomRecord.dates[0]) {
-            builtRecord.object.metadata.created = atomRecord.dates[0].start_date! + ' - ' + atomRecord.dates[0].end_date!
-        }
+        builtRecord.object.metadata.created = String(atomRecord.dates[0].date);
+    } else if ('start_date' in atomRecord.dates[0] && 'end_date' in atomRecord.dates[0]) {
+        builtRecord.object.metadata.created = `${atomRecord.dates[0].start_date!  } - ${  atomRecord.dates[0].end_date!}`;
     }
     return builtRecord;
 }
