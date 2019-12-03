@@ -76,7 +76,7 @@ async function populateAtomRecords(records: ObjectRecord[]) {
 async function populateAtomRecord(record: ObjectRecord): Promise<ObjectRecord> {
     const atomId = extractAtomId(record.object.path);
     if (!atomId) {
-        const msg = 'Invalid name. The folder path does not match the pattern "RECORD-AID-xxxxxxx".';
+        const msg = 'Invalid name. The folder path does not match the pattern "RECORD-AID-D-xxxxxxx".';
         return buildError(record, msg);
     }
     const atomRecord: any = await getAtomRecord(atomId);
@@ -109,7 +109,7 @@ async function buildRecordRecord(
     if ('date' in atomRecord.dates[0]) {
         builtRecord.object.metadata.created = String(atomRecord.dates[0].date);
     } else if ('start_date' in atomRecord.dates[0] && 'end_date' in atomRecord.dates[0]) {
-        builtRecord.object.metadata.created = `${atomRecord.dates[0].start_date!  } - ${  atomRecord.dates[0].end_date!}`;
+        builtRecord.object.metadata.created = `${atomRecord.dates[0].start_date!} - ${atomRecord.dates[0].end_date!}`;
     }
     return builtRecord;
 }
