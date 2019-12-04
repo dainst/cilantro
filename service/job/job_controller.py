@@ -6,7 +6,7 @@ from flask import Blueprint, url_for, jsonify, request
 
 from service.errors import ApiError
 from service.user.user_service import auth
-from utils import job_db
+from utils.job_db import JobDb
 from utils import json_validation
 
 from service.job.jobs import IngestRecordsJob, IngestJournalsJob
@@ -97,7 +97,9 @@ def job_list():
     :return: A JSON object containing the list of job objects
     """
     user = auth.username()
+    job_db = JobDb()
     jobs = job_db.get_jobs_for_user(user)
+    job_db.close()
     show_all_jobs = request.args.get('show_all_jobs')
     response = []
     if not show_all_jobs or show_all_jobs == "false":
@@ -596,7 +598,9 @@ def job_status(job_id):
 
     :return: A JSON object containing the status info
     """
+    job_db = JobDb()
     job = job_db.get_job_by_id(job_id)
+    job_db.close()
 
     job['duration'] = str(datetime.timedelta(
         seconds=int((job['updated'] - job['created']).total_seconds())))
