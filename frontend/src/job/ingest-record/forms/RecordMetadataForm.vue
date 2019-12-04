@@ -84,14 +84,14 @@ async function populateAtomRecord(record: ObjectRecord): Promise<ObjectRecord> {
     }
     try {
         const atomRecord = await getAtomRecord(atomId);
-        return buildRecordRecord(record, atomRecord);
+        return buildRecordRecord(record, atomRecord, atomId);
     } catch (error) {
         const msg = `No Record with the extracted ID "${atomId}" found.`;
         return buildError(record, msg);
     }
 }
 
-async function buildRecordRecord(record: ObjectRecord, atomRecord: AtomRecord):
+async function buildRecordRecord(record: ObjectRecord, atomRecord: AtomRecord, atomId: string):
     Promise<ObjectRecord> {
     return {
         id: record.id,
@@ -102,7 +102,7 @@ async function buildRecordRecord(record: ObjectRecord, atomRecord: AtomRecord):
                 title: atomRecord.title,
                 created: atomRecord.dates[0].date,
                 author: [atomRecord.creators[0].authotized_form_of_name],
-                atom_id: String(atomRecord.reference_code)
+                atom_id: atomId
             }
         },
         remoteRecord: atomRecord,
