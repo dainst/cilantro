@@ -47,7 +47,7 @@ import {
 import { getJobDetails, getJobList, Job } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
-@Component
+@Component({ name: 'SpecificJobsList' })
 export default class SpecificJobsList extends Vue {
     @Prop(Array) jobIDs!: string[];
     @Prop() showAllJobs!: boolean;
