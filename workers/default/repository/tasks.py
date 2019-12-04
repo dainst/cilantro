@@ -24,8 +24,9 @@ class CreateObjectTask(ObjectTask):
     name = "create_object"
 
     def process_object(self, obj):
-        _initialize_object(obj, self.params)
-        return {'object_id': self._get_object_id()}
+        oid = self._get_object_id()
+        _initialize_object(obj, self.params, oid)
+        return {'object_id': oid}
 
     def _get_object_id(self):
         try:
@@ -48,9 +49,9 @@ def _get_work_path(params):
     return abs_path
 
 
-def _initialize_object(obj, params):
+def _initialize_object(obj, params, oid):
     obj.set_metadata_from_dict(params['metadata'])
-    obj.metadata.id = params['id']
+    obj.metadata.id = oid
     _initialize_files(obj, params['path'], params['user'],
                       params['initial_representation'])
     obj.write()
