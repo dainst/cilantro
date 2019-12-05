@@ -28,8 +28,9 @@ def create_digital_object(obj):
     headers = {'REST-API-Key': atom_api_key,
                'Content-Type': 'application/json'}
     data = _get_digital_object_data(obj)
-    log.debug(f"Digital object: {json.dumps(data, indent=4)}")
-    response = requests.post(url, data=data, headers=headers)
+    json_data = json.dumps(data, indent=4)
+    log.debug(f"Digital object: {json_data}")
+    response = requests.post(url, data=json_data, headers=headers)
     response.raise_for_status()
     return f"{atom_uri}/{response.json()['slug']}"
 
