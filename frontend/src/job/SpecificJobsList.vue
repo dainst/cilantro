@@ -52,11 +52,42 @@ export default class SpecificJobsList extends Vue {
     @Prop(Array) jobIDs!: string[];
     @Prop() showAllJobs!: boolean;
     jobs: Job[] = [];
+    updatePendingJobsInterval: number = 0;
 
     getChildrenIDs = getChildrenIDs;
 
     mounted() {
         this.loadJobs();
+    }
+
+    updated() {
+        this.updatePendingJobs();
+    }
+
+    async updatePendingJobs() {
+        let pendingJobs = this.getPendingJobs();
+        if (!this.updatePendingJobsInterval && pendingJobs.length > 0) {
+            this.updatePendingJobsInterval = setInterval(async () => {
+                pendingJobs = this.getPendingJobs();
+                if (pendingJobs.length == 0) {
+                    clearInterval(this.updatePendingJobsInterval);
+                }
+                for (let job of pendingJobs) {
+                    let updatedJobDetails: Job = await getJobDetails(job.job_id);
+                    job = Object.assign(job, updatedJobDetails);
+                }
+            }, 5000)
+        }
+    }
+
+    getPendingJobs(): Job[] {
+        let pendingJobs: Job[] = [];
+        for (let job of this.jobs) {
+            if (job.state === 'started' || job.state === 'new') {
+                pendingJobs.push(job);
+            }
+        }
+        return pendingJobs;
     }
 
     get jobsLoaded() {
