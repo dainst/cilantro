@@ -172,6 +172,7 @@
                 this.$buefy.dialog.prompt({
                     message: `Choose a new name`,
                     inputAttrs: {
+                        value:file.name,
                         placeholder: 'name',
                         maxlength: 40
                     },
