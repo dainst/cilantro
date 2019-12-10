@@ -19,7 +19,7 @@ Run this command after first checking out the code:
 
     make init
 
-Then generate an access token at https://github.com/settings/tokens/new, and add the token to your local .env file.
+Then generate an access token at https://github.com/settings/tokens/new (you don't need to tick any of the scope boxes), and add the token to your local .env file.
 
 Run all docker containers with backend services:
 
@@ -35,6 +35,8 @@ The frontend can be accessed under http://localhost:8080/.
 To stop the application run:
 
     make stop
+
+To login to the frontend add a username and a password hash at `config/users.yml`. You can [generate a bcryt-hash here](https://bcrypt-generator.com/).
 
 ### Documentation
 
