@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Dashboard from './dashboard/Dashboard.vue';
 import IngestJournal from './job/ingest-journal/IngestJournal.vue';
 import IngestRecord from './job/ingest-record/IngestRecord.vue';
+import NlpTask from './job/nlp-task/NlpTask.vue';
 import StagingArea from './staging/StagingArea.vue';
 import JobDetails from './job/JobDetails.vue';
 import JobList from './job/JobList.vue';
@@ -48,6 +49,11 @@ const router = new Router({
             path: '/ingest-record',
             name: 'ingest-record',
             component: IngestRecord
+        },
+        {
+            path: '/nlp-task',
+            name: 'nlp-task',
+            component: NlpTask
         },
         {
             path: '/job',
