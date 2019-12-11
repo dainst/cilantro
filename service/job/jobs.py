@@ -25,7 +25,6 @@ class BaseJob:
         :return AsyncResult: Celery result
         """
         raise NotImplementedError("run method not implemented")
-        self.job_db.close()
 
     @abstractmethod
     def _add_to_job_db(self, params, user_name):
