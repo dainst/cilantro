@@ -1,7 +1,12 @@
+import logging
+
 from utils.celery_client import celery_app
 
 from workers.base_task import ObjectTask
 from utils.atom_api import create_digital_object
+
+
+log = logging.getLogger(__name__)
 
 
 class PublishToAtomTask(ObjectTask):
@@ -16,7 +21,8 @@ class PublishToAtomTask(ObjectTask):
     name = "publish_to_atom"
 
     def process_object(self, obj):
-        create_digital_object(obj)
+        uri = create_digital_object(obj)
+        log.info(f"Created digital object in AtoM: {uri}")
 
 
 PublishToAtomTask = celery_app.register_task(PublishToAtomTask())

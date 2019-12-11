@@ -3,16 +3,14 @@ FROM node:12.6.0-alpine as builder
 RUN apk update && apk upgrade && \
     apk add --no-cache git
 
-COPY . /src
+COPY ./.git /src/.git
+COPY ./frontend/package.json /src/frontend/package.json
+COPY ./frontend/package-lock.json /src/frontend/package-lock.json
 WORKDIR /src/frontend
 
 RUN npm install
 
 COPY ./frontend /src/frontend
-
-ARG VUE_APP_BACKEND_URI
-
-RUN echo "VUE_APP_BACKEND_URI = $VUE_APP_BACKEND_URI" > .env
 
 RUN npm run build
 

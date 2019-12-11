@@ -79,6 +79,14 @@ Similarly end-to-end tests that test the whole application with protractor can
 be run with:
 
     make test-e2e
+    
+Single tests can be run with:
+
+    docker exec cilantro_test python -m unittest module.path.to.TestCase
+
+e.g.
+
+    docker exec cilantro_test python -m unittest test.unit.worker.convert.test_cut_pdf.CutPdfTest
 
 ##### Tips
 

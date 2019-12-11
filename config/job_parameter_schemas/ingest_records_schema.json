@@ -22,7 +22,7 @@
                     "metadata": {
                         "type": "object",
                         "additionalProperties": false,
-                        "required": ["title", "created", "author", "atom_id"],
+                        "required": ["title", "author", "atom_id"],
                         "properties": {
                             "title": {
                                 "type": "string"

@@ -18,18 +18,15 @@
                 <b-table-column field="id" label="Path">{{ props.row.id }}</b-table-column>
                 <b-table-column
                     field="object.metadata.title"
-                    label="Title">
-                        {{ props.row.object.metadata.title || '-' | truncate(80) }}
-                </b-table-column>
+                    label="Title"
+                >{{ props.row.object.metadata.title || '-' | truncate(80) }}</b-table-column>
             </template>
             <template slot="detail" slot-scope="props">
                 <div class="content">
                     <ul v-if="props.row.errors.length > 0">
                         <li v-for="error in props.row.errors" :key="error">{{ error }}</li>
                     </ul>
-                    <div v-else>
-                        No problems found for this folder path
-                    </div>
+                    <div v-else>No problems found for this folder path</div>
                 </div>
             </template>
         </b-table>
@@ -40,11 +37,11 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { initRecordObject } from '../RecordImportParameters';
+import { initRecordObject, RecordMetadata } from '../RecordImportParameters';
 import { getAtomRecord, AtomRecord } from '@/util/AtomClient';
 import {
     checkFolderStructure, buildError, getRowClass, getTableField, ObjectRecord
-} from '@/job/JobMetadataFormUtils.ts';
+} from '@/job/JobMetadataFormUtils';
 
 @Component({
     filters: {
@@ -79,45 +76,58 @@ async function populateAtomRecords(records: ObjectRecord[]) {
 async function populateAtomRecord(record: ObjectRecord): Promise<ObjectRecord> {
     const atomId = extractAtomId(record.object.path);
     if (!atomId) {
-        const msg = 'Invalid name. The folder path does not match the pattern "RECORD-AID-xxxxxxx".';
+        const msg = 'Invalid name. The folder path does not match the pattern "RECORD-AID-D-xxxxxxx".';
         return buildError(record, msg);
     }
     const atomRecord: any = await getAtomRecord(atomId);
-    if (atomRecord['id'] == 'not-found') {
+    if (atomRecord.id === 'not-found') {
         const msg = `No Record with the extracted ID "${atomId}" found.`;
         return buildError(record, msg);
-    } else {
-        return buildRecordRecord(record, atomRecord);
     }
+    return buildRecordRecord(record, atomRecord, atomId);
 }
 
-async function buildRecordRecord(record: ObjectRecord, atomRecord: AtomRecord):
-    Promise<ObjectRecord> {
-    return {
+async function buildRecordRecord(
+    record: ObjectRecord,
+    atomRecord: AtomRecord,
+    atomId: string
+): Promise<ObjectRecord> {
+    const builtRecord = {
         id: record.id,
         object: {
             id: record.object.id,
             path: record.object.path,
             metadata: {
                 title: atomRecord.title,
-                created: atomRecord.dates[0].date,
                 author: [atomRecord.creators[0].authotized_form_of_name],
-                atom_id: String(atomRecord.reference_code)
-            }
+                atom_id: atomId
+            } as RecordMetadata
         },
         remoteRecord: atomRecord,
         errors: record.errors
     };
+    if ('date' in atomRecord.dates[0]) {
+        builtRecord.object.metadata.created = String(atomRecord.dates[0].date);
+    } else if ('start_date' in atomRecord.dates[0] && 'end_date' in atomRecord.dates[0]) {
+        builtRecord.object.metadata.created = `${atomRecord.dates[0].start_date!} - ${atomRecord.dates[0].end_date!}`;
+    }
+    return builtRecord;
 }
 
 function initRecord(path: string): ObjectRecord {
     return { id: path, object: initRecordObject(path), errors: [] };
 }
 
+/**
+ * Converts the folder name to an AtoM slug
+ *
+ * AtoM slugs are always lowercase and start with
+ * 'de-' whereas folder names start with 'D-'.
+ */
 function extractAtomId(path: string): string | null {
-    const result = path.match(/.*RECORD-AID-(.+)/);
+    const result = path.match(/.*RECORD-AID-D-(.+)/);
     if (!result || result.length < 1) return null;
-    return result[1];
+    return `de-${result[1].toLowerCase()}`;
 }
 </script>
 

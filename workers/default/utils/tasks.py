@@ -6,7 +6,6 @@ import glob
 from celery import chord, signature
 
 from utils.celery_client import celery_app
-from utils import job_db
 from workers.base_task import BaseTask, ObjectTask
 
 
@@ -42,8 +41,8 @@ class ListFilesTask(ObjectTask):
             child_ids += [task_id]
             chord_tasks.append(chain)
 
-        job_db.set_job_children(self.job_id, child_ids)
-        job_db.update_job_state(self.job_id, "started")
+        self.job_db.set_job_children(self.job_id, child_ids)
+        self.job_db.update_job_state(self.job_id, "started")
 
         return chord(chord_tasks, signature('finish_chord', kwargs={'job_id': self.job_id, 'work_path': self.job_id}))
 
@@ -59,7 +58,7 @@ class ListFilesTask(ObjectTask):
         chain = celery_app.signature(subtasks, kwargs=params)
         chain.options['task_id'] = params['job_id']
 
-        job_db.add_job(job_id=params['job_id'], user=None, job_type=subtasks,
+        self.job_db.add_job(job_id=params['job_id'], user=None, job_type=subtasks,
                        parent_job_id=params['parent_job_id'], child_job_ids=[], parameters=params)
 
         return chain, params['job_id']
@@ -96,7 +95,7 @@ class FinishChainTask(BaseTask):
     name = "finish_chain"
 
     def execute_task(self):
-        job_db.update_job_state(self.parent_job_id, 'success')
+        self.job_db.update_job_state(self.parent_job_id, 'success')
 
 
 FinishChainTask = celery_app.register_task(FinishChainTask())
@@ -109,7 +108,7 @@ class FinishChordTask(BaseTask):
     name = "finish_chord"
 
     def execute_task(self):
-        job_db.update_job_state(self.job_id, "success")
+        self.job_db.update_job_state(self.job_id, "success")
 
 
 FinishChordTask = celery_app.register_task(FinishChordTask())

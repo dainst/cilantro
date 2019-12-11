@@ -5,7 +5,7 @@ from abc import abstractmethod
 from celery import chord, signature
 
 from utils.celery_client import celery_app
-from utils import job_db
+from utils.job_db import JobDb
 
 
 class BaseJob:
@@ -14,9 +14,8 @@ class BaseJob:
     logger = logging.getLogger(__name__)
     job_type = 'base_job'
 
-    @abstractmethod
-    def __init__(self, params, user_name):
-        raise NotImplementedError("__init__ method not implemented")
+    def __init__(self):
+        self.job_db = JobDb()
 
     @abstractmethod
     def run(self):
@@ -26,6 +25,7 @@ class BaseJob:
         :return AsyncResult: Celery result
         """
         raise NotImplementedError("run method not implemented")
+        self.job_db.close()
 
     @abstractmethod
     def _add_to_job_db(self, params, user_name):
@@ -45,6 +45,7 @@ class BatchJob(BaseJob):
 
         :param List[chain] chains: A list of celery task chains
         """
+        super().__init__()
         self.id = _generate_id()
 
         chains = self._create_chains(params, user_name)
@@ -63,9 +64,9 @@ class BatchJob(BaseJob):
                 f'  chain #{index}, job id: {chain_id}:')
 
     def run(self):
-        job_db.update_job_state(self.id, 'started')
+        self.job_db.update_job_state(self.id, 'started')
         for chain_id in self.chain_ids:
-            job_db.update_job_state(chain_id, 'started')
+            self.job_db.update_job_state(chain_id, 'started')
 
         self.chord.apply_async(task_id=self.id)
 
@@ -86,7 +87,7 @@ class BatchJob(BaseJob):
                 single_task.kwargs['work_path'] = current_work_path
                 single_task.kwargs['parent_job_id'] = current_chain_id
 
-                job_db.add_job(job_id=job_id,
+                self.job_db.add_job(job_id=job_id,
                                user=user_name,
                                job_type=single_task.name,
                                parent_job_id=current_chain_id,
@@ -95,7 +96,7 @@ class BatchJob(BaseJob):
 
                 current_chain_links += [job_id]
 
-            job_db.add_job(job_id=current_chain_id,
+            self.job_db.add_job(job_id=current_chain_id,
                            user=user_name,
                            job_type='chain',
                            parent_job_id=self.id,
@@ -103,7 +104,7 @@ class BatchJob(BaseJob):
                            parameters={'work_path': current_chain.kwargs['work_path']})
             chain_ids += [current_chain_id]
 
-        job_db.add_job(job_id=self.id,
+        self.job_db.add_job(job_id=self.id,
                        user=user_name,
                        job_type=self.job_type,
                        parent_job_id=None,
@@ -231,8 +232,10 @@ class IngestJournalsJob(BatchJob):
 
         return chains
 
+
 def _link(name, **params):
     return celery_app.signature(name, kwargs=params)
+
 
 def _generate_id():
     return str(uuid.uuid1())
