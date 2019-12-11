@@ -10,6 +10,6 @@ export const ojsZenonMapping = {
     '000814258': 'test'
 } as { [index: string]: string };
 
-export const allowedFileExtensions = ['pdf', 'tif', 'tiff', 'zip'];
+export const allowedFileExtensions = ['pdf', 'tif', 'tiff', 'zip', 'txt'];
 
 export const backendUri = process.env.VUE_APP_BACKEND_URI || '/api';
