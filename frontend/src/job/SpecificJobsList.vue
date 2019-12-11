@@ -1,31 +1,34 @@
 <template>
     <section>
-        <b-table v-if="jobsLoaded" :data="jobs" detailed detail-key="job_id"
-                 default-sort="created" :default-sort-direction="'asc'"
-                 :has-detailed-visible="(row) => { return row.children.length >0 }">
+        <b-table
+            v-if="jobsLoaded"
+            :data="jobs"
+            detailed
+            detail-key="job_id"
+            default-sort="created"
+            :default-sort-direction="'asc'"
+            :has-detailed-visible="(row) => { return row.children.length >0 }"
+        >
             <template slot-scope="props">
-                <b-table-column field="job_type" label="Type" sortable>
-                    {{ props.row.job_type }}
-                </b-table-column>
                 <b-table-column field="state" label="Status" sortable>
                     <div class="is-flex">
-                        <b-icon v-bind="iconAttributesForState(props.row.state)"/>
-                        {{ props.row.state }}
+                        <b-icon v-bind="iconAttributesForState(props.row.state)" />
                     </div>
                 </b-table-column>
-                <b-table-column field="name" label="Name" sortable>
-                    {{ props.row.name }}</b-table-column>
-                <b-table-column field="job_id" label="ID" sortable>
-                    {{ props.row.job_id }}
-                </b-table-column>
-                <b-table-column field="created" label="Created"
-                                :custom-sort="sortByCreated" sortable>
-                    {{ props.row.created }}
-                </b-table-column>
-                <b-table-column field="updated" label="Updated"
-                                :custom-sort="sortByUpdated" sortable>
-                    {{ props.row.updated }}
-                </b-table-column>
+                <b-table-column field="name" label="Name" sortable>{{ props.row.name }}</b-table-column>
+                <b-table-column field="job_type" label="Type" sortable>{{ props.row.job_type }}</b-table-column>
+                <b-table-column
+                    field="created"
+                    label="Created"
+                    :custom-sort="sortByCreated"
+                    sortable
+                >{{ props.row.created }}</b-table-column>
+                <b-table-column
+                    field="updated"
+                    label="Updated"
+                    :custom-sort="sortByUpdated"
+                    sortable
+                >{{ props.row.updated }}</b-table-column>
                 <b-table-column>
                     <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
                 </b-table-column>
@@ -34,9 +37,7 @@
                 <SpecificJobsList :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
-        <div v-else>
-            Loading jobs...
-        </div>
+        <div v-else>Loading jobs...</div>
     </section>
 </template>
 
