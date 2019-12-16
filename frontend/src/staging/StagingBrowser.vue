@@ -25,9 +25,9 @@
                         <b-icon :icon="getFileIcon(props.row)"/>
                     </b-table-column>
                     <b-table-column field="name" label="Name">{{ props.row.name }}</b-table-column>
-                    <b-table-column field="edit" label="Edit" width="25" @click.native.stop>
+                    <b-table-column field="edit" label="" width="25" @click.native.stop>
                         <b-dropdown aria-role="list">
-                            <b-button icon-right="settings" slot="trigger"/>
+                            <b-button icon-right="dots-vertical" type="is-text" slot="trigger"/>
                             <b-dropdown-item aria-role="listitem" @click="showRenameModal(props.row)">
                                 <div class="media">
                                     <b-icon class="media-left" icon="folder-edit"/>
@@ -244,7 +244,7 @@ export function getFilesInWorkDir(files: WorkbenchFileTree, workDir: string): Wo
     splitPath.slice(1).forEach((dir: string) => {
         contents = contents[dir].contents || {};
     });
-    return getVisibleFolderContents(Object.values(contents).sort(compareFileEntries));
+    return Object.values(getVisibleFolderContents(contents)).sort(compareFileEntries);
 }
 
 function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
