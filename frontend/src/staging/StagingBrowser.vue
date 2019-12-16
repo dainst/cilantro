@@ -22,9 +22,32 @@
             >
                 <template slot-scope="props">
                     <b-table-column width="25">
-                        <b-icon :icon="getFileIcon(props.row)" />
+                        <b-icon :icon="getFileIcon(props.row)"/>
                     </b-table-column>
                     <b-table-column field="name" label="Name">{{ props.row.name }}</b-table-column>
+                    <b-table-column field="edit" label="Edit" width="25" @click.native.stop>
+                        <b-dropdown aria-role="list">
+                            <b-button icon-right="settings" slot="trigger"/>
+                            <b-dropdown-item aria-role="listitem" @click="showRenameModal(props.row)">
+                                <div class="media">
+                                    <b-icon class="media-left" icon="folder-edit"/>
+                                    <div class="media-content">Rename</div>
+                                </div>
+                            </b-dropdown-item>
+                            <b-dropdown-item aria-role="listitem" @click="showMoveModalForItem(props.row)">
+                                <div class="media">
+                                    <b-icon class="media-left" icon="folder-move"/>
+                                    <div class="media-content">Move</div>
+                                </div>
+                            </b-dropdown-item>
+                            <b-dropdown-item aria-role="listitem" @click="showDeleteDialogForItem(props.row)">
+                                <div class="media">
+                                    <b-icon class="media-left" icon="delete"/>
+                                    <div class="media-content">Delete</div>
+                                </div>
+                            </b-dropdown-item>
+                        </b-dropdown>
+                    </b-table-column>
                 </template>
                 <template slot="detail" slot-scope="props">
                     <p>{{ props.row.name }}</p>
@@ -33,7 +56,7 @@
         </div>
         <div v-else>Folder is empty ...</div>
 
-        <StagingBrowserUpload :working-directory="workingDirectory" @upload-finished="fetchFiles" />
+        <StagingBrowserUpload :working-directory="workingDirectory" @upload-finished="fetchFiles"/>
     </section>
 </template>
 
@@ -76,7 +99,7 @@ export default class StagingBrowser extends Vue {
         this.fetchFiles();
     }
 
-    onCheck(checkedFiles: WorkbenchFile[]): void {
+    async onCheck(checkedFiles: WorkbenchFile[]): Promise<void> {
         const paths = checkedFiles.map(file => getFilePath(this.workingDirectory, file.name));
         this.$emit('update:selected-paths', paths);
     }
@@ -118,6 +141,12 @@ export default class StagingBrowser extends Vue {
         this.filesToShow = getFilesInWorkDir(this.stagingFiles, this.workingDirectory);
     }
 
+    showDeleteDialogForItem(file: WorkbenchFile) {
+        this.onCheck([file]).then(() => {
+            this.showDeleteDialog();
+        });
+    }
+
     showDeleteDialog() {
         this.$buefy.dialog.confirm({
             message: `Delete ${this.checkedFiles.length} items?`,
@@ -135,6 +164,40 @@ export default class StagingBrowser extends Vue {
         Promise.all(deletions).then(() => {
             this.$emit('update:selected-paths', []);
             this.fetchFiles();
+        });
+    }
+
+    showRenameModal(file: WorkbenchFile) {
+        this.onCheck([file]).then(() => {
+            this.$buefy.dialog.prompt({
+                message: `Choose a new name`,
+                inputAttrs: {
+                    value:file.name,
+                    placeholder: 'name',
+                    maxlength: 40
+                },
+                onConfirm: (value) => this.renameSelected(value)
+            });
+        });
+
+    }
+
+    renameSelected(value: string) {
+        this.operationInProgress = true;
+        const moveOperations = this.checkedFiles.map((file) => {
+            const sourcePath = getFilePath(this.workingDirectory, file.name);
+            return moveInStaging(sourcePath, getFilePath(this.workingDirectory, value))
+                .catch(e => showError(`Failed to rename ${file.name}!`, e));
+        });
+        Promise.all(moveOperations).then(() => {
+            this.$emit('update:selected-paths', []);
+            this.fetchFiles();
+        });
+    }
+
+    showMoveModalForItem(file: WorkbenchFile) {
+        this.onCheck([file]).then(() => {
+            this.showMoveModal();
         });
     }
 
