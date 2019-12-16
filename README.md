@@ -36,6 +36,11 @@ To stop the application run:
 
     make stop
 
+### User management
+
+For now users are managed via the file `config/users.yml`. Every user is able to
+login and start new jobs. Passwords in this file are encrypted with bcrypt.
+
 ### Documentation
 
 The documentation is automatically generated when a commit is pushed to the
