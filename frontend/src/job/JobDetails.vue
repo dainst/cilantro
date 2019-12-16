@@ -50,6 +50,28 @@
                     </template>
                 </b-table>
             </b-field>
+
+            <b-collapse class="card" :open="false" aria-id="job-params" v-if="job.log && job.log.length > 0">
+                <div
+                    slot="trigger" 
+                    slot-scope="props"
+                    class="card-header"
+                    role="button"
+                    aria-controls="job-params">
+                    <p class="card-header-title">
+                        Show Job Parameters
+                    </p>
+                    <a class="card-header-icon">
+                        <b-icon
+                            :icon="props.open ? 'menu-up' : 'menu-down' ">
+                        </b-icon>
+                    </a>
+                </div>
+                <div class="card-content">
+                    <pre>{{ job.parameters }}</pre>
+                </div>
+            </b-collapse>
+
             <b-message v-if="job.errors && job.errors.length > 0"
                        title="Errors" type="is-danger" has-icon :closable="false">
                 <b-table :data="job.errors">
@@ -69,11 +91,26 @@
                     </template>
                 </b-table>
             </b-message>
-            <b-collapse :open="false" aria-id="job-params">
-                <button class="button" slot="trigger" aria-controls="job-params">
-                    Show Job Parameters
-                </button>
-                <pre>{{ job.parameters }}</pre>
+
+            <b-collapse class="card" :open="false" aria-id="job-log" v-if="job.log && job.log.length > 0">
+                <div
+                    slot="trigger" 
+                    slot-scope="props"
+                    class="card-header"
+                    role="button"
+                    aria-controls="job-log">
+                    <p class="card-header-title">
+                        Show Job Log
+                    </p>
+                    <a class="card-header-icon">
+                        <b-icon
+                            :icon="props.open ? 'menu-up' : 'menu-down' ">
+                        </b-icon>
+                    </a>
+                </div>
+                <div class="card-content">
+                    <pre>{{job.log}}</pre>
+                </div>
             </b-collapse>
         </div>
     </div>
