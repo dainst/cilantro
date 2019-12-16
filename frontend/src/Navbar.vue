@@ -1,6 +1,5 @@
 <template>
     <b-navbar>
-
         <template slot="brand">
             <b-navbar-item tag="router-link" to="/">
                 <strong>iDAI.workbench</strong>
@@ -8,8 +7,15 @@
         </template>
 
         <template slot="start" v-if="isAuthenticated">
-            <b-navbar-item tag="router-link" to="/jobs">Jobs</b-navbar-item>
-            <b-navbar-item tag="router-link" to="/staging">Staging Area</b-navbar-item>
+            <b-navbar-item tag="router-link" to="/">
+                <b-icon icon="monitor-dashboard"></b-icon>&nbsp;&nbsp;Dashboard
+            </b-navbar-item>
+            <b-navbar-item tag="router-link" to="/jobs">
+                <b-icon icon="timer"></b-icon>&nbsp;&nbsp;Job Monitor
+            </b-navbar-item>
+            <b-navbar-item tag="router-link" to="/staging">
+                <b-icon icon="folder-upload"></b-icon>&nbsp;&nbsp;Staging Area
+            </b-navbar-item>
         </template>
 
         <template slot="end" v-if="isAuthenticated">
@@ -21,13 +27,11 @@
                         <b-icon icon="menu-down"></b-icon>
                     </button>
                     <b-dropdown-item @click="logout()">
-                        <b-icon icon="logout" size="is-small"></b-icon>
-                        Logout
+                        <b-icon icon="logout" size="is-small"></b-icon>Logout
                     </b-dropdown-item>
                 </b-dropdown>
             </b-navbar-item>
         </template>
-
     </b-navbar>
 </template>
 
@@ -41,5 +45,5 @@ import { mapGetters, mapActions } from 'vuex';
         ...mapActions(['logout'])
     }
 })
-export default class Navbar extends Vue {}
+export default class Navbar extends Vue { }
 </script>

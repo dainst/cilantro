@@ -64,6 +64,7 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
     """
     os.makedirs(path, exist_ok=True)
     new_pdf = PyPDF2.PdfFileWriter()
+    input_streams = []
     for file in files:
         input_str = os.path.join(path, file['file'])
         input_stream = open(input_str, 'rb')
@@ -81,10 +82,13 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
         else:
             for index in range(pdf.getNumPages()):
                 new_pdf.addPage(pdf.getPage(index))
-    input_stream.close()
+        input_streams.append(input_stream)
 
     with open(os.path.join(path, filename), 'wb+') as stream:
         new_pdf.write(stream)
+        for input_stream in input_streams:
+            input_stream.close()
+
     if remove_old:
         for file in files:
             file_path = os.path.join(path, os.path.basename(file['file']))
