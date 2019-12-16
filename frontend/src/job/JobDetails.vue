@@ -1,9 +1,11 @@
 <template>
     <div>
-        <b-button @click="gotoJobsView">View All Jobs</b-button>
         <div class="container">
-            <div v-if="job.parent_job_id">
-                <b-button @click="goToSingleView(job.parent_job_id)">Go to Parent Job</b-button>
+            <div  class="title">
+                 <b-button class="is-dark"
+                    v-if="job.parent_job_id"
+                    @click="goToSingleView(job.parent_job_id)">
+                    <b-icon icon="arrow-top-left"></b-icon></b-button> {{job.name}}
             </div>
             <b-field label="ID">
                 <p>{{job.job_id}}</p>
@@ -40,18 +42,20 @@
                             {{ props.row.state}}
                         </b-table-column>
                         <b-table-column field="job_id" label="ID">
-                            {{ props.row.job_id}}
+                                {{ props.row.job_id}}
                         </b-table-column>
-                        <b-table-column field="job_id" label="">
-                            <b-button @click="goToSingleView(props.row.job_id)">
-                                Single View
+                        <b-table-column field="detail">
+                            <b-button icon-right="arrow-bottom-right" class="is-dark"
+                                      @click="goToSingleView(props.row.job_id)">
+                                View
                             </b-button>
                         </b-table-column>
                     </template>
                 </b-table>
             </b-field>
 
-            <b-collapse class="card" :open="false" aria-id="job-params" v-if="job.log && job.log.length > 0">
+            <b-collapse class="card" :open="false" aria-id="job-params"
+                        v-if="job.log && job.log.length > 0">
                 <div
                     slot="trigger" 
                     slot-scope="props"
