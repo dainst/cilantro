@@ -44,7 +44,7 @@ import {
 import { showSuccess, showWarning, showError } from '@/util/Notifier.ts';
 import {
     getStagingFiles, deleteFileFromStaging,
-    createFolderInStaging, WorkbenchFile, moveInStaging, WorkbenchFileTree
+    createFolderInStaging, WorkbenchFile, moveInStaging, WorkbenchFileTree, getVisibleFolderContents,
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';
@@ -181,7 +181,7 @@ export function getFilesInWorkDir(files: WorkbenchFileTree, workDir: string): Wo
     splitPath.slice(1).forEach((dir: string) => {
         contents = contents[dir].contents || {};
     });
-    return Object.values(contents).sort(compareFileEntries);
+    return getVisibleFolderContents(Object.values(contents).sort(compareFileEntries));
 }
 
 function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
