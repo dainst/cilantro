@@ -1,4 +1,5 @@
 import logging
+import io
 import os
 from abc import abstractmethod
 import traceback
@@ -75,6 +76,11 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
+    log_output = io.StringIO()
+    handler = logging.StreamHandler(log_output)
+    handler.setLevel(logging.INFO)
+    logging.getLogger().addHandler(handler)
+
     def __init__(self):
         self.job_db = JobDb()
 
@@ -92,6 +98,8 @@ class BaseTask(Task):
         https://docs.celeryproject.org/en/latest/userguide/tasks.html#handlers
         """
         self.job_db.update_job_state(self.job_id, status.lower())
+        self.job_db.update_job_log(self.job_id, self.log_output.getvalue().strip().split('\n'))
+
         if status == 'FAILURE':
             error_object = { 'job_id': self.job_id, 'job_name': self.name, 'message': self.error }
             self.job_db.add_job_error( self.job_id, error_object )

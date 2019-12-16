@@ -88,7 +88,8 @@ class JobDb:
             'started': None,
             'updated': timestamp,
             'parameters': parameters,
-            'errors': []
+            'errors': [],
+            'log': []
             }
 
         self.db.jobs.insert_one(job)
@@ -117,6 +118,18 @@ class JobDb:
         if error:
             self.db.jobs.update_many({"job_id": job_id},
                                 {'$push': {'errors': error}})
+
+    def update_job_log(self, job_id, log_output):
+        """
+        Updates (replaces) the log for the specified job.
+
+        :param str job_id: Cilantro-ID of the job
+        :param list log_output: List of logged lines
+        """
+        timestamp = datetime.datetime.now()
+        self.db.jobs.update_many({"job_id": job_id},
+                                  {'$set': {'updated': timestamp, 'log': log_output}})
+
 
     def set_job_children(self, job_id, child_job_ids):
         timestamp = datetime.datetime.now()
