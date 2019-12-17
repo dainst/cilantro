@@ -1,14 +1,25 @@
 <template>
     <section>
-        <div class="navbar-end">
+        <div class="navbar">
             <div class="navbar-item">
-                <b-switch v-model="showAllJobs">
+                <b-button @click="showAll">
                     Show all
+                </b-button>
+            </div>
+            <div class="navbar-item">
+                <b-switch v-model="showSuccess">
+                    Show successful
+                </b-switch>
+                <b-switch v-model="showFailure">
+                    Show failure
+                </b-switch>
+                <b-switch v-model="showInProgress">
+                    Show in progress
                 </b-switch>
             </div>
         </div>
         <div>
-            <SpecificJobsList :jobIDs="[]" :showAllJobs="showAllJobs"></SpecificJobsList>
+            <SpecificJobsList :jobIDs="[]" :activeStates="activeStates"></SpecificJobsList>
         </div>
     </section>
 </template>
@@ -21,6 +32,30 @@ import SpecificJobsList from '@/job/SpecificJobsList.vue';
     components: { SpecificJobsList }
 })
 export default class JobList extends Vue {
-    showAllJobs: boolean = false;
+    showSuccess: boolean = true;
+    showFailure: boolean = true;
+    showInProgress: boolean = true;
+
+    showAll() {
+        this.showSuccess = true;
+        this.showFailure = true;
+        this.showInProgress = true;
+    }
+
+    get activeStates() {
+        const states = [];
+        if (this.showSuccess) {
+            states.push('success');
+        }
+        if (this.showFailure) {
+            states.push('failure');
+        }
+        if (this.showInProgress) {
+            states.push('new');
+            states.push('started');
+        }
+        return states;
+    }
 }
+
 </script>

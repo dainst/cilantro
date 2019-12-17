@@ -2,7 +2,7 @@
     <section>
         <b-table
             v-if="jobsLoaded"
-            :data="jobs"
+            :data="filteredJobs"
             detailed
             detail-key="job_id"
             default-sort="created"
@@ -18,9 +18,9 @@
                 <b-table-column field="label" label="Name" sortable>
                     {{ props.row.label }}
                 </b-table-column>
-                <b-table-column field="description" label="Description" sortable>
+                <b-table-column field="description" label="Description">
                     {{ props.row.description }}
-                    </b-table-column>
+                </b-table-column>
                 <b-table-column field="id" label="ID" sortable>{{props.row.job_id}}</b-table-column>
                 <b-table-column
                     field="created"
@@ -61,7 +61,8 @@ import { showError } from '@/util/Notifier.ts';
 @Component({ name: 'SpecificJobsList' })
 export default class SpecificJobsList extends Vue {
     @Prop(Array) jobIDs!: string[];
-    @Prop() showAllJobs!: boolean;
+    @Prop() activeStates!: string[];
+    unfilteredJobs: Job[] = []
     jobs: Job[] = [];
 
     getChildrenIDs = getChildrenIDs;
@@ -74,19 +75,18 @@ export default class SpecificJobsList extends Vue {
         return this.jobIDs.length === 0 || this.jobs.length === this.jobIDs.length; // leere liste
     }
 
+    get filteredJobs() {
+        return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
+    }
+
     async loadJobs() {
         if (this.jobIDs.length === 0) {
-            this.jobs = await getJobList(this.showAllJobs);
+            this.unfilteredJobs = await getJobList();
         } else {
             for await (const id of this.jobIDs) { // eslint-disable-line no-restricted-syntax
                 this.jobs.push(await getJobDetails(id));
             }
         }
-    }
-
-    @Watch('showAllJobs')
-    onChanged(showAllJobs: boolean) {
-        this.loadJobs();
     }
 
     sortByCreated = sortByCreated;

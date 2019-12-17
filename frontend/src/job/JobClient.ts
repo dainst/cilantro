@@ -9,8 +9,8 @@ export async function startJob(
     return sendRequest('post', `${backendUri}/job/${jobType}`, {}, params, false);
 }
 
-export async function getJobList(getAllJobs: boolean): Promise<Job[]> {
-    return sendRequest('get', `${backendUri}/job/jobs`, {}, { show_all_jobs: getAllJobs }, false);
+export async function getJobList(): Promise<Job[]> {
+    return sendRequest('get', `${backendUri}/job/jobs`, {}, {}, false);
 }
 
 export async function getJobDetails(jobID: string): Promise<Job> {
