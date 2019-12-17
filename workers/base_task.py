@@ -94,6 +94,22 @@ class BaseTask(Task):
         parent = self.job_db.get_job_by_id(parent_id)
         if 'parent_job_id' in parent:
             self._propagate_failure_to_ancestors(parent['parent_job_id'], error)
+            self._set_following_siblings_aborted(parent_id, parent['parent_job_id'])
+    
+    def _set_following_siblings_aborted(self, job_id, parent_id):
+        parent = self.job_db.get_job_by_id(parent_id)
+        if parent['job_type'] == 'chain':
+            found_self = False
+            for child in parent['children']:
+                if found_self == True:
+                    self.job_db.update_job_state(child['job_id'], 'aborted')
+                    self.job_db.set_job_label_and_description(child['job_id'],
+                        'Aborted', 
+                        'This task was never initialized and has been aborted due to a previous error.')
+
+                if child['job_id'] == job_id:
+                    found_self = True
+
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         """
@@ -109,6 +125,8 @@ class BaseTask(Task):
 
             if self.parent_job_id is not None:
                 self._propagate_failure_to_ancestors(self.parent_job_id, error_object)
+                self._set_following_siblings_aborted(self.job_id, self.parent_job_id)
+
         self.job_db.close()
 
     def get_work_path(self):
