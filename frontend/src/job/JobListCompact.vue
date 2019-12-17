@@ -32,7 +32,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { getJobList, iconAttributesForState, Job } from './JobClient';
-import { showError } from '@/util/Notifier.ts';
+import { showError } from '@/util/Notifier';
 
 @Component
 export default class JobListCompact extends Vue {
@@ -46,7 +46,7 @@ export default class JobListCompact extends Vue {
 
     async updateJobList() {
         try {
-            this.jobList = await getJobList(false);
+            this.jobList = await getJobList();
         } catch (e) {
             showError('Failed to load job list from server', e);
         }
