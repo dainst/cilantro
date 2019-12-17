@@ -1,5 +1,5 @@
 <template>
-    <section class="job-shortlist" v-if="getFilteredJobList().length>0">
+    <section class="job-shortlist" v-if="getUnfinishedJobs().length>0">
         <div>
         <h3 class="is-size-5">
             Your active jobs
@@ -7,7 +7,7 @@
                 <b-icon icon="refresh" size="is-small"></b-icon>
             </a>
         </h3>
-        <div v-for="job in getFilteredJobList()" :key="job['job_id']">
+        <div v-for="job in getUnfinishedJobs()" :key="job['job_id']">
             <router-link class="message" :to="{ name: 'job', query: { id: job['job_id'] }}">
                 <div class="message-header">
                     <b-icon v-bind="iconAttributesForState(job['state'])"></b-icon>
@@ -38,15 +38,8 @@ import { showError } from '@/util/Notifier.ts';
 export default class JobListCompact extends Vue {
     jobList: Job[] = [];
 
-    getFilteredJobList() {
-        const filteredList:Job[] = [];
-        for (let i = 0; i < this.jobList.length; i += 1) {
-            const job:Job = this.jobList[i];
-            if (job.state !== 'success') {
-                filteredList.push(job);
-            }
-        }
-        return filteredList;
+    getUnfinishedJobs() {
+        return this.jobList.filter(job => job.state !== 'success');
     }
 
     iconAttributesForState = iconAttributesForState
