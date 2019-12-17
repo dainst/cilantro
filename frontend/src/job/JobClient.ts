@@ -17,6 +17,20 @@ export async function getJobDetails(jobID: string): Promise<Job> {
     return sendRequest('get', `${backendUri}/job/${jobID}`, {}, {}, false);
 }
 
+export function iconAttributesForState(state: string) {
+    if (state === 'new') {
+        return [{ type: 'is-info' }, { icon: 'alarm' }];
+    } if (state === 'failure') {
+        return [{ type: 'is-danger' }, { icon: 'alert' }];
+    } if (state === 'aborted') {
+        return [{ type: 'is-danger' }, { icon: 'cancel' }];
+    }
+    if (state === 'success') {
+        return [{ type: 'is-success' }, { icon: 'check' }];
+    }
+    return [{ type: 'is-warning' }, { icon: 'cogs' }];
+}
+
 export interface Job {
     children: object[];
     created: string;

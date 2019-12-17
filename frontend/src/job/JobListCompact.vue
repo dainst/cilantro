@@ -31,34 +31,25 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { getJobList, Job } from './JobClient';
+import { getJobList, iconAttributesForState, Job } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component
 export default class JobListCompact extends Vue {
     jobList: Job[] = [];
 
-    getFilteredJobList(){
-        let filteredList:Job[] =[];
-        for(var i = 0; i < this.jobList.length; i++){
-            var job:Job = this.jobList[i];
-            if(job['state'] != 'success'){
+    getFilteredJobList() {
+        const filteredList:Job[] = [];
+        for (let i = 0; i < this.jobList.length; i += 1) {
+            const job:Job = this.jobList[i];
+            if (job.state !== 'success') {
                 filteredList.push(job);
             }
         }
         return filteredList;
-    };
+    }
 
-    iconAttributesForState = (state: string) => {
-        if (state === 'new') {
-            return [{ type: 'is-info' }, { icon: 'alarm' }];
-        } if (state === 'failure') {
-            return [{ type: 'is-danger' }, { icon: 'alert' }];
-        } if (state === 'success') {
-            return [{ type: 'is-success' }, { icon: 'check' }];
-        }
-        return [{ type: 'is-warning' }, { icon: 'cogs' }];
-    };
+    iconAttributesForState = iconAttributesForState
 
     async updateJobList() {
         try {

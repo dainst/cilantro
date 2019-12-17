@@ -53,7 +53,9 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { getJobDetails, getJobList, Job } from './JobClient';
+import {
+    getJobDetails, getJobList, iconAttributesForState, Job
+} from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
 @Component({ name: 'SpecificJobsList' })
@@ -118,16 +120,5 @@ function sortByCreated(a: Job, b: Job, isAsc: boolean) {
 
 function compareDates(a: Date, b: Date, isAsc: boolean) {
     return isAsc ? b.getTime() - a.getTime() : a.getTime() - b.getTime();
-}
-
-function iconAttributesForState(state: string) {
-    if (state === 'new') {
-        return [{ type: 'is-info' }, { icon: 'alarm' }];
-    } if (state === 'failure') {
-        return [{ type: 'is-danger' }, { icon: 'alert' }];
-    } if (state === 'success') {
-        return [{ type: 'is-success' }, { icon: 'check' }];
-    }
-    return [{ type: 'is-warning' }, { icon: 'cogs' }];
 }
 </script>
