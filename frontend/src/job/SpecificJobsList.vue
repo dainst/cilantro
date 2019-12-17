@@ -72,20 +72,22 @@ export default class SpecificJobsList extends Vue {
     }
 
     get jobsLoaded() {
-        return this.jobIDs.length === 0 || this.jobs.length === this.jobIDs.length; // leere liste
+        return this.unfilteredJobs.length !== 0;
     }
 
     get filteredJobs() {
-        return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
+        if (this.jobIDs.length === 0) {
+            return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
+        }
+        return this.unfilteredJobs;
     }
 
     async loadJobs() {
         if (this.jobIDs.length === 0) {
             this.unfilteredJobs = await getJobList();
         } else {
-            for await (const id of this.jobIDs) { // eslint-disable-line no-restricted-syntax
-                this.jobs.push(await getJobDetails(id));
-            }
+            const requests = this.jobIDs.map(id => getJobDetails(id));
+            this.unfilteredJobs = await Promise.all(requests);
         }
     }
 
