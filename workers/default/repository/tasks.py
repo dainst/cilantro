@@ -27,6 +27,8 @@ class CreateObjectTask(ObjectTask):
 
     def process_object(self, obj):
         oid = self._get_object_id()
+
+        self.job_db.set_job_object_id(self.parent_job_id, oid)
         _initialize_object(obj, self.params, oid)
         return {'object_id': oid}
 
@@ -35,9 +37,7 @@ class CreateObjectTask(ObjectTask):
             object_id = self.get_param('id')
         except KeyError:
             object_id = self.job_id
-        job_db = JobDb()
-        uid = job_db.generate_unique_object_identifier()
-        job_db.close()
+        uid = self.job_db.generate_unique_object_identifier()
         return object_id + f"_{uid}"
 
 

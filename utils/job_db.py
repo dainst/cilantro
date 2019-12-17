@@ -145,6 +145,12 @@ class JobDb:
         self.db.jobs.update_many({"job_id": job_id},
                             {'$set': updated_values})
 
+    def set_job_object_id(self, job_id, object_id):
+        timestamp = datetime.datetime.now()
+        updated_values = {'object_id': object_id, 'updated': timestamp}
+        self.db.jobs.update_many({"job_id": job_id},
+                            {'$set': updated_values})
+
     def add_job_error(self, job_id, error_message):
         timestamp = datetime.datetime.now()
         self.db.jobs.update_many({"job_id": job_id},
