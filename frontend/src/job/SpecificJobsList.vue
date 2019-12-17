@@ -15,8 +15,13 @@
                         <b-icon v-bind="iconAttributesForState(props.row.state)" />
                     </div>
                 </b-table-column>
-                <b-table-column field="name" label="Name" sortable>{{ props.row.name }}</b-table-column>
-                <b-table-column field="job_type" label="Type" sortable>{{ props.row.job_type }}</b-table-column>
+                <b-table-column field="label" label="Name" sortable>
+                    {{ props.row.label }}
+                </b-table-column>
+                <b-table-column field="description" label="Description" sortable>
+                    {{ props.row.description }}
+                    </b-table-column>
+                <b-table-column field="id" label="ID" sortable>{{props.row.job_id}}</b-table-column>
                 <b-table-column
                     field="created"
                     label="Created"

@@ -26,6 +26,8 @@ export interface Job {
     job_id: string; // eslint-disable-line camelcase
     job_type: string; // eslint-disable-line camelcase
     name: string;
+    label: string;
+    description: string;
     parameters: object;
     parent_job_id: string; // eslint-disable-line camelcase
     started: string;

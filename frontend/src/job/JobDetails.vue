@@ -11,10 +11,10 @@
                 <p>{{job.job_id}}</p>
             </b-field>
             <b-field label="Name">
-                <p>{{job.name}}</p>
+                <p>{{job.label}}</p>
             </b-field>
-            <b-field label="Type">
-                <p>{{job.job_type}}</p>
+            <b-field label="Description">
+                <p>{{job.description}}</p>
             </b-field>
             <b-field label="Status">
                 <p>{{job.state}}</p>
@@ -35,8 +35,8 @@
                 <b-table :data="job.children"
                          default-sort="created" :default-sort-direction="'asc'">
                     <template slot-scope="props">
-                        <b-table-column field="type" label="Type">
-                            {{ props.row.type}}
+                        <b-table-column field="label" label="Name">
+                            {{ props.row.label}}
                         </b-table-column>
                         <b-table-column field="state" label="Status">
                             {{ props.row.state}}

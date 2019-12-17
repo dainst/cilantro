@@ -13,6 +13,8 @@ class BaseJob:
 
     logger = logging.getLogger(__name__)
     job_type = 'base_job'
+    label = 'No label set for cilantro job'
+    description = 'No description set for cilantro job'
 
     def __init__(self):
         self.job_db = JobDb()
@@ -25,7 +27,6 @@ class BaseJob:
         :return AsyncResult: Celery result
         """
         raise NotImplementedError("run method not implemented")
-        self.job_db.close()
 
     @abstractmethod
     def _add_to_job_db(self, params, user_name):
@@ -73,7 +74,7 @@ class BatchJob(BaseJob):
     def _add_to_job_db(self, params, user_name):
         chain_ids = []
 
-        for current_chain in self.chord.tasks:
+        for idx, current_chain in enumerate(self.chord.tasks):
             current_chain_links = []
             current_chain_id = _generate_id()
             current_work_path = current_chain_id
@@ -101,7 +102,9 @@ class BatchJob(BaseJob):
                            job_type='chain',
                            parent_job_id=self.id,
                            child_job_ids=current_chain_links,
-                           parameters={'work_path': current_chain.kwargs['work_path']})
+                           parameters={'work_path': current_chain.kwargs['work_path']},
+                           label=f"Batch #{idx+1}",
+                           description="Group containing all the individual steps for a single batch.")
             chain_ids += [current_chain_id]
 
         self.job_db.add_job(job_id=self.id,
@@ -109,13 +112,19 @@ class BatchJob(BaseJob):
                        job_type=self.job_type,
                        parent_job_id=None,
                        child_job_ids=chain_ids,
-                       parameters=params)
+                       parameters=params,
+                       label=self.label,
+                       description=self.description)
 
         return chain_ids
 
 
 class IngestRecordsJob(BatchJob):
     job_type = 'ingest_records'
+    label = 'Retrodigitized Archival Records'
+    description = """
+    Import multiple folders that contain scans of archival material into iDAI.archives / AtoM.
+    """
 
     def _create_chains(self, params, user_name):
         chains = []
@@ -175,6 +184,10 @@ class IngestRecordsJob(BatchJob):
 
 class IngestJournalsJob(BatchJob):
     job_type = 'ingest_journals'
+    label = 'Retrodigitized Journals'
+    description = """
+    Import multiple folders that contain scans of journal issues into iDAI.publications / OJS.
+    """
 
     def _create_chains(self, params, user_name):
         chains = []

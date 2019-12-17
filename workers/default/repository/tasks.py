@@ -22,6 +22,8 @@ class CreateObjectTask(ObjectTask):
     -An Object in the working dir
     """
     name = "create_object"
+    label = "Create object"
+    description = "Sets up metadata for further processing."
 
     def process_object(self, obj):
         oid = self._get_object_id()
@@ -84,6 +86,8 @@ class PublishToRepositoryTask(BaseTask):
     """
 
     name = "publish_to_repository"
+    label = "Publish to repository"
+    description = "Copies the current results into the data repository."
 
     def execute_task(self):
         work_path = self.get_work_path()
@@ -107,6 +111,8 @@ class PublishToArchiveTask(BaseTask):
     """Copy the given dir-trees from work dir to the archive."""
 
     name = "publish_to_archive"
+    label = "Publish to archive"
+    description = "Copies the current results into iDAI.archives / AtoM."
 
     def execute_task(self):
         work_path = self.get_work_path()

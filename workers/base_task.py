@@ -75,6 +75,9 @@ class BaseTask(Task):
     results = {}
     work_path = None
     log = logging.getLogger(__name__)
+    
+    label = 'No label set for worker type'
+    description = 'No description set for worker type'
 
     log_output = io.StringIO()
     handler = logging.StreamHandler(log_output)
@@ -217,6 +220,7 @@ class BaseTask(Task):
         except KeyError:
             self.parent_job_id = None
 
+        self.job_db.set_job_label_and_description(self.job_id, self.label, self.description)
         self.log.debug(f"initialized params: {self.params}")
 
 

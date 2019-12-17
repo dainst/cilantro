@@ -64,7 +64,7 @@ class JobDb:
             {"job_id": job_id}, {'_id': False}))
         return job
 
-    def add_job(self, job_id, user, job_type, parent_job_id, child_job_ids, parameters):
+    def add_job(self, job_id, user, job_type, parent_job_id, child_job_ids, parameters, label="Not implemented", description="Not implemented",):
         """
         Add a job to the job database.
 
@@ -81,6 +81,8 @@ class JobDb:
             'user': user,
             'job_type': job_type,
             'name': f"{job_type}-{job_id}",
+            'label': label,
+            'description': description,
             'parent_job_id': parent_job_id,
             'child_job_ids': child_job_ids,
             'state': 'new',
@@ -137,6 +139,12 @@ class JobDb:
         self.db.jobs.update_many({"job_id": job_id},
                             {'$set': updated_values})
 
+    def set_job_label_and_description(self, job_id, label, description):
+        timestamp = datetime.datetime.now()
+        updated_values = {'label': label, 'description': description, 'updated': timestamp}
+        self.db.jobs.update_many({"job_id": job_id},
+                            {'$set': updated_values})
+
     def add_job_error(self, job_id, error_message):
         timestamp = datetime.datetime.now()
         self.db.jobs.update_many({"job_id": job_id},
@@ -169,7 +177,7 @@ class JobDb:
                 child = self.db.jobs.find_one({'job_id': child_id}, {'_id': False})
                 children_with_status += [{'job_id': child_id,
                                         'state': child['state'],
-                                        'type': child['job_type']}]
+                                        'label': child['label']}]
 
             del job['child_job_ids']
             job['children'] = children_with_status

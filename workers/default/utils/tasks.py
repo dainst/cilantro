@@ -22,6 +22,8 @@ class ListFilesTask(ObjectTask):
     """
 
     name = "list_files"
+    label = "File batch"
+    description = "Group containing individual steps applied to individual files."
 
     def process_object(self, obj):
         rep = self.get_param('representation')
@@ -80,6 +82,8 @@ class CleanupWorkdirTask(BaseTask):
     """
 
     name = "cleanup_workdir"
+    label = "Cleanup"
+    description = "Cleans up the internal working directory."
 
     def execute_task(self):
         work_path = self.get_work_path()
@@ -93,6 +97,8 @@ class FinishChainTask(BaseTask):
     """Task to set the job state to success after all other tasks have run."""
 
     name = "finish_chain"
+    label = "Finish batch"
+    description = ""
 
     def execute_task(self):
         self.job_db.update_job_state(self.parent_job_id, 'success')
@@ -106,6 +112,25 @@ class FinishChordTask(BaseTask):
     Finish a celery chord task, writes state into the mongo DB.
     """
     name = "finish_chord"
+    label = "No label set for chord task"
+    description = "No label set for chord task"
+
+    
+    def _init_params(self, params):
+        """
+        The original chord task gets replaced by celery by this callback task. We initialized 
+        the original task in the job database with a given name (see jobs.py). Replacing the original
+        task will also set the label and description to the default values as defined in base_task.py. 
+        For that reason, we read the initial values from the job database, set them as label/description
+        for the replacing task und then initialize the parameters.
+        """
+
+        intial_job = self.job_db.get_job_by_id(params['job_id'])
+        self.label = intial_job['label']
+        self.description = intial_job['description']
+
+        super()._init_params(params)
+
 
     def execute_task(self):
         self.job_db.update_job_state(self.job_id, "success")

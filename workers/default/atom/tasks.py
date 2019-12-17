@@ -19,6 +19,8 @@ class PublishToAtomTask(ObjectTask):
     """
 
     name = "publish_to_atom"
+    label = "Add digital object"
+    description = "Adds a 'digital object' for the current PDF in iDAI.archives / AtoM."
 
     def process_object(self, obj):
         uri = create_digital_object(obj)
