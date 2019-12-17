@@ -30,7 +30,10 @@
                     sortable
                 >{{ props.row.updated }}</b-table-column>
                 <b-table-column>
-                    <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
+                    <b-button icon-right="arrow-bottom-right" class="is-dark"
+                              @click="goToSingleView(props.row.job_id)">
+                        View
+                    </b-button>
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
