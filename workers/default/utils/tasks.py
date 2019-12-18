@@ -115,12 +115,11 @@ class FinishChordTask(BaseTask):
     label = "No label set for chord task"
     description = "No label set for chord task"
 
-    
     def _init_params(self, params):
         """
-        The original chord task gets replaced by celery by this callback task. We initialized 
+        The original chord task gets replaced by celery by this callback task. We initialized
         the original task in the job database with a given name (see jobs.py). Replacing the original
-        task will also set the label and description to the default values as defined in base_task.py. 
+        task will also set the label and description to the default values as defined in base_task.py.
         For that reason, we read the initial values from the job database, set them as label/description
         for the replacing task und then initialize the parameters.
         """
@@ -130,7 +129,6 @@ class FinishChordTask(BaseTask):
         self.description = intial_job['description']
 
         super()._init_params(params)
-
 
     def execute_task(self):
         self.job_db.update_job_state(self.job_id, "success")
