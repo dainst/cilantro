@@ -63,7 +63,6 @@ export default class SpecificJobsList extends Vue {
     @Prop(Array) jobIDs!: string[];
     @Prop() activeStates!: string[];
     unfilteredJobs: Job[] = []
-    jobs: Job[] = [];
 
     getChildrenIDs = getChildrenIDs;
 
