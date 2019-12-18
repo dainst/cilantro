@@ -54,8 +54,7 @@
                 </b-table>
             </b-field>
 
-            <b-collapse class="card" :open="false" aria-id="job-params"
-                        v-if="job.log && job.log.length > 0">
+            <b-collapse class="card" :open="false" aria-id="job-params">
                 <div
                     slot="trigger" 
                     slot-scope="props"
