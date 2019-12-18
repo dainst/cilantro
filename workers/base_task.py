@@ -76,8 +76,12 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
-    label = 'No label set for worker type'
-    description = 'No description set for worker type'
+    @property
+    def label(self):
+        raise NotImplementedError
+    @property
+    def description(self):
+        raise NotImplementedError
 
     log_output = io.StringIO()
     handler = logging.StreamHandler(log_output)

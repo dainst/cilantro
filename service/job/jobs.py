@@ -12,9 +12,18 @@ class BaseJob:
     """Wraps multiple celery task chains as a celery chord and handles ID generation."""
 
     logger = logging.getLogger(__name__)
-    job_type = 'base_job'
-    label = 'No label set for cilantro job'
-    description = 'No description set for cilantro job'
+
+    @property
+    def job_type(self):
+        raise NotImplementedError
+
+    @property
+    def label(self):
+        raise NotImplementedError
+
+    @property
+    def description(self):
+        raise NotImplementedError
 
     def __init__(self):
         self.job_db = JobDb()
@@ -34,7 +43,6 @@ class BaseJob:
 
 
 class BatchJob(BaseJob):
-    job_type = 'batch_job'
 
     @abstractmethod
     def _create_chains(self, params, user_name):
@@ -89,32 +97,33 @@ class BatchJob(BaseJob):
                 single_task.kwargs['parent_job_id'] = current_chain_id
 
                 self.job_db.add_job(job_id=job_id,
-                               user=user_name,
-                               job_type=single_task.name,
-                               parent_job_id=current_chain_id,
-                               child_job_ids=[],
-                               parameters=single_task.kwargs)
+                                    user=user_name,
+                                    job_type=single_task.name,
+                                    parent_job_id=current_chain_id,
+                                    child_job_ids=[],
+                                    parameters=single_task.kwargs)
 
                 current_chain_links += [job_id]
 
             self.job_db.add_job(job_id=current_chain_id,
-                           user=user_name,
-                           job_type='chain',
-                           parent_job_id=self.id,
-                           child_job_ids=current_chain_links,
-                           parameters={'work_path': current_chain.kwargs['work_path']},
-                           label=f"Batch #{idx+1}",
-                           description="Group containing all the individual steps for a single batch.")
+                                user=user_name,
+                                job_type='chain',
+                                parent_job_id=self.id,
+                                child_job_ids=current_chain_links,
+                                parameters={
+                                    'work_path': current_chain.kwargs['work_path']},
+                                label=f"Batch #{idx+1}",
+                                description="Group containing all the individual steps for a single batch.")
             chain_ids += [current_chain_id]
 
         self.job_db.add_job(job_id=self.id,
-                       user=user_name,
-                       job_type=self.job_type,
-                       parent_job_id=None,
-                       child_job_ids=chain_ids,
-                       parameters=params,
-                       label=self.label,
-                       description=self.description)
+                            user=user_name,
+                            job_type=self.job_type,
+                            parent_job_id=None,
+                            child_job_ids=chain_ids,
+                            parameters=params,
+                            label=self.label,
+                            description=self.description)
 
         return chain_ids
 
@@ -122,9 +131,7 @@ class BatchJob(BaseJob):
 class IngestRecordsJob(BatchJob):
     job_type = 'ingest_records'
     label = 'Retrodigitized Archival Records'
-    description = """
-    Import multiple folders that contain scans of archival material into iDAI.archives / AtoM.
-    """
+    description = "Import multiple folders that contain scans of archival material into iDAI.archives / AtoM."
 
     def _create_chains(self, params, user_name):
         chains = []
@@ -136,39 +143,39 @@ class IngestRecordsJob(BatchJob):
             current_chain = _link('create_object', **task_params)
 
             current_chain |= _link('list_files',
-                                        representation='tif',
-                                        target='jpg',
-                                        task='convert.tif_to_jpg')
+                                   representation='tif',
+                                   target='jpg',
+                                   task='convert.tif_to_jpg')
 
             current_chain |= _link('list_files',
-                                        representation='jpg',
-                                        target='jpg_thumbnails',
-                                        task='convert.tif_to_jpg',
-                                        max_width=50,
-                                        max_height=50)
+                                   representation='jpg',
+                                   target='jpg_thumbnails',
+                                   task='convert.tif_to_jpg',
+                                   max_width=50,
+                                   max_height=50)
 
             current_chain |= _link('list_files',
-                                        representation='tif',
-                                        target='ptif',
-                                        task='convert.tif_to_ptif')
+                                   representation='tif',
+                                   target='ptif',
+                                   task='convert.tif_to_ptif')
 
             current_chain |= _link('list_files',
-                                        representation='tif',
-                                        target='pdf',
-                                        task='convert.tif_to_pdf')
+                                   representation='tif',
+                                   target='pdf',
+                                   task='convert.tif_to_pdf')
             current_chain |= _link('convert.merge_converted_pdf')
 
             if params['options']['do_ocr']:
                 current_chain |= _link('list_files',
-                                            representation='tif',
-                                            target='txt',
-                                            task='convert.tif_to_txt',
-                                            ocr_lang=params['options']['ocr_lang'])
+                                       representation='tif',
+                                       target='txt',
+                                       task='convert.tif_to_txt',
+                                       ocr_lang=params['options']['ocr_lang'])
 
             current_chain |= _link('generate_xml',
-                                        template_file='mets_template_no_articles.xml',
-                                        target_filename='mets.xml',
-                                        schema_file='mets.xsd')
+                                   template_file='mets_template_no_articles.xml',
+                                   target_filename='mets.xml',
+                                   schema_file='mets.xsd')
 
             current_chain |= _link('publish_to_repository')
             current_chain |= _link('publish_to_atom')
@@ -185,9 +192,7 @@ class IngestRecordsJob(BatchJob):
 class IngestJournalsJob(BatchJob):
     job_type = 'ingest_journals'
     label = 'Retrodigitized Journals'
-    description = """
-    Import multiple folders that contain scans of journal issues into iDAI.publications / OJS.
-    """
+    description = "Import multiple folders that contain scans of journal issues into iDAI.publications / OJS."
 
     def _create_chains(self, params, user_name):
         chains = []
@@ -199,44 +204,44 @@ class IngestJournalsJob(BatchJob):
             current_chain = _link('create_object', **task_params)
 
             current_chain |= _link('list_files',
-                                        representation='tif',
-                                        target='pdf',
-                                        task='convert.tif_to_pdf')
+                                   representation='tif',
+                                   target='pdf',
+                                   task='convert.tif_to_pdf')
 
             current_chain |= _link('convert.merge_converted_pdf')
 
             current_chain |= _link('list_files',
-                                        representation='tif',
-                                        target='jpg',
-                                        task='convert.tif_to_jpg')
+                                   representation='tif',
+                                   target='jpg',
+                                   task='convert.tif_to_jpg')
 
             current_chain |= _link('list_files',
-                                        representation='tif',
-                                        target='jpg_thumbnails',
-                                        task='convert.scale_image',
-                                        max_width=50,
-                                        max_height=50)
+                                   representation='tif',
+                                   target='jpg_thumbnails',
+                                   task='convert.scale_image',
+                                   max_width=50,
+                                   max_height=50)
 
             current_chain |= _link('generate_xml',
-                                        template_file='ojs3_template_issue.xml',
-                                        target_filename='ojs_import.xml',
-                                        ojs_metadata=params['options']['ojs_metadata'])
+                                   template_file='ojs3_template_issue.xml',
+                                   target_filename='ojs_import.xml',
+                                   ojs_metadata=params['options']['ojs_metadata'])
 
             current_chain |= _link('generate_xml',
-                                        template_file='mets_template_no_articles.xml',
-                                        target_filename='mets.xml',
-                                        schema_file='mets.xsd')
+                                   template_file='mets_template_no_articles.xml',
+                                   target_filename='mets.xml',
+                                   schema_file='mets.xsd')
             if params['options']['do_ocr']:
                 current_chain |= _link('list_files',
-                                            representation='tif',
-                                            target='txt',
-                                            task='convert.tif_to_txt',
-                                            ocr_lang=params['options']['ocr_lang'])
+                                       representation='tif',
+                                       target='txt',
+                                       task='convert.tif_to_txt',
+                                       ocr_lang=params['options']['ocr_lang'])
 
             if params['options']['ojs_metadata']['auto_publish_issue']:
                 current_chain |= _link('publish_to_ojs',
-                                            ojs_metadata=params['options']['ojs_metadata'],
-                                            ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
+                                       ojs_metadata=params['options']['ojs_metadata'],
+                                       ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
             current_chain |= _link('publish_to_repository')
             current_chain |= _link('publish_to_archive')
             current_chain |= _link('cleanup_workdir')
