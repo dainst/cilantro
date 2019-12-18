@@ -75,7 +75,7 @@ class BaseTask(Task):
     results = {}
     work_path = None
     log = logging.getLogger(__name__)
-    
+
     label = 'No label set for worker type'
     description = 'No description set for worker type'
 
