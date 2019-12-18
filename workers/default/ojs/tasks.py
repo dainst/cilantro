@@ -20,7 +20,7 @@ class PublishToOJSTask(ObjectTask):
 
     name = "publish_to_ojs"
     label = "Publish to OJS"
-    descriptions = "Publishes the current result in OJS."
+    description = "Publishes the current result in OJS."
 
     def process_object(self, obj):
         work_path = self.get_work_path()
