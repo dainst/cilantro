@@ -22,9 +22,13 @@ class CreateObjectTask(ObjectTask):
     -An Object in the working dir
     """
     name = "create_object"
+    label = "Create object"
+    description = "Sets up metadata for further processing."
 
     def process_object(self, obj):
         oid = self._get_object_id()
+
+        self.job_db.set_job_object_id(self.parent_job_id, oid)
         _initialize_object(obj, self.params, oid)
         return {'object_id': oid}
 
@@ -33,9 +37,7 @@ class CreateObjectTask(ObjectTask):
             object_id = self.get_param('id')
         except KeyError:
             object_id = self.job_id
-        job_db = JobDb()
-        uid = job_db.generate_unique_object_identifier()
-        job_db.close()
+        uid = self.job_db.generate_unique_object_identifier()
         return object_id + f"_{uid}"
 
 
@@ -84,6 +86,8 @@ class PublishToRepositoryTask(BaseTask):
     """
 
     name = "publish_to_repository"
+    label = "Publish to repository"
+    description = "Copies the current results into the data repository."
 
     def execute_task(self):
         work_path = self.get_work_path()
@@ -107,6 +111,8 @@ class PublishToArchiveTask(BaseTask):
     """Copy the given dir-trees from work dir to the archive."""
 
     name = "publish_to_archive"
+    label = "Publish to archive"
+    description = "Copies the current results into iDAI.archives / AtoM."
 
     def execute_task(self):
         work_path = self.get_work_path()

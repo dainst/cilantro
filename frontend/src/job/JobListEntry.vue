@@ -2,7 +2,7 @@
     <section>
         <b-table
             v-if="jobsLoaded"
-            :data="jobs"
+            :data="filteredJobs"
             detailed
             detail-key="job_id"
             default-sort="created"
@@ -15,8 +15,13 @@
                         <b-icon v-bind="iconAttributesForState(props.row.state)" />
                     </div>
                 </b-table-column>
-                <b-table-column field="name" label="Name" sortable>{{ props.row.name }}</b-table-column>
-                <b-table-column field="job_type" label="Type" sortable>{{ props.row.job_type }}</b-table-column>
+                <b-table-column field="label" label="Name" sortable>
+                    {{ props.row.label }}
+                </b-table-column>
+                <b-table-column field="description" label="Description">
+                    {{ props.row.description }}
+                </b-table-column>
+                <b-table-column field="id" label="ID" sortable>{{props.row.job_id}}</b-table-column>
                 <b-table-column
                     field="created"
                     label="Created"
@@ -30,11 +35,14 @@
                     sortable
                 >{{ props.row.updated }}</b-table-column>
                 <b-table-column>
-                    <b-button @click="goToSingleView(props.row.job_id)">Single View</b-button>
+                    <b-button icon-right="arrow-bottom-right" class="is-dark"
+                              @click="goToSingleView(props.row.job_id)">
+                        View
+                    </b-button>
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
-                <SpecificJobsList :jobIDs="getChildrenIDs(props.row.children)" />
+                <JobListEntry :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
         <div v-else>Loading jobs...</div>
@@ -45,14 +53,16 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { getJobDetails, getJobList, Job } from './JobClient';
+import {
+    getJobDetails, getJobList, iconAttributesForState, Job
+} from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
-@Component({ name: 'SpecificJobsList' })
-export default class SpecificJobsList extends Vue {
+@Component({ name: 'JobListEntry' })
+export default class JobListEntry extends Vue {
     @Prop(Array) jobIDs!: string[];
-    @Prop() showAllJobs!: boolean;
-    jobs: Job[] = [];
+    @Prop() activeStates!: string[];
+    unfilteredJobs: Job[] = []
 
     getChildrenIDs = getChildrenIDs;
 
@@ -61,22 +71,23 @@ export default class SpecificJobsList extends Vue {
     }
 
     get jobsLoaded() {
-        return this.jobIDs.length === 0 || this.jobs.length === this.jobIDs.length; // leere liste
+        return this.unfilteredJobs.length !== 0;
+    }
+
+    get filteredJobs() {
+        if (this.jobIDs.length === 0) {
+            return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
+        }
+        return this.unfilteredJobs;
     }
 
     async loadJobs() {
         if (this.jobIDs.length === 0) {
-            this.jobs = await getJobList(this.showAllJobs);
+            this.unfilteredJobs = await getJobList();
         } else {
-            for await (const id of this.jobIDs) { // eslint-disable-line no-restricted-syntax
-                this.jobs.push(await getJobDetails(id));
-            }
+            const requests = this.jobIDs.map(id => getJobDetails(id));
+            this.unfilteredJobs = await Promise.all(requests);
         }
-    }
-
-    @Watch('showAllJobs')
-    onChanged(showAllJobs: boolean) {
-        this.loadJobs();
     }
 
     sortByCreated = sortByCreated;
@@ -110,16 +121,5 @@ function sortByCreated(a: Job, b: Job, isAsc: boolean) {
 
 function compareDates(a: Date, b: Date, isAsc: boolean) {
     return isAsc ? b.getTime() - a.getTime() : a.getTime() - b.getTime();
-}
-
-function iconAttributesForState(state: string) {
-    if (state === 'new') {
-        return [{ type: 'is-info' }, { icon: 'alarm' }];
-    } if (state === 'failure') {
-        return [{ type: 'is-danger' }, { icon: 'alert' }];
-    } if (state === 'success') {
-        return [{ type: 'is-success' }, { icon: 'check' }];
-    }
-    return [{ type: 'is-warning' }, { icon: 'cogs' }];
 }
 </script>

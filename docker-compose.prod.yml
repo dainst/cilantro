@@ -19,7 +19,6 @@ x-env-jobdb: &env-jobdb
   FIRST_OBJECT_ID: 1000
 
 x-env-app-config: &env-app-config
-  OLD_JOBS_THRESHOLD_DAYS: &old-job-threshold-days 7
   BACKEND_URI: &backend-uri https://workbench.idai.world/api
   CILANTRO_ENV: &cilantro-env prod
   OJS_URI: &ojs-uri https://publications.dainst.org/journals/plugins/generic/ojs-cilantro-plugin/api

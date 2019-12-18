@@ -1,4 +1,5 @@
 import logging
+import io
 import os
 from abc import abstractmethod
 import traceback
@@ -75,6 +76,18 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
+    @property
+    def label(self):
+        raise NotImplementedError
+    @property
+    def description(self):
+        raise NotImplementedError
+
+    log_output = io.StringIO()
+    handler = logging.StreamHandler(log_output)
+    handler.setLevel(logging.INFO)
+    logging.getLogger().addHandler(handler)
+
     def __init__(self):
         self.job_db = JobDb()
 
@@ -85,6 +98,22 @@ class BaseTask(Task):
         parent = self.job_db.get_job_by_id(parent_id)
         if 'parent_job_id' in parent:
             self._propagate_failure_to_ancestors(parent['parent_job_id'], error)
+            self._set_following_siblings_aborted(parent_id, parent['parent_job_id'])
+
+    def _set_following_siblings_aborted(self, job_id, parent_id):
+        parent = self.job_db.get_job_by_id(parent_id)
+        if parent['job_type'] == 'chain':
+            found_self = False
+            for child in parent['children']:
+                if found_self:
+                    self.job_db.update_job_state(child['job_id'], 'aborted')
+                    self.job_db.set_job_label_and_description(child['job_id'],
+                        'Aborted',
+                        'This task was never initialized and has been aborted due to a previous error.')
+
+                if child['job_id'] == job_id:
+                    found_self = True
+
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         """
@@ -92,12 +121,16 @@ class BaseTask(Task):
         https://docs.celeryproject.org/en/latest/userguide/tasks.html#handlers
         """
         self.job_db.update_job_state(self.job_id, status.lower())
+        self.job_db.update_job_log(self.job_id, self.log_output.getvalue().strip().split('\n'))
+
         if status == 'FAILURE':
             error_object = { 'job_id': self.job_id, 'job_name': self.name, 'message': self.error }
             self.job_db.add_job_error( self.job_id, error_object )
 
             if self.parent_job_id is not None:
                 self._propagate_failure_to_ancestors(self.parent_job_id, error_object)
+                self._set_following_siblings_aborted(self.job_id, self.parent_job_id)
+
         self.job_db.close()
 
     def get_work_path(self):
@@ -209,6 +242,7 @@ class BaseTask(Task):
         except KeyError:
             self.parent_job_id = None
 
+        self.job_db.set_job_label_and_description(self.job_id, self.label, self.description)
         self.log.debug(f"initialized params: {self.params}")
 
 

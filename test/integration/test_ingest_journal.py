@@ -10,17 +10,17 @@ class IngestJournalTest(JobTypeTest):
 
         data, status_code = self.post_job('ingest_journals', params)
         self.assertEqual(status_code, 202)
-        first_job_id = data['job_id']
+        job_id = data['job_id']
         self.assertTrue(data['success'])
-        self.assert_state(first_job_id, 'success', "JOURNAL_TEST_TIMEOUT")
+        self.assert_state(job_id, 'success', "JOURNAL_TEST_TIMEOUT")
 
-        response = self.get_job_by_id(first_job_id)
-        object_id = response['parameters']['objects'][0]['id']
+        job_from_db = self.get_job_by_id(job_id)
+        first_batch_job_in_job_from_db = self.get_job_by_id(job_from_db['children'][0]['job_id'])
 
         files_generated = [
-            f"data/pdf/{object_id}.pdf",
+            f"data/pdf/{first_batch_job_in_job_from_db['object_id']}.pdf",
             'meta.json']
         for file in files_generated:
-            self.assert_file_in_repository(object_id, file)
+            self.assert_file_in_repository(first_batch_job_in_job_from_db['object_id'], file)
 
         self.unstage_resource('some_tiffs')
