@@ -5,12 +5,7 @@ x-env-dirs: &env-dirs
   WORKING_DIR: /data/workspace
   STAGING_DIR: /data/staging
   CONFIG_DIR: /config
-
-x-env-ojs3: &env-ojs3
-  MYSQL_USER: ojs
-  MYSQL_PASSWORD: /run/secrets/ojs_mysql_password
-  ADMIN_USER: admin
-  ADMIN_PASSWORD: /run/secrets/ojs_admin_password
+  ARCHIVE_DIR: /data/archive
 
 x-env-broker: &env-broker
   BROKER_HOST: "broker"
@@ -21,26 +16,14 @@ x-env-jobdb: &env-jobdb
   JOB_DB_URL: job-db
   JOB_DB_PORT: 27017
   JOB_DB_NAME: job_database
+  FIRST_OBJECT_ID: 1000
 
-x-env-arachne: &env-arachne
-  ARACHNE_DB_HOST: bogusman02.dai-cloud.uni-koeln.de
-  ARACHNE_DB_NAME: arachne
-  ARACHNE_DB_USER: root
-  ARACHNE_DB_PASSWORD: /run/secrets/arachne_db_password
-
-x-env-archaeocloud: &env-archaeocloud
-  ARCHAEOCLOUD_DIR: archaeocloud_test_dir
-  BOOKSCAN_DIR: aronscans/bookscans
-  PDF_DIR: aronscans/download-book
-  METS_DIR: S-Arachne/MetsDocuments
-  TEI_DIR: S-Arachne/TeiDocuments
-  PTIF_DIR: S-Arachne/arachne4scans/arachne4webimages/bookscans
-  ARCHIVE_DIR: $historical-books-archive/DAI
-
-x-env-frontend-uris: &env-frontend-uris
-  BACKEND_URI: https://workbench.idai.world/api
-  ZENON_URI: https://zenon.dainst.org/api/v1/
-  OJS_URI: http://test.publications.dainst.org/journals/plugins/generic/ojs-cilantro-plugin/api/
+x-env-app-config: &env-app-config
+  BACKEND_URI: &backend-uri https://workbench.idai.world/api
+  CILANTRO_ENV: &cilantro-env prod
+  OJS_URI: &ojs-uri https://publications.dainst.org/journals/plugins/generic/ojs-cilantro-plugin/api
+  ATOM_URI: &atom-uri https://archives.dainst.org/
+  REPOSITORY_URI: &repository-uri https://workbench.idai.world/api/repository
 
 services:
 
@@ -50,7 +33,7 @@ services:
       RABBITMQ_DEFAULT_USER: *broker-user
       RABBITMQ_DEFAULT_PASS: *broker-password
 
-  db:
+  celery-db:
     image: redis:latest
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
@@ -62,62 +45,73 @@ services:
       - mongo-data:/data
 
   service:
-    image: dainst/cilantro-service:latest
+    image: dainst/cilantro-service:0.2.0
     volumes:
-      - data:/data
-      - /opt/cilantro/config:/config
+      - staging-data:/data/staging
+      - repository-data:/data/repository
+      - config:/config
     working_dir: /app
     environment:
       <<: *env-dirs
       <<: *env-broker
       <<: *env-jobdb
-      DB_HOST: "db"
+      DB_HOST: "celery-db"
+      CILANTRO_ENV: *cilantro-env
+      OLD_JOBS_THRESHOLD_DAYS: *old-job-threshold-days
+      BACKEND_URI: *backend-uri
+      ATOM_URI: *atom-uri
     networks:
-      - default
       - web
+      - default
     deploy:
       labels:
         - "traefik.docker.network=web"
         - "traefik.enable=true"
         - "traefik.frontend.rule=Host:workbench.idai.world; PathPrefixStrip:/api"
         - "traefik.port=5000"
+    secrets:
+      - atom_api_key
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:latest
+    image: dainst/cilantro-default-worker:0.2.0
     working_dir: /app
     volumes:
-      - data:/data
-      - /opt/cilantro/config:/config
+      - staging-data:/data/staging
+      - workspace-data:/data/workspace
+      - archive-data:/data/archive
+      - repository-data:/data/repository
+      - config:/config
     environment:
       <<: *env-dirs
       <<: *env-broker
-      <<: *env-ojs3
       <<: *env-jobdb
-      <<: *env-arachne
-      <<: *env-archaeocloud
-      DB_HOST: "db"
+      DB_HOST: "celery-db"
+      CILANTRO_ENV: *cilantro-env
+      BACKEND_URI: *backend-uri
+      OJS_URI: *ojs-uri
+      ATOM_URI: *atom-uri
+      REPOSITORY_URI: *repository-uri
     secrets:
       - ojs_auth_key
-      - arachne_db_password
+      - atom_api_key
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:latest
+    image: dainst/cilantro-convert-worker:0.2.0
     working_dir: /app
     volumes:
-      - data:/data
-      - /opt/cilantro/config:/config
+      - workspace-data:/data/workspace
+      - config:/config
     environment:
       <<: *env-dirs
       <<: *env-broker
-      DB_HOST: "db"
+      <<: *env-jobdb
+      DB_HOST: "celery-db"
+      CILANTRO_ENV: *cilantro-env
 
   frontend:
-    image: dainst/cilantro-frontend:latest
-    environment:
-      <<: *env-ojs3
-      <<: *env-frontend-uris
+    image: dainst/cilantro-frontend:0.2.0
     networks:
       - default
       - web
@@ -128,24 +122,45 @@ services:
         - "traefik.frontend.rule=Host:workbench.idai.world"
         - "traefik.port=80"
 
+  pdf-viewer:
+    image: dainst/cilantro-dai-book-viewer:latest
+    volumes:
+      - repository-data:/usr/share/nginx/html/documents
+    networks:
+      - web
+    deploy:
+      labels:
+        - "traefik.docker.network=web"
+        - "traefik.enable=true"
+        - "traefik.frontend.rule=Host:viewer.idai.world"
+        - "traefik.port=80"
+
 secrets:
-  arachne_db_password:
+  ojs_auth_key:
     external: true
-  ojs_mysql_user:
+    name: workbench_ojs_auth_key
+  atom_api_key:
     external: true
-  ojs_mysql_password:
-    external: true
-  ojs_admin_user:
-    external: true
-  ojs_admin_password:
-    external: true
+    name: workbench_atom_api_key
 
 volumes:
   mongo-data:
+    name: workbench_mongo_data
+    external: true
   redis-data:
-  data:
-    external:
-    name: cilantro_repository_data
+  workspace-data:
+  repository-data:
+    name: workbench_repository_data
+    external: true
+  archive-data:
+    name: workbench_archive_data
+    external: true
+  staging-data:
+    name: workbench_staging_data
+    external: true
+  config:
+    name: workbench_config
+    external: true
 
 networks:
   web:
