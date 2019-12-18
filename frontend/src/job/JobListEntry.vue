@@ -42,7 +42,7 @@
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
-                <SpecificJobsList :jobIDs="getChildrenIDs(props.row.children)" />
+                <JobListEntry :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
         <div v-else>Loading jobs...</div>
@@ -58,8 +58,8 @@ import {
 } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
-@Component({ name: 'SpecificJobsList' })
-export default class SpecificJobsList extends Vue {
+@Component({ name: 'JobListEntry' })
+export default class JobListEntry extends Vue {
     @Prop(Array) jobIDs!: string[];
     @Prop() activeStates!: string[];
     unfilteredJobs: Job[] = []

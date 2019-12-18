@@ -19,17 +19,17 @@
             </div>
         </div>
         <div>
-            <SpecificJobsList :jobIDs="[]" :activeStates="activeStates"></SpecificJobsList>
+            <JobListEntry :jobIDs="[]" :activeStates="activeStates"></JobListEntry>
         </div>
     </section>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import SpecificJobsList from '@/job/SpecificJobsList.vue';
+import JobListEntry from '@/job/JobListEntry.vue';
 
 @Component({
-    components: { SpecificJobsList }
+    components: { JobListEntry }
 })
 export default class JobList extends Vue {
     showSuccess: boolean = true;
