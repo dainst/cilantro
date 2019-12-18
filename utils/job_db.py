@@ -35,9 +35,9 @@ class JobDb:
                 {'$inc': {'next_object_id': 1}},
                 return_document=ReturnDocument.AFTER
             )['next_object_id']
-        except KeyError:
+        except (KeyError, TypeError):
             raise RuntimeError("The database doesn't seem to be initialized"
-                            "properly")
+                               "properly")
 
     def get_jobs_for_user(self, user):
         """
