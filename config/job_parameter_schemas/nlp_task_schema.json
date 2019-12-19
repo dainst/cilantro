@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Ingest Records schema",
+    "description": "Used to validate nlp-task job parameters",
+    "type": "object",
+    "required": ["objects", "options"],
+    "additionalProperties": false,
+    "properties": {
+        "objects": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["id", "path"],
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "path": {
+                        "type": "string"
+                    },
+                    "metadata": {
+                        "type": "object"
+                    }
+                }
+            }
+        },
+        "options": {
+            "type": "object",
+            "properties": {
+                "lang": {
+                    "type": "string"
+                },
+                "tag_intervals": {
+                    "type": "boolean"
+                }
+            }
+        }
+    }
+}

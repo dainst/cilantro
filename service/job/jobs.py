@@ -171,7 +171,6 @@ class IngestRecordsJob(BatchJob):
 
         return chains
 
-
 class IngestJournalsJob(BatchJob):
     job_type = 'ingest_journals'
 
@@ -227,6 +226,29 @@ class IngestJournalsJob(BatchJob):
             current_chain |= _link('publish_to_archive')
             current_chain |= _link('cleanup_workdir')
             current_chain |= _link('finish_chain')
+            chains.append(current_chain)
+
+        return chains
+
+
+class NlpTaskJob(BatchJob):
+    job_type = 'nlp_task'
+
+    def _create_chains(self, params, user_name):
+        chains = []
+
+        for text_object in params['objects']:
+            task_params = dict(**text_object, **{'user': user_name})
+
+            current_chain = _link('create_object', **task_params,
+                                        initial_representation='txt')
+
+            current_chain |= _link('list_files',
+                                        representation='txt',
+                                        task='nlp_heideltime.time_annotate',
+                                        lang=params['options']['lang'],
+                                        tag_intervals=params['options']['tag_intervals'])
+
             chains.append(current_chain)
 
         return chains

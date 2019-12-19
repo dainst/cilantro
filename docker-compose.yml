@@ -117,6 +117,24 @@ services:
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
 
+  nlp-heideltime-worker:
+    image: dainst/cilantro-nlp-heideltime-worker:latest
+    user: ${UID}
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-nlp-heideltime-worker/Dockerfile
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      <<: *env-jobdb
+      DB_HOST: db
+      CILANTRO_ENV: *cilantro-env
+
   frontend:
     image: dainst/cilantro-frontend:latest
     build:
