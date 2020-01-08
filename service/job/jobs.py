@@ -245,6 +245,7 @@ class NlpTaskJob(BatchJob):
 
             current_chain |= _link('list_files',
                                         representation='txt',
+                                        target='xml',
                                         task='nlp_heideltime.time_annotate',
                                         lang=params['options']['lang'],
                                         tag_intervals=params['options']['tag_intervals'])
