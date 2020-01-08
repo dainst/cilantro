@@ -1,6 +1,8 @@
-# NOTE/TODO: The dainst/heideltime version should be fixed here to
-# allow versioning for the worker container defined in this file.
-FROM heideltime:latest
+
+# This extends the heideltime container from the chronoi-project, which is
+# currently (01/2020) maintained in the pilot corpus project:
+# https://github.com/dainst/chronoi-pilot-corpus-processing/tree/master/heideltime
+FROM dainst/chronoi-heideltime:0.1.0
 
 RUN apt-get update && apt-get -y install \
     python3-pip
