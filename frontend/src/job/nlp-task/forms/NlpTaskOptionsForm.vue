@@ -1,59 +1,70 @@
 <template>
-    <section class="tile is-ancestor">
-        <div class="tile is-parent">
-            <div class="tile is-child box">
-                <p class="title">NLP Task Options</p>
-                <b-field>
-                    <b-switch
-                        v-model="options.tag_intervals"
-                        @change="logOptions()"
-                    >Do interval tagging</b-switch>
-                </b-field>
-                <b-field>
-                    <b-select placeholder="Input language" v-model="options.lang" @change="logOptions()">
-                        <option 
-                            v-for="lang in langs"
-                            :value="lang.short"
-                            :key="lang.short"
-                        >{{ lang.long }}</option>
-                    </b-select>
-                </b-field>
-            </div>
-        </div>
-    </section>
+  <section class="tile is-ancestor">
+    <div class="tile is-parent">
+      <div class="tile is-child box">
+        <p class="title">NLP Task Options</p>
+
+        <section>
+          <p class="subtitle strong">Time tagging options</p>
+          <b-field label="Interval tagging">
+            <b-switch v-model="options.tag_intervals">Do interval tagging</b-switch>
+          </b-field>
+          <b-field label="Input language">
+            <b-select placeholder="Input language" v-model="options.lang">
+              <option v-for="lang in langs" :value="lang.short" :key="lang.short">{{ lang.long }}</option>
+            </b-select>
+          </b-field>
+          <b-field label="Document Creation Time">
+            <b-switch
+              v-model="options.read_dct_from_metadata"
+            >Use DCT from metadata (Not implemented yet).</b-switch>
+          </b-field>
+          <b-field v-show="!options.read_dct_from_metadata">
+            Select DCT:
+            <b-datepicker v-model="dct_field" placeholder="Select DCT." icon="calendar-today"></b-datepicker>
+          </b-field>
+        </section>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script lang="ts">
-import {
-    Component, Vue, Watch, Prop
-} from 'vue-property-decorator';
-import { NlpTaskOptions } from '../NlpTaskParameters';
-import JobOptionsForm from '../../JobOptionsForm.vue';
+import { Component, Vue, Watch, Prop } from "vue-property-decorator";
+import { NlpTaskOptions, format_dct_string } from "../NlpTaskParameters";
 
-@Component({
-    components: {
-        JobOptionsForm
-    }
-})
+@Component
 export default class NlpTaskOptionsForm extends Vue {
-    @Prop({ required: true }) initialOptions!: NlpTaskOptions;
-    options: NlpTaskOptions = JSON.parse(JSON.stringify(this.initialOptions));
-    langs = [
-        { short: "en", long: "English" },
-        { short: "fr", long: "French" },
-        { short: "de", long: "German" },
-        { short: "it", long: "Italian" },
-        { short: "es", long: "Spanish" },
-    ]
+  @Prop({ required: true }) initialOptions!: NlpTaskOptions;
 
-    logOptions() {
-        console.log(this.options);
-    }
+  options: NlpTaskOptions = this.initialOptions;
 
-    @Watch('options')
-    onOptionsChanged(options: NlpTaskOptions) {
-        console.log(options)
-        this.$emit('options-updated', options);
-    }
+  langs = [
+    { short: "en", long: "English" },
+    { short: "fr", long: "French" },
+    { short: "de", long: "German" },
+    { short: "it", long: "Italian" },
+    { short: "es", long: "Spanish" }
+  ];
+
+  // initializes the datepicker field with a date string like "1970-01-01"
+  dct_field: Date = new Date(this.options.document_creation_time);
+
+  @Watch("options.lang")
+  @Watch("options.tag_intervals")
+  @Watch("options.read_dct_from_metadata")
+  opOptionsChanged() {
+    this.signalOptionsChanged();
+  }
+
+  @Watch("dct_field")
+  onDctFieldChanged(dct_field: Date) {
+    this.options.document_creation_time = format_dct_string(dct_field);
+    this.signalOptionsChanged();
+  }
+
+  signalOptionsChanged() {
+    this.$emit("options-updated", this.options);
+  }
 }
 </script>

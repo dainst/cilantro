@@ -70,7 +70,7 @@ export default class NlpTask extends Vue {
             objects: this.selectedPaths.map(
               path => initNlpTaskTargetTextfile(path)
             ),
-            options: initOptions()
+            options: this.options
         };
     }
 }

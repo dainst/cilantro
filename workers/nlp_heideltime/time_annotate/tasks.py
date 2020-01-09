@@ -4,24 +4,25 @@ import logging
 from utils.celery_client import celery_app
 from workers.base_task import FileTask
 
+import datetime
 import os.path
-from subprocess import run, PIPE, TimeoutExpired
+from subprocess import run, PIPE, SubprocessError
 
 log = logging.getLogger(__name__)
+
 
 class TimeAnnotateTask(FileTask):
 
     name = "nlp_heideltime.time_annotate"
 
-    default_timeout_seconds = 60
+    _default_timeout_seconds = 180
 
-    default_heideltime_params = [
+    _default_heideltime_params = [
         "heideltime",
         "-t", "narrative",
-        "-dct", "1970-01-01"
     ]
 
-    langs = {
+    _langs = {
         "de": "german",
         "en": "english",
         "es": "spanish",
@@ -29,44 +30,58 @@ class TimeAnnotateTask(FileTask):
         "it": "italian"
     }
 
-
     def process_file(self, file, target_dir):
         cmd = self._prepare_heideltime_cmd_params(file)
-        annotation_xml = self._run_external_command(cmd)
+        annotation_xml = self._run_external_command(cmd, self._default_timeout_seconds)
         target_path = self._determine_new_filename(file, target_dir)
         with open(target_path, mode='wb') as out_file:
             out_file.write(annotation_xml)
 
-
     def _prepare_heideltime_cmd_params(self, input_file):
-        params = self.default_heideltime_params
+        params = self._default_heideltime_params
 
-        lang_short = self.get_param('lang')
-        if lang_short not in self.langs.keys():
-            raise ValueError(f'Language code "{lang_short}" is not a valid choice for option "lang".')
-        params += ['-l', self.langs[lang_short]]
-
-        if (self.get_param('tag_intervals')):
+        params += ['-l', self._prepare_lang_param()]
+        params += ['-dct', self._prepare_dct_param()]
+        if self.get_param('tag_intervals'):
             params.append('-it')
 
         params.append(input_file)
-
         return params
 
+    def _prepare_lang_param(self):
+        lang_short = self.get_param('lang')
+        if lang_short not in self._langs.keys():
+            raise ValueError(f'Language code "{lang_short}" is not a valid choice for option "lang".')
+        return self._langs[lang_short]
 
-    def _run_external_command(self, params):
+    def _prepare_dct_param(self):
+        iso_date_string = self.get_param('document_creation_time')
+        # this should raise a ValueError if the string is not a valid date
+        date_obj = datetime.datetime.strptime(iso_date_string, "%Y-%m-%d").date()
+        if type(date_obj) is datetime.date:
+            # return the string as we are now sure that it is in valid format
+            return iso_date_string
+        else:
+            raise ValueError(f"Cannot convert date: {iso_date_string}")
+
+    def _run_external_command(self, params, timeout_after_secs):
         log.debug("Calling: ", " ".join(params))
-        # NOTE: Because of the timeout and check parameters, this raises TimeoutExpired and
-        # CalledProcessError if the external program takes too long to complete or fails. We
-        # do not handle these to intentionally let the job fail at this point.
-        exec_result = run(params,
-                                stdout=PIPE,
-                                stderr=PIPE,
-                                check=True,
-                                timeout=self.default_timeout_seconds)
-        # stdout should be an unencoded binary stream
-        return exec_result.stdout
-
+        try:
+            # When calling the command, redirect stdout and stderr to separate pipes,
+            # raise exceptions in case of a non-zero return code or after the timeout passes.
+            result = run(params, stdout=PIPE, stderr=PIPE, check=True, timeout=timeout_after_secs)
+        except SubprocessError as e:
+            # Either a TimeoutExpired or a CalledProcessError.
+            # In any case we dump stderr as that is not included in the exception messages.
+            if hasattr(e, 'stderr') and e.stderr is not None:
+                log.error("Call to external program failed. Dumping stderr:")
+                log.error(e.stderr)
+            # re-raise to fail this task
+            raise e
+        if result is not None and result.stdout is not None:
+            return result.stdout
+        else:
+            return ""
 
     def _determine_new_filename(self, input_file, target_dir):
         basename, _ = os.path.splitext(os.path.basename(input_file))
