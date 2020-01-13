@@ -50,7 +50,7 @@ def convert_pdf_to_txt(source_file, output_dir):
             index += 1
 
 
-def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
+def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, metadata=None):
     """
     Create a PDF file by combining sections of other PDFs.
 
@@ -64,6 +64,9 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
     """
     os.makedirs(path, exist_ok=True)
     new_pdf = PyPDF2.PdfFileWriter()
+    if metadata:
+        logging.info(metadata)
+        new_pdf.addMetadata(metadata)
     input_streams = []
     for file in files:
         input_str = os.path.join(path, file['file'])
