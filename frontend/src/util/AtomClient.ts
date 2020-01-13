@@ -12,6 +12,10 @@ export interface AtomRecord {
     title: string;
     dates: AtomDate[];
     creators: AtomAuthors[];
+    level_of_description:string;
+    extent_and_medium:string;
+    repository:string;
+    scope_and_content:string;
 }
 
 export interface AtomDate {
