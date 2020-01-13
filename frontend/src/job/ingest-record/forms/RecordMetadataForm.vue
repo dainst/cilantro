@@ -100,7 +100,14 @@ async function buildRecordRecord(
             metadata: {
                 title: atomRecord.title,
                 author: [atomRecord.creators[0].authotized_form_of_name],
-                atom_id: atomId
+                atom_id: atomId,
+                scope_and_content: atomRecord.scope_and_content,
+                repository: atomRecord.repository,
+                creators: atomRecord.creators,
+                extent_and_medium: atomRecord.extent_and_medium,
+                level_of_description: atomRecord.level_of_description,
+                dates: atomRecord.dates,
+                reference_code: atomRecord.reference_code,
             } as RecordMetadata
         },
         remoteRecord: atomRecord,
