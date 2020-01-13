@@ -5,6 +5,7 @@ x-env-dirs: &env-dirs
   WORKING_DIR: /data/workspace
   STAGING_DIR: /data/staging
   CONFIG_DIR: /config
+  RESOURCES_DIR: /app/resources
   ARCHIVE_DIR: /data/archive
 
 x-env-broker: &env-broker
