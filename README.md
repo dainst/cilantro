@@ -36,7 +36,13 @@ To stop the application run:
 
     make stop
 
-To login to the frontend add a username and a password hash at `config/users.yml`. You can [generate a bcryt-hash here](https://bcrypt-generator.com/).
+### User management
+
+For now users are managed via the file `config/users.yml`. Every user is able to
+login and start new jobs. Passwords in this file are encrypted with bcrypt.
+
+You can [generate a bcryt-hash here](https://bcrypt-generator.com/).
+
 
 ### Documentation
 

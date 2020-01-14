@@ -20,10 +20,6 @@ def job_list():
     """
     List jobs of the user.
 
-    List jobs of the user updated less than a week ago and all jobs, which were
-    not successful.
-    If show_all_jobs is set True it returns all jobs.
-
     .. :quickref: Job Controller; List jobs of the user
 
     **Example request**:
@@ -92,26 +88,14 @@ def job_list():
                 "user": "test_user"
             }
         ]
-
-    :query show_all_jobs: (optional) if 'True', all jobs are listed
     :return: A JSON object containing the list of job objects
     """
     user = auth.username()
     job_db = JobDb()
     jobs = job_db.get_jobs_for_user(user)
     job_db.close()
-    show_all_jobs = request.args.get('show_all_jobs')
-    response = []
-    if not show_all_jobs or show_all_jobs == "false":
-        threshold_days = int(os.environ['OLD_JOBS_THRESHOLD_DAYS'])
-        threshold_date = (datetime.datetime.now() -
-                          datetime.timedelta(days=threshold_days))
-        for job in jobs:
-            if job['updated'] > threshold_date:
-                response.append(job)
-    else:
-        response = jobs
-    return jsonify(response)
+
+    return jsonify(jobs)
 
 
 @job_controller.route('/ingest_journals', methods=['POST'])

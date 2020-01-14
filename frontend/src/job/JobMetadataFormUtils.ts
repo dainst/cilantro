@@ -2,7 +2,8 @@ import { RecordObject } from './ingest-record/RecordImportParameters';
 import { JournalIssue } from './ingest-journal/JournalImportParameters';
 import { AtomRecord } from '@/util/AtomClient';
 import { ZenonRecord } from '@/util/ZenonClient';
-import { getStagingFiles, WorkbenchFileTree } from '@/staging/StagingClient';
+import { getStagingFiles, WorkbenchFileTree, getVisibleFolderContents } from '@/staging/StagingClient';
+import { ignoredFolderNames } from '@/config';
 
 export async function checkFolderStructure(records: ObjectRecord[]) {
     const stagingFiles = await getStagingFiles();
@@ -24,7 +25,9 @@ export function getStagingFile(stagingFiles: WorkbenchFileTree, path: string) {
 }
 
 export function validateFolder(folder: WorkbenchFileTree) {
-    if (Object.keys(folder).length !== 1) return "Folder has more than one entry. Only one subfolder 'tif' is allowed.";
+    if (getVisibleFolderContents(folder).length !== 1) {
+        return "Folder has more than one entry. Only one subfolder 'tif' is allowed.";
+    }
     if (!('tif' in folder)) return "Folder does not have a subfolder 'tif'.";
     const tifFolder = folder.tif.contents;
     if (!tifFolder || Object.keys(tifFolder).length === 0) return "Subfolder 'tif' is empty.";

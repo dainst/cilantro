@@ -1,6 +1,6 @@
 import { sendRequest } from '@/util/HTTPClient';
 import { AxiosRequestConfig } from 'axios';
-import {backendUri} from "@/config";
+import {backendUri, ignoredFolderNames} from "@/config";
 
 export async function getStagingFiles(path: string = ''): Promise<WorkbenchFileTree> {
     return sendRequest('get', `${backendUri}/staging${path}`, {}, {}, false);
@@ -22,6 +22,12 @@ export async function createFolderInStaging(folderPath: string): Promise<boolean
 
 export async function moveInStaging(source: string, target: string): Promise<boolean> {
     return sendRequest('post', `${backendUri}/staging/move`, {}, { source, target }, false);
+}
+
+export function getVisibleFolderContents(tree: WorkbenchFileTree): WorkbenchFile[] {
+    return Object.values(tree)
+        .filter(file => !file.name.startsWith('.'))
+        .filter(file => !ignoredFolderNames.includes(file.name));
 }
 
 export interface WorkbenchFile {

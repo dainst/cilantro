@@ -1,18 +1,20 @@
 <template>
     <div>
-        <b-button @click="gotoJobsView">View All Jobs</b-button>
         <div class="container">
-            <div v-if="job.parent_job_id">
-                <b-button @click="goToSingleView(job.parent_job_id)">Go to Parent Job</b-button>
+            <div  class="title">
+                 <b-button class="is-dark"
+                    v-if="job.parent_job_id"
+                    @click="goToSingleView(job.parent_job_id)">
+                    <b-icon icon="arrow-top-left"></b-icon></b-button> {{job.name}}
             </div>
             <b-field label="ID">
                 <p>{{job.job_id}}</p>
             </b-field>
             <b-field label="Name">
-                <p>{{job.name}}</p>
+                <p>{{job.label}}</p>
             </b-field>
-            <b-field label="Type">
-                <p>{{job.job_type}}</p>
+            <b-field label="Description">
+                <p>{{job.description}}</p>
             </b-field>
             <b-field label="Status">
                 <p>{{job.state}}</p>
@@ -33,23 +35,46 @@
                 <b-table :data="job.children"
                          default-sort="created" :default-sort-direction="'asc'">
                     <template slot-scope="props">
-                        <b-table-column field="type" label="Type">
-                            {{ props.row.type}}
+                        <b-table-column field="label" label="Name">
+                            {{ props.row.label}}
                         </b-table-column>
                         <b-table-column field="state" label="Status">
                             {{ props.row.state}}
                         </b-table-column>
                         <b-table-column field="job_id" label="ID">
-                            {{ props.row.job_id}}
+                                {{ props.row.job_id}}
                         </b-table-column>
-                        <b-table-column field="job_id" label="">
-                            <b-button @click="goToSingleView(props.row.job_id)">
-                                Single View
+                        <b-table-column field="detail">
+                            <b-button icon-right="arrow-bottom-right" class="is-dark"
+                                      @click="goToSingleView(props.row.job_id)">
+                                View
                             </b-button>
                         </b-table-column>
                     </template>
                 </b-table>
             </b-field>
+
+            <b-collapse class="card" :open="false" aria-id="job-params">
+                <div
+                    slot="trigger" 
+                    slot-scope="props"
+                    class="card-header"
+                    role="button"
+                    aria-controls="job-params">
+                    <p class="card-header-title">
+                        Show Job Parameters
+                    </p>
+                    <a class="card-header-icon">
+                        <b-icon
+                            :icon="props.open ? 'menu-up' : 'menu-down' ">
+                        </b-icon>
+                    </a>
+                </div>
+                <div class="card-content">
+                    <pre>{{ job.parameters }}</pre>
+                </div>
+            </b-collapse>
+
             <b-message v-if="job.errors && job.errors.length > 0"
                        title="Errors" type="is-danger" has-icon :closable="false">
                 <b-table :data="job.errors">
@@ -69,11 +94,26 @@
                     </template>
                 </b-table>
             </b-message>
-            <b-collapse :open="false" aria-id="job-params">
-                <button class="button" slot="trigger" aria-controls="job-params">
-                    Show Job Parameters
-                </button>
-                <pre>{{ job.parameters }}</pre>
+
+            <b-collapse class="card" :open="false" aria-id="job-log" v-if="job.log && job.log.length > 0">
+                <div
+                    slot="trigger" 
+                    slot-scope="props"
+                    class="card-header"
+                    role="button"
+                    aria-controls="job-log">
+                    <p class="card-header-title">
+                        Show Job Log
+                    </p>
+                    <a class="card-header-icon">
+                        <b-icon
+                            :icon="props.open ? 'menu-up' : 'menu-down' ">
+                        </b-icon>
+                    </a>
+                </div>
+                <div class="card-content">
+                    <pre>{{job.log}}</pre>
+                </div>
             </b-collapse>
         </div>
     </div>

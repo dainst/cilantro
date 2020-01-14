@@ -35,24 +35,30 @@ def convert_tif_to_jpg(source_file, target_file):
         PilImage.open(source_file).convert('RGB').save(target_file)
 
 
-def convert_jpg_to_pdf(source_file, target_file):
+def convert_jpg_to_pdf(source_file, target_file, max_size=(900, 1200)):
     """
     Make a 1 Paged PDF Document from a jpg file.
 
     :param str source_file: path to the jpg
     :param str target_file: desired output path
+    :param tuple max_size: the maximum size in pixels of the resulting pdf
     """
-    PilImage.open(source_file).save(target_file, 'PDF', resolution=100.0)
+    image = PilImage.open(source_file)
+    image.thumbnail(max_size)
+    image.save(target_file, 'PDF', resolution=100.0)
 
 
-def tif_to_pdf(source_file, target_file):
+def tif_to_pdf(source_file, target_file, max_size=(900, 1200)):
     """
     Make a 1 Paged PDF Document from a tif file.
 
     :param str source_file: path to the jpg
     :param str target_file: desired output path
+    :param tuple max_size: the maximum size in pixels of the resulting pdf
     """
-    PilImage.open(source_file).save(target_file, 'PDF', resolution=100.0)
+    image = PilImage.open(source_file)
+    image.thumbnail(max_size)
+    image.save(target_file, 'PDF', resolution=100.0)
 
 
 def tif_to_txt(source_file, target_file, language='eng'):

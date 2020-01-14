@@ -1,5 +1,5 @@
 <template>
-    <section class="job-shortlist" v-if="getFilteredJobList().length>0">
+    <section class="job-shortlist" v-if="getUnfinishedJobs().length>0">
         <div>
         <h3 class="is-size-5">
             Your active jobs
@@ -7,7 +7,7 @@
                 <b-icon icon="refresh" size="is-small"></b-icon>
             </a>
         </h3>
-        <div v-for="job in getFilteredJobList()" :key="job['job_id']">
+        <div v-for="job in getUnfinishedJobs()" :key="job['job_id']">
             <router-link class="message" :to="{ name: 'job', query: { id: job['job_id'] }}">
                 <div class="message-header">
                     <b-icon v-bind="iconAttributesForState(job['state'])"></b-icon>
@@ -31,38 +31,22 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { getJobList, Job } from './JobClient';
-import { showError } from '@/util/Notifier.ts';
+import { getJobList, iconAttributesForState, Job } from './JobClient';
+import { showError } from '@/util/Notifier';
 
 @Component
 export default class JobListCompact extends Vue {
     jobList: Job[] = [];
 
-    getFilteredJobList(){
-        let filteredList:Job[] =[];
-        for(var i = 0; i < this.jobList.length; i++){
-            var job:Job = this.jobList[i];
-            if(job['state'] != 'success'){
-                filteredList.push(job);
-            }
-        }
-        return filteredList;
-    };
+    getUnfinishedJobs() {
+        return this.jobList.filter(job => job.state !== 'success');
+    }
 
-    iconAttributesForState = (state: string) => {
-        if (state === 'new') {
-            return [{ type: 'is-info' }, { icon: 'alarm' }];
-        } if (state === 'failure') {
-            return [{ type: 'is-danger' }, { icon: 'alert' }];
-        } if (state === 'success') {
-            return [{ type: 'is-success' }, { icon: 'check' }];
-        }
-        return [{ type: 'is-warning' }, { icon: 'cogs' }];
-    };
+    iconAttributesForState = iconAttributesForState
 
     async updateJobList() {
         try {
-            this.jobList = await getJobList(false);
+            this.jobList = await getJobList();
         } catch (e) {
             showError('Failed to load job list from server', e);
         }

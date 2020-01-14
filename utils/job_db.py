@@ -35,9 +35,9 @@ class JobDb:
                 {'$inc': {'next_object_id': 1}},
                 return_document=ReturnDocument.AFTER
             )['next_object_id']
-        except KeyError:
+        except (KeyError, TypeError):
             raise RuntimeError("The database doesn't seem to be initialized"
-                            "properly")
+                               "properly")
 
     def get_jobs_for_user(self, user):
         """
@@ -64,7 +64,7 @@ class JobDb:
             {"job_id": job_id}, {'_id': False}))
         return job
 
-    def add_job(self, job_id, user, job_type, parent_job_id, child_job_ids, parameters):
+    def add_job(self, job_id, user, job_type, parent_job_id, child_job_ids, parameters, label="Not implemented", description="Not implemented",):
         """
         Add a job to the job database.
 
@@ -81,6 +81,8 @@ class JobDb:
             'user': user,
             'job_type': job_type,
             'name': f"{job_type}-{job_id}",
+            'label': label,
+            'description': description,
             'parent_job_id': parent_job_id,
             'child_job_ids': child_job_ids,
             'state': 'new',
@@ -88,7 +90,8 @@ class JobDb:
             'started': None,
             'updated': timestamp,
             'parameters': parameters,
-            'errors': []
+            'errors': [],
+            'log': []
             }
 
         self.db.jobs.insert_one(job)
@@ -118,9 +121,33 @@ class JobDb:
             self.db.jobs.update_many({"job_id": job_id},
                                 {'$push': {'errors': error}})
 
+    def update_job_log(self, job_id, log_output):
+        """
+        Updates (replaces) the log for the specified job.
+
+        :param str job_id: Cilantro-ID of the job
+        :param list log_output: List of logged lines
+        """
+        timestamp = datetime.datetime.now()
+        self.db.jobs.update_many({"job_id": job_id},
+                                  {'$set': {'updated': timestamp, 'log': log_output}})
+
+
     def set_job_children(self, job_id, child_job_ids):
         timestamp = datetime.datetime.now()
         updated_values = {'child_job_ids': child_job_ids, 'updated': timestamp}
+        self.db.jobs.update_many({"job_id": job_id},
+                            {'$set': updated_values})
+
+    def set_job_label_and_description(self, job_id, label, description):
+        timestamp = datetime.datetime.now()
+        updated_values = {'label': label, 'description': description, 'updated': timestamp}
+        self.db.jobs.update_many({"job_id": job_id},
+                            {'$set': updated_values})
+
+    def set_job_object_id(self, job_id, object_id):
+        timestamp = datetime.datetime.now()
+        updated_values = {'object_id': object_id, 'updated': timestamp}
         self.db.jobs.update_many({"job_id": job_id},
                             {'$set': updated_values})
 
@@ -156,7 +183,7 @@ class JobDb:
                 child = self.db.jobs.find_one({'job_id': child_id}, {'_id': False})
                 children_with_status += [{'job_id': child_id,
                                         'state': child['state'],
-                                        'type': child['job_type']}]
+                                        'label': child['label']}]
 
             del job['child_job_ids']
             job['children'] = children_with_status
