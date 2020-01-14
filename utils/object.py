@@ -55,7 +55,28 @@ class ObjectMetadata(SerializableClass):
     year: int
     number: str
     volume: str
+
     identification: str
+    scope_and_content: str
+    repository: str
+    creators: str
+    extent_and_medium: str
+    level_of_description: str
+    dates: str
+    reference_code: str
+
+    def get_pdf_metadata(self):
+        return {
+            "/Title": self.title,
+            "/Created": self.created,
+            "scope_and_content": self.scope_and_content,
+            "repository": self.repository,
+            "creators": json.dumps(self.creators),
+            "extent_and_medium": self.extent_and_medium,
+            "level_of_description": self.level_of_description,
+            "dates": json.dumps(self.dates),
+            "reference_code": self.reference_code
+        }
 
 
 class Object:

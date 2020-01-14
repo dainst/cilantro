@@ -38,6 +38,33 @@
                             },
                             "atom_id": {
                                 "type": "string"
+                            },
+                            "reference_code": {
+                                "type": "string"
+                            },
+                            "creators": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object"
+                                }
+                            },
+                            "dates": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object"
+                                }
+                            },
+                            "level_of_description": {
+                                "type": "string"
+                            },
+                            "extent_and_medium": {
+                                "type": "string"
+                            },
+                            "repository": {
+                                "type": "string"
+                            },
+                            "scope_and_content": {
+                                "type": "string"
                             }
                         }
                     }

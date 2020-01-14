@@ -50,7 +50,7 @@ class MergeConvertedPdfTask(ObjectTask):
         rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, 'pdf')
         files = [{'file': os.path.basename(f)}
                  for f in sorted(_list_files(rep_dir, '.pdf'))]
-        split_merge_pdf(files, rep_dir, f"{obj.metadata.id}.pdf")
+        split_merge_pdf(files, rep_dir, f"{obj.metadata.id}.pdf", metadata=obj.metadata.get_pdf_metadata())
 
 
 class JpgToPdfTask(FileTask):
