@@ -65,7 +65,6 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, me
     os.makedirs(path, exist_ok=True)
     new_pdf = PyPDF2.PdfFileWriter()
     if metadata:
-        logging.info(metadata)
         new_pdf.addMetadata(metadata)
     input_streams = []
     for file in files:
