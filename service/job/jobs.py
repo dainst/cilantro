@@ -252,6 +252,8 @@ class IngestJournalsJob(BatchJob):
 
 class NlpTaskJob(BatchJob):
     job_type = 'nlp_task'
+    label = 'Experimental NLP task'
+    description = "Experimental task to demonstrate the integration of natural language processing."
 
     def _create_chains(self, params, user_name):
         chains = []
@@ -269,6 +271,10 @@ class NlpTaskJob(BatchJob):
                                         lang=params['options']['lang'],
                                         tag_intervals=params['options']['tag_intervals'],
                                         document_creation_time=params['options']['document_creation_time'])
+
+            current_chain |= _link('list_files',
+                                        representation='xml',
+                                        task='nlp_heideltime.convert_timeml_to_viewer_json')
 
             chains.append(current_chain)
 

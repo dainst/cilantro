@@ -18,7 +18,8 @@ RUN pip3 install \
     pymongo \
     jinja2 \
     lxml \
-    redis
+    redis \
+    beautifulsoup4
 
 COPY ./utils /app/utils
 COPY ./workers /app/workers

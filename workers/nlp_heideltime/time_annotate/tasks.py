@@ -8,12 +8,30 @@ import datetime
 import os.path
 from subprocess import run, PIPE, SubprocessError
 
+from .viewer_json import convert_timeml_to_annotation_json
+
 log = logging.getLogger(__name__)
+
+
+class ConvertTimeMLToViewerJsonTask(FileTask):
+
+    name = "nlp_heideltime.convert_timeml_to_viewer_json"
+    label = "TimeML to Viewer JSON"
+    description = "Convert TimeML/TIMEX3 DATEs to annotations shown with the pdf viewer."
+
+    def process_file(self, file, target_dir):
+        target_file = os.path.join(target_dir, "annotation-time-expressions.json")
+        convert_timeml_to_annotation_json(file, target_file)
+
+
+ConvertTimeMLToViewerJsonTask = celery_app.register_task(ConvertTimeMLToViewerJsonTask())
 
 
 class TimeAnnotateTask(FileTask):
 
     name = "nlp_heideltime.time_annotate"
+    label = "Time Expression Annotation"
+    description = "Annotate a textfile using the chronoi heideltime implementation."
 
     _default_timeout_seconds = 180
 
