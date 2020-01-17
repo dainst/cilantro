@@ -13,6 +13,11 @@ from .viewer_json import convert_timeml_to_annotation_json
 log = logging.getLogger(__name__)
 
 
+def _determine_new_filename(input_file, target_dir, append_str):
+    basename, _ = os.path.splitext(os.path.basename(input_file))
+    return os.path.join(target_dir, f"{basename}{append_str}")
+
+
 class ConvertTimeMLToViewerJsonTask(FileTask):
 
     name = "nlp_heideltime.convert_timeml_to_viewer_json"
@@ -20,7 +25,7 @@ class ConvertTimeMLToViewerJsonTask(FileTask):
     description = "Convert TimeML/TIMEX3 DATEs to annotations shown with the pdf viewer."
 
     def process_file(self, file, target_dir):
-        target_file = os.path.join(target_dir, "annotation-time-expressions.json")
+        target_file = _determine_new_filename(file, target_dir, "-annotations-time-expression.json")
         convert_timeml_to_annotation_json(file, target_file)
 
 
@@ -51,7 +56,7 @@ class TimeAnnotateTask(FileTask):
     def process_file(self, file, target_dir):
         cmd = self._prepare_heideltime_cmd_params(file)
         annotation_xml = self._run_external_command(cmd, self._default_timeout_seconds)
-        target_path = self._determine_new_filename(file, target_dir)
+        target_path = _determine_new_filename(file, target_dir, ".xml")
         with open(target_path, mode='wb') as out_file:
             out_file.write(annotation_xml)
 
@@ -100,10 +105,6 @@ class TimeAnnotateTask(FileTask):
             return result.stdout
         else:
             return ""
-
-    def _determine_new_filename(self, input_file, target_dir):
-        basename, _ = os.path.splitext(os.path.basename(input_file))
-        return os.path.join(target_dir, f"{basename}.xml")
 
 
 TimeAnnotateTask = celery_app.register_task(TimeAnnotateTask())

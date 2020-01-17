@@ -274,7 +274,8 @@ class NlpTaskJob(BatchJob):
 
             current_chain |= _link('list_files',
                                         representation='xml',
-                                        task='nlp_heideltime.convert_timeml_to_viewer_json')
+                                        task='nlp_heideltime.convert_timeml_to_viewer_json',
+                                        target='json')
 
             chains.append(current_chain)
 
