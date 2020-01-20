@@ -7,10 +7,19 @@ import re
 
 log = logging.getLogger(__name__)
 
+
 class XMLTagPageGenerator(object):
 
+    def __init__(self, xml_str, page_separator="\f"):
+        """
+        Initiate a generator, that is able to yield xml-Tags together with the page
+        numbers, where page numbers are suppeosed to be encoded with a separator sign
+        in the Text, that marks the end of one page and the beginning of the next
 
-    def __init__(self, xml_str, page_separator = "\f"):
+        :param string xml_str: The xml to parse.
+        :param string page_separator: The string separating one page from the next.
+            Defaults to the ascii form feed char "\f".
+        """
         self.doc = bs4.BeautifulSoup(xml_str, "html.parser")
         self.page_boundaries = None
         self.page_separator = page_separator
@@ -41,7 +50,7 @@ class XMLTagPageGenerator(object):
                 # count characters to the current text position
                 new_pos += len(child)
             elif type(child) is bs4.Tag:
-                yield (child, new_pos)
+                yield child, new_pos
                 # recurse to the child
                 yield from cls._iterate_tags_with_text_pos(child, new_pos)
                 # count text characters to the current text position (these will be counted
@@ -70,8 +79,7 @@ class XMLTagPageGenerator(object):
         """
         for tag, start in self.iterate_tags_with_text_pos():
             end = start + len(tag.text)
-            yield (tag, self._pages(start, end))
-
+            yield tag, self._pages(start, end)
 
 
 class Annotation(object):
@@ -79,8 +87,8 @@ class Annotation(object):
     An annotation as used by the dai-book-viewer.
     """
 
-    def __init__(self, id, lemma):
-        self.id = id
+    def __init__(self, idstr, lemma):
+        self.id = idstr
         self.score = None
         self.terms = []
         self.pages = []
@@ -122,8 +130,8 @@ def convert_timeml_to_annotation_json(source_file, output_file):
             lemma = tag.attrs.get("value", "")
             # since each annotation has a unique lemma, use it for the id. Hex-encode to make sure
             # it doesn't contain any non-simple chars, whitespace etc.
-            id = "timex" + lemma.encode().hex()
-            annotation = annotations.get(lemma, Annotation(id, lemma))
+            idstr = "timex" + lemma.encode().hex()
+            annotation = annotations.get(lemma, Annotation(idstr, lemma))
             for page in pages:
                 annotation.add_occurence(tag.text, page)
             annotations[lemma] = annotation

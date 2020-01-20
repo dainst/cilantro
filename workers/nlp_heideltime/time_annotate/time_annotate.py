@@ -6,7 +6,7 @@ from subprocess import run, PIPE, SubprocessError
 import logging
 log = logging.getLogger(__name__)
 
-def run_external_command(params, timeout_after_secs):
+def run_external_command(params, timeout_after_secs=None):
     try:
         # When calling the command, redirect stdout and stderr to separate pipes,
         # raise exceptions in case of a non-zero return code or after the timeout passes.
