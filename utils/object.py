@@ -66,17 +66,26 @@ class ObjectMetadata(SerializableClass):
     reference_code: str
 
     def get_pdf_metadata(self):
-        return {
-            "/Title": self.title,
-            "/Created": self.created,
-            "scope_and_content": self.scope_and_content,
-            "repository": self.repository,
-            "creators": json.dumps(self.creators),
-            "extent_and_medium": self.extent_and_medium,
-            "level_of_description": self.level_of_description,
-            "dates": json.dumps(self.dates),
-            "reference_code": self.reference_code
-        }
+        metadata = {}
+        if hasattr(self, "title"):
+            metadata["/Title"] = self.title
+        if hasattr(self, "created"):
+            metadata["/Created"] = self.created
+        if hasattr(self, "scope_and_content"):
+            metadata["scope_and_content"] = self.scope_and_content
+        if hasattr(self, "repository"):
+            metadata["repository"] = self.repository
+        if hasattr(self, "creators"):
+            metadata["creators"] = json.dumps(self.creators)
+        if hasattr(self, "extent_and_medium"):
+            metadata["extent_and_medium"] = self.extent_and_medium
+        if hasattr(self, "level_of_description"):
+            metadata["level_of_description"] = self.level_of_description
+        if hasattr(self, "dates"):
+            metadata["dates"] = json.dumps(self.dates)
+        if hasattr(self, "reference_code"):
+            metadata["reference_code"] = self.reference_code
+        return metadata
 
 
 class Object:
