@@ -21,7 +21,9 @@
                 </div>
                 <div class="tile is-child box">
                     <p class="title">NLP Processing</p>
-                    <p>Job Type Description</p>
+                    <p>
+                        <i>work in progress ...</i>
+                    </p>
                     <router-link to="nlp-task" tag="b-button" id="start_nlp_task">Start</router-link>
                 </div>
             </div>

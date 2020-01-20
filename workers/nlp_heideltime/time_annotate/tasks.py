@@ -8,8 +8,6 @@ from .timeml_to_viewer_json import convert_timeml_to_annotation_json
 from .time_annotate import HeideltimeCommandParamsBuilder, run_external_command
 
 
-
-
 def _determine_new_filename(input_file, target_dir, append_str):
     basename, _ = os.path.splitext(os.path.basename(input_file))
     return os.path.join(target_dir, f"{basename}{append_str}")
@@ -52,5 +50,6 @@ class TimeAnnotateTask(FileTask):
         builder.set_interval_tagging(self.get_param("tag_intervals"))
         builder.set_target_filename(input_file)
         return builder.get_params()
+
 
 TimeAnnotateTask = celery_app.register_task(TimeAnnotateTask())

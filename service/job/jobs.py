@@ -188,6 +188,7 @@ class IngestRecordsJob(BatchJob):
 
         return chains
 
+
 class IngestJournalsJob(BatchJob):
     job_type = 'ingest_journals'
     label = 'Retrodigitized Journals'
@@ -262,20 +263,20 @@ class NlpTaskJob(BatchJob):
             task_params = dict(**text_object, **{'user': user_name})
 
             current_chain = _link('create_object', **task_params,
-                                        initial_representation='txt')
+                                  initial_representation='txt')
 
             current_chain |= _link('list_files',
-                                        representation='txt',
-                                        target='xml',
-                                        task='nlp_heideltime.time_annotate',
-                                        lang=params['options']['lang'],
-                                        tag_intervals=params['options']['tag_intervals'],
-                                        document_creation_time=params['options']['document_creation_time'])
+                                   representation='txt',
+                                   target='xml',
+                                   task='nlp_heideltime.time_annotate',
+                                   lang=params['options']['lang'],
+                                   tag_intervals=params['options']['tag_intervals'],
+                                   document_creation_time=params['options']['document_creation_time'])
 
             current_chain |= _link('list_files',
-                                        representation='xml',
-                                        task='nlp_heideltime.convert_timeml_to_viewer_json',
-                                        target='json')
+                                   representation='xml',
+                                   task='nlp_heideltime.convert_timeml_to_viewer_json',
+                                   target='json')
 
             chains.append(current_chain)
 

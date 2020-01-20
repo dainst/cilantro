@@ -6,6 +6,7 @@ from subprocess import run, PIPE, SubprocessError
 import logging
 log = logging.getLogger(__name__)
 
+
 def run_external_command(params, timeout_after_secs=None):
     try:
         # When calling the command, redirect stdout and stderr to separate pipes,
@@ -83,14 +84,16 @@ class HeideltimeCommandParamsBuilder(object):
         else:
             raise ValueError(f'Language "{lang}" is not a valid choice for the language option.')
 
-    def _valid_dct(self, dct):
+    @classmethod
+    def _valid_dct(cls, dct):
         try:
             datetime.datetime.strptime(dct, "%Y-%m-%d").date()
         except ValueError:
             raise ValueError(f"Document creation time should be in ISO-Format: YYYY-MM-DD, is: '{dct}'")
         return dct
 
-    def _valid_bool(self, maybe_bool):
+    @classmethod
+    def _valid_bool(cls, maybe_bool):
         if not isinstance(maybe_bool, bool):
             raise ValueError(f"Not a boolean: '{maybe_bool}'")
         return maybe_bool

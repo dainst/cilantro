@@ -51,7 +51,7 @@ export default class NlpTask extends Vue {
     options: NlpTaskOptions = initOptions();
 
     continueToJobStart() {
-        this.activeStep = 1
+        this.activeStep = 1;
     }
 
     async startJob() {

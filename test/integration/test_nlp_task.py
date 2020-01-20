@@ -1,8 +1,6 @@
 
 from test.integration.job_type_test import JobTypeTest
 
-import glob
-import os.path
 
 class NlpTaskTest(JobTypeTest):
     """Test job executing some nlp tasks."""
@@ -28,9 +26,8 @@ class NlpTaskTest(JobTypeTest):
         first_job_id = job_from_db['children'][0]['job_id']
 
         # the input file's basenames that were staged above
-        input_basenames = [ "timex1", "timex2" ]
+        input_basenames = ["timex1", "timex2"]
         for basename in input_basenames:
             self.assert_file_in_workdir(first_job_id, f"data/xml/{basename}.xml")
             self.assert_file_in_workdir(first_job_id, f"data/json/{basename}-annotations-time-expression.json")
         self.unstage_resource('some_texts')
-

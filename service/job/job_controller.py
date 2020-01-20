@@ -220,6 +220,7 @@ def journal_job_create():
 
     return body, 202, headers
 
+
 @job_controller.route('/ingest_records', methods=['POST'])
 @auth.login_required
 def record_job_create():

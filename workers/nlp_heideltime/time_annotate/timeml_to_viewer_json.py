@@ -143,5 +143,3 @@ def convert_timeml_to_annotation_json(source_file, output_file):
     }
     with open(output_file, "w", encoding="utf-8") as file:
         json.dump(output_obj, file, indent=4)
-
-
