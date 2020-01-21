@@ -5,21 +5,22 @@
 FROM dainst/chronoi-heideltime:0.1.0
 
 RUN apt-get update && apt-get -y install \
-    python3-pip
+    python3-pip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-RUN pip3 install \
-    watchdog \
-    celery \
-    pymongo \
-    jinja2 \
-    lxml \
-    redis \
-    beautifulsoup4
+# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
+RUN set -ex && mkdir /app
+
+RUN pip3 install pipenv
+COPY docker/cilantro-nlp-heideltime-worker/Pipfile.lock Pipfile.lock
+COPY docker/cilantro-nlp-heideltime-worker/Pipfile Pipfile
+RUN set -ex && pipenv install --deploy --system
 
 COPY ./utils /app/utils
 COPY ./workers /app/workers
