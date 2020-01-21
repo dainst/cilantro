@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 retry_time = 100
 
 
-def _asset_timeout(waited: int, timeout: int):
+def _assert_timeout(waited: int, timeout: int):
     """
     Check if timeout has occured for the time waited.
 
@@ -95,7 +95,7 @@ class JobTypeTest(unittest.TestCase):
                     success = False
                     continue
             try:
-                waited = _asset_timeout(waited, timeout)
+                waited = _assert_timeout(waited, timeout)
             except TimeoutError:
                 raise AssertionError(
                     f"experienced timeout ({timeout / 1000}s) while waiting "
@@ -116,7 +116,7 @@ class JobTypeTest(unittest.TestCase):
         state = self.get_job_by_id(job_id)
         while state != expected_state:
             try:
-                waited = _asset_timeout(waited, timeout)
+                waited = _assert_timeout(waited, timeout)
             except TimeoutError:
                 raise AssertionError(
                     f"experienced timeout ({timeout / 1000}s) while waiting "
