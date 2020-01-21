@@ -20,14 +20,16 @@ class IngestRecordTest(JobTypeTest):
         self.assertTrue(data['success'])
 
         job_id = data['job_id']
-        self.assert_state(job_id, 'success', timeout='JOURNAL_TEST_TIMEOUT')
+        self.assert_state(job_id, 'success')
 
         job_from_db = self.get_job_by_id(job_id)
-        first_batch_job_in_job_from_db = self.get_job_by_id(job_from_db['children'][0]['job_id'])
+        first_batch_job_in_job_from_db = self.get_job_by_id(
+            job_from_db['children'][0]['job_id'])
 
         files_generated = [
             f"data/pdf/{first_batch_job_in_job_from_db['object_id']}.pdf",
             'meta.json']
         for file in files_generated:
-            self.assert_file_in_repository(first_batch_job_in_job_from_db['object_id'], file)
+            self.assert_file_in_repository(
+                first_batch_job_in_job_from_db['object_id'], file)
         self.unstage_resource('some_tiffs')
