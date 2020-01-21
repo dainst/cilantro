@@ -72,19 +72,19 @@ class ObjectMetadata(SerializableClass):
         if hasattr(self, "created"):
             metadata["/Created"] = self.created
         if hasattr(self, "scope_and_content"):
-            metadata["scope_and_content"] = self.scope_and_content
+            metadata["/ScopeAndContent"] = self.scope_and_content
         if hasattr(self, "repository"):
-            metadata["repository"] = self.repository
+            metadata["/Repository"] = self.repository
         if hasattr(self, "creators"):
-            metadata["creators"] = json.dumps(self.creators)
+            metadata["/Creators"] = json.dumps(self.creators)
         if hasattr(self, "extent_and_medium"):
-            metadata["extent_and_medium"] = self.extent_and_medium
+            metadata["/ExtentAndMedium"] = self.extent_and_medium
         if hasattr(self, "level_of_description"):
-            metadata["level_of_description"] = self.level_of_description
+            metadata["/LevelOfDescription"] = self.level_of_description
         if hasattr(self, "dates"):
-            metadata["dates"] = json.dumps(self.dates)
+            metadata["/Dates"] = json.dumps(self.dates)
         if hasattr(self, "reference_code"):
-            metadata["reference_code"] = self.reference_code
+            metadata["/ReferenceCode"] = self.reference_code
         return metadata
 
 
