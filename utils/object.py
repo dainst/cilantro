@@ -67,24 +67,29 @@ class ObjectMetadata(SerializableClass):
 
     def get_pdf_metadata(self):
         metadata = {}
+
         if hasattr(self, "title"):
             metadata["/Title"] = self.title
         if hasattr(self, "created"):
             metadata["/Created"] = self.created
+
+        subject_string = ""
         if hasattr(self, "scope_and_content"):
-            metadata["/ScopeAndContent"] = self.scope_and_content
+            subject_string += f"Scope and content:\n{self.scope_and_content}\n\n"
         if hasattr(self, "repository"):
-            metadata["/Repository"] = self.repository
+            subject_string += f"Repository:\n{self.repository}\n\n"
         if hasattr(self, "creators"):
-            metadata["/Creators"] = json.dumps(self.creators)
+            subject_string += f"Creators:\n{json.dumps(self.creators,indent=2, sort_keys=True)}\n\n"
         if hasattr(self, "extent_and_medium"):
-            metadata["/ExtentAndMedium"] = self.extent_and_medium
+            subject_string += f"Extend and medium:\n{self.extent_and_medium}\n\n"
         if hasattr(self, "level_of_description"):
-            metadata["/LevelOfDescription"] = self.level_of_description
+            subject_string += f"Level of description:\n{self.level_of_description}\n\n"
         if hasattr(self, "dates"):
-            metadata["/Dates"] = json.dumps(self.dates)
+            subject_string += f"Dates:\n{json.dumps(self.dates, indent=2, sort_keys=True)}\n\n"
         if hasattr(self, "reference_code"):
-            metadata["/ReferenceCode"] = self.reference_code
+            subject_string += f"Reference code:\n{self.reference_code}"
+
+        metadata['/Subject'] = subject_string
         return metadata
 
 
