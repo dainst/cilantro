@@ -19,7 +19,18 @@
                 <b-table-column
                     field="object.metadata.title"
                     label="Title"
-                >{{ props.row.object.metadata.title || '-' | truncate(80) }}</b-table-column>
+                >{{ props.row.object.metadata.title || '-' | truncate(80) }}
+                </b-table-column>
+                <b-table-column
+                    field="object.metadata.repository"
+                    label="Repository"
+                >{{ props.row.object.metadata.repository || '-' | truncate(80) }}
+                </b-table-column>
+                <b-table-column
+                    field="object.metadata.reference_code"
+                    label="Reference code"
+                >{{ props.row.object.metadata.reference_code || '-' | truncate(80) }}
+                </b-table-column>
             </template>
             <template slot="detail" slot-scope="props">
                 <div class="content">
