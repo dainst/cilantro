@@ -1,4 +1,4 @@
-import { RecordObject } from './ingest-record/RecordImportParameters';
+import { IngestArchivalMaterialObject } from './ingest-archival-material/IngestArchivalMaterialParameters';
 import { JournalIssue } from './ingest-journal/JournalImportParameters';
 import { AtomRecord } from '@/util/AtomClient';
 import { ZenonRecord } from '@/util/ZenonClient';
@@ -56,7 +56,7 @@ export function getTableField(field: any) {
 
 export interface ObjectRecord {
     id: string,
-    object: RecordObject | JournalIssue;
+    object: IngestArchivalMaterialObject | JournalIssue;
     remoteRecord?: AtomRecord | ZenonRecord;
     errors: string[];
 }

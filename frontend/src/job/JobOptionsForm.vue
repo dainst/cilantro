@@ -20,17 +20,17 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import { JournalImportOptions } from './ingest-journal/JournalImportParameters';
-import { RecordImportOptions } from './ingest-record/RecordImportParameters';
+import { IngestArchivalMaterialOptions } from './ingest-archival-material/IngestArchivalMaterialParameters';
 
 @Component
 export default class JobOptionsForm extends Vue {
-    @Prop({ required: true }) initialOptions!: RecordImportOptions | JournalImportOptions;
+    @Prop({ required: true }) initialOptions!: IngestArchivalMaterialOptions | JournalImportOptions;
 
-    options: RecordImportOptions | JournalImportOptions =
+    options: IngestArchivalMaterialOptions | JournalImportOptions =
         JSON.parse(JSON.stringify(this.initialOptions));
 
     @Watch('options')
-    onOptionsChanged(options: RecordImportOptions) {
+    onOptionsChanged(options: IngestArchivalMaterialOptions) {
         this.$emit('options-updated', options);
     }
 }

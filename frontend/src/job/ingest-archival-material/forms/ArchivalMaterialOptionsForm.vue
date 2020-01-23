@@ -12,7 +12,7 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { RecordImportOptions } from '../RecordImportParameters';
+import { IngestArchivalMaterialOptions } from '../IngestArchivalMaterialParameters';
 import JobOptionsForm from '../../JobOptionsForm.vue';
 
 @Component({
@@ -21,11 +21,11 @@ import JobOptionsForm from '../../JobOptionsForm.vue';
     }
 })
 export default class RecordOptionsForm extends Vue {
-    @Prop({ required: true }) initialOptions!: RecordImportOptions;
-    options: RecordImportOptions = JSON.parse(JSON.stringify(this.initialOptions));
+    @Prop({ required: true }) initialOptions!: IngestArchivalMaterialOptions;
+    options: IngestArchivalMaterialOptions = JSON.parse(JSON.stringify(this.initialOptions));
 
     @Watch('options')
-    onOptionsChanged(options: RecordImportOptions) {
+    onOptionsChanged(options: IngestArchivalMaterialOptions) {
         this.$emit('options-updated', options);
     }
 }

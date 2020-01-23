@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Dashboard from './dashboard/Dashboard.vue';
 import IngestJournal from './job/ingest-journal/IngestJournal.vue';
-import IngestRecord from './job/ingest-record/IngestRecord.vue';
+import IngestArchivalMaterial from './job/ingest-archival-material/IngestArchivalMaterial.vue';
 import StagingArea from './staging/StagingArea.vue';
 import JobDetails from './job/JobDetails.vue';
 import JobList from './job/JobList.vue';
@@ -45,9 +45,9 @@ const router = new Router({
             component: IngestJournal
         },
         {
-            path: '/ingest-record',
-            name: 'ingest-record',
-            component: IngestRecord
+            path: '/ingest-archival-material',
+            name: 'ingest-archival-material',
+            component: IngestArchivalMaterial
         },
         {
             path: '/job',
@@ -62,7 +62,7 @@ const router = new Router({
     ]
 });
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     if (!to.matched.length) {
         next('/not-found');
     } else if (!to.matched.some(record => record.meta.noAuth)) {

@@ -36,12 +36,12 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { startJob } from '../JobClient';
-import RecordMetadataForm from './forms/RecordMetadataForm.vue';
+import RecordMetadataForm from './forms/ArchivalMaterialMetadataForm.vue';
 import JobFilesForm from '../JobFilesForm.vue';
-import RecordOptionsForm from './forms/RecordOptionsForm.vue';
+import RecordOptionsForm from './forms/ArchivalMaterialOptionsForm.vue';
 import {
-    RecordImportParameters, RecordObject, RecordImportOptions, initOptions
-} from './RecordImportParameters';
+    IngestArchivalMaterialParameters, IngestArchivalMaterialObject, IngestArchivalMaterialOptions, initOptions
+} from './IngestArchivalMaterialParameters';
 import { showError, showSuccess } from '@/util/Notifier.ts';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
@@ -56,17 +56,17 @@ import { JobParameters } from '../JobParameters';
         StartJobButton
     }
 })
-export default class IngestRecord extends Vue {
+export default class IngestArchivalMaterial extends Vue {
     selectedPaths: string[] = [];
-    records: RecordObject[] = [];
-    options: RecordImportOptions = initOptions();
+    records: IngestArchivalMaterialObject[] = [];
+    options: IngestArchivalMaterialOptions = initOptions();
     activeStep: number = 0;
 
     continueToMetadata() {
         this.activeStep = 1;
     }
 
-    onRecordsUpdated(records: RecordObject[]) {
+    onRecordsUpdated(records: IngestArchivalMaterialObject[]) {
         this.records = records;
     }
 
@@ -85,7 +85,7 @@ export default class IngestRecord extends Vue {
         }
     }
 
-    buildJobParams(): RecordImportParameters {
+    buildJobParams(): IngestArchivalMaterialParameters {
         return {
             objects: this.records,
             options: this.options
