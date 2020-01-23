@@ -9,7 +9,7 @@ from service.user.user_service import auth
 from utils.job_db import JobDb
 from utils import json_validation
 
-from service.job.jobs import IngestRecordsJob, IngestJournalsJob
+from service.job.jobs import IngestArchivalMaterialsJob, IngestJournalsJob
 
 job_controller = Blueprint('job', __name__)
 
@@ -77,8 +77,8 @@ def job_list():
                 "created": "Wed, 23 Oct 2019 12:59:37 GMT",
                 "errors": [],
                 "job_id": "f7fdf50a-f594-11e9-8f9d-0242ac130009",
-                "job_type": "ingest_records",
-                "name": "ingest_records-f7fdf50a-f594-11e9-8f9d-0242ac130009",
+                "job_type": "ingest_archival_material",
+                "name": "ingest_archival_material-f7fdf50a-f594-11e9-8f9d-0242ac130009",
                 "parameters": {
                     ...
                 },
@@ -221,7 +221,7 @@ def journal_job_create():
     return body, 202, headers
 
 
-@job_controller.route('/ingest_records', methods=['POST'])
+@job_controller.route('/ingest_archival_material', methods=['POST'])
 @auth.login_required
 def record_job_create():
     """
@@ -325,13 +325,13 @@ def record_job_create():
     params = request.get_json(force=True)
     user_name = auth.username()
     try:
-        json_validation.validate_params(params, 'ingest_records')
+        json_validation.validate_params(params, 'ingest_archival_material')
     except FileNotFoundError as e:
         raise ApiError("unknown_job_type", str(e), 404)
     except jsonschema.exceptions.ValidationError as e:
         raise ApiError("invalid_job_params", str(e), 400)
 
-    job = IngestRecordsJob(params, user_name)
+    job = IngestArchivalMaterialsJob(params, user_name)
     job.run()
 
     body = jsonify({

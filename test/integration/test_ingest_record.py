@@ -1,7 +1,7 @@
 from test.integration.job_type_test import JobTypeTest
 
 
-class IngestRecordTest(JobTypeTest):
+class IngestArchivalMaterialTest(JobTypeTest):
     """Test record (aka Retrodigitalisat) import job."""
 
     def test_record_import(self):
@@ -15,7 +15,7 @@ class IngestRecordTest(JobTypeTest):
         self.stage_resource('files', 'some_tiffs')
         params = self.load_params_from_file('params', 'record.json')
 
-        data, status_code = self.post_job('ingest_records', params)
+        data, status_code = self.post_job('ingest_archival_material', params)
         self.assertEqual(status_code, 202)
         self.assertTrue(data['success'])
 

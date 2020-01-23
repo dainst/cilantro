@@ -128,9 +128,9 @@ class BatchJob(BaseJob):
         return chain_ids
 
 
-class IngestRecordsJob(BatchJob):
-    job_type = 'ingest_records'
-    label = 'Retrodigitized Archival Records'
+class IngestArchivalMaterialsJob(BatchJob):
+    job_type = 'ingest_archival_material'
+    label = 'Retrodigitized Archival Material'
     description = "Import multiple folders that contain scans of archival material into iDAI.archives / AtoM."
 
     def _create_chains(self, params, user_name):

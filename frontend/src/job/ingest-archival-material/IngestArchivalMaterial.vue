@@ -77,7 +77,7 @@ export default class IngestArchivalMaterial extends Vue {
     async startJob() {
         const params = this.buildJobParams();
         try {
-            await startJob('ingest_records', params);
+            await startJob('ingest_archival_material', params);
             showSuccess('Job started');
             this.$router.push({ path: '/' });
         } catch (e) {

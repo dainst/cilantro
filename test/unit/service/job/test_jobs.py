@@ -2,7 +2,7 @@ import unittest
 import os
 import json
 
-from service.job.jobs import IngestJournalsJob, IngestRecordsJob
+from service.job.jobs import IngestJournalsJob, IngestArchivalMaterialsJob
 
 
 class JobsTest(unittest.TestCase):
@@ -21,7 +21,7 @@ class JobsTest(unittest.TestCase):
         additional_object = dict(job_params['objects'][0])
 
         job_params['objects'] += [additional_object]
-        job = IngestRecordsJob(job_params, 'test_user')
+        job = IngestArchivalMaterialsJob(job_params, 'test_user')
 
         self.assertTrue(type(job.id) == str, 'job id should be generated')
         for chain_id in job.chain_ids:
@@ -42,12 +42,12 @@ class JobsTest(unittest.TestCase):
         with open(test_params_path, 'r') as params_file:
             job_params = json.loads(params_file.read())
 
-        job_ocr = IngestRecordsJob(job_params, 'test_user')
+        job_ocr = IngestArchivalMaterialsJob(job_params, 'test_user')
 
         job_params = dict(job_params)
         job_params['options']['do_ocr'] = False
 
-        job_no_ocr = IngestRecordsJob(job_params, 'test_user')
+        job_no_ocr = IngestArchivalMaterialsJob(job_params, 'test_user')
 
         publish_chain_length = len(job_ocr.chord.tasks[0].tasks)
         no_publish_chain_length = len(job_no_ocr.chord.tasks[0].tasks)
