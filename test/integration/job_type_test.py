@@ -48,7 +48,7 @@ class JobTypeTest(unittest.TestCase):
         self.client = app.test_client()
 
     def assert_file_in_repository(self, object_id: str, file_path: str,
-                                  timeout: int=None):
+                                  timeout: int = None):
         """
         Assert that a file is present in the repository.
 
@@ -70,7 +70,7 @@ class JobTypeTest(unittest.TestCase):
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
 
-    def assert_job_successful(self, task_ids: list, timeout: int=None):
+    def assert_job_successful(self, task_ids: list, timeout: int = None):
         """
         Assert that a job completed successfully.
 
@@ -102,7 +102,7 @@ class JobTypeTest(unittest.TestCase):
                     f"for SUCCESS state")
 
     def assert_state(self, job_id: str, expected_state: str,
-                     timeout: int=None):
+                     timeout: int = None):
         """
         Assert that a job has a certain state.
 
@@ -200,7 +200,7 @@ class JobTypeTest(unittest.TestCase):
         except FileNotFoundError:
             pass
 
-    def load_params_from_file(self, folder: str, path:str):
+    def load_params_from_file(self, folder: str, path: str):
         """
         Load job params from a JSON file.
 
@@ -218,7 +218,7 @@ def _get_default_timeout():
     """
     Determine the timemout.
 
-    Order: 
+    Order:
     1) specific timeout defined by environment variable
     2) 10000 milisecoends
 
