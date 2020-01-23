@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import Vue from 'vue';
 import { sendRequest } from './HTTPClient';
 import { backendUri } from '@/config';
@@ -8,14 +9,14 @@ export async function getAtomRecord(atomID: string): Promise<AtomRecord> {
 }
 
 export interface AtomRecord {
-    reference_code: string; // eslint-disable-line camelcase
+    reference_code: string;
     title: string;
     dates: AtomDate[];
     creators: AtomAuthors[];
-    level_of_description:string;
-    extent_and_medium:string;
-    repository:string;
-    scope_and_content:string;
+    level_of_description: string;
+    extent_and_medium: string;
+    repository: string;
+    scope_and_content: string;
 }
 
 export interface AtomDate {
@@ -25,5 +26,5 @@ export interface AtomDate {
 }
 
 export interface AtomAuthors {
-    authotized_form_of_name: string; // eslint-disable-line camelcase
+    authotized_form_of_name: string;
 }
