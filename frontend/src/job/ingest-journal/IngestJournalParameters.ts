@@ -2,9 +2,9 @@ import { JobParameters, JobObject } from '../JobParameters';
 
 /* eslint-disable camelcase */
 
-export interface JournalImportParameters extends JobParameters {
+export interface IngestJournalParameters extends JobParameters {
     objects: JournalIssue[];
-    options: JournalImportOptions;
+    options: IngestJournalOptions;
 }
 
 export interface JournalIssue extends JobObject {
@@ -21,7 +21,7 @@ export interface JournalIssueMetadata {
     reporting_year: number;
 }
 
-export interface JournalImportOptions {
+export interface IngestJournalOptions {
     ojs_metadata: OJSMetadata;
     do_ocr: boolean;
     ocr_lang: string;
@@ -50,7 +50,7 @@ export function initIssue(path: string): JournalIssue {
     };
 }
 
-export function initOptions(): JournalImportOptions {
+export function initOptions(): IngestJournalOptions {
     return {
         ojs_metadata: {
             auto_publish_issue: false,

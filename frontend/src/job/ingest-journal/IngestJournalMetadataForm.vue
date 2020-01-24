@@ -51,7 +51,7 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { initIssue } from '../JournalImportParameters';
+import { initIssue } from './IngestJournalParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 import { ojsZenonMapping } from '@/config';
 import {

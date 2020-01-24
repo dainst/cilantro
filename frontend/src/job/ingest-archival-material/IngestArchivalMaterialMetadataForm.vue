@@ -48,7 +48,7 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { initRecordObject, ArchivalMaterialMetadata } from '../IngestArchivalMaterialParameters';
+import { initRecordObject, ArchivalMaterialMetadata } from './IngestArchivalMaterialParameters';
 import { getAtomRecord, AtomRecord } from '@/util/AtomClient';
 import {
     checkFolderStructure, buildError, getRowClass, getTableField, ObjectRecord
@@ -118,7 +118,7 @@ async function buildRecordRecord(
                 extent_and_medium: atomRecord.extent_and_medium,
                 level_of_description: atomRecord.level_of_description,
                 dates: atomRecord.dates,
-                reference_code: atomRecord.reference_code,
+                reference_code: atomRecord.reference_code
             } as ArchivalMaterialMetadata
         },
         remoteRecord: atomRecord,

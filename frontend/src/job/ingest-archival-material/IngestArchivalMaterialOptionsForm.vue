@@ -12,8 +12,8 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
-import { IngestArchivalMaterialOptions } from '../IngestArchivalMaterialParameters';
-import JobOptionsForm from '../../JobOptionsForm.vue';
+import { IngestArchivalMaterialOptions } from './IngestArchivalMaterialParameters';
+import JobOptionsForm from '../JobOptionsForm.vue';
 
 @Component({
     components: {

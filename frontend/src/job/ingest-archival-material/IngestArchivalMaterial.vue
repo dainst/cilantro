@@ -36,9 +36,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { startJob } from '../JobClient';
-import ArchivalMaterialMetadataForm from './forms/ArchivalMaterialMetadataForm.vue';
+import ArchivalMaterialMetadataForm from './IngestArchivalMaterialMetadataForm.vue';
 import JobFilesForm from '../JobFilesForm.vue';
-import ArchivalMaterialOptionsForm from './forms/ArchivalMaterialOptionsForm.vue';
+import ArchivalMaterialOptionsForm from './IngestArchivalMaterialOptionsForm.vue';
 import {
     IngestArchivalMaterialParameters, IngestArchivalMaterialObject, IngestArchivalMaterialOptions, initOptions
 } from './IngestArchivalMaterialParameters';

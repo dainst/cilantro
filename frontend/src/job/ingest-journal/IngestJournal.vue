@@ -7,14 +7,22 @@
         </b-steps>
 
         <div v-if="activeStep === 0">
-            <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
+            <ContinueButton
+                @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
+            </ContinueButton>
             <JobFilesForm :selected-paths.sync="selectedPaths" />
-            <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
+            <ContinueButton
+                @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
+            </ContinueButton>
         </div>
         <div v-if="activeStep === 1">
-            <ContinueButton @click="continueToOptions" :disabled="this.issues.length == 0"></ContinueButton>
+            <ContinueButton
+                @click="continueToOptions" :disabled="this.issues.length == 0">
+            </ContinueButton>
             <JournalMetadataForm :selected-paths="selectedPaths" @update:issues="onIssuesUpdated" />
-            <ContinueButton @click="continueToOptions" :disabled="this.issues.length == 0"></ContinueButton>
+            <ContinueButton
+                @click="continueToOptions" :disabled="this.issues.length == 0">
+            </ContinueButton>
         </div>
         <div v-if="activeStep === 2">
             <StartJobButton @click="startJob"></StartJobButton>
@@ -28,13 +36,13 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { startJob } from '../JobClient';
 
-import JournalMetadataForm from './forms/JournalMetadataForm.vue';
+import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JobFilesForm from '../JobFilesForm.vue';
-import ArticlesForm from './forms/ArticlesForm.vue';
-import JournalOptionsForm from './forms/JournalOptionsForm.vue';
+// import ArticlesForm from './forms/ArticlesForm.vue';
+import JournalOptionsForm from './IngestJournalOptionsForm.vue';
 import {
-    JournalImportParameters, JournalIssue, JournalImportOptions, initOptions
-} from './JournalImportParameters';
+    IngestJournalParameters, JournalIssue, IngestJournalOptions, initOptions
+} from './IngestJournalParameters';
 import { showError, showSuccess } from '@/util/Notifier.ts';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
@@ -52,7 +60,7 @@ import { JobParameters } from '../JobParameters';
 export default class IngestJournal extends Vue {
     selectedPaths: string[] = [];
     issues: JournalIssue[] = [];
-    options: JournalImportOptions = initOptions();
+    options: IngestJournalOptions = initOptions();
     activeStep: number = 0;
 
     continueToMetadata() {
@@ -78,7 +86,7 @@ export default class IngestJournal extends Vue {
         }
     }
 
-    buildJobParams(): JournalImportParameters {
+    buildJobParams(): IngestJournalParameters {
         return {
             objects: this.issues,
             options: this.options

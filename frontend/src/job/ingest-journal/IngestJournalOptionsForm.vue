@@ -30,8 +30,8 @@
 import {
     Component, Vue, Watch, Prop
 } from 'vue-property-decorator';
-import { JournalImportOptions } from '../JournalImportParameters';
-import JobOptionsForm from '../../JobOptionsForm.vue';
+import { IngestJournalOptions } from './IngestJournalParameters';
+import JobOptionsForm from '../JobOptionsForm.vue';
 
 @Component({
     components: {
@@ -39,11 +39,11 @@ import JobOptionsForm from '../../JobOptionsForm.vue';
     }
 })
 export default class JournalOptionsForm extends Vue {
-    @Prop({ required: true }) initialOptions!: JournalImportOptions;
-    options: JournalImportOptions = JSON.parse(JSON.stringify(this.initialOptions));
+    @Prop({ required: true }) initialOptions!: IngestJournalOptions;
+    options: IngestJournalOptions = JSON.parse(JSON.stringify(this.initialOptions));
 
     @Watch('options')
-    onOptionsChanged(options: JournalImportOptions) {
+    onOptionsChanged(options: IngestJournalOptions) {
         this.$emit('options-updated', options);
     }
 }

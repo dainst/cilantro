@@ -1,5 +1,5 @@
 import { IngestArchivalMaterialObject } from './ingest-archival-material/IngestArchivalMaterialParameters';
-import { JournalIssue } from './ingest-journal/JournalImportParameters';
+import { JournalIssue } from './ingest-journal/IngestJournalParameters';
 import { AtomRecord } from '@/util/AtomClient';
 import { ZenonRecord } from '@/util/ZenonClient';
 import { getStagingFiles, WorkbenchFileTree, getVisibleFolderContents } from '@/staging/StagingClient';
