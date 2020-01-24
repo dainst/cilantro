@@ -50,10 +50,6 @@ export function getRowClass(record: ObjectRecord) {
     return '';
 }
 
-export function getTableField(field: any) {
-    return field || '-';
-}
-
 export interface ObjectRecord {
     id: string,
     object: IngestArchivalMaterialObject | JournalIssue;

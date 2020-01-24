@@ -51,7 +51,7 @@ import {
 import { initRecordObject, ArchivalMaterialMetadata } from './IngestArchivalMaterialParameters';
 import { getAtomRecord, AtomRecord } from '@/util/AtomClient';
 import {
-    checkFolderStructure, buildError, getRowClass, getTableField, ObjectRecord
+    checkFolderStructure, buildError, getRowClass, ObjectRecord
 } from '@/job/JobMetadataFormUtils';
 
 @Component({
@@ -76,7 +76,6 @@ export default class ArchivalMaterialMetadataForm extends Vue {
     }
 
     getRowClass = getRowClass;
-    getTableField = getTableField;
     labelPosition: string = 'on-border';
 }
 

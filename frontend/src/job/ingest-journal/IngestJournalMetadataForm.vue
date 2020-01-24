@@ -55,7 +55,7 @@ import { initIssue } from './IngestJournalParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 import { ojsZenonMapping } from '@/config';
 import {
-    checkFolderStructure, buildError, getRowClass, getTableField, ObjectRecord
+    checkFolderStructure, buildError, getRowClass, ObjectRecord
 } from '@/job/JobMetadataFormUtils.ts';
 
 @Component({
@@ -80,8 +80,6 @@ export default class JournalMetadataForm extends Vue {
     }
 
     getRowClass = getRowClass;
-
-    getTableField = getTableField;
 
     labelPosition: string = 'on-border';
 }
