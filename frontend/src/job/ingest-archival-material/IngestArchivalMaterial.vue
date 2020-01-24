@@ -19,7 +19,7 @@
             <ContinueButton
                 @click="continueToOptions"
                 :disabled="this.records.length == 0" />
-            <RecordMetadataForm
+            <ArchivalMaterialMetadataForm
                 :selected-paths="selectedPaths" @update:records="onRecordsUpdated" />
             <ContinueButton
                 @click="continueToOptions"
@@ -27,7 +27,7 @@
         </div>
         <div v-if="activeStep === 2">
             <StartJobButton @click="startJob"></StartJobButton>
-            <RecordOptionsForm :initialOptions="options" @options-updated="options = $event" />
+            <ArchivalMaterialOptionsForm :initialOptions="options" @options-updated="options = $event" />
             <StartJobButton @click="startJob"></StartJobButton>
         </div>
     </div>
@@ -36,9 +36,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { startJob } from '../JobClient';
-import RecordMetadataForm from './forms/ArchivalMaterialMetadataForm.vue';
+import ArchivalMaterialMetadataForm from './forms/ArchivalMaterialMetadataForm.vue';
 import JobFilesForm from '../JobFilesForm.vue';
-import RecordOptionsForm from './forms/ArchivalMaterialOptionsForm.vue';
+import ArchivalMaterialOptionsForm from './forms/ArchivalMaterialOptionsForm.vue';
 import {
     IngestArchivalMaterialParameters, IngestArchivalMaterialObject, IngestArchivalMaterialOptions, initOptions
 } from './IngestArchivalMaterialParameters';
@@ -50,8 +50,8 @@ import { JobParameters } from '../JobParameters';
 @Component({
     components: {
         JobFilesForm,
-        RecordMetadataForm,
-        RecordOptionsForm,
+        ArchivalMaterialMetadataForm,
+        ArchivalMaterialOptionsForm,
         ContinueButton,
         StartJobButton
     }

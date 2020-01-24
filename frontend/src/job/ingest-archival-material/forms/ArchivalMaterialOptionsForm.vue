@@ -20,7 +20,7 @@ import JobOptionsForm from '../../JobOptionsForm.vue';
         JobOptionsForm
     }
 })
-export default class RecordOptionsForm extends Vue {
+export default class ArchivalMaterialOptionsForm extends Vue {
     @Prop({ required: true }) initialOptions!: IngestArchivalMaterialOptions;
     options: IngestArchivalMaterialOptions = JSON.parse(JSON.stringify(this.initialOptions));
 

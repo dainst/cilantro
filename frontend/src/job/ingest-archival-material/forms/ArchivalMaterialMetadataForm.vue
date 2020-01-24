@@ -63,7 +63,7 @@ import {
         }
     }
 })
-export default class RecordMetadataForm extends Vue {
+export default class ArchivalMaterialMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
 
     records: ObjectRecord[] = [];
