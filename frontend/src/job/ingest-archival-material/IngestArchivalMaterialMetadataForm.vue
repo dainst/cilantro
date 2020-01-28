@@ -91,7 +91,7 @@ export default class ArchivalMaterialMetadataForm extends Vue {
     async mounted() {
         const stagingFiles = await getStagingFiles();
 
-        const objects: IngestArchivalMaterialObject[] = await asyncMap(
+        this.objects = await asyncMap(
             this.selectedPaths, async(path) : Promise<IngestArchivalMaterialObject> => {
                 const id = path.split('/').pop() || '';
                 const atomId = extractAtomId(path);
@@ -114,8 +114,6 @@ export default class ArchivalMaterialMetadataForm extends Vue {
                 return new ObjectError(id, path, errors);
             }
         );
-
-        this.objects = objects;
 
         this.objects = await asyncMap(this.objects, async(object) => {
             if (object instanceof ObjectData) {           
@@ -163,8 +161,7 @@ function extractAtomId(path: string): string | null {
 
 async function loadAtomData(object: ObjectData) {
     try {
-        const queryResult = await getAtomRecord(object.metadata.atom_id);
-        const atomRecord = queryResult as AtomRecord;
+        const atomRecord = await getAtomRecord(object.metadata.atom_id) as AtomRecord;
 
         let authors: string[] = [];
         let notes: string[] = [];
@@ -193,7 +190,7 @@ async function loadAtomData(object: ObjectData) {
 
         return new ObjectData(object.id, object.path, metadata);
     } catch (error) {
-        return new ObjectError(object.id, object.path, error);
+        return new ObjectError(object.id, object.path, [error]);
     }
 }
 
