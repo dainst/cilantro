@@ -77,7 +77,6 @@ import { ojsZenonMapping } from '@/config';
 import { getStagingFiles } from '@/staging/StagingClient';
 import { WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents } from '@/staging/StagingClient';
 
-
 @Component({
     filters: {
         truncate(value: string, length: number) {
@@ -100,7 +99,7 @@ export default class JournalMetadataForm extends Vue {
     async mounted() {
         const stagingFiles = await getStagingFiles();
 
-        const objects: IngestJournalObject[] = await asyncMap(
+        this.objects = await asyncMap(
             this.selectedPaths, async(path) : Promise<IngestJournalObject> => {
                 const id = path.split('/').pop() || '';
                 const zenonId = extractZenonId(path);
@@ -123,40 +122,10 @@ export default class JournalMetadataForm extends Vue {
             }
         );
 
-        this.objects = objects;
-
         this.objects = await asyncMap(this.objects, async(object) => {
             if (object instanceof ObjectData) {
-                const zenonId = object.metadata.zenon_id;
-                const queryResult = await getRecord(zenonId);
-                if (typeof queryResult === 'string') return new ObjectError(object.id, object.path, [queryResult]);
-
-                const zenonRecord = queryResult as ZenonRecord;
-                const errors : string[] = [];
-
-                let parentId = '';
-                if (!zenonRecord.parentId) {
-                    errors.push(`Zenon record has no parent id. Can't determine which Journal this issue belongs to.`);
-                } else if (!(zenonRecord.parentId in ojsZenonMapping)) {
-                    errors.push(`Missing OJS Journal code for Journal with Zenon-ID '${zenonRecord.parentId}'.`);
-                } else {
-                    // eslint-disable-next-line prefer-destructuring
-                    parentId = zenonRecord.parentId;
-                }
-
-                if (errors.length !== 0) return new ObjectError(object.id, object.path, errors);
-
-                const metadata = {
-                    zenon_id: zenonId,
-                    volume: getSerialVolume(zenonRecord),
-                    publishing_year: parseInt(zenonRecord.publicationDates[0], 10),
-                    number: getIssueNumber(zenonRecord),
-                    description: zenonRecord.title,
-                    ojs_journal_code: ojsZenonMapping[parentId],
-                    reporting_year: getReportingYear(zenonRecord)
-                } as JournalIssueMetadata;
-
-                return new ObjectData(object.id, object.path, metadata);
+                const updated : IngestJournalObject = await loadZenonData(object);
+                return updated;
             }
             return new ObjectError(object.id, object.path, object.messages);
         });
@@ -189,6 +158,39 @@ function extractZenonId(path: string): string {
     const result = path.match(/.*JOURNAL-ZID(\d+)/);
     if (!result || result.length < 1) return '';
     return result[1];
+}
+
+async function loadZenonData(object: ObjectData) {
+    try {
+        const zenonRecord = await getRecord(object.metadata.zenon_id) as ZenonRecord;
+        const errors : string[] = [];
+
+        let parentId = '';
+        if (!zenonRecord.parentId) {
+            errors.push(`Zenon record has no parent id. Can't determine which Journal this issue belongs to.`);
+        } else if (!(zenonRecord.parentId in ojsZenonMapping)) {
+            errors.push(`Missing OJS Journal code for Journal with Zenon-ID '${zenonRecord.parentId}'.`);
+        } else {
+            // eslint-disable-next-line prefer-destructuring
+            parentId = zenonRecord.parentId;
+        }
+
+        if (errors.length !== 0) return new ObjectError(object.id, object.path, errors);
+
+        const metadata = {
+            zenon_id: object.metadata.zenon_id,
+            volume: getSerialVolume(zenonRecord),
+            publishing_year: parseInt(zenonRecord.publicationDates[0], 10),
+            number: getIssueNumber(zenonRecord),
+            description: zenonRecord.title,
+            ojs_journal_code: ojsZenonMapping[parentId],
+            reporting_year: getReportingYear(zenonRecord)
+        } as JournalIssueMetadata;
+
+        return new ObjectData(object.id, object.path, metadata);
+    } catch (error) {
+        return new ObjectError(object.id, object.path, [error]);
+    }
 }
 
 // TODO: Move to separate util script
