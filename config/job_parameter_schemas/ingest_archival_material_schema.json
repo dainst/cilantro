@@ -3,14 +3,21 @@
     "title": "Ingest Records schema",
     "description": "Used to validate ingest-records job parameters",
     "type": "object",
-    "required": ["objects", "options"],
+    "required": [
+        "objects",
+        "options"
+    ],
     "additionalProperties": false,
     "properties": {
         "objects": {
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["id", "path", "metadata"],
+                "required": [
+                    "id",
+                    "path",
+                    "metadata"
+                ],
                 "additionalProperties": false,
                 "properties": {
                     "id": {
@@ -22,7 +29,11 @@
                     "metadata": {
                         "type": "object",
                         "additionalProperties": false,
-                        "required": ["title", "author", "atom_id"],
+                        "required": [
+                            "title",
+                            "creators",
+                            "atom_id"
+                        ],
                         "properties": {
                             "title": {
                                 "type": "string"
@@ -30,7 +41,13 @@
                             "created": {
                                 "type": "string"
                             },
-                            "author": {
+                            "authors": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "notes": {
                                 "type": "array",
                                 "items": {
                                     "type": "string"
@@ -45,7 +62,7 @@
                             "creators": {
                                 "type": "array",
                                 "items": {
-                                    "type": "object"
+                                    "type": "string"
                                 }
                             },
                             "dates": {

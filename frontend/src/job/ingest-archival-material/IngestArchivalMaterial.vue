@@ -18,17 +18,19 @@
         <div v-if="activeStep === 1">
             <ContinueButton
                 @click="continueToOptions"
-                :disabled="this.records.length == 0" />
+                :disabled="hasInvalidObjects()" />
             <ArchivalMaterialMetadataForm
-                :selected-paths="selectedPaths" @update:records="onRecordsUpdated" />
+                :selected-paths="selectedPaths" @update:objectsUpdated="onObjectsUpdated" />
             <ContinueButton
                 @click="continueToOptions"
-                :disabled="this.records.length == 0" />
+                :disabled="hasInvalidObjects()" />
         </div>
         <div v-if="activeStep === 2">
-            <StartJobButton @click="startJob"></StartJobButton>
-            <ArchivalMaterialOptionsForm :initialOptions="options" @options-updated="options = $event" />
-            <StartJobButton @click="startJob"></StartJobButton>
+            <StartJobButton @click="startJob" :disabled="hasInvalidObjects()"></StartJobButton>
+            <ArchivalMaterialOptionsForm
+                :initialOptions="this.parameters.options"
+                @options-updated="this.parameters.options = $event" />
+            <StartJobButton @click="startJob" :disabled="hasInvalidObjects()"></StartJobButton>
         </div>
     </div>
 </template>
@@ -40,12 +42,12 @@ import ArchivalMaterialMetadataForm from './IngestArchivalMaterialMetadataForm.v
 import JobFilesForm from '../JobFilesForm.vue';
 import ArchivalMaterialOptionsForm from './IngestArchivalMaterialOptionsForm.vue';
 import {
-    IngestArchivalMaterialParameters, IngestArchivalMaterialObject, IngestArchivalMaterialOptions, initOptions
+    IngestArchivalMaterialParameters, IngestArchivalMaterialObject, IngestArchivalMaterialOptions
 } from './IngestArchivalMaterialParameters';
 import { showError, showSuccess } from '@/util/Notifier.ts';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
-import { JobParameters } from '../JobParameters';
+import { ObjectError } from '../JobParameters';
 
 @Component({
     components: {
@@ -58,38 +60,46 @@ import { JobParameters } from '../JobParameters';
 })
 export default class IngestArchivalMaterial extends Vue {
     selectedPaths: string[] = [];
-    records: IngestArchivalMaterialObject[] = [];
-    options: IngestArchivalMaterialOptions = initOptions();
+    parameters: IngestArchivalMaterialParameters;
     activeStep: number = 0;
+
+    constructor() {
+        super();
+
+        const options = {
+            do_ocr: false,
+            ocr_lang: 'eng'
+        } as IngestArchivalMaterialOptions;
+
+        this.parameters = new IngestArchivalMaterialParameters([], options);
+    }
 
     continueToMetadata() {
         this.activeStep = 1;
     }
 
-    onRecordsUpdated(records: IngestArchivalMaterialObject[]) {
-        this.records = records;
+    onObjectsUpdated(objects: IngestArchivalMaterialObject[]) {
+        this.parameters.objects = objects;
     }
 
     continueToOptions() {
         this.activeStep = 2;
     }
 
+    hasInvalidObjects() {
+        return this.parameters.objects.filter(object => object instanceof ObjectError).length > 0;
+    }
+
     async startJob() {
-        const params = this.buildJobParams();
         try {
-            await startJob('ingest_archival_material', params);
-            showSuccess('Job started');
-            this.$router.push({ path: '/' });
+            if (this.parameters !== undefined) {
+                await startJob('ingest_archival_material', this.parameters);
+                showSuccess('Job started');
+                this.$router.push({ path: '/' });
+            }
         } catch (e) {
             showError(e);
         }
-    }
-
-    buildJobParams(): IngestArchivalMaterialParameters {
-        return {
-            objects: this.records,
-            options: this.options
-        };
     }
 }
 </script>
