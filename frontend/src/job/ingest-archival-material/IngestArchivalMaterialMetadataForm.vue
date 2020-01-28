@@ -67,6 +67,7 @@ import {
 } from './IngestArchivalMaterialParameters';
 import { getStagingFiles } from '@/staging/StagingClient';
 import { AtomRecord, getAtomRecord } from '@/util/AtomClient';
+import { asyncMap } from '@/util/MetaProgramming';
 import { WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents } from '@/staging/StagingClient';
 
 @Component({
@@ -208,68 +209,6 @@ function splitAuthorsFromNotes(atomNotes: string[]) {
 
     return { authors, other };
 }
-
-// TODO: Move to separate util script
-function asyncMap<A, B>(
-    inputValues: Array<A>,
-    mappingFunction: (_: A) => Promise<B>
-): Promise<Array<B>> {
-    return Promise.all(inputValues.map(value => mappingFunction(value)));
-}
-
-// async function populateAtomRecords(records: ObjectRecord[]) {
-//     return Promise.all(records.map(async record => populateAtomRecord(record)));
-// }
-
-// async function populateAtomRecord(record: ObjectRecord): Promise<ObjectRecord> {
-//     const atomId = extractAtomId(record.object.path);
-//     if (!atomId) {
-//         const msg = 'Invalid name. The folder path does not match the pattern "RECORD-AID-D-xxxxxxx".';
-//         return buildError(record, msg);
-//     }
-//     const atomRecord: any = await getAtomRecord(atomId);
-//     if (atomRecord.id === 'not-found') {
-//         const msg = `No Record with the extracted ID "${atomId}" found.`;
-//         return buildError(record, msg);
-//     }
-//     return buildRecordRecord(record, atomRecord, atomId);
-// }
-
-// async function buildRecordRecord(
-//     record: ObjectRecord,
-//     atomRecord: AtomRecord,
-//     atomId: string
-// ): Promise<ObjectRecord> {
-//     const builtRecord = {
-//         id: record.id,
-//         object: {
-//             id: record.object.id,
-//             path: record.object.path,
-//             metadata: {
-//                 title: atomRecord.title,
-//                 author: [atomRecord.creators[0].authotized_form_of_name],
-//                 atom_id: atomId,
-//                 scope_and_content: atomRecord.scope_and_content,
-//                 repository: atomRecord.repository,
-//                 creators: atomRecord.creators,
-//                 extent_and_medium: atomRecord.extent_and_medium,
-//                 level_of_description: atomRecord.level_of_description,
-//                 dates: atomRecord.dates,
-//                 reference_code: atomRecord.reference_code
-//             } as ArchivalMaterialMetadata
-//         },
-//         remoteRecord: atomRecord,
-//         errors: record.errors
-//     };
-//     if ('date' in atomRecord.dates[0]) {
-//         builtRecord.object.metadata.created = String(atomRecord.dates[0].date);
-//     } else if ('start_date' in atomRecord.dates[0] && 'end_date' in atomRecord.dates[0]) {
-//         builtRecord.object.metadata.created = `${atomRecord.dates[0].start_date!} - ${atomRecord.dates[0].end_date!}`;
-//     }
-//     return builtRecord;
-// }
-
-
 </script>
 
 <style lang="scss" scoped>

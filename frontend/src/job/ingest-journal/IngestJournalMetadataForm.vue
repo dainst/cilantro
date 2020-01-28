@@ -73,6 +73,7 @@ import {
 } from '@/job/JobParameters';
 import { IngestJournalObject, ObjectData, JournalIssueMetadata } from './IngestJournalParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
+import { asyncMap } from '@/util/MetaProgramming';
 import { ojsZenonMapping } from '@/config';
 import { getStagingFiles } from '@/staging/StagingClient';
 import { WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents } from '@/staging/StagingClient';
@@ -191,14 +192,6 @@ async function loadZenonData(object: ObjectData) {
     } catch (error) {
         return new ObjectError(object.id, object.path, [error]);
     }
-}
-
-// TODO: Move to separate util script
-function asyncMap<A, B>(
-    inputValues: Array<A>,
-    mappingFunction: (_: A) => Promise<B>
-): Promise<Array<B>> {
-    return Promise.all(inputValues.map(value => mappingFunction(value)));
 }
 
 function getReportingYear(record: ZenonRecord): number {
