@@ -17,17 +17,23 @@
         </div>
         <div v-if="activeStep === 1">
             <ContinueButton
-                @click="continueToOptions" :disabled="this.issues.length == 0">
+                @click="continueToOptions" :disabled="hasInvalidObjects()">
             </ContinueButton>
-            <JournalMetadataForm :selected-paths="selectedPaths" @update:issues="onIssuesUpdated" />
+            <JournalMetadataForm
+                :selected-paths="selectedPaths"
+                @update:objectsUpdated="onObjectsUpdated"
+            />
             <ContinueButton
-                @click="continueToOptions" :disabled="this.issues.length == 0">
+                @click="continueToOptions" :disabled="hasInvalidObjects()">
             </ContinueButton>
         </div>
         <div v-if="activeStep === 2">
-            <StartJobButton @click="startJob"></StartJobButton>
-            <JournalOptionsForm :initialOptions="options" @options-updated="options = $event" />
-            <StartJobButton @click="startJob"></StartJobButton>
+            <StartJobButton @click="startJob" :disabled="hasInvalidObjects()"></StartJobButton>
+            <JournalOptionsForm
+                :initialOptions="this.parameters.options"
+                @options-updated="this.parameters.options = $event"
+            />
+            <StartJobButton @click="startJob" :disabled="hasInvalidObjects()"></StartJobButton>
         </div>
     </div>
 </template>
@@ -40,13 +46,13 @@ import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JobFilesForm from '../JobFilesForm.vue';
 // import ArticlesForm from './forms/ArticlesForm.vue';
 import JournalOptionsForm from './IngestJournalOptionsForm.vue';
-import {
-    IngestJournalParameters, JournalIssue, IngestJournalOptions, initOptions
+import { 
+    IngestJournalParameters, IngestJournalObject, IngestJournalOptions, OJSMetadata
 } from './IngestJournalParameters';
-import { showError, showSuccess } from '@/util/Notifier.ts';
+import { showError, showSuccess } from '@/util/Notifier';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
-import { JobParameters } from '../JobParameters';
+import { JobParameters, ObjectError } from '../JobParameters';
 
 @Component({
     components: {
@@ -59,38 +65,50 @@ import { JobParameters } from '../JobParameters';
 })
 export default class IngestJournal extends Vue {
     selectedPaths: string[] = [];
-    issues: JournalIssue[] = [];
-    options: IngestJournalOptions = initOptions();
+    parameters: IngestJournalParameters;
     activeStep: number = 0;
+
+    constructor() {
+        super();
+        const options = {
+            ojs_metadata: {
+                auto_publish_issue: false,
+                default_create_frontpage: true,
+                allow_upload_without_file: false
+            } as OJSMetadata,
+            do_ocr: false,
+            ocr_lang: 'eng'
+        } as IngestJournalOptions;
+
+        this.parameters = new IngestJournalParameters([], options);
+    }
 
     continueToMetadata() {
         this.activeStep = 1;
     }
 
-    onIssuesUpdated(issues: JournalIssue[]) {
-        this.issues = issues.filter(issue => issue.metadata.zenon_id > 0);
+    onObjectsUpdated(objects: IngestJournalObject[]) {
+        this.parameters.objects = objects;
     }
 
     continueToOptions() {
         this.activeStep = 2;
     }
 
+    hasInvalidObjects() {
+        return this.parameters.objects.filter(object => object instanceof ObjectError).length > 0;
+    }
+
     async startJob() {
-        const params = this.buildJobParams();
         try {
-            await startJob('ingest_journals', params);
-            showSuccess('Job started');
-            this.$router.push({ path: '/' });
+            if (this.parameters !== undefined) {
+                await startJob('ingest_journals', this.parameters);
+                showSuccess('Job started');
+                this.$router.push({ path: '/' });
+            }
         } catch (e) {
             showError(e);
         }
-    }
-
-    buildJobParams(): IngestJournalParameters {
-        return {
-            objects: this.issues,
-            options: this.options
-        };
     }
 }
 </script>

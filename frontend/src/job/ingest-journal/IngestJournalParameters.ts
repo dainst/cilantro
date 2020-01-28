@@ -1,24 +1,48 @@
-import { JobParameters, JobObject } from '../JobParameters';
-
 /* eslint-disable camelcase */
+import { JobParameters, ObjectError, ObjectData as GeneralObjectData } from '../JobParameters';
+import { ZenonRecord } from '@/util/ZenonClient';
 
-export interface IngestJournalParameters extends JobParameters {
-    objects: JournalIssue[];
+export class IngestJournalParameters implements JobParameters {
+    objects: IngestJournalObject[];
     options: IngestJournalOptions;
+
+    constructor(objects: IngestJournalObject[], options: IngestJournalOptions) {
+        this.objects = objects;
+        this.options = options;
+    }
 }
 
-export interface JournalIssue extends JobObject {
+export class ObjectData implements GeneralObjectData {
+    id: string;
+    path: string;
     metadata: JournalIssueMetadata;
+    constructor(id: string, path: string, metadata: JournalIssueMetadata) {
+        this.id = id;
+        this.path = path;
+        this.metadata = metadata;
+    }
 }
 
-export interface JournalIssueMetadata {
-    zenon_id: number;
-    volume: number;
-    publishing_year: number;
-    number: number;
-    description: string;
-    ojs_journal_code: string;
-    reporting_year: number;
+export class JournalIssueMetadata {
+    zenon_id: string;
+    volume?: number;
+    publishing_year?: number;
+    number?: number;
+    description?: string;
+    ojs_journal_code?: string;
+    reporting_year?: number;
+
+    constructor(zenonId: string, volume?: number, publishingYear?: number,
+        number?: number, description?: string, ojsJournalCode?: string,
+        reportingYear?: number) {
+        this.zenon_id = zenonId;
+        this.volume = volume;
+        this.publishing_year = publishingYear;
+        this.number = number;
+        this.description = description;
+        this.ojs_journal_code = ojsJournalCode;
+        this.reporting_year = reportingYear;
+    }
 }
 
 export interface IngestJournalOptions {
@@ -33,31 +57,4 @@ export interface OJSMetadata {
     allow_upload_without_file: boolean;
 }
 
-export function initIssue(path: string): JournalIssue {
-    const id = path.split('/').pop() || '';
-    return {
-        id,
-        path,
-        metadata: {
-            zenon_id: 0,
-            volume: 1,
-            publishing_year: 0,
-            reporting_year: 0,
-            number: 1,
-            description: '',
-            ojs_journal_code: ''
-        }
-    };
-}
-
-export function initOptions(): IngestJournalOptions {
-    return {
-        ojs_metadata: {
-            auto_publish_issue: false,
-            default_create_frontpage: true,
-            allow_upload_without_file: false
-        },
-        do_ocr: false,
-        ocr_lang: 'eng'
-    };
-}
+export type IngestJournalObject = ObjectData | ObjectError;
