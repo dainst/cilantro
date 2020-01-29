@@ -17,23 +17,23 @@
         </div>
         <div v-if="activeStep === 1">
             <ContinueButton
-                @click="continueToOptions" :disabled="hasInvalidObjects()">
+                @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
             <JournalMetadataForm
                 :selected-paths="selectedPaths"
-                @update:objectsUpdated="onObjectsUpdated"
+                @update:targetsUpdated="onTargetsUpdated"
             />
             <ContinueButton
-                @click="continueToOptions" :disabled="hasInvalidObjects()">
+                @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
         </div>
         <div v-if="activeStep === 2">
-            <StartJobButton @click="startJob" :disabled="hasInvalidObjects()"></StartJobButton>
+            <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
             <JournalOptionsForm
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event"
             />
-            <StartJobButton @click="startJob" :disabled="hasInvalidObjects()"></StartJobButton>
+            <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
 </template>
@@ -48,7 +48,7 @@ import JournalOptionsForm from './IngestJournalOptionsForm.vue';
 
 import { JobParameters, JobTargetError } from '../JobParameters';
 import {
-    IngestJournalParameters, IngestJournalObject, IngestJournalOptions, OJSMetadata
+    IngestJournalParameters, IngestJournalTarget, IngestJournalOptions, OJSMetadata
 } from './IngestJournalParameters';
 
 import { showError, showSuccess } from '@/util/Notifier';
@@ -88,17 +88,17 @@ export default class IngestJournal extends Vue {
         this.activeStep = 1;
     }
 
-    onObjectsUpdated(objects: IngestJournalObject[]) {
-        this.parameters.objects = objects;
+    onTargetsUpdated(targets: IngestJournalTarget[]) {
+        this.parameters.targets = targets;
     }
 
     continueToOptions() {
         this.activeStep = 2;
     }
 
-    hasInvalidObjects() {
-        return this.parameters.objects.filter(
-            object => object instanceof JobTargetError
+    hasInvalidTargets() {
+        return this.parameters.targets.filter(
+            target => target instanceof JobTargetError
         ).length > 0;
     }
 

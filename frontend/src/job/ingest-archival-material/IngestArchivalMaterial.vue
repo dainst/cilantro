@@ -18,19 +18,19 @@
         <div v-if="activeStep === 1">
             <ContinueButton
                 @click="continueToOptions"
-                :disabled="hasInvalidObjects()" />
+                :disabled="hasInvalidTargets()" />
             <ArchivalMaterialMetadataForm
-                :selected-paths="selectedPaths" @update:objectsUpdated="onObjectsUpdated" />
+                :selected-paths="selectedPaths" @update:targetsUpdated="onTargetsUpdated" />
             <ContinueButton
                 @click="continueToOptions"
-                :disabled="hasInvalidObjects()" />
+                :disabled="hasInvalidTargets()" />
         </div>
         <div v-if="activeStep === 2">
-            <StartJobButton @click="startJob" :disabled="hasInvalidObjects()"></StartJobButton>
+            <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
             <ArchivalMaterialOptionsForm
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event" />
-            <StartJobButton @click="startJob" :disabled="hasInvalidObjects()"></StartJobButton>
+            <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
 </template>
@@ -48,7 +48,7 @@ import StartJobButton from '@/util/StartJobButton.vue';
 
 import { JobTargetError } from '../JobParameters';
 import {
-    IngestArchivalMaterialParameters, IngestArchivalMaterialObject, IngestArchivalMaterialOptions
+    IngestArchivalMaterialParameters, IngestArchivalMaterialTarget, IngestArchivalMaterialOptions
 } from './IngestArchivalMaterialParameters';
 
 @Component({
@@ -80,17 +80,17 @@ export default class IngestArchivalMaterial extends Vue {
         this.activeStep = 1;
     }
 
-    onObjectsUpdated(objects: IngestArchivalMaterialObject[]) {
-        this.parameters.objects = objects;
+    onTargetsUpdated(targets: IngestArchivalMaterialTarget[]) {
+        this.parameters.targets = targets;
     }
 
     continueToOptions() {
         this.activeStep = 2;
     }
 
-    hasInvalidObjects() {
-        return this.parameters.objects.filter(
-            object => object instanceof JobTargetError
+    hasInvalidTargets() {
+        return this.parameters.targets.filter(
+            target => target instanceof JobTargetError
         ).length > 0;
     }
 

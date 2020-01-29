@@ -1,9 +1,9 @@
 <template>
     <section>
-        <b-table :data="this.objects" detailed detail-key="id">
+        <b-table :data="this.targets" detailed detail-key="id">
             <template slot-scope="props">
                 <b-table-column width="25">
-                    <b-icon v-if="isObjectError(props.row)" icon="alert-circle" type="is-danger" />
+                    <b-icon v-if="isTargetError(props.row)" icon="alert-circle" type="is-danger" />
                     <template v-else>
                         <b-icon
                             v-if="!props.row.metadata"
@@ -20,7 +20,7 @@
                     field="id"
                     label="Path"
                 >{{ props.row.id }}</b-table-column>
-                <template v-if="!isObjectError(props.row) && props.row.metadata">
+                <template v-if="!isTargetError(props.row) && props.row.metadata">
                     <b-table-column
                         field="metadata.description"
                         label="Description"
@@ -51,7 +51,7 @@
 
             <template slot="detail" slot-scope="props">
                 <div class="content">
-                    <ul v-if="isObjectError(props.row)">
+                    <ul v-if="isTargetError(props.row)">
                         <li v-for="message in props.row.messages" :key="message">{{ message }}</li>
                     </ul>
                     <div v-else>
@@ -68,10 +68,10 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import {
-    JobTargetError, isObjectError, getObjectFolder, containsNumberOfFiles,
+    JobTargetError, isTargetError, getTargetFolder, containsNumberOfFiles,
     containsOnlyFilesWithSuffix
 } from '@/job/JobParameters';
-import { IngestJournalObject, JobTargetData, JournalIssueMetadata } from './IngestJournalParameters';
+import { IngestJournalTarget, JobTargetData, JournalIssueMetadata } from './IngestJournalParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/MetaProgramming';
 import { ojsZenonMapping } from '@/config';
@@ -90,18 +90,18 @@ import { WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents } from '@/st
 export default class JournalMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
 
-    objects: IngestJournalObject[];
+    targets: IngestJournalTarget[];
 
     constructor() {
         super();
-        this.objects = [];
+        this.targets = [];
     }
 
     async mounted() {
         const stagingFiles = await getStagingFiles();
 
-        this.objects = await asyncMap(
-            this.selectedPaths, async(path) : Promise<IngestJournalObject> => {
+        this.targets = await asyncMap(
+            this.selectedPaths, async(path) : Promise<IngestJournalTarget> => {
                 const id = path.split('/').pop() || '';
                 const zenonId = extractZenonId(path);
                 let errors: string[] = [];
@@ -109,11 +109,11 @@ export default class JournalMetadataForm extends Vue {
                     errors.push(`Could not extract Zenon ID from ${path}.`);
                 }
 
-                const objectFolder = await getObjectFolder(stagingFiles, id);
-                if (Object.keys(objectFolder).length === 0) {
+                const targetFolder = await getTargetFolder(stagingFiles, id);
+                if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {
-                    errors = errors.concat(evaluateObjectFolder(objectFolder));
+                    errors = errors.concat(evaluateTargetFolder(targetFolder));
                 }
 
                 if (errors.length === 0) {
@@ -125,33 +125,33 @@ export default class JournalMetadataForm extends Vue {
             }
         );
 
-        this.objects = await asyncMap(this.objects, async(object) => {
-            if (object instanceof JobTargetData) {
-                const updated : IngestJournalObject = await loadZenonData(object);
+        this.targets = await asyncMap(this.targets, async(target) => {
+            if (target instanceof JobTargetData) {
+                const updated : IngestJournalTarget = await loadZenonData(target);
                 return updated;
             }
-            return new JobTargetError(object.id, object.path, object.messages);
+            return new JobTargetError(target.id, target.path, target.messages);
         });
 
-        this.$emit('update:objectsUpdated', this.objects);
+        this.$emit('update:targetsUpdated', this.targets);
     }
 
-    isObjectError = isObjectError;
+    isTargetError = isTargetError;
     labelPosition: string = 'on-border';
 }
 
-function evaluateObjectFolder(objectFolder : WorkbenchFileTree) {
+function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
     const errors: string[] = [];
-    if (!containsNumberOfFiles(objectFolder, 1)) {
+    if (!containsNumberOfFiles(targetFolder, 1)) {
         errors.push(
             `Folder has more than one entry. Only one subfolder 'tif' is allowed.`
         );
     }
 
-    if (!('tif' in objectFolder)) {
+    if (!('tif' in targetFolder)) {
         errors.push(`Folder does not have a subfolder 'tif'.`);
-    } else if (objectFolder.tif.contents !== undefined &&
-                !containsOnlyFilesWithSuffix(objectFolder.tif.contents, '.tif')) {
+    } else if (targetFolder.tif.contents !== undefined &&
+                !containsOnlyFilesWithSuffix(targetFolder.tif.contents, '.tif')) {
         errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
     }
     return errors;
@@ -163,9 +163,9 @@ function extractZenonId(path: string): string {
     return result[1];
 }
 
-async function loadZenonData(object: JobTargetData) {
+async function loadZenonData(target: JobTargetData) {
     try {
-        const zenonRecord = await getRecord(object.metadata.zenon_id) as ZenonRecord;
+        const zenonRecord = await getRecord(target.metadata.zenon_id) as ZenonRecord;
         const errors : string[] = [];
 
         let parentId = '';
@@ -178,10 +178,10 @@ async function loadZenonData(object: JobTargetData) {
             parentId = zenonRecord.parentId;
         }
 
-        if (errors.length !== 0) return new JobTargetError(object.id, object.path, errors);
+        if (errors.length !== 0) return new JobTargetError(target.id, target.path, errors);
 
         const metadata = {
-            zenon_id: object.metadata.zenon_id,
+            zenon_id: target.metadata.zenon_id,
             volume: getSerialVolume(zenonRecord),
             publishing_year: parseInt(zenonRecord.publicationDates[0], 10),
             number: getIssueNumber(zenonRecord),
@@ -190,9 +190,9 @@ async function loadZenonData(object: JobTargetData) {
             reporting_year: getReportingYear(zenonRecord)
         } as JournalIssueMetadata;
 
-        return new JobTargetData(object.id, object.path, metadata);
+        return new JobTargetData(target.id, target.path, metadata);
     } catch (error) {
-        return new JobTargetError(object.id, object.path, [error]);
+        return new JobTargetError(target.id, target.path, [error]);
     }
 }
 

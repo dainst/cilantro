@@ -4,11 +4,11 @@ import { AtomDate } from '@/util/AtomClient';
 /* eslint-disable camelcase */
 
 export class IngestArchivalMaterialParameters implements JobParameters {
-    objects: IngestArchivalMaterialObject[];
+    targets: IngestArchivalMaterialTarget[];
     options: IngestArchivalMaterialOptions;
 
-    constructor(objects: IngestArchivalMaterialObject[], options: IngestArchivalMaterialOptions) {
-        this.objects = objects;
+    constructor(target: IngestArchivalMaterialTarget[], options: IngestArchivalMaterialOptions) {
+        this.targets = target;
         this.options = options;
     }
 }
@@ -60,4 +60,4 @@ export interface IngestArchivalMaterialOptions {
     ocr_lang: string;
 }
 
-export type IngestArchivalMaterialObject = JobTargetData | JobTargetError;
+export type IngestArchivalMaterialTarget = JobTargetData | JobTargetError;

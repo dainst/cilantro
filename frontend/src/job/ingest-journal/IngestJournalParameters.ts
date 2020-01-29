@@ -1,13 +1,12 @@
 /* eslint-disable camelcase */
 import { JobParameters, JobTargetError, JobTargetData as GenericJobTargetData } from '../JobParameters';
-import { ZenonRecord } from '@/util/ZenonClient';
 
 export class IngestJournalParameters implements JobParameters {
-    objects: IngestJournalObject[];
+    targets: IngestJournalTarget[];
     options: IngestJournalOptions;
 
-    constructor(objects: IngestJournalObject[], options: IngestJournalOptions) {
-        this.objects = objects;
+    constructor(target: IngestJournalTarget[], options: IngestJournalOptions) {
+        this.targets = target;
         this.options = options;
     }
 }
@@ -57,4 +56,4 @@ export interface OJSMetadata {
     allow_upload_without_file: boolean;
 }
 
-export type IngestJournalObject = JobTargetData | JobTargetError;
+export type IngestJournalTarget = JobTargetData | JobTargetError;

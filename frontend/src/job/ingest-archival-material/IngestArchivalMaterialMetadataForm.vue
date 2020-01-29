@@ -1,9 +1,9 @@
 <template>
     <section>
-        <b-table :data="objects" detailed detail-key="id" > <!-- :row-class="getRowClass" -->
+        <b-table :data="targets" detailed detail-key="id" > <!-- :row-class="getRowClass" -->
             <template slot-scope="props">
                 <b-table-column width="25">
-                    <b-icon v-if="isObjectError(props.row)" icon="alert-circle" type="is-danger" />
+                    <b-icon v-if="isTargetError(props.row)" icon="alert-circle" type="is-danger" />
                     <template v-else>
                         <b-icon
                             v-if="!props.row.metadata"
@@ -17,7 +17,7 @@
                     </template>
                 </b-table-column>
                 <b-table-column field="id" label="Path">{{ props.row.id }}</b-table-column>
-                <template v-if="!isObjectError(props.row) && props.row.metadata">
+                <template v-if="!isTargetError(props.row) && props.row.metadata">
                     <b-table-column
                         field="metadata.title"
                         label="Title"
@@ -43,7 +43,7 @@
             </template>
             <template slot="detail" slot-scope="props">
                 <div class="content">
-                    <ul v-if="isObjectError(props.row)">
+                    <ul v-if="isTargetError(props.row)">
                         <li v-for="message in props.row.messages" :key="message">{{ message }}</li>
                     </ul>
                     <div v-else>No problems found for this folder path</div>
@@ -58,12 +58,12 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import {
-    JobTargetError, isObjectError, getObjectFolder, containsNumberOfFiles,
+    JobTargetError, isTargetError, getTargetFolder, containsNumberOfFiles,
     containsOnlyFilesWithSuffix
 } from '@/job/JobParameters';
 import {
     JobTargetData, IngestArchivalMaterialParameters,
-    IngestArchivalMaterialObject, IngestArchivalMaterialOptions, ArchivalMaterialMetadata
+    IngestArchivalMaterialTarget, IngestArchivalMaterialOptions, ArchivalMaterialMetadata
 } from './IngestArchivalMaterialParameters';
 import {
     getStagingFiles, WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents
@@ -83,18 +83,18 @@ import { asyncMap } from '@/util/MetaProgramming';
 export default class ArchivalMaterialMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
 
-    objects: IngestArchivalMaterialObject[];
+    targets: IngestArchivalMaterialTarget[];
 
     constructor() {
         super();
-        this.objects = [];
+        this.targets = [];
     }
 
     async mounted() {
         const stagingFiles = await getStagingFiles();
 
-        this.objects = await asyncMap(
-            this.selectedPaths, async(path) : Promise<IngestArchivalMaterialObject> => {
+        this.targets = await asyncMap(
+            this.selectedPaths, async(path) : Promise<IngestArchivalMaterialTarget> => {
                 const id = path.split('/').pop() || '';
                 const atomId = extractAtomId(path);
                 let errors: string[] = [];
@@ -102,11 +102,11 @@ export default class ArchivalMaterialMetadataForm extends Vue {
                     errors.push(`Could not extract Atom ID from ${path}.`);
                 }
 
-                const objectFolder = await getObjectFolder(stagingFiles, id);
-                if (Object.keys(objectFolder).length === 0) {
+                const targetFolder = await getTargetFolder(stagingFiles, id);
+                if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {
-                    errors = errors.concat(evaluateObjectFolder(objectFolder));
+                    errors = errors.concat(evaluateTargetFolder(targetFolder));
                 }
                 if (errors.length === 0) {
                     return new JobTargetData(
@@ -117,33 +117,33 @@ export default class ArchivalMaterialMetadataForm extends Vue {
             }
         );
 
-        this.objects = await asyncMap(this.objects, async(object) => {
-            if (object instanceof JobTargetData) {           
-                const updated : IngestArchivalMaterialObject = await loadAtomData(object);
+        this.targets = await asyncMap(this.targets, async(target) => {
+            if (target instanceof JobTargetData) {           
+                const updated : IngestArchivalMaterialTarget = await loadAtomData(target);
                 return updated;
             }
-            return new JobTargetError(object.id, object.path, object.messages);
+            return new JobTargetError(target.id, target.path, target.messages);
         });
 
-        this.$emit('update:objectsUpdated', this.objects);
+        this.$emit('update:targetsUpdated', this.targets);
     }
 
-    isObjectError = isObjectError;
+    isTargetError = isTargetError;
     labelPosition: string = 'on-border';
 }
 
-function evaluateObjectFolder(objectFolder : WorkbenchFileTree) {
+function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
     const errors: string[] = [];
-    if (!containsNumberOfFiles(objectFolder, 1)) {
+    if (!containsNumberOfFiles(targetFolder, 1)) {
         errors.push(
             `Folder has more than one entry. Only one subfolder 'tif' is allowed.`
         );
     }
 
-    if (!('tif' in objectFolder)) {
+    if (!('tif' in targetFolder)) {
         errors.push(`Folder does not have a subfolder 'tif'.`);
-    } else if (objectFolder.tif.contents !== undefined &&
-                !containsOnlyFilesWithSuffix(objectFolder.tif.contents, '.tif')) {
+    } else if (targetFolder.tif.contents !== undefined &&
+                !containsOnlyFilesWithSuffix(targetFolder.tif.contents, '.tif')) {
         errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
     }
     return errors;
@@ -161,9 +161,9 @@ function extractAtomId(path: string): string | null {
     return `de-${result[1].toLowerCase()}`;
 }
 
-async function loadAtomData(object: JobTargetData) {
+async function loadAtomData(target: JobTargetData) {
     try {
-        const atomRecord = await getAtomRecord(object.metadata.atom_id) as AtomRecord;
+        const atomRecord = await getAtomRecord(target.metadata.atom_id) as AtomRecord;
 
         let authors: string[] = [];
         let notes: string[] = [];
@@ -175,7 +175,7 @@ async function loadAtomData(object: JobTargetData) {
         }
 
         const metadata = {
-            atom_id: object.metadata.atom_id,
+            atom_id: target.metadata.atom_id,
             title: atomRecord.title,
             authors,
             scope_and_content: atomRecord.scope_and_content,
@@ -190,9 +190,9 @@ async function loadAtomData(object: JobTargetData) {
             reference_code: atomRecord.reference_code
         } as ArchivalMaterialMetadata;
 
-        return new JobTargetData(object.id, object.path, metadata);
+        return new JobTargetData(target.id, target.path, metadata);
     } catch (error) {
-        return new JobTargetError(object.id, object.path, [error]);
+        return new JobTargetError(target.id, target.path, [error]);
     }
 }
 
