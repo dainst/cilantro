@@ -4,12 +4,12 @@
     "description": "Used to validate ingest-records job parameters",
     "type": "object",
     "required": [
-        "objects",
+        "targets",
         "options"
     ],
     "additionalProperties": false,
     "properties": {
-        "objects": {
+        "targets": {
             "type": "array",
             "items": {
                 "type": "object",

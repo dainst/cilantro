@@ -136,8 +136,8 @@ class IngestArchivalMaterialsJob(BatchJob):
     def _create_chains(self, params, user_name):
         chains = []
 
-        for record_object in params['objects']:
-            task_params = dict(**record_object, **{'user': user_name},
+        for record_target in params['targets']:
+            task_params = dict(**record_target, **{'user': user_name},
                                initial_representation='tif')
 
             current_chain = _link('create_object', **task_params)
@@ -197,8 +197,8 @@ class IngestJournalsJob(BatchJob):
     def _create_chains(self, params, user_name):
         chains = []
 
-        for issue_object in params['objects']:
-            task_params = dict(**issue_object, **{'user': user_name},
+        for issue_target in params['targets']:
+            task_params = dict(**issue_target, **{'user': user_name},
                                initial_representation='tif')
 
             current_chain = _link('create_object', **task_params)
@@ -241,7 +241,7 @@ class IngestJournalsJob(BatchJob):
             if params['options']['ojs_metadata']['auto_publish_issue']:
                 current_chain |= _link('publish_to_ojs',
                                        ojs_metadata=params['options']['ojs_metadata'],
-                                       ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
+                                       ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
             current_chain |= _link('publish_to_repository')
             current_chain |= _link('publish_to_archive')
             current_chain |= _link('cleanup_workdir')

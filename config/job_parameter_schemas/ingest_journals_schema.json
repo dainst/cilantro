@@ -4,12 +4,12 @@
     "description": "Used to validate ingest-journal job parameters",
     "type": "object",
     "required": [
-        "objects",
+        "targets",
         "options"
     ],
     "additionalProperties": false,
     "properties": {
-        "objects": {
+        "targets": {
             "type": "array",
             "items": {
                 "type": "object",
@@ -69,7 +69,8 @@
         "options": {
             "type": "object",
             "required": [
-                "ojs_metadata"
+                "ojs_metadata",
+                "ocr_options"
             ],
             "additionalProperties": false,
             "properties": {
@@ -93,11 +94,21 @@
                         }
                     }
                 },
-                "do_ocr": {
-                    "type": "boolean"
-                },
-                "ocr_lang": {
-                    "type": "string"
+                "ocr_options": {
+                    "type": "object",
+                    "required": [
+                        "do_ocr",
+                        "ocr_lang"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "do_ocr": {
+                            "type": "boolean"
+                        },
+                        "ocr_lang": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         }
