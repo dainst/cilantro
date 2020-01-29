@@ -1,4 +1,4 @@
-import { JobParameters, ObjectError, ObjectData as GeneralObjectData } from '../JobParameters';
+import { JobParameters, JobTargetError, JobTargetData as GenericJobTargetData } from '../JobParameters';
 import { AtomDate } from '@/util/AtomClient';
 
 /* eslint-disable camelcase */
@@ -13,7 +13,7 @@ export class IngestArchivalMaterialParameters implements JobParameters {
     }
 }
 
-export class ObjectData implements GeneralObjectData {
+export class JobTargetData implements GenericJobTargetData {
     id: string;
     path: string;
     metadata: ArchivalMaterialMetadata;
@@ -60,25 +60,4 @@ export interface IngestArchivalMaterialOptions {
     ocr_lang: string;
 }
 
-export type IngestArchivalMaterialObject = ObjectData | ObjectError;
-
-// export function initRecordObject(path: string): IngestArchivalMaterialObject {
-//     const id = path.split('/').pop() || '';
-//     return {
-//         id,
-//         path,
-//         metadata: {
-//             title: '',
-//             created: '',
-//             author: [],
-//             atom_id: '',
-//             reference_code: '',
-//             dates: [],
-//             level_of_description: '',
-//             extent_and_medium: '',
-//             creators: [],
-//             repository: '',
-//             scope_and_content: ''
-//         }
-//     };
-// }
+export type IngestArchivalMaterialObject = JobTargetData | JobTargetError;

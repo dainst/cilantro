@@ -42,17 +42,18 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { startJob } from '../JobClient';
 
-import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JobFilesForm from '../JobFilesForm.vue';
-// import ArticlesForm from './forms/ArticlesForm.vue';
+import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JournalOptionsForm from './IngestJournalOptionsForm.vue';
+
+import { JobParameters, JobTargetError } from '../JobParameters';
 import {
     IngestJournalParameters, IngestJournalObject, IngestJournalOptions, OJSMetadata
 } from './IngestJournalParameters';
+
 import { showError, showSuccess } from '@/util/Notifier';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
-import { JobParameters, ObjectError } from '../JobParameters';
 
 @Component({
     components: {
@@ -96,7 +97,9 @@ export default class IngestJournal extends Vue {
     }
 
     hasInvalidObjects() {
-        return this.parameters.objects.filter(object => object instanceof ObjectError).length > 0;
+        return this.parameters.objects.filter(
+            object => object instanceof JobTargetError
+        ).length > 0;
     }
 
     async startJob() {

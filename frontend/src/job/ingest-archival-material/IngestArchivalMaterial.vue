@@ -37,17 +37,19 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { startJob } from '../JobClient';
-import ArchivalMaterialMetadataForm from './IngestArchivalMaterialMetadataForm.vue';
 import JobFilesForm from '../JobFilesForm.vue';
+import ArchivalMaterialMetadataForm from './IngestArchivalMaterialMetadataForm.vue';
 import ArchivalMaterialOptionsForm from './IngestArchivalMaterialOptionsForm.vue';
-import {
-    IngestArchivalMaterialParameters, IngestArchivalMaterialObject, IngestArchivalMaterialOptions
-} from './IngestArchivalMaterialParameters';
+
+import { startJob } from '../JobClient';
 import { showError, showSuccess } from '@/util/Notifier.ts';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
-import { ObjectError } from '../JobParameters';
+
+import { JobTargetError } from '../JobParameters';
+import {
+    IngestArchivalMaterialParameters, IngestArchivalMaterialObject, IngestArchivalMaterialOptions
+} from './IngestArchivalMaterialParameters';
 
 @Component({
     components: {
@@ -87,7 +89,9 @@ export default class IngestArchivalMaterial extends Vue {
     }
 
     hasInvalidObjects() {
-        return this.parameters.objects.filter(object => object instanceof ObjectError).length > 0;
+        return this.parameters.objects.filter(
+            object => object instanceof JobTargetError
+        ).length > 0;
     }
 
     async startJob() {

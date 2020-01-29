@@ -68,10 +68,10 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import {
-    ObjectError, isObjectError, getObjectFolder, containsNumberOfFiles,
+    JobTargetError, isObjectError, getObjectFolder, containsNumberOfFiles,
     containsOnlyFilesWithSuffix
 } from '@/job/JobParameters';
-import { IngestJournalObject, ObjectData, JournalIssueMetadata } from './IngestJournalParameters';
+import { IngestJournalObject, JobTargetData, JournalIssueMetadata } from './IngestJournalParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/MetaProgramming';
 import { ojsZenonMapping } from '@/config';
@@ -117,18 +117,20 @@ export default class JournalMetadataForm extends Vue {
                 }
 
                 if (errors.length === 0) {
-                    return new ObjectData(id, path, { zenon_id: zenonId } as JournalIssueMetadata);
+                    return new JobTargetData(
+                        id, path, { zenon_id: zenonId } as JournalIssueMetadata
+                    );
                 }
-                return new ObjectError(id, path, errors);
+                return new JobTargetError(id, path, errors);
             }
         );
 
         this.objects = await asyncMap(this.objects, async(object) => {
-            if (object instanceof ObjectData) {
+            if (object instanceof JobTargetData) {
                 const updated : IngestJournalObject = await loadZenonData(object);
                 return updated;
             }
-            return new ObjectError(object.id, object.path, object.messages);
+            return new JobTargetError(object.id, object.path, object.messages);
         });
 
         this.$emit('update:objectsUpdated', this.objects);
@@ -161,7 +163,7 @@ function extractZenonId(path: string): string {
     return result[1];
 }
 
-async function loadZenonData(object: ObjectData) {
+async function loadZenonData(object: JobTargetData) {
     try {
         const zenonRecord = await getRecord(object.metadata.zenon_id) as ZenonRecord;
         const errors : string[] = [];
@@ -176,7 +178,7 @@ async function loadZenonData(object: ObjectData) {
             parentId = zenonRecord.parentId;
         }
 
-        if (errors.length !== 0) return new ObjectError(object.id, object.path, errors);
+        if (errors.length !== 0) return new JobTargetError(object.id, object.path, errors);
 
         const metadata = {
             zenon_id: object.metadata.zenon_id,
@@ -188,9 +190,9 @@ async function loadZenonData(object: ObjectData) {
             reporting_year: getReportingYear(zenonRecord)
         } as JournalIssueMetadata;
 
-        return new ObjectData(object.id, object.path, metadata);
+        return new JobTargetData(object.id, object.path, metadata);
     } catch (error) {
-        return new ObjectError(object.id, object.path, [error]);
+        return new JobTargetError(object.id, object.path, [error]);
     }
 }
 

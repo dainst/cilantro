@@ -1,16 +1,15 @@
 import { WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents } from '@/staging/StagingClient';
-import { ignoredFolderNames } from '@/config';
 
 export abstract class JobParameters {
     abstract objects: JobObject[];
 }
 
-export abstract class ObjectData {
+export abstract class JobTargetData {
     abstract id: string;
     abstract path: string;
 }
 
-export class ObjectError implements ObjectData {
+export class JobTargetError implements JobTargetData {
     id: string;
     path: string;
     messages: string[];
@@ -22,10 +21,10 @@ export class ObjectError implements ObjectData {
 }
 
 export function isObjectError(o: any) {
-    return o instanceof ObjectError;
+    return o instanceof JobTargetError;
 }
 
-export type JobObject = ObjectData | ObjectError;
+export type JobObject = JobTargetData | JobTargetError;
 
 export async function getObjectFolder(stagingFiles: WorkbenchFileTree, objectId: string) {
     return getStagingFile(stagingFiles, objectId);

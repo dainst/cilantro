@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { JobParameters, ObjectError, ObjectData as GeneralObjectData } from '../JobParameters';
+import { JobParameters, JobTargetError, JobTargetData as GenericJobTargetData } from '../JobParameters';
 import { ZenonRecord } from '@/util/ZenonClient';
 
 export class IngestJournalParameters implements JobParameters {
@@ -12,7 +12,7 @@ export class IngestJournalParameters implements JobParameters {
     }
 }
 
-export class ObjectData implements GeneralObjectData {
+export class JobTargetData implements GenericJobTargetData {
     id: string;
     path: string;
     metadata: JournalIssueMetadata;
@@ -57,4 +57,4 @@ export interface OJSMetadata {
     allow_upload_without_file: boolean;
 }
 
-export type IngestJournalObject = ObjectData | ObjectError;
+export type IngestJournalObject = JobTargetData | JobTargetError;

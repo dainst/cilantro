@@ -58,17 +58,18 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import {
-    ObjectError, isObjectError, getObjectFolder, containsNumberOfFiles,
+    JobTargetError, isObjectError, getObjectFolder, containsNumberOfFiles,
     containsOnlyFilesWithSuffix
 } from '@/job/JobParameters';
 import {
-    ObjectData, IngestArchivalMaterialParameters,
+    JobTargetData, IngestArchivalMaterialParameters,
     IngestArchivalMaterialObject, IngestArchivalMaterialOptions, ArchivalMaterialMetadata
 } from './IngestArchivalMaterialParameters';
-import { getStagingFiles } from '@/staging/StagingClient';
+import {
+    getStagingFiles, WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents
+} from '@/staging/StagingClient';
 import { AtomRecord, getAtomRecord } from '@/util/AtomClient';
 import { asyncMap } from '@/util/MetaProgramming';
-import { WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents } from '@/staging/StagingClient';
 
 @Component({
     filters: {
@@ -108,20 +109,20 @@ export default class ArchivalMaterialMetadataForm extends Vue {
                     errors = errors.concat(evaluateObjectFolder(objectFolder));
                 }
                 if (errors.length === 0) {
-                    return new ObjectData(
+                    return new JobTargetData(
                         id, path, { atom_id: atomId } as ArchivalMaterialMetadata
                     );
                 }
-                return new ObjectError(id, path, errors);
+                return new JobTargetError(id, path, errors);
             }
         );
 
         this.objects = await asyncMap(this.objects, async(object) => {
-            if (object instanceof ObjectData) {           
+            if (object instanceof JobTargetData) {           
                 const updated : IngestArchivalMaterialObject = await loadAtomData(object);
                 return updated;
             }
-            return new ObjectError(object.id, object.path, object.messages);
+            return new JobTargetError(object.id, object.path, object.messages);
         });
 
         this.$emit('update:objectsUpdated', this.objects);
@@ -160,7 +161,7 @@ function extractAtomId(path: string): string | null {
     return `de-${result[1].toLowerCase()}`;
 }
 
-async function loadAtomData(object: ObjectData) {
+async function loadAtomData(object: JobTargetData) {
     try {
         const atomRecord = await getAtomRecord(object.metadata.atom_id) as AtomRecord;
 
@@ -189,9 +190,9 @@ async function loadAtomData(object: ObjectData) {
             reference_code: atomRecord.reference_code
         } as ArchivalMaterialMetadata;
 
-        return new ObjectData(object.id, object.path, metadata);
+        return new JobTargetData(object.id, object.path, metadata);
     } catch (error) {
-        return new ObjectError(object.id, object.path, [error]);
+        return new JobTargetError(object.id, object.path, [error]);
     }
 }
 
