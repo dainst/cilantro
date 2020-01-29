@@ -27,7 +27,7 @@
         </div>
         <div v-if="activeStep === 2">
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
-            <ArchivalMaterialOptionsForm
+            <OCROptionsForm
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event" />
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
@@ -37,25 +37,25 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import JobFilesForm from '../JobFilesForm.vue';
+import JobFilesForm from '@/job/JobFilesForm.vue';
+import OCROptionsForm from '@/job/OCROptionsForm.vue';
 import ArchivalMaterialMetadataForm from './IngestArchivalMaterialMetadataForm.vue';
-import ArchivalMaterialOptionsForm from './IngestArchivalMaterialOptionsForm.vue';
 
 import { startJob } from '../JobClient';
 import { showError, showSuccess } from '@/util/Notifier.ts';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
 
-import { JobTargetError } from '../JobParameters';
+import { JobTargetError, OCROptions } from '../JobParameters';
 import {
-    IngestArchivalMaterialParameters, IngestArchivalMaterialTarget, IngestArchivalMaterialOptions
+    IngestArchivalMaterialParameters, IngestArchivalMaterialTarget
 } from './IngestArchivalMaterialParameters';
 
 @Component({
     components: {
         JobFilesForm,
         ArchivalMaterialMetadataForm,
-        ArchivalMaterialOptionsForm,
+        OCROptionsForm,
         ContinueButton,
         StartJobButton
     }
@@ -71,7 +71,7 @@ export default class IngestArchivalMaterial extends Vue {
         const options = {
             do_ocr: false,
             ocr_lang: 'eng'
-        } as IngestArchivalMaterialOptions;
+        } as OCROptions;
 
         this.parameters = new IngestArchivalMaterialParameters([], options);
     }

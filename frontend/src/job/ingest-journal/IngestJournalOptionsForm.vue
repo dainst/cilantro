@@ -20,7 +20,10 @@
                 </b-field>
             </div>
             <div class="tile is-child box">
-                <JobOptionsForm :initialOptions="options" @options-updated="options = $event" />
+                <OCROptionsForm
+                    :initialOptions="options.ocr_options"
+                    @options-updated="options = $event"
+                />
             </div>
         </div>
     </section>
@@ -31,11 +34,11 @@ import {
     Component, Vue, Watch, Prop
 } from 'vue-property-decorator';
 import { IngestJournalOptions } from './IngestJournalParameters';
-import JobOptionsForm from '../JobOptionsForm.vue';
+import OCROptionsForm from '@/job/OCROptionsForm.vue';
 
 @Component({
     components: {
-        JobOptionsForm
+        OCROptionsForm
     }
 })
 export default class JournalOptionsForm extends Vue {

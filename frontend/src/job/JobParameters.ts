@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents } from '@/staging/StagingClient';
 
 export abstract class JobParameters {
@@ -18,6 +19,11 @@ export class JobTargetError implements JobTargetData {
         this.path = path;
         this.messages = input;
     }
+}
+
+export interface OCROptions {
+    do_ocr: boolean;
+    ocr_lang: string;
 }
 
 export function isTargetError(o: any) {

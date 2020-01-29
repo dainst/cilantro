@@ -1,5 +1,7 @@
 /* eslint-disable camelcase */
-import { JobParameters, JobTargetError, JobTargetData as GenericJobTargetData } from '../JobParameters';
+import {
+    JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions
+} from '../JobParameters';
 
 export class IngestJournalParameters implements JobParameters {
     targets: IngestJournalTarget[];
@@ -46,8 +48,7 @@ export class JournalIssueMetadata {
 
 export interface IngestJournalOptions {
     ojs_metadata: OJSMetadata;
-    do_ocr: boolean;
-    ocr_lang: string;
+    ocr_options: OCROptions;
 }
 
 export interface OJSMetadata {

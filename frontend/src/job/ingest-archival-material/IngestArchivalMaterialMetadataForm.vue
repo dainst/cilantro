@@ -62,11 +62,10 @@ import {
     containsOnlyFilesWithSuffix
 } from '@/job/JobParameters';
 import {
-    JobTargetData, IngestArchivalMaterialParameters,
-    IngestArchivalMaterialTarget, IngestArchivalMaterialOptions, ArchivalMaterialMetadata
+    JobTargetData, IngestArchivalMaterialTarget, ArchivalMaterialMetadata
 } from './IngestArchivalMaterialParameters';
 import {
-    getStagingFiles, WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents
+    getStagingFiles, WorkbenchFileTree, WorkbenchFile
 } from '@/staging/StagingClient';
 import { AtomRecord, getAtomRecord } from '@/util/AtomClient';
 import { asyncMap } from '@/util/MetaProgramming';

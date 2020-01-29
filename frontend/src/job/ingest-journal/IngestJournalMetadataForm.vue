@@ -75,8 +75,9 @@ import { IngestJournalTarget, JobTargetData, JournalIssueMetadata } from './Inge
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/MetaProgramming';
 import { ojsZenonMapping } from '@/config';
-import { getStagingFiles } from '@/staging/StagingClient';
-import { WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents } from '@/staging/StagingClient';
+import {
+    WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles
+} from '@/staging/StagingClient';
 
 @Component({
     filters: {

@@ -46,7 +46,7 @@ import JobFilesForm from '../JobFilesForm.vue';
 import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JournalOptionsForm from './IngestJournalOptionsForm.vue';
 
-import { JobParameters, JobTargetError } from '../JobParameters';
+import { JobParameters, JobTargetError, OCROptions } from '../JobParameters';
 import {
     IngestJournalParameters, IngestJournalTarget, IngestJournalOptions, OJSMetadata
 } from './IngestJournalParameters';
@@ -77,8 +77,10 @@ export default class IngestJournal extends Vue {
                 default_create_frontpage: true,
                 allow_upload_without_file: false
             } as OJSMetadata,
-            do_ocr: false,
-            ocr_lang: 'eng'
+            ocr_options: {
+                do_ocr: false,
+                ocr_lang: 'eng'
+            } as OCROptions
         } as IngestJournalOptions;
 
         this.parameters = new IngestJournalParameters([], options);

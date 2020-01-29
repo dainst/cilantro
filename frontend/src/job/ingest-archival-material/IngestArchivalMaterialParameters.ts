@@ -1,13 +1,15 @@
-import { JobParameters, JobTargetError, JobTargetData as GenericJobTargetData } from '../JobParameters';
+import {
+    JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions
+} from '../JobParameters';
 import { AtomDate } from '@/util/AtomClient';
 
 /* eslint-disable camelcase */
 
 export class IngestArchivalMaterialParameters implements JobParameters {
     targets: IngestArchivalMaterialTarget[];
-    options: IngestArchivalMaterialOptions;
+    options: OCROptions;
 
-    constructor(target: IngestArchivalMaterialTarget[], options: IngestArchivalMaterialOptions) {
+    constructor(target: IngestArchivalMaterialTarget[], options: OCROptions) {
         this.targets = target;
         this.options = options;
     }
@@ -53,11 +55,6 @@ export class ArchivalMaterialMetadata {
         this.repository = repository;
         this.scope_and_content = scopeAndContent;
     }
-}
-
-export interface IngestArchivalMaterialOptions {
-    do_ocr: boolean;
-    ocr_lang: string;
 }
 
 export type IngestArchivalMaterialTarget = JobTargetData | JobTargetError;
