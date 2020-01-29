@@ -46,7 +46,7 @@ import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JobFilesForm from '../JobFilesForm.vue';
 // import ArticlesForm from './forms/ArticlesForm.vue';
 import JournalOptionsForm from './IngestJournalOptionsForm.vue';
-import { 
+import {
     IngestJournalParameters, IngestJournalObject, IngestJournalOptions, OJSMetadata
 } from './IngestJournalParameters';
 import { showError, showSuccess } from '@/util/Notifier';
