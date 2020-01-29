@@ -223,9 +223,9 @@ def journal_job_create():
 
 @job_controller.route('/ingest_archival_material', methods=['POST'])
 @auth.login_required
-def record_job_create():
+def archival_material_job_create():
     """
-    Create a record batch import job.
+    Create a archival material batch import job.
 
     Parameters can be provided as JSON as part of the request body
     and must match the job parameter schema.
