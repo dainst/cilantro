@@ -23,9 +23,10 @@ export interface AtomRecord {
 }
 
 export interface AtomDate {
-    date?: string;
-    start_date?: string;
-    end_date?: string;
+    date: string;
+    start_date: string;
+    end_date: string;
+    type: string
 }
 
 export interface AtomAuthors {
