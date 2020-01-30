@@ -18,9 +18,9 @@ class JobsTest(unittest.TestCase):
         with open(test_params_path, 'r') as params_file:
             job_params = json.loads(params_file.read())
 
-        additional_object = dict(job_params['objects'][0])
+        additional_object = dict(job_params['targets'][0])
 
-        job_params['objects'] += [additional_object]
+        job_params['targets'] += [additional_object]
         job = IngestArchivalMaterialsJob(job_params, 'test_user')
 
         self.assertTrue(type(job.id) == str, 'job id should be generated')
@@ -28,7 +28,7 @@ class JobsTest(unittest.TestCase):
             self.assertTrue(type(chain_id) == str,
                             'ids for chains should be generated')
         self.assertEqual(len(
-            job.chain_ids), 2, 'two chains should be generated, one for each "objects" item')
+            job.chain_ids), 2, 'two chains should be generated, one for each "targets" item')
 
         chain_length = len(job.chord.tasks[0].tasks)
         self.assertEqual(chain_length, 13,
@@ -63,9 +63,9 @@ class JobsTest(unittest.TestCase):
         with open(test_params_path, 'r') as params_file:
             job_params = json.loads(params_file.read())
 
-        additional_object = dict(job_params['objects'][0])
+        additional_object = dict(job_params['targets'][0])
 
-        job_params['objects'] += [additional_object]
+        job_params['targets'] += [additional_object]
         job = IngestJournalsJob(job_params, 'test_user')
 
         self.assertTrue(type(job.id) == str, 'job id should be generated')
@@ -73,7 +73,7 @@ class JobsTest(unittest.TestCase):
             self.assertTrue(type(chain_id) == str,
                             'ids for chains should be generated')
         self.assertEqual(len(
-            job.chain_ids), 2, 'two chains should be generated, one for each "objects" item')
+            job.chain_ids), 2, 'two chains should be generated, one for each "targets" item')
 
         chain_length = len(job.chord.tasks[0].tasks)
 
@@ -112,7 +112,7 @@ class JobsTest(unittest.TestCase):
         job_ocr = IngestJournalsJob(job_params, 'test_user')
 
         job_params = dict(job_params)
-        job_params['options']['do_ocr'] = False
+        job_params['options']['ocr_options']['do_ocr'] = False
 
         job_no_ocr = IngestJournalsJob(job_params, 'test_user')
 
