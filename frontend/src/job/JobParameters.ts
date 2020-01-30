@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
-import { WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents } from '@/staging/StagingClient';
+import { WorkbenchFileTree, getVisibleFolderContents } from '@/staging/StagingClient';
 
 export abstract class JobParameters {
-    abstract targets: JobTargetTarget[];
+    abstract targets: JobTarget[];
 }
 
 export abstract class JobTargetData {
@@ -30,7 +30,7 @@ export function isTargetError(o: any) {
     return o instanceof JobTargetError;
 }
 
-export type JobTargetTarget = JobTargetData | JobTargetError;
+export type JobTarget = JobTargetData | JobTargetError;
 
 export async function getTargetFolder(stagingFiles: WorkbenchFileTree, targetId: string) {
     return getStagingFile(stagingFiles, targetId);
@@ -52,7 +52,7 @@ export function containsNumberOfFiles(folder: WorkbenchFileTree, number: number)
     return true;
 }
 
-export function containsOnlyFilesWithSuffix(folder: { [index: string]: WorkbenchFile },
+export function containsOnlyFilesWithSuffix(folder: WorkbenchFileTree,
     suffix: string) {
     const differentSuffixFiles = Object.keys(folder).filter(file => !file.endsWith(suffix));
     if (differentSuffixFiles.length !== 0) return false;
