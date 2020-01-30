@@ -50,7 +50,12 @@ class MergeConvertedPdfTask(ObjectTask):
         rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, 'pdf')
         files = [{'file': os.path.basename(f)}
                  for f in sorted(_list_files(rep_dir, '.pdf'))]
-        split_merge_pdf(files, rep_dir, f"{obj.metadata.id}.pdf", metadata=obj.metadata.get_pdf_metadata())
+
+        metadata = None
+        if "get_pdf_metadata" in dir(obj.metadata):
+            metadata = obj.metadata.get_pdf_metadata()
+        split_merge_pdf(
+            files, rep_dir, f"{obj.metadata.id}.pdf", metadata=metadata)
 
 
 class JpgToPdfTask(FileTask):
@@ -206,7 +211,6 @@ class ScaleImageTask(FileTask):
         Scales images to the maximum dimension of {params['max_width']} x {params['max_height']}.
         """
         super()._init_params(params)
-
 
     def process_file(self, file, target_dir):
         max_width = int(self.params['max_width'])

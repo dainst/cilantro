@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import List, Iterator
 from distutils.dir_util import copy_tree
+import pickle
 
 from utils.serialization import SerializableClass
 from utils.list_dir import list_dir
@@ -42,54 +43,138 @@ class Actor(SerializableClass):
 class ObjectMetadata(SerializableClass):
     """Basic metadata that can be recorded for every cilantro object."""
 
-    id: str
-    title: str
-    abstract: str
-    description: str
-    type: str
-    creator: Actor
-    created: datetime
+    def get_created_value(self, job_parameters):
+        if 'created' not in job_parameters or job_parameters['created'] is None:
+            return datetime.now()
+        else:
+            job_parameters['created']
 
-    pages: PagesInfo
 
-    year: int
-    number: str
-    volume: str
+class IngestJournalMetadata(ObjectMetadata):
+    # title: str
+    # abstract: str
+    # description: str
+    # type: str  # TODO: What does type mean here?
+    # creator: Actor
 
-    identification: str
-    scope_and_content: str
-    repository: str
-    creators: str
-    extent_and_medium: str
-    level_of_description: str
-    dates: str
-    reference_code: str
+    # pages: PagesInfo
+
+    # year: int
+    # number: str
+    # volume: str
+
+    # identification: str
+
+    def __init__(self, object_id, job_parameters):
+        self.id = object_id
+        self.created = self.get_created_value(job_parameters)
+
+        self.description = job_parameters["description"]
+        self.volume = job_parameters["volume"]
+        self.number = job_parameters["number"]
+        self.ojs_journal_code = job_parameters["ojs_journal_code"]
+        self.publishing_year = job_parameters["publishing_year"]
+        self.reporting_year = job_parameters["reporting_year"]
+        self.zenon_id = job_parameters["zenon_id"]
+
+        # self.title = job_parameters["title"]
+        # self.abstract = job_parameters["abstract"]
+        # self.type = job_parameters["type"]
+        # self.creator = job_parameters["creator"]
+        # self.pages = job_parameters["PagesInfo"]
+        # self.volume = job_parameters["volume"]
+        # self.identification = job_parameters["identification"]
+
+
+class IngestArchivalMaterialMetadataDate():
+    def __init__(self, params):
+        self.date = params['date']
+        self.date_start = params['start_date']
+        self.date_end = params['end_date']
+        self.date_type = params['type']
+
+
+class IngestArchivalMaterialMetadata(ObjectMetadata):
+    def __init__(self, object_id, job_parameters):
+        self.id = object_id
+        self.created = self.get_created_value(job_parameters)
+        self.atom_id = job_parameters['atom_id']
+        self.title = job_parameters['title']
+        self.creators = job_parameters['creators']
+        self.repository = job_parameters['repository']
+        self.reference_code = job_parameters['reference_code']
+        self.scope_and_content = job_parameters['scope_and_content']
+        self.authors = job_parameters['authors']
+        self.extent_and_medium = job_parameters['extent_and_medium']
+        self.level_of_description = job_parameters['level_of_description']
+        self.dates = []
+        for date in job_parameters['dates']:
+            self.dates += [IngestArchivalMaterialMetadataDate(date)]
+        self.notes = job_parameters['notes']
 
     def get_pdf_metadata(self):
         metadata = {}
 
-        if hasattr(self, "title"):
-            metadata["/Title"] = self.title
-        if hasattr(self, "created"):
-            metadata["/Created"] = self.created
+        metadata["/Title"] = self.title
+        metadata["/CreationDate"] = self.created.strftime("%Y-%m-%d")
+        metadata["/AtomID"] = self.atom_id
+
+        if len(self.authors) != 0:
+            authors_string = ""
+            count = 0
+            for author in self.authors:
+                if count != 0:
+                    authors_string += ", "
+                authors_string += author
+                count += 1
+            metadata["/Author"] = authors_string
 
         subject_string = ""
-        if hasattr(self, "scope_and_content"):
+        if self.scope_and_content:
             subject_string += f"Scope and content:\n{self.scope_and_content}\n\n"
-        if hasattr(self, "repository"):
+        if self.repository:
             subject_string += f"Repository:\n{self.repository}\n\n"
-        if hasattr(self, "creators"):
-            subject_string += f"Creators:\n{json.dumps(self.creators,indent=2, sort_keys=True)}\n\n"
-        if hasattr(self, "extent_and_medium"):
-            subject_string += f"Extend and medium:\n{self.extent_and_medium}\n\n"
-        if hasattr(self, "level_of_description"):
-            subject_string += f"Level of description:\n{self.level_of_description}\n\n"
-        if hasattr(self, "dates"):
-            subject_string += f"Dates:\n{json.dumps(self.dates, indent=2, sort_keys=True)}\n\n"
-        if hasattr(self, "reference_code"):
-            subject_string += f"Reference code:\n{self.reference_code}"
+        if self.reference_code:
+            subject_string += f"Reference code:\n{self.reference_code}\n\n"
 
-        metadata['/Subject'] = subject_string
+        if len(self.creators) != 0:
+            creators_string = "Creators:\n"
+            for creator in self.creators:
+                creators_string += f"{creator}\n"
+            creators_string += "\n"
+            subject_string += creators_string
+
+        if self.extent_and_medium:
+            subject_string += f"Extend and medium:\n{self.extent_and_medium}\n\n"
+
+        if self.level_of_description:
+            subject_string += f"Level of description:\n{self.level_of_description}\n\n"
+
+        if len(self.notes) != 0:
+            for note in self.notes:
+                nodes_string += f"{note}\n"
+            nodes_string += "\n"
+            subject_string += nodes_string
+
+        if len(self.dates) != 0:
+            dates_string = ""
+            count = 0
+            for date in self.dates:
+                if count != 0:
+                    dates_string += " | "
+                dates_string += f"Date ({date.date_type}): "
+                if date.date_start == date.date_end:
+                    dates_string += date.date
+                else:
+                    dates_string += f"{date.date_start} - {date.date_end}"
+                dates_string += "\n"
+                count += 1
+            dates_string += "\n"
+            subject_string += dates_string
+
+        if subject_string:
+            metadata['/Subject'] = subject_string
+
         return metadata
 
 
@@ -129,17 +214,14 @@ class Object:
 
         if not os.path.exists(self.path):
             os.makedirs(self.path)
-        if os.path.exists(os.path.join(self.path, 'meta.json')):
-            with open(os.path.join(self.path, 'meta.json'), 'r',
-                      encoding="utf-8") as data:
-                try:
-                    self.metadata = ObjectMetadata.from_dict(json.load(data))
-                except ValueError:
-                    self.metadata = ObjectMetadata()
+        if os.path.exists(os.path.join(self.path, 'meta.pickle')):
+            try:
+                with open(os.path.join(self.path, 'meta.pickle'), 'rb') as file:
+                    self.metadata = pickle.load(file)
+            except ValueError:
+                self.metadata = None
         else:
-            open(os.path.join(self.path, 'meta.json'), 'a', encoding="utf-8") \
-                .close()
-            self.metadata = ObjectMetadata()
+            self.metadata = None
 
     def write(self):
         """
@@ -150,6 +232,8 @@ class Object:
         with open(os.path.join(self.path, 'meta.json'), 'w',
                   encoding="utf-8") as stream:
             stream.write(self.metadata.to_json())
+        with open(os.path.join(self.path, 'meta.pickle'), 'wb') as file:
+            pickle.dump(self.metadata, file)
 
     def add_stream(self, file_name: str, representation: str, file: BytesIO):
         """
@@ -212,8 +296,15 @@ class Object:
                     representations.append(BytesIO(file.read()))
         return iter(representations)
 
-    def set_metadata_from_dict(self, d):
-        self.metadata = ObjectMetadata.from_dict(d)
+    def set_metadata(self, object_id, object_metadata_dict, job_type):
+        if(job_type == 'ingest_journals'):
+            self.metadata = IngestJournalMetadata(
+                object_id, object_metadata_dict)
+        elif(job_type == 'ingest_archival_material'):
+            self.metadata = IngestArchivalMaterialMetadata(
+                object_id, object_metadata_dict)
+        else:
+            self.metadata = ObjectMetadata(object_id, object_metadata_dict)
         self.write()
 
     def copy(self, path):

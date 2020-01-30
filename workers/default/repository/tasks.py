@@ -6,7 +6,7 @@ from utils.celery_client import celery_app
 from workers.base_task import BaseTask, ObjectTask
 from utils.repository import generate_repository_path
 from utils.job_db import JobDb
-    
+
 repository_dir = os.environ['REPOSITORY_DIR']
 archive_dir = os.environ['ARCHIVE_DIR']
 working_dir = os.environ['WORKING_DIR']
@@ -52,8 +52,8 @@ def _get_work_path(params):
 
 
 def _initialize_object(obj, params, oid):
-    obj.set_metadata_from_dict(params['metadata'])
-    obj.metadata.id = oid
+    obj.set_metadata(
+        oid, params['metadata'], params['job_type'])
     _initialize_files(obj, params['path'], params['user'],
                       params['initial_representation'])
     obj.write()

@@ -8,33 +8,6 @@ class PathDoesNotExist(Exception):
 
 
 class SerializableClass(object):
-
-    @classmethod
-    def from_dict(cls, dic: dict):
-        """
-        Create an object of the given Class from a dictionary.
-
-        Fills the attributes accordingly.
-
-        :param dict dic: The dictionary that represents the object of the class
-        :return: cls: The generated object
-        """
-        for key, value in dic.items():
-            if isinstance(value, dict):
-                dic[key] = cls._create_subobject(key, value)
-
-        obj = object.__new__(cls)
-        obj.__dict__ = dic
-        return obj
-
-    @classmethod
-    def _create_subobject(cls, key, value):
-        key_class = inspect.getmembers(cls)[0][1][key]
-        if SerializableClass().__class__ in inspect.getmro(key_class):
-            return key_class.from_dict(value)
-        else:
-            return value
-
     def to_named_tuple(self):
         """
         Creates a tuple<cls> object.

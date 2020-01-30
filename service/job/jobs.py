@@ -138,7 +138,7 @@ class IngestArchivalMaterialsJob(BatchJob):
 
         for record_target in params['targets']:
             task_params = dict(**record_target, **{'user': user_name},
-                               initial_representation='tif')
+                               initial_representation='tif', job_type=self.job_type)
 
             current_chain = _link('create_object', **task_params)
 
@@ -199,7 +199,7 @@ class IngestJournalsJob(BatchJob):
 
         for issue_target in params['targets']:
             task_params = dict(**issue_target, **{'user': user_name},
-                               initial_representation='tif')
+                               initial_representation='tif', job_type=self.job_type)
 
             current_chain = _link('create_object', **task_params)
 
