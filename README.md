@@ -21,6 +21,12 @@ Run this command after first checking out the code:
 
 Then generate an access token at https://github.com/settings/tokens/new, and add the token to your local .env file.
 
+Get your local user id and group id by running
+
+    id -u && id -g
+
+and add those to your local .env file.
+
 Run all docker containers with backend services:
 
     make run
