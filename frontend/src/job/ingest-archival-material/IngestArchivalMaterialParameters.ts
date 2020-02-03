@@ -6,10 +6,10 @@ import { AtomDate } from '@/util/AtomClient';
 /* eslint-disable camelcase */
 
 export class IngestArchivalMaterialParameters implements JobParameters {
-    targets: IngestArchivalMaterialTarget[];
+    targets: MaybeJobTarget[];
     options: OCROptions;
 
-    constructor(target: IngestArchivalMaterialTarget[], options: OCROptions) {
+    constructor(target: MaybeJobTarget[], options: OCROptions) {
         this.targets = target;
         this.options = options;
     }
@@ -57,4 +57,4 @@ export class ArchivalMaterialMetadata {
     }
 }
 
-export type IngestArchivalMaterialTarget = JobTargetData | JobTargetError;
+export type MaybeJobTarget = JobTargetData | JobTargetError;

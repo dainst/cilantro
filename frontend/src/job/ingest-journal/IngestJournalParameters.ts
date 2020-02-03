@@ -4,10 +4,10 @@ import {
 } from '../JobParameters';
 
 export class IngestJournalParameters implements JobParameters {
-    targets: IngestJournalTarget[];
+    targets: MaybeJobTarget[];
     options: IngestJournalOptions;
 
-    constructor(target: IngestJournalTarget[], options: IngestJournalOptions) {
+    constructor(target: MaybeJobTarget[], options: IngestJournalOptions) {
         this.targets = target;
         this.options = options;
     }
@@ -57,4 +57,4 @@ export interface OJSMetadata {
     allow_upload_without_file: boolean;
 }
 
-export type IngestJournalTarget = JobTargetData | JobTargetError;
+export type MaybeJobTarget = JobTargetData | JobTargetError;

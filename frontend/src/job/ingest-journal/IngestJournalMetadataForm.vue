@@ -71,7 +71,7 @@ import {
     JobTargetError, isTargetError, getTargetFolder, containsNumberOfFiles,
     containsOnlyFilesWithSuffix
 } from '@/job/JobParameters';
-import { IngestJournalTarget, JobTargetData, JournalIssueMetadata } from './IngestJournalParameters';
+import { MaybeJobTarget, JobTargetData, JournalIssueMetadata } from './IngestJournalParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/MetaProgramming';
 import { ojsZenonMapping } from '@/config';
@@ -91,7 +91,7 @@ import {
 export default class JournalMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
 
-    targets: IngestJournalTarget[];
+    targets: MaybeJobTarget[];
 
     constructor() {
         super();
@@ -102,7 +102,7 @@ export default class JournalMetadataForm extends Vue {
         const stagingFiles = await getStagingFiles();
 
         this.targets = await asyncMap(
-            this.selectedPaths, async(path) : Promise<IngestJournalTarget> => {
+            this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
                 const id = path.split('/').pop() || '';
                 const zenonId = extractZenonId(path);
                 let errors: string[] = [];
@@ -128,7 +128,7 @@ export default class JournalMetadataForm extends Vue {
 
         this.targets = await asyncMap(this.targets, async(target) => {
             if (target instanceof JobTargetData) {
-                const updated : IngestJournalTarget = await loadZenonData(target);
+                const updated : MaybeJobTarget = await loadZenonData(target);
                 return updated;
             }
             return new JobTargetError(target.id, target.path, target.messages);

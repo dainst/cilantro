@@ -48,7 +48,7 @@ import StartJobButton from '@/util/StartJobButton.vue';
 
 import { JobTargetError, OCROptions } from '../JobParameters';
 import {
-    IngestArchivalMaterialParameters, IngestArchivalMaterialTarget
+    IngestArchivalMaterialParameters, MaybeJobTarget
 } from './IngestArchivalMaterialParameters';
 
 @Component({
@@ -80,7 +80,7 @@ export default class IngestArchivalMaterial extends Vue {
         this.activeStep = 1;
     }
 
-    onTargetsUpdated(targets: IngestArchivalMaterialTarget[]) {
+    onTargetsUpdated(targets: MaybeJobTarget[]) {
         this.parameters.targets = targets;
     }
 

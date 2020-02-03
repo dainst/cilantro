@@ -48,7 +48,7 @@ import JournalOptionsForm from './IngestJournalOptionsForm.vue';
 
 import { JobParameters, JobTargetError, OCROptions } from '../JobParameters';
 import {
-    IngestJournalParameters, IngestJournalTarget, IngestJournalOptions, OJSMetadata
+    IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSMetadata
 } from './IngestJournalParameters';
 
 import { showError, showSuccess } from '@/util/Notifier';
@@ -90,7 +90,7 @@ export default class IngestJournal extends Vue {
         this.activeStep = 1;
     }
 
-    onTargetsUpdated(targets: IngestJournalTarget[]) {
+    onTargetsUpdated(targets: MaybeJobTarget[]) {
         this.parameters.targets = targets;
     }
 

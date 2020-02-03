@@ -62,7 +62,7 @@ import {
     containsOnlyFilesWithSuffix
 } from '@/job/JobParameters';
 import {
-    JobTargetData, IngestArchivalMaterialTarget, ArchivalMaterialMetadata
+    JobTargetData, MaybeJobTarget, ArchivalMaterialMetadata
 } from './IngestArchivalMaterialParameters';
 import {
     getStagingFiles, WorkbenchFileTree, WorkbenchFile
@@ -82,7 +82,7 @@ import { asyncMap } from '@/util/MetaProgramming';
 export default class ArchivalMaterialMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
 
-    targets: IngestArchivalMaterialTarget[];
+    targets: MaybeJobTarget[];
 
     constructor() {
         super();
@@ -93,7 +93,7 @@ export default class ArchivalMaterialMetadataForm extends Vue {
         const stagingFiles = await getStagingFiles();
 
         this.targets = await asyncMap(
-            this.selectedPaths, async(path) : Promise<IngestArchivalMaterialTarget> => {
+            this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
                 const id = path.split('/').pop() || '';
                 const atomId = extractAtomId(path);
                 let errors: string[] = [];
@@ -118,7 +118,7 @@ export default class ArchivalMaterialMetadataForm extends Vue {
 
         this.targets = await asyncMap(this.targets, async(target) => {
             if (target instanceof JobTargetData) {           
-                const updated : IngestArchivalMaterialTarget = await loadAtomData(target);
+                const updated : MaybeJobTarget = await loadAtomData(target);
                 return updated;
             }
             return new JobTargetError(target.id, target.path, target.messages);

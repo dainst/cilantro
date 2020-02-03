@@ -2,7 +2,7 @@
 import { WorkbenchFileTree, getVisibleFolderContents } from '@/staging/StagingClient';
 
 export abstract class JobParameters {
-    abstract targets: JobTarget[];
+    abstract targets: MaybeJobTarget[];
 }
 
 export abstract class JobTargetData {
@@ -30,7 +30,7 @@ export function isTargetError(o: any) {
     return o instanceof JobTargetError;
 }
 
-export type JobTarget = JobTargetData | JobTargetError;
+export type MaybeJobTarget = JobTargetData | JobTargetError;
 
 export async function getTargetFolder(stagingFiles: WorkbenchFileTree, targetId: string) {
     return getStagingFile(stagingFiles, targetId);
