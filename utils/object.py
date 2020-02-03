@@ -86,7 +86,7 @@ class IngestJournalMetadata(ObjectMetadata):
         # self.identification = job_parameters["identification"]
 
 
-class IngestArchivalMaterialMetadataDate():
+class AtomDate():
     def __init__(self, params):
         self.date = params['date']
         self.date_start = params['start_date']
@@ -109,7 +109,7 @@ class IngestArchivalMaterialMetadata(ObjectMetadata):
         self.level_of_description = job_parameters['level_of_description']
         self.dates = []
         for date in job_parameters['dates']:
-            self.dates += [IngestArchivalMaterialMetadataDate(date)]
+            self.dates += [AtomDate(date)]
         self.notes = job_parameters['notes']
 
     def get_pdf_metadata(self):
