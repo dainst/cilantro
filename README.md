@@ -21,6 +21,8 @@ Run this command after first checking out the code:
 
 Then generate an access token at https://github.com/settings/tokens/new, and add the token to your local .env file.
 
+Edit the .env file and replace the UID placeholders with your UID and GID. You can get these with the command `id -u && id -g`
+
 Run all docker containers with backend services:
 
     make run
