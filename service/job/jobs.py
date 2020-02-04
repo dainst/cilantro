@@ -165,7 +165,7 @@ class IngestArchivalMaterialsJob(BatchJob):
                                    task='convert.tif_to_pdf')
             current_chain |= _link('convert.merge_converted_pdf')
             current_chain |= _link('convert.set_pdf_metadata',
-                                    metadata=self._create_pdf_metadata(record_target['metadata']))
+                                   metadata=self._create_pdf_metadata(record_target['metadata']))
 
             if params['options']['do_ocr']:
                 current_chain |= _link('list_files',
@@ -234,21 +234,21 @@ class IngestArchivalMaterialsJob(BatchJob):
             nodes_string += "\n"
             subject_string += nodes_string
 
-        # if len(self.dates) != 0:
-        #     dates_string = ""
-        #     count = 0
-        #     for date in self.dates:
-        #         if count != 0:
-        #             dates_string += " | "
-        #         dates_string += f"Date ({date.date_type}): "
-        #         if date.date_start == date.date_end:
-        #             dates_string += date.date
-        #         else:
-        #             dates_string += f"{date.date_start} - {date.date_end}"
-        #         dates_string += "\n"
-        #         count += 1
-        #     dates_string += "\n"
-        #     subject_string += dates_string
+        if "dates" in metadata and len(metadata["dates"]) != 0:
+            dates_string = ""
+            count = 0
+            for date in metadata["dates"]:
+                if count != 0:
+                    dates_string += " | "
+                dates_string += f"Date ({date['type']}): "
+                if date["start_date"] == date["end_date"]:
+                    dates_string += date["date"]
+                else:
+                    dates_string += f"{date['start_date']} - {date['end_date']}"
+                dates_string += "\n"
+                count += 1
+            dates_string += "\n"
+            subject_string += dates_string
 
         if subject_string:
             pdf_metadata['/Subject'] = subject_string
