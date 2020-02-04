@@ -62,16 +62,13 @@ class Object:
                 with open(os.path.join(self.path, 'meta.json'), 'r', encoding="utf-8") as file_handler:
                     val = json.load(file_handler)
                     self.id = val['id']
-                    self.job_type = val['job_type']
                     self.metadata = val['metadata']
             except ValueError:
                 self.metadata = {}
                 self.id = None
-                self.job_type = None
         else:
             self.metadata = {}
             self.id = None
-            self.job_type = None
 
     def write(self):
         """
@@ -82,8 +79,7 @@ class Object:
         with open(os.path.join(self.path, 'meta.json'), 'w',
                   encoding="utf-8") as out:
 
-            val = {'id': self.id, 'job_type': self.job_type,
-                   'metadata': self.metadata}
+            val = {'id': self.id, 'metadata': self.metadata}
             json.dump(val, out)
 
     def add_stream(self, file_name: str, representation: str, file: BytesIO):

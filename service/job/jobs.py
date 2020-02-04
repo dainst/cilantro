@@ -164,7 +164,8 @@ class IngestArchivalMaterialsJob(BatchJob):
                                    target='pdf',
                                    task='convert.tif_to_pdf')
             current_chain |= _link('convert.merge_converted_pdf')
-            current_chain |= _link('convert.set_pdf_metadata')
+            current_chain |= _link('convert.set_pdf_metadata',
+                                    metadata=self._create_pdf_metadata(record_target['metadata']))
 
             if params['options']['do_ocr']:
                 current_chain |= _link('list_files',
@@ -188,6 +189,71 @@ class IngestArchivalMaterialsJob(BatchJob):
             chains.append(current_chain)
 
         return chains
+
+    def _create_pdf_metadata(self, metadata):
+        pdf_metadata = {}
+        if "title" in metadata:
+            pdf_metadata["/Title"] = metadata["title"]
+        if "atom_id" in metadata:
+            pdf_metadata["/AtomID"] = metadata["atom_id"]
+
+        if "authors" in metadata and len(metadata["authors"]) != 0:
+            authors_string = ""
+            count = 0
+            for author in metadata['authors']:
+                if count != 0:
+                    authors_string += ", "
+                authors_string += author
+                count += 1
+            pdf_metadata["/Author"] = authors_string
+
+        subject_string = ""
+        if "scope_and_content" in metadata:
+            subject_string += f"Scope and content:\n{metadata['scope_and_content']}\n\n"
+        if "repository" in metadata:
+            subject_string += f"Repository:\n{metadata['repository']}\n\n"
+        if "reference_code" in metadata:
+            subject_string += f"Reference code:\n{metadata['reference_code']}\n\n"
+
+        if "creators" in metadata and metadata['creators'] != 0:
+            creators_string = "Creators:\n"
+            for creator in metadata['creators']:
+                creators_string += f"{creator}\n"
+            creators_string += "\n"
+            subject_string += creators_string
+
+        if "extent_and_medium" in metadata:
+            subject_string += f"Extend and medium:\n{metadata['extent_and_medium']}\n\n"
+
+        if "level_of_description" in metadata:
+            subject_string += f"Level of description:\n{metadata['level_of_description']}\n\n"
+
+        if "notes" in metadata and len(metadata["notes"]) != 0:
+            for note in metadata["notes"]:
+                nodes_string += f"{note}\n"
+            nodes_string += "\n"
+            subject_string += nodes_string
+
+        # if len(self.dates) != 0:
+        #     dates_string = ""
+        #     count = 0
+        #     for date in self.dates:
+        #         if count != 0:
+        #             dates_string += " | "
+        #         dates_string += f"Date ({date.date_type}): "
+        #         if date.date_start == date.date_end:
+        #             dates_string += date.date
+        #         else:
+        #             dates_string += f"{date.date_start} - {date.date_end}"
+        #         dates_string += "\n"
+        #         count += 1
+        #     dates_string += "\n"
+        #     subject_string += dates_string
+
+        if subject_string:
+            pdf_metadata['/Subject'] = subject_string
+
+        return pdf_metadata
 
 
 class IngestJournalsJob(BatchJob):

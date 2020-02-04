@@ -64,7 +64,7 @@ class SetPdfMetadataTask(ObjectTask):
     description = "Sets PDF metadata based"
 
     def process_object(self, obj):
-        set_pdf_metadata(obj)
+        set_pdf_metadata(obj, self.get_param('metadata'))
 
 
 class JpgToPdfTask(FileTask):
@@ -248,6 +248,7 @@ class TifToPTifTask(FileTask):
 
     def process_file(self, file, target_dir):
         convert_tif_to_ptif(file, target_dir)
+
 
 
 ScaleImageTask = celery_app.register_task(ScaleImageTask())
