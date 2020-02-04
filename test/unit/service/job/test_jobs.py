@@ -31,8 +31,8 @@ class JobsTest(unittest.TestCase):
             job.chain_ids), 2, 'two chains should be generated, one for each "targets" item')
 
         chain_length = len(job.chord.tasks[0].tasks)
-        self.assertEqual(chain_length, 13,
-                         'each default record import chain should consist of 13 subtasks.')
+        self.assertEqual(chain_length, 14,
+                         'each default record import chain should consist of 14 subtasks.')
 
     def test_import_records_job_no_ocr(self):
         """Test OCR option for record batch import."""
