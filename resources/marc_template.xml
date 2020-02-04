@@ -1,5 +1,5 @@
-{% set metadata = obj.metadata.to_dict() %}
-{% set parent_metadata = obj.get_parent().metadata.to_dict() %}
+{% set metadata = obj.metadata %}
+{% set parent_metadata = obj.get_parent().metadata %}
 <?xml version="1.0" encoding="UTF-8"?>
 <collection xmlns="http://www.loc.gov/MARC21/slim">
     <record>

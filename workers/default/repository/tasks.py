@@ -52,8 +52,8 @@ def _get_work_path(params):
 
 
 def _initialize_object(obj, params, oid):
-    obj.set_metadata(
-        oid, params['metadata'], params['job_type'])
+    obj.id = params['id']
+    obj.metadata = params['metadata']
     _initialize_files(obj, params['path'], params['user'],
                       params['initial_representation'])
     obj.write()

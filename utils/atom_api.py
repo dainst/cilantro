@@ -37,9 +37,9 @@ def create_digital_object(obj):
 
 def _get_digital_object_data(obj):
     repository_uri = os.environ['REPOSITORY_URI']
-    oid = obj.metadata.id
+    oid = obj.id
     return {
-        'information_object_slug': obj.metadata.atom_id,
+        'information_object_slug': obj.metadata['atom_id'],
         'media_type': 'text',
         'mime_type': 'application/pdf',
         'uri': f"{repository_uri}/file/{oid}/data/pdf/{oid}.pdf",

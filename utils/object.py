@@ -7,7 +7,6 @@ from typing import List, Iterator
 from distutils.dir_util import copy_tree
 import pickle
 
-from utils.serialization import SerializableClass
 from utils.list_dir import list_dir
 
 
@@ -23,159 +22,6 @@ class InvalidObjectIdError(Exception):
     example when the last 4 characters are no digits.
     """
     pass
-
-
-class PagesInfo(SerializableClass):
-    """Printing and visualisation information for the document."""
-
-    showndesc: str
-    startPrint: str
-    endPrint: str
-
-
-class Actor(SerializableClass):
-    """Personal and legal entities in cilantro metadata."""
-
-    firstname: str
-    lastname: str
-
-
-class ObjectMetadata(SerializableClass):
-    """Basic metadata that can be recorded for every cilantro object."""
-
-    def get_created_value(self, job_parameters):
-        if 'created' not in job_parameters or job_parameters['created'] is None:
-            return datetime.now()
-        else:
-            job_parameters['created']
-
-
-class IngestJournalMetadata(ObjectMetadata):
-    # title: str
-    # abstract: str
-    # description: str
-    # type: str  # TODO: What does type mean here?
-    # creator: Actor
-
-    # pages: PagesInfo
-
-    # year: int
-    # number: str
-    # volume: str
-
-    # identification: str
-
-    def __init__(self, object_id, job_parameters):
-        self.id = object_id
-        self.created = self.get_created_value(job_parameters)
-
-        self.description = job_parameters["description"]
-        self.volume = job_parameters["volume"]
-        self.number = job_parameters["number"]
-        self.ojs_journal_code = job_parameters["ojs_journal_code"]
-        self.publishing_year = job_parameters["publishing_year"]
-        self.reporting_year = job_parameters["reporting_year"]
-        self.zenon_id = job_parameters["zenon_id"]
-
-        # self.title = job_parameters["title"]
-        # self.abstract = job_parameters["abstract"]
-        # self.type = job_parameters["type"]
-        # self.creator = job_parameters["creator"]
-        # self.pages = job_parameters["PagesInfo"]
-        # self.volume = job_parameters["volume"]
-        # self.identification = job_parameters["identification"]
-
-
-class AtomDate():
-    def __init__(self, params):
-        self.date = params['date']
-        self.date_start = params['start_date']
-        self.date_end = params['end_date']
-        self.date_type = params['type']
-
-
-class IngestArchivalMaterialMetadata(ObjectMetadata):
-    def __init__(self, object_id, job_parameters):
-        self.id = object_id
-        self.created = self.get_created_value(job_parameters)
-        self.atom_id = job_parameters['atom_id']
-        self.title = job_parameters['title']
-        self.creators = job_parameters['creators']
-        self.repository = job_parameters['repository']
-        self.reference_code = job_parameters['reference_code']
-        self.scope_and_content = job_parameters['scope_and_content']
-        self.authors = job_parameters['authors']
-        self.extent_and_medium = job_parameters['extent_and_medium']
-        self.level_of_description = job_parameters['level_of_description']
-        self.dates = []
-        for date in job_parameters['dates']:
-            self.dates += [AtomDate(date)]
-        self.notes = job_parameters['notes']
-
-    def get_pdf_metadata(self):
-        metadata = {}
-
-        metadata["/Title"] = self.title
-        metadata["/CreationDate"] = self.created.strftime("%Y-%m-%d")
-        metadata["/AtomID"] = self.atom_id
-
-        if len(self.authors) != 0:
-            authors_string = ""
-            count = 0
-            for author in self.authors:
-                if count != 0:
-                    authors_string += ", "
-                authors_string += author
-                count += 1
-            metadata["/Author"] = authors_string
-
-        subject_string = ""
-        if self.scope_and_content:
-            subject_string += f"Scope and content:\n{self.scope_and_content}\n\n"
-        if self.repository:
-            subject_string += f"Repository:\n{self.repository}\n\n"
-        if self.reference_code:
-            subject_string += f"Reference code:\n{self.reference_code}\n\n"
-
-        if len(self.creators) != 0:
-            creators_string = "Creators:\n"
-            for creator in self.creators:
-                creators_string += f"{creator}\n"
-            creators_string += "\n"
-            subject_string += creators_string
-
-        if self.extent_and_medium:
-            subject_string += f"Extend and medium:\n{self.extent_and_medium}\n\n"
-
-        if self.level_of_description:
-            subject_string += f"Level of description:\n{self.level_of_description}\n\n"
-
-        if len(self.notes) != 0:
-            for note in self.notes:
-                nodes_string += f"{note}\n"
-            nodes_string += "\n"
-            subject_string += nodes_string
-
-        if len(self.dates) != 0:
-            dates_string = ""
-            count = 0
-            for date in self.dates:
-                if count != 0:
-                    dates_string += " | "
-                dates_string += f"Date ({date.date_type}): "
-                if date.date_start == date.date_end:
-                    dates_string += date.date
-                else:
-                    dates_string += f"{date.date_start} - {date.date_end}"
-                dates_string += "\n"
-                count += 1
-            dates_string += "\n"
-            subject_string += dates_string
-
-        if subject_string:
-            metadata['/Subject'] = subject_string
-
-        return metadata
 
 
 class Object:
@@ -201,9 +47,6 @@ class Object:
     INITIAL_REPRESENTATION = "origin"
     DATA_DIR = "data"
 
-    path: str
-    metadata: ObjectMetadata
-
     def __init__(self, path):
         """
         Create an empty cilantro object that lives in path or finds one.
@@ -214,14 +57,86 @@ class Object:
 
         if not os.path.exists(self.path):
             os.makedirs(self.path)
-        if os.path.exists(os.path.join(self.path, 'meta.pickle')):
+        if os.path.exists(os.path.join(self.path, 'meta.json')):
             try:
-                with open(os.path.join(self.path, 'meta.pickle'), 'rb') as file:
-                    self.metadata = pickle.load(file)
+                with open(os.path.join(self.path, 'meta.json'), 'r', encoding="utf-8") as file_handler:
+                    val = json.load(file_handler)
+                    self.id = val['id']
+                    self.metadata = val['metadata']
             except ValueError:
-                self.metadata = None
+                self.metadata = {}
+                self.id = None
         else:
-            self.metadata = None
+            self.metadata = {}
+            self.id = None
+
+    def get_pdf_metadata(self):
+
+        if 'atom_id' in self.metadata:
+            metadata = {}
+            if "title" in self.metadata:
+                metadata["/Title"] = self.metadata["title"]
+            if "atom_id" in self.metadata:
+                metadata["/AtomID"] = self.metadata["atom_id"]
+
+            if "authors" in self.metadata and len(self.metadata["authors"]) != 0:
+                authors_string = ""
+                count = 0
+                for author in self.metadata['authors']:
+                    if count != 0:
+                        authors_string += ", "
+                    authors_string += author
+                    count += 1
+                metadata["/Author"] = authors_string
+
+            subject_string = ""
+            if "scope_and_content" in self.metadata:
+                subject_string += f"Scope and content:\n{self.metadata['scope_and_content']}\n\n"
+            if "repository" in self.metadata:
+                subject_string += f"Repository:\n{self.metadata['repository']}\n\n"
+            if "reference_code" in self.metadata:
+                subject_string += f"Reference code:\n{self.metadata['reference_code']}\n\n"
+
+            if "creators" in self.metadata and self.metadata['creators'] != 0:
+                creators_string = "Creators:\n"
+                for creator in self.metadata['creators']:
+                    creators_string += f"{creator}\n"
+                creators_string += "\n"
+                subject_string += creators_string
+
+            if "extent_and_medium" in self.metadata:
+                subject_string += f"Extend and medium:\n{self.metadata['extent_and_medium']}\n\n"
+
+            if "level_of_description" in self.metadata:
+                subject_string += f"Level of description:\n{self.metadata['level_of_description']}\n\n"
+
+            if "notes" in self.metadata and len(self.metadata["notes"]) != 0:
+                for note in self.metadata["notes"]:
+                    nodes_string += f"{note}\n"
+                nodes_string += "\n"
+                subject_string += nodes_string
+
+            # if len(self.dates) != 0:
+            #     dates_string = ""
+            #     count = 0
+            #     for date in self.dates:
+            #         if count != 0:
+            #             dates_string += " | "
+            #         dates_string += f"Date ({date.date_type}): "
+            #         if date.date_start == date.date_end:
+            #             dates_string += date.date
+            #         else:
+            #             dates_string += f"{date.date_start} - {date.date_end}"
+            #         dates_string += "\n"
+            #         count += 1
+            #     dates_string += "\n"
+            #     subject_string += dates_string
+
+            if subject_string:
+                metadata['/Subject'] = subject_string
+
+            return metadata
+        return None
 
     def write(self):
         """
@@ -230,10 +145,10 @@ class Object:
         :return: None
         """
         with open(os.path.join(self.path, 'meta.json'), 'w',
-                  encoding="utf-8") as stream:
-            stream.write(self.metadata.to_json())
-        with open(os.path.join(self.path, 'meta.pickle'), 'wb') as file:
-            pickle.dump(self.metadata, file)
+                  encoding="utf-8") as out:
+
+            val = { 'id': self.id, 'metadata': self.metadata }
+            json.dump(val, out)
 
     def add_stream(self, file_name: str, representation: str, file: BytesIO):
         """
@@ -295,17 +210,6 @@ class Object:
                 with open(os.path.join(path, filename), 'rb') as file:
                     representations.append(BytesIO(file.read()))
         return iter(representations)
-
-    def set_metadata(self, object_id, object_metadata_dict, job_type):
-        if(job_type == 'ingest_journals'):
-            self.metadata = IngestJournalMetadata(
-                object_id, object_metadata_dict)
-        elif(job_type == 'ingest_archival_material'):
-            self.metadata = IngestArchivalMaterialMetadata(
-                object_id, object_metadata_dict)
-        else:
-            self.metadata = ObjectMetadata(object_id, object_metadata_dict)
-        self.write()
 
     def copy(self, path):
         """
