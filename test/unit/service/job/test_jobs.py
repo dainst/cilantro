@@ -10,10 +10,10 @@ class JobsTest(unittest.TestCase):
 
     test_resource_dir = 'test/resources'
 
-    def test_import_records_job(self):
-        """Test initialization for record batch import."""
+    def test_import_archival_material_job(self):
+        """Test initialization for archival material batch import."""
         test_params_path = os.path.join(
-            self.test_resource_dir, 'params/record.json')
+            self.test_resource_dir, 'params/archival_material.json')
 
         with open(test_params_path, 'r') as params_file:
             job_params = json.loads(params_file.read())
@@ -32,12 +32,12 @@ class JobsTest(unittest.TestCase):
 
         chain_length = len(job.chord.tasks[0].tasks)
         self.assertEqual(chain_length, 14,
-                         'each default record import chain should consist of 14 subtasks.')
+                         'each default archival material import chain should consist of 14 subtasks.')
 
-    def test_import_records_job_no_ocr(self):
-        """Test OCR option for record batch import."""
+    def test_import_archival_material_job_no_ocr(self):
+        """Test OCR option for archival material batch import."""
         test_params_path = os.path.join(
-            self.test_resource_dir, 'params/record.json')
+            self.test_resource_dir, 'params/archival_material.json')
 
         with open(test_params_path, 'r') as params_file:
             job_params = json.loads(params_file.read())
