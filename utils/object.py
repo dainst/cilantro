@@ -62,81 +62,16 @@ class Object:
                 with open(os.path.join(self.path, 'meta.json'), 'r', encoding="utf-8") as file_handler:
                     val = json.load(file_handler)
                     self.id = val['id']
+                    self.job_type = val['job_type']
                     self.metadata = val['metadata']
             except ValueError:
                 self.metadata = {}
                 self.id = None
+                self.job_type = None
         else:
             self.metadata = {}
             self.id = None
-
-    def get_pdf_metadata(self):
-
-        if 'atom_id' in self.metadata:
-            metadata = {}
-            if "title" in self.metadata:
-                metadata["/Title"] = self.metadata["title"]
-            if "atom_id" in self.metadata:
-                metadata["/AtomID"] = self.metadata["atom_id"]
-
-            if "authors" in self.metadata and len(self.metadata["authors"]) != 0:
-                authors_string = ""
-                count = 0
-                for author in self.metadata['authors']:
-                    if count != 0:
-                        authors_string += ", "
-                    authors_string += author
-                    count += 1
-                metadata["/Author"] = authors_string
-
-            subject_string = ""
-            if "scope_and_content" in self.metadata:
-                subject_string += f"Scope and content:\n{self.metadata['scope_and_content']}\n\n"
-            if "repository" in self.metadata:
-                subject_string += f"Repository:\n{self.metadata['repository']}\n\n"
-            if "reference_code" in self.metadata:
-                subject_string += f"Reference code:\n{self.metadata['reference_code']}\n\n"
-
-            if "creators" in self.metadata and self.metadata['creators'] != 0:
-                creators_string = "Creators:\n"
-                for creator in self.metadata['creators']:
-                    creators_string += f"{creator}\n"
-                creators_string += "\n"
-                subject_string += creators_string
-
-            if "extent_and_medium" in self.metadata:
-                subject_string += f"Extend and medium:\n{self.metadata['extent_and_medium']}\n\n"
-
-            if "level_of_description" in self.metadata:
-                subject_string += f"Level of description:\n{self.metadata['level_of_description']}\n\n"
-
-            if "notes" in self.metadata and len(self.metadata["notes"]) != 0:
-                for note in self.metadata["notes"]:
-                    nodes_string += f"{note}\n"
-                nodes_string += "\n"
-                subject_string += nodes_string
-
-            # if len(self.dates) != 0:
-            #     dates_string = ""
-            #     count = 0
-            #     for date in self.dates:
-            #         if count != 0:
-            #             dates_string += " | "
-            #         dates_string += f"Date ({date.date_type}): "
-            #         if date.date_start == date.date_end:
-            #             dates_string += date.date
-            #         else:
-            #             dates_string += f"{date.date_start} - {date.date_end}"
-            #         dates_string += "\n"
-            #         count += 1
-            #     dates_string += "\n"
-            #     subject_string += dates_string
-
-            if subject_string:
-                metadata['/Subject'] = subject_string
-
-            return metadata
-        return None
+            self.job_type = None
 
     def write(self):
         """
@@ -147,7 +82,8 @@ class Object:
         with open(os.path.join(self.path, 'meta.json'), 'w',
                   encoding="utf-8") as out:
 
-            val = { 'id': self.id, 'metadata': self.metadata }
+            val = {'id': self.id, 'job_type': self.job_type,
+                   'metadata': self.metadata}
             json.dump(val, out)
 
     def add_stream(self, file_name: str, representation: str, file: BytesIO):

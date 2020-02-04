@@ -164,6 +164,7 @@ class IngestArchivalMaterialsJob(BatchJob):
                                    target='pdf',
                                    task='convert.tif_to_pdf')
             current_chain |= _link('convert.merge_converted_pdf')
+            current_chain |= _link('convert.set_pdf_metadata')
 
             if params['options']['do_ocr']:
                 current_chain |= _link('list_files',

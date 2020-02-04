@@ -53,6 +53,7 @@ def _get_work_path(params):
 
 def _initialize_object(obj, params, oid):
     obj.id = params['id']
+    obj.job_type = params['job_type']
     obj.metadata = params['metadata']
     _initialize_files(obj, params['path'], params['user'],
                       params['initial_representation'])

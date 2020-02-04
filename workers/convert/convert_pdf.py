@@ -50,7 +50,95 @@ def convert_pdf_to_txt(source_file, output_dir):
             index += 1
 
 
-def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, metadata=None):
+def set_pdf_metadata(obj):
+    """
+    Create a new PDF file with additional metadata.
+    """
+
+    pdf_metadata = {}
+    if obj.job_type == 'ingest_archival_material':
+        pdf_metadata = _create_pdf_metadata_archival_material(obj.metadata)
+    else:
+        log.warning(f'No PDF metadata definition for job type {obj.job_type}.')
+
+    path = obj.path + "/data/pdf/" + obj.id + ".pdf"
+
+    old_pdf = PyPDF2.PdfFileReader(path)
+    new_pdf = PyPDF2.PdfFileWriter()
+    new_pdf.cloneReaderDocumentRoot(old_pdf)
+    new_pdf.addMetadata(pdf_metadata)
+
+    with open(path, 'wb+') as stream:
+        new_pdf.write(stream)
+
+
+def _create_pdf_metadata_archival_material(metadata):
+    pdf_metadata = {}
+    if "title" in metadata:
+        pdf_metadata["/Title"] = metadata["title"]
+    if "atom_id" in metadata:
+        pdf_metadata["/AtomID"] = metadata["atom_id"]
+
+    if "authors" in metadata and len(metadata["authors"]) != 0:
+        authors_string = ""
+        count = 0
+        for author in metadata['authors']:
+            if count != 0:
+                authors_string += ", "
+            authors_string += author
+            count += 1
+        pdf_metadata["/Author"] = authors_string
+
+    subject_string = ""
+    if "scope_and_content" in metadata:
+        subject_string += f"Scope and content:\n{metadata['scope_and_content']}\n\n"
+    if "repository" in metadata:
+        subject_string += f"Repository:\n{metadata['repository']}\n\n"
+    if "reference_code" in metadata:
+        subject_string += f"Reference code:\n{metadata['reference_code']}\n\n"
+
+    if "creators" in metadata and metadata['creators'] != 0:
+        creators_string = "Creators:\n"
+        for creator in metadata['creators']:
+            creators_string += f"{creator}\n"
+        creators_string += "\n"
+        subject_string += creators_string
+
+    if "extent_and_medium" in metadata:
+        subject_string += f"Extend and medium:\n{metadata['extent_and_medium']}\n\n"
+
+    if "level_of_description" in metadata:
+        subject_string += f"Level of description:\n{metadata['level_of_description']}\n\n"
+
+    if "notes" in metadata and len(metadata["notes"]) != 0:
+        for note in metadata["notes"]:
+            nodes_string += f"{note}\n"
+        nodes_string += "\n"
+        subject_string += nodes_string
+
+    # if len(self.dates) != 0:
+    #     dates_string = ""
+    #     count = 0
+    #     for date in self.dates:
+    #         if count != 0:
+    #             dates_string += " | "
+    #         dates_string += f"Date ({date.date_type}): "
+    #         if date.date_start == date.date_end:
+    #             dates_string += date.date
+    #         else:
+    #             dates_string += f"{date.date_start} - {date.date_end}"
+    #         dates_string += "\n"
+    #         count += 1
+    #     dates_string += "\n"
+    #     subject_string += dates_string
+
+    if subject_string:
+        pdf_metadata['/Subject'] = subject_string
+
+    return pdf_metadata
+
+
+def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
     """
     Create a PDF file by combining sections of other PDFs.
 
@@ -64,8 +152,7 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, me
     """
     os.makedirs(path, exist_ok=True)
     new_pdf = PyPDF2.PdfFileWriter()
-    if metadata:
-        new_pdf.addMetadata(metadata)
+
     input_streams = []
     for file in files:
         input_str = os.path.join(path, file['file'])

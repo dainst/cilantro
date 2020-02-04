@@ -6,7 +6,7 @@ from utils.object import Object
 from workers.convert.convert_image import convert_tif_to_jpg, \
     convert_jpg_to_pdf, tif_to_txt, convert_tif_to_ptif, tif_to_pdf
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf, \
-    convert_pdf_to_tif
+    convert_pdf_to_tif, set_pdf_metadata
 from workers.convert.image_scaling import scale_image
 
 
@@ -51,9 +51,20 @@ class MergeConvertedPdfTask(ObjectTask):
         files = [{'file': os.path.basename(f)}
                  for f in sorted(_list_files(rep_dir, '.pdf'))]
 
-        metadata = obj.get_pdf_metadata()
         split_merge_pdf(
-            files, rep_dir, f"{obj.id}.pdf", metadata=metadata)
+            files, rep_dir, f"{obj.id}.pdf")
+
+
+class SetPdfMetadataTask(ObjectTask):
+    """
+    Sets PDF Metadata for a given object.
+    """
+    name = "convert.set_pdf_metadata"
+    label = "Set PDF metadata"
+    description = "Sets PDF metadata based"
+
+    def process_object(self, obj):
+        set_pdf_metadata(obj)
 
 
 class JpgToPdfTask(FileTask):
@@ -247,3 +258,4 @@ PdfToTifTask = celery_app.register_task(PdfToTifTask())
 PdfToTxtTask = celery_app.register_task(PdfToTxtTask())
 TifToTxtTask = celery_app.register_task(TifToTxtTask())
 TifToPTifTask = celery_app.register_task(TifToPTifTask())
+SetPdfMetadataTask = celery_app.register_task(SetPdfMetadataTask())
