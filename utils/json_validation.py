@@ -3,7 +3,7 @@ import json
 import jsonschema
 
 
-resource_dir = os.environ['CONFIG_DIR']
+resource_dir = os.environ['RESOURCES_DIR']
 
 
 def validate_params(params, job_type):
