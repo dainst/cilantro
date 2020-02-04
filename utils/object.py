@@ -5,7 +5,6 @@ import json
 from pathlib import Path
 from typing import List, Iterator
 from distutils.dir_util import copy_tree
-import pickle
 
 from utils.list_dir import list_dir
 
