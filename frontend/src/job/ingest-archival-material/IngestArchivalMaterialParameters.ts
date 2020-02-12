@@ -39,21 +39,8 @@ export class ArchivalMaterialMetadata {
     repository?: string;
     scope_and_content?: string;
 
-    constructor(atomId: string, title?: string, created?: string, authors?: string[],
-        referenceCode?: string, creators?: string[], dates?: AtomDate[],
-        levelOfDescription?: string, extendAndMedium?: string, repository?: string,
-        scopeAndContent?: string) {
+    constructor(atomId: string) {
         this.atom_id = atomId;
-        this.title = title;
-        this.created = created;
-        this.authors = authors;
-        this.reference_code = referenceCode;
-        this.creators = creators;
-        this.dates = dates;
-        this.level_of_description = levelOfDescription;
-        this.extent_and_medium = extendAndMedium;
-        this.repository = repository;
-        this.scope_and_content = scopeAndContent;
     }
 }
 

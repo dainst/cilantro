@@ -33,16 +33,8 @@ export class JournalIssueMetadata {
     ojs_journal_code?: string;
     reporting_year?: number;
 
-    constructor(zenonId: string, volume?: number, publishingYear?: number,
-        number?: number, description?: string, ojsJournalCode?: string,
-        reportingYear?: number) {
+    constructor(zenonId: string) {
         this.zenon_id = zenonId;
-        this.volume = volume;
-        this.publishing_year = publishingYear;
-        this.number = number;
-        this.description = description;
-        this.ojs_journal_code = ojsJournalCode;
-        this.reporting_year = reportingYear;
     }
 }
 
