@@ -21,11 +21,7 @@ Run this command after first checking out the code:
 
 Then generate an access token at https://github.com/settings/tokens/new, and add the token to your local .env file.
 
-Get your local user id and group id by running
-
-    id -u && id -g
-
-and add those to your local .env file.
+Edit the .env file and replace the UID placeholders with your UID and GID. You can get these with the command `id -u && id -g`
 
 Run all docker containers with backend services:
 
@@ -111,7 +107,7 @@ OJS monitoring under http://localhost:4444
 
 ## Troubleshooting
 
-On Linux hosts the tests will fail because the data directory created by
+* On Linux hosts the tests will fail because the data directory created by
 docker does not have the right permissions and the user account that runs the
 tests can not access it. The easiest way to fix that is just to change the owner
 on the whole directory and subfolders. The Makefile offers a short command for
@@ -121,9 +117,11 @@ this:
 
 After that re-run the tests and they may succeed.
 
-In case of duplicate entries in the database clean your test containers with:
+* In case of duplicate entries in the database clean your test containers with:
 
     docker-compose down
+    
+* If you run into an error using `make run-frontend`on mac, run `softwareupdate --install -a` to update the whole system to the newest state. If the error remains, check if it is this Error-Code: `getaddrinfo ENOTFOUND x86_64-apple-darwin13.4.0`, if so use the command `unset HOST`and retry the make call.
 
 ## Code style
 
