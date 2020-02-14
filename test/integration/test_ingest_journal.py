@@ -12,7 +12,7 @@ class IngestJournalTest(JobTypeTest):
         self.assertEqual(status_code, 202)
         job_id = data['job_id']
         self.assertTrue(data['success'])
-        self.assert_state(job_id, 'success')
+        self.assert_state(job_id, 'success', 120000)
 
         job_from_db = self.get_job_by_id(job_id)
         first_batch_job_in_job_from_db = self.get_job_by_id(
