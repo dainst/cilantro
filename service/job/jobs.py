@@ -195,7 +195,7 @@ class IngestArchivalMaterialsJob(BatchJob):
         if "title" in metadata:
             pdf_metadata["/Title"] = metadata["title"]
         if "atom_id" in metadata:
-            pdf_metadata["/AtomID"] = metadata["atom_id"]
+            pdf_metadata["/ArchiveLink"] = f'https://archives.dainst.org/index.php/{metadata["atom_id"]}'
 
         if "authors" in metadata and len(metadata["authors"]) != 0:
             authors_string = ""
