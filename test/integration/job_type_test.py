@@ -54,7 +54,8 @@ class JobTypeTest(unittest.TestCase):
 
         :param str object_id: The id of the cilantro object
         :param str file_path: Path of the file to assert
-        :param int timeout: Timeout in miliseconds
+        :param int timeout: Timeout in miliseconds, defaults to value of environment 
+        variable (if set) or hardcoded value. See _get_default_timeout.
         """
         if timeout is None:
             timeout = _get_default_timeout()
@@ -78,7 +79,8 @@ class JobTypeTest(unittest.TestCase):
         is reached.
 
         :param list task_ids: List of ids of tasks
-        :param int timeout: Timeout in miliseconds
+        :param int timeout: Timeout in miliseconds, defaults to value of environment 
+        variable (if set) or hardcoded value. See _get_default_timeout.
         """
         if timeout is None:
             timeout = _get_default_timeout()
@@ -108,7 +110,8 @@ class JobTypeTest(unittest.TestCase):
 
         :param str job_id: The id of the job
         :param str expected_state: The expected state of the job
-        :param int timeout: Timeout in miliseconds
+        :param int timeout: Timeout in miliseconds, defaults to value of environment 
+        variable (if set) or hardcoded value. See _get_default_timeout.
         """
         if timeout is None:
             timeout = _get_default_timeout()
