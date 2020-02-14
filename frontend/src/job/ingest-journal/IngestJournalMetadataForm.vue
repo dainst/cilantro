@@ -73,7 +73,7 @@ import {
 } from '@/job/JobParameters';
 import { MaybeJobTarget, JobTargetData, JournalIssueMetadata } from './IngestJournalParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
-import { asyncMap } from '@/util/MetaProgramming';
+import { asyncMap } from '@/util/HelperFunctions';
 import { ojsZenonMapping } from '@/config';
 import {
     WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles

@@ -68,7 +68,7 @@ import {
     getStagingFiles, WorkbenchFileTree, WorkbenchFile
 } from '@/staging/StagingClient';
 import { AtomRecord, getAtomRecord } from '@/util/AtomClient';
-import { asyncMap } from '@/util/MetaProgramming';
+import { asyncMap } from '@/util/HelperFunctions';
 
 @Component({
     filters: {
