@@ -30,7 +30,6 @@ x-env-app-config: &env-app-config
 
 x-test-timeouts: &test-timeouts
   DEFAULT_TEST_TIMEOUT: ${DEFAULT_TEST_TIMEOUT}
-  JOURNAL_TEST_TIMEOUT: ${JOURNAL_TEST_TIMEOUT}
 
 services:
 

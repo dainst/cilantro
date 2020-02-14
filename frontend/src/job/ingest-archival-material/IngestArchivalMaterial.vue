@@ -1,38 +1,35 @@
 <template>
     <div class="container">
         <b-steps v-model="activeStep" :has-navigation="(false)">
-            <b-step-item label="Journal Files"></b-step-item>
-            <b-step-item label="Journal Metadata"></b-step-item>
+            <b-step-item label="Record Files"></b-step-item>
+            <b-step-item label="Record Metadata"></b-step-item>
             <b-step-item label="Start Import"></b-step-item>
         </b-steps>
 
         <div v-if="activeStep === 0">
             <ContinueButton
-                @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
-            </ContinueButton>
+                @click="continueToMetadata"
+                :disabled="this.selectedPaths.length == 0" />
             <JobFilesForm :selected-paths.sync="selectedPaths" />
             <ContinueButton
-                @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
-            </ContinueButton>
+                @click="continueToMetadata"
+                :disabled="this.selectedPaths.length == 0" />
         </div>
         <div v-if="activeStep === 1">
             <ContinueButton
-                @click="continueToOptions" :disabled="hasInvalidTargets()">
-            </ContinueButton>
-            <JournalMetadataForm
-                :selected-paths="selectedPaths"
-                @update:targetsUpdated="onTargetsUpdated"
-            />
+                @click="continueToOptions"
+                :disabled="hasInvalidTargets()" />
+            <ArchivalMaterialMetadataForm
+                :selected-paths="selectedPaths" @update:targetsUpdated="onTargetsUpdated" />
             <ContinueButton
-                @click="continueToOptions" :disabled="hasInvalidTargets()">
-            </ContinueButton>
+                @click="continueToOptions"
+                :disabled="hasInvalidTargets()" />
         </div>
         <div v-if="activeStep === 2">
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
-            <JournalOptionsForm
+            <OCROptionsForm
                 :initialOptions="this.parameters.options"
-                @options-updated="this.parameters.options = $event"
-            />
+                @options-updated="this.parameters.options = $event" />
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
@@ -40,50 +37,43 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import JobFilesForm from '@/job/JobFilesForm.vue';
+import OCROptionsForm from '@/job/OCROptionsForm.vue';
+import ArchivalMaterialMetadataForm from './IngestArchivalMaterialMetadataForm.vue';
+
 import { startJob } from '../JobClient';
-
-import JobFilesForm from '../JobFilesForm.vue';
-import JournalMetadataForm from './IngestJournalMetadataForm.vue';
-import JournalOptionsForm from './IngestJournalOptionsForm.vue';
-
-import { JobParameters, JobTargetError, OCROptions } from '../JobParameters';
-import {
-    IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSMetadata
-} from './IngestJournalParameters';
-
-import { showError, showSuccess } from '@/util/Notifier';
+import { showError, showSuccess } from '@/util/Notifier.ts';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
+
+import { JobTargetError, OCROptions } from '../JobParameters';
+import {
+    IngestArchivalMaterialParameters, MaybeJobTarget
+} from './IngestArchivalMaterialParameters';
 
 @Component({
     components: {
         JobFilesForm,
-        JournalMetadataForm,
-        JournalOptionsForm,
+        ArchivalMaterialMetadataForm,
+        OCROptionsForm,
         ContinueButton,
         StartJobButton
     }
 })
-export default class IngestJournal extends Vue {
+export default class IngestArchivalMaterial extends Vue {
     selectedPaths: string[] = [];
-    parameters: IngestJournalParameters;
+    parameters: IngestArchivalMaterialParameters;
     activeStep: number = 0;
 
     constructor() {
         super();
-        const options = {
-            ojs_metadata: {
-                auto_publish_issue: false,
-                default_create_frontpage: true,
-                allow_upload_without_file: false
-            } as OJSMetadata,
-            ocr_options: {
-                do_ocr: false,
-                ocr_lang: 'eng'
-            } as OCROptions
-        } as IngestJournalOptions;
 
-        this.parameters = new IngestJournalParameters([], options);
+        const options = {
+            do_ocr: false,
+            ocr_lang: 'eng'
+        } as OCROptions;
+
+        this.parameters = new IngestArchivalMaterialParameters([], options);
     }
 
     continueToMetadata() {
@@ -107,7 +97,7 @@ export default class IngestJournal extends Vue {
     async startJob() {
         try {
             if (this.parameters !== undefined) {
-                await startJob('ingest_journals', this.parameters);
+                await startJob('ingest_archival_material', this.parameters);
                 showSuccess('Job started');
                 this.$router.push({ path: '/' });
             }

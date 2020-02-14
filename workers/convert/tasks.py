@@ -6,7 +6,7 @@ from utils.object import Object
 from workers.convert.convert_image import convert_tif_to_jpg, \
     convert_jpg_to_pdf, tif_to_txt, convert_tif_to_ptif, tif_to_pdf
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf, \
-    convert_pdf_to_tif
+    convert_pdf_to_tif, set_pdf_metadata
 from workers.convert.image_scaling import scale_image
 
 
@@ -50,7 +50,21 @@ class MergeConvertedPdfTask(ObjectTask):
         rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, 'pdf')
         files = [{'file': os.path.basename(f)}
                  for f in sorted(_list_files(rep_dir, '.pdf'))]
-        split_merge_pdf(files, rep_dir, f"{obj.metadata.id}.pdf")
+
+        split_merge_pdf(
+            files, rep_dir, f"{obj.id}.pdf")
+
+
+class SetPdfMetadataTask(ObjectTask):
+    """
+    Sets PDF Metadata for a given object.
+    """
+    name = "convert.set_pdf_metadata"
+    label = "Set PDF metadata"
+    description = "Sets PDF metadata based"
+
+    def process_object(self, obj):
+        set_pdf_metadata(obj, self.get_param('metadata'))
 
 
 class JpgToPdfTask(FileTask):
@@ -207,7 +221,6 @@ class ScaleImageTask(FileTask):
         """
         super()._init_params(params)
 
-
     def process_file(self, file, target_dir):
         max_width = int(self.params['max_width'])
         max_height = int(self.params['max_height'])
@@ -237,6 +250,7 @@ class TifToPTifTask(FileTask):
         convert_tif_to_ptif(file, target_dir)
 
 
+
 ScaleImageTask = celery_app.register_task(ScaleImageTask())
 JpgToPdfTask = celery_app.register_task(JpgToPdfTask())
 MergeConvertedPdf = celery_app.register_task(MergeConvertedPdfTask())
@@ -245,3 +259,4 @@ PdfToTifTask = celery_app.register_task(PdfToTifTask())
 PdfToTxtTask = celery_app.register_task(PdfToTxtTask())
 TifToTxtTask = celery_app.register_task(TifToTxtTask())
 TifToPTifTask = celery_app.register_task(TifToPTifTask())
+SetPdfMetadataTask = celery_app.register_task(SetPdfMetadataTask())

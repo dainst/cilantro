@@ -1,5 +1,5 @@
 {% set ns = namespace() %}
-{% set metadata = obj.metadata.to_dict() %}
+{% set metadata = obj.metadata %}
 {% set server_url = environ['BACKEND_URI'] %}
 <?xml version="1.0" encoding="UTF-8"?>
 <mets:mets

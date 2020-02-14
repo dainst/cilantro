@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import List, Iterator
 from distutils.dir_util import copy_tree
 
-from utils.serialization import SerializableClass
 from utils.list_dir import list_dir
 
 
@@ -22,40 +21,6 @@ class InvalidObjectIdError(Exception):
     example when the last 4 characters are no digits.
     """
     pass
-
-
-class PagesInfo(SerializableClass):
-    """Printing and visualisation information for the document."""
-
-    showndesc: str
-    startPrint: str
-    endPrint: str
-
-
-class Actor(SerializableClass):
-    """Personal and legal entities in cilantro metadata."""
-
-    firstname: str
-    lastname: str
-
-
-class ObjectMetadata(SerializableClass):
-    """Basic metadata that can be recorded for every cilantro object."""
-
-    id: str
-    title: str
-    abstract: str
-    description: str
-    type: str
-    creator: Actor
-    created: datetime
-
-    pages: PagesInfo
-
-    year: int
-    number: str
-    volume: str
-    identification: str
 
 
 class Object:
@@ -81,9 +46,6 @@ class Object:
     INITIAL_REPRESENTATION = "origin"
     DATA_DIR = "data"
 
-    path: str
-    metadata: ObjectMetadata
-
     def __init__(self, path):
         """
         Create an empty cilantro object that lives in path or finds one.
@@ -95,16 +57,17 @@ class Object:
         if not os.path.exists(self.path):
             os.makedirs(self.path)
         if os.path.exists(os.path.join(self.path, 'meta.json')):
-            with open(os.path.join(self.path, 'meta.json'), 'r',
-                      encoding="utf-8") as data:
-                try:
-                    self.metadata = ObjectMetadata.from_dict(json.load(data))
-                except ValueError:
-                    self.metadata = ObjectMetadata()
+            try:
+                with open(os.path.join(self.path, 'meta.json'), 'r', encoding="utf-8") as file_handler:
+                    val = json.load(file_handler)
+                    self.id = val['id']
+                    self.metadata = val['metadata']
+            except ValueError:
+                self.metadata = {}
+                self.id = None
         else:
-            open(os.path.join(self.path, 'meta.json'), 'a', encoding="utf-8") \
-                .close()
-            self.metadata = ObjectMetadata()
+            self.metadata = {}
+            self.id = None
 
     def write(self):
         """
@@ -113,8 +76,10 @@ class Object:
         :return: None
         """
         with open(os.path.join(self.path, 'meta.json'), 'w',
-                  encoding="utf-8") as stream:
-            stream.write(self.metadata.to_json())
+                  encoding="utf-8") as out:
+
+            val = {'id': self.id, 'metadata': self.metadata}
+            json.dump(val, out)
 
     def add_stream(self, file_name: str, representation: str, file: BytesIO):
         """
@@ -176,10 +141,6 @@ class Object:
                 with open(os.path.join(path, filename), 'rb') as file:
                     representations.append(BytesIO(file.read()))
         return iter(representations)
-
-    def set_metadata_from_dict(self, d):
-        self.metadata = ObjectMetadata.from_dict(d)
-        self.write()
 
     def copy(self, path):
         """

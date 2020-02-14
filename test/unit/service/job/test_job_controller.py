@@ -79,7 +79,8 @@ class JobControllerTest(unittest.TestCase):
 
     def test_create_job_invalid_json(self):
         """Test job creation to fail when the POST payload is not JSON."""
-        self._make_request('/job/ingest_journals', 'jkfj,;', 400, 'bad_request')
+        self._make_request('/job/ingest_journals',
+                           'jkfj,;', 400, 'bad_request')
 
     def test_create_job_unknown_param(self):
         """Test job creation to fail when there are unknown params given."""
@@ -93,14 +94,14 @@ class JobControllerTest(unittest.TestCase):
     def test_create_job_missing_param(self):
         """Test job creation to fail when there are params missing."""
         job_params = self._read_test_params()
-        del job_params['objects'][0]['metadata']['volume']
+        del job_params['targets'][0]['metadata']['volume']
         self._make_request('/job/ingest_journals', json.dumps(job_params), 400,
                            'invalid_job_params', 'is a required property')
 
     def test_create_job_wrong_param_type(self):
         """Test job creation to fail when a param has the wrong type."""
         job_params = self._read_test_params()
-        job_params['objects'][0]['metadata']['volume'] = "asdf"
+        job_params['targets'][0]['metadata']['volume'] = "asdf"
         self._make_request('/job/ingest_journals', json.dumps(job_params), 400,
                            'invalid_job_params', 'is not of type')
 

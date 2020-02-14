@@ -4,8 +4,9 @@ import unittest
 import logging
 from filecmp import dircmp
 from io import BytesIO
+import json
 
-from utils.object import Object, ObjectMetadata
+from utils.object import Object
 
 working_dir = os.environ['WORKING_DIR']
 resource_dir = os.environ['TEST_RESOURCE_DIR']
@@ -39,18 +40,18 @@ class ObjectTest(unittest.TestCase):
     def test_init(self):
         obj = Object(test_object_working_path)
 
-        self.assertIsInstance(obj.metadata, ObjectMetadata)
-        self.assertEqual(obj.metadata.to_json(), '{}')
+        self.assertIsInstance(obj.metadata, dict)
+        self.assertEqual(json.dumps(obj.metadata), '{}')
 
     def test_read(self):
         _copy_test_object()
         obj = Object(test_object_working_path)
-        self.assertIsInstance(obj.metadata, ObjectMetadata)
-        self.assertEqual(obj.metadata.creator.firstname, "Peter")
+        self.assertIsInstance(obj.metadata, dict)
+        self.assertEqual(obj.metadata['creator']['firstname'], "Peter")
 
     def test_write(self):
         obj = Object(test_object_working_path)
-        obj.metadata.title = "A test object"
+        obj.metadata['title'] = "A test object"
         obj.write()
 
         self.assertTrue(os.path.isdir(test_object_working_path))
@@ -59,7 +60,7 @@ class ObjectTest(unittest.TestCase):
 
     def test_add_stream(self):
         obj = Object(test_object_working_path)
-        obj.metadata.title = "A test object"
+        obj.metadata['title'] = "A test object"
         stream = open(test_file_path, 'rb')
         obj.add_stream(os.path.basename(test_file_path), 'jpg',
                        BytesIO(stream.read()))
@@ -72,7 +73,7 @@ class ObjectTest(unittest.TestCase):
 
     def test_add_file(self):
         obj = Object(test_object_working_path)
-        obj.metadata.title = "A test object"
+        obj.metadata['title'] = "A test object"
         obj.add_file('jpg', test_file_path)
         obj.write()
 
