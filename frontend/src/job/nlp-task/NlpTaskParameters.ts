@@ -20,7 +20,7 @@ export interface NlpTaskOptions {
 // Export a helper funtcion to properly fromat the document creation
 // time string in the task options. (Could be a member of the NlpTaskOptions,
 // but converting that to a class is too much hassle)
-export function format_dct_string(date: Date): string {
+export function formatDCTString(date: Date): string {
     // Return only the date portion of an ISO formatted datetime,
     // e.g. "1970-01-01". Ignore the local timezone via UTC().
     const utc_date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0))
@@ -33,7 +33,7 @@ export function initOptions(): NlpTaskOptions {
         lang: 'en',
         tag_intervals: false,
         read_dct_from_metadata: false,
-        document_creation_time: format_dct_string(new Date()),
+        document_creation_time: formatDCTString(new Date()),
     };
 }
 
