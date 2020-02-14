@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
-import { NlpTaskOptions, format_dct_string } from "../NlpTaskParameters";
+import { NlpTaskOptions, formatDCTString } from "../NlpTaskParameters";
 
 @Component
 export default class NlpTaskOptionsForm extends Vue {
@@ -59,7 +59,7 @@ export default class NlpTaskOptionsForm extends Vue {
 
   @Watch("dct_field")
   onDctFieldChanged(dct_field: Date) {
-    this.options.document_creation_time = format_dct_string(dct_field);
+    this.options.document_creation_time = formatDCTString(dct_field);
     this.signalOptionsChanged();
   }
 
