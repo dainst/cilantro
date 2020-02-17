@@ -23,9 +23,9 @@ import { OCROptions } from './JobParameters';
 
 @Component
 export default class OCROptionsForm extends Vue {
-    @Prop({ required: true }) initialOptions!: OCROptions
+    @Prop({ required: true }) initialOptions!: OCROptions;
 
-    options: OCROptions = JSON.parse(JSON.stringify(this.initialOptions));
+    options: OCROptions = this.initialOptions;
 
     @Watch('options')
     onOptionsChanged(options: OCROptions) {

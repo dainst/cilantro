@@ -43,7 +43,7 @@ import OCROptionsForm from '@/job/OCROptionsForm.vue';
 })
 export default class JournalOptionsForm extends Vue {
     @Prop({ required: true }) initialOptions!: IngestJournalOptions;
-    options: IngestJournalOptions = JSON.parse(JSON.stringify(this.initialOptions));
+    options: IngestJournalOptions = this.initialOptions;
 
     @Watch('options')
     onOptionsChanged(options: IngestJournalOptions) {
