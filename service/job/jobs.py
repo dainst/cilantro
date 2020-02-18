@@ -313,7 +313,7 @@ class IngestJournalsJob(BatchJob):
             current_chain |= _link('publish_to_archive')
             current_chain |= _link('cleanup_directories',
                                     keep_staging=params['options']['app_options']['keep_staging'], 
-                                    staging_current_folder=issue_target['path'],
+                                    staging_current_folder=issue_target['path_f'],
                                     user_name=user_name)
             current_chain |= _link('finish_chain')
             chains.append(current_chain)
