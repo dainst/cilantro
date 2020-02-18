@@ -46,7 +46,7 @@ services:
       - mongo-data:/data
 
   service:
-    image: dainst/cilantro-service:0.2.1
+    image: dainst/cilantro-service:0.2.2
     volumes:
       - staging-data:/data/staging
       - repository-data:/data/repository
