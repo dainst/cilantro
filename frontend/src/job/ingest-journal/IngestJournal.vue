@@ -33,6 +33,10 @@
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event"
             />
+            <AppOptionsForm 
+                :initialOptions="this.parameters.options.app_options"  
+                @options-updated="this.parameters.options.app_options = $event" 
+                />
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
@@ -45,8 +49,9 @@ import { startJob } from '../JobClient';
 import JobFilesForm from '../JobFilesForm.vue';
 import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JournalOptionsForm from './IngestJournalOptionsForm.vue';
+import AppOptionsForm from '../AppOptionForm.vue';
 
-import { JobParameters, JobTargetError, OCROptions } from '../JobParameters';
+import { JobParameters, JobTargetError, OCROptions, AppOptions } from '../JobParameters';
 import {
     IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSMetadata
 } from './IngestJournalParameters';
@@ -60,6 +65,7 @@ import StartJobButton from '@/util/StartJobButton.vue';
         JobFilesForm,
         JournalMetadataForm,
         JournalOptionsForm,
+        AppOptionsForm,
         ContinueButton,
         StartJobButton
     }
@@ -71,6 +77,7 @@ export default class IngestJournal extends Vue {
 
     constructor() {
         super();
+        
         const options = {
             ojs_metadata: {
                 auto_publish_issue: false,
@@ -79,11 +86,14 @@ export default class IngestJournal extends Vue {
             } as OJSMetadata,
             ocr_options: {
                 do_ocr: false,
-                ocr_lang: 'eng'
-            } as OCROptions
+                ocr_lang: 'deu'
+            } as OCROptions,
+            app_options: { 
+                keep_staging: false 
+            } as AppOptions
         } as IngestJournalOptions;
 
-        this.parameters = new IngestJournalParameters([], options);
+        this.parameters = new IngestJournalParameters([], options );
     }
 
     continueToMetadata() {

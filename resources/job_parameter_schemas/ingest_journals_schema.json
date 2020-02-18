@@ -70,7 +70,8 @@
             "type": "object",
             "required": [
                 "ojs_metadata",
-                "ocr_options"
+                "ocr_options",
+                "app_options"
             ],
             "additionalProperties": false,
             "properties": {
@@ -107,6 +108,18 @@
                         },
                         "ocr_lang": {
                             "type": "string"
+                        }
+                    }
+                },
+                "app_options": {
+                    "type": "object",
+                    "required": [
+                        "keep_staging"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "keep_staging": {
+                            "type": "boolean"
                         }
                     }
                 }

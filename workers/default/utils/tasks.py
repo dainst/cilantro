@@ -69,7 +69,7 @@ class ListFilesTask(ObjectTask):
 ListFilesTask = celery_app.register_task(ListFilesTask())
 
 
-class CleanupWorkdirTask(BaseTask):
+class CleanupDirectoriesTask(BaseTask):
     """
     Remove the complete content of the working dir.
 
@@ -81,16 +81,27 @@ class CleanupWorkdirTask(BaseTask):
     -Empty working dir
     """
 
-    name = "cleanup_workdir"
+    name = "cleanup_directories"
     label = "Cleanup"
-    description = "Cleans up the internal working directory."
+    description = "Cleans up the internal directories."
+
 
     def execute_task(self):
+        keep_staging = self.get_param('keep_staging')
+        if (not keep_staging):
+            # delete staging folder if user doesn't want to keep it
+            staging_current_folder = self.get_param('staging_current_folder')
+            user = self.get_param('user_name')
+            staging_path = os.path.join(self.staging_dir, user, staging_current_folder )
+
+            shutil.rmtree(staging_path)
+
+        # delete temp folders
         work_path = self.get_work_path()
         shutil.rmtree(work_path)
 
 
-CleanupWorkdirTask = celery_app.register_task(CleanupWorkdirTask())
+CleanupDirectoriesTask = celery_app.register_task(CleanupDirectoriesTask())
 
 
 class FinishChainTask(BaseTask):
