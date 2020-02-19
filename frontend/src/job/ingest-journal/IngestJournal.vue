@@ -49,11 +49,11 @@ import { startJob } from '../JobClient';
 import JobFilesForm from '../JobFilesForm.vue';
 import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JournalOptionsForm from './IngestJournalOptionsForm.vue';
-import AppOptionsForm from '../AppOptionForm.vue';
+import AppOptionsForm from '../AppOptionsForm.vue';
 
 import { JobParameters, JobTargetError, OCROptions, AppOptions } from '../JobParameters';
 import {
-    IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSMetadata
+    IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSOptions
 } from './IngestJournalParameters';
 
 import { showError, showSuccess } from '@/util/Notifier';
@@ -79,11 +79,11 @@ export default class IngestJournal extends Vue {
         super();
         
         const options = {
-            ojs_metadata: {
+            ojs_options: {
                 auto_publish_issue: false,
                 default_create_frontpage: true,
                 allow_upload_without_file: false
-            } as OJSMetadata,
+            } as OJSOptions,
             ocr_options: {
                 do_ocr: false,
                 ocr_lang: 'deu'

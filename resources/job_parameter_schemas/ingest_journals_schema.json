@@ -69,13 +69,13 @@
         "options": {
             "type": "object",
             "required": [
-                "ojs_metadata",
+                "ojs_options",
                 "ocr_options",
                 "app_options"
             ],
             "additionalProperties": false,
             "properties": {
-                "ojs_metadata": {
+                "ojs_options": {
                     "type": "object",
                     "required": [
                         "auto_publish_issue",

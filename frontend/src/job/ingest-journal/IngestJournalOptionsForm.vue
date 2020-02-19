@@ -5,17 +5,17 @@
                 <p class="title">OJS Options</p>
                 <b-field>
                     <b-switch
-                        v-model="options.ojs_metadata.auto_publish_issue"
+                        v-model="options.ojs_options.auto_publish_issue"
                     >Automatically publish issue</b-switch>
                 </b-field>
                 <b-field>
                     <b-switch
-                        v-model="options.ojs_metadata.default_create_frontpage"
+                        v-model="options.ojs_options.default_create_frontpage"
                     >Always create frontpage</b-switch>
                 </b-field>
                 <b-field>
                     <b-switch
-                        v-model="options.ojs_metadata.allow_upload_without_file"
+                        v-model="options.ojs_options.allow_upload_without_file"
                     >Allow upload without file</b-switch>
                 </b-field>
             </div>

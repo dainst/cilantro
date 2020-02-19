@@ -91,7 +91,7 @@ class JobsTest(unittest.TestCase):
         job_publish = IngestJournalsJob(job_params, 'test_user')
 
         job_params = dict(job_params)
-        job_params['options']['ojs_metadata']['auto_publish_issue'] = False
+        job_params['options']['ojs_options']['auto_publish_issue'] = False
 
         job_no_publish = IngestJournalsJob(job_params, 'test_user')
 

@@ -90,12 +90,39 @@
         },
         "options": {
             "type": "object",
+            "required": [
+                "ocr_options",
+                "app_options"
+            ],
+            "additionalProperties": false,
             "properties": {
-                "do_ocr": {
-                    "type": "boolean"
+                "ocr_options": {
+                    "type": "object",
+                    "required": [
+                        "do_ocr",
+                        "ocr_lang"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "do_ocr": {
+                            "type": "boolean"
+                        },
+                        "ocr_lang": {
+                            "type": "string"
+                        }
+                    }
                 },
-                "ocr_lang": {
-                    "type": "string"
+                "app_options": {
+                    "type": "object",
+                    "required": [
+                        "keep_staging"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "keep_staging": {
+                            "type": "boolean"
+                        }
+                    }
                 }
             }
         }

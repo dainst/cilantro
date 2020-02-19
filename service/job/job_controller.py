@@ -146,7 +146,7 @@ def journal_job_create():
                 }
             }],
             "options": {
-                "ojs_metadata": {
+                "ojs_options": {
                     "auto_publish_issue": true,
                     "default_create_frontpage": true,
                     "allow_upload_without_file": false
@@ -405,7 +405,7 @@ def get_job_param_schema(job_type):
                         "ocr_lang": {
                             "type": "string"
                         },
-                        "ojs_metadata": {
+                        "ojs_options": {
                             "additionalProperties": false,
                             "properties": {
                                 "allow_upload_without_file": {
@@ -435,7 +435,7 @@ def get_job_param_schema(job_type):
                         }
                     },
                     "required": [
-                        "ojs_metadata",
+                        "ojs_options",
                         "do_ocr",
                         "nlp_params"
                     ],
