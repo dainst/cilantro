@@ -44,7 +44,6 @@ export interface IngestJournalOptions {
 }
 
 export interface OJSMetadata {
-    auto_publish_issue: boolean;
     default_create_frontpage: boolean;
     allow_upload_without_file: boolean;
 }

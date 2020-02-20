@@ -5,11 +5,6 @@
                 <p class="title">OJS Options</p>
                 <b-field>
                     <b-switch
-                        v-model="options.ojs_metadata.auto_publish_issue"
-                    >Automatically publish issue</b-switch>
-                </b-field>
-                <b-field>
-                    <b-switch
                         v-model="options.ojs_metadata.default_create_frontpage"
                     >Always create frontpage</b-switch>
                 </b-field>
