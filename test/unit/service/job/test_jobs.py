@@ -78,28 +78,9 @@ class JobsTest(unittest.TestCase):
         chain_length = len(job.chord.tasks[0].tasks)
 
         self.assertEqual(chain_length, 11,
-                         'each default journal import chain should consist of 13 subtasks.')
+                         'each default journal import chain should consist of 11 subtasks.')
 
-    def test_import_journals_job_no_publish(self):
-        """Test autopublish option for journal batch import."""
-        test_params_path = os.path.join(
-            self.test_resource_dir, 'params/journal.json')
 
-        with open(test_params_path, 'r') as params_file:
-            job_params = json.loads(params_file.read())
-
-        job_publish = IngestJournalsJob(job_params, 'test_user')
-
-        job_params = dict(job_params)
-        job_params['options']['ojs_metadata']['auto_publish_issue'] = False
-
-        job_no_publish = IngestJournalsJob(job_params, 'test_user')
-
-        publish_chain_length = len(job_publish.chord.tasks[0].tasks)
-        no_publish_chain_length = len(job_no_publish.chord.tasks[0].tasks)
-
-        self.assertTrue(publish_chain_length == no_publish_chain_length + 1,
-                        'the job without publish option should result in a chain one task shorter')
 
     def test_import_journal_job_no_ocr(self):
         """Test OCR option for journal batch import."""
