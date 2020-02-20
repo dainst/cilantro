@@ -77,7 +77,7 @@ class JobsTest(unittest.TestCase):
 
         chain_length = len(job.chord.tasks[0].tasks)
 
-        self.assertEqual(chain_length, 13,
+        self.assertEqual(chain_length, 11,
                          'each default journal import chain should consist of 13 subtasks.')
 
     def test_import_journals_job_no_publish(self):

@@ -309,8 +309,6 @@ class IngestJournalsJob(BatchJob):
                 current_chain |= _link('publish_to_ojs',
                                        ojs_metadata=params['options']['ojs_metadata'],
                                        ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
-            current_chain |= _link('publish_to_repository')
-            current_chain |= _link('publish_to_archive')
             current_chain |= _link('cleanup_workdir')
             current_chain |= _link('finish_chain')
             chains.append(current_chain)
