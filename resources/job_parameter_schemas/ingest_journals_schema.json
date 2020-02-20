@@ -77,7 +77,6 @@
                 "ojs_metadata": {
                     "type": "object",
                     "required": [
-                        "auto_publish_issue",
                         "default_create_frontpage",
                         "allow_upload_without_file"
                     ],
