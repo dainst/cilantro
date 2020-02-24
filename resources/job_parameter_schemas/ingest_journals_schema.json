@@ -78,8 +78,7 @@
                     "type": "object",
                     "required": [
                         "auto_publish_issue",
-                        "default_create_frontpage",
-                        "allow_upload_without_file"
+                        "default_create_frontpage"
                     ],
                     "additionalProperties": false,
                     "properties": {
@@ -87,9 +86,6 @@
                             "type": "boolean"
                         },
                         "default_create_frontpage": {
-                            "type": "boolean"
-                        },
-                        "allow_upload_without_file": {
                             "type": "boolean"
                         }
                     }

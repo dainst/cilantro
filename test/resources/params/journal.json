@@ -17,8 +17,7 @@
     "options": {
         "ojs_metadata": {
             "auto_publish_issue": true,
-            "default_create_frontpage": true,
-            "allow_upload_without_file": false
+            "default_create_frontpage": true
         },
         "ocr_options": {
             "do_ocr": true,
