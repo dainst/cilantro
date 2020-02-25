@@ -4,7 +4,7 @@ Cilantro is a task runner designed to manage long running distributed jobs that
 operate on file system objects. Its backend is written in Python (3.6+) and uses
 [Celery](http://docs.celeryproject.org/) and [Flask](http://flask.pocoo.org/).
 Its frontend is written in JavaScript and uses
-[AngularJS](https://angularjs.org/).
+[VueJS](https://vuejs.org/).
 
 ## Development
 
