@@ -305,12 +305,9 @@ class IngestJournalsJob(BatchJob):
                                        task='convert.tif_to_txt',
                                        ocr_lang=params['options']['ocr_options']['ocr_lang'])
 
-            if params['options']['ojs_metadata']['auto_publish_issue']:
-                current_chain |= _link('publish_to_ojs',
-                                       ojs_metadata=params['options']['ojs_metadata'],
-                                       ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
-            current_chain |= _link('publish_to_repository')
-            current_chain |= _link('publish_to_archive')
+            current_chain |= _link('publish_to_ojs',
+                                   ojs_metadata=params['options']['ojs_metadata'],
+                                   ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
             current_chain |= _link('cleanup_workdir')
             current_chain |= _link('finish_chain')
             chains.append(current_chain)

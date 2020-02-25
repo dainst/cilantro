@@ -73,7 +73,6 @@ export default class IngestJournal extends Vue {
         super();
         const options = {
             ojs_metadata: {
-                auto_publish_issue: false,
                 default_create_frontpage: true
             } as OJSMetadata,
             ocr_options: {

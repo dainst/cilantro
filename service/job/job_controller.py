@@ -147,7 +147,6 @@ def journal_job_create():
             }],
             "options": {
                 "ojs_metadata": {
-                    "auto_publish_issue": true,
                     "default_create_frontpage": true
                 }
             }
@@ -406,10 +405,7 @@ def get_job_param_schema(job_type):
                         },
                         "ojs_metadata": {
                             "additionalProperties": false,
-                            "properties":
-                                "auto_publish_issue": {
-                                    "type": "boolean"
-                                },
+                            "properties": {
                                 "default_create_frontpage": {
                                     "type": "boolean"
                                 },
@@ -423,7 +419,6 @@ def get_job_param_schema(job_type):
                             "required": [
                                 "ojs_journal_code",
                                 "ojs_user",
-                                "auto_publish_issue",
                                 "default_create_frontpage"
                             ],
                             "type": "object"
