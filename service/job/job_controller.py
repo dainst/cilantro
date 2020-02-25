@@ -147,8 +147,7 @@ def journal_job_create():
             }],
             "options": {
                 "ojs_metadata": {
-                    "default_create_frontpage": true,
-                    "allow_upload_without_file": false
+                    "default_create_frontpage": true
                 }
             }
         }
@@ -407,9 +406,6 @@ def get_job_param_schema(job_type):
                         "ojs_metadata": {
                             "additionalProperties": false,
                             "properties": {
-                                "allow_upload_without_file": {
-                                    "type": "boolean"
-                                },
                                 "default_create_frontpage": {
                                     "type": "boolean"
                                 },
@@ -423,8 +419,7 @@ def get_job_param_schema(job_type):
                             "required": [
                                 "ojs_journal_code",
                                 "ojs_user",
-                                "default_create_frontpage",
-                                "allow_upload_without_file"
+                                "default_create_frontpage"
                             ],
                             "type": "object"
                         }

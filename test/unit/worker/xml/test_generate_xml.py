@@ -26,8 +26,7 @@ class GenerateXMLTest(unittest.TestCase):
         params = {
             "ojs_metadata": {
                 "auto_publish_issue": False,
-                "default_create_frontpage": True,
-                "allow_upload_without_file": False}}
+                "default_create_frontpage": True}}
 
         generate_xml(obj, template_file, target_file_path,
                      params)

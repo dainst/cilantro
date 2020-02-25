@@ -77,8 +77,7 @@
                 "ojs_metadata": {
                     "type": "object",
                     "required": [
-                        "default_create_frontpage",
-                        "allow_upload_without_file"
+                        "default_create_frontpage"
                     ],
                     "additionalProperties": false,
                     "properties": {
@@ -86,9 +85,6 @@
                             "type": "boolean"
                         },
                         "default_create_frontpage": {
-                            "type": "boolean"
-                        },
-                        "allow_upload_without_file": {
                             "type": "boolean"
                         }
                     }

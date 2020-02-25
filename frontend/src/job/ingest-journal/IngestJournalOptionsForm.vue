@@ -8,11 +8,6 @@
                         v-model="options.ojs_metadata.default_create_frontpage"
                     >Always create frontpage</b-switch>
                 </b-field>
-                <b-field>
-                    <b-switch
-                        v-model="options.ojs_metadata.allow_upload_without_file"
-                    >Allow upload without file</b-switch>
-                </b-field>
             </div>
             <div class="tile is-child box">
                 <OCROptionsForm

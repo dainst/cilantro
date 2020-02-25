@@ -45,7 +45,6 @@ export interface IngestJournalOptions {
 
 export interface OJSMetadata {
     default_create_frontpage: boolean;
-    allow_upload_without_file: boolean;
 }
 
 export type MaybeJobTarget = JobTargetData | JobTargetError;

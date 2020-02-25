@@ -1,7 +1,8 @@
 FROM node:12.6.0-alpine as builder
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache git
+RUN apk update
+RUN apk upgrade
+RUN apk add --no-cache git
 
 COPY ./.git /src/.git
 COPY ./frontend/package.json /src/frontend/package.json
