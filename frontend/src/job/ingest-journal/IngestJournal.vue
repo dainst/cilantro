@@ -99,7 +99,7 @@ export default class IngestJournal extends Vue {
     hasInvalidTargets() {
         return this.parameters.targets.filter(
             target => target instanceof JobTargetError
-        ).length > 0;
+        ).length > 0 || this.parameters.targets.length === 0;
     }
 
     async startJob() {
