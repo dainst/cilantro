@@ -27,7 +27,7 @@ class IngestArchivalMaterialTest(JobTypeTest):
             job_from_db['children'][0]['job_id'])
 
         files_generated = [
-            f"data/pdf/{params['targets'][0]['id']}.pdf",
+            f"data/pdf/{first_batch_job_in_job_from_db['object_id']}.pdf",
             'meta.json']
         for file in files_generated:
             self.assert_file_in_repository(

@@ -23,7 +23,7 @@ x-env-app-config: &env-app-config
   BACKEND_URI: &backend-uri https://workbench.test.idai.world/api
   CILANTRO_ENV: &cilantro-env test
   OJS_URI: &ojs-uri https://ojs.test.idai.world/plugins/generic/ojs-cilantro-plugin/api
-  ATOM_URI: &atom-uri https://archives.test.idai.world/
+  ATOM_URI: &atom-uri https://archives.test.idai.world
   REPOSITORY_URI: &repository-uri https://workbench.test.idai.world/api/repository
 
 services:
@@ -46,7 +46,7 @@ services:
       - mongo-data:/data
 
   service:
-    image: dainst/cilantro-service:0.2.2
+    image: dainst/cilantro-service:0.2.3
     volumes:
       - staging-data:/data/staging
       - repository-data:/data/repository
@@ -74,7 +74,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:0.2.1
+    image: dainst/cilantro-default-worker:0.2.2
     working_dir: /app
     volumes:
       - staging-data:/data/staging
@@ -98,7 +98,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:0.2.1
+    image: dainst/cilantro-convert-worker:0.2.2
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -111,7 +111,7 @@ services:
       CILANTRO_ENV: *cilantro-env
 
   frontend:
-    image: dainst/cilantro-frontend:0.2.3
+    image: dainst/cilantro-frontend:0.2.4
     networks:
       - default
       - web

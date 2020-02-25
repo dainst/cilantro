@@ -26,19 +26,16 @@ class CreateObjectTask(ObjectTask):
     description = "Sets up metadata for further processing."
 
     def process_object(self, obj):
-        oid = self._get_object_id()
+        oid = self._generate_object_id()
 
         self.job_db.set_job_object_id(self.parent_job_id, oid)
         _initialize_object(obj, self.params, oid)
         return {'object_id': oid}
 
-    def _get_object_id(self):
-        try:
-            object_id = self.get_param('id')
-        except KeyError:
-            object_id = self.job_id
-        uid = self.job_db.generate_unique_object_identifier()
-        return object_id + f"_{uid}"
+    def _generate_object_id(self):
+        part_a = self.get_param('id')
+        part_b = self.job_db.generate_unique_object_identifier()
+        return f"{part_a}_{part_b}"
 
 
 CreateObjectTask = celery_app.register_task(CreateObjectTask())
@@ -52,7 +49,7 @@ def _get_work_path(params):
 
 
 def _initialize_object(obj, params, oid):
-    obj.id = params['id']
+    obj.id = oid
     obj.metadata = params['metadata']
     _initialize_files(obj, params['path'], params['user'],
                       params['initial_representation'])
