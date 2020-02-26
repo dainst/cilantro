@@ -229,10 +229,11 @@ class IngestArchivalMaterialsJob(BatchJob):
             subject_string += f"Level of description:\n{metadata['level_of_description']}\n\n"
 
         if "notes" in metadata and len(metadata["notes"]) != 0:
+            notes_string = ""
             for note in metadata["notes"]:
-                nodes_string += f"{note}\n"
-            nodes_string += "\n"
-            subject_string += nodes_string
+                notes_string += f"{note}\n"
+            notes_string += "\n"
+            subject_string += notes_string
 
         if "dates" in metadata and len(metadata["dates"]) != 0:
             dates_string = ""
