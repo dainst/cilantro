@@ -195,7 +195,8 @@ class IngestArchivalMaterialsJob(BatchJob):
         if "title" in metadata:
             pdf_metadata["/Title"] = metadata["title"]
         if "atom_id" in metadata:
-            pdf_metadata["/ArchiveLink"] = f'https://archives.dainst.org/index.php/{metadata["atom_id"]}'
+            pdf_metadata[
+                "/ArchiveLink"] = f'https://archives.dainst.org/index.php/{metadata["atom_id"]}'
 
         if "authors" in metadata and len(metadata["authors"]) != 0:
             authors_string = ""
@@ -210,7 +211,7 @@ class IngestArchivalMaterialsJob(BatchJob):
         subject_string = ""
         if "scope_and_content" in metadata:
             subject_string += f"Eingrenzung und Inhalt:\n{metadata['scope_and_content']}\n\n"
-        
+
         repository_string = ""
         if "repository" in metadata:
             repository_string += f"Archiv:\n{metadata['repository']}"
@@ -277,8 +278,9 @@ class IngestArchivalMaterialsJob(BatchJob):
                 count += 1
             subject_string += dates_string
 
-        if subject_string:
-            pdf_metadata['/Subject'] = subject_string
+        subject_string += "\nCopyright © Deutsches Archäologisches Institut"
+
+        pdf_metadata['/Subject'] = subject_string
 
         return pdf_metadata
 
