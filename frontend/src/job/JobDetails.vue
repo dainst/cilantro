@@ -7,6 +7,25 @@
                     @click="goToSingleView(job.parent_job_id)">
                     <b-icon icon="arrow-top-left"></b-icon></b-button> {{job.name}}
             </div>
+            <b-message v-if="job.errors && job.errors.length > 0"
+                       title="Errors" type="is-danger" has-icon :closable="false">
+                <b-table :data="job.errors">
+                    <template slot-scope="props">
+                        <b-table-column field="job_name" label="Failed task name">
+                            {{props.row.job_name}}
+                        </b-table-column>
+                        <b-table-column field="job_id" label="Failed task ID">
+                            {{props.row.job_id}}
+                        </b-table-column>
+                        <b-table-column field="message" label="Error">
+                            {{ props.row.message}}
+                        </b-table-column>
+                        <b-table-column field="job_id" label="">
+                            <b-button @click="goToSingleView(props.row.job_id)">Show Task</b-button>
+                        </b-table-column>
+                    </template>
+                </b-table>
+            </b-message>
             <b-field label="ID">
                 <p>{{job.job_id}}</p>
             </b-field>
@@ -56,7 +75,7 @@
 
             <b-collapse class="card" :open="false" aria-id="job-params">
                 <div
-                    slot="trigger" 
+                    slot="trigger"
                     slot-scope="props"
                     class="card-header"
                     role="button"
@@ -75,29 +94,11 @@
                 </div>
             </b-collapse>
 
-            <b-message v-if="job.errors && job.errors.length > 0"
-                       title="Errors" type="is-danger" has-icon :closable="false">
-                <b-table :data="job.errors">
-                    <template slot-scope="props">
-                        <b-table-column field="job_name" label="Failed task name">
-                            {{props.row.job_name}}
-                        </b-table-column>
-                        <b-table-column field="job_id" label="Failed task ID">
-                            {{props.row.job_id}}
-                        </b-table-column>
-                    <b-table-column field="message" label="Error">
-                        {{ props.row.message}}
-                    </b-table-column>
-                    <b-table-column field="job_id" label="">
-                        <b-button @click="goToSingleView(props.row.job_id)">Show Task</b-button>
-                    </b-table-column>
-                    </template>
-                </b-table>
-            </b-message>
+
 
             <b-collapse class="card" :open="false" aria-id="job-log" v-if="job.log && job.log.length > 0">
                 <div
-                    slot="trigger" 
+                    slot="trigger"
                     slot-scope="props"
                     class="card-header"
                     role="button"
