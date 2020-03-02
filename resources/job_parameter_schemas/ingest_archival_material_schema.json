@@ -80,6 +80,9 @@
                             "repository": {
                                 "type": "string"
                             },
+                            "repository_inherited_from": {
+                                "type": "string"
+                            },
                             "scope_and_content": {
                                 "type": "string"
                             }

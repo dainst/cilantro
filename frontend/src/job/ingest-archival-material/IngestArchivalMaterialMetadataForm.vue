@@ -179,6 +179,7 @@ async function loadAtomData(target: JobTargetData) {
             authors,
             scope_and_content: atomRecord.scope_and_content,
             repository: atomRecord.repository,
+            repository_inherited_from: atomRecord.repository_inherited_from,
             creators: atomRecord.creators.map(
                 creator => creator.authotized_form_of_name
             ),

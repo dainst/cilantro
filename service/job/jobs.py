@@ -209,24 +209,42 @@ class IngestArchivalMaterialsJob(BatchJob):
 
         subject_string = ""
         if "scope_and_content" in metadata:
-            subject_string += f"Scope and content:\n{metadata['scope_and_content']}\n\n"
+            subject_string += f"Eingrenzung und Inhalt:\n{metadata['scope_and_content']}\n\n"
+        
+        repository_string = ""
         if "repository" in metadata:
-            subject_string += f"Repository:\n{metadata['repository']}\n\n"
+            repository_string += f"Archiv:\n{metadata['repository']}"
+        if "repository_inherited_from" in metadata:
+            repository_string += f"\nBestand: {metadata['repository_inherited_from']}"
+        if repository_string:
+            subject_string += f"{repository_string}\n\n"
+
         if "reference_code" in metadata:
-            subject_string += f"Reference code:\n{metadata['reference_code']}\n\n"
+            subject_string += f"Signatur:\n{metadata['reference_code']}\n\n"
 
         if "creators" in metadata and metadata['creators'] != 0:
-            creators_string = "Creators:\n"
+            creators_string = "Bestandsbildner:\n"
             for creator in metadata['creators']:
                 creators_string += f"{creator}\n"
             creators_string += "\n"
             subject_string += creators_string
 
         if "extent_and_medium" in metadata:
-            subject_string += f"Extend and medium:\n{metadata['extent_and_medium']}\n\n"
+            subject_string += f"Umfang und Medium:\n{metadata['extent_and_medium']}\n\n"
+
+        level_of_description_translations = {
+            "Fonds": "Bestand",
+            "File": "Akte",
+            "Item": "Objekt"
+        }
 
         if "level_of_description" in metadata:
-            subject_string += f"Level of description:\n{metadata['level_of_description']}\n\n"
+            subject_string += f"Erschließungsstufe: "
+            if metadata['level_of_description'] in level_of_description_translations:
+                subject_string += level_of_description_translations[metadata['level_of_description']]
+            else:
+                subject_string += metadata['level_of_description']
+            subject_string += "\n\n"
 
         if "notes" in metadata and len(metadata["notes"]) != 0:
             notes_string = ""
@@ -235,20 +253,28 @@ class IngestArchivalMaterialsJob(BatchJob):
             notes_string += "\n"
             subject_string += notes_string
 
+        date_type_translations = {
+            "Creation": "Datum",
+            "Accumulation": "Laufzeit"
+        }
         if "dates" in metadata and len(metadata["dates"]) != 0:
             dates_string = ""
             count = 0
             for date in metadata["dates"]:
                 if count != 0:
                     dates_string += " | "
-                dates_string += f"Date ({date['type']}): "
+
+                if date['type'] in date_type_translations:
+                    dates_string += f"{date_type_translations[date['type']]}: "
+                else:
+                    dates_string += f"Datum ({date['type']}): "
+
                 if date["start_date"] == date["end_date"]:
                     dates_string += date["date"]
                 else:
                     dates_string += f"{date['start_date']} - {date['end_date']}"
                 dates_string += "\n"
                 count += 1
-            dates_string += "\n"
             subject_string += dates_string
 
         if subject_string:

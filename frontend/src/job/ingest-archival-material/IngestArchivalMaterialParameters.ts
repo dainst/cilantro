@@ -37,6 +37,7 @@ export class ArchivalMaterialMetadata {
     level_of_description?: string;
     extent_and_medium?: string;
     repository?: string;
+    repository_inherited_from?: string;
     scope_and_content?: string;
 
     constructor(atomId: string) {
