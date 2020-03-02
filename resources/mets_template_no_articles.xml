@@ -75,7 +75,7 @@
         <mets:fileGrp USE="DOWNLOAD">
             <mets:file ID="PDF1" MIMETYPE="application/pdf">
                 {% for file_path in glob(obj.get_representation_dir('pdf') + '/*.pdf')|sort() %}
-                    <mets:FLocat LOCTYPE="URL" xlink:href="path_join(server_url, 'repository', 'file', object_id, 'data', 'pdf', basename(file_path))"/>
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(server_url, 'repository', 'file', object_id, 'data', 'pdf', basename(file_path))}}"/>
                 {% endfor %}
             </mets:file>
         </mets:fileGrp>
