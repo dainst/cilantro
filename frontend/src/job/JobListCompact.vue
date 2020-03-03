@@ -39,10 +39,7 @@ export default class JobListCompact extends Vue {
     jobList: Job[] = [];
 
     getUnfinishedJobs() {
-        if (Array.isArray(this.jobList)) {
-            return this.jobList.filter(job => job.state !== 'success');
-        } 
-        return [];
+        return this.jobList.filter(job => job.state !== 'success');
     }
 
     iconAttributesForState = iconAttributesForState
@@ -51,7 +48,7 @@ export default class JobListCompact extends Vue {
         try {
             this.jobList = await getJobList();
         } catch (e) {
-            showError('Failed to load job list from server', e.message);
+            showError('Failed to load job list from server', e);
         }
         this.jobList.reverse();
     }
