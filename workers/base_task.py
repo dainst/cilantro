@@ -71,6 +71,7 @@ class BaseTask(Task):
     """
 
     working_dir = os.environ['WORKING_DIR']
+    staging_dir = os.environ['STAGING_DIR']
     params = {}
     results = {}
     work_path = None

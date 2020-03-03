@@ -24,7 +24,7 @@ class GenerateXMLTest(unittest.TestCase):
         template_file = 'mets_template_no_articles.xml'
         target_file_path = os.path.join(obj.path, 'test_ojsxml.xml')
         params = {
-            "ojs_metadata": {
+            "ojs_options": {
                 "auto_publish_issue": False,
                 "default_create_frontpage": True}}
 
