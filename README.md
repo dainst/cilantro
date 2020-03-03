@@ -123,6 +123,13 @@ After that re-run the tests and they may succeed.
     
 * If you run into an error using `make run-frontend`on mac, run `softwareupdate --install -a` to update the whole system to the newest state. If the error remains, check if it is this Error-Code: `getaddrinfo ENOTFOUND x86_64-apple-darwin13.4.0`, if so use the command `unset HOST`and retry the make call.
 
+* On Mac's on can encounter an error after running `make run-frontend` of that kind 
+
+    getaddrinfo ENOTFOUND x86_64-apple-darwin13.4.0
+    
+    to fix this one needs to run the command `unset HOST` in the Terminal and re-run the `make run-frontend` command. 
+   
+
 ## Code style
 
 ### Python
