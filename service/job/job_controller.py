@@ -149,7 +149,6 @@ def journal_job_create():
                 "ojs_options": {
                     "auto_publish_issue": true,
                     "default_create_frontpage": true,
-                    "allow_upload_without_file": false
                 }
             }
         }
