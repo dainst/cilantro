@@ -15,10 +15,8 @@
         }
     ],
     "options": {
-        "ojs_options": {
-            "auto_publish_issue": true,
-            "default_create_frontpage": true,
-            "allow_upload_without_file": false
+        "ojs_metadata": {
+            "default_create_frontpage": true
         },
         "ocr_options": {
             "do_ocr": true,

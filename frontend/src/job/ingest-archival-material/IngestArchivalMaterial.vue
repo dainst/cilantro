@@ -30,10 +30,6 @@
             <OCROptionsForm
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event" />
-            <AppOptionsForm 
-                :initialOptions="this.parameters.options.app_options"  
-                @options-updated="this.parameters.options.app_options = $event" 
-                />
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
@@ -43,7 +39,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import JobFilesForm from '@/job/JobFilesForm.vue';
 import OCROptionsForm from '@/job/OCROptionsForm.vue';
-import AppOptionsForm from '@/job/AppOptionsForm.vue';
 import ArchivalMaterialMetadataForm from './IngestArchivalMaterialMetadataForm.vue';
 
 import { startJob } from '../JobClient';
@@ -51,9 +46,9 @@ import { showError, showSuccess } from '@/util/Notifier.ts';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
 
-import { JobTargetError, OCROptions, AppOptions } from '../JobParameters';
+import { JobTargetError, OCROptions } from '../JobParameters';
 import {
-    IngestArchivalMaterialParameters, MaybeJobTarget, IngestArchivalOptions
+    IngestArchivalMaterialParameters, MaybeJobTarget
 } from './IngestArchivalMaterialParameters';
 
 @Component({
@@ -61,7 +56,6 @@ import {
         JobFilesForm,
         ArchivalMaterialMetadataForm,
         OCROptionsForm,
-        AppOptionsForm,
         ContinueButton,
         StartJobButton
     }
@@ -75,14 +69,9 @@ export default class IngestArchivalMaterial extends Vue {
         super();
 
         const options = {
-            ocr_options: {
-                do_ocr: false,
-                ocr_lang: 'deu'
-            } as OCROptions,
-            app_options: { 
-                keep_staging: false 
-            } as AppOptions
-        } as IngestArchivalOptions;
+            do_ocr: false,
+            ocr_lang: 'eng'
+        } as OCROptions;
 
         this.parameters = new IngestArchivalMaterialParameters([], options);
     }

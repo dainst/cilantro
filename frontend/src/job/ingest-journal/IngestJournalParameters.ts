@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import {
-    JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions, AppOptions
+    JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions
 } from '../JobParameters';
 
 export class IngestJournalParameters implements JobParameters {
@@ -39,13 +39,11 @@ export class JournalIssueMetadata {
 }
 
 export interface IngestJournalOptions {
-    ojs_options: OJSOptions;
+    ojs_metadata: OJSMetadata;
     ocr_options: OCROptions;
-    app_options: AppOptions;
 }
 
-export interface OJSOptions {
-    auto_publish_issue: boolean;
+export interface OJSMetadata {
     default_create_frontpage: boolean;
 }
 

@@ -126,7 +126,7 @@ export default class StagingBrowser extends Vue {
             this.$emit('files-selected', []);
             this.operationInProgress = false;
         } catch (e) {
-            showError('Failed to retrieve file list from server!', 'test');
+            showError('Failed to retrieve file list from server!', e);
         }
     }
 

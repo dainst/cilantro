@@ -163,18 +163,16 @@ class IngestArchivalMaterialsJob(BatchJob):
                                    representation='tif',
                                    target='pdf',
                                    task='convert.tif_to_pdf')
-
             current_chain |= _link('convert.merge_converted_pdf')
-
             current_chain |= _link('convert.set_pdf_metadata',
                                    metadata=self._create_pdf_metadata(record_target['metadata']))
 
-            if params['options']['ocr_options']['do_ocr']:
+            if params['options']['do_ocr']:
                 current_chain |= _link('list_files',
                                        representation='tif',
                                        target='txt',
                                        task='convert.tif_to_txt',
-                                       ocr_lang=params['options']['ocr_options']['ocr_lang'])
+                                       ocr_lang=params['options']['ocr_lang'])
 
             current_chain |= _link('generate_xml',
                                    template_file='mets_template_no_articles.xml',
@@ -185,11 +183,7 @@ class IngestArchivalMaterialsJob(BatchJob):
             current_chain |= _link('publish_to_atom')
             current_chain |= _link('publish_to_archive')
 
-            current_chain |= _link('cleanup_directories',
-                                    keep_staging=params['options']['app_options']['keep_staging'], 
-                                    staging_current_folder=record_target['path'],
-                                    user_name=user_name)
-
+            current_chain |= _link('cleanup_workdir')
             current_chain |= _link('finish_chain')
 
             chains.append(current_chain)
@@ -327,13 +321,12 @@ class IngestJournalsJob(BatchJob):
             current_chain |= _link('generate_xml',
                                    template_file='ojs3_template_issue.xml',
                                    target_filename='ojs_import.xml',
-                                   ojs_options=params['options']['ojs_options'])
+                                   ojs_metadata=params['options']['ojs_metadata'])
 
             current_chain |= _link('generate_xml',
                                    template_file='mets_template_no_articles.xml',
                                    target_filename='mets.xml',
                                    schema_file='mets.xsd')
-
             if params['options']['ocr_options']['do_ocr']:
                 current_chain |= _link('list_files',
                                        representation='tif',
@@ -341,17 +334,10 @@ class IngestJournalsJob(BatchJob):
                                        task='convert.tif_to_txt',
                                        ocr_lang=params['options']['ocr_options']['ocr_lang'])
 
-            if params['options']['ojs_options']['auto_publish_issue']:
-                current_chain |= _link('publish_to_ojs',
-                                       ojs_options=params['options']['ojs_options'],
-                                       ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
-
-            current_chain |= _link('publish_to_repository')
-            current_chain |= _link('publish_to_archive')
-            current_chain |= _link('cleanup_directories',
-                                    keep_staging=params['options']['app_options']['keep_staging'], 
-                                    staging_current_folder=issue_target['path'],
-                                    user_name=user_name)
+            current_chain |= _link('publish_to_ojs',
+                                   ojs_metadata=params['options']['ojs_metadata'],
+                                   ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
+            current_chain |= _link('cleanup_workdir')
             current_chain |= _link('finish_chain')
             chains.append(current_chain)
 

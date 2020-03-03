@@ -26,10 +26,6 @@ export interface OCROptions {
     ocr_lang: string;
 }
 
-export interface AppOptions {
-    keep_staging: boolean;
-} 
-
 export function isTargetError(o: any) {
     return o instanceof JobTargetError;
 }

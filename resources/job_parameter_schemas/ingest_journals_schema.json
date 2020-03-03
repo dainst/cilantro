@@ -69,13 +69,12 @@
         "options": {
             "type": "object",
             "required": [
-                "ojs_options",
-                "ocr_options",
-                "app_options"
+                "ojs_metadata",
+                "ocr_options"
             ],
             "additionalProperties": false,
             "properties": {
-                "ojs_options": {
+                "ojs_metadata": {
                     "type": "object",
                     "required": [
                         "default_create_frontpage"
@@ -103,18 +102,6 @@
                         },
                         "ocr_lang": {
                             "type": "string"
-                        }
-                    }
-                },
-                "app_options": {
-                    "type": "object",
-                    "required": [
-                        "keep_staging"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                        "keep_staging": {
-                            "type": "boolean"
                         }
                     }
                 }

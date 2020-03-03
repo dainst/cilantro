@@ -1,5 +1,5 @@
 import {
-    JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions, AppOptions
+    JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions
 } from '../JobParameters';
 import { AtomDate } from '@/util/AtomClient';
 
@@ -7,9 +7,9 @@ import { AtomDate } from '@/util/AtomClient';
 
 export class IngestArchivalMaterialParameters implements JobParameters {
     targets: MaybeJobTarget[];
-    options: IngestArchivalOptions;
+    options: OCROptions;
 
-    constructor(target: MaybeJobTarget[], options: IngestArchivalOptions) {
+    constructor(target: MaybeJobTarget[], options: OCROptions) {
         this.targets = target;
         this.options = options;
     }
@@ -19,7 +19,6 @@ export class JobTargetData implements GenericJobTargetData {
     id: string;
     path: string;
     metadata: ArchivalMaterialMetadata;
-
     constructor(id: string, path: string, metadata: ArchivalMaterialMetadata) {
         this.id = id;
         this.path = path;
@@ -44,11 +43,6 @@ export class ArchivalMaterialMetadata {
     constructor(atomId: string) {
         this.atom_id = atomId;
     }
-}
-
-export interface IngestArchivalOptions {
-    ocr_options: OCROptions;
-    app_options: AppOptions;
 }
 
 export type MaybeJobTarget = JobTargetData | JobTargetError;

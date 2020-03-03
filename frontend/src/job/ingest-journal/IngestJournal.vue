@@ -33,10 +33,6 @@
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event"
             />
-            <AppOptionsForm 
-                :initialOptions="this.parameters.options.app_options"  
-                @options-updated="this.parameters.options.app_options = $event" 
-                />
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
@@ -49,11 +45,10 @@ import { startJob } from '../JobClient';
 import JobFilesForm from '../JobFilesForm.vue';
 import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JournalOptionsForm from './IngestJournalOptionsForm.vue';
-import AppOptionsForm from '../AppOptionsForm.vue';
 
-import { JobParameters, JobTargetError, OCROptions, AppOptions } from '../JobParameters';
+import { JobParameters, JobTargetError, OCROptions } from '../JobParameters';
 import {
-    IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSOptions
+    IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSMetadata
 } from './IngestJournalParameters';
 
 import { showError, showSuccess } from '@/util/Notifier';
@@ -65,7 +60,6 @@ import StartJobButton from '@/util/StartJobButton.vue';
         JobFilesForm,
         JournalMetadataForm,
         JournalOptionsForm,
-        AppOptionsForm,
         ContinueButton,
         StartJobButton
     }
@@ -77,23 +71,17 @@ export default class IngestJournal extends Vue {
 
     constructor() {
         super();
-        
         const options = {
-            ojs_options: {
-                auto_publish_issue: false,
-                default_create_frontpage: true,
-                allow_upload_without_file: false
-            } as OJSOptions,
+            ojs_metadata: {
+                default_create_frontpage: true
+            } as OJSMetadata,
             ocr_options: {
                 do_ocr: false,
-                ocr_lang: 'deu'
-            } as OCROptions,
-            app_options: { 
-                keep_staging: false 
-            } as AppOptions
+                ocr_lang: 'eng'
+            } as OCROptions
         } as IngestJournalOptions;
 
-        this.parameters = new IngestJournalParameters([], options );
+        this.parameters = new IngestJournalParameters([], options);
     }
 
     continueToMetadata() {
