@@ -95,13 +95,17 @@ class BatchJob(BaseJob):
                 single_task.options['task_id'] = job_id
                 single_task.kwargs['work_path'] = current_work_path
                 single_task.kwargs['parent_job_id'] = current_chain_id
+                label = single_task.kwargs['label'] if 'label' in single_task.kwargs else 'Not initialized'
+                description = single_task.kwargs['description'] if 'description' in single_task.kwargs else 'Not initialized'
 
                 self.job_db.add_job(job_id=job_id,
                                     user=user_name,
                                     job_type=single_task.name,
                                     parent_job_id=current_chain_id,
                                     child_job_ids=[],
-                                    parameters=single_task.kwargs)
+                                    parameters=single_task.kwargs,
+                                    label=label,
+                                    description=description)
 
                 current_chain_links += [job_id]
 
