@@ -96,7 +96,7 @@ export default class SpecificJobsList extends Vue {
 
     async loadJobs() {
         if (this.jobIDs.length === 0) {
-            this.jobs = await getJobList(this.showAllJobs);
+            this.jobs = await getJobList();
         } else {
             for await (const id of this.jobIDs) { // eslint-disable-line no-restricted-syntax
                 this.jobs.push(await getJobDetails(id));
