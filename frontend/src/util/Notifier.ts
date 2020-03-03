@@ -8,7 +8,7 @@ export function showError(msg: string, consoleMessage?: string) {
         indefinite: true,
         queue: false
     });
-    if (consoleMessage) console.error(consoleMessage);
+    if (consoleMessage) console.log(consoleMessage);
 }
 
 export function showSuccess(msg: string) {
