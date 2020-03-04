@@ -43,10 +43,12 @@
             </template>
             <template slot="detail" slot-scope="props">
                 <div class="content">
+                    <ul>
+                        <li v-for="(data, name) in props.row.metadata" :key="data">{{name}}: {{data}}</li>
+                    </ul>
                     <ul v-if="isTargetError(props.row)">
                         <li v-for="message in props.row.messages" :key="message">{{ message }}</li>
                     </ul>
-                    <div v-else>No problems found for this folder path</div>
                 </div>
             </template>
         </b-table>
@@ -117,7 +119,7 @@ export default class ArchivalMaterialMetadataForm extends Vue {
         );
 
         this.targets = await asyncMap(this.targets, async(target) => {
-            if (target instanceof JobTargetData) {           
+            if (target instanceof JobTargetData) {
                 const updated : MaybeJobTarget = await loadAtomData(target);
                 return updated;
             }

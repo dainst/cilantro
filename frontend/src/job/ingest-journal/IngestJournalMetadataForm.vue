@@ -51,12 +51,12 @@
 
             <template slot="detail" slot-scope="props">
                 <div class="content">
+                    <ul>
+                        <li v-for="(id, name) in props.row.metadata" :key="id">{{name}}: {{id}}</li>
+                    </ul>
                     <ul v-if="isTargetError(props.row)">
                         <li v-for="message in props.row.messages" :key="message">{{ message }}</li>
                     </ul>
-                    <div v-else>
-                        No problems found for this folder path
-                    </div>
                 </div>
             </template>
         </b-table>
