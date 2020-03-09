@@ -1,10 +1,11 @@
 import os
-
+import logging
 from utils.celery_client import celery_app
 
 from workers.base_task import ObjectTask
 from workers.default.ojs.ojs_api import publish, generate_frontmatter
 
+log = logging.getLogger(__name__)
 
 def _generate_ojs_id(prefix, journal_code, result_id):
     return f"{prefix}-{journal_code}-{result_id}"
@@ -29,9 +30,8 @@ class PublishToOJSTask(ObjectTask):
         _, result = publish(os.path.join(work_path, 'ojs_import.xml'),
                             ojs_journal_code)
 
-        if (len(result['warnings']) > 0 and
-                'Existing issue' in result['warnings'][0]):
-            raise RuntimeError('Issue already exists in OJS')
+        if len(result['warnings']) > 0:
+            raise RuntimeError(result['warnings'])
         else:
             ojs_id = _generate_ojs_id('issue',
                                       ojs_journal_code,
