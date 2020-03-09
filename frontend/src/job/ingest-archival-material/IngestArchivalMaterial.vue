@@ -28,12 +28,13 @@
         <div v-if="activeStep === 2">
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
             <OCROptionsForm
-                :initialOptions="this.parameters.options"
-                @options-updated="this.parameters.options = $event" />
-            <AppOptionsForm 
-                :initialOptions="this.parameters.options.app_options"  
-                @options-updated="this.parameters.options.app_options = $event" 
-                />
+                :initialOptions="this.parameters.options.ocr_options"
+                @options-updated="this.parameters.options.ocr_options = $event"
+            />
+            <AppOptionsForm
+                :initialOptions="this.parameters.options.app_options"
+                @options-updated="this.parameters.options.app_options = $event"
+            />
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
@@ -79,8 +80,8 @@ export default class IngestArchivalMaterial extends Vue {
                 do_ocr: false,
                 ocr_lang: 'deu'
             } as OCROptions,
-            app_options: { 
-                keep_staging: false 
+            app_options: {
+                keep_staging: false
             } as AppOptions
         } as IngestArchivalOptions;
 
