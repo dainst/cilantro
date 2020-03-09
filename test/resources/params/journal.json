@@ -16,7 +16,6 @@
     ],
     "options": {
         "ojs_options": {
-            "auto_publish_issue": true,
             "default_create_frontpage": true
         },
         "ocr_options": {

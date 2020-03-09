@@ -74,13 +74,11 @@ class JobsTest(unittest.TestCase):
                             'ids for chains should be generated')
         self.assertEqual(len(
             job.chain_ids), 2, 'two chains should be generated, one for each "targets" item')
-        
+
         chain_length = len(job.chord.tasks[0].tasks)
 
-        self.assertEqual(chain_length, 13,
-                         'each default journal import chain should consist of 13 subtasks.')
-
-
+        self.assertEqual(chain_length, 11,
+                         'each default journal import chain should consist of 11 subtasks.')
 
     def test_import_journal_job_no_ocr(self):
         """Test OCR option for journal batch import."""

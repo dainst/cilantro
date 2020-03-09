@@ -150,7 +150,7 @@ class StagingControllerTest(unittest.TestCase):
 
     def test_delete_folder_in_folder(self):
         os.makedirs(os.path.join(self.staging_dir, test_user, 'test_dir',
-                    'test_sub_dir'))
+                                 'test_sub_dir'))
         response = self.client.delete(f'/staging/test_dir/test_sub_dir',
                                       headers=get_auth_header())
         self.assertEqual(response.status_code, 200)

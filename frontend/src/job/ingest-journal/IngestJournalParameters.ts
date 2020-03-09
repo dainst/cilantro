@@ -45,7 +45,6 @@ export interface IngestJournalOptions {
 }
 
 export interface OJSOptions {
-    auto_publish_issue: boolean;
     default_create_frontpage: boolean;
 }
 

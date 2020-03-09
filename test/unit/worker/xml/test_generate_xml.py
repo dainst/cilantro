@@ -25,8 +25,9 @@ class GenerateXMLTest(unittest.TestCase):
         target_file_path = os.path.join(obj.path, 'test_ojsxml.xml')
         params = {
             "ojs_options": {
-                "auto_publish_issue": False,
-                "default_create_frontpage": True}}
+                "default_create_frontpage": True
+            }
+        }
 
         generate_xml(obj, template_file, target_file_path,
                      params)

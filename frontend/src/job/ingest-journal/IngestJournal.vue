@@ -77,22 +77,21 @@ export default class IngestJournal extends Vue {
 
     constructor() {
         super();
-        
+
         const options = {
             ojs_options: {
-                auto_publish_issue: false,
-                default_create_frontpage: true,
+                default_create_frontpage: true
             } as OJSOptions,
             ocr_options: {
                 do_ocr: false,
                 ocr_lang: 'deu'
             } as OCROptions,
-            app_options: { 
-                keep_staging: false 
+            app_options: {
+                keep_staging: false
             } as AppOptions
         } as IngestJournalOptions;
 
-        this.parameters = new IngestJournalParameters([], options );
+        this.parameters = new IngestJournalParameters([], options);
     }
 
     continueToMetadata() {

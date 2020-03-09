@@ -190,9 +190,9 @@ class IngestArchivalMaterialsJob(BatchJob):
             current_chain |= _link('publish_to_archive')
 
             current_chain |= _link('cleanup_directories',
-                                    keep_staging=params['options']['app_options']['keep_staging'], 
-                                    staging_current_folder=record_target['path'],
-                                    user_name=user_name)
+                                   keep_staging=params['options']['app_options']['keep_staging'],
+                                   staging_current_folder=record_target['path'],
+                                   user_name=user_name)
 
             current_chain |= _link('finish_chain')
 
@@ -345,17 +345,15 @@ class IngestJournalsJob(BatchJob):
                                        task='convert.tif_to_txt',
                                        ocr_lang=params['options']['ocr_options']['ocr_lang'])
 
-            if params['options']['ojs_options']['auto_publish_issue']:
-                current_chain |= _link('publish_to_ojs',
-                                       ojs_options=params['options']['ojs_options'],
-                                       ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
+            current_chain |= _link('publish_to_ojs',
+                                   ojs_metadata=params['options']['ojs_options'],
+                                   ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
 
-            current_chain |= _link('publish_to_repository')
-            current_chain |= _link('publish_to_archive')
             current_chain |= _link('cleanup_directories',
-                                    keep_staging=params['options']['app_options']['keep_staging'], 
-                                    staging_current_folder=issue_target['path'],
-                                    user_name=user_name)
+                                   keep_staging=params['options']['app_options']['keep_staging'],
+                                   staging_current_folder=issue_target['path'],
+                                   user_name=user_name)
+
             current_chain |= _link('finish_chain')
             chains.append(current_chain)
 
