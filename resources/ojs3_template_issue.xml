@@ -10,7 +10,7 @@
         <number>{{metadata['number']}}</number>
         <year>{{metadata['reporting_year']}}</year>
     </issue_identification>
-    <date_published>{{metadata['publishing_year']}}</date_published>
+    <date_published>{{metadata['publishing_year']}}-01-01</date_published>
     <last_modified>{{datetime.date.today().isoformat()}}</last_modified>
     <issue_galleys xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
         <issue_galley>
