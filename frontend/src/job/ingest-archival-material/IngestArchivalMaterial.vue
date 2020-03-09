@@ -31,6 +31,7 @@
                 :initialOptions="this.parameters.options.ocr_options"
                 @options-updated="this.parameters.options.ocr_options = $event"
             />
+            <br/>
             <AppOptionsForm
                 :initialOptions="this.parameters.options.app_options"
                 @options-updated="this.parameters.options.app_options = $event"
