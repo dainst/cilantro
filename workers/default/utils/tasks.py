@@ -22,8 +22,6 @@ class ListFilesTask(ObjectTask):
     """
 
     name = "list_files"
-    label = "File batch"
-    description = "Group containing individual steps applied to individual files."
 
     def process_object(self, obj):
         rep = self.get_param('representation')
@@ -82,8 +80,6 @@ class CleanupDirectoriesTask(BaseTask):
     """
 
     name = "cleanup_directories"
-    label = "Cleanup"
-    description = "Cleans up the internal directories."
 
 
     def execute_task(self):
@@ -108,8 +104,6 @@ class FinishChainTask(BaseTask):
     """Task to set the job state to success after all other tasks have run."""
 
     name = "finish_chain"
-    label = "Finish batch"
-    description = ""
 
     def execute_task(self):
         self.job_db.update_job_state(self.parent_job_id, 'success')
@@ -123,8 +117,6 @@ class FinishChordTask(BaseTask):
     Finish a celery chord task, writes state into the mongo DB.
     """
     name = "finish_chord"
-    label = "No label set for chord task"
-    description = "No label set for chord task"
 
     def _init_params(self, params):
         """

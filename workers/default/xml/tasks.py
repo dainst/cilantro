@@ -29,8 +29,6 @@ class GenerateXMLTask(ObjectTask):
     """
 
     name = "generate_xml"
-    label = "Generate XML"
-    description = "Creates an OJS import XML file."
 
     def process_object(self, obj):
         params = {**self.params, **{'object_id': self.results['object_id']}}
