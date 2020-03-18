@@ -1,27 +1,16 @@
 <template>
-  <b-collapse
-                aria-id="processing_options_collapse"
-                class="panel"
-                :open.sync="isOpen">
-        <div
-                slot="trigger"
-                class="panel-heading"
-                role="button"
-                aria-controls="processing_options_collapse">
-            <strong>Post-Processing Options</strong>
-        </div>
-        <div class="panel-block">
+    <div>
+        <p class="title">Application Options</p>
         <b-field>
             <b-switch v-model="options.keep_staging">
-               Keep imported raw data on server
+                Keep successfully processed files in staging area
             </b-switch>
         </b-field>
-        </div>
-  </b-collapse>
+    </div>
 </template>
 
 <script lang="ts">
- 
+
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
@@ -30,11 +19,6 @@ import { AppOptions } from './JobParameters';
 @Component
 export default class AppOptionsForm extends Vue {
     @Prop({ required: true }) initialOptions!: AppOptions;
-
-    
-    isOpen = false;
-        
-
     options: AppOptions = this.initialOptions;
 
     @Watch('options')

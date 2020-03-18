@@ -13,6 +13,23 @@ Its frontend is written in JavaScript and uses
 * Docker Community Edition
 * NodeJS
 
+#### For Windows Users:
+
+Since the following process relies on make and uses bash related commands it can't be used in a Windows-Shell. The easiest way to circumvent this problem is to make use of the WSL-System of Windows 10 Pro. If you don't have Windows 10 Pro, go get Windows 10 Pro, also Docker dosn't work flawlessly without it. 
+
+Expecting that you have Win10 Pro, you need to activate the Linux Subsystem Feature and Install Ubuntu 18.04 or what ever Version is available by the time you read this. If your Ubuntu-Subsystem is up and running, open it and start installing the requierments. Begin with nodejs and pip3 for python
+    
+    sudo apt update
+    sudo apt install nodejs python3-pip
+    
+After that start following this instruction very carefully, since you are going to setup a linux in a virtual environment communication with a docker in another environment running an linux serving an Webserver there are a lot of possibilities of mistakes.
+
+https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly
+
+After you done with that you are good to go on with the rest of this instructions.
+
+Also, if you are developing with VSCode, there is a WSL Extension for that IDE available which works very well, gives you the possibilitie to use the linux subsystem from within VSCode, see: https://code.visualstudio.com/docs/remote/wsl
+
 ### Running cilantro
 
 Run this command after first checking out the code:

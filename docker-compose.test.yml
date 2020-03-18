@@ -46,7 +46,7 @@ services:
       - mongo-data:/data
 
   service:
-    image: dainst/cilantro-service:0.2.4
+    image: dainst/cilantro-service:0.2.5
     volumes:
       - staging-data:/data/staging
       - repository-data:/data/repository
@@ -74,7 +74,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:0.2.2
+    image: dainst/cilantro-default-worker:0.2.3
     working_dir: /app
     volumes:
       - staging-data:/data/staging
@@ -98,7 +98,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:0.2.2
+    image: dainst/cilantro-convert-worker:0.2.3
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -111,7 +111,7 @@ services:
       CILANTRO_ENV: *cilantro-env
 
   frontend:
-    image: dainst/cilantro-frontend:0.2.5
+    image: dainst/cilantro-frontend:0.2.7
     networks:
       - default
       - web

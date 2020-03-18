@@ -87,7 +87,7 @@ export default class IngestJournal extends Vue {
                 ocr_lang: 'deu'
             } as OCROptions,
             app_options: {
-                keep_staging: false
+                keep_staging: true
             } as AppOptions
         } as IngestJournalOptions;
 
