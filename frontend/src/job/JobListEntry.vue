@@ -62,12 +62,18 @@ import { showError } from '@/util/Notifier.ts';
 export default class JobListEntry extends Vue {
     @Prop(Array) jobIDs!: string[];
     @Prop() activeStates!: string[];
-    unfilteredJobs: Job[] = []
-
+    unfilteredJobs: Job[] = [];
+    updatePendingJobsInterval: number = 0;
     getChildrenIDs = getChildrenIDs;
 
     mounted() {
         this.loadJobs();
+        this.updatePendingJobsInterval = setInterval(() => {
+            this.loadJobs();
+            if (this.jobsLoaded) {
+                clearInterval(this.updatePendingJobsInterval);
+            }
+        }, 5000);
     }
 
     get jobsLoaded() {
