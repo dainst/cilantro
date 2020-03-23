@@ -32,7 +32,8 @@
                         "required": [
                             "title",
                             "creators",
-                            "atom_id"
+                            "atom_id",
+                            "copyright"
                         ],
                         "properties": {
                             "title": {
@@ -54,6 +55,9 @@
                                 }
                             },
                             "atom_id": {
+                                "type": "string"
+                            },
+                            "copyright": {
                                 "type": "string"
                             },
                             "reference_code": {

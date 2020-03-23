@@ -9,18 +9,28 @@
         <div v-if="activeStep === 0">
             <ContinueButton
                 @click="continueToMetadata"
-                :disabled="this.selectedPaths.length == 0" />
+                :disabled="this.selectedPaths.length === 0" />
+
             <JobFilesForm :selected-paths.sync="selectedPaths" />
+
+            <div class="container">
+                <b-field label="Default copyright statement">
+                    <b-input v-model="defaultCopyright"></b-input>
+                </b-field>
+            </div>
+
+            <br/>
+
             <ContinueButton
                 @click="continueToMetadata"
-                :disabled="this.selectedPaths.length == 0" />
+                :disabled="this.selectedPaths.length === 0" />
         </div>
         <div v-if="activeStep === 1">
             <ContinueButton
                 @click="continueToOptions"
                 :disabled="hasInvalidTargets()" />
             <ArchivalMaterialMetadataForm
-                :selected-paths="selectedPaths" @update:targetsUpdated="onTargetsUpdated" />
+                :selected-paths="selectedPaths" :default-copyright="defaultCopyright" @update:targetsUpdated="onTargetsUpdated" />
             <ContinueButton
                 @click="continueToOptions"
                 :disabled="hasInvalidTargets()" />
@@ -72,6 +82,7 @@ export default class IngestArchivalMaterial extends Vue {
     selectedPaths: string[] = [];
     parameters: IngestArchivalMaterialParameters;
     activeStep: number = 0;
+    defaultCopyright: string;
 
     constructor() {
         super();
@@ -87,6 +98,7 @@ export default class IngestArchivalMaterial extends Vue {
         } as IngestArchivalOptions;
 
         this.parameters = new IngestArchivalMaterialParameters([], options);
+        this.defaultCopyright = "Copyright © Deutsches Archäologisches Institut";
     }
 
     continueToMetadata() {

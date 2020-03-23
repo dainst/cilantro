@@ -29,6 +29,7 @@ export class JobTargetData implements GenericJobTargetData {
 
 export class ArchivalMaterialMetadata {
     atom_id: string;
+    copyright: string;
     title?: string;
     created?: string;
     authors?: string[];
@@ -41,8 +42,9 @@ export class ArchivalMaterialMetadata {
     repository_inherited_from?: string;
     scope_and_content?: string;
 
-    constructor(atomId: string) {
+    constructor(atomId: string, copyright: string) {
         this.atom_id = atomId;
+        this.copyright = copyright;
     }
 }
 

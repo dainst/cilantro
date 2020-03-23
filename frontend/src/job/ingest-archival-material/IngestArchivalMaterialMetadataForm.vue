@@ -23,23 +23,17 @@
                         label="Title"
                     >{{ props.row.metadata.title || '-' | truncate(80) }}
                     </b-table-column>
-                    <b-table-column
-                        field="metadata.repository"
-                        label="Repository"
-                    >{{ props.row.metadata.repository || '-' | truncate(80) }}
-                    </b-table-column>
-                    <b-table-column
-                        field="metadata.reference_code"
-                        label="Reference code"
-                    >{{ props.row.metadata.reference_code || '-' | truncate(80) }}
+
+                    <b-table-column field="copyright" label="Copyright">
+                        <b-field>
+                            <b-input v-model="props.row.metadata.copyright"></b-input>
+                        </b-field>
                     </b-table-column>
                 </template>
                 <template v-else>
                     <b-table-column label="Title">-</b-table-column>
-                    <b-table-column label="Repository">-</b-table-column>
-                    <b-table-column label="Reference code">-</b-table-column>
+                    <b-table-column label="Copyright">-</b-table-column>
                 </template>
-
             </template>
             <template slot="detail" slot-scope="props">
                 <div class="content">
@@ -83,7 +77,7 @@ import { asyncMap } from '@/util/HelperFunctions';
 })
 export default class ArchivalMaterialMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
-
+    @Prop({ required: true }) private defaultCopyright!: string;
     targets: MaybeJobTarget[];
 
     constructor() {
@@ -111,7 +105,7 @@ export default class ArchivalMaterialMetadataForm extends Vue {
                 }
                 if (errors.length === 0) {
                     return new JobTargetData(
-                        id, path, { atom_id: atomId } as ArchivalMaterialMetadata
+                        id, path, { atom_id: atomId, copyright: this.defaultCopyright } as ArchivalMaterialMetadata
                     );
                 }
                 return new JobTargetError(id, path, errors);
@@ -177,6 +171,7 @@ async function loadAtomData(target: JobTargetData) {
 
         const metadata = {
             atom_id: target.metadata.atom_id,
+            copyright: target.metadata.copyright,
             title: atomRecord.title,
             authors,
             scope_and_content: atomRecord.scope_and_content,
