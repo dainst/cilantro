@@ -7,6 +7,7 @@ import traceback
 import celery.signals
 from celery.task import Task
 
+from workers.task_informations import get_label, get_description
 from utils.job_db import JobDb
 from utils.object import Object
 from utils.setup_logging import setup_logging
@@ -77,12 +78,28 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
+    _label = None
+    _description = None
+
     @property
     def label(self):
-        raise NotImplementedError
+        if not self._label:
+            return get_label(self.name)
+        return self._label
+
+    @label.setter
+    def label(self, value):
+        self._label = value
+
     @property
     def description(self):
-        raise NotImplementedError
+        if not self._description:
+            return get_description(self.name)
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        self._description = value
 
     log_output = io.StringIO()
     handler = logging.StreamHandler(log_output)

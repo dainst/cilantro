@@ -4,6 +4,7 @@ import logging
 from abc import abstractmethod
 from celery import chord, signature
 
+from workers.task_informations import get_label, get_description
 from utils.celery_client import celery_app
 from utils.job_db import JobDb
 
@@ -95,8 +96,8 @@ class BatchJob(BaseJob):
                 single_task.options['task_id'] = job_id
                 single_task.kwargs['work_path'] = current_work_path
                 single_task.kwargs['parent_job_id'] = current_chain_id
-                label = single_task.kwargs['label'] if 'label' in single_task.kwargs else 'Not initialized'
-                description = single_task.kwargs['description'] if 'description' in single_task.kwargs else 'Not initialized'
+                label = get_label(single_task.name)
+                description = get_description(single_task.name)
 
                 self.job_db.add_job(job_id=job_id,
                                     user=user_name,
