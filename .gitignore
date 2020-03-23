@@ -136,3 +136,6 @@ fabric.properties
 cilantro-build.sh
 docker.log
 .vscode/launch.json
+
+# npm dependencies
+node_modules/
