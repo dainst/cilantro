@@ -175,6 +175,10 @@ class BaseTask(Task):
         :param dict/list prev_result: (optional) result of the previous task
         :return dict: merged result of the task and previous tasks
         """
+
+        self.log_output.truncate(0)
+        self.log_output.seek(0)
+
         self.results = {}
         self._init_params(params)
 
