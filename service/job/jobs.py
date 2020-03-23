@@ -289,7 +289,8 @@ class IngestArchivalMaterialsJob(BatchJob):
                 count += 1
             subject_string += dates_string
 
-        subject_string += "\nCopyright © Deutsches Archäologisches Institut"
+        if metadata['copyright']:
+            subject_string += f"\n{metadata['copyright']}"
 
         pdf_metadata['/Subject'] = subject_string
 
