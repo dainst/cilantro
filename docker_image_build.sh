@@ -7,7 +7,7 @@ function publishImage {
     echo "Bumping version of $1 to $version"
 
     # Build & publish image on dockerhub
-    docker-compose build ${1#"cilantro-"} ${nocache}
+    docker-compose build -f docker-compose.test.yml ${1#"cilantro-"} ${nocache}
     docker tag dainst/${1}:latest dainst/${1}:${version}
     docker push dainst/${1}:latest
     docker push dainst/${1}:${version}
