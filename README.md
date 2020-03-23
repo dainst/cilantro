@@ -96,6 +96,10 @@ When the application is started with `make run` backend tests can be run
 separately with:
 
     make test-backend
+    
+Analogous frontend tests can be started with
+    
+    make test-frontend
 
 Similarly end-to-end tests that test the whole application with protractor can
 be run with:

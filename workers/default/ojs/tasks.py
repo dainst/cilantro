@@ -20,8 +20,6 @@ class PublishToOJSTask(ObjectTask):
     """
 
     name = "publish_to_ojs"
-    label = "Publish to OJS"
-    description = "Publishes the current result in OJS."
 
     def process_object(self, obj):
         work_path = self.get_work_path()
@@ -44,8 +42,6 @@ class GenerateFrontmatterTask(ObjectTask):
     """Generate and add frontpage to the article in OJS."""
 
     name = "generate_frontmatter"
-    label = "Generate frontmatter"
-    description = "Generates an article frontmatter for OJS."
 
     def process_object(self, obj):
         if 'create_frontpage' in obj.metadata.to_dict() and \
