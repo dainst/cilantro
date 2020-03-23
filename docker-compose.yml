@@ -22,7 +22,7 @@ x-env-jobdb: &env-jobdb
 x-env-app-config: &env-app-config
   BACKEND_URI: &backend-uri http://localhost:5000
   CILANTRO_ENV: &cilantro-env development
-  OJS_URI: &ojs-uri http://mock-server:8080/ojs/plugins/generic/cilantro/api/
+  OJS_URI: &ojs-uri http://mock-server:8080/ojs/plugins/generic/ojs-cilantro-plugin/api
   OJS_AUTH_KEY: &ojs-auth-key ${OJS_AUTH_KEY}
   ATOM_URI: &atom-uri http://mock-server:8080/atom
   ATOM_API_KEY: &atom-api-key ${ATOM_API_KEY}
