@@ -13,30 +13,52 @@
 
             <JobFilesForm :selected-paths.sync="selectedPaths" />
 
-            <div class="container">
-                <b-field label="Default copyright statement">
-                    <b-input v-model="defaultCopyright"></b-input>
-                </b-field>
-            </div>
-
-            <br/>
-
             <ContinueButton
                 @click="continueToMetadata"
                 :disabled="this.selectedPaths.length === 0" />
         </div>
+
         <div v-if="activeStep === 1">
             <ContinueButton
                 @click="continueToOptions"
-                :disabled="hasInvalidTargets()" />
+                :disabled="hasInvalidTargets" />
+            <div class="container">
+                <div class="is-size-4">Default copyright statement:</div>
+                <b-field>
+                    <b-input placeholder="No copyright statement"
+                             v-model="defaultCopyright"
+                             expanded>
+                    </b-input>
+                    <p class="control">
+                        <b-button
+                            class="button is-default"
+                            :disabled="defaultCopyright === initialCopyright"
+                            @click="defaultCopyright = initialCopyright"
+                            icon-left="undo-variant">
+                            Initial value
+                        </b-button>
+                        <b-button
+                            class="button is-primary"
+                            :disabled="onlyDefaultCopyrightStatementsUsed"
+                            @click="setDefaultCopyrightStatement()"
+                            icon-right="playlist-check">
+                            Apply to all
+                        </b-button>
+                    </p>
+                </b-field>
+            </div>
+            <br/>
             <ArchivalMaterialMetadataForm
-                :selected-paths="selectedPaths" :default-copyright="defaultCopyright" @update:targetsUpdated="onTargetsUpdated" />
+                :selected-paths="selectedPaths" :default-copyright="defaultCopyright"
+                @update:targetsUpdated="onTargetsUpdated" />
+            <br/>
             <ContinueButton
                 @click="continueToOptions"
-                :disabled="hasInvalidTargets()" />
+                :disabled="hasInvalidTargets" />
         </div>
+
         <div v-if="activeStep === 2">
-            <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
+            <StartJobButton @click="startJob" :disabled="hasInvalidTargets"></StartJobButton>
             <OCROptionsForm
                 :initialOptions="this.parameters.options.ocr_options"
                 @options-updated="this.parameters.options.ocr_options = $event"
@@ -46,7 +68,7 @@
                 :initialOptions="this.parameters.options.app_options"
                 @options-updated="this.parameters.options.app_options = $event"
             />
-            <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
+            <StartJobButton @click="startJob" :disabled="hasInvalidTargets"></StartJobButton>
         </div>
     </div>
 </template>
@@ -65,7 +87,7 @@ import StartJobButton from '@/util/StartJobButton.vue';
 
 import { JobTargetError, OCROptions, AppOptions } from '../JobParameters';
 import {
-    IngestArchivalMaterialParameters, MaybeJobTarget, IngestArchivalOptions
+    IngestArchivalMaterialParameters, MaybeJobTarget, IngestArchivalOptions, JobTargetData
 } from './IngestArchivalMaterialParameters';
 
 @Component({
@@ -82,6 +104,7 @@ export default class IngestArchivalMaterial extends Vue {
     selectedPaths: string[] = [];
     parameters: IngestArchivalMaterialParameters;
     activeStep: number = 0;
+    initialCopyright: string;
     defaultCopyright: string;
 
     constructor() {
@@ -98,7 +121,8 @@ export default class IngestArchivalMaterial extends Vue {
         } as IngestArchivalOptions;
 
         this.parameters = new IngestArchivalMaterialParameters([], options);
-        this.defaultCopyright = "Copyright © Deutsches Archäologisches Institut";
+        this.initialCopyright = 'Copyright © Deutsches Archäologisches Institut';
+        this.defaultCopyright = this.initialCopyright;
     }
 
     continueToMetadata() {
@@ -113,10 +137,28 @@ export default class IngestArchivalMaterial extends Vue {
         this.activeStep = 2;
     }
 
-    hasInvalidTargets() {
+    setDefaultCopyrightStatement() {
+        this.parameters.targets.map((target) => {
+            if (target instanceof JobTargetData) {
+                const updated = new JobTargetData(target.id, target.path, target.metadata);
+                updated.metadata.copyright = this.defaultCopyright;
+                return updated;
+            }
+            return target;
+        });
+    }
+
+    get hasInvalidTargets() {
         return this.parameters.targets.filter(
             target => target instanceof JobTargetError
         ).length > 0 || this.parameters.targets.length === 0;
+    }
+
+    get onlyDefaultCopyrightStatementsUsed() {
+        return !this.parameters.targets.some(
+            target => (target instanceof JobTargetData &&
+                    target.metadata.copyright !== this.defaultCopyright)
+        );
     }
 
     async startJob() {

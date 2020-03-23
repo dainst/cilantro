@@ -26,7 +26,9 @@
 
                     <b-table-column field="copyright" label="Copyright">
                         <b-field>
-                            <b-input v-model="props.row.metadata.copyright"></b-input>
+                            <b-input placeholder="No copyright statement"
+                                     v-model="props.row.metadata.copyright">
+                            </b-input>
                         </b-field>
                     </b-table-column>
                 </template>
