@@ -13,7 +13,8 @@ module.exports = {
         '^.+\\.tsx?$': 'ts-jest'
     },
     transformIgnorePatterns: [
-        '/node_modules/'
+        '/node_modules/',
+        '/node_modules/(?!@babel)'
     ],
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1'

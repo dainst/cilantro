@@ -45,7 +45,7 @@
                 <JobListEntry :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
-        <div v-else>Loading jobs...</div>
+        <div class="loading" v-else>Loading jobs...</div>
     </section>
 </template>
 

@@ -8,8 +8,12 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --no-fix",
     "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "testcafe 'chromium:/usr/bin/chromium-browser:headless' tests/e2e/*.test.js"
+    "test:e2e": "testcafe 'chromium:/usr/bin/chromium-browser:headless' tests/e2e/*.test.js",
+    "test:debug": "node --inspect-brk node_modules/.bin/vue-cli-service test:unit --no-cache --watch --runInBand"
   },
+  "jest": {
+    "testEnvironment": "node"
+ },
   "dependencies": {
     "axios": "^0.19.0",
     "buefy": "^0.8.2",
