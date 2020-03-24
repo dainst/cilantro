@@ -51,7 +51,6 @@ services:
       - ./mongo-data:/data
 
   service:
-    image: dainst/cilantro-service:latest
     build:
       context: .
       dockerfile: ./docker/cilantro-service/Dockerfile
@@ -74,7 +73,6 @@ services:
       REPOSITORY_URI: *repository-uri
 
   default-worker:
-    image: dainst/cilantro-default-worker:latest
     user: ${UID}
     build:
       context: .
@@ -98,7 +96,6 @@ services:
       REPOSITORY_URI: *repository-uri
 
   convert-worker:
-    image: dainst/cilantro-convert-worker:latest
     user: ${UID}
     build:
       context: .
@@ -114,14 +111,6 @@ services:
       <<: *env-jobdb
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
-
-  frontend:
-    image: dainst/cilantro-frontend:latest
-    build:
-      context: .
-      dockerfile: ./docker/cilantro-frontend/Dockerfile
-    ports:
-      - "8081:80"
 
   test:
     container_name: cilantro_test
