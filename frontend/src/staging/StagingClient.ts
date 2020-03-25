@@ -29,32 +29,11 @@ export function getVisibleFolderContents(tree: WorkbenchFileTree): WorkbenchFile
         .filter(file => !file.name.startsWith('.'))
         .filter(file => !ignoredFolderNames.includes(file.name));
 }
-export function getUnmarkedFolderContents(tree: WorkbenchFileTree): WorkbenchFile[] {
-    return Object.values(tree)
-        .filter((file) => {
-            if (file.contents) {
-                return !Object.values(file.contents).some(f => f.name === '.info');
-            }
-            return true;
-        })
-        .filter(file => !file.name.startsWith('.'))
-        .filter(file => !ignoredFolderNames.includes(file.name));
-}
-export function getMarkedFolderContents(tree: WorkbenchFileTree): WorkbenchFile[] {
-    return Object.values(tree)
-        .filter((file) => {
-            if (file.contents) {
-                return Object.values(file.contents).some(f => f.name === '.info');
-            }
-            return false;
-        })
-        .filter(file => !file.name.startsWith('.'))
-        .filter(file => !ignoredFolderNames.includes(file.name));
-}
 
 export interface WorkbenchFile {
     name: string;
     type: string;
+    marked: boolean;
     contents?: WorkbenchFileTree;
 }
 
