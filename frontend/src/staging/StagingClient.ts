@@ -1,6 +1,6 @@
-import { sendRequest } from '@/util/HTTPClient';
 import { AxiosRequestConfig } from 'axios';
-import {backendUri, ignoredFolderNames} from "@/config";
+import { sendRequest } from '@/util/HTTPClient';
+import { backendUri, ignoredFolderNames } from '@/config';
 
 export async function getStagingFiles(path: string = ''): Promise<WorkbenchFileTree> {
     return sendRequest('get', `${backendUri}/staging${path}`, {}, {}, false);
@@ -29,18 +29,40 @@ export function getVisibleFolderContents(tree: WorkbenchFileTree): WorkbenchFile
         .filter(file => !file.name.startsWith('.'))
         .filter(file => !ignoredFolderNames.includes(file.name));
 }
+export function getUnmarkedFolderContents(tree: WorkbenchFileTree): WorkbenchFile[] {
+    return Object.values(tree)
+        .filter((file) => {
+            if (file.contents) {
+                return !Object.values(file.contents).some(f => f.name === '.info');
+            }
+            return true;
+        })
+        .filter(file => !file.name.startsWith('.'))
+        .filter(file => !ignoredFolderNames.includes(file.name));
+}
+export function getMarkedFolderContents(tree: WorkbenchFileTree): WorkbenchFile[] {
+    return Object.values(tree)
+        .filter((file) => {
+            if (file.contents) {
+                return Object.values(file.contents).some(f => f.name === '.info');
+            }
+            return false;
+        })
+        .filter(file => !file.name.startsWith('.'))
+        .filter(file => !ignoredFolderNames.includes(file.name));
+}
 
 export interface WorkbenchFile {
     name: string;
     type: string;
-    contents?: { [index: string]: WorkbenchFile }
+    contents?: WorkbenchFileTree;
 }
 
 export type WorkbenchFileTree = { [index: string]: WorkbenchFile };
 
 function onUploadProgress(onProgressCallback: (n: number) => void) {
     return (progressEvent: { loaded: number, total: number }) => {
-        var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         onProgressCallback(percentCompleted);
-    }
+    };
 }
