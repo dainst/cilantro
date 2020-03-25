@@ -122,11 +122,11 @@
                 "app_options": {
                     "type": "object",
                     "required": [
-                        "keep_staging"
+                        "mark_solved"
                     ],
                     "additionalProperties": false,
                     "properties": {
-                        "keep_staging": {
+                        "mark_solved": {
                             "type": "boolean"
                         }
                     }

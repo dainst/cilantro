@@ -191,7 +191,7 @@ class IngestArchivalMaterialsJob(BatchJob):
             current_chain |= _link('publish_to_archive')
 
             current_chain |= _link('cleanup_directories',
-                                   keep_staging=params['options']['app_options']['keep_staging'],
+                                   mark_solved=params['options']['app_options']['mark_solved'],
                                    staging_current_folder=record_target['path'],
                                    user_name=user_name)
 
@@ -352,7 +352,7 @@ class IngestJournalsJob(BatchJob):
                                    ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
 
             current_chain |= _link('cleanup_directories',
-                                   keep_staging=params['options']['app_options']['keep_staging'],
+                                   mark_solved=params['options']['app_options']['mark_solved'],
                                    staging_current_folder=issue_target['path'],
                                    user_name=user_name)
 
