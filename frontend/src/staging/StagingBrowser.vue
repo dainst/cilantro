@@ -2,8 +2,6 @@
     <section>
         <b-loading :is-full-page="true" :active="operationInProgress"></b-loading>
 
-
-
         <b-navbar>
             <template slot="start">
                 <StagingBrowserNav
@@ -64,7 +62,6 @@
                             </b-dropdown-item>
                         </b-dropdown>
                     </b-table-column>
-
 
                 </template>
                 <template slot="detail" slot-scope="props">
