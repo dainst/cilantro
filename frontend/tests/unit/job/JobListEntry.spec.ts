@@ -1,9 +1,9 @@
-import {shallowMount, createLocalVue} from '@vue/test-utils';
+import {shallowMount, createLocalVue, mount} from '@vue/test-utils';
 import Buefy from 'buefy';
-import Vuex, {Store} from 'vuex'
+import Vuex, {Store} from 'vuex';
 
-import JobListEntry from '@/job/JobListEntry.vue'
-import {Job, iconAttributesForState as iAFS } from '@/job/JobClient'
+import JobListEntry from '@/job/JobListEntry.vue';
+import {Job } from '@/job/JobClient';
 
 jest.mock('@/job/JobClient', () => ({
         getJobList(){ 
@@ -35,7 +35,10 @@ jest.mock('@/job/JobClient', () => ({
 // getJobList.mockImplementation(() => _getJobList());
 
 const localVue = createLocalVue();
-localVue.use(Buefy)
+localVue.use(Buefy, {
+    defaultIconPack: 'mdi',
+    defaultContainerElement: '#content'
+})
 localVue.use(Vuex)
 
 

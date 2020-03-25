@@ -11,24 +11,26 @@
                 @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
             </ContinueButton>
             <JobFilesForm :selected-paths.sync="selectedPaths" />
-            <ContinueButton
+            <ContinueButton class="toMetadataButton"
                 @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
             </ContinueButton>
         </div>
         <div v-if="activeStep === 1">
-            <ContinueButton
+            <ContinueButton class="toOptionsButton"
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
             <JournalMetadataForm
                 :selected-paths="selectedPaths"
                 @update:targetsUpdated="onTargetsUpdated"
             />
-            <ContinueButton
+            <ContinueButton class="toOptionsButton"
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
         </div>
         <div v-if="activeStep === 2">
-            <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
+            <StartJobButton class="startJobButton"
+                @click="startJob" :disabled="hasInvalidTargets()">
+            </StartJobButton>
             <JournalOptionsForm
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event"
@@ -37,7 +39,8 @@
                 :initialOptions="this.parameters.options.app_options"  
                 @options-updated="this.parameters.options.app_options = $event" 
                 />
-            <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
+            <StartJobButton class="startJobButton" 
+            @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
 </template>
