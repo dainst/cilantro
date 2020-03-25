@@ -83,15 +83,17 @@ class CleanupDirectoriesTask(BaseTask):
 
     def execute_task(self):
         mark_solved = self.get_param('mark_solved')
+        staging_current_folder = self.get_param('staging_current_folder')
+        user = self.get_param('user_name')
+        info_file_path = os.path.join(self.staging_dir, user, staging_current_folder, '.info')
         if mark_solved:
-            staging_current_folder = self.get_param('staging_current_folder')
-            user = self.get_param('user_name')
-            info_file_path = os.path.join(self.staging_dir, user, staging_current_folder, '.info')
             f = open(info_file_path, 'w')
             f.write(
                 'This file marks the parent directory as processed by the iDAI.workbench. Deleting this file will '
                 'unmark the directory in the web interface.')
             f.close()
+        elif os.path.exists(info_file_path):
+            os.remove(info_file_path)
 
         # delete temp folders
         work_path = self.get_work_path()
