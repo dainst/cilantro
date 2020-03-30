@@ -34,5 +34,6 @@ module.exports = {
         'ts-jest': {
             babelConfig: true
         }
-    }
+    },
+    
 };

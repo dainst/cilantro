@@ -43,7 +43,7 @@ export default class Login extends Vue {
     name: string = '';
     password: string = '';
 
-    authenticationStore = getModule(AuthenticationStore);
+    authenticationStore = this.createAuthStore();
 
     get missingInput() {
         return this.name.length === 0 || this.password.length === 0;
@@ -53,6 +53,14 @@ export default class Login extends Vue {
         const { name } = this;
         const { password } = this;
         this.authenticationStore.login({ name, password });
+    }
+
+    createAuthStore() {
+        /**
+         * For Testing only this way one can mock the getModule out of it
+         */
+        
+        return getModule(AuthenticationStore);
     }
 
     @Watch('authStatus')
