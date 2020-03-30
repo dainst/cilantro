@@ -1,6 +1,5 @@
-import {shallowMount, createLocalVue} from '@vue/test-utils';
+import { mount, createLocalVue} from '@vue/test-utils';
 import Buefy from 'buefy';
-import BButton from 'buefy/src/components/button/BButton.vue';
 import Vuex, {Store} from 'vuex'
 
 import ContinueButton from '@/util/ContinueButton.vue'
@@ -14,17 +13,19 @@ describe("ContinueButton.vue", () => {
 
     beforeEach(()=>{
         const store = new Store({});
-        wrapper = shallowMount(ContinueButton, {
-            localVue,
-            store,
-            methods: {
-                onClick: jest.fn()
-            }
-        });
+        wrapper = mount(ContinueButton, {localVue, store});
     })
 
     it("renders", () => {
         expect(wrapper.exists()).toBe(true)
+    })
+
+    it("was clicked", () => {
+        let button = wrapper.find('button');
+        expect(button.attributes('disabled')).toBeFalsy();
+        button.trigger('click')
+        wrapper.vm.$nextTick();
+        expect(wrapper.emitted('click')).toBeTruthy();
     })
 
 })
