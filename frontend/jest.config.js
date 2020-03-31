@@ -35,5 +35,6 @@ module.exports = {
             babelConfig: true
         }
     },
+    //setupTestFrameworkScriptFile: '<rootDir>/tests/unit/vueSetup.ts'
     
 };
