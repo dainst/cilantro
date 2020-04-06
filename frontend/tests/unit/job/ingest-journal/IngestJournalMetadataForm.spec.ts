@@ -5,21 +5,32 @@ import flushPromises from 'flush-promises';
 import IngestJournalMetadataForm from '@/job/ingest-journal/IngestJournalMetadataForm.vue'
 import { WorkbenchFile, WorkbenchFileTree, getVisibleFolderContents as realFolderFunction } from '@/staging/StagingClient';
 
-let mockBench: WorkbenchFile = {
-    name: 'test',
+let mockTif: WorkbenchFile = {
+    name: 'test.tif',
     type: 'tif',
 };
+
+let mockInfo: WorkbenchFile = {
+    name: '.info',
+    type: 'conf'
+}
+
+let mockTiffFolder: WorkbenchFile = {
+    name: 'tif',
+    type: 'folder',
+    contents: {'test.tif': mockTif }
+}
 
 let mockFolder: WorkbenchFile = {
     name: 'tif',
     type: 'folder',
-    contents: {'001': mockBench}
+    contents: { 'tif': mockTiffFolder, '.info': mockInfo }
 };
 
 
 jest.mock('@/staging/StagingClient', () => ({
+    ...jest.requireActual('@/staging/StagingClient'),
     getStagingFiles: () => Promise.resolve({ 'Journal-ZID001149881': mockFolder }),
-    getVisibleFolderContents: (tree: WorkbenchFileTree) => tree
 }));
 
 
@@ -48,15 +59,16 @@ describe("IngestJournalMetadataForm", () => {
     });
 
 
-    it("has a proper selectedPaths", async () =>{
-        wrapper = shallowMount(IngestJournalMetadataForm, {
+    it("has no error alert", async () =>{
+        wrapper = mount(IngestJournalMetadataForm, {
             localVue,
             store,
             propsData: {
                 selectedPaths: ['/Journal-ZID001149881']
-            }
+            },
         })
         await flushPromises();
-        expect(true).not.toBeFalsy();
+        let icon = wrapper.find('.has-text-danger');
+        expect(icon.exists()).toBe(false);
     })
 });
