@@ -15,7 +15,7 @@
             </template>
             <template slot="end">
             <b-switch v-model="showMarked">
-                Show Successful Tasks
+                Show completed tasks
             </b-switch>
             </template>
         </b-navbar>

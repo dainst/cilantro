@@ -3,7 +3,7 @@
         <p class="title">Application Options</p>
         <b-field>
             <b-switch v-model="options.mark_done">
-                Mark file as solved in staging area.
+                Mark file as completed in staging area.
             </b-switch>
         </b-field>
     </div>
