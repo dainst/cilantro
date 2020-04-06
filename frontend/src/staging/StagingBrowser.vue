@@ -19,9 +19,9 @@
             </b-switch>
             </template>
         </b-navbar>
-        <div v-if="getFilesToShow(showMarked).length !== 0">
+        <div v-if="getFilesToShow().length !== 0">
             <b-table
-                :data="getFilesToShow(showMarked)"
+                :data="getFilesToShow()"
                 checkable
                 hoverable
                 :checked-rows="checkedFiles"
@@ -243,8 +243,8 @@ export default class StagingBrowser extends Vue {
         });
     }
 
-    getFilesToShow(marked:boolean) {
-        if (marked) {
+    getFilesToShow() {
+        if (this.showMarked) {
             return this.filesToShow;
         }
         return this.filesToShow.filter(file => !file.marked);
