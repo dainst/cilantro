@@ -85,18 +85,24 @@ class CleanupDirectoriesTask(BaseTask):
         mark_done = self.get_param('mark_done')
         staging_current_folder = self.get_param('staging_current_folder')
         user = self.get_param('user_name')
-        info_file_path = os.path.join(self.staging_dir, user, staging_current_folder, '.info')
-        if mark_done:
-            f = open(info_file_path, 'w')
-            f.write(
-                'This file marks the parent directory as processed by the iDAI.workbench. Deleting this file will '
-                'unmark the directory in the web interface.')
-            f.close()
+        file_path = os.path.join(self.staging_dir, user, staging_current_folder)
 
-        # delete temp folders
+        if mark_done:
+            self.mark_file_as_done(file_path)
+
+        self.delete_temp_folders()
+
+    @staticmethod
+    def mark_file_as_done(folder):
+        f = open(os.path.join(folder, '.info'), 'w')
+        f.write(
+            'This file marks the parent directory as processed by the iDAI.workbench. Deleting this file will '
+            'unmark the directory in the web interface.')
+        f.close()
+
+    def delete_temp_folders(self):
         work_path = self.get_work_path()
         shutil.rmtree(work_path)
-
 
 CleanupDirectoriesTask = celery_app.register_task(CleanupDirectoriesTask())
 
