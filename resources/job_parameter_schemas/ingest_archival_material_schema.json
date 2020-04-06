@@ -122,11 +122,11 @@
                 "app_options": {
                     "type": "object",
                     "required": [
-                        "mark_solved"
+                        "mark_done"
                     ],
                     "additionalProperties": false,
                     "properties": {
-                        "mark_solved": {
+                        "mark_done": {
                             "type": "boolean"
                         }
                     }

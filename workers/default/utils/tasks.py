@@ -82,11 +82,11 @@ class CleanupDirectoriesTask(BaseTask):
     name = "cleanup_directories"
 
     def execute_task(self):
-        mark_solved = self.get_param('mark_solved')
+        mark_done = self.get_param('mark_done')
         staging_current_folder = self.get_param('staging_current_folder')
         user = self.get_param('user_name')
         info_file_path = os.path.join(self.staging_dir, user, staging_current_folder, '.info')
-        if mark_solved:
+        if mark_done:
             f = open(info_file_path, 'w')
             f.write(
                 'This file marks the parent directory as processed by the iDAI.workbench. Deleting this file will '

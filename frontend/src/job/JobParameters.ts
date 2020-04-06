@@ -27,7 +27,7 @@ export interface OCROptions {
 }
 
 export interface AppOptions {
-    mark_solved: boolean;
+    mark_done: boolean;
 }
 
 export function isTargetError(o: any) {

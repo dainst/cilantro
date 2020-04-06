@@ -23,7 +23,7 @@
             "ocr_lang": "eng"
         },
         "app_options": {
-            "mark_solved": false
+            "mark_done": false
         }
     }
 }
