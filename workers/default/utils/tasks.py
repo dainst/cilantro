@@ -92,8 +92,6 @@ class CleanupDirectoriesTask(BaseTask):
                 'This file marks the parent directory as processed by the iDAI.workbench. Deleting this file will '
                 'unmark the directory in the web interface.')
             f.close()
-        elif os.path.exists(info_file_path):
-            os.remove(info_file_path)
 
         # delete temp folders
         work_path = self.get_work_path()
