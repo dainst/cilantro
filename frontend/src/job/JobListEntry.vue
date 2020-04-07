@@ -45,7 +45,9 @@
                 <JobListEntry :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
-        <div class="loading" v-else>Loading jobs...</div>
+        <div v-else-if="jobsLoading">Loading jobs...</div>
+        <div v-else-if="emptyJobList">No jobs found</div>
+        <div v-else>There has been an error. JobList in unexpected state</div>
     </section>
 </template>
 
@@ -62,7 +64,7 @@ import { showError } from '@/util/Notifier.ts';
 export default class JobListEntry extends Vue {
     @Prop(Array) jobIDs!: string[];
     @Prop() activeStates!: string[];
-    unfilteredJobs: Job[] = [];
+    unfilteredJobs: Job[] | null = null;
     updatePendingJobsInterval: number = 0;
     getChildrenIDs = getChildrenIDs;
 
@@ -77,7 +79,15 @@ export default class JobListEntry extends Vue {
     }
 
     get jobsLoaded() {
-        return this.unfilteredJobs.length !== 0;
+        return ( this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length !== 0 ) ;
+    }
+
+    get jobsLoading() {
+        return ( this.unfilteredJobs === null );
+    }
+
+    get emptyJobList() {
+        return ( this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0 );
     }
 
     get filteredJobs() {

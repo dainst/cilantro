@@ -51,8 +51,18 @@ describe("JobListEntry.vue", () => {
         expect(wrapper.exists()).toBe(true)
     })
 
-    it("no jobs no list", () => {
-        expect(wrapper.contains('div.loading')).toBe(true)
+    it("jobs loading display 'loading jobs...'", () => {
+        expect(wrapper.text()).toBe('Loading jobs...')
+    })
+
+    it("zero jobs loaded display 'No jobs found'", () => {
+        wrapper.setData({unfilteredJobs: []})
+        expect(wrapper.text()).toBe('No jobs found')
+    })
+
+    it("job list in wrong state", () => {
+        wrapper.setData({unfilteredJobs: undefined})
+        expect(wrapper.text()).toBe('There has been an error. JobList in unexpected state')
     })
 })
 
