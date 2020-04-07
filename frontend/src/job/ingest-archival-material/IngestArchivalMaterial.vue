@@ -8,12 +8,14 @@
 
         <div v-if="activeStep === 0">
             <ContinueButton
+                class="toMetadataButton"
                 @click="continueToMetadata"
                 :disabled="this.selectedPaths.length === 0" />
 
             <JobFilesForm :selected-paths.sync="selectedPaths" />
 
             <ContinueButton
+                class="toMetadataButton"
                 @click="continueToMetadata"
                 :disabled="this.selectedPaths.length === 0" />
         </div>
@@ -53,6 +55,7 @@
                 @update:targetsUpdated="onTargetsUpdated" />
             <br/>
             <ContinueButton
+                class="toOptionsButton"
                 @click="continueToOptions"
                 :disabled="hasInvalidTargets" />
         </div>
