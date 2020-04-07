@@ -78,21 +78,11 @@
         "options": {
             "type": "object",
             "required": [
-                "omp_options",
                 "ocr_options",
                 "app_options"
             ],
             "additionalProperties": false,
             "properties": {
-                "omp_options": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "properties": {
-                        "auto_publish_issue": {
-                            "type": "boolean"
-                        }
-                    }
-                },
                 "ocr_options": {
                     "type": "object",
                     "required": [
