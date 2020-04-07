@@ -6,7 +6,14 @@
         <div class="columns is-centered">
             <form class="column is-narrow login" @submit.prevent="login">
                 <b-field>
-                    <b-input placeholder="Name" minlength="1" type="text" required v-model="name"></b-input>
+                    <input 
+                        placeholder="Name" 
+                        minlength="1" 
+                        type="text" 
+                        required 
+                        v-model="name"
+                        id="username"
+                    ></input>
                 </b-field>
                 <b-field>
                     <b-input
@@ -15,6 +22,7 @@
                         type="password"
                         required
                         v-model="password"
+                        id="password"
                     ></b-input>
                 </b-field>
                 <b-button
@@ -22,6 +30,7 @@
                     native-type="submit"
                     class="button is-fullwidth"
                     @click="login()"
+                    id="submit"
                 >Login</b-button>
             </form>
         </div>
@@ -43,7 +52,7 @@ export default class Login extends Vue {
     name: string = '';
     password: string = '';
 
-    authenticationStore = getModule(AuthenticationStore);
+    authenticationStore = this.createAuthStore();
 
     get missingInput() {
         return this.name.length === 0 || this.password.length === 0;
@@ -53,6 +62,14 @@ export default class Login extends Vue {
         const { name } = this;
         const { password } = this;
         this.authenticationStore.login({ name, password });
+    }
+
+    createAuthStore() {
+        /**
+         * For Testing only this way one can mock the getModule out of it
+         */
+        
+        return getModule(AuthenticationStore);
     }
 
     @Watch('authStatus')

@@ -11,33 +11,36 @@
                 @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
             </ContinueButton>
             <JobFilesForm :selected-paths.sync="selectedPaths" />
-            <ContinueButton
+            <ContinueButton class="toMetadataButton"
                 @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
             </ContinueButton>
         </div>
         <div v-if="activeStep === 1">
-            <ContinueButton
+            <ContinueButton class="toOptionsButton"
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
             <JournalMetadataForm
                 :selected-paths="selectedPaths"
                 @update:targetsUpdated="onTargetsUpdated"
             />
-            <ContinueButton
+            <ContinueButton class="toOptionsButton"
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
         </div>
         <div v-if="activeStep === 2">
-            <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
+            <StartJobButton class="startJobButton"
+                @click="startJob" :disabled="hasInvalidTargets()">
+            </StartJobButton>
             <JournalOptionsForm
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event"
             />
-            <AppOptionsForm 
-                :initialOptions="this.parameters.options.app_options"  
-                @options-updated="this.parameters.options.app_options = $event" 
+            <AppOptionsForm
+                :initialOptions="this.parameters.options.app_options"
+                @options-updated="this.parameters.options.app_options = $event"
                 />
-            <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
+            <StartJobButton class="startJobButton" 
+            @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
 </template>
@@ -87,7 +90,7 @@ export default class IngestJournal extends Vue {
                 ocr_lang: 'deu'
             } as OCROptions,
             app_options: {
-                keep_staging: true
+                mark_done: true
             } as AppOptions
         } as IngestJournalOptions;
 

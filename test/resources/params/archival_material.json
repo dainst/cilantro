@@ -23,7 +23,7 @@
             "ocr_lang": "eng"
         },
         "app_options": {
-            "keep_staging": false
+            "mark_done": false
         }
     }
 }

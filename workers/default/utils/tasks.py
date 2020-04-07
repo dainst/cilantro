@@ -59,7 +59,7 @@ class ListFilesTask(ObjectTask):
         chain.options['task_id'] = params['job_id']
 
         self.job_db.add_job(job_id=params['job_id'], user=None, job_type=subtasks,
-                       parent_job_id=params['parent_job_id'], child_job_ids=[], parameters=params)
+                            parent_job_id=params['parent_job_id'], child_job_ids=[], parameters=params)
 
         return chain, params['job_id']
 
@@ -81,21 +81,28 @@ class CleanupDirectoriesTask(BaseTask):
 
     name = "cleanup_directories"
 
-
     def execute_task(self):
-        keep_staging = self.get_param('keep_staging')
-        if (not keep_staging):
-            # delete staging folder if user doesn't want to keep it
-            staging_current_folder = self.get_param('staging_current_folder')
-            user = self.get_param('user_name')
-            staging_path = os.path.join(self.staging_dir, user, staging_current_folder )
+        mark_done = self.get_param('mark_done')
+        staging_current_folder = self.get_param('staging_current_folder')
+        user = self.get_param('user_name')
+        file_path = os.path.join(self.staging_dir, user, staging_current_folder)
 
-            shutil.rmtree(staging_path)
+        if mark_done:
+            self.mark_file_as_done(file_path)
 
-        # delete temp folders
+        self.delete_temp_folders()
+
+    @staticmethod
+    def mark_file_as_done(folder):
+        f = open(os.path.join(folder, '.info'), 'w')
+        f.write(
+            'This file marks the parent directory as processed by the iDAI.workbench. Deleting this file will '
+            'unmark the directory in the web interface.')
+        f.close()
+
+    def delete_temp_folders(self):
         work_path = self.get_work_path()
         shutil.rmtree(work_path)
-
 
 CleanupDirectoriesTask = celery_app.register_task(CleanupDirectoriesTask())
 
