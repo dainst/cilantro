@@ -1,6 +1,6 @@
-import { sendRequest } from '@/util/HTTPClient';
 import { AxiosRequestConfig } from 'axios';
-import {backendUri, ignoredFolderNames} from "@/config";
+import { sendRequest } from '@/util/HTTPClient';
+import { backendUri, ignoredFolderNames } from '@/config';
 
 export async function getStagingFiles(path: string = ''): Promise<WorkbenchFileTree> {
     return sendRequest('get', `${backendUri}/staging${path}`, {}, {}, false);
@@ -33,14 +33,15 @@ export function getVisibleFolderContents(tree: WorkbenchFileTree): WorkbenchFile
 export interface WorkbenchFile {
     name: string;
     type: string;
-    contents?: { [index: string]: WorkbenchFile }
+    marked: boolean;
+    contents?: WorkbenchFileTree;
 }
 
 export type WorkbenchFileTree = { [index: string]: WorkbenchFile };
 
 function onUploadProgress(onProgressCallback: (n: number) => void) {
     return (progressEvent: { loaded: number, total: number }) => {
-        var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         onProgressCallback(percentCompleted);
-    }
+    };
 }

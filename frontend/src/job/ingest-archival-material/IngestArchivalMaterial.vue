@@ -119,7 +119,7 @@ export default class IngestArchivalMaterial extends Vue {
                 ocr_lang: 'deu'
             } as OCROptions,
             app_options: {
-                keep_staging: true
+                mark_done: true
             } as AppOptions
         } as IngestArchivalOptions;
 

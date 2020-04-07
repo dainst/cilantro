@@ -109,11 +109,11 @@
                 "app_options": {
                     "type": "object",
                     "required": [
-                        "keep_staging"
+                        "mark_done"
                     ],
                     "additionalProperties": false,
                     "properties": {
-                        "keep_staging": {
+                        "mark_done": {
                             "type": "boolean"
                         }
                     }
