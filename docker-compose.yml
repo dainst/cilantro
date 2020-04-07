@@ -24,6 +24,8 @@ x-env-app-config: &env-app-config
   CILANTRO_ENV: &cilantro-env development
   OJS_URI: &ojs-uri http://mock-server:8080/ojs/plugins/generic/ojs-cilantro-plugin/api
   OJS_AUTH_KEY: &ojs-auth-key ${OJS_AUTH_KEY}
+  OMP_URI: &omp-uri http://localhost:4444//plugins/generic/cilantro/api/
+  OMP_AUTH_KEY: &omp-auth-key ${OJS_AUTH_KEY}
   ATOM_URI: &atom-uri http://mock-server:8080/atom
   ATOM_API_KEY: &atom-api-key ${ATOM_API_KEY}
   REPOSITORY_URI: &repository-uri http://service:5000/repository

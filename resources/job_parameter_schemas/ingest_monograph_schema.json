@@ -1,0 +1,127 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Ingest Journal schema",
+    "description": "Used to validate ingest-journal job parameters",
+    "type": "object",
+    "required": [
+        "targets",
+        "options"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "targets": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "path",
+                    "metadata"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "path": {
+                        "type": "string"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "press_code",
+                            "zenon_id",
+                            "title",
+                            "author"
+                        ],
+                        "properties": {
+                            "press_code": {
+                                "type": "string"
+                            },
+                            "zenon_id": {
+                                "type": "string"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "prefix": {
+                                "type": "string"
+                            },
+                            "subtitle": {
+                                "type": "string"
+                            },
+                            "abstract": {
+                                "type": "string"
+                            },
+                            "date_published": {
+                                "type": "string"
+                            },
+                            "author": {
+                                "type": "object",
+                                "additionalProperties": false,
+                                "required": ["givenname", "lastname"],
+                                "properties": {
+                                    "givenname": {
+                                        "type": "string"
+                                    },
+                                    "lastname": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "options": {
+            "type": "object",
+            "required": [
+                "omp_options",
+                "ocr_options",
+                "app_options"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "omp_options": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "auto_publish_issue": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                "ocr_options": {
+                    "type": "object",
+                    "required": [
+                        "do_ocr",
+                        "ocr_lang"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "do_ocr": {
+                            "type": "boolean"
+                        },
+                        "ocr_lang": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "app_options": {
+                    "type": "object",
+                    "required": [
+                        "mark_done"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "mark_done": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
