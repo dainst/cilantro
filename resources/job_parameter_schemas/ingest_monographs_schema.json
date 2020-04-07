@@ -46,16 +46,20 @@
                                 "type": "string"
                             },
                             "prefix": {
-                                "type": "string"
+                                "type": "string",
+                                "default": ""
                             },
                             "subtitle": {
-                                "type": "string"
+                                "type": "string",
+                                "default": ""
                             },
                             "abstract": {
-                                "type": "string"
+                                "type": "string",
+                                "default": ""
                             },
                             "date_published": {
-                                "type": "string"
+                                "type": "string",
+                                "default": ""
                             },
                             "author": {
                                 "type": "object",

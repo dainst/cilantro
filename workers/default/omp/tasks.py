@@ -29,6 +29,9 @@ class PublishToOMPTask(ObjectTask):
         _, result = publish(os.path.join(work_path, 'omp_import.xml'),
                             omp_press_code)
 
+        if not result['success']:
+            raise RuntimeError(result)
+
         if len(result['warnings']) > 0:
             raise RuntimeError(result['warnings'])
         else:
