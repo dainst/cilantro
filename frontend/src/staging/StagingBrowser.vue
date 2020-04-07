@@ -2,29 +2,43 @@
     <section>
         <b-loading :is-full-page="true" :active="operationInProgress"></b-loading>
 
-        <StagingBrowserNav
-            :working-directory="workingDirectory"
-            :is-file-selected="checkedFiles.length == 0"
-            @delete-selected="showDeleteDialog"
-            @open-folder="openFolder"
-            @create-folder="createFolder"
-            @move-selected="showMoveModal"
-        />
-
-        <div v-if="filesToShow.length !== 0">
+        <b-navbar>
+            <template slot="start">
+                <StagingBrowserNav
+                    :working-directory="workingDirectory"
+                    :is-file-selected="checkedFiles.length == 0"
+                    @delete-selected="showDeleteDialog"
+                    @open-folder="openFolder"
+                    @create-folder="createFolder"
+                    @move-selected="showMoveModal"
+                />
+            </template>
+            <template slot="end">
+            <b-switch v-model="showMarked">
+                Show completed tasks
+            </b-switch>
+            </template>
+        </b-navbar>
+        <div v-if="getFilesToShow().length !== 0">
             <b-table
-                :data="filesToShow"
+                :data="getFilesToShow()"
                 checkable
                 hoverable
                 :checked-rows="checkedFiles"
                 @check="onCheck"
                 @click="fileClicked"
             >
-                <template slot-scope="props">
+                <template slot-scope="props" >
                     <b-table-column width="25">
                         <b-icon :icon="getFileIcon(props.row)"/>
                     </b-table-column>
+
                     <b-table-column field="name" label="Name">{{ props.row.name }}</b-table-column>
+
+                    <b-table-column field="marked">
+                        <b-icon icon="check" type="is-success" v-if="props.row.marked"></b-icon>
+                    </b-table-column>
+
                     <b-table-column field="edit" label="" width="25" @click.native.stop>
                         <b-dropdown aria-role="list">
                             <b-button icon-right="dots-vertical" type="is-text" slot="trigger"/>
@@ -48,6 +62,7 @@
                             </b-dropdown-item>
                         </b-dropdown>
                     </b-table-column>
+
                 </template>
                 <template slot="detail" slot-scope="props">
                     <p>{{ props.row.name }}</p>
@@ -55,7 +70,6 @@
             </b-table>
         </div>
         <div v-else>Folder is empty ...</div>
-
         <StagingBrowserUpload :working-directory="workingDirectory" @upload-finished="fetchFiles"/>
     </section>
 </template>
@@ -66,8 +80,13 @@ import {
 } from 'vue-property-decorator';
 import { showSuccess, showWarning, showError } from '@/util/Notifier.ts';
 import {
-    getStagingFiles, deleteFileFromStaging,
-    createFolderInStaging, WorkbenchFile, moveInStaging, WorkbenchFileTree, getVisibleFolderContents,
+    getStagingFiles,
+    deleteFileFromStaging,
+    createFolderInStaging,
+    WorkbenchFile,
+    moveInStaging,
+    WorkbenchFileTree,
+    getVisibleFolderContents
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';
@@ -87,6 +106,7 @@ export default class StagingBrowser extends Vue {
     workingDirectory: string = '';
     stagingFiles: WorkbenchFileTree = {};
     filesToShow: WorkbenchFile[] = [];
+    showMarked: boolean = false;
 
     get checkedFiles(): WorkbenchFile[] {
         return this.filesToShow.filter((file) => {
@@ -172,14 +192,13 @@ export default class StagingBrowser extends Vue {
             this.$buefy.dialog.prompt({
                 message: `Choose a new name`,
                 inputAttrs: {
-                    value:file.name,
+                    value: file.name,
                     placeholder: 'name',
                     maxlength: 40
                 },
-                onConfirm: (value) => this.renameSelected(value)
+                onConfirm: value => this.renameSelected(value)
             });
         });
-
     }
 
     renameSelected(value: string) {
@@ -222,6 +241,13 @@ export default class StagingBrowser extends Vue {
             this.$emit('update:selected-paths', []);
             this.fetchFiles();
         });
+    }
+
+    getFilesToShow() {
+        if (this.showMarked) {
+            return this.filesToShow;
+        }
+        return this.filesToShow.filter(file => !file.marked);
     }
 
     // eslint-disable-next-line class-methods-use-this

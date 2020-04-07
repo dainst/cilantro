@@ -35,9 +35,9 @@
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event"
             />
-            <AppOptionsForm 
-                :initialOptions="this.parameters.options.app_options"  
-                @options-updated="this.parameters.options.app_options = $event" 
+            <AppOptionsForm
+                :initialOptions="this.parameters.options.app_options"
+                @options-updated="this.parameters.options.app_options = $event"
                 />
             <StartJobButton class="startJobButton" 
             @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
@@ -90,7 +90,7 @@ export default class IngestJournal extends Vue {
                 ocr_lang: 'deu'
             } as OCROptions,
             app_options: {
-                keep_staging: true
+                mark_done: true
             } as AppOptions
         } as IngestJournalOptions;
 

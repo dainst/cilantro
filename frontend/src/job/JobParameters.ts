@@ -27,8 +27,8 @@ export interface OCROptions {
 }
 
 export interface AppOptions {
-    keep_staging: boolean;
-} 
+    mark_done: boolean;
+}
 
 export function isTargetError(o: any) {
     return o instanceof JobTargetError;

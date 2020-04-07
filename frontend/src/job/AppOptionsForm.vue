@@ -2,8 +2,8 @@
     <div>
         <p class="title">Application Options</p>
         <b-field>
-            <b-switch v-model="options.keep_staging">
-                Keep successfully processed files in staging area
+            <b-switch v-model="options.mark_done">
+                Mark selected directories as done in staging area.
             </b-switch>
         </b-field>
     </div>
