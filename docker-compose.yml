@@ -98,9 +98,6 @@ services:
       ATOM_URI: *atom-uri
       ATOM_API_KEY: *atom-api-key
       REPOSITORY_URI: *repository-uri
-    networks:
-      - default
-      - omp-docker_default
 
   convert-worker:
     user: ${UID}
@@ -152,7 +149,3 @@ services:
       - "2222:80"
     volumes:
       - ./data/repository:/usr/share/nginx/html/documents
-
-networks:
-  omp-docker_default:
-    external: true
