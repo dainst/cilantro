@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <b-steps v-model="activeStep" :has-navigation="(false)">
+        <b-steps v-model="activeStep" :has-navigation="false">
             <b-step-item label="Book Files"></b-step-item>
             <b-step-item label="Book Metadata"></b-step-item>
             <b-step-item label="Start Import"></b-step-item>
@@ -8,11 +8,11 @@
 
         <div v-if="activeStep === 0">
             <ContinueButton
-                @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
+                @click="continueToMetadata" :disabled="this.selectedPaths.length === 0">
             </ContinueButton>
             <JobFilesForm :selected-paths.sync="selectedPaths" />
             <ContinueButton
-                @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
+                @click="continueToMetadata" :disabled="this.selectedPaths.length === 0">
             </ContinueButton>
         </div>
         <div v-if="activeStep === 1">
@@ -51,7 +51,9 @@ import BookMetadataForm from './IngestBookMetadataForm.vue';
 import BookOptionsForm from './IngestBookOptionsForm.vue';
 import AppOptionsForm from '../AppOptionsForm.vue';
 
-import { JobParameters, JobTargetError, OCROptions, AppOptions } from '../JobParameters';
+import {
+    JobParameters, JobTargetError, OCROptions, AppOptions
+} from '../JobParameters';
 import {
     IngestBookParameters, MaybeJobTarget, IngestBookOptions, OJSOptions
 } from './IngestBookParameters';
