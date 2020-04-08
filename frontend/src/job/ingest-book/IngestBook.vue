@@ -55,7 +55,7 @@ import {
     JobParameters, JobTargetError, OCROptions, AppOptions
 } from '../JobParameters';
 import {
-    IngestBookParameters, MaybeJobTarget, IngestBookOptions, OJSOptions
+    IngestBookParameters, MaybeJobTarget, IngestBookOptions
 } from './IngestBookParameters';
 
 import { showError, showSuccess } from '@/util/Notifier';
@@ -81,9 +81,6 @@ export default class IngestBook extends Vue {
         super();
 
         const options = {
-            ojs_options: {
-                default_create_frontpage: true
-            } as OJSOptions,
             ocr_options: {
                 do_ocr: false,
                 ocr_lang: 'deu'
