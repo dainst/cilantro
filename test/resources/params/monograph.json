@@ -1,0 +1,26 @@
+{
+  "targets": [{
+    "id": "some_tiffs_1234",
+    "path": "some_tiffs",
+    "metadata": {
+      "title": "Test title",
+      "abstract": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+      "author": {
+        "givenname": "Max",
+        "lastname": "Mustermann"
+      },
+      "zenon_id": "001149881",
+      "date_published": "2020-04-07",
+      "press_code": "dai"
+    }
+  }],
+  "options": {
+    "ocr_options": {
+      "do_ocr": true,
+      "ocr_lang": "eng"
+    },
+    "app_options": {
+      "mark_done": false
+    }
+  }
+}

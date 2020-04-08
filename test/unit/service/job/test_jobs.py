@@ -2,7 +2,7 @@ import unittest
 import os
 import json
 
-from service.job.jobs import IngestJournalsJob, IngestArchivalMaterialsJob
+from service.job.jobs import IngestJournalsJob, IngestArchivalMaterialsJob, IngestMonographsJob
 
 
 class JobsTest(unittest.TestCase):
@@ -94,6 +94,52 @@ class JobsTest(unittest.TestCase):
         job_params['options']['ocr_options']['do_ocr'] = False
 
         job_no_ocr = IngestJournalsJob(job_params, 'test_user')
+
+        publish_chain_length = len(job_ocr.chord.tasks[0].tasks)
+        no_publish_chain_length = len(job_no_ocr.chord.tasks[0].tasks)
+
+        self.assertTrue(publish_chain_length == no_publish_chain_length + 1,
+                        'the job without OCR option should result in a chain one task shorter')
+
+    def test_import_monographs_job(self):
+        """Test initialization for monographs batch import."""
+        test_params_path = os.path.join(
+            self.test_resource_dir, 'params/monograph.json')
+
+        with open(test_params_path, 'r') as params_file:
+            job_params = json.loads(params_file.read())
+
+        additional_object = dict(job_params['targets'][0])
+
+        job_params['targets'] += [additional_object]
+        job = IngestMonographsJob(job_params, 'test_user')
+
+        self.assertTrue(type(job.id) == str, 'job id should be generated')
+        for chain_id in job.chain_ids:
+            self.assertTrue(type(chain_id) == str,
+                            'ids for chains should be generated')
+        self.assertEqual(len(
+            job.chain_ids), 2, 'two chains should be generated, one for each "targets" item')
+
+        chain_length = len(job.chord.tasks[0].tasks)
+
+        self.assertEqual(chain_length, 10,
+                         'each default journal import chain should consist of 11 subtasks.')
+
+    def test_import_monographs_job_no_ocr(self):
+        """Test OCR option for monographs batch import."""
+        test_params_path = os.path.join(
+            self.test_resource_dir, 'params/monograph.json')
+
+        with open(test_params_path, 'r') as params_file:
+            job_params = json.loads(params_file.read())
+
+        job_ocr = IngestMonographsJob(job_params, 'test_user')
+
+        job_params = dict(job_params)
+        job_params['options']['ocr_options']['do_ocr'] = False
+
+        job_no_ocr = IngestMonographsJob(job_params, 'test_user')
 
         publish_chain_length = len(job_ocr.chord.tasks[0].tasks)
         no_publish_chain_length = len(job_no_ocr.chord.tasks[0].tasks)
