@@ -37,7 +37,7 @@ class PublishToOMPTask(ObjectTask):
         else:
             omp_id = _generate_omp_id('monograph',
                                       omp_press_code,
-                                      result['published_issues'][0])
+                                      result['published_monographs'][0])
             obj.metadata['omp_id'] = omp_id
             obj.write()
 
