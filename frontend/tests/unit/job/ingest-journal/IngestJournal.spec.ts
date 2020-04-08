@@ -25,7 +25,7 @@ const options: IngestJournalOptions = {
         do_ocr: true,
         ocr_lang: '' },
     app_options: { 
-        keep_staging: true }
+        mark_done: true }
 }
 const param = new IngestJournalParameters([target], options )
 

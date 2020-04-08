@@ -8,22 +8,26 @@ import { WorkbenchFile, WorkbenchFileTree, getVisibleFolderContents as realFolde
 let mockTif: WorkbenchFile = {
     name: 'test.tif',
     type: 'tif',
+    marked: false,
 };
 
 let mockInfo: WorkbenchFile = {
     name: '.info',
-    type: 'conf'
+    type: 'conf',
+    marked: false,
 }
 
 let mockTiffFolder: WorkbenchFile = {
     name: 'tif',
     type: 'folder',
+    marked: false,
     contents: {'test.tif': mockTif }
 }
 
 let mockFolder: WorkbenchFile = {
     name: 'tif',
     type: 'folder',
+    marked: false,
     contents: { 'tif': mockTiffFolder, '.info': mockInfo }
 };
 
