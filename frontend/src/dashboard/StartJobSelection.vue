@@ -12,6 +12,14 @@
                     <router-link to="ingest-journal" tag="b-button" id="start_ingest_journal">Start</router-link>
                 </div>
                 <div class="tile is-child box">
+                    <p class="title">Retrodigitized Books</p>
+                    <p>
+                        Import multiple folders that contain scans of Book issues
+                        into iDAI.publications / OMP.
+                    </p>
+                    <router-link to="ingest-book" tag="b-button" id="start_ingest_book">Start</router-link>
+                </div>
+                <div class="tile is-child box">
                     <p class="title">Retrodigitized Archival Material</p>
                     <p>
                         Import multiple folders that contain scans of archival material
