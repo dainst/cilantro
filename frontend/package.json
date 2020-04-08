@@ -18,6 +18,7 @@
     "axios": "^0.19.2",
     "buefy": "^0.8.13",
     "core-js": "^2.6.11",
+    "flush-promises": "^1.0.2",
     "pdfjs-dist": "^2.3.200",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
