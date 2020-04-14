@@ -21,9 +21,9 @@
                         Import multiple folders that contain scans of Book issues
                         into iDAI.publications / OMP.
                     </p>
-                    <router-link to="ingest-book"
+                    <router-link to="ingest-monograph"
                                  tag="b-button"
-                                 id="start_ingest_book">
+                                 id="start_ingest_monograph">
                         Start
                     </router-link>
                 </div>

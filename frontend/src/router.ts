@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Dashboard from './dashboard/Dashboard.vue';
 import IngestJournal from './job/ingest-journal/IngestJournal.vue';
-import IngestBook from './job/ingest-book/IngestBook.vue';
+import IngestMonograph from './job/ingest-monograph/IngestMonograph.vue';
 import IngestArchivalMaterial from './job/ingest-archival-material/IngestArchivalMaterial.vue';
 import StagingArea from './staging/StagingArea.vue';
 import JobDetails from './job/JobDetails.vue';
@@ -46,9 +46,9 @@ const router = new Router({
             component: IngestJournal
         },
         {
-            path: '/ingest-book',
-            name: 'ingest-book',
-            component: IngestBook
+            path: '/ingest-monograph',
+            name: 'ingest-monograph',
+            component: IngestMonograph
         },
         {
             path: '/ingest-archival-material',

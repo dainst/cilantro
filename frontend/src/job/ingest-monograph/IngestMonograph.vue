@@ -19,7 +19,7 @@
             <ContinueButton
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
-            <BookMetadataForm
+            <MonographMetadataForm
                 :selected-paths="selectedPaths"
                 @update:targetsUpdated="onTargetsUpdated"
             />
@@ -29,10 +29,11 @@
         </div>
         <div v-if="activeStep === 2">
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
-            <BookOptionsForm
-                :initialOptions="this.parameters.options"
-                @options-updated="this.parameters.options = $event"
+            <OCROptionsForm
+                :initialOptions="this.parameters.options.ocr_options"
+                @options-updated="this.parameters.options.ocr_options = $event"
             />
+            <hr>
             <AppOptionsForm
                 :initialOptions="this.parameters.options.app_options"
                 @options-updated="this.parameters.options.app_options = $event"
@@ -47,26 +48,26 @@ import { Component, Vue } from 'vue-property-decorator';
 import { startJob } from '../JobClient';
 
 import JobFilesForm from '../JobFilesForm.vue';
-import BookMetadataForm from './IngestBookMetadataForm.vue';
-import BookOptionsForm from './IngestBookOptionsForm.vue';
+import MonographMetadataForm from './IngestMonographMetadataForm.vue';
 import AppOptionsForm from '../AppOptionsForm.vue';
 
 import {
     JobParameters, JobTargetError, OCROptions, AppOptions
 } from '../JobParameters';
 import {
-    IngestBookParameters, MaybeJobTarget, IngestBookOptions
-} from './IngestBookParameters';
+    IngestMonographParameters, MaybeJobTarget, IngestMonographOptions
+} from './IngestMonographParameters';
 
 import { showError, showSuccess } from '@/util/Notifier';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
+import OCROptionsForm from '@/job/OCROptionsForm.vue';
 
 @Component({
     components: {
         JobFilesForm,
-        BookMetadataForm,
-        BookOptionsForm,
+        MonographMetadataForm,
+        OCROptionsForm,
         AppOptionsForm,
         ContinueButton,
         StartJobButton
@@ -74,7 +75,7 @@ import StartJobButton from '@/util/StartJobButton.vue';
 })
 export default class IngestBook extends Vue {
     selectedPaths: string[] = [];
-    parameters: IngestBookParameters;
+    parameters: IngestMonographParameters;
     activeStep: number = 0;
 
     constructor() {
@@ -88,9 +89,9 @@ export default class IngestBook extends Vue {
             app_options: {
                 mark_done: true
             } as AppOptions
-        } as IngestBookOptions;
+        } as IngestMonographOptions;
 
-        this.parameters = new IngestBookParameters([], options);
+        this.parameters = new IngestMonographParameters([], options);
     }
 
     continueToMetadata() {
@@ -114,7 +115,7 @@ export default class IngestBook extends Vue {
     async startJob() {
         try {
             if (this.parameters !== undefined) {
-                await startJob('ingest_Books', this.parameters);
+                await startJob('ingest_monographs', this.parameters);
                 showSuccess('Job started');
                 this.$router.push({ path: '/' });
             }

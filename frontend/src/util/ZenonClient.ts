@@ -42,6 +42,12 @@ export interface ZenonRecord {
     containerReference: string;
     publicationDates: string[];
     parentId?: string;
+    summary: string
+    primaryAuthorsNames: string[],
+    secondaryAuthorsNames: string[],
+    corporateAuthorsNames: string[],
+    shortTitle: string,
+    subTitle: string
 }
 
 export interface ZenonAuthors {
