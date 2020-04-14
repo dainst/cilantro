@@ -30,13 +30,12 @@
             >
                 <template slot-scope="props" >
                     <b-table-column width="25">
-                        <b-icon :icon="getFileIcon(props.row)"/>
+                        <b-icon :icon="getFileIcon(props.row)"
+                                :type="props.row.marked ? 'is-success' : ''"/>
                     </b-table-column>
 
-                    <b-table-column field="name" label="Name">{{ props.row.name }}</b-table-column>
-
-                    <b-table-column field="marked">
-                        <b-icon icon="check" type="is-success" v-if="props.row.marked"></b-icon>
+                    <b-table-column field="name" label="Name">
+                        {{ props.row.name }}
                     </b-table-column>
 
                     <b-table-column field="edit" label="" width="25" @click.native.stop>
