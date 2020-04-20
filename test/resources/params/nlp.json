@@ -1,5 +1,5 @@
 {
-    "objects": [
+    "targets": [
         {
             "id": "some_texts",
             "path": "some_texts",
