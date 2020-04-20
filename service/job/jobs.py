@@ -362,9 +362,9 @@ class IngestJournalsJob(BatchJob):
         return chains
 
 
-class NlpTaskJob(BatchJob):
-    job_type = 'nlp_task'
-    label = 'Experimental NLP task'
+class NlpJob(BatchJob):
+    job_type = 'nlp'
+    label = 'Experimental NLP'
     description = "Experimental task to demonstrate the integration of natural language processing."
 
     def _create_chains(self, params, user_name):

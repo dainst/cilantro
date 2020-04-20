@@ -9,7 +9,7 @@ from service.user.user_service import auth
 from utils.job_db import JobDb
 from utils import json_validation
 
-from service.job.jobs import IngestArchivalMaterialsJob, IngestJournalsJob, NlpTaskJob
+from service.job.jobs import IngestArchivalMaterialsJob, IngestJournalsJob, NlpJob
 
 job_controller = Blueprint('job', __name__)
 
@@ -342,21 +342,21 @@ def archival_material_job_create():
     return body, 202, headers
 
 
-@job_controller.route('/nlp_task', methods=['POST'])
+@job_controller.route('/nlp', methods=['POST'])
 @auth.login_required
-def nlp_task_job_create():
+def nlp_job_create():
     if not request.data:
         raise ApiError("invalid_job_params", "No request payload found")
     params = request.get_json(force=True)
     user_name = auth.username()
     try:
-        json_validation.validate_params(params, 'nlp_task')
+        json_validation.validate_params(params, 'nlp')
     except FileNotFoundError as e:
         raise ApiError("unknown_job_type", str(e), 404)
     except jsonschema.exceptions.ValidationError as e:
         raise ApiError("invalid_job_params", str(e), 400)
 
-    job = NlpTaskJob(params, user_name)
+    job = NlpJob(params, user_name)
     job.run()
 
     body = jsonify({

@@ -2,15 +2,15 @@ import { JobParameters, JobObject } from '../JobParameters';
 
 /* eslint-disable camelcase */
 
-export interface NlpTaskParameters extends JobParameters {
+export interface NlpParameters extends JobParameters {
     objects: JobObject[];
-    options: NlpTaskOptions;
+    options: NlpOptions;
 }
 
-export interface NlpTaskTargetTextFile extends JobObject {
+export interface NlpTargetTextFile extends JobObject {
 }
 
-export interface NlpTaskOptions {
+export interface NlpOptions {
     lang: string;
     tag_intervals: boolean;
     read_dct_from_metadata: boolean;
@@ -18,7 +18,7 @@ export interface NlpTaskOptions {
 }
 
 // Export a helper funtcion to properly fromat the document creation
-// time string in the task options. (Could be a member of the NlpTaskOptions,
+// time string in the task options. (Could be a member of the NlpOptions,
 // but converting that to a class is too much hassle)
 export function formatDCTString(date: Date): string {
     // Return only the date portion of an ISO formatted datetime,
@@ -28,7 +28,7 @@ export function formatDCTString(date: Date): string {
     return match != null ? match[0] : ""
 }
 
-export function initOptions(): NlpTaskOptions {
+export function initOptions(): NlpOptions {
     return {
         lang: 'en',
         tag_intervals: false,
@@ -37,7 +37,7 @@ export function initOptions(): NlpTaskOptions {
     };
 }
 
-export function initNlpTaskTargetTextfile(path: string): NlpTaskTargetTextFile  {
+export function initNlpTargetTextfile(path: string): NlpTargetTextFile  {
     const id = path.split('/').join("-");
     return {
         id,

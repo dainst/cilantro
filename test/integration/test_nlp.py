@@ -4,23 +4,23 @@ import os
 from test.integration.job_type_test import JobTypeTest
 
 
-class NlpTaskTest(JobTypeTest):
+class NlpTest(JobTypeTest):
     """Test job executing some nlp tasks."""
 
     @staticmethod
     def _timeout():
         return int(os.environ.get('NLP_TEST_TIMEOUT'))
 
-    def test_nlp_task(self):
-        """Test nlp task functionality.
+    def test_nlp(self):
+        """Test nlp functionality.
 
         Starts a job that triggers some annotation functionalities and checks that
         all the relevant files are created.
         """
         self.stage_resource('files', 'some_texts')
-        params = self.load_params_from_file('params', 'nlp_task.json')
+        params = self.load_params_from_file('params', 'nlp.json')
 
-        data, status_code = self.post_job('nlp_task', params)
+        data, status_code = self.post_job('nlp', params)
         self.assertEqual(status_code, 202)
         self.assertTrue(data['success'])
 

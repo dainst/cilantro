@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Dashboard from './dashboard/Dashboard.vue';
 import IngestJournal from './job/ingest-journal/IngestJournal.vue';
-import NlpTask from './job/nlp-task/NlpTask.vue';
+import Nlp from './job/nlp/Nlp.vue';
 import IngestArchivalMaterial from './job/ingest-archival-material/IngestArchivalMaterial.vue';
 import StagingArea from './staging/StagingArea.vue';
 import JobDetails from './job/JobDetails.vue';
@@ -51,9 +51,9 @@ const router = new Router({
             component: IngestArchivalMaterial
         },
         {
-            path: '/nlp-task',
-            name: 'nlp-task',
-            component: NlpTask
+            path: '/nlp',
+            name: 'nlp',
+            component: Nlp
         },
         {
             path: '/job',

@@ -2,7 +2,7 @@
   <section class="tile is-ancestor">
     <div class="tile is-parent">
       <div class="tile is-child box">
-        <p class="title">NLP Task Options</p>
+        <p class="title">NLP Options</p>
 
         <section>
           <p class="subtitle strong">Time tagging options</p>
@@ -31,13 +31,13 @@
 
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
-import { NlpTaskOptions, formatDCTString } from "../NlpTaskParameters";
+import { NlpOptions, formatDCTString } from "../NlpParameters";
 
 @Component
-export default class NlpTaskOptionsForm extends Vue {
-  @Prop({ required: true }) initialOptions!: NlpTaskOptions;
+export default class NlpOptionsForm extends Vue {
+  @Prop({ required: true }) initialOptions!: NlpOptions;
 
-  options: NlpTaskOptions = this.initialOptions;
+  options: NlpOptions = this.initialOptions;
 
   langs = [
     { short: "en", long: "English" },

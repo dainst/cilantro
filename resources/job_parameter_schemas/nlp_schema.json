@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "Ingest Records schema",
-    "description": "Used to validate nlp-task job parameters",
+    "description": "Used to validate nlp job parameters",
     "type": "object",
     "required": ["objects", "options"],
     "additionalProperties": false,

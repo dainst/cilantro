@@ -12,7 +12,7 @@
     </div>
     <div v-if="activeStep === 1">
       <StartJobButton @click="startJob"></StartJobButton>
-      <NlpTaskOptionsForm :initialOptions="options" @options-updated="options = $event" />
+      <NlpOptionsForm :initialOptions="options" @options-updated="options = $event" />
       <StartJobButton @click="startJob"></StartJobButton>
     </div>
   </div>
@@ -28,27 +28,27 @@ import JobFilesForm from '../JobFilesForm.vue';
 import { JobParameters } from '../JobParameters';
 
 import {
-    NlpTaskParameters, NlpTaskOptions, initOptions, initNlpTaskTargetTextfile
-} from './NlpTaskParameters';
+    NlpParameters, NlpOptions, initOptions, initNlpTargetTextfile
+} from './NlpParameters';
 
 import { showError, showSuccess } from '@/util/Notifier.ts';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
 
-import NlpTaskOptionsForm from './forms/NlpTaskOptionsForm.vue';
+import NlpOptionsForm from './forms/NlpOptionsForm.vue';
 
 @Component({
     components: {
         JobFilesForm,
         ContinueButton,
         StartJobButton,
-        NlpTaskOptionsForm
+        NlpOptionsForm
     }
 })
-export default class NlpTask extends Vue {
+export default class Nlp extends Vue {
     selectedPaths: string[] = [];
     activeStep: number = 0;
-    options: NlpTaskOptions = initOptions();
+    options: NlpOptions = initOptions();
 
     continueToJobStart() {
         this.activeStep = 1;
@@ -57,7 +57,7 @@ export default class NlpTask extends Vue {
     async startJob() {
         const params = this.buildJobParams();
         try {
-            await startJob('nlp_task', params);
+            await startJob('nlp', params);
             showSuccess('Job started');
             this.$router.push({ path: '/' });
         } catch (e) {
@@ -65,10 +65,10 @@ export default class NlpTask extends Vue {
         }
     }
 
-    buildJobParams(): NlpTaskParameters {
+    buildJobParams(): NlpParameters {
         return {
             objects: this.selectedPaths.map(
-              path => initNlpTaskTargetTextfile(path)
+              path => initNlpTargetTextfile(path)
             ),
             options: this.options
         };
