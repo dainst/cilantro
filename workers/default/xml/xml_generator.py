@@ -36,7 +36,7 @@ def generate_xml(obj, template_file, target_filepath, params):
     log.info("Object: " + str(obj))
 
     pdf_doc = os.path.join(obj.get_representation_dir('pdf'),
-                           f"{obj.metadata.id}.pdf")
+                           f"{obj.id}.pdf")
     with open(pdf_doc, "rb") as pdf_file:
         encoded_string = base64.b64encode(pdf_file.read())
     params['pdf_base64'] = encoded_string.decode('utf-8')

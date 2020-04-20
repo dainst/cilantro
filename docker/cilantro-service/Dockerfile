@@ -17,6 +17,8 @@ RUN set -ex && pipenv install --deploy --system
 
 COPY ./utils /app/utils
 COPY ./service /app/service
+COPY ./resources /app/resources
+
 WORKDIR /app
 
 COPY docker/cilantro-service/entrypoint.sh /entrypoint.sh

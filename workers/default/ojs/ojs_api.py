@@ -68,7 +68,7 @@ def _make_request(url, headers, import_data=None):
         with urlopen(request) as response:
             response_text = response.read().decode('utf-8')
     except HTTPError as e:
-        log.debug(f"Request failed with: {e.read()}")
+        log.error(f"Request failed with: {e.read()}")
         raise
 
     try:

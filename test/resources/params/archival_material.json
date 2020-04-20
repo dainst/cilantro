@@ -1,0 +1,29 @@
+{
+    "targets": [
+        {
+            "id": "some_tiffs_1234",
+            "path": "some_tiffs",
+            "metadata": {
+                "title": "54A, Attische Vasen ausser schwarzfigurige und.",
+                "created": "1836-1879",
+                "authors": [
+                    "Peter Baumeister"
+                ],
+                "creators": [
+                    "Simon Hohl"
+                ],
+                "atom_id": "1449025",
+                "copyright": "Simon Hohl"
+            }
+        }
+    ],
+    "options": {
+        "ocr_options": {
+            "do_ocr": true,
+            "ocr_lang": "eng"
+        },
+        "app_options": {
+            "mark_done": false
+        }
+    }
+}

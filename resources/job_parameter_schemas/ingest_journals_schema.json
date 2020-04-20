@@ -3,14 +3,21 @@
     "title": "Ingest Journal schema",
     "description": "Used to validate ingest-journal job parameters",
     "type": "object",
-    "required": ["objects", "options"],
+    "required": [
+        "targets",
+        "options"
+    ],
     "additionalProperties": false,
     "properties": {
-        "objects": {
+        "targets": {
             "type": "array",
             "items": {
                 "type": "object",
-                "required": ["id", "path", "metadata"],
+                "required": [
+                    "id",
+                    "path",
+                    "metadata"
+                ],
                 "additionalProperties": false,
                 "properties": {
                     "id": {
@@ -22,7 +29,13 @@
                     "metadata": {
                         "type": "object",
                         "additionalProperties": false,
-                        "required": ["volume", "publishing_year", "reporting_year", "number", "description"],
+                        "required": [
+                            "volume",
+                            "publishing_year",
+                            "reporting_year",
+                            "number",
+                            "description"
+                        ],
                         "properties": {
                             "volume": {
                                 "type": "number"
@@ -43,7 +56,7 @@
                                 "type": "string"
                             },
                             "zenon_id": {
-                                "type": "number"
+                                "type": "string"
                             },
                             "ojs_journal_code": {
                                 "type": "string"
@@ -55,14 +68,18 @@
         },
         "options": {
             "type": "object",
-            "required": ["ojs_metadata"],
+            "required": [
+                "ojs_options",
+                "ocr_options",
+                "app_options"
+            ],
             "additionalProperties": false,
             "properties": {
-                "ojs_metadata": {
+                "ojs_options": {
                     "type": "object",
-                    "required": ["auto_publish_issue",
-                                 "default_create_frontpage",
-                                 "allow_upload_without_file"],
+                    "required": [
+                        "default_create_frontpage"
+                    ],
                     "additionalProperties": false,
                     "properties": {
                         "auto_publish_issue": {
@@ -70,17 +87,36 @@
                         },
                         "default_create_frontpage": {
                             "type": "boolean"
-                        },
-                        "allow_upload_without_file": {
-                            "type": "boolean"
                         }
                     }
                 },
-                "do_ocr": {
-                    "type": "boolean"
+                "ocr_options": {
+                    "type": "object",
+                    "required": [
+                        "do_ocr",
+                        "ocr_lang"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "do_ocr": {
+                            "type": "boolean"
+                        },
+                        "ocr_lang": {
+                            "type": "string"
+                        }
+                    }
                 },
-                "ocr_lang": {
-                    "type": "string"
+                "app_options": {
+                    "type": "object",
+                    "required": [
+                        "mark_done"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "mark_done": {
+                            "type": "boolean"
+                        }
+                    }
                 }
             }
         }

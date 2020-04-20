@@ -7,6 +7,7 @@ import App from '@/App.vue';
 const localVue = createLocalVue();
 localVue.use(VueRouter);
 localVue.use(Vuex);
+localVue.use(Buefy)
 
 describe('App.vue', () => {
     const store = new Store({});

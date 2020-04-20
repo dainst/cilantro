@@ -7,19 +7,40 @@
         </b-steps>
 
         <div v-if="activeStep === 0">
-            <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
+            <ContinueButton
+                @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
+            </ContinueButton>
             <JobFilesForm :selected-paths.sync="selectedPaths" />
-            <ContinueButton @click="continueToMetadata" :disabled="this.selectedPaths.length == 0"></ContinueButton>
+            <ContinueButton class="toMetadataButton"
+                @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
+            </ContinueButton>
         </div>
         <div v-if="activeStep === 1">
-            <ContinueButton @click="continueToOptions" :disabled="this.issues.length == 0"></ContinueButton>
-            <JournalMetadataForm :selected-paths="selectedPaths" @update:issues="onIssuesUpdated" />
-            <ContinueButton @click="continueToOptions" :disabled="this.issues.length == 0"></ContinueButton>
+            <ContinueButton class="toOptionsButton"
+                @click="continueToOptions" :disabled="hasInvalidTargets()">
+            </ContinueButton>
+            <JournalMetadataForm
+                :selected-paths="selectedPaths"
+                @update:targetsUpdated="onTargetsUpdated"
+            />
+            <ContinueButton class="toOptionsButton"
+                @click="continueToOptions" :disabled="hasInvalidTargets()">
+            </ContinueButton>
         </div>
         <div v-if="activeStep === 2">
-            <StartJobButton @click="startJob"></StartJobButton>
-            <JournalOptionsForm :initialOptions="options" @options-updated="options = $event" />
-            <StartJobButton @click="startJob"></StartJobButton>
+            <StartJobButton class="startJobButton"
+                @click="startJob" :disabled="hasInvalidTargets()">
+            </StartJobButton>
+            <JournalOptionsForm
+                :initialOptions="this.parameters.options"
+                @options-updated="this.parameters.options = $event"
+            />
+            <AppOptionsForm
+                :initialOptions="this.parameters.options.app_options"
+                @options-updated="this.parameters.options.app_options = $event"
+                />
+            <StartJobButton class="startJobButton" 
+            @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
 </template>
@@ -28,61 +49,82 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { startJob } from '../JobClient';
 
-import JournalMetadataForm from './forms/JournalMetadataForm.vue';
 import JobFilesForm from '../JobFilesForm.vue';
-import ArticlesForm from './forms/ArticlesForm.vue';
-import JournalOptionsForm from './forms/JournalOptionsForm.vue';
+import JournalMetadataForm from './IngestJournalMetadataForm.vue';
+import JournalOptionsForm from './IngestJournalOptionsForm.vue';
+import AppOptionsForm from '../AppOptionsForm.vue';
+
+import { JobParameters, JobTargetError, OCROptions, AppOptions } from '../JobParameters';
 import {
-    JournalImportParameters, JournalIssue, JournalImportOptions, initOptions
-} from './JournalImportParameters';
-import { showError, showSuccess } from '@/util/Notifier.ts';
+    IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSOptions
+} from './IngestJournalParameters';
+
+import { showError, showSuccess } from '@/util/Notifier';
 import ContinueButton from '@/util/ContinueButton.vue';
 import StartJobButton from '@/util/StartJobButton.vue';
-import { JobParameters } from '../JobParameters';
 
 @Component({
     components: {
         JobFilesForm,
         JournalMetadataForm,
         JournalOptionsForm,
+        AppOptionsForm,
         ContinueButton,
         StartJobButton
     }
 })
 export default class IngestJournal extends Vue {
     selectedPaths: string[] = [];
-    issues: JournalIssue[] = [];
-    options: JournalImportOptions = initOptions();
+    parameters: IngestJournalParameters;
     activeStep: number = 0;
+
+    constructor() {
+        super();
+
+        const options = {
+            ojs_options: {
+                default_create_frontpage: true
+            } as OJSOptions,
+            ocr_options: {
+                do_ocr: false,
+                ocr_lang: 'deu'
+            } as OCROptions,
+            app_options: {
+                mark_done: true
+            } as AppOptions
+        } as IngestJournalOptions;
+
+        this.parameters = new IngestJournalParameters([], options);
+    }
 
     continueToMetadata() {
         this.activeStep = 1;
     }
 
-    onIssuesUpdated(issues: JournalIssue[]) {
-        this.issues = issues.filter(issue => issue.metadata.zenon_id > 0);
+    onTargetsUpdated(targets: MaybeJobTarget[]) {
+        this.parameters.targets = targets;
     }
 
     continueToOptions() {
         this.activeStep = 2;
     }
 
+    hasInvalidTargets() {
+        return this.parameters.targets.filter(
+            target => target instanceof JobTargetError
+        ).length > 0 || this.parameters.targets.length === 0;
+    }
+
     async startJob() {
-        const params = this.buildJobParams();
         try {
-            await startJob('ingest_journals', params);
-            showSuccess('Job started');
-            this.$router.push({ path: '/' });
+            if (this.parameters !== undefined) {
+                await startJob('ingest_journals', this.parameters);
+                showSuccess('Job started');
+                this.$router.push({ path: '/' });
+            }
         } catch (e) {
             showError(e);
         }
-    }
-
-    buildJobParams(): JournalImportParameters {
-        return {
-            objects: this.issues,
-            options: this.options
-        };
     }
 }
 </script>

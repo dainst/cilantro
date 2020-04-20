@@ -4,6 +4,7 @@ import logging
 from abc import abstractmethod
 from celery import chord, signature
 
+from workers.task_informations import get_label, get_description
 from utils.celery_client import celery_app
 from utils.job_db import JobDb
 
@@ -95,13 +96,17 @@ class BatchJob(BaseJob):
                 single_task.options['task_id'] = job_id
                 single_task.kwargs['work_path'] = current_work_path
                 single_task.kwargs['parent_job_id'] = current_chain_id
+                label = get_label(single_task.name)
+                description = get_description(single_task.name)
 
                 self.job_db.add_job(job_id=job_id,
                                     user=user_name,
                                     job_type=single_task.name,
                                     parent_job_id=current_chain_id,
                                     child_job_ids=[],
-                                    parameters=single_task.kwargs)
+                                    parameters=single_task.kwargs,
+                                    label=label,
+                                    description=description)
 
                 current_chain_links += [job_id]
 
@@ -128,17 +133,17 @@ class BatchJob(BaseJob):
         return chain_ids
 
 
-class IngestRecordsJob(BatchJob):
-    job_type = 'ingest_records'
-    label = 'Retrodigitized Archival Records'
+class IngestArchivalMaterialsJob(BatchJob):
+    job_type = 'ingest_archival_material'
+    label = 'Retrodigitized Archival Material'
     description = "Import multiple folders that contain scans of archival material into iDAI.archives / AtoM."
 
     def _create_chains(self, params, user_name):
         chains = []
 
-        for record_object in params['objects']:
-            task_params = dict(**record_object, **{'user': user_name},
-                               initial_representation='tif')
+        for record_target in params['targets']:
+            task_params = dict(**record_target, **{'user': user_name},
+                               initial_representation='tif', job_type=self.job_type)
 
             current_chain = _link('create_object', **task_params)
 
@@ -163,14 +168,18 @@ class IngestRecordsJob(BatchJob):
                                    representation='tif',
                                    target='pdf',
                                    task='convert.tif_to_pdf')
+
             current_chain |= _link('convert.merge_converted_pdf')
 
-            if params['options']['do_ocr']:
+            current_chain |= _link('convert.set_pdf_metadata',
+                                   metadata=self._create_pdf_metadata(record_target['metadata']))
+
+            if params['options']['ocr_options']['do_ocr']:
                 current_chain |= _link('list_files',
                                        representation='tif',
                                        target='txt',
                                        task='convert.tif_to_txt',
-                                       ocr_lang=params['options']['ocr_lang'])
+                                       ocr_lang=params['options']['ocr_options']['ocr_lang'])
 
             current_chain |= _link('generate_xml',
                                    template_file='mets_template_no_articles.xml',
@@ -181,12 +190,111 @@ class IngestRecordsJob(BatchJob):
             current_chain |= _link('publish_to_atom')
             current_chain |= _link('publish_to_archive')
 
-            current_chain |= _link('cleanup_workdir')
+            current_chain |= _link('cleanup_directories',
+                                   mark_done=params['options']['app_options']['mark_done'],
+                                   staging_current_folder=record_target['path'],
+                                   user_name=user_name)
+
             current_chain |= _link('finish_chain')
 
             chains.append(current_chain)
 
         return chains
+
+    def _create_pdf_metadata(self, metadata):
+        pdf_metadata = {}
+        if "title" in metadata:
+            pdf_metadata["/Title"] = metadata["title"]
+        if "atom_id" in metadata:
+            pdf_metadata[
+                "/ArchiveLink"] = f'https://archives.dainst.org/index.php/{metadata["atom_id"]}'
+
+        if "authors" in metadata and len(metadata["authors"]) != 0:
+            authors_string = ""
+            count = 0
+            for author in metadata['authors']:
+                if count != 0:
+                    authors_string += ", "
+                authors_string += author
+                count += 1
+            pdf_metadata["/Author"] = authors_string
+
+        subject_string = ""
+        if "scope_and_content" in metadata:
+            subject_string += f"Eingrenzung und Inhalt:\n{metadata['scope_and_content']}\n\n"
+
+        repository_string = ""
+        if "repository" in metadata:
+            repository_string += f"Archiv:\n{metadata['repository']}"
+        if "repository_inherited_from" in metadata:
+            repository_string += f"\nBestand: {metadata['repository_inherited_from']}"
+        if repository_string:
+            subject_string += f"{repository_string}\n\n"
+
+        if "reference_code" in metadata:
+            subject_string += f"Signatur:\n{metadata['reference_code']}\n\n"
+
+        if "creators" in metadata and metadata['creators'] != 0:
+            creators_string = "Bestandsbildner:\n"
+            for creator in metadata['creators']:
+                creators_string += f"{creator}\n"
+            creators_string += "\n"
+            subject_string += creators_string
+
+        if "extent_and_medium" in metadata:
+            subject_string += f"Umfang und Medium:\n{metadata['extent_and_medium']}\n\n"
+
+        level_of_description_translations = {
+            "Fonds": "Bestand",
+            "File": "Akte",
+            "Item": "Objekt"
+        }
+
+        if "level_of_description" in metadata:
+            subject_string += f"Erschließungsstufe: "
+            if metadata['level_of_description'] in level_of_description_translations:
+                subject_string += level_of_description_translations[metadata['level_of_description']]
+            else:
+                subject_string += metadata['level_of_description']
+            subject_string += "\n\n"
+
+        if "notes" in metadata and len(metadata["notes"]) != 0:
+            notes_string = ""
+            for note in metadata["notes"]:
+                notes_string += f"{note}\n"
+            notes_string += "\n"
+            subject_string += notes_string
+
+        date_type_translations = {
+            "Creation": "Datum",
+            "Accumulation": "Laufzeit"
+        }
+        if "dates" in metadata and len(metadata["dates"]) != 0:
+            dates_string = ""
+            count = 0
+            for date in metadata["dates"]:
+                if count != 0:
+                    dates_string += " | "
+
+                if date['type'] in date_type_translations:
+                    dates_string += f"{date_type_translations[date['type']]}: "
+                else:
+                    dates_string += f"Datum ({date['type']}): "
+
+                if date["start_date"] == date["end_date"]:
+                    dates_string += date["date"]
+                else:
+                    dates_string += f"{date['start_date']} - {date['end_date']}"
+                dates_string += "\n"
+                count += 1
+            subject_string += dates_string
+
+        if metadata['copyright']:
+            subject_string += f"\n{metadata['copyright']}"
+
+        pdf_metadata['/Subject'] = subject_string
+
+        return pdf_metadata
 
 
 class IngestJournalsJob(BatchJob):
@@ -197,9 +305,9 @@ class IngestJournalsJob(BatchJob):
     def _create_chains(self, params, user_name):
         chains = []
 
-        for issue_object in params['objects']:
-            task_params = dict(**issue_object, **{'user': user_name},
-                               initial_representation='tif')
+        for issue_target in params['targets']:
+            task_params = dict(**issue_target, **{'user': user_name},
+                               initial_representation='tif', job_type=self.job_type)
 
             current_chain = _link('create_object', **task_params)
 
@@ -225,26 +333,29 @@ class IngestJournalsJob(BatchJob):
             current_chain |= _link('generate_xml',
                                    template_file='ojs3_template_issue.xml',
                                    target_filename='ojs_import.xml',
-                                   ojs_metadata=params['options']['ojs_metadata'])
+                                   ojs_options=params['options']['ojs_options'])
 
             current_chain |= _link('generate_xml',
                                    template_file='mets_template_no_articles.xml',
                                    target_filename='mets.xml',
                                    schema_file='mets.xsd')
-            if params['options']['do_ocr']:
+
+            if params['options']['ocr_options']['do_ocr']:
                 current_chain |= _link('list_files',
                                        representation='tif',
                                        target='txt',
                                        task='convert.tif_to_txt',
-                                       ocr_lang=params['options']['ocr_lang'])
+                                       ocr_lang=params['options']['ocr_options']['ocr_lang'])
 
-            if params['options']['ojs_metadata']['auto_publish_issue']:
-                current_chain |= _link('publish_to_ojs',
-                                       ojs_metadata=params['options']['ojs_metadata'],
-                                       ojs_journal_code=issue_object['metadata']['ojs_journal_code'])
-            current_chain |= _link('publish_to_repository')
-            current_chain |= _link('publish_to_archive')
-            current_chain |= _link('cleanup_workdir')
+            current_chain |= _link('publish_to_ojs',
+                                   ojs_metadata=params['options']['ojs_options'],
+                                   ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
+
+            current_chain |= _link('cleanup_directories',
+                                   mark_done=params['options']['app_options']['mark_done'],
+                                   staging_current_folder=issue_target['path'],
+                                   user_name=user_name)
+
             current_chain |= _link('finish_chain')
             chains.append(current_chain)
 

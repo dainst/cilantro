@@ -6,7 +6,7 @@ from utils.celery_client import celery_app
 from workers.base_task import BaseTask, ObjectTask
 from utils.repository import generate_repository_path
 from utils.job_db import JobDb
-    
+
 repository_dir = os.environ['REPOSITORY_DIR']
 archive_dir = os.environ['ARCHIVE_DIR']
 working_dir = os.environ['WORKING_DIR']
@@ -22,23 +22,18 @@ class CreateObjectTask(ObjectTask):
     -An Object in the working dir
     """
     name = "create_object"
-    label = "Create object"
-    description = "Sets up metadata for further processing."
 
     def process_object(self, obj):
-        oid = self._get_object_id()
+        oid = self._generate_object_id()
 
         self.job_db.set_job_object_id(self.parent_job_id, oid)
         _initialize_object(obj, self.params, oid)
         return {'object_id': oid}
 
-    def _get_object_id(self):
-        try:
-            object_id = self.get_param('id')
-        except KeyError:
-            object_id = self.job_id
-        uid = self.job_db.generate_unique_object_identifier()
-        return object_id + f"_{uid}"
+    def _generate_object_id(self):
+        part_a = self.get_param('id')
+        part_b = self.job_db.generate_unique_object_identifier()
+        return f"{part_a}_{part_b}"
 
 
 CreateObjectTask = celery_app.register_task(CreateObjectTask())
@@ -52,8 +47,8 @@ def _get_work_path(params):
 
 
 def _initialize_object(obj, params, oid):
-    obj.set_metadata_from_dict(params['metadata'])
-    obj.metadata.id = oid
+    obj.id = oid
+    obj.metadata = params['metadata']
     _initialize_files(obj, params['path'], params['user'],
                       params['initial_representation'])
     obj.write()
@@ -86,8 +81,6 @@ class PublishToRepositoryTask(BaseTask):
     """
 
     name = "publish_to_repository"
-    label = "Publish to repository"
-    description = "Copies the current results into the data repository."
 
     def execute_task(self):
         work_path = self.get_work_path()
@@ -111,8 +104,6 @@ class PublishToArchiveTask(BaseTask):
     """Copy the given dir-trees from work dir to the archive."""
 
     name = "publish_to_archive"
-    label = "Publish to archive"
-    description = "Copies the current results into iDAI.archives / AtoM."
 
     def execute_task(self):
         work_path = self.get_work_path()

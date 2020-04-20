@@ -12,6 +12,6 @@ export const ojsZenonMapping = {
 
 export const allowedFileExtensions = ['pdf', 'tif', 'tiff', 'zip', 'txt'];
 
-export const ignoredFolderNames = ['__MACOSX', '@eaDir']
+export const ignoredFolderNames = ['__MACOSX', '@eaDir'];
 
 export const backendUri = process.env.VUE_APP_BACKEND_URI || '/api';

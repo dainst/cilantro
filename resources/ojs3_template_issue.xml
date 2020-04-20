@@ -1,6 +1,6 @@
-{% set metadata = obj.metadata.to_dict() %}
-{% set ojs_metadata = params['ojs_metadata'] %}
-{% set pdf_file_path = path_join(obj.get_representation_dir('pdf'), obj.metadata.id + '.pdf') %}
+{% set metadata = obj.metadata %}
+{% set ojs_options = params['ojs_options'] %}
+{% set pdf_file_path = path_join(obj.get_representation_dir('pdf'), obj.id + '.pdf') %}
 <?xml version="1.0" encoding="UTF-8"?>
 <issue xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" published="1" current="1" access_status="1"
        xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
@@ -10,7 +10,7 @@
         <number>{{metadata['number']}}</number>
         <year>{{metadata['reporting_year']}}</year>
     </issue_identification>
-    <date_published>{{metadata['publishing_year']}}</date_published>
+    <date_published>{{metadata['publishing_year']}}-01-01</date_published>
     <last_modified>{{datetime.date.today().isoformat()}}</last_modified>
     <issue_galleys xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
         <issue_galley>

@@ -45,7 +45,9 @@
                 <JobListEntry :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
-        <div v-else>Loading jobs...</div>
+        <div v-else-if="jobsLoading">Loading jobs...</div>
+        <div v-else-if="emptyJobList">No jobs found</div>
+        <div v-else>There has been an error. JobList in unexpected state</div>
     </section>
 </template>
 
@@ -58,36 +60,66 @@ import {
 } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
 
+enum LoadState {
+        loaded,
+        empty,
+        loading,
+        error
+    };
+
 @Component({ name: 'JobListEntry' })
 export default class JobListEntry extends Vue {
     @Prop(Array) jobIDs!: string[];
     @Prop() activeStates!: string[];
-    unfilteredJobs: Job[] = []
-
+    unfilteredJobs: Job[] = [];
+    loadingState: LoadState = LoadState.loading;
+    updatePendingJobsInterval: number = 0;
     getChildrenIDs = getChildrenIDs;
 
     mounted() {
         this.loadJobs();
+        this.updatePendingJobsInterval = setInterval(() => {
+            this.loadJobs();
+            if (this.jobsLoaded) {
+                clearInterval(this.updatePendingJobsInterval);
+            }
+        }, 5000);
     }
 
     get jobsLoaded() {
-        return this.unfilteredJobs.length !== 0;
+        return  this.loadingState == LoadState.loaded;
+    }
+
+    get jobsLoading() {
+        // return ( this.unfilteredJobs === null );
+        return this.loadingState == LoadState.loading;
+    }
+
+    get emptyJobList() {
+        // return ( this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0 );
+        return this.loadingState == LoadState.empty;
     }
 
     get filteredJobs() {
-        if (this.jobIDs.length === 0) {
-            return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
-        }
-        return this.unfilteredJobs;
+            if (this.jobIDs.length === 0) {
+                return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
+            }
+            return this.unfilteredJobs;
     }
 
     async loadJobs() {
+        this.loadingState = LoadState.loading
+        
         if (this.jobIDs.length === 0) {
             this.unfilteredJobs = await getJobList();
+
         } else {
+           
             const requests = this.jobIDs.map(id => getJobDetails(id));
             this.unfilteredJobs = await Promise.all(requests);
         }
+
+        this.setJobListState();
     }
 
     sortByCreated = sortByCreated;
@@ -101,6 +133,17 @@ export default class JobListEntry extends Vue {
             query: { id }
         });
     }
+
+    setJobListState () {
+        if (Array.isArray( this.unfilteredJobs ) && this.unfilteredJobs.length !== 0 ) {
+            this.loadingState = LoadState.loaded
+        } else if (Array.isArray( this.unfilteredJobs ) && this.unfilteredJobs.length === 0) {
+            this.loadingState = LoadState.empty
+        } else {
+            this.loadingState = LoadState.error
+        }
+    }
+   
 }
 
 function getChildrenIDs(children: Job[]) {

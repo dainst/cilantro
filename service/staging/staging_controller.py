@@ -27,6 +27,7 @@ def _list_dir(dir_path, recursive=False):
             tree[entry.name] = {"type": "directory", "name": entry.name}
             if recursive:
                 path = os.path.join(dir_path, entry.name)
+                tree[entry.name]["marked"] = os.path.exists(os.path.join(path, ".info"))
                 tree[entry.name]["contents"] = _list_dir(path, recursive)
     return tree
 

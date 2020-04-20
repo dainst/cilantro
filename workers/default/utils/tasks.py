@@ -22,8 +22,6 @@ class ListFilesTask(ObjectTask):
     """
 
     name = "list_files"
-    label = "File batch"
-    description = "Group containing individual steps applied to individual files."
 
     def process_object(self, obj):
         rep = self.get_param('representation')
@@ -61,7 +59,7 @@ class ListFilesTask(ObjectTask):
         chain.options['task_id'] = params['job_id']
 
         self.job_db.add_job(job_id=params['job_id'], user=None, job_type=subtasks,
-                       parent_job_id=params['parent_job_id'], child_job_ids=[], parameters=params)
+                            parent_job_id=params['parent_job_id'], child_job_ids=[], parameters=params)
 
         return chain, params['job_id']
 
@@ -69,7 +67,7 @@ class ListFilesTask(ObjectTask):
 ListFilesTask = celery_app.register_task(ListFilesTask())
 
 
-class CleanupWorkdirTask(BaseTask):
+class CleanupDirectoriesTask(BaseTask):
     """
     Remove the complete content of the working dir.
 
@@ -81,24 +79,38 @@ class CleanupWorkdirTask(BaseTask):
     -Empty working dir
     """
 
-    name = "cleanup_workdir"
-    label = "Cleanup"
-    description = "Cleans up the internal working directory."
+    name = "cleanup_directories"
 
     def execute_task(self):
+        mark_done = self.get_param('mark_done')
+        staging_current_folder = self.get_param('staging_current_folder')
+        user = self.get_param('user_name')
+        file_path = os.path.join(self.staging_dir, user, staging_current_folder)
+
+        if mark_done:
+            self.mark_file_as_done(file_path)
+
+        self.delete_temp_folders()
+
+    @staticmethod
+    def mark_file_as_done(folder):
+        f = open(os.path.join(folder, '.info'), 'w')
+        f.write(
+            'This file marks the parent directory as processed by the iDAI.workbench. Deleting this file will '
+            'unmark the directory in the web interface.')
+        f.close()
+
+    def delete_temp_folders(self):
         work_path = self.get_work_path()
         shutil.rmtree(work_path)
 
-
-CleanupWorkdirTask = celery_app.register_task(CleanupWorkdirTask())
+CleanupDirectoriesTask = celery_app.register_task(CleanupDirectoriesTask())
 
 
 class FinishChainTask(BaseTask):
     """Task to set the job state to success after all other tasks have run."""
 
     name = "finish_chain"
-    label = "Finish batch"
-    description = ""
 
     def execute_task(self):
         self.job_db.update_job_state(self.parent_job_id, 'success')
@@ -112,8 +124,6 @@ class FinishChordTask(BaseTask):
     Finish a celery chord task, writes state into the mongo DB.
     """
     name = "finish_chord"
-    label = "No label set for chord task"
-    description = "No label set for chord task"
 
     def _init_params(self, params):
         """

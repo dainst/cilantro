@@ -6,7 +6,7 @@ from utils.object import Object
 from workers.convert.convert_image import convert_tif_to_jpg, \
     convert_jpg_to_pdf, tif_to_txt, convert_tif_to_ptif, tif_to_pdf
 from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf, \
-    convert_pdf_to_tif
+    convert_pdf_to_tif, set_pdf_metadata
 from workers.convert.image_scaling import scale_image
 
 
@@ -43,14 +43,24 @@ class MergeConvertedPdfTask(ObjectTask):
     """
 
     name = "convert.merge_converted_pdf"
-    label = "Merge converted PDF"
-    description = "Merges individual PDF files into one."
 
     def process_object(self, obj):
         rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, 'pdf')
         files = [{'file': os.path.basename(f)}
                  for f in sorted(_list_files(rep_dir, '.pdf'))]
-        split_merge_pdf(files, rep_dir, f"{obj.metadata.id}.pdf")
+
+        split_merge_pdf(
+            files, rep_dir, f"{obj.id}.pdf")
+
+
+class SetPdfMetadataTask(ObjectTask):
+    """
+    Sets PDF Metadata for a given object.
+    """
+    name = "convert.set_pdf_metadata"
+
+    def process_object(self, obj):
+        set_pdf_metadata(obj, self.get_param('metadata'))
 
 
 class JpgToPdfTask(FileTask):
@@ -69,8 +79,6 @@ class JpgToPdfTask(FileTask):
     """
 
     name = "convert.jpg_to_pdf"
-    label = "Convert JPG to PDF"
-    description = "Converts JPG files into PDF files."
 
     def process_file(self, file, target_dir):
         convert_jpg_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
@@ -78,8 +86,6 @@ class JpgToPdfTask(FileTask):
 
 class TifToPdfTask(FileTask):
     name = "convert.tif_to_pdf"
-    label = "Convert TIF to PDF"
-    description = "Converts TIF files into PDF files."
 
     def process_file(self, file, target_dir):
         tif_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
@@ -101,8 +107,6 @@ class TifToJpgTask(FileTask):
     """
 
     name = "convert.tif_to_jpg"
-    label = "Convert TIF to JPG"
-    description = "Converts TIF files into JPG files."
 
     def process_file(self, file, target_dir):
         convert_tif_to_jpg(file, _get_target_file(file, target_dir, 'jpg'))
@@ -125,8 +129,6 @@ class PdfToTxtTask(FileTask):
     """
 
     name = "convert.pdf_to_txt"
-    label = "Convert PDF to TXT"
-    description = "Converts PDF files into TXT files."
 
     def process_file(self, file, target_dir):
         convert_pdf_to_txt(file, target_dir)
@@ -149,8 +151,6 @@ class PdfToTifTask(FileTask):
     """
 
     name = "convert.pdf_to_tif"
-    label = "Convert PDF to TIF"
-    description = "Converts PDF files into TIF files."
 
     def process_file(self, file, target_dir):
         convert_pdf_to_tif(file, target_dir)
@@ -172,8 +172,6 @@ class TifToTxtTask(FileTask):
     """
 
     name = "convert.tif_to_txt"
-    label = "Convert TIF to TXT"
-    description = "Converts TIF files into TXT files."
 
     def process_file(self, file, target_dir):
         lang = self.get_param("ocr_lang")
@@ -198,15 +196,12 @@ class ScaleImageTask(FileTask):
     """
 
     name = "convert.scale_image"
-    label = "Scale images"
-    description = "Scales images."
 
     def _init_params(self, params):
         self.description = f"""
         Scales images to the maximum dimension of {params['max_width']} x {params['max_height']}.
         """
         super()._init_params(params)
-
 
     def process_file(self, file, target_dir):
         max_width = int(self.params['max_width'])
@@ -230,11 +225,10 @@ class TifToPTifTask(FileTask):
     """
 
     name = "convert.tif_to_ptif"
-    label = "Convert TIF to PTIF"
-    description = "Converts TIF files into PTIF files."
 
     def process_file(self, file, target_dir):
         convert_tif_to_ptif(file, target_dir)
+
 
 
 ScaleImageTask = celery_app.register_task(ScaleImageTask())
@@ -245,3 +239,4 @@ PdfToTifTask = celery_app.register_task(PdfToTifTask())
 PdfToTxtTask = celery_app.register_task(PdfToTxtTask())
 TifToTxtTask = celery_app.register_task(TifToTxtTask())
 TifToPTifTask = celery_app.register_task(TifToPTifTask())
+SetPdfMetadataTask = celery_app.register_task(SetPdfMetadataTask())

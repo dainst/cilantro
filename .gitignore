@@ -2,7 +2,7 @@ redis-data
 /data
 /archaeocloud_test_dir
 .DS_Store
-.env
+/.env
 test/integration/env.py
 /config/users.yml
 /config/settings.json
@@ -119,9 +119,7 @@ cmake-build-release/
 
 # IntelliJ
 out/
-.idea/misc.xml
-.idea/encodings.xml
-.idea/inspectionProfiles/Project_Default.xml
+.idea/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
@@ -135,3 +133,7 @@ fabric.properties
 # custom build
 cilantro-build.sh
 docker.log
+.vscode/launch.json
+
+# npm dependencies
+node_modules/

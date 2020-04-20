@@ -4,7 +4,7 @@ Cilantro is a task runner designed to manage long running distributed jobs that
 operate on file system objects. Its backend is written in Python (3.6+) and uses
 [Celery](http://docs.celeryproject.org/) and [Flask](http://flask.pocoo.org/).
 Its frontend is written in JavaScript and uses
-[AngularJS](https://angularjs.org/).
+[VueJS](https://vuejs.org/).
 
 ## Development
 
@@ -13,6 +13,23 @@ Its frontend is written in JavaScript and uses
 * Docker Community Edition
 * NodeJS
 
+#### For Windows Users:
+
+Since the following process relies on make and uses bash related commands it can't be used in a Windows-Shell. The easiest way to circumvent this problem is to make use of the WSL-System of Windows 10 Pro. If you don't have Windows 10 Pro, go get Windows 10 Pro, also Docker dosn't work flawlessly without it. 
+
+Expecting that you have Win10 Pro, you need to activate the Linux Subsystem Feature and Install Ubuntu 18.04 or what ever Version is available by the time you read this. If your Ubuntu-Subsystem is up and running, open it and start installing the requierments. Begin with nodejs and pip3 for python
+    
+    sudo apt update
+    sudo apt install nodejs python3-pip
+    
+After that start following this instruction very carefully, since you are going to setup a linux in a virtual environment communication with a docker in another environment running an linux serving an Webserver there are a lot of possibilities of mistakes.
+
+https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly
+
+After you done with that you are good to go on with the rest of this instructions.
+
+Also, if you are developing with VSCode, there is a WSL Extension for that IDE available which works very well, gives you the possibilitie to use the linux subsystem from within VSCode, see: https://code.visualstudio.com/docs/remote/wsl
+
 ### Running cilantro
 
 Run this command after first checking out the code:
@@ -20,6 +37,8 @@ Run this command after first checking out the code:
     make init
 
 Then generate an access token at https://github.com/settings/tokens/new (you don't need to tick any of the scope boxes), and add the token to your local .env file.
+
+Edit the .env file and replace the UID placeholders with your UID and GID. You can get these with the command `id -u && id -g`
 
 Run all docker containers with backend services:
 
@@ -80,6 +99,10 @@ When the application is started with `make run` backend tests can be run
 separately with:
 
     make test-backend
+    
+Analogous frontend tests can be started with
+    
+    make test-frontend
 
 Similarly end-to-end tests that test the whole application with protractor can
 be run with:
@@ -108,7 +131,7 @@ OJS monitoring under http://localhost:4444
 
 ## Troubleshooting
 
-On Linux hosts the tests will fail because the data directory created by
+* On Linux hosts the tests will fail because the data directory created by
 docker does not have the right permissions and the user account that runs the
 tests can not access it. The easiest way to fix that is just to change the owner
 on the whole directory and subfolders. The Makefile offers a short command for
@@ -118,9 +141,18 @@ this:
 
 After that re-run the tests and they may succeed.
 
-In case of duplicate entries in the database clean your test containers with:
+* In case of duplicate entries in the database clean your test containers with:
 
     docker-compose down
+    
+* If you run into an error using `make run-frontend`on mac, run `softwareupdate --install -a` to update the whole system to the newest state. If the error remains, check if it is this Error-Code: `getaddrinfo ENOTFOUND x86_64-apple-darwin13.4.0`, if so use the command `unset HOST`and retry the make call.
+
+* On Mac's on can encounter an error after running `make run-frontend` of that kind 
+
+    getaddrinfo ENOTFOUND x86_64-apple-darwin13.4.0
+    
+    to fix this one needs to run the command `unset HOST` in the Terminal and re-run the `make run-frontend` command. 
+   
 
 ## Code style
 
