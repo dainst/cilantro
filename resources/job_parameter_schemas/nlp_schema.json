@@ -3,10 +3,10 @@
     "title": "Ingest Records schema",
     "description": "Used to validate nlp job parameters",
     "type": "object",
-    "required": ["objects", "options"],
+    "required": ["targets", "options"],
     "additionalProperties": false,
     "properties": {
-        "objects": {
+        "targets": {
             "type": "array",
             "items": {
                 "type": "object",

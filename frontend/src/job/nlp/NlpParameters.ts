@@ -1,13 +1,14 @@
-import { JobParameters, JobObject } from '../JobParameters';
+import { JobParameters, MaybeJobTarget, JobTargetData } from '../JobParameters';
 
 /* eslint-disable camelcase */
 
 export interface NlpParameters extends JobParameters {
-    objects: JobObject[];
+    targets: MaybeJobTarget[];
     options: NlpOptions;
 }
 
-export interface NlpTargetTextFile extends JobObject {
+export interface NlpTargetTextFile extends JobTargetData {
+    metadata: {}
 }
 
 export interface NlpOptions {

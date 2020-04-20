@@ -370,8 +370,8 @@ class NlpJob(BatchJob):
     def _create_chains(self, params, user_name):
         chains = []
 
-        for text_object in params['objects']:
-            task_params = dict(**text_object, **{'user': user_name})
+        for target in params['targets']:
+            task_params = dict(**target, **{'user': user_name})
 
             current_chain = _link('create_object', **task_params,
                                   initial_representation='txt')

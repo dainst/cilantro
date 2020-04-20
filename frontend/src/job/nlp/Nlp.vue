@@ -67,7 +67,7 @@ export default class Nlp extends Vue {
 
     buildJobParams(): NlpParameters {
         return {
-            objects: this.selectedPaths.map(
+            targets: this.selectedPaths.map(
               path => initNlpTargetTextfile(path)
             ),
             options: this.options
