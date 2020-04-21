@@ -29,8 +29,8 @@ class ListFilesTask(ObjectTask):
 
         pattern = os.path.join(obj.get_representation_dir(rep), '*.*')
         files = []
-        for tif_file in glob.iglob(pattern):
-            files.append(tif_file)
+        for matching_file in glob.iglob(pattern):
+            files.append(matching_file)
         raise self.replace(self._generate_chord_for_files(files, task))
 
     def _generate_chord_for_files(self, files, subtasks):

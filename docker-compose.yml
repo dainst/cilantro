@@ -30,6 +30,7 @@ x-env-app-config: &env-app-config
 
 x-test-timeouts: &test-timeouts
   DEFAULT_TEST_TIMEOUT: ${DEFAULT_TEST_TIMEOUT}
+  NLP_TEST_TIMEOUT: ${NLP_TEST_TIMEOUT}
 
 services:
 
@@ -100,6 +101,24 @@ services:
     build:
       context: .
       dockerfile: ./docker/cilantro-convert-worker/Dockerfile
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      <<: *env-jobdb
+      DB_HOST: db
+      CILANTRO_ENV: *cilantro-env
+
+  nlp-heideltime-worker:
+    image: dainst/cilantro-nlp-heideltime-worker:latest
+    user: ${UID}
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-nlp-heideltime-worker/Dockerfile
     working_dir: /app
     volumes:
       - .:/app

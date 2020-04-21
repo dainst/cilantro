@@ -24,6 +24,7 @@
                     <p>
                         <i>work in progress ...</i>
                     </p>
+                    <router-link to="nlp" tag="b-button" id="start_nlp">Start</router-link>
                 </div>
             </div>
         </div>

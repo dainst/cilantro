@@ -71,6 +71,28 @@ class JobTypeTest(unittest.TestCase):
                 waited += retry_time
                 time.sleep(0.001 * retry_time)
 
+    def assert_file_in_workdir(self, job_id, path, timeout: int = None):
+        """
+        Assert that a file is present in the working directory.
+
+        :param job_id: The id of the job that created the file.
+        :param path: Path to the file below the job's folder.
+        :param int timeout: Timeout in miliseconds, defaults to value of environment
+        variable (if set) or hardcoded value. See _get_default_timeout.
+        """
+        if timeout is None:
+            timeout = _get_default_timeout()
+        waited = 0
+        file = Path(os.path.join(self.working_dir, job_id, path))
+        while not file.is_file():
+            if waited > timeout:
+                raise AssertionError(
+                    f"experienced timeout ({timeout / 1000}s) while waiting "
+                    f"for file '{file}' to appear in working directory")
+            else:
+                waited += retry_time
+                time.sleep(0.001 * retry_time)
+
     def assert_job_successful(self, task_ids: list, timeout: int = None):
         """
         Assert that a job completed successfully.

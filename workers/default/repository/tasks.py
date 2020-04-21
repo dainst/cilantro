@@ -55,7 +55,7 @@ def _initialize_object(obj, params, oid):
 
 
 def _initialize_files(obj, path, user, init_rep):
-    types = ('*.tif', '*.tiff', '*.TIF', '*.TIFF')
+    types = ('*.tif', '*.tiff', '*.TIF', '*.TIFF', '*.txt', '*.TXT')
     files_grabbed = []
     for files in types:
         files_grabbed.extend(glob.glob(os.path.join(staging_dir, user,

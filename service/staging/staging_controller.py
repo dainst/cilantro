@@ -13,7 +13,7 @@ staging_controller = Blueprint('staging', __name__)
 
 staging_dir = os.environ['STAGING_DIR']
 
-allowed_extensions = ['pdf', 'tif', 'tiff', 'zip']
+allowed_extensions = ['pdf', 'tif', 'tiff', 'zip', 'txt']
 
 log = logging.getLogger(__name__)
 

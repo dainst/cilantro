@@ -36,7 +36,7 @@ Run this command after first checking out the code:
 
     make init
 
-Then generate an access token at https://github.com/settings/tokens/new, and add the token to your local .env file.
+Then generate an access token at https://github.com/settings/tokens/new (you don't need to tick any of the scope boxes), and add the token to your local .env file.
 
 Edit the .env file and replace the UID placeholders with your UID and GID. You can get these with the command `id -u && id -g`
 
@@ -59,6 +59,9 @@ To stop the application run:
 
 For now users are managed via the file `config/users.yml`. Every user is able to
 login and start new jobs. Passwords in this file are encrypted with bcrypt.
+
+You can [generate a bcryt-hash here](https://bcrypt-generator.com/).
+
 
 ### Documentation
 

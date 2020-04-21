@@ -1,0 +1,15 @@
+{
+    "targets": [
+        {
+            "id": "some_texts",
+            "path": "some_texts",
+            "metadata": {}
+        }
+    ],
+    "options": {
+        "lang": "en",
+        "tag_intervals": false,
+        "read_dct_from_metadata": false,
+        "document_creation_time": "2020-01-16"
+    }
+}
