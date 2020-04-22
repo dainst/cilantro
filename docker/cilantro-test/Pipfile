@@ -22,7 +22,8 @@ bcrypt = "*"
 pymongo = "*"
 jsonschema = "*"
 mysql-connector = "*"
-Sphinx = "*"
+# Fixing the sphinx version avoids some incompatibility errors when building the documentation
+Sphinx = "==2.4.4"
 sphinxcontrib-httpdomain = "*"
 # workaround for https://github.com/pypa/pipenv/issues/3865
 docutils = "==0.15"
