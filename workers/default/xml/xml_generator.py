@@ -2,6 +2,7 @@ import logging
 import os
 import datetime
 import glob
+import json
 import base64
 
 from jinja2 import Environment, FileSystemLoader
@@ -26,20 +27,34 @@ def generate_xml(obj, template_file, target_filepath, params):
     # Some functions which may be needed in the template (logic)
     env.globals['path_join'] = os.path.join
     env.globals['datetime'] = datetime
-    env.globals['glob'] = glob.glob
     env.globals['basename'] = os.path.basename
     env.globals['splitext'] = os.path.splitext
     env.globals['getsize'] = os.path.getsize
     env.globals['environ'] = os.environ
 
     log.info("Generating XML with template: " + template_file)
-    log.info("Object: " + str(obj))
 
     pdf_doc = os.path.join(obj.get_representation_dir('pdf'),
                            f"{obj.id}.pdf")
     with open(pdf_doc, "rb") as pdf_file:
         encoded_string = base64.b64encode(pdf_file.read())
     params['pdf_base64'] = encoded_string.decode('utf-8')
+
+    jpegs = glob.glob(obj.get_representation_dir('jpg') + '/*.jpg')
+    thumbnails = glob.glob(obj.get_representation_dir('jpg_thumbnails') + '/*.jpg')
+    pdfs = glob.glob(obj.get_representation_dir('pdf') + '/*.pdf')
+    
+    params['files'] = {}
+
+    if jpegs:
+        params['files']['jpegs'] = jpegs
+
+    if thumbnails:
+        params['files']['thumbnails'] = thumbnails
+
+    if pdfs:
+        params['files']['pdfs'] = pdfs 
+    
 
     template = env.get_template(template_file)
     filled_template = template.render(obj=obj, params=params)

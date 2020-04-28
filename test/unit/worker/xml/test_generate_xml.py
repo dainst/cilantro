@@ -23,15 +23,31 @@ class GenerateXMLTest(unittest.TestCase):
         obj = Object(f'{self.resource_dir}/objects/a_journal')
         template_file = 'mets_template_no_articles.xml'
         target_file_path = os.path.join(obj.path, 'test_ojsxml.xml')
+    
+        # params = {
+        #     "ojs_options": {
+        #         "default_create_frontpage": True
+        #     }
+        # }
+
         params = {
-            "ojs_options": {
-                "default_create_frontpage": True
+            'template_file': 'mets_template_no_articles.xml', 
+            'target_filename': 'mets.xml', 
+            'schema_file': 'mets.xsd', 
+            'job_id': '5b7ab852-887b-11ea-b351-0242ac170008', 
+            'work_path': '5b79b2ec-887b-11ea-af07-0242ac170008', 
+            'parent_job_id': '5b79b2ec-887b-11ea-af07-0242ac170008', 
+            'object_id': 'JOURNAL-ZID001149881_1353296', 
+            'pdf_base64': '' 
             }
-        }
+
+        obj.metadata['title'] = 'Haus vom Nikolaus.'
+
+        obj.metadata['author'] = [{ "firstname": 'Santa', "lastname": 'Claus'}]
 
         generate_xml(obj, template_file, target_file_path,
                      params)
 
         self.assertTrue(os.path.isfile(
             f'{self.resource_dir}/objects/a_journal/test_ojsxml.xml'))
-        os.remove(f'{self.resource_dir}/objects/a_journal/test_ojsxml.xml')
+        #os.remove(f'{self.resource_dir}/objects/a_journal/test_ojsxml.xml')
