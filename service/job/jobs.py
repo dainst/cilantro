@@ -368,8 +368,6 @@ class IngestMonographsJob(BatchJob):
     description = "Import multiple folders that contain scans of monographs into iDAI.publications / OMP."
 
     def _create_chains(self, params, user_name):
-        chains = []
-
         for monograph_target in params['targets']:
             task_params = dict(**monograph_target, **{'user': user_name},
                                initial_representation='tif', job_type=self.job_type)
@@ -421,6 +419,34 @@ class IngestMonographsJob(BatchJob):
                                    user_name=user_name)
 
             current_chain |= _link('finish_chain')
+
+
+class NlpJob(BatchJob):
+    job_type = 'nlp'
+    label = 'Experimental NLP'
+    description = "Experimental task to demonstrate the integration of natural language processing."
+
+    def _create_chains(self, params, user_name):
+        chains = []
+        for target in params['targets']:
+            task_params = dict(**target, **{'user': user_name})
+
+            current_chain = _link('create_object', **task_params,
+                                  initial_representation='txt')
+
+            current_chain |= _link('list_files',
+                                   representation='txt',
+                                   target='xml',
+                                   task='nlp_heideltime.time_annotate',
+                                   lang=params['options']['lang'],
+                                   tag_intervals=params['options']['tag_intervals'],
+                                   document_creation_time=params['options']['document_creation_time'])
+
+            current_chain |= _link('list_files',
+                                   representation='xml',
+                                   task='nlp_heideltime.convert_timeml_to_viewer_json',
+                                   target='json')
+
             chains.append(current_chain)
 
         return chains

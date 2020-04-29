@@ -1,0 +1,13 @@
+(This file contains FF-characters - form-feed, ASCII 0x0C - to simulate page preaks in a PDF export)
+
+The sixties were a crazy time in archaeology.
+
+They did this from 2006to 2010 exactly.
+
+This happened 13000 years ago.
+
+After the birth of Julius Caesar everything went on like before.
+
+Something happened during the Abbasid Caliphate.
+
+Some time after this he again did this and that.

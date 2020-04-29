@@ -1,10 +1,13 @@
 {
     "id": "a_journal",
     "metadata": {
-        "volume": "",
-        "year": 2018,
-        "number": "",
-        "description": "[PDFs teilweise verf\u00fcgbar]",
+        "zenon_id": "001149881",
+        "volume": "1850",
+        "publishing_year": 1850,
+        "number": "13",
+        "description": "Archäologischer Anzeiger",
+        "ojs_journal_code": "aa",
+        "reporting_year": 1850,
         "identification": "year"
     }
 }

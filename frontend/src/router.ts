@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Dashboard from './dashboard/Dashboard.vue';
 import IngestJournal from './job/ingest-journal/IngestJournal.vue';
 import IngestMonograph from './job/ingest-monograph/IngestMonograph.vue';
+import Nlp from './job/nlp/Nlp.vue';
 import IngestArchivalMaterial from './job/ingest-archival-material/IngestArchivalMaterial.vue';
 import StagingArea from './staging/StagingArea.vue';
 import JobDetails from './job/JobDetails.vue';
@@ -54,6 +55,11 @@ const router = new Router({
             path: '/ingest-archival-material',
             name: 'ingest-archival-material',
             component: IngestArchivalMaterial
+        },
+        {
+            path: '/nlp',
+            name: 'nlp',
+            component: Nlp
         },
         {
             path: '/job',

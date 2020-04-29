@@ -20,6 +20,7 @@ convert_exchange = Exchange('convert', type='direct')
 celery_app.conf.task_queues = (
     Queue('default', default_exchange, routing_key='default'),
     Queue('nlp', nlp_exchange, routing_key='nlp'),
+    Queue('nlp_heideltime', nlp_exchange, routing_key='nlp_heideltime'),
     Queue('convert', nlp_exchange, routing_key='convert'),
 )
 celery_app.conf.task_default_queue = 'default'
@@ -28,6 +29,10 @@ celery_app.conf.task_default_routing_key = 'default'
 
 # specify tasks excecuted by non-default workers here!
 celery_app.conf.task_routes = {
+    'nlp_heideltime.*': {
+        'queue': 'nlp_heideltime',
+        'routing_key': 'nlp_heideltime',
+    },
     'nlp.*': {
         'queue': 'nlp',
         'routing_key': 'nlp',

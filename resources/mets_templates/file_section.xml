@@ -1,0 +1,32 @@
+<mets:fileSec>
+        {% if params['files']['jpegs'] %}
+        <mets:fileGrp USE="DEFAULT">
+            {% for file_path in params['files']['jpegs']|sort() %}
+                {% set ns.id_list = ns.id_list + [loop.index] %}
+                <mets:file ID="file_{{loop.index}}" MIMETYPE="image/jpeg">
+                    {% set new_file_path = path_join(server_url, 'repository', 'file', object_id, 'data', 'jpg', basename(file_path)) %}
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
+                </mets:file>
+            {% endfor %}
+        </mets:fileGrp>
+        {% endif %}
+        {% if params['files']['thumbnails'] %}
+        <mets:fileGrp USE="THUMBS">
+            {% for file_path in params['files']['thumbnails']|sort() %}
+                <mets:file ID="thumb_file_{{loop.index}}" MIMETYPE="image/jpeg">
+                    {% set new_file_path = path_join(server_url, 'repository', 'file', object_id, 'data', 'jpg', basename(file_path)) %}
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{new_file_path}}"/>
+                </mets:file>
+            {% endfor %}
+        </mets:fileGrp>
+        {% endif %}
+        {% if params['files']['pdfs'] %}
+        <mets:fileGrp USE="DOWNLOAD">
+            <mets:file ID="PDF1" MIMETYPE="application/pdf">
+                {% for file_path in params['files']['pdfs']|sort() %}
+                    <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(server_url, 'repository', 'file', object_id, 'data', 'pdf', basename(file_path))}}"/>
+                {% endfor %}
+            </mets:file>
+        </mets:fileGrp>
+        {% endif %}
+    </mets:fileSec>

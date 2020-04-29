@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mets:mets
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:mets="http://www.loc.gov/METS/"
+    xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns:dv="http://dfg-viewer.de/"
+    xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/mets/mets.xsd
+        http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-2.xsd">
+
+    <mets:metsHdr LASTMODDATE="2020-04-28T12:11:28.591673">
+        <mets:agent ROLE="CREATOR" TYPE="ORGANIZATION">
+            <mets:name>Deutsches Archäologisches Institut</mets:name>
+        </mets:agent>
+    </mets:metsHdr>
+
+<mets:dmdSec ID="dmd001">
+    <mets:mdWrap MIMETYPE="text/xml" MDTYPE="MODS">
+        <mets:xmlData>
+            <mods:mods>
+                <mods:titleInfo>
+                    <mods:title>Haus vom Nikolaus.</mods:title>
+                </mods:titleInfo>
+                    <mods:name type="personal">
+                        <mods:displayForm>Santa Claus</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+                            <mods:roleTerm type="text">Author</mods:roleTerm>
+                        </mods:role>
+                    </mods:name>
+            </mods:mods>
+        </mets:xmlData>
+    </mets:mdWrap>
+</mets:dmdSec>
+
+    <mets:amdSec ID="amd1">
+        <mets:rightsMD ID="rights1">
+            <mets:mdWrap MIMETYPE="text/xml" MDTYPE="OTHER" OTHERMDTYPE="DVRIGHTS">
+                <mets:xmlData>
+                    <dv:rights>
+                        <dv:owner>Deutsches Archäologisches Institut</dv:owner>
+                        <dv:ownerLogo>https://www.dainst.org/image/company_logo?img_id=11201</dv:ownerLogo>
+                        <dv:ownerSiteURL>https://dainst.org</dv:ownerSiteURL>
+                    </dv:rights>
+                </mets:xmlData>
+            </mets:mdWrap>
+        </mets:rightsMD>
+    </mets:amdSec>
+
+<mets:fileSec>
+        <mets:fileGrp USE="DOWNLOAD">
+            <mets:file ID="PDF1" MIMETYPE="application/pdf">
+                    <mets:FLocat LOCTYPE="URL" xlink:href="http://localhost:5000/repository/file/a_journal/data/pdf/a_journal.pdf"/>
+            </mets:file>
+        </mets:fileGrp>
+    </mets:fileSec>    
+<mets:structMap TYPE="PHYSICAL">
+    <mets:div ID="struct_phys" TYPE="physSequence">
+        <mets:fptr FILEID="PDF1"/>
+    </mets:div>
+</mets:structMap>
+
+<mets:structMap TYPE="LOGICAL">
+    <mets:div ID="struct_log" DMDID="dmd001" ADMID="amd1" TYPE="Monograph">
+        <mets:fptr FILEID="PDF1"/>
+        <mets:div ID="struct_log_1" TYPE="chapter" LABEL="Haus vom Nikolaus."></mets:div>
+    </mets:div>
+</mets:structMap>
+
+
+</mets:mets>

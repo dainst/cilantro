@@ -1,5 +1,4 @@
 import jsonschema
-import os
 import datetime
 
 from flask import Blueprint, url_for, jsonify, request
@@ -10,7 +9,7 @@ from utils.job_db import JobDb
 from utils import json_validation
 
 from service.job.jobs import IngestArchivalMaterialsJob,\
-    IngestJournalsJob, IngestMonographsJob
+    IngestJournalsJob, IngestMonographsJob, NlpJob
 
 job_controller = Blueprint('job', __name__)
 
@@ -454,6 +453,32 @@ def archival_material_job_create():
         raise ApiError("invalid_job_params", str(e), 400)
 
     job = IngestArchivalMaterialsJob(params, user_name)
+    job.run()
+
+    body = jsonify({
+        'success': True,
+        'job_id': job.id})
+
+    headers = {'Location': url_for(
+        'job.job_status', job_id=job.id)}
+    return body, 202, headers
+
+
+@job_controller.route('/nlp', methods=['POST'])
+@auth.login_required
+def nlp_job_create():
+    if not request.data:
+        raise ApiError("invalid_job_params", "No request payload found")
+    params = request.get_json(force=True)
+    user_name = auth.username()
+    try:
+        json_validation.validate_params(params, 'nlp')
+    except FileNotFoundError as e:
+        raise ApiError("unknown_job_type", str(e), 404)
+    except jsonschema.exceptions.ValidationError as e:
+        raise ApiError("invalid_job_params", str(e), 400)
+
+    job = NlpJob(params, user_name)
     job.run()
 
     body = jsonify({
