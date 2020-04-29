@@ -23,5 +23,6 @@ import StagingBrowser from '@/staging/StagingBrowser.vue';
 })
 export default class JobFilesForm extends Vue {
     @Prop({ default: () => [] }) private selectedPaths!: string[];
+    @Prop() private acceptedFiletypes!: string;
 }
 </script>

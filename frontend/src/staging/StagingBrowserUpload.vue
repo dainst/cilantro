@@ -37,6 +37,7 @@
                 v-if="!uploadRunning"
                 v-model="filesToUpload"
                 @input="uploadFiles"
+                :accept="acceptedFileType"
             >
                 <section class="section">
                     <div class="content has-text-centered">
@@ -63,6 +64,7 @@ import { allowedFileExtensions } from '@/config';
 @Component
 export default class StagingBrowserUpload extends Vue {
     @Prop({ default: '' }) workingDirectory!: string;
+     @Prop({ required: true }) acceptedFiletypes!: string;
 
     uploadRunning: boolean = false;
     uploadStatus: { [index: string]: Status } = {};

@@ -12,7 +12,7 @@
                 @click="continueToMetadata"
                 :disabled="this.selectedPaths.length === 0" />
 
-            <JobFilesForm :selected-paths.sync="selectedPaths" />
+            <JobFilesForm :selected-paths.sync="selectedPaths" :accepted-filetypes="acceptedFileTypes" />
 
             <ContinueButton
                 class="toMetadataButton"
@@ -105,6 +105,7 @@ import {
 })
 export default class IngestArchivalMaterial extends Vue {
     selectedPaths: string[] = [];
+    acceptedFileTypes = "image/*";
     parameters: IngestArchivalMaterialParameters;
     activeStep: number = 0;
     initialCopyright: string;
