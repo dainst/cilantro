@@ -7,7 +7,7 @@
 
     <div v-if="activeStep === 0">
       <ContinueButton @click="continueToJobStart" :disabled="this.selectedPaths.length == 0"></ContinueButton>
-      <JobFilesForm :selected-paths.sync="selectedPaths" />
+      <JobFilesForm :selected-paths.sync="selectedPaths" :accepted-filetypes="acceptedFileTypes" />
       <ContinueButton @click="continueToJobStart" :disabled="this.selectedPaths.length == 0"></ContinueButton>
     </div>
     <div v-if="activeStep === 1">
@@ -47,6 +47,7 @@ import NlpOptionsForm from './forms/NlpOptionsForm.vue';
 })
 export default class Nlp extends Vue {
     selectedPaths: string[] = [];
+    acceptedFileTypes = "image/*,.txt,.xml"
     activeStep: number = 0;
     options: NlpOptions = initOptions();
 

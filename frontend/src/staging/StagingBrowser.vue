@@ -75,7 +75,7 @@
             </b-table>
         </div>
         <div v-else>Folder is empty ...</div>
-        <StagingBrowserUpload :working-directory="workingDirectory" @upload-finished="fetchFiles"/>
+        <StagingBrowserUpload :working-directory="workingDirectory" @upload-finished="fetchFiles" :accepted-filetypes="acceptedFiletypes"/>
     </section>
 </template>
 
@@ -106,6 +106,7 @@ import StagingBrowserFolderSelection from './StagingBrowserFolderSelection.vue';
 })
 export default class StagingBrowser extends Vue {
     @Prop({ required: true }) selectedPaths!: string[];
+    @Prop({ required: true }) acceptedFiletypes!: string;
 
     operationInProgress: boolean = false;
     workingDirectory: string = '';

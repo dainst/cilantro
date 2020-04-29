@@ -10,7 +10,7 @@
             <ContinueButton
                 @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
             </ContinueButton>
-            <JobFilesForm :selected-paths.sync="selectedPaths" />
+            <JobFilesForm :selected-paths.sync="selectedPaths" :accepted-filetypes="acceptedFileTypes" />
             <ContinueButton class="toMetadataButton"
                 @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
             </ContinueButton>
@@ -75,6 +75,7 @@ import StartJobButton from '@/util/StartJobButton.vue';
 })
 export default class IngestJournal extends Vue {
     selectedPaths: string[] = [];
+    acceptedFileTypes = "image/tiff, image/tif";
     parameters: IngestJournalParameters;
     activeStep: number = 0;
 
