@@ -1,7 +1,7 @@
 <template>
     <b-table class="" :data="this.targets" detailed detail-key="id">
         <template slot-scope="props">
-            <b-table-column width="25">
+            <b-table-column style="vertical-align: middle;">
                 <b-icon v-if="isTargetError(props.row)" icon="alert-circle" type="is-danger" />
                 <template v-else>
                     <b-icon
@@ -19,27 +19,21 @@
                 field="id"
                 label="Path"
             >{{ props.row.id }}</b-table-column>
-            <template v-if="!isTargetError(props.row) && props.row.metadata">
-                <b-table-column
-                    field="metadata.title"
-                    label="Title"
-                >{{ props.row.metadata.title || '-' | truncate(80) }}</b-table-column>
+            <template
+                v-if="!isTargetError(props.row) &&
+                    props.row.metadata &&
+                    props.row.metadata.author">
+                <b-table-column field="metadata.title"
+                                label="Title">
+                    <a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id"
+                       target="_blank">
+                        {{ props.row.metadata.title || '-' | truncate(80) }}
+                    </a>
+                </b-table-column>
                 <b-table-column
                     field="metadata.subtitle"
                     label="Subtitle"
                 >{{ props.row.metadata.subtitle || '-' }}
-                </b-table-column>
-                <b-table-column
-                    field="metadata.author.original_string"
-                    label="Author given name"
-                >{{ props.row.metadata.author ?
-                    props.row.metadata.author.givenname : '-' }}
-                </b-table-column>
-                <b-table-column
-                    field="metadata.author.original_string"
-                    label="Author last name"
-                >{{ props.row.metadata.author ?
-                    props.row.metadata.author.lastname : '-' }}
                 </b-table-column>
                 <b-table-column
                     field="metadata.date_published"
@@ -50,9 +44,6 @@
             <template v-else>
                 <b-table-column label="Title">-</b-table-column>
                 <b-table-column label="Subtitle">-</b-table-column>
-                <b-table-column label="Author (Zenon data)">-</b-table-column>
-                <b-table-column label="Author given name">-</b-table-column>
-                <b-table-column label="Author last name">-</b-table-column>
                 <b-table-column label="Date published">-</b-table-column>
             </template>
         </template>
@@ -141,8 +132,7 @@ export default class MonographMetadataForm extends Vue {
 
         this.targets = await asyncMap(this.targets, async(target) => {
             if (target instanceof JobTargetData) {
-                const updated : MaybeJobTarget = await loadZenonData(target);
-                return updated;
+                return loadZenonData(target);
             }
             return new JobTargetError(target.id, target.path, target.messages);
         });
@@ -151,7 +141,6 @@ export default class MonographMetadataForm extends Vue {
     }
 
     isTargetError = isTargetError;
-    labelPosition: string = 'on-border';
 }
 
 function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
@@ -229,7 +218,7 @@ function extractAuthor(record: ZenonRecord) : Person {
 
     const authorSplit = authorCompleteName.split(',');
 
-    if (authorSplit.length >= 1) {
+    if (authorSplit.length === 2) {
         return {
             givenname: authorSplit[1].replace(/[\\.]+$/, ''),
             lastname: authorSplit[0]
@@ -237,7 +226,7 @@ function extractAuthor(record: ZenonRecord) : Person {
     }
     return {
         givenname: '',
-        lastname: ''
+        lastname: authorCompleteName
     } as Person;
 }
 
