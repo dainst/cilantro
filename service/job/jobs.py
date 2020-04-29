@@ -368,6 +368,7 @@ class IngestMonographsJob(BatchJob):
     description = "Import multiple folders that contain scans of monographs into iDAI.publications / OMP."
 
     def _create_chains(self, params, user_name):
+        chains = []
         for monograph_target in params['targets']:
             task_params = dict(**monograph_target, **{'user': user_name},
                                initial_representation='tif', job_type=self.job_type)
@@ -419,6 +420,9 @@ class IngestMonographsJob(BatchJob):
                                    user_name=user_name)
 
             current_chain |= _link('finish_chain')
+            chains.append(current_chain)
+
+        return chains
 
 
 class NlpJob(BatchJob):
