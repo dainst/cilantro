@@ -13,6 +13,8 @@ pdftotext = "*"
 Wand = "*"
 pyocr = "*"
 pymongo = "*"
+pyyaml = "*"
+argh = "*"
 
 [dev-packages]
 
