@@ -6,7 +6,7 @@
                 :selected-paths="selectedPaths"
                 :accepted-filetypes="acceptedFiletypes"
                 @update:selected-paths="$emit('update:selected-paths', $event)"
-            />
+                :accepted-filetypes="acceptedFiletypes"/>
         </div>
     </section>
 </template>
