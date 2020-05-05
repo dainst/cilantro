@@ -129,6 +129,12 @@ is available for debugging under http://localhost:5555.
 
 OJS monitoring under http://localhost:4444
 
+### Additional docker-compose configurations
+
+#### Local OMP instance
+
+If you have checked out [omp-docker](https://github.com/dainst/omp-docker) and want to develop against its running instance (instead of the default mock server), you can do so by using the provided [docker-compose.local_omp.yml](docker-compose.local_omp.yml) by running `docker-compose -f docker-compose.yml -f docker-compose.local_omp.yml up`.
+
 ## Troubleshooting
 
 * On Linux hosts the tests will fail because the data directory created by
