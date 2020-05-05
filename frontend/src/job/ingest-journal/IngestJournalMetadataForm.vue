@@ -57,7 +57,7 @@
             </template>
 
             <template slot="detail" slot-scope="props">
-                <div class="content">
+                <div class="content metadata_output">
                     <ul>
                         <li v-for="(id, name) in props.row.metadata" :key="id">{{name}}: {{id}}</li>
                     </ul>
@@ -154,18 +154,19 @@ export default class JournalMetadataForm extends Vue {
 
 function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
     const errors: string[] = [];
-    if (!containsNumberOfFiles(targetFolder, 1)) {
+    if (containsNumberOfFiles(targetFolder, 0)) {
         errors.push(
-            `Folder has more than one entry. Only one subfolder 'tif' is allowed.`
+            `Folder appears to be empty. Please provide input data.`
         );
     }
 
-    if (!('tif' in targetFolder)) {
-        errors.push(`Folder does not have a subfolder 'tif'.`);
-    } else if (targetFolder.tif.contents !== undefined &&
+    if (('tif' in targetFolder)) {
+        // if there is a tif folder, make sure it only contains tifs
+        if (targetFolder.tif.contents !== undefined &&
                 !containsOnlyFilesWithSuffix(targetFolder.tif.contents, '.tif')) {
-        errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
-    }
+            errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
+        }
+    } 
     return errors;
 }
 

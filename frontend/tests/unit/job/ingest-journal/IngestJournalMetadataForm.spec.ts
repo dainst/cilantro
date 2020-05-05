@@ -28,13 +28,34 @@ let mockFolder: WorkbenchFile = {
     name: 'tif',
     type: 'folder',
     marked: false,
-    contents: { 'tif': mockTiffFolder, '.info': mockInfo }
+    contents: { 'test.tif': mockTif, '.info': mockInfo }
 };
+
+let mockStagingTree: WorkbenchFileTree =  {'Journal-ZID001149881': {
+    name: 'Journal-ZID001149881',
+    type: 'folder',
+    marked: false,
+    contents: {
+        "Anerkennung_als_Quereinsteigerin.pdf": {
+            "name": "Anerkennung_als_Quereinsteigerin.pdf",
+            "type": "file",
+            marked: false
+          },
+          "neu.pdf": {
+            "name": "neu.pdf",
+            "type": "file",
+            marked: false
+          }
+        }
+      
+    }
+}
+
 
 
 jest.mock('@/staging/StagingClient', () => ({
     ...jest.requireActual('@/staging/StagingClient'),
-    getStagingFiles: () => Promise.resolve({ 'Journal-ZID001149881': mockFolder }),
+    getStagingFiles: () => Promise.resolve( mockStagingTree ),
 }));
 
 
@@ -73,6 +94,13 @@ describe("IngestJournalMetadataForm", () => {
         })
         await flushPromises();
         let icon = wrapper.find('.has-text-danger');
+        wrapper.find('a').trigger('click');
+
+        await wrapper.vm.$nextTick();
+        let details = wrapper.find('.metadata_output');
+        let msg = details.text();
+        console.log(msg);
         expect(icon.exists()).toBe(false);
-    })
+    });
+
 });
