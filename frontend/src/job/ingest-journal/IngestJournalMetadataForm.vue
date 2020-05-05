@@ -47,6 +47,13 @@
                     <b-table-column label="Year">-</b-table-column>
                     <b-table-column label="Number">-</b-table-column>
                 </template>
+                <b-table-column label="">
+                    <b-button title="Remove from selection"
+                              type="is-text"
+                              @click="removeTarget(props.row)">
+                        <b-icon icon="close"/>
+                    </b-button>
+                </b-table-column>
             </template>
 
             <template slot="detail" slot-scope="props">
@@ -138,7 +145,11 @@ export default class JournalMetadataForm extends Vue {
     }
 
     isTargetError = isTargetError;
-    labelPosition: string = 'on-border';
+
+    removeTarget(removedTarget: MaybeJobTarget) {
+        this.targets = this.targets.filter(target => removedTarget.id !== target.id);
+        this.$emit('update:targetsUpdated', this.targets);
+    }
 }
 
 function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {

@@ -2,8 +2,10 @@
     <section>
         <b-table :data="targets" detailed detail-key="id" > <!-- :row-class="getRowClass" -->
             <template slot-scope="props">
-                <b-table-column width="25">
-                    <b-icon v-if="isTargetError(props.row)" icon="alert-circle" type="is-danger" />
+                <b-table-column>
+                    <template v-if="isTargetError(props.row)">
+                        <b-icon icon='alert-circle' type="is-danger"/>
+                    </template>
                     <template v-else>
                         <b-icon
                             v-if="!props.row.metadata"
@@ -36,6 +38,15 @@
                     <b-table-column label="Title">-</b-table-column>
                     <b-table-column label="Copyright">-</b-table-column>
                 </template>
+
+                <b-table-column label="">
+                    <b-button title="Remove from selection"
+                              class="button"
+                              type="is-text"
+                              @click="removeTarget(props.row)">
+                        <b-icon icon="close"/>
+                    </b-button>
+                </b-table-column>
             </template>
             <template slot="detail" slot-scope="props">
                 <div class="content">
@@ -107,7 +118,9 @@ export default class ArchivalMaterialMetadataForm extends Vue {
                 }
                 if (errors.length === 0) {
                     return new JobTargetData(
-                        id, path, { atom_id: atomId, copyright: this.defaultCopyright } as ArchivalMaterialMetadata
+                        id, path, {
+                            atom_id: atomId, copyright: this.defaultCopyright
+                        } as ArchivalMaterialMetadata
                     );
                 }
                 return new JobTargetError(id, path, errors);
@@ -126,7 +139,11 @@ export default class ArchivalMaterialMetadataForm extends Vue {
     }
 
     isTargetError = isTargetError;
-    labelPosition: string = 'on-border';
+
+    removeTarget(removedTarget: MaybeJobTarget) {
+        this.targets = this.targets.filter(target => removedTarget.id !== target.id);
+        this.$emit('update:targetsUpdated', this.targets);
+    }
 }
 
 function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {

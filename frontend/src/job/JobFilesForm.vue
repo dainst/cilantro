@@ -4,6 +4,7 @@
         <div style="padding-top:10px; padding-bottom:10px">
             <StagingBrowser
                 :selected-paths="selectedPaths"
+                :accepted-filetypes="acceptedFiletypes"
                 @update:selected-paths="$emit('update:selected-paths', $event)"
             />
         </div>
