@@ -8,11 +8,11 @@
 
         <div v-if="activeStep === 0">
             <ContinueButton
-                @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
+                @click="continueToMetadata" :disabled="validJobFiles()">
             </ContinueButton>
             <JobFilesForm :selected-paths.sync="selectedPaths" :accepted-filetypes="acceptedFileTypes" />
             <ContinueButton class="toMetadataButton"
-                @click="continueToMetadata" :disabled="this.selectedPaths.length == 0">
+                @click="continueToMetadata" :disabled="validJobFiles()">
             </ContinueButton>
         </div>
         <div v-if="activeStep === 1">
@@ -21,6 +21,7 @@
             </ContinueButton>
             <JournalMetadataForm
                 :selected-paths="selectedPaths"
+                :folder-name-pattern="folderNamePattern"
                 @update:targetsUpdated="onTargetsUpdated"
             />
             <ContinueButton class="toOptionsButton"
@@ -76,6 +77,7 @@ import StartJobButton from '@/util/StartJobButton.vue';
 export default class IngestJournal extends Vue {
     selectedPaths: string[] = [];
     acceptedFileTypes = "image/tiff, image/tif";
+    folderNamePattern = /.*JOURNAL-ZID(\d+)/i; 
     parameters: IngestJournalParameters;
     activeStep: number = 0;
 
@@ -114,6 +116,12 @@ export default class IngestJournal extends Vue {
         return this.parameters.targets.filter(
             target => target instanceof JobTargetError
         ).length > 0 || this.parameters.targets.length === 0;
+    }
+
+    validJobFiles() {
+        let path_be_cool = false;
+        path_be_cool = this.selectedPaths.map(path => this.folderNamePattern.test(path)).reduce((a, b) => a && b);
+        return this.selectedPaths.length == 0 && path_be_cool;
     }
 
     async startJob() {

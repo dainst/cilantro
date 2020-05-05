@@ -49,3 +49,5 @@ export interface OJSOptions {
 }
 
 export type MaybeJobTarget = JobTargetData | JobTargetError;
+
+

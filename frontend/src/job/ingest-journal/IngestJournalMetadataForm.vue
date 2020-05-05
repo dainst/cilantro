@@ -97,6 +97,8 @@ import {
 })
 export default class JournalMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
+    @Prop() private folderNamePattern: RegExp;
+
 
     targets: MaybeJobTarget[];
 
@@ -170,7 +172,7 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
 }
 
 function extractZenonId(path: string): string {
-    const result = path.match(/.*JOURNAL-ZID(\d+)/i);
+    const result = path.match(this.folderNamePattern);
     if (!result || result.length < 1) return '';
     return result[1];
 }
