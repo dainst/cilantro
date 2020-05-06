@@ -34,7 +34,9 @@
                             "publishing_year",
                             "reporting_year",
                             "number",
-                            "description"
+                            "description",
+                            "ojs_journal_code",
+                            "zenon_id"
                         ],
                         "properties": {
                             "volume": {
