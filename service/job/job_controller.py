@@ -403,60 +403,48 @@ def get_job_param_schema(job_type):
             "additionalProperties": false,
             "description": "Used to validate ingest-journal job parameters",
             "properties": {
-                "objects": {
-                    "items": {
-                        "properties": {
-                            "path": {
-                                "type": "string"
-                            }
-                        },
-                        "required": [
-                            "path"
-                        ],
-                        "type": "object"
-                    },
-                    "type": "array"
-                },
                 "options": {
                     "additionalProperties": false,
                     "properties": {
-                        "do_nlp": {
-                            "type": "boolean"
-                        },
-                        "do_ocr": {
-                            "type": "boolean"
-                        },
-                        "nlp_params": {
+                        "app_options": {
                             "additionalProperties": false,
                             "properties": {
-                                "lang": {
+                                "mark_done": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "mark_done"
+                            ],
+                            "type": "object"
+                        },
+                        "ocr_options": {
+                            "additionalProperties": false,
+                            "properties": {
+                                "do_ocr": {
+                                    "type": "boolean"
+                                },
+                                "ocr_lang": {
                                     "type": "string"
                                 }
                             },
                             "required": [
-                                "lang"
+                                "do_ocr",
+                                "ocr_lang"
                             ],
                             "type": "object"
-                        },
-                        "ocr_lang": {
-                            "type": "string"
                         },
                         "ojs_options": {
                             "additionalProperties": false,
                             "properties": {
-                                "default_create_frontpage": {
+                                "auto_publish_issue": {
                                     "type": "boolean"
                                 },
-                                "ojs_journal_code": {
-                                    "type": "string"
-                                },
-                                "ojs_user": {
-                                    "type": "string"
+                                "default_create_frontpage": {
+                                    "type": "boolean"
                                 }
                             },
                             "required": [
-                                "ojs_journal_code",
-                                "ojs_user",
                                 "default_create_frontpage"
                             ],
                             "type": "object"
@@ -464,14 +452,73 @@ def get_job_param_schema(job_type):
                     },
                     "required": [
                         "ojs_options",
-                        "do_ocr",
-                        "nlp_params"
+                        "ocr_options",
+                        "app_options"
                     ],
                     "type": "object"
+                },
+                "targets": {
+                    "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "metadata": {
+                                "additionalProperties": false,
+                                "properties": {
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "identification": {
+                                        "type": "string"
+                                    },
+                                    "number": {
+                                        "type": "number"
+                                    },
+                                    "ojs_journal_code": {
+                                        "type": "string"
+                                    },
+                                    "publishing_year": {
+                                        "type": "number"
+                                    },
+                                    "reporting_year": {
+                                        "type": "number"
+                                    },
+                                    "volume": {
+                                        "type": "number"
+                                    },
+                                    "zenon_id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "volume",
+                                    "publishing_year",
+                                    "reporting_year",
+                                    "number",
+                                    "description",
+                                    "ojs_journal_code",
+                                    "zenon_id"
+                                ],
+                                "type": "object"
+                            },
+                            "path": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "id",
+                            "path",
+                            "metadata"
+                        ],
+                        "type": "object"
+                    },
+                    "type": "array"
                 }
             },
             "required": [
-                "objects",
+                "targets",
                 "options"
             ],
             "title": "Ingest Journal schema",
