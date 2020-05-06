@@ -38,54 +38,54 @@ def job_list():
             {
                 "children": [
                     {
-                        "job_id": "f602db90-f594-11e9-b848-0242ac130009",
-                        "state": "success",
-                        "type": "chain"
-                    },
-                    {
-                        "job_id": "f6053df6-f594-11e9-b455-0242ac130009",
-                        "state": "success",
-                        "type": "chain"
+                        "job_id": "e86b96de-8f79-11ea-833a-0242ac140008",
+                        "label": "Batch #1",
+                        "state": "success"
                     }
                 ],
-                "created": "Wed, 23 Oct 2019 12:59:34 GMT",
+                "created": "Wed, 06 May 2020 09:13:54 GMT",
+                "description": "Import multiple folders that contain scans of journal issues into iDAI.publications / OJS.",
                 "errors": [],
-                "job_id": "f5fe4d76-f594-11e9-8671-0242ac130009",
+                "job_id": "e86a56b0-8f79-11ea-ab78-0242ac140008",
                 "job_type": "ingest_journals",
-                "name": "ingest_journals-f5fe4d76-f594-11e9-8671-0242ac130009",
-                "parameters": {
-                    ...
-                },
-                "started": "Wed, 23 Oct 2019 12:59:39 GMT",
-                "state": "success",
-                "updated": "Wed, 23 Oct 2019 12:59:39 GMT",
-                "user": "test_user"
-            },
-            {
-                "children": [
-                    {
-                        "job_id": "f803e5fa-f594-11e9-a9da-0242ac130009",
-                        "state": "started",
-                        "type": "chain"
-                    },
-                    {
-                        "job_id": "f8119042-f594-11e9-8a4d-0242ac130009",
-                        "state": "started",
-                        "type": "chain"
-                    }
+                "label": "Retrodigitized Journals",
+                "log": [
+                    "Task finish_chord[e86a56b0-8f79-11ea-ab78-0242ac140008] succeeded in 0.220787524998741s: {'object_id': 'JOURNAL-ZID001149881_1353285'}"
                 ],
-                "created": "Wed, 23 Oct 2019 12:59:37 GMT",
-                "errors": [],
-                "job_id": "f7fdf50a-f594-11e9-8f9d-0242ac130009",
-                "job_type": "ingest_archival_material",
-                "name": "ingest_archival_material-f7fdf50a-f594-11e9-8f9d-0242ac130009",
+                "name": "ingest_journals-e86a56b0-8f79-11ea-ab78-0242ac140008",
                 "parameters": {
-                    ...
+                    "options": {
+                        "app_options": {
+                            "mark_done": true
+                        },
+                        "ocr_options": {
+                            "do_ocr": false,
+                            "ocr_lang": "deu"
+                        },
+                        "ojs_options": {
+                            "default_create_frontpage": true
+                        }
+                    },
+                    "targets": [
+                        {
+                            "id": "JOURNAL-ZID001149881",
+                            "metadata": {
+                                "description": "Archäologischer Anzeiger",
+                                "number": 13,
+                                "ojs_journal_code": "aa",
+                                "publishing_year": 1850,
+                                "reporting_year": 1850,
+                                "volume": 1850,
+                                "zenon_id": "001149881"
+                            },
+                            "path": "JOURNAL-ZID001149881"
+                        }
+                    ]
                 },
-                "started": "Wed, 23 Oct 2019 12:59:37 GMT",
-                "state": "started",
-                "updated": "Wed, 23 Oct 2019 12:59:37 GMT",
-                "user": "test_user"
+                "started": "Wed, 06 May 2020 09:13:56 GMT",
+                "state": "success",
+                "updated": "Wed, 06 May 2020 09:13:56 GMT",
+                "user": "u"
             }
         ]
     :return: A JSON object containing the list of job objects
