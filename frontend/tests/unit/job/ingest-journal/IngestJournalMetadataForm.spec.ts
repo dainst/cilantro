@@ -94,13 +94,13 @@ describe("IngestJournalMetadataForm", () => {
         })
         await flushPromises();
         let icon = wrapper.find('.has-text-danger');
+        expect(icon.exists()).toBe(false);
+        // no error lets check the output
         wrapper.find('a').trigger('click');
-
         await wrapper.vm.$nextTick();
         let details = wrapper.find('.metadata_output');
-        let msg = details.text();
-        console.log(msg);
-        expect(icon.exists()).toBe(false);
+        expect(details.text()).toBe('zenon_id: 001149881')
+        
     });
 
 });
