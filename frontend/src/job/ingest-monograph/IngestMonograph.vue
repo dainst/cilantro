@@ -10,7 +10,9 @@
             <ContinueButton
                 @click="continueToMetadata" :disabled="this.selectedPaths.length === 0">
             </ContinueButton>
-            <JobFilesForm :selected-paths.sync="selectedPaths" />
+            <JobFilesForm
+                :selected-paths.sync="selectedPaths"
+                :accepted-filetypes="acceptedFileTypes"/>
             <ContinueButton
                 @click="continueToMetadata" :disabled="this.selectedPaths.length === 0">
             </ContinueButton>
@@ -51,9 +53,7 @@ import JobFilesForm from '../JobFilesForm.vue';
 import MonographMetadataForm from './IngestMonographMetadataForm.vue';
 import AppOptionsForm from '../AppOptionsForm.vue';
 
-import {
-    JobParameters, JobTargetError, OCROptions, AppOptions
-} from '../JobParameters';
+import { JobTargetError, OCROptions, AppOptions } from '../JobParameters';
 import {
     IngestMonographParameters, MaybeJobTarget, IngestMonographOptions
 } from './IngestMonographParameters';
@@ -77,6 +77,7 @@ export default class IngestBook extends Vue {
     selectedPaths: string[] = [];
     parameters: IngestMonographParameters;
     activeStep: number = 0;
+    acceptedFileTypes = 'image/tiff, image/tif';
 
     constructor() {
         super();
