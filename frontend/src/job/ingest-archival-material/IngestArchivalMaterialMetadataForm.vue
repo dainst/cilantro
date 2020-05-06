@@ -51,14 +51,10 @@
             <template slot="detail" slot-scope="props">
                 <div class="content">
                     <ul>
-                        <li v-for="(data, name) in props.row.metadata" :key="data">
-                            {{name}}: {{data}}
-                        </li>
+                        <li v-for="(data, name) in props.row.metadata" :key="data">{{name}}: {{data}}</li>
                     </ul>
                     <ul v-if="isTargetError(props.row)">
-                        <li v-for="message in props.row.messages" :key="message">
-                            {{ message }}
-                        </li>
+                        <li v-for="message in props.row.messages" :key="message">{{ message }}</li>
                     </ul>
                 </div>
             </template>
@@ -68,7 +64,7 @@
 
 <script lang="ts">
 import {
-    Component, Vue, Prop
+    Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import {
     JobTargetError, isTargetError, getTargetFolder, containsNumberOfFiles,
@@ -78,7 +74,7 @@ import {
     JobTargetData, MaybeJobTarget, ArchivalMaterialMetadata
 } from './IngestArchivalMaterialParameters';
 import {
-    getStagingFiles, WorkbenchFileTree
+    getStagingFiles, WorkbenchFileTree, WorkbenchFile
 } from '@/staging/StagingClient';
 import { AtomRecord, getAtomRecord } from '@/util/AtomClient';
 import { asyncMap } from '@/util/HelperFunctions';
@@ -158,7 +154,8 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
         );
     }
 
-    if (!containsOnlyFilesWithSuffix(targetFolder, '.tif')) {
+     if (targetFolder.contents !== undefined &&
+                !containsOnlyFilesWithSuffix(targetFolder.contents, '.tif')) {
         errors.push(`Folder does not only contain files ending in '.tif'.`);
     }
     return errors;

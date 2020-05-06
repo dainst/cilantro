@@ -50,12 +50,15 @@ function getStagingFile(stagingFiles: WorkbenchFileTree, path: string): Workbenc
 }
 
 export function containsNumberOfFiles(folder: WorkbenchFileTree, number: number) {
-    return getVisibleFolderContents(folder).length === number;
+    if (getVisibleFolderContents(folder).length !== number) {
+        return false;
+    }
+    return true;
 }
 
 export function containsOnlyFilesWithSuffix(folder: WorkbenchFileTree,
     suffix: string) {
-    const differentSuffixFiles =
-        Object.keys(folder.contents).filter(file => !file.endsWith(suffix));
-    return differentSuffixFiles.length === 0;
+    const differentSuffixFiles = Object.keys(folder).filter(file => !file.endsWith(suffix));
+    if (differentSuffixFiles.length !== 0) return false;
+    return true;
 }
