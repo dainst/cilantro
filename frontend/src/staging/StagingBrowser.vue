@@ -30,31 +30,36 @@
             >
                 <template slot-scope="props" >
                     <b-table-column width="25">
-                        <b-icon :icon="getFileIcon(props.row)"/>
+                        <b-icon :icon="getFileIcon(props.row)"
+                                :type="props.row.marked ? 'is-success' : ''"/>
                     </b-table-column>
 
-                    <b-table-column field="name" label="Name">{{ props.row.name }}</b-table-column>
-
-                    <b-table-column field="marked">
-                        <b-icon icon="check" type="is-success" v-if="props.row.marked"></b-icon>
+                    <b-table-column field="name" label="Name">
+                        {{ props.row.name }}
                     </b-table-column>
 
                     <b-table-column field="edit" label="" width="25" @click.native.stop>
                         <b-dropdown aria-role="list">
                             <b-button icon-right="dots-vertical" type="is-text" slot="trigger"/>
-                            <b-dropdown-item aria-role="listitem" @click="showRenameModal(props.row)">
+                            <b-dropdown-item
+                                aria-role="listitem"
+                                @click="showRenameModal(props.row)">
                                 <div class="media">
                                     <b-icon class="media-left" icon="folder-edit"/>
                                     <div class="media-content">Rename</div>
                                 </div>
                             </b-dropdown-item>
-                            <b-dropdown-item aria-role="listitem" @click="showMoveModalForItem(props.row)">
+                            <b-dropdown-item
+                                aria-role="listitem"
+                                @click="showMoveModalForItem(props.row)">
                                 <div class="media">
                                     <b-icon class="media-left" icon="folder-move"/>
                                     <div class="media-content">Move</div>
                                 </div>
                             </b-dropdown-item>
-                            <b-dropdown-item aria-role="listitem" @click="showDeleteDialogForItem(props.row)">
+                            <b-dropdown-item
+                                aria-role="listitem"
+                                @click="showDeleteDialogForItem(props.row)">
                                 <div class="media">
                                     <b-icon class="media-left" icon="delete"/>
                                     <div class="media-content">Delete</div>

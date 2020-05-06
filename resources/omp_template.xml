@@ -1,0 +1,38 @@
+{% set metadata = obj.metadata %}
+{% set pdf_file_path = path_join(obj.get_representation_dir('pdf'), obj.id + '.pdf') %}<?xml version="1.0" encoding="UTF-8"?>
+<monograph xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:onix="http://ns.editeur.org/onix/3.0/reference" stage="production"
+           date_published="{{metadata['date_published']}}" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+    <id type="internal" advice="ignore">1</id>
+    <title>{{metadata['title']}}</title>
+    <prefix>{{metadata['prefix']}}</prefix>
+    <subtitle>{{metadata['subtitle']}}</subtitle>
+    <abstract>{{metadata['abstract']}}</abstract>
+    <authors xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+        <author primary_contact="true" include_in_browse="true" user_group_ref="Author">
+            <givenname>{{metadata['author']['givenname']}}</givenname>
+            <familyname>{{metadata['author']['lastname']}}</familyname>
+            <email>Test</email>
+        </author>
+    </authors>
+    <submission_file xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     stage="production_ready" id="1" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+        <revision number="1" genre="Book Manuscript" filename="merged.pdf"
+                  viewable="true"
+                  date_uploaded="{{datetime.date.today().isoformat()}}"
+                  date_modified="{{datetime.date.today().isoformat()}}"
+                  filesize="{{getsize(pdf_file_path)}}"
+                  filetype="application/pdf">
+            <name>Cilantro creation</name>
+            <embed encoding="base64">{{params['pdf_base64']}}</embed>
+        </revision>
+    </submission_file>
+    <publication_format xmlns:onix="http://ns.editeur.org/onix/3.0/reference"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" approved="true" available="true"
+                        physical_format="false" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+        <name>PDF</name>
+        <seq>1</seq>
+        <submission_file_ref id="1" revision="1"/>
+    </publication_format>
+</monograph>
