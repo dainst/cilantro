@@ -49,7 +49,7 @@
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props">
-                <div class="content">
+                <div class="content metadata_output">
                     <ul>
                         <li v-for="(data, name) in props.row.metadata" :key="data">{{name}}: {{data}}</li>
                     </ul>
@@ -74,7 +74,7 @@ import {
     JobTargetData, MaybeJobTarget, ArchivalMaterialMetadata
 } from './IngestArchivalMaterialParameters';
 import {
-    getStagingFiles, WorkbenchFileTree, WorkbenchFile
+    getStagingFiles, WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents
 } from '@/staging/StagingClient';
 import { AtomRecord, getAtomRecord } from '@/util/AtomClient';
 import { asyncMap } from '@/util/HelperFunctions';
@@ -154,9 +154,16 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
         );
     }
 
-     if (targetFolder.contents !== undefined &&
-                !containsOnlyFilesWithSuffix(targetFolder.contents, '.tif')) {
-        errors.push(`Folder does not only contain files ending in '.tif'.`);
+    if (targetFolder !== undefined) {
+        // since there is no subfolder anymore get all files in question
+        let file_list = getVisibleFolderContents(targetFolder);
+        // check if everyone is a tif
+        let clear = file_list
+                    .map(file => file.name.endsWith('.tif') || file.name.endsWith('.tiff') )
+                    .reduce((a,b) => a && b, true);
+        if (!clear){
+            errors.push(`Folder does not only contain files ending in '.tif'.`);
+        }
     }
     return errors;
 }
