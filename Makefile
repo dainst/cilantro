@@ -7,6 +7,9 @@ run-frontend:
 run-detached:
 	docker-compose up -d
 
+run-local-omp:
+	docker-compose -f docker-compose.yml -f docker-compose.local_omp.yml up
+
 stop:
 	docker-compose stop
 

@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+  default-worker:
+    environment:
+      OMP_URI: http://omp_dev:80/plugins/generic/cilantro/api/
+    networks:
+      - default
+      - omp_dev_network
+
+networks:
+  omp_dev_network:
+    external: true

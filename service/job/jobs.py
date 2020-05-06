@@ -362,6 +362,69 @@ class IngestJournalsJob(BatchJob):
         return chains
 
 
+class IngestMonographsJob(BatchJob):
+    job_type = 'ingest_monographs'
+    label = 'Retrodigitized Monographs'
+    description = "Import multiple folders that contain scans of monographs into iDAI.publications / OMP."
+
+    def _create_chains(self, params, user_name):
+        chains = []
+        for monograph_target in params['targets']:
+            task_params = dict(**monograph_target, **{'user': user_name},
+                               initial_representation='tif', job_type=self.job_type)
+
+            current_chain = _link('create_object', **task_params)
+
+            current_chain |= _link('list_files',
+                                   representation='tif',
+                                   target='pdf',
+                                   task='convert.tif_to_pdf')
+
+            current_chain |= _link('convert.merge_converted_pdf')
+
+            current_chain |= _link('list_files',
+                                   representation='tif',
+                                   target='jpg',
+                                   task='convert.tif_to_jpg')
+
+            current_chain |= _link('list_files',
+                                   representation='tif',
+                                   target='jpg_thumbnails',
+                                   task='convert.scale_image',
+                                   max_width=50,
+                                   max_height=50)
+
+            current_chain |= _link('generate_xml',
+                                   template_file='omp_template.xml',
+                                   target_filename='omp_import.xml')
+
+            # TODO: Create mets template for monographs, see SD-290
+            # current_chain |= _link('generate_xml',
+            #                        template_file='mets_template_no_articles.xml',
+            #                        target_filename='mets.xml',
+            #                        schema_file='mets.xsd')
+
+            if params['options']['ocr_options']['do_ocr']:
+                current_chain |= _link('list_files',
+                                       representation='tif',
+                                       target='txt',
+                                       task='convert.tif_to_txt',
+                                       ocr_lang=params['options']['ocr_options']['ocr_lang'])
+
+            current_chain |= _link('publish_to_omp',
+                                   omp_press_code=monograph_target['metadata']['press_code'])
+
+            current_chain |= _link('cleanup_directories',
+                                   mark_done=params['options']['app_options']['mark_done'],
+                                   staging_current_folder=monograph_target['path'],
+                                   user_name=user_name)
+
+            current_chain |= _link('finish_chain')
+            chains.append(current_chain)
+
+        return chains
+
+
 class NlpJob(BatchJob):
     job_type = 'nlp'
     label = 'Experimental NLP'
@@ -369,7 +432,6 @@ class NlpJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
-
         for target in params['targets']:
             task_params = dict(**target, **{'user': user_name})
 

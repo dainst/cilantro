@@ -6,24 +6,24 @@
         <div class="columns is-centered">
             <form class="column is-narrow login" @submit.prevent="login">
                 <b-field>
-                    <input 
-                        placeholder="Name" 
-                        minlength="1" 
-                        type="text" 
-                        required 
+                    <input
+                        placeholder="Name"
+                        minlength="1"
+                        type="text"
+                        required
                         v-model="name"
                         id="username"
-                    ></input>
+                    >
                 </b-field>
                 <b-field>
-                    <b-input
+                    <input
                         placeholder="Password"
                         minlength="1"
                         type="password"
                         required
                         v-model="password"
                         id="password"
-                    ></b-input>
+                    >
                 </b-field>
                 <b-button
                     :disabled="missingInput"
@@ -68,7 +68,7 @@ export default class Login extends Vue {
         /**
          * For Testing only this way one can mock the getModule out of it
          */
-        
+
         return getModule(AuthenticationStore);
     }
 

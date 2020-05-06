@@ -1,0 +1,10 @@
+{
+    "request": {
+        "method": "POST",
+        "urlPattern": "/omp/plugins/generic/cilantro/api/import/.*"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"system\": \"omp 3.1.0.0\", \"published_monographs\": [1], \"task\": \"import\", \"success\": true, \"warnings\": []}"
+    }
+}

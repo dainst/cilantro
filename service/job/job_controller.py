@@ -1,5 +1,4 @@
 import jsonschema
-import os
 import datetime
 
 from flask import Blueprint, url_for, jsonify, request
@@ -9,7 +8,8 @@ from service.user.user_service import auth
 from utils.job_db import JobDb
 from utils import json_validation
 
-from service.job.jobs import IngestArchivalMaterialsJob, IngestJournalsJob, NlpJob
+from service.job.jobs import IngestArchivalMaterialsJob,\
+    IngestJournalsJob, IngestMonographsJob, NlpJob
 
 job_controller = Blueprint('job', __name__)
 
@@ -219,6 +219,123 @@ def journal_job_create():
         raise ApiError("invalid_job_params", str(e), 400)
 
     job = IngestJournalsJob(params, user_name)
+    job.run()
+
+    body = jsonify({
+        'success': True,
+        'job_id': job.id})
+
+    headers = {'Location': url_for(
+        'job.job_status', job_id=job.id)}
+
+    return body, 202, headers
+
+
+@job_controller.route('/ingest_monographs', methods=['POST'])
+@auth.login_required
+def ingest_monographs_job_create():
+    """
+    Create a monograph batch import job.
+
+    Parameters can be provided as JSON as part of the request body
+    and must match the job parameter schema.
+
+    Valid user credential have to be given via HTTP basic authentication.
+
+    Also adds the job to the job database.
+
+    .. :quickref: Job Controller; Create a job of the specified job type
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      POST /job/<job-type> HTTP/1.1
+
+      {
+          "options": {
+            "app_options": {
+              "mark_done": true
+            },
+            "ocr_options": {
+              "do_ocr": false,
+              "ocr_lang": "deu"
+            }
+          },
+          "targets": [
+            {
+              "id": "BOOK-ZID001573894",
+              "metadata": {
+                "abstract": "",
+                "author": {
+                  "givenname": "Claudia",
+                  "lastname": "Deglau"
+                },
+                "date_published": "2020-01-01T00:00:00.000Z",
+                "press_code": "dai",
+                "subtitle": "Karl Marx und sein Einfluss auf die Altertums- und Geschichtswissenschaften",
+                "title": "Aus dem Tempel und dem ewigen Genuß des Geistes verstoßen?",
+                "zenon_id": "001573894"
+              },
+              "path": "BOOK-ZID001573894"
+            }
+          ]
+        }
+
+    Each path ("BOOK-ZID001573894" in the example case) is expected to contain
+    a subdirectory "tif" that contains tif files.
+
+    **Example response SUCCESS**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+        {
+            "job_id": "399a5952-f594-11e9-ae9e-0242ac120007",
+            "success": true
+        }
+
+    **Example response ERROR**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 400 BAD REQUEST
+
+        {
+            "error": {
+                "code": "bad_request",
+                "message": "400 Bad Request: The browser (or proxy)
+                            sent a request that this server could
+                            not understand."
+            },
+            "success": false
+        }
+
+    :reqheader Accept: application/json
+    :param str job_type: name of the job type
+    :<json dict objects: issue file path and metadata
+    :<json dict options: job chain options
+
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
+
+    :return: A JSON object containing the status, the job id and the task
+        ids of every subtask in every chain
+    """
+    if not request.data:
+        raise ApiError("invalid_job_params", "No request payload found")
+    params = request.get_json(force=True)
+    user_name = auth.username()
+    try:
+        json_validation.validate_params(params, 'ingest_monographs')
+    except FileNotFoundError as e:
+        raise ApiError("unknown_job_type", str(e), 404)
+    except jsonschema.exceptions.ValidationError as e:
+        raise ApiError("invalid_job_params", str(e), 400)
+
+    job = IngestMonographsJob(params, user_name)
     job.run()
 
     body = jsonify({
