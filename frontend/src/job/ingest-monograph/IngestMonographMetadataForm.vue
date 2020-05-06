@@ -220,8 +220,8 @@ function extractAuthor(record: ZenonRecord) : Person {
 
     if (authorSplit.length === 2) {
         return {
-            givenname: authorSplit[1].replace(/[\\.]+$/, ''),
-            lastname: authorSplit[0]
+            givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
+            lastname: authorSplit[0].trim()
         } as Person;
     }
     return {
