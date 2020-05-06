@@ -120,38 +120,49 @@ def journal_job_create():
       POST /job/<job-type> HTTP/1.1
 
       {
-            "objects": [{
-                "id": "some_tiffs",
-                "path": "some_tiffs",
+            "targets": [{
+                "id": "JOURNAL-ZID001149881",
+                "path": "JOURNAL-ZID001149881",
                 "metadata": {
                     "description": "Archäologischer Anzeiger",
                     "number": 1,
-                    "ojs_journal_code": "test",
+                    "ojs_journal_code": "aa",
                     "volume": 1,
-                    "publishing_year": 2015,
-                    "reporting_year": 2011,
-                    "zenon_id": 1449024
+                    "publishing_year": 1850,
+                    "reporting_year": 1950,
+                    "zenon_id": 001149881
                 }
             },{
-                "id": "some_tiffs_2",
-                "path": "some_tiffs_2",
+                "id": "JOURNAL-ZID001562251",
+                "path": "JOURNAL-ZID001562251",
                 "metadata": {
                     "description": "Archäologischer Anzeiger",
                     "number": 1,
-                    "ojs_journal_code": "test",
+                    "ojs_journal_code": "aa",
                     "volume": 1,
-                    "publishing_year": 2015,
-                    "reporting_year": 2011,
-                    "zenon_id": 1449024
+                    "publishing_year": 2018,
+                    "reporting_year": 2018,
+                    "zenon_id": 001562251
                 }
             }],
             "options": {
                 "ojs_options": {
-                    "auto_publish_issue": true,
-                    "default_create_frontpage": true,
+                    "default_create_frontpage": true
+                },
+                "ocr_options": {
+                    "do_ocr": true,
+                    "ocr_lang": "deu"
+                },
+                "app_options": {
+                    "mark_done": true
                 }
             }
         }
+
+
+    Each path ("JOURNAL-ZID001149881" and "JOURNAL-ZID001562251" in the
+    example case, are expected to contain either contain a number of tif files
+    or a subdirectory "tif" that contains tif images.)
 
 
     Each path ("some_tiffs" and "some_tiffs_2" in the example case, are
