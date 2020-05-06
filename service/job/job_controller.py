@@ -242,42 +242,37 @@ def ingest_monographs_job_create():
       POST /job/<job-type> HTTP/1.1
 
       {
-            "targets": [{
-                "id": "some_tiffs",
-                "path": "some_tiffs",
-                "metadata": {
-                    "description": "Archäologischer Anzeiger",
-                    "number": 1,
-                    "ojs_journal_code": "test",
-                    "volume": 1,
-                    "publishing_year": 2015,
-                    "reporting_year": 2011,
-                    "zenon_id": 1449024
-                }
-            },{
-                "id": "some_tiffs_2",
-                "path": "some_tiffs_2",
-                "metadata": {
-                    "description": "Archäologischer Anzeiger",
-                    "number": 1,
-                    "ojs_journal_code": "test",
-                    "volume": 1,
-                    "publishing_year": 2015,
-                    "reporting_year": 2011,
-                    "zenon_id": 1449024
-                }
-            }],
-            "options": {
-                "ojs_options": {
-                    "auto_publish_issue": true,
-                    "default_create_frontpage": true,
-                }
+          "options": {
+            "app_options": {
+              "mark_done": true
+            },
+            "ocr_options": {
+              "do_ocr": false,
+              "ocr_lang": "deu"
             }
+          },
+          "targets": [
+            {
+              "id": "BOOK-ZID001573894",
+              "metadata": {
+                "abstract": "",
+                "author": {
+                  "givenname": "Claudia",
+                  "lastname": "Deglau"
+                },
+                "date_published": "2020-01-01T00:00:00.000Z",
+                "press_code": "dai",
+                "subtitle": "Karl Marx und sein Einfluss auf die Altertums- und Geschichtswissenschaften",
+                "title": "Aus dem Tempel und dem ewigen Genuß des Geistes verstoßen?",
+                "zenon_id": "001573894"
+              },
+              "path": "BOOK-ZID001573894"
+            }
+          ]
         }
 
-
-    Each path ("some_tiffs" and "some_tiffs_2" in the example case, are
-    expected to contain a directory "tif" that contains tif images.)
+    Each path ("BOOK-ZID001573894" in the example case) is expected to contain
+    a subdirectory "tif" that contains tif files.
 
     **Example response SUCCESS**:
 
