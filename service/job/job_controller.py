@@ -253,43 +253,50 @@ def archival_material_job_create():
       POST /job/<job-type> HTTP/1.1
 
       {
-        "objects": [{
-            "id": "some_tiffs",
-            "path": "some_tiffs",
-            "metadata": {
-                "title": "54A, Attische Vasen ausser schwarzfigurige",
-                "abstract": "12 drawings arranged by technique.",
-                "created": "1836-1879",
-                "author": [{
-                    "firstname": "Peter",
-                    "lastname": "Baumeister"
-                    }],
-                "zenon_id": 1449024,
-                "atom_id": 1449025
+          "options": {
+            "app_options": {
+              "mark_done": true
+            },
+            "ocr_options": {
+              "do_ocr": false,
+              "ocr_lang": "deu"
             }
-        },{
-            "id": "some_tiffs_2",
-            "path": "some_tiffs_2",
-            "metadata": {
-                "title": "54A, Attische Vasen ausser schwarzfigurige.",
-                "abstract": "12 drawings arranged by technique.",
-                "created": "1836-1879",
-                "author": [{
-                    "firstname": "Peter",
-                    "lastname": "Baumeister"
-                    }],
-                "zenon_id": 1449024,
-                "atom_id": 1449025
+          },
+          "targets": [
+            {
+              "id": "RECORD-AID-D-de-dai-z-adz-nl-otto-benndorf",
+              "metadata": {
+                "atom_id": "de-de-dai-z-adz-nl-otto-benndorf",
+                "authors": [],
+                "copyright": "Copyright © Deutsches Archäologisches Institut",
+                "creators": [
+                  "Duhn, Friedrich Carl von (1851–1930)"
+                ],
+                "dates": [
+                  {
+                    "date": "1877",
+                    "end_date": "1877-00-00",
+                    "start_date": "1877-00-00",
+                    "type": "Creation"
+                  }
+                ],
+                "extent_and_medium": "1 hellblaue Jurismappe mit losen Blättern, 21 x 15 cm.",
+                "level_of_description": "Subfonds",
+                "notes": [],
+                "reference_code": "GR D-DAI-ATH-Archiv NL-Duhn",
+                "repository": "Deutsches Archäologisches Institut, Athen, Archiv",
+                "repository_inherited_from": "Nachlässe",
+                "scope_and_content": "Bericht über eine Reise im nördlichen Peloponnes gemeinsam mit Habbo Gerhard Lolling. Die Reise begann am 14. April und endete für Duhn am 15. Mai 1877. Das Dokument beschreibt lediglich die Reiseroute (Athen, Ägina, Epidauros, Nafplio, Nemea, Sikyon, Pellene, Aigeira, Aigion, Patras, Megaspilion, Dyme, Olympia, Tripoli, Nafplio, Athen), gibt jedoch keine genaueren Angaben zu den gemachten Funden/ Entdeckungen. Nur, dass Achaia sehr vernachlässigt ist und wenig Resultate erbracht worden sind, wird bemerkt. Die aufgelisteten Anlagen 1. Skulpturenreste, 2. griechische Inschriften, 3. Dyme, 4. lateinische Inschriften von Patras, 5. Rechnung sind nicht mehr beiliegend.",
+                "title": "Nachlass Duhn, Friedrich Carl von"
+              },
+              "path": "RECORD-AID-D-de-dai-z-adz-nl-otto-benndorf"
             }
-        }],
-        "options": {
-            "do_ocr": true,
-            "ocr_lang": "eng"
+          ]
         }
-    }
 
-    Each path ("some_tiffs" and "some_tiffs_2" in the example case, are
-    expected to contain a directory "tif" that contains tif images.)
+    Each path ("RECORD-AID-D-de-dai-z-adz-nl-otto-benndorf" in the example case)
+    is expected to contain a number of ordered tif files to create the result
+    PDF.
 
     **Example response SUCCESS**:
 
