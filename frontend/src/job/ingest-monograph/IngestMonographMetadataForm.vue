@@ -21,8 +21,7 @@
             >{{ props.row.id }}</b-table-column>
             <template
                 v-if="!isTargetError(props.row) &&
-                    props.row.metadata &&
-                    props.row.metadata.author">
+                    props.row.metadata">
                 <b-table-column field="metadata.title"
                                 label="Title">
                     <a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id"
@@ -175,7 +174,7 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
 
         if (zenonRecord.publicationDates.length > 0) {
             try {
-                datePublished = new Date(zenonRecord.publicationDates[0]).toISOString();
+                [datePublished] = new Date(zenonRecord.publicationDates[0]).toISOString().split('T');
             } catch (e) {
                 errors.push(`Unable to parse date: ${zenonRecord.publicationDates[0]}`);
             }
@@ -185,7 +184,7 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
             [summary] = zenonRecord.summary;
         }
 
-        const author = extractAuthor(zenonRecord);
+        const authors = extractAuthors(zenonRecord);
 
         if (errors.length !== 0) {
             return new JobTargetError(target.id, target.path, errors);
@@ -193,7 +192,7 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
         const metadata = {
             zenon_id: target.metadata.zenon_id,
             press_code: 'dai',
-            author,
+            authors,
             title: zenonRecord.shortTitle.replace(/[\s:]+$/, '').trim(),
             subtitle: zenonRecord.subTitle.trim(),
             abstract: summary,
@@ -206,28 +205,29 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
     }
 }
 
-function extractAuthor(record: ZenonRecord) : Person {
-    let authorCompleteName = '';
+function extractAuthors(record: ZenonRecord) : Person[] {
+    let authorsCompleteNames: string[] = [];
     if (record.primaryAuthorsNames.length !== 0) {
-        [authorCompleteName] = record.primaryAuthorsNames;
+        authorsCompleteNames = authorsCompleteNames.concat(record.primaryAuthorsNames);
     } else if (record.secondaryAuthorsNames.length !== 0) {
-        [authorCompleteName] = record.secondaryAuthorsNames;
+        authorsCompleteNames = authorsCompleteNames.concat(record.secondaryAuthorsNames);
     } else if (record.corporateAuthorsNames.length !== 0) {
-        [authorCompleteName] = record.corporateAuthorsNames;
+        authorsCompleteNames = authorsCompleteNames.concat(record.corporateAuthorsNames);
     }
 
-    const authorSplit = authorCompleteName.split(',');
-
-    if (authorSplit.length === 2) {
+    return authorsCompleteNames.map((authorCompleteName) => {
+        const authorSplit = authorCompleteName.split(',');
+        if (authorSplit.length === 2) {
+            return {
+                givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
+                lastname: authorSplit[0].trim()
+            } as Person;
+        }
         return {
-            givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
-            lastname: authorSplit[0].trim()
+            givenname: '',
+            lastname: authorCompleteName
         } as Person;
-    }
-    return {
-        givenname: '',
-        lastname: authorCompleteName
-    } as Person;
+    });
 }
 
 </script>

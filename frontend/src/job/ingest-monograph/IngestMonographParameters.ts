@@ -27,7 +27,7 @@ export class JobTargetData implements GenericJobTargetData {
 export class MonographMetadata {
     zenon_id: string;
     press_code?: string;
-    author?: Person;
+    authors?: Person[];
     title?: string;
     subtitle?: string;
     abstract?: string;
