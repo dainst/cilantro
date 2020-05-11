@@ -27,7 +27,6 @@ def list_dir(directory, **kwargs):
 
     if kwargs.get('filter'):
         f_list = kwargs.get('filter')
-        print(f_list)
         res_list = []
         for f_val in f_list:
             # filter the files in the result list for every representation map item
