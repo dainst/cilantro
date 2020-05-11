@@ -54,17 +54,17 @@ def _initialize_object(obj, params, oid):
     obj.write()
 
 
-def _initialize_files(obj, path, user, init_rep):
-    types = ('*.tif', '*.tiff', '*.TIF', '*.TIFF', '*.txt', '*.TXT')
-    files_grabbed = []
-    for files in types:
-        files_grabbed.extend(glob.glob(os.path.join(staging_dir, user,
-                                                    path, init_rep, files)))
+filename_extension_mapping = {
+    'tif': ['**/*.tif', '**/*.tiff', '**/*.TIF', '**/*.TIFF'],
+    'txt': ['**/*.txt', '**/*.TXT']
+}
 
-    if len(files_grabbed) < 1:
-        # if no files found, try in the main folder
-        for files in types:
-            files_grabbed.extend(glob.glob(os.path.join(staging_dir, user, 
+
+def _initialize_files(obj, path, user, init_rep):
+
+    files_grabbed = []
+    for files in filename_extension_mapping[init_rep]:
+        files_grabbed.extend(glob.glob(os.path.join(staging_dir, user,
                                                     path, files)))
 
     if len(files_grabbed) < 1:

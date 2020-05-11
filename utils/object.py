@@ -46,13 +46,6 @@ class Object:
     INITIAL_REPRESENTATION = "origin"
     DATA_DIR = "data"
 
-    REPRESENTATION_MAP = {
-        'tif': [ 'tif', 'tiff' ], 
-        'jpg': [ 'jpg', 'jpeg' ], 
-        'pdf': [ 'pdf' ],
-        'txt': [ 'txt' ]
-    }
-
     def __init__(self, path):
         """
         Create an empty cilantro object that lives in path or finds one.
@@ -144,11 +137,7 @@ class Object:
         representations = []
         path = self.get_representation_dir(representation)
 
-        if not os.path.isdir(path):
-            # the given representation, must either reside under its own folder or the main data folder
-            path = self.get_data_dir()
-
-        for filename in list_dir(path, sorted=True, filter=self.REPRESENTATION_MAP[representation]):
+        for filename in list_dir(path, sorted=True):
             if not os.path.isdir(os.path.join(path, filename)):
                 with open(os.path.join(path, filename), 'rb') as file:
                     representations.append(BytesIO(file.read()))
