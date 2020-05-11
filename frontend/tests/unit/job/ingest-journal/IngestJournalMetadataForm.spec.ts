@@ -5,49 +5,33 @@ import flushPromises from 'flush-promises';
 import IngestJournalMetadataForm from '@/job/ingest-journal/IngestJournalMetadataForm.vue'
 import { WorkbenchFile, WorkbenchFileTree, getVisibleFolderContents as realFolderFunction } from '@/staging/StagingClient';
 
-let mockTif: WorkbenchFile = {
-    name: 'test.tif',
-    type: 'tif',
-    marked: false,
-};
-
-let mockInfo: WorkbenchFile = {
-    name: '.info',
-    type: 'conf',
-    marked: false,
-}
-
-let mockTiffFolder: WorkbenchFile = {
-    name: 'tif',
-    type: 'folder',
-    marked: false,
-    contents: {'test.tif': mockTif }
-}
-
-let mockFolder: WorkbenchFile = {
-    name: 'tif',
-    type: 'folder',
-    marked: false,
-    contents: { 'test.tif': mockTif, '.info': mockInfo }
-};
 
 let mockStagingTree: WorkbenchFileTree =  {'Journal-ZID001149881': {
     name: 'Journal-ZID001149881',
     type: 'folder',
     marked: false,
     contents: {
-        "Anerkennung_als_Quereinsteigerin.pdf": {
-            "name": "Anerkennung_als_Quereinsteigerin.pdf",
-            "type": "file",
-            marked: false
-          },
-          "neu.pdf": {
-            "name": "neu.pdf",
-            "type": "file",
-            marked: false
-          }
+            ".info": {
+                name: '.info',
+                type: 'conf',
+                marked: false,
+            },
+              "test.tif": {
+                name: 'test.tif',
+                type: 'tif',
+                marked: false,
+            },
+              "test2.tiff": {
+                name: 'test2.tiff',
+                type: 'tif',
+                marked: false,
+            },
+              "wrong.pdf": {
+                name: 'wrong.pdf',
+                type: 'pdf',
+                marked: false,
+            }
         }
-      
     }
 }
 
