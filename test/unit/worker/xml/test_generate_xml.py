@@ -50,4 +50,4 @@ class GenerateXMLTest(unittest.TestCase):
 
         self.assertTrue(os.path.isfile(
             f'{self.resource_dir}/objects/a_journal/test_ojsxml.xml'))
-        #os.remove(f'{self.resource_dir}/objects/a_journal/test_ojsxml.xml')
+        os.remove(f'{self.resource_dir}/objects/a_journal/test_ojsxml.xml')
