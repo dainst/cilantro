@@ -45,3 +45,19 @@ function onUploadProgress(onProgressCallback: (n: number) => void) {
         onProgressCallback(percentCompleted);
     };
 }
+
+/**
+ * runs through a WorkbenchFileTree and checks if it only contains files with the given extensions.
+ * files with a leading . are considered 'invisible' and are therefor excluded from this search
+ * 
+ * @param folder the folder to lookup
+ * @param extensions the extensions to find
+ */
+export function containsOnlyVisibleFilesWithExtensions(folder: WorkbenchFileTree, extensions: string[] ) {
+    let file_list: WorkbenchFile[] = getVisibleFolderContents(folder);
+        // check if every file
+    return file_list.every(file => 
+            // has one of the given extensions
+                extensions.some( ext => 
+                    file.name.endsWith(ext)) );
+}

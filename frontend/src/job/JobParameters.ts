@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { WorkbenchFileTree, getVisibleFolderContents } from '@/staging/StagingClient';
+import { WorkbenchFileTree, getVisibleFolderContents, WorkbenchFile } from '@/staging/StagingClient';
 
 export abstract class JobParameters {
     abstract targets: MaybeJobTarget[];

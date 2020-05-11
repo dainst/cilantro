@@ -74,7 +74,7 @@ import {
     JobTargetData, MaybeJobTarget, ArchivalMaterialMetadata
 } from './IngestArchivalMaterialParameters';
 import {
-    getStagingFiles, WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents
+    getStagingFiles, WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, containsOnlyVisibleFilesWithExtensions
 } from '@/staging/StagingClient';
 import { AtomRecord, getAtomRecord } from '@/util/AtomClient';
 import { asyncMap } from '@/util/HelperFunctions';
@@ -156,11 +156,7 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
 
     if (targetFolder !== undefined) {
         // since there is no subfolder anymore get all files in question
-        let file_list = getVisibleFolderContents(targetFolder);
-        // check if everyone is a tif
-        let clear = file_list
-                    .map(file => file.name.endsWith('.tif') || file.name.endsWith('.tiff') )
-                    .reduce((a,b) => a && b, true);
+        let clear = containsOnlyVisibleFilesWithExtensions(targetFolder, ['.tif', '.tiff']);
         if (!clear){
             errors.push(`Folder does not only contain files ending in '.tif'.`);
         }
