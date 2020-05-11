@@ -10,18 +10,20 @@
     <abstract>{{metadata['abstract']}}</abstract>
     <authors xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+        {% for author in metadata['authors'] %}
         <author primary_contact="true" include_in_browse="true" user_group_ref="Author">
-            <givenname>{{metadata['author']['givenname']}}</givenname>
-            <familyname>{{metadata['author']['lastname']}}</familyname>
-            <email>Test</email>
+            <givenname>{{author.givenname}}</givenname>
+            <familyname>{{author.lastname}}</familyname>
+            <email></email>
         </author>
+        {% endfor %}
     </authors>
     <submission_file xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                      stage="production_ready" id="1" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
         <revision number="1" genre="Book Manuscript" filename="merged.pdf"
                   viewable="true"
-                  date_uploaded="{{datetime.date.today().isoformat()}}"
-                  date_modified="{{datetime.date.today().isoformat()}}"
+                  date_uploaded="{{datetime.date.today().strftime('%Y-%m-%d')}}"
+                  date_modified="{{datetime.date.today().strftime('%Y-%m-%d')}}"
                   filesize="{{getsize(pdf_file_path)}}"
                   filetype="application/pdf">
             <name>Cilantro creation</name>

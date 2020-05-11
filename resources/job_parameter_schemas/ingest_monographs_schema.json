@@ -33,7 +33,7 @@
                             "press_code",
                             "zenon_id",
                             "title",
-                            "author"
+                            "authors"
                         ],
                         "properties": {
                             "press_code": {
@@ -61,16 +61,19 @@
                                 "type": "string",
                                 "default": ""
                             },
-                            "author": {
-                                "type": "object",
-                                "additionalProperties": false,
-                                "required": ["givenname", "lastname"],
-                                "properties": {
-                                    "givenname": {
-                                        "type": "string"
-                                    },
-                                    "lastname": {
-                                        "type": "string"
+                            "authors": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": ["givenname", "lastname"],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "givenname": {
+                                            "type": "string"
+                                        },
+                                        "lastname": {
+                                            "type": "string"
+                                        }
                                     }
                                 }
                             }
