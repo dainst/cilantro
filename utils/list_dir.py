@@ -25,4 +25,11 @@ def list_dir(directory, **kwargs):
     if kwargs.get('sorted', False):
         res = sort_alphanumeric(res)
 
+    if kwargs.get('filter'):
+        f_list = kwargs.get('filter')
+        res_list = []
+        for f_val in f_list:
+            # filter the files in the result list for every representation map item
+            res_list += list(filter(lambda file_name: file_name.endswith('.' + f_val), res))
+
     return res

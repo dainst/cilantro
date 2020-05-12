@@ -5,36 +5,41 @@ import flushPromises from 'flush-promises';
 import IngestJournalMetadataForm from '@/job/ingest-journal/IngestJournalMetadataForm.vue'
 import { WorkbenchFile, WorkbenchFileTree, getVisibleFolderContents as realFolderFunction } from '@/staging/StagingClient';
 
-let mockTif: WorkbenchFile = {
-    name: 'test.tif',
-    type: 'tif',
-    marked: false,
-};
 
-let mockInfo: WorkbenchFile = {
-    name: '.info',
-    type: 'conf',
-    marked: false,
-}
-
-let mockTiffFolder: WorkbenchFile = {
-    name: 'tif',
+let mockStagingTree: WorkbenchFileTree =  {'Journal-ZID001149881': {
+    name: 'Journal-ZID001149881',
     type: 'folder',
     marked: false,
-    contents: {'test.tif': mockTif }
+    contents: {
+            ".info": {
+                name: '.info',
+                type: 'conf',
+                marked: false,
+            },
+              "test.tif": {
+                name: 'test.tif',
+                type: 'tif',
+                marked: false,
+            },
+              "test2.tiff": {
+                name: 'test2.tiff',
+                type: 'tif',
+                marked: false,
+            },
+              "wrong.pdf": {
+                name: 'wrong.pdf',
+                type: 'pdf',
+                marked: false,
+            }
+        }
+    }
 }
 
-let mockFolder: WorkbenchFile = {
-    name: 'tif',
-    type: 'folder',
-    marked: false,
-    contents: { 'tif': mockTiffFolder, '.info': mockInfo }
-};
 
 
 jest.mock('@/staging/StagingClient', () => ({
     ...jest.requireActual('@/staging/StagingClient'),
-    getStagingFiles: () => Promise.resolve({ 'Journal-ZID001149881': mockFolder }),
+    getStagingFiles: () => Promise.resolve( mockStagingTree ),
 }));
 
 
@@ -74,5 +79,12 @@ describe("IngestJournalMetadataForm", () => {
         await flushPromises();
         let icon = wrapper.find('.has-text-danger');
         expect(icon.exists()).toBe(false);
-    })
+        // no error lets check the output
+        wrapper.find('a').trigger('click');
+        await wrapper.vm.$nextTick();
+        let details = wrapper.find('.metadata_output');
+        expect(details.text()).toBe('zenon_id: 001149881')
+        
+    });
+
 });

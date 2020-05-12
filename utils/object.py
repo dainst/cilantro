@@ -136,6 +136,7 @@ class Object:
         """
         representations = []
         path = self.get_representation_dir(representation)
+
         for filename in list_dir(path, sorted=True):
             if not os.path.isdir(os.path.join(path, filename)):
                 with open(os.path.join(path, filename), 'rb') as file:
