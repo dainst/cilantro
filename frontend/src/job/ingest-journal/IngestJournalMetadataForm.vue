@@ -98,6 +98,7 @@ import {
 export default class JournalMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
 
+
     targets: MaybeJobTarget[];
 
     constructor() {
