@@ -74,3 +74,24 @@ class IngestJournalTest(unittest.TestCase):
             validate_xml(self.target_file_path, schema_file_path=self.schema_file)
             mock_log.assert_has_calls([call("XML Syntax-Check OK!"), call("XSD Schema Validation OK!")])
 
+    def test_archive_xml_create(self):
+        """
+        Test XML generation and validation with example template for OMP-Import.
+        """
+        # SetUp
+        obj = Object(f'{self.resource_dir}/objects/a_book_1234')
+        template_file = 'mets_template_archive.xml'
+        self.target_file_path = os.path.join(obj.path, 'test_archivexml.xml')
+
+        params = {}
+        
+        # 1st. check creation
+        generate_xml(obj, template_file, self.target_file_path, params)
+        self.assertTrue(os.path.isfile(self.target_file_path))
+        
+        # 2nd. check validation
+        with patch.object(self.logger, 'info') as mock_log:
+            validate_xml(self.target_file_path, schema_file_path=self.schema_file)
+            mock_log.assert_has_calls([call("XML Syntax-Check OK!"), call("XSD Schema Validation OK!")])
+
+

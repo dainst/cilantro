@@ -10,7 +10,7 @@ from utils.repository import generate_repository_path
 test_object = 'a_book_1234'
 test_representation = 'pdf'
 test_jpg = "test.jpg"
-test_file = 'test.pdf'
+test_file = 'a_book.pdf'
 test_metafile = 'meta.json'
 
 
