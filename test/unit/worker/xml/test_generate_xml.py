@@ -21,17 +21,12 @@ class GenerateXMLTest(unittest.TestCase):
         checks.
         """
         obj = Object(f'{self.resource_dir}/objects/a_journal')
-        template_file = 'mets_template_no_articles.xml'
+        template_file = 'mets_template_journal.xml'
         target_file_path = os.path.join(obj.path, 'test_ojsxml.xml')
     
-        # params = {
-        #     "ojs_options": {
-        #         "default_create_frontpage": True
-        #     }
-        # }
 
         params = {
-            'template_file': 'mets_template_no_articles.xml', 
+            'template_file': 'mets_template_journal.xml', 
             'target_filename': 'mets.xml', 
             'schema_file': 'mets.xsd', 
             'job_id': '5b7ab852-887b-11ea-b351-0242ac170008', 
@@ -41,9 +36,9 @@ class GenerateXMLTest(unittest.TestCase):
             'pdf_base64': '' 
             }
 
-        obj.metadata['title'] = 'Haus vom Nikolaus.'
+        #obj.metadata['title'] = 'Haus vom Nikolaus.'
 
-        obj.metadata['author'] = [{ "firstname": 'Santa', "lastname": 'Claus'}]
+        #obj.metadata['author'] = [{ "firstname": 'Santa', "lastname": 'Claus'}]
 
         generate_xml(obj, template_file, target_file_path,
                      params)

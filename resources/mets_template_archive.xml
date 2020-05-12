@@ -4,13 +4,11 @@
 {% set object_id = obj.id %}
 {% set server_url = environ['BACKEND_URI'] %}
 <?xml version="1.0" encoding="UTF-8"?>
-<mets:mets
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:mets="http://www.loc.gov/METS/"
-    xmlns:mods="http://www.loc.gov/mods/v3"
-    xmlns:dv="http://dfg-viewer.de/"
-    xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/mets/mets.xsd
+<mets:mets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xmlns:mets="http://www.loc.gov/METS/" 
+    xmlns:mods="http://www.loc.gov/mods/v3" 
+    xmlns:dv="http://dfg-viewer.de/" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/mets/mets.xsd
         http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-2.xsd">
 
     <mets:metsHdr LASTMODDATE="{{datetime.datetime.utcnow().isoformat()}}">
@@ -20,7 +18,26 @@
     </mets:metsHdr>
 
     {% if metadata['title'] or metadata['author'] %}
-         {% include "mets_templates/dmd_section.xml" %}
+    <mets:dmdSec ID="dmd001">
+        <mets:mdWrap MIMETYPE="text/xml" MDTYPE="MODS">
+            <mets:xmlData>
+                <mods:mods>
+                    <mods:titleInfo>
+                        <mods:title>{{metadata['title']}}</mods:title>
+                    </mods:titleInfo>
+                    {% for author in metadata['author'] %}
+                    <mods:name type="personal">
+                        <mods:displayForm>{{author['firstname']}} {{author['lastname']}}</mods:displayForm>
+                        <mods:role>
+                            <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+                            <mods:roleTerm type="text">Author</mods:roleTerm>
+                        </mods:role>
+                    </mods:name>
+                    {% endfor %}
+                </mods:mods>
+            </mets:xmlData>
+        </mets:mdWrap>
+    </mets:dmdSec>
     {% endif %}
 
     <mets:amdSec ID="amd1">
@@ -44,11 +61,11 @@
     {% include "mets_templates/struct_maps.xml" %}
 
     {% if ns.id_list|length > 0 %}
-        <mets:structLink>
+    <mets:structLink>
             {% for id in ns.id_list %}
-                <mets:smLink xlink:from="struct_log_1" xlink:to="struct_phys_{{id}}"/>
+        <mets:smLink xlink:from="struct_log_1" xlink:to="struct_phys_{{id}}"/>
             {% endfor %}
-        </mets:structLink>
+    </mets:structLink>
     {% endif %}
 
 </mets:mets>

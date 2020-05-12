@@ -1,3 +1,8 @@
+{% set ns = namespace() %}
+{% set ns.id_list = [] %}
+{% set metadata = obj.metadata %}
+{% set object_id = obj.id %}
+{% set server_url = environ['BACKEND_URI'] %}
 <?xml version="1.0" encoding="UTF-8"?>
 <mets:mets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xmlns:xlink="http://www.w3.org/1999/xlink" 
@@ -6,7 +11,7 @@
     xmlns:dv="http://dfg-viewer.de/" xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/mets/mets.xsd
         http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-2.xsd">
 
-    <mets:metsHdr LASTMODDATE="2020-05-12T14:51:33.261453">
+    <mets:metsHdr LASTMODDATE="{{datetime.datetime.utcnow().isoformat()}}">
         <mets:agent ROLE="CREATOR" TYPE="ORGANIZATION">
             <mets:name>Deutsches Archäologisches Institut</mets:name>
         </mets:agent>
@@ -18,17 +23,17 @@
                 <mods:mods>
                     <mods:relatedItem type="series">
                         <mods:titleInfo>
-                            <mods:title>Archäologischer Anzeiger</mods:title>
+                            <mods:title>{{metadata['description']}}</mods:title>
                         </mods:titleInfo>
                         <mods:titleInfo TYPE="abbreviated">
-                            <mods:title>AA</mods:title>
+                            <mods:title>{{metadata['ojs_journal_code'] | upper }}</mods:title>
                         </mods:titleInfo>
                         <mods:part>
-                            <mods:detail type="issue">13</mods:detail>
+                            <mods:detail type="issue">{{metadata['number']}}</mods:detail>
                         </mods:part>
                     </mods:relatedItem>
                     <mods:originInfo>
-                        <mods:dateIssued encoding="iso8601" keyDate="yes">1850</mods:dateIssued>
+                        <mods:dateIssued encoding="iso8601" keyDate="yes">{{metadata['publishing_year']}}</mods:dateIssued>
                     </mods:originInfo>
                 </mods:mods>
             </mets:xmlData>
@@ -45,20 +50,26 @@
                         <dv:ownerSiteURL>https://dainst.org</dv:ownerSiteURL>
                     </dv:rights>
                     <dv:links>
-                        <dv:reference linktext="OPAC">https://zenon.dainst.org/Record/001149881</dv:reference>
+                        <dv:reference linktext="OPAC">https://zenon.dainst.org/Record/{{metadata['zenon_id']}}</dv:reference>
                     </dv:links>
                 </mets:xmlData>
             </mets:mdWrap>
         </mets:rightsMD>
     </mets:amdSec>
 
+    {% if params['files'] %}
     <mets:fileSec>
+        {% if params['files']['pdfs'] %}
         <mets:fileGrp USE="DEFAULT">
             <mets:file ID="PDF1" MIMETYPE="application/pdf">
-                <mets:FLocat LOCTYPE="URL" xlink:href="http://localhost:5000/repository/file/a_journal/data/pdf/a_journal.pdf"/>
+                {% for file_path in params['files']['pdfs']|sort() %}
+                <mets:FLocat LOCTYPE="URL" xlink:href="{{path_join(server_url, 'repository', 'file', object_id, 'data', 'pdf', basename(file_path))}}"/>
+                {% endfor %}
             </mets:file>
         </mets:fileGrp>
+        {% endif %}
     </mets:fileSec>
+    {% endif %}
     
     <mets:structMap TYPE="PHYSICAL">
         <mets:div ID="struct_phys" TYPE="physSequence">
@@ -67,7 +78,7 @@
     </mets:structMap>
 
     <mets:structMap TYPE="LOGICAL">
-        <mets:div ID="struct_log" DMDID="dmd001" ADMID="amd1" TYPE="periodical" LABEL="Archäologischer Anzeiger"></mets:div>
+        <mets:div ID="struct_log" DMDID="dmd001" ADMID="amd1" TYPE="periodical" LABEL="{{metadata['description']}}"></mets:div>
     </mets:structMap>
 
 </mets:mets>

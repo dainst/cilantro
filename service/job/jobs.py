@@ -182,7 +182,7 @@ class IngestArchivalMaterialsJob(BatchJob):
                                        ocr_lang=params['options']['ocr_options']['ocr_lang'])
 
             current_chain |= _link('generate_xml',
-                                   template_file='mets_template_no_articles.xml',
+                                   template_file='mets_template_archive.xml',
                                    target_filename='mets.xml',
                                    schema_file='mets.xsd')
 
@@ -336,7 +336,7 @@ class IngestJournalsJob(BatchJob):
                                    ojs_options=params['options']['ojs_options'])
 
             current_chain |= _link('generate_xml',
-                                   template_file='mets_template_no_articles.xml',
+                                   template_file='mets_template_journal.xml',
                                    target_filename='mets.xml',
                                    schema_file='mets.xsd')
 
@@ -398,11 +398,10 @@ class IngestMonographsJob(BatchJob):
                                    template_file='omp_template.xml',
                                    target_filename='omp_import.xml')
 
-            # TODO: Create mets template for monographs, see SD-290
-            # current_chain |= _link('generate_xml',
-            #                        template_file='mets_template_no_articles.xml',
-            #                        target_filename='mets.xml',
-            #                        schema_file='mets.xsd')
+            current_chain |= _link('generate_xml',
+                                    template_file='mets_template_monography.xml',
+                                    target_filename='mets.xml',
+                                    schema_file='mets.xsd')
 
             if params['options']['ocr_options']['do_ocr']:
                 current_chain |= _link('list_files',

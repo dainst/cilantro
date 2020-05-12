@@ -1,0 +1,16 @@
+{
+    "id": "a_opm_book",
+    "metadata": {
+        "press_code": "dai",
+        "zenon_id": "000112233",
+        "title": "Das Haus vom Nikolaus",
+        "prefix": "",
+        "subtitle": "Architekturstudien vom Polarkreis.",
+        "abstract": "Architektur ohne viel Tüttelütt, gradlinig mit ein paar Ecken. Mit einem Vorwort von W. Gropius.",
+        "date_published": "1982",
+        "authors": [
+            {"givenname": "Mies", "lastname": "van der Rohe"},
+            {"givenname": "Wilhelm", "lastname": "Dörpfeld"}
+        ]
+    }
+}
