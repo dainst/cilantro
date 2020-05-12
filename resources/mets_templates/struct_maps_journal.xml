@@ -1,0 +1,18 @@
+<mets:structMap TYPE="PHYSICAL">
+    <mets:div ID="struct_phys" TYPE="physSequence">
+        <mets:fptr FILEID="PDF1"/>
+            {# id_list defined in main file #}
+            {% for id in ns.id_list %}
+        <mets:div ID="struct_phys_{{id}}" ORDER="{{loop.index}}" ORDERLABEL="{{loop.index}}" TYPE="page">
+            <mets:fptr FILEID="file_{{ns.id_list[loop.index - 1]}}"/>
+            <mets:fptr FILEID="thumb_file_{{ns.id_list[loop.index - 1]}}"/>
+        </mets:div>
+            {% endfor %}
+    </mets:div>
+</mets:structMap>
+
+{% if metadata['title'] %}
+<mets:structMap TYPE="LOGICAL">
+    <mets:div ID="struct_log" DMDID="dmd001" ADMID="amd1" TYPE="periodical" LABEL="{{metadata['title']}}"></mets:div>
+</mets:structMap>
+{% endif %}
