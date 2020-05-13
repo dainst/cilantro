@@ -40,7 +40,7 @@ describe("IngestJournal.vue", () => {
             data() {
                 return {
                     parameters: param,
-                    selectedPaths: fakePath
+                    selectedPaths: [fakePath]
                 }
             }  
         })
