@@ -17,7 +17,6 @@
         </mets:agent>
     </mets:metsHdr>
 
-    {% if metadata['title'] or metadata['author'] %}
     <mets:dmdSec ID="dmd001">
         <mets:mdWrap MIMETYPE="text/xml" MDTYPE="MODS">
             <mets:xmlData>
@@ -38,16 +37,24 @@
                     </mods:name>
                     {% endfor %}
                     <mods:originInfo>
-                        <mods:dateIssued encoding="iso8601" keyDate="yes">{{metadata['date_published']}}</mods:dateIssued>
+                        {% if '-' in metadata['created'] %}
+                        {% set parts = metadata['created'].split('-') %}
+                            <mods:dateIssued encoding="iso8601" point="start">{{parts[0]}}</mods:dateIssued>
+                            <mods:dateIssued encoding="iso8601" point="end">{{parts[1]}}</mods:dateIssued>
+                        {% else %}
+                            <mods:dateIssued encoding="iso8601" keyDate="yes">{{metadata['created']}}</mods:dateIssued>
+                        {% endif %}
                     </mods:originInfo>
                     {% if metadata['abstract'] %}
                     <mods:abstract>{{metadata['abstract']}}≠</mods:abstract>
                     {% endif %}
+                    <mods:physicalDescription>
+                        <mods:extent>{{metadata['description']}}</mods:extent>
+                    </mods:physicalDescription>
                 </mods:mods>
             </mets:xmlData>
         </mets:mdWrap>
     </mets:dmdSec>
-    {% endif %}
 
     <mets:amdSec ID="amd1">
         <mets:rightsMD ID="rights1">
@@ -115,11 +122,9 @@
         </mets:div>
     </mets:structMap>
 
-    {% if metadata['title'] %}
     <mets:structMap TYPE="LOGICAL">
-        <mets:div ID="struct_log" DMDID="dmd001" ADMID="amd1" TYPE="document" LABEL="{{metadata['title']}}"></mets:div>
+        <mets:div ID="struct_log" DMDID="dmd001" ADMID="amd1" TYPE="document"></mets:div>
     </mets:structMap>
-    {% endif %}
     {% if ns.id_list|length > 0 %}
     <mets:structLink>
             {% for id in ns.id_list %}

@@ -36,10 +36,6 @@ class GenerateXMLTest(unittest.TestCase):
             'pdf_base64': '' 
             }
 
-        #obj.metadata['title'] = 'Haus vom Nikolaus.'
-
-        #obj.metadata['author'] = [{ "firstname": 'Santa', "lastname": 'Claus'}]
-
         generate_xml(obj, template_file, target_file_path,
                      params)
 

@@ -19,8 +19,7 @@ class IngestJournalTest(unittest.TestCase):
         self.logger = logging.getLogger('workers.default.xml.xml_validator')
 
     def tearDown(self):
-        pass
-       # os.remove(self.target_file_path)
+        os.remove(self.target_file_path)
 
     def test_journal_xml_create(self):
         """
