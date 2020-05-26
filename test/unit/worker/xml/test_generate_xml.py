@@ -20,7 +20,7 @@ class GenerateXMLTest(unittest.TestCase):
         It is only tested if a file was generated. No further content
         checks.
         """
-        obj = Object(f'{self.resource_dir}/objects/a_journal')
+        obj = Object(f'{self.resource_dir}/objects/a_journal_0003')
         template_file = 'mets_template_journal.xml'
         target_file_path = os.path.join(obj.path, 'test_ojsxml.xml')
     
@@ -40,5 +40,5 @@ class GenerateXMLTest(unittest.TestCase):
                      params)
 
         self.assertTrue(os.path.isfile(
-            f'{self.resource_dir}/objects/a_journal/test_ojsxml.xml'))
-        os.remove(f'{self.resource_dir}/objects/a_journal/test_ojsxml.xml')
+            f'{self.resource_dir}/objects/a_journal_0003/test_ojsxml.xml'))
+        os.remove(f'{self.resource_dir}/objects/a_journal_0003/test_ojsxml.xml')

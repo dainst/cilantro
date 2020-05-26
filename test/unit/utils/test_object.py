@@ -10,7 +10,7 @@ from utils.object import Object
 
 working_dir = os.environ['WORKING_DIR']
 resource_dir = os.environ['TEST_RESOURCE_DIR']
-test_object_name = 'a_book_1234'
+test_object_name = 'a_archival_description_0001'
 test_object_working_path = os.path.join(working_dir, test_object_name)
 test_object_resource_path = os.path.join(resource_dir, 'objects',
                                          test_object_name)
@@ -47,7 +47,10 @@ class ObjectTest(unittest.TestCase):
         _copy_test_object()
         obj = Object(test_object_working_path)
         self.assertIsInstance(obj.metadata, dict)
-        self.assertEqual(obj.metadata['creator']['firstname'], "Peter")
+        self.assertEqual(
+            obj.metadata['creators'][0],
+            "Duhn, Friedrich Carl von (1851–1930)"
+        )
 
     def test_write(self):
         obj = Object(test_object_working_path)
@@ -86,7 +89,7 @@ class ObjectTest(unittest.TestCase):
         obj = Object(test_object_working_path)
         representations = obj.list_representations()
 
-        self.assertEqual(len(representations), 2)
+        self.assertEqual(len(representations), 5)
         self.assertEqual(representations[0], 'jpg')
 
     def test_get_representation(self):

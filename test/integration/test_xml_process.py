@@ -26,7 +26,7 @@ class IngestJournalTest(unittest.TestCase):
         Test XML generation and validation with example template for OJS-Import.
         """
         # SetUp
-        obj = Object(f'{self.resource_dir}/objects/a_journal')
+        obj = Object(f'{self.resource_dir}/objects/a_journal_0003')
         template_file = 'mets_template_journal.xml'
         self.target_file_path = os.path.join(obj.path, 'test_ojsxml.xml')
 
@@ -58,7 +58,7 @@ class IngestJournalTest(unittest.TestCase):
         Test XML generation and validation with example template for OMP-Import.
         """
         # SetUp
-        obj = Object(f'{self.resource_dir}/objects/a_omp_book')
+        obj = Object(f'{self.resource_dir}/objects/a_omp_book_0002')
         template_file = 'mets_template_monography.xml'
         self.target_file_path = os.path.join(obj.path, 'test_ompxml.xml')
 
@@ -78,7 +78,7 @@ class IngestJournalTest(unittest.TestCase):
         Test XML generation and validation with example template for OMP-Import.
         """
         # SetUp
-        obj = Object(f'{self.resource_dir}/objects/a_book_1234')
+        obj = Object(f'{self.resource_dir}/objects/a_archival_description_0001')
         template_file = 'mets_template_archive.xml'
         self.target_file_path = os.path.join(obj.path, 'test_archivexml.xml')
 

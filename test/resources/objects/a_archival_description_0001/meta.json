@@ -1,0 +1,27 @@
+{
+  "id": "a_archival_description_0001",
+  "metadata": {
+    "atom_id": "de-de-dai-z-adz-nl-otto-benndorf",
+    "copyright": "Copyright \u00a9 Deutsches Arch\u00e4ologisches Institut",
+    "title": "Nachlass Duhn, Friedrich Carl von",
+    "authors": [],
+    "scope_and_content": "Bericht \u00fcber eine Reise im n\u00f6rdlichen Peloponnes gemeinsam mit Habbo Gerhard Lolling. Die Reise begann am 14. April und endete f\u00fcr Duhn am 15. Mai 1877. Das Dokument beschreibt lediglich die Reiseroute (Athen, \u00c4gina, Epidauros, Nafplio, Nemea, Sikyon, Pellene, Aigeira, Aigion, Patras, Megaspilion, Dyme, Olympia, Tripoli, Nafplio, Athen), gibt jedoch keine genaueren Angaben zu den gemachten Funden/ Entdeckungen. Nur, dass Achaia sehr vernachl\u00e4ssigt ist und wenig Resultate erbracht worden sind, wird bemerkt. Die aufgelisteten Anlagen 1. Skulpturenreste, 2. griechische Inschriften, 3. Dyme, 4. lateinische Inschriften von Patras, 5. Rechnung sind nicht mehr beiliegend.",
+    "repository": "Deutsches Arch\u00e4ologisches Institut, Athen, Archiv",
+    "repository_inherited_from": "Nachl\u00e4sse",
+    "creators": [
+      "Duhn, Friedrich Carl von (1851\u20131930)"
+    ],
+    "extent_and_medium": "1 hellblaue Jurismappe mit losen Bl\u00e4ttern, 21 x 15 cm.",
+    "level_of_description": "Subfonds",
+    "dates": [
+      {
+        "date": "1877",
+        "start_date": "1877-00-00",
+        "end_date": "1877-00-00",
+        "type": "Creation"
+      }
+    ],
+    "notes": [],
+    "reference_code": "GR D-DAI-ATH-Archiv NL-Duhn"
+  }
+}

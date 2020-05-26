@@ -7,10 +7,10 @@ from service.run_service import app
 from utils.repository import generate_repository_path
 
 
-test_object = 'a_book_1234'
+test_object = 'a_archival_description_0001'
 test_representation = 'pdf'
 test_jpg = "test.jpg"
-test_file = 'a_book.pdf'
+test_file = 'a_archival_description_0001.pdf'
 test_metafile = 'meta.json'
 
 
