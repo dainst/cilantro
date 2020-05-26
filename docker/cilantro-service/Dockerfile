@@ -18,6 +18,7 @@ RUN set -ex && pipenv install --deploy --system
 COPY ./utils /app/utils
 COPY ./service /app/service
 COPY ./resources /app/resources
+COPY ./workers/task_information.py /app/workers/task_information.py
 
 WORKDIR /app
 
