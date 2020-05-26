@@ -64,8 +64,10 @@ def _initialize_files(obj, path, user, init_rep):
 
     files_grabbed = []
     for files in filename_extension_mapping[init_rep]:
-        files_grabbed.extend(glob.glob(os.path.join(staging_dir, user,
-                                                    path, files)))
+        files_grabbed.extend(glob.glob(
+            os.path.join(staging_dir, user, path, files),
+            recursive=True
+        ))
 
     if len(files_grabbed) < 1:
         raise Exception(f'no valid job files found in {path}')
