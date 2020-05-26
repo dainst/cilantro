@@ -4,7 +4,7 @@ import logging
 from abc import abstractmethod
 from celery import chord, signature
 
-from workers.task_informations import get_label, get_description
+from workers.task_information import get_label, get_description
 from utils.celery_client import celery_app
 from utils.job_db import JobDb
 

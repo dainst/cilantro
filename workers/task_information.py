@@ -1,4 +1,4 @@
-informations = {
+information = {
     "convert.merge_converted_pdf": {"label": "Merge converted PDF",
                                     "description": "Merges individual PDF files into one."},
     "convert.set_pdf_metadata": {"label": "Set PDF metadata",
@@ -45,12 +45,12 @@ informations = {
 
 
 def get_label(name):
-    if name in informations:
-        return informations[name]["label"]
+    if name in information:
+        return information[name]["label"]
     return "Unknown Task"
 
 
 def get_description(name):
-    if name in informations:
-        return informations[name]["description"]
+    if name in information:
+        return information[name]["description"]
     return "Unknown Task"

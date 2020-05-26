@@ -7,7 +7,7 @@ import traceback
 import celery.signals
 from celery.task import Task
 
-from workers.task_informations import get_label, get_description
+from workers.task_information import get_label, get_description
 from utils.job_db import JobDb
 from utils.object import Object
 from utils.setup_logging import setup_logging
