@@ -1,0 +1,35 @@
+# This file is only used for pushing images to dockerhub, see docker_image_build.sh.
+
+version: '3.5'
+
+services:
+
+  service:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-service/Dockerfile
+    image: dainst/cilantro-service:latest
+
+  default-worker:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-default-worker/Dockerfile
+    image: dainst/cilantro-default-worker:latest
+
+  convert-worker:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-convert-worker/Dockerfile
+    image: dainst/cilantro-convert-worker:latest
+
+  nlp-heideltime-worker:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-nlp-heideltime-worker/Dockerfile
+    image: dainst/cilantro-nlp-heideltime-worker:latest
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-frontend/Dockerfile
+    image: dainst/cilantro-frontend:latest
