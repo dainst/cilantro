@@ -36,8 +36,10 @@ export function isTargetError(o: any) {
 
 export type MaybeJobTarget = JobTargetData | JobTargetError;
 
-export async function getTargetFolder(stagingFiles: WorkbenchFileTree, targetId: string) {
-    return getStagingFile(stagingFiles, targetId);
+export async function getTargetFolder(stagingFiles: WorkbenchFileTree, targetPath: string) {
+    // cut trailing /
+    if (targetPath.charAt(0) === "/") targetPath = targetPath.substr(1);
+    return getStagingFile(stagingFiles, targetPath);
 }
 
 function getStagingFile(stagingFiles: WorkbenchFileTree, path: string): WorkbenchFileTree | {} {
@@ -56,6 +58,6 @@ export function containsNumberOfFiles(folder: WorkbenchFileTree, number: number)
 export function containsOnlyFilesWithSuffix(folder: WorkbenchFileTree,
     suffix: string) {
     const differentSuffixFiles = Object.keys(folder).filter(file => !file.endsWith(suffix));
-    
+
     return differentSuffixFiles.length === 0;
 }
