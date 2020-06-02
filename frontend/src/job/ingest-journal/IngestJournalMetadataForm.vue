@@ -40,6 +40,12 @@
                         label="Number"
                         >{{ props.row.metadata.number || '-' }}
                     </b-table-column>
+                    <b-table-column
+                        field="metadata.zenon_link"
+                        label="Zenon"
+                    ><a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id">
+                        {{props.row.metadata.zenon_id}}</a>
+                    </b-table-column>
                 </template>
                 <template v-else>
                     <b-table-column label="Description">-</b-table-column>
