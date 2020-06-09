@@ -5,7 +5,7 @@ ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-RUN apk add --update python-dev py-pip gcc libffi libffi-dev musl-dev
+RUN apk add --update python3-dev py-pip gcc libffi libffi-dev musl-dev
 
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 RUN set -ex && mkdir /app

@@ -9,7 +9,7 @@ RUN apt-get update && \
     libtiff-dev \
     libpoppler-cpp-dev \
     pkg-config \
-    python-dev \
+    python3-dev \
     libmagickwand-dev \
     ghostscript \
     tesseract-ocr \
