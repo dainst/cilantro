@@ -10,7 +10,7 @@ RUN apk add --update python3-dev py-pip gcc libffi libffi-dev musl-dev
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 RUN set -ex && mkdir /app
 
-RUN pip3 install pipenv
+RUN pip3 install 'pipenv==2018.11.26'
 COPY docker/cilantro-service/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-service/Pipfile Pipfile
 RUN set -ex && pipenv install --deploy --system
