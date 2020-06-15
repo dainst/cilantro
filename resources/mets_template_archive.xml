@@ -37,19 +37,31 @@
                     </mods:name>
                     {% endfor %}
                     <mods:originInfo>
-                        {% if '-' in metadata['created'] %}
-                        {% set parts = metadata['created'].split('-') %}
-                            <mods:dateIssued encoding="iso8601" point="start">{{parts[0]}}</mods:dateIssued>
-                            <mods:dateIssued encoding="iso8601" point="end">{{parts[1]}}</mods:dateIssued>
-                        {% else %}
-                            <mods:dateIssued encoding="iso8601" keyDate="yes">{{metadata['created']}}</mods:dateIssued>
+                        {% if metadata['dates'] %}
+                            {% for date in metadata['dates'] %}
+                                {% if date['type'] == 'Creation' %}
+                                    {% if date['start_date'] and date['end_date'] %}
+                                    <mods:dateCreated encoding="iso8601" point="start">{{date['start_date']}}</mods:dateCreated>
+                                    <mods:dateCreated encoding="iso8601" point="end">{{date['end_date']}}</mods:dateCreated>
+                                    {% else %}
+                                    <mods:dateCreated encoding="iso8601" keyDate="yes">{{date['date']}}</mods:dateCreated>
+                                    {% endif %}
+                                {% else %}
+                                    {% if date['start_date'] and date['end_date'] %}
+                                    <mods:dateIssued encoding="iso8601" point="start">{{date['start_date']}}</mods:dateIssued>
+                                    <mods:dateIssued encoding="iso8601" point="end">{{date['end_date']}}</mods:dateIssued>
+                                    {% else %}
+                                    <mods:dateIssued encoding="iso8601" keyDate="yes">{{date['date']}}</mods:dateIssued>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                         {% endif %}
                     </mods:originInfo>
-                    {% if metadata['abstract'] %}
-                    <mods:abstract>{{metadata['abstract']}}≠</mods:abstract>
+                    {% if metadata['scope_and_content'] %}
+                    <mods:abstract>{{metadata['scope_and_content']}}</mods:abstract>
                     {% endif %}
                     <mods:physicalDescription>
-                        <mods:extent>{{metadata['description']}}</mods:extent>
+                        <mods:extent>{{metadata['extent_and_medium']}}</mods:extent>
                     </mods:physicalDescription>
                 </mods:mods>
             </mets:xmlData>
@@ -65,9 +77,6 @@
                         <dv:ownerLogo>https://arachne.uni-koeln.de/arachne/images/dfg-viewer-logo.jpg</dv:ownerLogo>
                         <dv:ownerSiteURL>https://dainst.org</dv:ownerSiteURL>
                     </dv:rights>
-                     <dv:links>
-                        <dv:reference linktext="OPAC">https://zenon.dainst.org/Record/{{metadata['zenon_id']}}</dv:reference>
-                    </dv:links>
                 </mets:xmlData>
             </mets:mdWrap>
         </mets:rightsMD>
