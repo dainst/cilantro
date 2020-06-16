@@ -131,9 +131,9 @@ OJS monitoring under http://localhost:4444
 
 ### Additional docker-compose configurations
 
-#### Local OMP instance
+#### Local OMP/OJS instance
 
-If you have checked out [omp-docker](https://github.com/dainst/omp-docker) and want to develop against its running instance (instead of the default mock server), you can do so by using the provided [docker-compose.local_omp.yml](docker-compose.local_omp.yml) by running `docker-compose -f docker-compose.yml -f docker-compose.local_omp.yml up`.
+If you have checked out [omp-docker](https://github.com/dainst/omp-docker) and/or [ojs-docker](https://github.com/dainst/ojs3-docker) and want to develop against its running instance (instead of the default mock server), you can do so by using the provided [docker-compose.local_omp.yml](docker-compose.local_omp.yml) and/or [docker-compose.local_ojs.yml](docker-compose.local_ojs.yml) by running `docker-compose -f docker-compose.yml -f docker-compose.local_omp.yml -f docker-compose.local_ojs.yml up`. Leave out the OJS or OMP yaml, if you use just one of them.
 
 ## Troubleshooting
 
