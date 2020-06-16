@@ -36,26 +36,3 @@ export function isTargetError(o: any) {
 
 export type MaybeJobTarget = JobTargetData | JobTargetError;
 
-export async function getTargetFolder(stagingFiles: WorkbenchFileTree, targetId: string) {
-    return getStagingFile(stagingFiles, targetId);
-}
-
-function getStagingFile(stagingFiles: WorkbenchFileTree, path: string): WorkbenchFileTree | {} {
-    return path.split('/').reduce((folderTree, folderName) => {
-        if (folderName in folderTree) {
-            return folderTree[folderName].contents || {};
-        }
-        return {};
-    }, stagingFiles);
-}
-
-export function containsNumberOfFiles(folder: WorkbenchFileTree, number: number) {
-    return getVisibleFolderContents(folder).length === number;
-}
-
-export function containsOnlyFilesWithSuffix(folder: WorkbenchFileTree,
-    suffix: string) {
-    const differentSuffixFiles = Object.keys(folder).filter(file => !file.endsWith(suffix));
-    
-    return differentSuffixFiles.length === 0;
-}

@@ -67,14 +67,13 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import {
-    JobTargetError, isTargetError, getTargetFolder, containsNumberOfFiles,
-    containsOnlyFilesWithSuffix
+    JobTargetError, isTargetError
 } from '@/job/JobParameters';
 import {
     JobTargetData, MaybeJobTarget, ArchivalMaterialMetadata
 } from './IngestArchivalMaterialParameters';
 import {
-    getStagingFiles, WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, containsOnlyVisibleFilesWithExtensions
+    getStagingFiles, WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, containsOnlyVisibleFilesWithExtensions, getTargetFolder, containsNumberOfFiles
 } from '@/staging/StagingClient';
 import { AtomRecord, getAtomRecord } from '@/util/AtomClient';
 import { asyncMap } from '@/util/HelperFunctions';
