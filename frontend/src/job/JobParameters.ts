@@ -37,7 +37,7 @@ export function isTargetError(o: any) {
 export type MaybeJobTarget = JobTargetData | JobTargetError;
 
 export async function getTargetFolder(stagingFiles: WorkbenchFileTree, targetPath: string) {
-    // cut trailing /
+    // cut leading /
     if (targetPath.charAt(0) === "/") targetPath = targetPath.substr(1);
     return getStagingFile(stagingFiles, targetPath);
 }
