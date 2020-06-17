@@ -5,6 +5,7 @@ import Router from 'vue-router';
 import AuthenticationStore from '@/authentication/AuthenticationStore';
 import AuthenticationStatus from '@/authentication/AuthenticationStatus';
 import Login from '@/Login.vue';
+import flushPromises from 'flush-promises';
 
 const MockComponent = { template: '<div class="login_success">Login success</div>' };
 
@@ -79,9 +80,17 @@ describe('Login.vue', () => {
     });
 
     it('submits the login form', async() => {
-        wrapper.find('#username').setValue('santa');
-        wrapper.find('#password').setValue('klaus');
+        const input_user =  wrapper.find('#username')
+        const input_pw =  wrapper.find('#password')
+        input_user.setValue('santa');
+        await flushPromises();
+
+        input_pw.setValue('klaus');
+        await flushPromises();
+        
         await wrapper.vm.$nextTick();
+
+        console.log(input_user.text())
 
         const button = wrapper.find('button');
         expect(button.attributes('disabled')).toBeFalsy();

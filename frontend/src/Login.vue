@@ -6,24 +6,24 @@
         <div class="columns is-centered">
             <form class="column is-narrow login" @submit.prevent="login">
                 <b-field>
-                    <input
+                    <b-input
                         placeholder="Name"
                         minlength="1"
                         type="text"
                         required
                         v-model="name"
                         id="username"
-                    >
+                    ></b-input>
                 </b-field>
                 <b-field>
-                    <input
+                    <b-input
                         placeholder="Password"
                         minlength="1"
                         type="password"
                         required
                         v-model="password"
                         id="password"
-                    >
+                    ></b-input>
                 </b-field>
                 <b-button
                     :disabled="missingInput"

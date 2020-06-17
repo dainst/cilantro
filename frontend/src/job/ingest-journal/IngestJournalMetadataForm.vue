@@ -81,15 +81,14 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import {
-    JobTargetError, isTargetError, getTargetFolder, containsNumberOfFiles,
-    containsOnlyFilesWithSuffix
+    JobTargetError, isTargetError
 } from '@/job/JobParameters';
 import { MaybeJobTarget, JobTargetData, JournalIssueMetadata } from './IngestJournalParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
 import { ojsZenonMapping } from '@/config';
 import {
-    WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles
+    WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles, getTargetFolder, containsNumberOfFiles, containsOnlyFilesWithSuffix
 } from '@/staging/StagingClient';
 
 @Component({
