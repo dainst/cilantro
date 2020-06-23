@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Ingest Journal schema",
-    "description": "Used to validate ingest-journal job parameters",
+    "title": "Ingest Monographs schema",
+    "description": "Used to validate ingest-monograph job parameters",
     "type": "object",
     "required": [
         "targets",
