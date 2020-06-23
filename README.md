@@ -133,7 +133,7 @@ OJS monitoring under http://localhost:4444
 
 #### Local OMP instance
 
-If you have checked out [omp-docker](https://github.com/dainst/omp-docker) and want to develop against its running instance (instead of the default mock server), you can do so by using the provided [docker-compose.local_omp.yml](docker-compose.local_omp.yml) by running `docker-compose -f docker-compose.yml -f docker-compose.local_omp.yml up`.
+If you have checked out [omp-docker](https://github.com/dainst/omp-docker) and want to develop against its running instance (instead of the default mock server), you can do so by using the provided [docker-compose.local_omp.yml](docker-compose.local_omp.yml) by running `make run-local-omp`.
 
 ## Troubleshooting
 
