@@ -1,12 +1,14 @@
 import {
-    shallowMount, mount, createLocalVue, Wrapper
+    shallowMount, mount, createLocalVue,
 } from '@vue/test-utils';
 import Buefy from 'buefy';
 import Vuex, { Store } from 'vuex';
 import flushPromises from 'flush-promises';
 import IngestArchivalMaterialMetadataForm from '@/job/ingest-archival-material/IngestArchivalMaterialMetadataForm.vue';
 import {
-    WorkbenchFile, WorkbenchFileTree, getVisibleFolderContents as realFolderFunction, getStagingFiles
+    WorkbenchFile,
+    WorkbenchFileTree,
+    getStagingFiles
 } from '@/staging/StagingClient';
 
 const mockStagingTree: WorkbenchFileTree = {
@@ -24,6 +26,33 @@ const mockStagingTree: WorkbenchFileTree = {
                 name: 'test2.tiff',
                 type: 'file',
                 marked: false
+            }
+        }
+    }
+};
+
+const mockDeepStagingTree: WorkbenchFileTree = {
+    'RECORD-AID-D-001149881': {
+        name: 'RECORD-AID-D-001149881',
+        type: 'folder',
+        marked: false,
+        contents: {
+            tif: {
+                name: 'tif',
+                type: 'folder',
+                marked: false,
+                contents: {
+                    'test.tif': {
+                        name: 'test.tif',
+                        type: 'file',
+                        marked: false
+                    },
+                    'test2.tiff': {
+                        name: 'test2.tiff',
+                        type: 'file',
+                        marked: false
+                    }
+                }
             }
         }
     }
@@ -87,7 +116,36 @@ describe('IngestArchiveMetadataForm', () => {
         expect(details.text()).toBe('atom_id: de-001149881copyright: DAI');
     });
 
-    it('complains about tif files', async() => {
+    it('check clean tif subfolder', async() => {
+        if (mockDeepStagingTree['RECORD-AID-D-001149881'].contents !== undefined &&
+            mockDeepStagingTree['RECORD-AID-D-001149881'].contents.tif.contents !== undefined) {
+            mockDeepStagingTree['RECORD-AID-D-001149881'].contents.tif.contents['test3.pdf'] = aPdf;
+        }
+        (getStagingFiles as jest.Mock).mockImplementation(
+            () => Promise.resolve(mockDeepStagingTree)
+        );
+
+        wrapper = mount(IngestArchivalMaterialMetadataForm, {
+            localVue,
+            store,
+            propsData: {
+                selectedPaths: ['/RECORD-AID-D-001149881'],
+                defaultCopyright: 'DAI'
+            }
+        });
+        await flushPromises();
+        // click the expand arrow
+        wrapper.find('a').trigger('click');
+        // wait for event processing
+        await wrapper.vm.$nextTick();
+        // find the error message
+        const details = wrapper.find('.metadata_output');
+        expect(details.text()).toBe(
+            "Subfolder 'tif' does not exclusively contain TIF files."
+        );
+    });
+
+    it('check clean main folder', async() => {
         if (mockStagingTree['RECORD-AID-D-001149881'].contents !== undefined) {
             mockStagingTree['RECORD-AID-D-001149881'].contents['test3.pdf'] = aPdf;
         }
@@ -108,6 +166,8 @@ describe('IngestArchiveMetadataForm', () => {
         await wrapper.vm.$nextTick();
         // find the error message
         const details = wrapper.find('.metadata_output');
-        expect(details.text()).toBe("Folder does not only contain files ending in '.tif'.");
+        expect(details.text()).toBe(
+            "Selected folder neither contains subfolder 'tif', nor itself exclusively TIF files."
+        );
     });
 });
