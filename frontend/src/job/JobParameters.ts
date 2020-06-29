@@ -35,4 +35,3 @@ export function isTargetError(o: any) {
 }
 
 export type MaybeJobTarget = JobTargetData | JobTargetError;
-

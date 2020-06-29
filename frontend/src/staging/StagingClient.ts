@@ -53,26 +53,28 @@ export function containsNumberOfFiles(folder: WorkbenchFileTree, number: number)
 /**
  * runs through a WorkbenchFileTree and checks if it only contains files with the given extensions.
  * files with a leading . are considered 'invisible' and are therefor excluded from this search
- * 
+ *
  * @param folder the folder to lookup
  * @param extensions the extensions to find
  */
 export function containsOnlyVisibleFilesWithExtensions(folder: WorkbenchFileTree, extensions: string[] ) {
     let file_list: WorkbenchFile[] = getVisibleFolderContents(folder);
         // check if every file
-    return file_list.every(file => 
+    return file_list.every(file =>
             // has one of the given extensions
-                extensions.some( ext => 
+                extensions.some( ext =>
                     file.name.endsWith(ext)) );
 }
 
 /**
  * Readout the Filetree for the requested ID
- * @param stagingFiles 
- * @param targetId 
- * @returns WorkbenchFileTree | {} 
+ * @param stagingFiles
+ * @param targetId
+ * @returns WorkbenchFileTree | {}
  */
 export async function getTargetFolder(stagingFiles: WorkbenchFileTree, targetId: string) {
+    // cut leading /
+    if (targetId.charAt(0) === "/") targetId = targetId.substr(1);
     if (targetId in stagingFiles) {
         return stagingFiles[targetId].contents || {};
     }
@@ -81,13 +83,13 @@ export async function getTargetFolder(stagingFiles: WorkbenchFileTree, targetId:
 
 /**
  * Checks wether or not the content of a folder contains only files with a specific suffix
- * @param folder 
- * @param suffix 
+ * @param folder
+ * @param suffix
  * @returns bool
  */
 export function containsOnlyFilesWithSuffix(folder: WorkbenchFileTree,
     suffix: string) {
     const differentSuffixFiles = Object.keys(folder).filter(file => !file.endsWith(suffix));
-    
+
     return differentSuffixFiles.length === 0;
 }
