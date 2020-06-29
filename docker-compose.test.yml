@@ -128,7 +128,7 @@ services:
       CILANTRO_ENV: *cilantro-env
 
   frontend:
-    image: dainst/cilantro-frontend:0.2.13
+    image: dainst/cilantro-frontend:0.2.14
     networks:
       - default
       - web
