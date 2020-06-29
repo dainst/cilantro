@@ -24,7 +24,7 @@ x-env-app-config: &env-app-config
   CILANTRO_ENV: &cilantro-env test
   OJS_URI: &ojs-uri https://ojs.test.idai.world/plugins/generic/ojs-cilantro-plugin/api
   OMP_URI: &omp-uri http://test.publications.dainst.org/books/plugins/generic/cilantro/api
-  ATOM_URI: &atom-uri https://archivestest.dainst.org
+  ATOM_URI: &atom-uri http://archivestest.dainst.org/index.php
   REPOSITORY_URI: &repository-uri https://workbench.test.idai.world/api/repository
 
 services:
