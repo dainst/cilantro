@@ -113,7 +113,8 @@ describe('IngestArchiveMetadataForm', () => {
         wrapper.find('a').trigger('click');
         await wrapper.vm.$nextTick();
         const details = wrapper.find('.metadata_output');
-        expect(details.text()).toBe('atom_id: de-001149881copyright: DAI');
+        expect(details.text()).toContain('atom_id: de-001149881');
+        expect(details.text()).toContain('copyright: DAI');
     });
 
     it('check clean tif subfolder', async() => {
