@@ -1,7 +1,7 @@
 <template>
     <section>
         <b-table
-            v-if="jobsLoaded"
+            v-if="!emptyJobList"
             :data="filteredJobs"
             detailed
             detail-key="job_id"
@@ -46,8 +46,8 @@
             </template>
         </b-table>
         <div v-else-if="jobsLoading">Loading jobs...</div>
+        <div v-else-if="errorLoading">There has been an error. JobList in unexpected state</div>
         <div v-else-if="emptyJobList">No jobs found</div>
-        <div v-else>There has been an error. JobList in unexpected state</div>
     </section>
 </template>
 
@@ -91,17 +91,19 @@ export default class JobListEntry extends Vue {
     }
 
     get jobsLoading() {
-        // return ( this.unfilteredJobs === null );
         return this.loadingState == LoadState.loading;
     }
 
+    get errorLoading() {
+        return this.loadingState == LoadState.error;
+    }
+
     get emptyJobList() {
-        // return ( this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0 );
-        return this.loadingState == LoadState.empty;
+        return ( this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0 );
     }
 
     get filteredJobs() {
-            if (this.jobIDs.length === 0) {
+            if (this.unfilteredJobs && this.jobIDs.length === 0) {
                 return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
             }
             return this.unfilteredJobs;
@@ -109,12 +111,12 @@ export default class JobListEntry extends Vue {
 
     async loadJobs() {
         this.loadingState = LoadState.loading
-        
+
         if (this.jobIDs.length === 0) {
             this.unfilteredJobs = await getJobList();
 
         } else {
-           
+
             const requests = this.jobIDs.map(id => getJobDetails(id));
             this.unfilteredJobs = await Promise.all(requests);
         }
@@ -139,11 +141,13 @@ export default class JobListEntry extends Vue {
             this.loadingState = LoadState.loaded
         } else if (Array.isArray( this.unfilteredJobs ) && this.unfilteredJobs.length === 0) {
             this.loadingState = LoadState.empty
-        } else {
-            this.loadingState = LoadState.error
+        }else{
+
+            this.loadingState=LoadState.error
+            this.unfilteredJobs = []
         }
     }
-   
+
 }
 
 function getChildrenIDs(children: Job[]) {
