@@ -46,8 +46,8 @@
             </template>
         </b-table>
         <div v-else-if="jobsLoading">Loading jobs...</div>
+        <div v-else-if="errorLoading">There has been an error. JobList in unexpected state</div>
         <div v-else-if="emptyJobList">No jobs found</div>
-        <div v-else>There has been an error. JobList in unexpected state</div>
     </section>
 </template>
 
@@ -94,12 +94,16 @@ export default class JobListEntry extends Vue {
         return this.loadingState == LoadState.loading;
     }
 
+    get errorLoading() {
+        return this.loadingState == LoadState.error;
+    }
+
     get emptyJobList() {
         return ( this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0 );
     }
 
     get filteredJobs() {
-            if (this.jobIDs.length === 0) {
+            if (this.unfilteredJobs && this.jobIDs.length === 0) {
                 return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
             }
             return this.unfilteredJobs;
@@ -137,8 +141,10 @@ export default class JobListEntry extends Vue {
             this.loadingState = LoadState.loaded
         } else if (Array.isArray( this.unfilteredJobs ) && this.unfilteredJobs.length === 0) {
             this.loadingState = LoadState.empty
-        } else {
-            this.loadingState = LoadState.error
+        }else{
+
+            this.loadingState=LoadState.error
+            this.unfilteredJobs = []
         }
     }
 
