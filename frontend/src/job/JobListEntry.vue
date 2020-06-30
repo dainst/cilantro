@@ -95,8 +95,7 @@ export default class JobListEntry extends Vue {
     }
 
     get emptyJobList() {
-        // return ( this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0 );
-        return this.loadingState == LoadState.empty;
+        return ( this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0 );
     }
 
     get filteredJobs() {
