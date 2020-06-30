@@ -40,6 +40,12 @@
                         label="Number"
                         >{{ props.row.metadata.number || '-' }}
                     </b-table-column>
+                    <b-table-column
+                        field="metadata.zenon_link"
+                        label="Zenon"
+                    ><a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id">
+                        {{props.row.metadata.zenon_id}}</a>
+                    </b-table-column>
                 </template>
                 <template v-else>
                     <b-table-column label="Description">-</b-table-column>
@@ -117,7 +123,7 @@ export default class JournalMetadataForm extends Vue {
                     errors.push(`Could not extract Zenon ID from ${path}.`);
                 }
 
-                const targetFolder = await getTargetFolder(stagingFiles, id);
+                const targetFolder = await getTargetFolder(stagingFiles, path);
                 if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {
@@ -166,7 +172,7 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
                 !containsOnlyFilesWithSuffix(targetFolder.tif.contents, '.tif')) {
             errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
         }
-    } 
+    }
     return errors;
 }
 

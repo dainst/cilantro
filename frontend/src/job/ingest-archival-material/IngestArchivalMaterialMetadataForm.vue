@@ -51,7 +51,10 @@
             <template slot="detail" slot-scope="props">
                 <div class="content metadata_output">
                     <ul>
-                        <li v-for="(data, name) in props.row.metadata" :key="data">{{name}}: {{data}}</li>
+                        <li
+                            v-for="(data, name) in props.row.metadata"
+                            :key="data">{{name}}: {{data}}
+                        </li>
                     </ul>
                     <ul v-if="isTargetError(props.row)">
                         <li v-for="message in props.row.messages" :key="message">{{ message }}</li>
@@ -64,7 +67,7 @@
 
 <script lang="ts">
 import {
-    Component, Vue, Prop, Watch
+    Component, Vue, Prop,
 } from 'vue-property-decorator';
 import {
     JobTargetError, isTargetError
@@ -73,7 +76,12 @@ import {
     JobTargetData, MaybeJobTarget, ArchivalMaterialMetadata
 } from './IngestArchivalMaterialParameters';
 import {
-    getStagingFiles, WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, containsOnlyVisibleFilesWithExtensions, getTargetFolder, containsNumberOfFiles
+    getStagingFiles,
+    WorkbenchFileTree,
+    containsOnlyVisibleFilesWithExtensions,
+    getTargetFolder,
+    containsNumberOfFiles,
+    containsOnlyFilesWithSuffix
 } from '@/staging/StagingClient';
 import { AtomRecord, getAtomRecord } from '@/util/AtomClient';
 import { asyncMap } from '@/util/HelperFunctions';
@@ -109,7 +117,7 @@ export default class ArchivalMaterialMetadataForm extends Vue {
                     errors.push(`Could not extract Atom ID from ${path}.`);
                 }
 
-                const targetFolder = await getTargetFolder(stagingFiles, id);
+                const targetFolder = await getTargetFolder(stagingFiles, path);
                 if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {
@@ -152,13 +160,14 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
             `Folder appears to be empty. Please provide input data.`
         );
     }
-
-    if (targetFolder !== undefined) {
-        // since there is no subfolder anymore get all files in question
-        let clear = containsOnlyVisibleFilesWithExtensions(targetFolder, ['.tif', '.tiff']);
-        if (!clear){
-            errors.push(`Folder does not only contain files ending in '.tif'.`);
+    if (('tif' in targetFolder)) {
+        // if there is a tif folder, make sure it only contains tifs
+        if (targetFolder.tif.contents !== undefined &&
+            !containsOnlyFilesWithSuffix(targetFolder.tif.contents, '.tif')) {
+            errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
         }
+    } else if (!containsOnlyVisibleFilesWithExtensions(targetFolder, ['.tif', '.tiff'])) {
+        errors.push(`Selected folder neither contains subfolder 'tif', nor itself exclusively TIF files.`);
     }
     return errors;
 }
@@ -208,7 +217,8 @@ async function loadAtomData(target: JobTargetData) {
 
         return new JobTargetData(target.id, target.path, metadata);
     } catch (error) {
-        return new JobTargetError(target.id, target.path, [error]);
+        const msg = `Could not resolve valid Atom dataset for id ${target.metadata.atom_id}.`;
+        return new JobTargetError(target.id, target.path, [msg]);
     }
 }
 

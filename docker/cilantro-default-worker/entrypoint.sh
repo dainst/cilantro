@@ -4,6 +4,10 @@ if test -f "/run/secrets/ojs_auth_key"; then
     echo "Found secret: setting OJS_AUTH_KEY"
     export OJS_AUTH_KEY=$(cat "/run/secrets/ojs_auth_key")
 fi
+if test -f "/run/secrets/omp_auth_key"; then
+    echo "Found secret: setting OMP_AUTH_KEY"
+    export OMP_AUTH_KEY=$(cat "/run/secrets/omp_auth_key")
+fi
 if test -f "/run/secrets/atom_api_key"; then
     echo "Found secret: setting ATOM_API_KEY"
     export ATOM_API_KEY=$(cat "/run/secrets/atom_api_key")
