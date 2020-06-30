@@ -1,7 +1,7 @@
 <template>
     <section>
         <b-table
-            v-if="jobsLoaded"
+            v-if="!emptyJobList"
             :data="filteredJobs"
             detailed
             detail-key="job_id"
@@ -91,7 +91,6 @@ export default class JobListEntry extends Vue {
     }
 
     get jobsLoading() {
-        // return ( this.unfilteredJobs === null );
         return this.loadingState == LoadState.loading;
     }
 
@@ -109,12 +108,12 @@ export default class JobListEntry extends Vue {
 
     async loadJobs() {
         this.loadingState = LoadState.loading
-        
+
         if (this.jobIDs.length === 0) {
             this.unfilteredJobs = await getJobList();
 
         } else {
-           
+
             const requests = this.jobIDs.map(id => getJobDetails(id));
             this.unfilteredJobs = await Promise.all(requests);
         }
@@ -143,7 +142,7 @@ export default class JobListEntry extends Vue {
             this.loadingState = LoadState.error
         }
     }
-   
+
 }
 
 function getChildrenIDs(children: Job[]) {
