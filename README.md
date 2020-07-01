@@ -62,6 +62,8 @@ login and start new jobs. Passwords in this file are encrypted with bcrypt.
 
 You can [generate a bcryt-hash here](https://bcrypt-generator.com/).
 
+After changing the `config/users.yml` the service has currently to be restarted in order to reload the file.
+
 
 ### Documentation
 
