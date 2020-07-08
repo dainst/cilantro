@@ -47,7 +47,7 @@ class JobDb:
         :return: list of job objects
         """
         job_list = []
-        for job in self.db.jobs.find({"user": user, "parent_job_id": None}, {'_id': False}):
+        for job in self.db.jobs.find({"user": user, "parent_job_id": None, "archived":False}, {'_id': False}):
             job_list.append(
                 self._expand_child_information(job)
             )
@@ -86,6 +86,7 @@ class JobDb:
             'parent_job_id': parent_job_id,
             'child_job_ids': child_job_ids,
             'state': 'new',
+            'archived': False,
             'created': timestamp,
             'started': None,
             'updated': timestamp,

@@ -46,6 +46,7 @@ export interface Job {
     parent_job_id: string; // eslint-disable-line camelcase
     started: string;
     state: string;
+    archived: boolean;
     updated: string;
     user: string;
 }
