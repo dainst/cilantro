@@ -39,6 +39,11 @@
                               @click="goToSingleView(props.row.job_id)">
                         View
                     </b-button>
+
+                    <b-button v-if="!props.row.parent_job_id" icon-right="delete" class="is-danger"
+                              @click="removeJob(props.row.job_id)">
+                        Remove
+                    </b-button>
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
@@ -56,6 +61,7 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import {
+    archiveJob,
     getJobDetails, getJobList, iconAttributesForState, Job
 } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
@@ -135,7 +141,16 @@ export default class JobListEntry extends Vue {
             query: { id }
         });
     }
+    removeJob(id: string){
+        this.$buefy.dialog.confirm({
+            message: `Delete Job ${id}?`,
+            onConfirm: ()=>{
+                archiveJob(id)
+                this.unfilteredJobs = this.unfilteredJobs.filter(function(ele){ return ele.job_id != id; });
+            }
+        });
 
+    }
     setJobListState () {
         if (Array.isArray( this.unfilteredJobs ) && this.unfilteredJobs.length !== 0 ) {
             this.loadingState = LoadState.loaded
