@@ -117,10 +117,20 @@ class JobDb:
         if state == 'started':
             updated_values['started'] = timestamp
         self.db.jobs.update_many({"job_id": job_id},
-                            {'$set': updated_values})
+                                 {'$set': updated_values})
         if error:
             self.db.jobs.update_many({"job_id": job_id},
-                                {'$push': {'errors': error}})
+                                     {'$push': {'errors': error}})
+
+    def archive_jobs(self, job_ids):
+        """
+        Archives a list of jobs in the job database with archived flag to true.
+        :param [str] job_ids: List of Cilantro-ID of the job
+        :return: None
+        """
+        updated_values = {'archived': True}
+        self.db.jobs.update_many({"job_id": {"$in":job_ids}},
+                                 {'$set': updated_values})
 
     def update_job_log(self, job_id, log_output):
         """

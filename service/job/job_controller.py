@@ -14,6 +14,43 @@ from service.job.jobs import IngestArchivalMaterialsJob,\
 job_controller = Blueprint('job', __name__)
 
 
+@job_controller.route('/archive_job/<job_id>', methods=['POST'])
+@auth.login_required
+def archive_job(job_id):
+    """
+    Archives a Job, setting a flag in the JobDB, which filters job_list entries.
+
+    .. :quickref: Job Controller; Archivating Jobs
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      POST /archive_job/<job-id> HTTP/1.1
+
+    **Example response**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 200 OK
+
+    :reqheader Accept: application/json
+    :param str job_id: Job ID
+
+    :resheader Content-Type: application/json
+    :>json dict: operation result
+    :status 200: OK
+
+    :return:
+    """
+    job_db = JobDb()
+
+    job_db.archive_jobs([job_id])
+    job_db.close()
+
+    return 200
+
+
 @job_controller.route('/jobs', methods=['GET'])
 @auth.login_required
 def job_list():
