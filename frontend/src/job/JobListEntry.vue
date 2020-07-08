@@ -71,7 +71,7 @@ enum LoadState {
         empty,
         loading,
         error
-    };
+    }
 
 @Component({ name: 'JobListEntry' })
 export default class JobListEntry extends Vue {
@@ -93,7 +93,7 @@ export default class JobListEntry extends Vue {
     }
 
     get jobsLoaded() {
-        return  this.loadingState == LoadState.loaded;
+        return this.loadingState == LoadState.loaded;
     }
 
     get jobsLoading() {
@@ -105,24 +105,22 @@ export default class JobListEntry extends Vue {
     }
 
     get emptyJobList() {
-        return ( this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0 );
+        return (this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0);
     }
 
     get filteredJobs() {
-            if (this.unfilteredJobs && this.jobIDs.length === 0) {
-                return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
-            }
-            return this.unfilteredJobs;
+        if (this.unfilteredJobs && this.jobIDs.length === 0) {
+            return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
+        }
+        return this.unfilteredJobs;
     }
 
     async loadJobs() {
-        this.loadingState = LoadState.loading
+        this.loadingState = LoadState.loading;
 
         if (this.jobIDs.length === 0) {
             this.unfilteredJobs = await getJobList();
-
         } else {
-
             const requests = this.jobIDs.map(id => getJobDetails(id));
             this.unfilteredJobs = await Promise.all(requests);
         }
@@ -141,28 +139,27 @@ export default class JobListEntry extends Vue {
             query: { id }
         });
     }
-    removeJob(id: string){
+
+    removeJob(id: string) {
         this.$buefy.dialog.confirm({
             message: `Delete Job ${id}?`,
-            onConfirm: ()=>{
-                archiveJob(id)
-                this.unfilteredJobs = this.unfilteredJobs.filter(function(ele){ return ele.job_id != id; });
+            onConfirm: () => {
+                archiveJob(id);
+                this.unfilteredJobs = this.unfilteredJobs.filter(ele => ele.job_id != id);
             }
         });
-
     }
-    setJobListState () {
-        if (Array.isArray( this.unfilteredJobs ) && this.unfilteredJobs.length !== 0 ) {
-            this.loadingState = LoadState.loaded
-        } else if (Array.isArray( this.unfilteredJobs ) && this.unfilteredJobs.length === 0) {
-            this.loadingState = LoadState.empty
-        }else{
 
-            this.loadingState=LoadState.error
-            this.unfilteredJobs = []
+    setJobListState() {
+        if (Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length !== 0) {
+            this.loadingState = LoadState.loaded;
+        } else if (Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0) {
+            this.loadingState = LoadState.empty;
+        } else {
+            this.loadingState = LoadState.error;
+            this.unfilteredJobs = [];
         }
     }
-
 }
 
 function getChildrenIDs(children: Job[]) {
