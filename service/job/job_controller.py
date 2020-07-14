@@ -28,12 +28,30 @@ def archive_job(job_id):
 
       POST /archive_job/<job-id> HTTP/1.1
 
-    **Example response**:
+    **Example response SUCCESS**:
 
     .. sourcecode:: http
 
         HTTP/1.1 200 OK
 
+        {
+            "job_id": "399a5952-f594-11e9-ae9e-0242ac120007",
+            "success": true
+        }
+
+    **Example response ERROR**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 401 Unauthorized
+
+        {
+            "error": {
+                "code": "unauthorized",
+                "message": "401 Unauthorized: Invalid User for JobID."
+            },
+            "success": false
+        }
     :reqheader Accept: application/json
     :param str job_id: Job ID
 
@@ -44,11 +62,25 @@ def archive_job(job_id):
     :return:
     """
     job_db = JobDb()
+    user = auth.username()
+    if job_db.get_job_by_id(job_id)["user"] == user:
+        job_db.archive_jobs([job_id])
+        job_db.close()
+    else:
+        job_db.close()
 
-    job_db.archive_jobs([job_id])
-    job_db.close()
+        body = jsonify({
+            'success': False,
+            'error': {
+                 "code": "unauthorized",
+                 "message": "401 Unauthorized: Invalid User for JobID."
+             }})
+        return body, 401
 
-    return 200
+
+    body = jsonify({
+        'success': True})
+    return body, 200
 
 
 @job_controller.route('/jobs', methods=['GET'])

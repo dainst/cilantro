@@ -144,8 +144,11 @@ export default class JobListEntry extends Vue {
         this.$buefy.dialog.confirm({
             message: `Delete Job ${id}?`,
             onConfirm: () => {
-                archiveJob(id);
                 this.unfilteredJobs = this.unfilteredJobs.filter(ele => ele.job_id != id);
+                archiveJob(id).catch((response) => {
+                        showError('Failed to archive job!', response.error);
+
+                });
             }
         });
     }
