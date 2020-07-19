@@ -39,6 +39,11 @@
                               @click="goToSingleView(props.row.job_id)">
                         View
                     </b-button>
+
+                    <b-button v-if="!props.row.parent_job_id" icon-right="delete" class="is-danger"
+                              @click="removeJob(props.row.job_id)">
+                        Remove
+                    </b-button>
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
@@ -56,6 +61,7 @@ import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import {
+    archiveJob,
     getJobDetails, getJobList, iconAttributesForState, Job
 } from './JobClient';
 import { showError } from '@/util/Notifier.ts';
@@ -65,7 +71,7 @@ enum LoadState {
         empty,
         loading,
         error
-    };
+    }
 
 @Component({ name: 'JobListEntry' })
 export default class JobListEntry extends Vue {
@@ -87,7 +93,7 @@ export default class JobListEntry extends Vue {
     }
 
     get jobsLoaded() {
-        return  this.loadingState == LoadState.loaded;
+        return this.loadingState == LoadState.loaded;
     }
 
     get jobsLoading() {
@@ -99,24 +105,22 @@ export default class JobListEntry extends Vue {
     }
 
     get emptyJobList() {
-        return ( this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0 );
+        return (this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0);
     }
 
     get filteredJobs() {
-            if (this.unfilteredJobs && this.jobIDs.length === 0) {
-                return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
-            }
-            return this.unfilteredJobs;
+        if (this.unfilteredJobs && this.jobIDs.length === 0) {
+            return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
+        }
+        return this.unfilteredJobs;
     }
 
     async loadJobs() {
-        this.loadingState = LoadState.loading
+        this.loadingState = LoadState.loading;
 
         if (this.jobIDs.length === 0) {
             this.unfilteredJobs = await getJobList();
-
         } else {
-
             const requests = this.jobIDs.map(id => getJobDetails(id));
             this.unfilteredJobs = await Promise.all(requests);
         }
@@ -136,18 +140,29 @@ export default class JobListEntry extends Vue {
         });
     }
 
-    setJobListState () {
-        if (Array.isArray( this.unfilteredJobs ) && this.unfilteredJobs.length !== 0 ) {
-            this.loadingState = LoadState.loaded
-        } else if (Array.isArray( this.unfilteredJobs ) && this.unfilteredJobs.length === 0) {
-            this.loadingState = LoadState.empty
-        }else{
+    removeJob(id: string) {
+        this.$buefy.dialog.confirm({
+            message: `Delete Job ${id}?`,
+            onConfirm: () => {
+                this.unfilteredJobs = this.unfilteredJobs.filter(ele => ele.job_id != id);
+                archiveJob(id).catch((response) => {
+                        showError('Failed to archive job!', response.error);
 
-            this.loadingState=LoadState.error
-            this.unfilteredJobs = []
-        }
+                });
+            }
+        });
     }
 
+    setJobListState() {
+        if (Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length !== 0) {
+            this.loadingState = LoadState.loaded;
+        } else if (Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0) {
+            this.loadingState = LoadState.empty;
+        } else {
+            this.loadingState = LoadState.error;
+            this.unfilteredJobs = [];
+        }
+    }
 }
 
 function getChildrenIDs(children: Job[]) {

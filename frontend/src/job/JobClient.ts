@@ -12,6 +12,9 @@ export async function startJob(
 export async function getJobList(): Promise<Job[]> {
     return sendRequest('get', `${backendUri}/job/jobs`, {}, {}, false);
 }
+export async function archiveJob(jobID: string): Promise<boolean> {
+    return sendRequest('post', `${backendUri}/job/archive_job/${jobID}`, {}, {}, false);
+}
 
 export async function getJobDetails(jobID: string): Promise<Job> {
     return sendRequest('get', `${backendUri}/job/${jobID}`, {}, {}, false);
@@ -46,6 +49,7 @@ export interface Job {
     parent_job_id: string; // eslint-disable-line camelcase
     started: string;
     state: string;
+    archived: boolean;
     updated: string;
     user: string;
 }
