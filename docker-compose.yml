@@ -135,6 +135,24 @@ services:
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
 
+  nlp-worker:
+    image: dainst/cilantro-nlp-worker:latest
+    user: ${UID}
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-nlp-worker/Dockerfile
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./data:/data
+      - ./config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      <<: *env-jobdb
+      DB_HOST: db
+      CILANTRO_ENV: *cilantro-env
+
   test:
     container_name: cilantro_test
     user: ${UID}

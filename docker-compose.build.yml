@@ -28,6 +28,12 @@ services:
       dockerfile: ./docker/cilantro-nlp-heideltime-worker/Dockerfile
     image: dainst/cilantro-nlp-heideltime-worker:latest
 
+  nlp-worker:
+    build:
+      context: .
+      dockerfile: ./docker/cilantro-nlp-worker/Dockerfile
+    image: dainst/cilantro-nlp-worker:latest
+
   frontend:
     build:
       context: .
