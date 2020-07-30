@@ -129,7 +129,7 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:0.1.1
+    image: dainst/cilantro-nlp-worker:0.1.2
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
