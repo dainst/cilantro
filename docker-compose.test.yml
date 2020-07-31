@@ -127,6 +127,20 @@ services:
       DB_HOST: "celery-db"
       CILANTRO_ENV: *cilantro-env
 
+  nlp-worker:
+    user: ${UID}
+    image: dainst/cilantro-nlp-worker:0.1.2
+    working_dir: /app
+    volumes:
+      - workspace-data:/data/workspace
+      - config:/config
+    environment:
+      <<: *env-dirs
+      <<: *env-broker
+      <<: *env-jobdb
+      DB_HOST: "celery-db"
+      CILANTRO_ENV: *cilantro-env
+
   frontend:
     image: dainst/cilantro-frontend:0.2.16
     networks:

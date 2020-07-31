@@ -29,8 +29,7 @@ def _init_text_analyzer(text):
     :param str text: The text to analyze
     :return class: The text_analyzer
     """
-    from nlp_components.idai_journals.publications import TextAnalyzer
-    # dependency in docker container
+    from nlp_components.src.publications import TextAnalyzer
     text_analyzer = TextAnalyzer(text)
     return text_analyzer
 
