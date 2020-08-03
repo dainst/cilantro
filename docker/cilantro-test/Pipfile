@@ -28,6 +28,7 @@ sphinxcontrib-httpdomain = "*"
 # workaround for https://github.com/pypa/pipenv/issues/3865
 docutils = "==0.15"
 beautifulsoup4 = "*"
+dkpro-cassis = "*"
 
 [dev-packages]
 
