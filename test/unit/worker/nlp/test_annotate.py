@@ -19,3 +19,13 @@ class AnnotateTest(unittest.TestCase):
         text = ""
         result = annotate(text)
         self.assertEqual(result, {})
+
+    def test_annotating_plain_text_returns_xmi_input(self, mock_init):
+        # input = "Perikles war ein Grieche. Genauso wie Aristoteles aus Stageira."
+        # result = analyzer.annotate_text(text)
+        pass
+
+    def test_annotating_previously_tagged_xmi(self, mock_init):
+        # input = load_from_example_heideltime_file
+        # result = analyzer.annotate_xmi_cas(text)
+        pass
