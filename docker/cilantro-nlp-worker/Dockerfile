@@ -22,8 +22,9 @@ COPY ./workers /app/workers
 COPY ./resources /app/resources
 WORKDIR /app
 
-# This allows us to "import nlp_components"
-ENV PYTHONPATH="/usr/src"
+# This allows us to "import from nlp_components.src.xyz" but also makes the
+# imports inside the nlp_components module work
+ENV PYTHONPATH="/usr/src/nlp_components/src:/usr/src"
 
 COPY docker/cilantro-nlp-worker/entrypoint.sh /entrypoint.sh
 COPY docker/cilantro-nlp-worker/VERSION .
