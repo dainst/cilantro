@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <name>German Archaeological Institute (DAI) Named Entity Annotation Type System</name>
+  <description/>
+  <version>1.0</version>
+  <vendor/>
+  <types>
+    <typeDescription>
+      <name>org.dainst.nlp.NamedEntity</name>
+      <description/>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>annotatorId</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>references</name>
+          <description/>
+          <rangeTypeName>uima.cas.StringArray</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>org.dainst.nlp.NamedEntity.Place</name>
+      <supertypeName>org.dainst.nlp.NamedEntity</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>org.dainst.nlp.NamedEntity.Person</name>
+      <supertypeName>org.dainst.nlp.NamedEntity</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>org.dainst.nlp.LayoutElement</name>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>org.dainst.nlp.LayoutElement.Page</name>
+      <supertypeName>org.dainst.nlp.LayoutElement</supertypeName>
+    </typeDescription>
+  </types>
+</typeSystemDescription>
