@@ -1,15 +1,14 @@
 
+import os.path
 import unittest
-from workers.nlp.formats.xmi import DaiNlpXmiBuilder, DaiNlpFormatError
-
 from io import BytesIO
+
 from lxml import etree
 
-import os.path
+from workers.nlp.formats.xmi import DaiNlpXmiBuilder, DaiNlpFormatError
 
 resources_dir = os.environ["RESOURCES_DIR"]
 path_typesystem_dai = os.path.join(resources_dir, "nlp_typesystem_dai.xml")
-path_typesystem_heideltime = os.path.join(resources_dir, "nlp_typesystem_heideltime.xml")
 
 
 class XPathAsserting:
@@ -59,7 +58,7 @@ class XMICASBuilderTest(unittest.TestCase, XPathAsserting):
     entity_args = dict(type_name='org.dainst.nlp.NamedEntity', start=0, end=7)
 
     def setUp(self) -> None:
-        self.builder = DaiNlpXmiBuilder(path_typesystem_dai, default_annotator_id=self.annotator)
+        self.builder = DaiNlpXmiBuilder(default_annotator_id=self.annotator)
         self.builder.set_sofa(self.text)
 
     def test_cannot_change_sofa_once_set(self):

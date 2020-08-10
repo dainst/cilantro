@@ -1,7 +1,7 @@
 
 # This extends the nlp-components image, which is maintained at:
 #   https://github.com/dainst/nlp_components
-FROM dainst/nlp-components:0.7.1
+FROM dainst/nlp-components:0.7.2
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true

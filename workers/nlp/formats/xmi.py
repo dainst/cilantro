@@ -1,4 +1,6 @@
 
+import os
+
 import cassis
 
 
@@ -8,17 +10,30 @@ class DaiNlpFormatError(Exception):
 
 class DaiNlpXmiBuilder:
 
-    def __init__(self, typesystem_path: str, default_annotator_id=""):
-        with open(typesystem_path, 'rb') as f:
+    typesystem_path = os.path.join(os.environ["RESOURCES_DIR"], "nlp_typesystem_dai.xml")
+
+    def __init__(self, default_annotator_id="", xmi=None):
+        with open(self.typesystem_path, 'rb') as f:
             self._typesystem = cassis.load_typesystem(f)
-        self._cas = cassis.Cas(self._typesystem)
         self.default_annotator_id = default_annotator_id
+
+        if xmi is None:
+            self._cas = cassis.Cas(self._typesystem)
+        else:
+            self._cas = cassis.load_cas_from_xmi(xmi, self._typesystem)
+
+    def get_sofa(self):
+        return self._cas.sofa_string
 
     def set_sofa(self, sofa: str):
         """
         Set the "Subject of analysis", i.e. the string that all annotations
-        are part of. Multiple Sofas are currently not supported.
+        are part of. Multiple Sofas are currently not supported. Will throw
+        if the sofa supplied is not a string or empty, or if a sofa is already
+        set.
         """
+        if not isinstance(sofa, str) or sofa == "":
+            raise DaiNlpFormatError("Trying to set sofa to empty string or to not a sofa.")
         if self._cas.sofa_string is None:
             self._cas.sofa_string = sofa
         else:
@@ -55,4 +70,8 @@ class DaiNlpXmiBuilder:
         return self
 
     def xmi(self) -> str:
+        """
+        Return an XML string that is an XMI CAS representation of the text and
+        annotations processed so for.
+        """
         return self._cas.to_xmi(path=None, pretty_print=True)
