@@ -63,6 +63,11 @@ class DaiNlpXmiBuilder:
         if 'references' in kwargs:
             annotation.references = kwargs.pop('references')
 
+        # Copy all values allowed in the dai typesystem from the kwargs
+        for feature in type_class.features:
+            if feature.name in kwargs:
+                annotation.__setattr__(feature.name, kwargs.pop(feature.name))
+
         if len(kwargs) != 0:
             raise DaiNlpFormatError(f"Unknwon attributes: {kwargs.keys()}")
 

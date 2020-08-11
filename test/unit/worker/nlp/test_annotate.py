@@ -18,8 +18,7 @@ _example_xmi_with_pages = """<?xml version='1.0' encoding='ASCII'?>
 """
 
 
-@patch('workers.nlp.annotate.annotate._init_text_analyzer')
-class AnnotateTest(unittest.TestCase):
+class AssertsXmiCanBeLoadedWithDaiTypesystem:
 
     @staticmethod
     def _load_dai_typesystem() -> cassis.TypeSystem:
@@ -34,6 +33,10 @@ class AnnotateTest(unittest.TestCase):
             return cassis.load_cas_from_xmi(xmi, typesystem)
         except Exception as e:
             raise AssertionError(e, "Loading the annotated xmi with our typesystem failed.")
+
+
+@patch('workers.nlp.annotate.annotate._init_text_analyzer')
+class NlpComponentsAnnotationTest(unittest.TestCase, AssertsXmiCanBeLoadedWithDaiTypesystem):
 
     @staticmethod
     def assert_xmi_contains_annotation_for(cas: cassis.Cas, entity: MockDAIEntity):

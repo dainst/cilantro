@@ -1,10 +1,46 @@
 
+import os
 import unittest
-
-from workers.nlp_heideltime.time_annotate.time_annotate import HeideltimeCommandParamsBuilder
-from workers.nlp_heideltime.time_annotate.time_annotate import run_external_command
-
 from subprocess import TimeoutExpired, CalledProcessError
+
+from test.unit.worker.nlp.test_annotate import AssertsXmiCanBeLoadedWithDaiTypesystem
+from workers.nlp_heideltime.time_annotate.time_annotate \
+    import HeideltimeCommandParamsBuilder, run_external_command, translate_heideltime_xmi_to_our_xmi
+
+
+class TranslateHeideltimeXmiToDaiXmiTest(unittest.TestCase, AssertsXmiCanBeLoadedWithDaiTypesystem):
+
+    @staticmethod
+    def _heideltime_sample_xmi() -> str:
+        path = os.path.join(os.environ['TEST_RESOURCE_DIR'], 'files', 'examples_xmi', 'example_output_heideltime.xmi')
+        with open(path, 'r', encoding='utf-8') as file:
+            return file.read()
+
+    def test_conversion_returns_xmi_with_correct_entities(self):
+        result = translate_heideltime_xmi_to_our_xmi(self._heideltime_sample_xmi())
+        self.assertIsInstance(result, str, 'Should return a string')
+        cas = self.assert_xmi_can_be_loaded_with_dai_typesystem(result)
+
+        timexes = list(cas.select('org.dainst.nlp.NamedEntity.TimexDate'))
+        self.assertEqual(len(timexes), 1, "Should have converted one timex.")
+        timex = timexes[0]
+        self.assertEqual(timex.begin, 17)
+        self.assertEqual(timex.end, 21)
+        self.assertEqual(timex.get_covered_text(), "2006")
+        self.assertEqual(timex.timexValue, "2006")
+        self.assertEqual(timex.timexMod, "")
+
+        temponyms = list(cas.select('org.dainst.nlp.NamedEntity.Temponym'))
+        self.assertEqual(len(temponyms), 1, 'Should have converted one temponym.')
+        temponym = temponyms[0]
+        self.assertEqual(temponym.begin, 54)
+        self.assertEqual(temponym.end, 71)
+        self.assertEqual(temponym.get_covered_text(), 'Abbasid Caliphate')
+        self.assertListEqual(temponym.references, ['http://chronontology.dainst.org/period/2O4ZL19IMOGo'])
+        self.assertEqual(temponym.earliestBegin, '+0750')
+        self.assertEqual(temponym.latestBegin, '+0750')
+        self.assertEqual(temponym.earliestEnd, '+0772')
+        self.assertEqual(temponym.latestEnd, '+0772')
 
 
 class ExternalCommandTest(unittest.TestCase):

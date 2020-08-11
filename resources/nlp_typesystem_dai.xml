@@ -31,6 +31,44 @@
       <supertypeName>org.dainst.nlp.NamedEntity</supertypeName>
     </typeDescription>
     <typeDescription>
+      <name>org.dainst.nlp.NamedEntity.TimexDate</name>
+      <supertypeName>org.dainst.nlp.NamedEntity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>timexValue</name>
+          <description>An ISO 8601 encoded Time value for a TimeML Date Timex.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>timexMod</name>
+          <description>A TimeML modifier like "APPROX" or "BEFORE"</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>org.dainst.nlp.NamedEntity.Temponym</name>
+      <supertypeName>org.dainst.nlp.NamedEntity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>earliestBegin</name>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>latestBegin</name>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>earliestEnd</name>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>latestEnd</name>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
       <name>org.dainst.nlp.LayoutElement</name>
       <supertypeName>uima.tcas.Annotation</supertypeName>
     </typeDescription>

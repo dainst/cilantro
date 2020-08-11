@@ -11,6 +11,9 @@ pymongo = "*"
 jinja2 = "*"
 lxml = "*"
 beautifulsoup4 = "*"
+pyyaml = "*"
+argh = "*"
+dkpro-cassis = "*"
 
 [dev-packages]
 
