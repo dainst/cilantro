@@ -83,6 +83,7 @@ class HeideltimeCommandParamsBuilder(object):
         self.params = [
             "heideltime",
             "-t", "narrative",
+            "-o", "xmi"
         ]
         self.filename = ""
 

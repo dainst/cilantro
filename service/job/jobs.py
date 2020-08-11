@@ -445,11 +445,6 @@ class NlpJob(BatchJob):
                                    tag_intervals=params['options']['tag_intervals'],
                                    document_creation_time=params['options']['document_creation_time'])
 
-            current_chain |= _link('list_files',
-                                   representation='xml',
-                                   task='nlp_heideltime.convert_timeml_to_viewer_json',
-                                   target='json')
-
             chains.append(current_chain)
 
         return chains
