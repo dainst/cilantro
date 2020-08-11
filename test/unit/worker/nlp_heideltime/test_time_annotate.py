@@ -4,7 +4,7 @@ import unittest
 from subprocess import TimeoutExpired, CalledProcessError
 
 from test.unit.worker.nlp.test_annotate import AssertsXmiCanBeLoadedWithDaiTypesystem
-from workers.nlp_heideltime.time_annotate.time_annotate \
+from workers.nlp_heideltime.time_annotate.heideltime_wrapper \
     import HeideltimeCommandParamsBuilder, run_external_command, translate_heideltime_xmi_to_our_xmi
 
 

@@ -4,7 +4,8 @@ from workers.base_task import FileTask
 
 import os.path
 
-from .time_annotate import HeideltimeCommandParamsBuilder, run_external_command, translate_heideltime_xmi_to_our_xmi
+from .heideltime_wrapper \
+    import HeideltimeCommandParamsBuilder, run_external_command, translate_heideltime_xmi_to_our_xmi
 
 
 def _determine_new_filename(input_file, target_dir, append_str):
