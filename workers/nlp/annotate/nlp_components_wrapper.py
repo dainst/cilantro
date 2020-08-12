@@ -1,5 +1,5 @@
 
-from workers.nlp.formats.xmi import DaiNlpXmiBuilder
+from workers.nlp.formats.xmi import DaiNlpXmiBuilder as XmiBuilder
 
 
 def annotate_xmi(xmi: str) -> str:
@@ -15,7 +15,7 @@ def annotate_xmi(xmi: str) -> str:
     :param str xmi_str: The xmi to add annotations to.
     :return str: generated annotations as xmi
     """
-    builder = DaiNlpXmiBuilder("", xmi=xmi)
+    builder = XmiBuilder("", xmi=xmi)
     analyzer = _init_text_analyzer(builder.get_sofa())
     builder.default_annotator_id = _annotator_id(analyzer)
     return _do_annoatate(builder=builder, analyzer=analyzer)
@@ -32,12 +32,12 @@ def annotate_text(text) -> str:
     :return str: generated annotations as xmi
     """
     analyzer = _init_text_analyzer(text)
-    builder = DaiNlpXmiBuilder(_annotator_id(analyzer))
+    builder = XmiBuilder(_annotator_id(analyzer))
     builder.set_sofa(text)
     return _do_annoatate(builder=builder, analyzer=analyzer)
 
 
-def _do_annoatate(builder: DaiNlpXmiBuilder, analyzer) -> str:
+def _do_annoatate(builder: XmiBuilder, analyzer) -> str:
     nes = analyzer.do_ner()
     types_to_entities = {
         "org.dainst.nlp.NamedEntity.Person": analyzer.get_persons(nes),
@@ -63,5 +63,8 @@ def _init_text_analyzer(text):
     :param str text: The text to analyze
     :return class: The text_analyzer
     """
+    # We need to include this dependency dynamically so that
+    # this module can be tested without the test container needing
+    # the full nlp_components dependency.
     from nlp_components.src.publications import TextAnalyzer
     return TextAnalyzer(text)
