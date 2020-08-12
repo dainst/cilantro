@@ -22,6 +22,8 @@
         <div v-if="getFilesToShow().length !== 0">
             <b-table
                 :data="getFilesToShow()"
+                :paginated=true
+                :per-page=100
                 checkable
                 hoverable
                 :checked-rows="checkedFiles"
@@ -96,12 +98,16 @@ import {
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';
 import StagingBrowserFolderSelection from './StagingBrowserFolderSelection.vue';
+import { RecycleScroller } from 'vue-virtual-scroller'
+
+//Vue.component('RecycleScroller', RecycleScroller)
 
 @Component({
     components: {
         StagingBrowserNav,
         StagingBrowserUpload,
-        StagingBrowserFolderSelection
+        StagingBrowserFolderSelection,
+        RecycleScroller
     }
 })
 export default class StagingBrowser extends Vue {
