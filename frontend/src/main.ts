@@ -5,9 +5,6 @@ import router from './router';
 import store from './store';
 import App from './App.vue';
 import 'buefy/dist/buefy.css';
-import VueVirtualScroller from 'vue-virtual-scroller'
-
-Vue.use(VueVirtualScroller)
 
 Vue.use(Buefy, {
     defaultIconPack: 'mdi',
