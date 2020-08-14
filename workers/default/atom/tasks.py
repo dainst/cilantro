@@ -26,9 +26,13 @@ class PublishToAtomTask(ObjectTask):
             uri = create_digital_object(obj)
             log.info(f"Created digital object in AtoM: {uri}")
         except HTTPError as err:
-            log.error(f"Error while creating digital object in AtoM: {err}, response: {err.response.text}")
-            log.error(f"Hint: Internal server errors are often caused by AtoM failing to resolve the repository"
-                + " URI given for the digital objekt in the request body")
+            msg = (
+                f"Error while creating digital object in AtoM: {err}, response: {err.response.text}\n"
+                f"Hint: Internal server errors are often caused by AtoM failing to resolve the repository "
+                f"URI given for the digital objekt in the request body."
+            )
+            log.error(msg)
+            raise RuntimeError(msg)
 
 
 PublishToAtomTask = celery_app.register_task(PublishToAtomTask())
