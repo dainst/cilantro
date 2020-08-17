@@ -98,16 +98,12 @@ import {
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';
 import StagingBrowserFolderSelection from './StagingBrowserFolderSelection.vue';
-import { RecycleScroller } from 'vue-virtual-scroller'
-
-//Vue.component('RecycleScroller', RecycleScroller)
 
 @Component({
     components: {
         StagingBrowserNav,
         StagingBrowserUpload,
-        StagingBrowserFolderSelection,
-        RecycleScroller
+        StagingBrowserFolderSelection
     }
 })
 export default class StagingBrowser extends Vue {

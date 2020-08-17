@@ -24,7 +24,7 @@ x-env-app-config: &env-app-config
   CILANTRO_ENV: &cilantro-env prod
   OJS_URI: &ojs-uri https://publications.dainst.org/journals/plugins/generic/ojs-cilantro-plugin/api
   OMP_URI: &omp-uri http://publications.dainst.org/books/plugins/generic/ojs-cilantro-plugin/api
-  ATOM_URI: &atom-uri https://archives.dainst.org/
+  ATOM_URI: &atom-uri https://archives.dainst.org/index.php
   REPOSITORY_URI: &repository-uri https://workbench.idai.world/api/repository
 
 services:
@@ -47,7 +47,7 @@ services:
       - mongo-data:/data
 
   service:
-    image: dainst/cilantro-service:0.2.13
+    image: dainst/cilantro-service:0.2.14
     volumes:
       - staging-data:/data/staging
       - repository-data:/data/repository

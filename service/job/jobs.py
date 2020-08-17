@@ -281,10 +281,12 @@ class IngestArchivalMaterialsJob(BatchJob):
                 else:
                     dates_string += f"Datum ({date['type']}): "
 
-                if date["start_date"] == date["end_date"]:
-                    dates_string += date["date"]
-                else:
-                    dates_string += f"{date['start_date']} - {date['end_date']}"
+                if "start_date" in date and "end_date" in date:
+                    if date["start_date"] == date["end_date"]:
+                        dates_string += date["date"]
+                    else:
+                        dates_string += f"{date['start_date']} - {date['end_date']}"
+
                 dates_string += "\n"
                 count += 1
             subject_string += dates_string
