@@ -2,7 +2,7 @@
 # This extends the heideltime container from the chronoi-project, which is
 # currently (01/2020) maintained in the pilot corpus project:
 # https://github.com/dainst/chronoi-pilot-corpus-processing/tree/master/heideltime
-FROM dainst/chronoi-heideltime:0.1.0
+FROM dainst/chronoi-heideltime:1.0.0
 
 RUN apt-get update && apt-get -y install \
     python3-pip \
@@ -17,6 +17,7 @@ ENV LANG C.UTF-8
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 RUN set -ex && mkdir /app
 
+WORKDIR /
 RUN pip3 install 'pipenv==2018.11.26'
 COPY docker/cilantro-nlp-heideltime-worker/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-nlp-heideltime-worker/Pipfile Pipfile

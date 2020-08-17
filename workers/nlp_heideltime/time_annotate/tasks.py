@@ -4,27 +4,13 @@ from workers.base_task import FileTask
 
 import os.path
 
-from .timeml_to_viewer_json import convert_timeml_to_annotation_json
-from .time_annotate import HeideltimeCommandParamsBuilder, run_external_command
+from .heideltime_wrapper \
+    import HeideltimeCommandParamsBuilder, run_external_command, translate_heideltime_xmi_to_our_xmi
 
 
 def _determine_new_filename(input_file, target_dir, append_str):
     basename, _ = os.path.splitext(os.path.basename(input_file))
     return os.path.join(target_dir, f"{basename}{append_str}")
-
-
-class ConvertTimeMLToViewerJsonTask(FileTask):
-
-    name = "nlp_heideltime.convert_timeml_to_viewer_json"
-    label = "TimeML to Viewer JSON"
-    description = "Convert TimeML/TIMEX3 DATEs to annotations shown with the pdf viewer."
-
-    def process_file(self, file, target_dir):
-        target_file = _determine_new_filename(file, target_dir, "-annotations-time-expression.json")
-        convert_timeml_to_annotation_json(file, target_file)
-
-
-ConvertTimeMLToViewerJsonTask = celery_app.register_task(ConvertTimeMLToViewerJsonTask())
 
 
 class TimeAnnotateTask(FileTask):
@@ -37,11 +23,12 @@ class TimeAnnotateTask(FileTask):
 
     def process_file(self, file, target_dir):
         cmd = self._prepare_heideltime_cmd_params(file)
-        print(cmd)
-        annotation_xml = run_external_command(cmd, self.default_timeout_seconds)
+        response = run_external_command(cmd, self.default_timeout_seconds)
+        response = response.decode(encoding="utf-8")
+        xmi = translate_heideltime_xmi_to_our_xmi(response)
         target_path = _determine_new_filename(file, target_dir, ".xml")
-        with open(target_path, mode='wb') as out_file:
-            out_file.write(annotation_xml)
+        with open(target_path, mode='w') as out_file:
+            out_file.write(xmi)
 
     def _prepare_heideltime_cmd_params(self, input_file):
         builder = HeideltimeCommandParamsBuilder()

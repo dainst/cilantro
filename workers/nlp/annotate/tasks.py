@@ -1,11 +1,8 @@
-import os
-import json
+
 import logging
 
 from utils.celery_client import celery_app
 from workers.base_task import ObjectTask
-
-from workers.nlp.annotate.annotate import annotate
 
 log = logging.getLogger(__name__)
 
@@ -19,16 +16,7 @@ class AnnotateTask(ObjectTask):
     name = "nlp.annotate"
 
     def process_object(self, obj):
-        full_text = self._get_full_text(obj)
-        json_file = os.path.join(obj.get_representation_dir(
-            self.get_param('source')), "annotations.json")
-        try:
-            lang = self.get_param('nlp_params')['lang']
-        except KeyError:
-            lang = None
-        result = annotate(full_text, lang)
-        with open(json_file, 'w+') as file:
-            json.dump(result, file)
+        raise Exception("Not implemented yet.")
 
     def _get_full_text(self, obj):
         """
@@ -40,11 +28,7 @@ class AnnotateTask(ObjectTask):
         :param class obj: The object
         :return str: The complete text, merged from all txts
         """
-        full_text = ""
-        for file2 in obj.get_representation(self.get_param('source')):
-            text = file2.read().decode("UTF-8").replace('\n', '')
-            full_text += f"{text}\f"
-        return full_text
+        raise Exception("Not implemented yet.")
 
 
 AnnotateTask = celery_app.register_task(AnnotateTask())

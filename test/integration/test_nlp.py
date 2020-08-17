@@ -17,6 +17,7 @@ class NlpTest(JobTypeTest):
         Starts a job that triggers some annotation functionalities and checks that
         all the relevant files are created.
         """
+        self.unstage_resource('some_texts')
         self.stage_resource('files', 'some_texts')
         params = self.load_params_from_file('params', 'nlp.json')
 
@@ -31,10 +32,6 @@ class NlpTest(JobTypeTest):
         job_from_db = self.get_job_by_id(job_id)
         first_job_id = job_from_db['children'][0]['job_id']
 
-        # the input file's basenames that were staged above
-        input_basenames = ["timex1", "timex2"]
-        for basename in input_basenames:
-            self.assert_file_in_workdir(first_job_id, f"data/xml/{basename}.xml", self._timeout())
-            self.assert_file_in_workdir(first_job_id, f"data/json/{basename}-annotations-time-expression.json",
-                                        self._timeout())
+        # "txt/timex1.txt" was staged above, so we expect "xml/timex1.xml" as output here
+        self.assert_file_in_workdir(first_job_id, f"data/xml/timex1.xml", self._timeout())
         self.unstage_resource('some_texts')

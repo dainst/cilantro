@@ -1,9 +1,13 @@
 
 import datetime
-
+import logging
+import os
 from subprocess import run, PIPE, SubprocessError
 
-import logging
+import cassis
+
+from workers.nlp.formats.xmi import DaiNlpXmiBuilder
+
 log = logging.getLogger(__name__)
 
 
@@ -26,6 +30,45 @@ def run_external_command(params, timeout_after_secs=None):
         return ""
 
 
+def translate_heideltime_xmi_to_our_xmi(xmi_str: str) -> str:
+    file = os.path.join(os.environ['RESOURCES_DIR'], 'nlp_typesystem_heideltime.xml')
+    with open(file, 'rb') as f:
+        typesystem = cassis.load_typesystem(f)
+    cas = cassis.load_cas_from_xmi(xmi_str, typesystem=typesystem)
+
+    builder = DaiNlpXmiBuilder("chronoi-heideltime")
+    builder.set_sofa(cas.sofa_string)
+
+    # translate timexes of type DATE
+    for annotation in cas.select("de.unihd.dbs.uima.types.heideltime.Timex3"):
+        if annotation.timexType == "DATE":
+            args = dict(
+                type_name="org.dainst.nlp.NamedEntity.TimexDate",
+                start=annotation.begin,
+                end=annotation.end,
+                timexValue=annotation.timexValue,
+                timexMod=annotation.timexMod
+            )
+            builder.add_annotation(**args)
+
+    # translate intervals of type TEMPONYM
+    for annotation in cas.select("de.unihd.dbs.uima.types.heideltime.Timex3Interval"):
+        if annotation.timexType == "TEMPONYM":
+            args = dict(
+                type_name="org.dainst.nlp.NamedEntity.Temponym",
+                start=annotation.begin,
+                end=annotation.end,
+                references=(annotation.ref.split(';') if annotation.ref else []),
+                earliestBegin=annotation.TimexValueEB,
+                latestBegin=annotation.TimexValueLB,
+                earliestEnd=annotation.TimexValueEE,
+                latestEnd=annotation.TimexValueLE
+            )
+            builder.add_annotation(**args)
+
+    return builder.xmi()
+
+
 class HeideltimeCommandParamsBuilder(object):
 
     _langs = {
@@ -40,6 +83,7 @@ class HeideltimeCommandParamsBuilder(object):
         self.params = [
             "heideltime",
             "-t", "narrative",
+            "-o", "xmi"
         ]
         self.filename = ""
 

@@ -115,7 +115,7 @@ services:
 
   nlp-heideltime-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-heideltime-worker:0.1.9
+    image: dainst/cilantro-nlp-heideltime-worker:0.1.10
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -129,7 +129,7 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:0.1.2
+    image: dainst/cilantro-nlp-worker:0.1.3
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace

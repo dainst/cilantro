@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:cas="http:///uima/cas.ecore" xmlns:heideltime="http:///de/unihd/dbs/uima/types/heideltime.ecore" xmlns:tcas="http:///uima/tcas.ecore" xmi:version="2.0">
+    <cas:NULL xmi:id="0" />
+    <tcas:DocumentAnnotation xmi:id="8" sofa="1" begin="0" end="73" language="x-unspecified" />
+    <heideltime:Dct xmi:id="13" sofa="1" begin="0" end="0" value="1970.01.01T00:00" />
+    <heideltime:Token xmi:id="20" sofa="1" begin="1" end="5" tokenId="0" sentId="0" pos="DT" />
+    <heideltime:Token xmi:id="28" sofa="1" begin="6" end="13" tokenId="0" sentId="0" pos="NN" />
+    <heideltime:Token xmi:id="36" sofa="1" begin="14" end="16" tokenId="0" sentId="0" pos="IN" />
+    <heideltime:Token xmi:id="44" sofa="1" begin="17" end="21" tokenId="0" sentId="0" pos="CD" />
+    <heideltime:Token xmi:id="52" sofa="1" begin="21" end="22" tokenId="0" sentId="0" pos="SENT" />
+    <heideltime:Token xmi:id="68" sofa="1" begin="24" end="33" tokenId="0" sentId="0" pos="NN" />
+    <heideltime:Token xmi:id="76" sofa="1" begin="34" end="42" tokenId="0" sentId="0" pos="VVD" />
+    <heideltime:Token xmi:id="84" sofa="1" begin="43" end="49" tokenId="0" sentId="0" pos="IN" />
+    <heideltime:Token xmi:id="92" sofa="1" begin="50" end="53" tokenId="0" sentId="0" pos="DT" />
+    <heideltime:Token xmi:id="100" sofa="1" begin="54" end="61" tokenId="0" sentId="0" pos="NP" />
+    <heideltime:Token xmi:id="108" sofa="1" begin="62" end="71" tokenId="0" sentId="0" pos="NN" />
+    <heideltime:Token xmi:id="116" sofa="1" begin="71" end="72" tokenId="0" sentId="0" pos="SENT" />
+    <heideltime:Sentence xmi:id="124" sofa="1" begin="1" end="22" sentenceId="0" />
+    <heideltime:Sentence xmi:id="136" sofa="1" begin="24" end="72" sentenceId="0" />
+    <heideltime:Timex3 xmi:id="142" sofa="1" begin="17" end="21" sentId="0" firstTokId="0" allTokIds="BEGIN&lt;--&gt;0" timexId="t1" timexInstance="0" timexType="DATE" timexValue="2006" foundByRule="date_r12a-explicit" timexQuant="" timexFreq="" timexMod="" emptyValue="" />
+    <heideltime:Timex3Interval xmi:id="182" sofa="1" begin="54" end="71" sentId="0" firstTokId="0" allTokIds="BEGIN&lt;--&gt;0&lt;--&gt;0" timexId="t100002" timexInstance="0" timexType="TEMPONYM" timexValue="+0772" foundByRule="temponym_chronontology_1" timexQuant="" timexFreq="" timexMod="" TimexValueEB="+0750" TimexValueLE="+0772" TimexValueEE="+0772" TimexValueLB="+0750" ref="http://chronontology.dainst.org/period/2O4ZL19IMOGo" />
+    <cas:Sofa xmi:id="1" sofaNum="1" sofaID="_InitialView" mimeType="text" sofaString="&#xA;That happend in 2006.&#xA;&#xA;Something happened during the Abbasid Caliphate.&#xA;" />
+    <cas:View sofa="1" members="8 13 20 28 36 44 52 68 76 84 92 100 108 116 124 136 142 182" />
+</xmi:XMI>

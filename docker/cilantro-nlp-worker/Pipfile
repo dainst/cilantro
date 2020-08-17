@@ -13,6 +13,7 @@ lxml = "*"
 beautifulsoup4 = "*"
 pyyaml = "*"
 argh = "*"
+dkpro-cassis = "*"
 
 [dev-packages]
 
