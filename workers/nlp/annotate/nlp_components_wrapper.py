@@ -66,5 +66,5 @@ def _init_text_analyzer(text):
     # We need to include this dependency dynamically so that
     # this module can be tested without the test container needing
     # the full nlp_components dependency.
-    from nlp_components.src.publications import TextAnalyzer
+    from nlp_components.publications import TextAnalyzer
     return TextAnalyzer(text)
