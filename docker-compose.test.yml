@@ -183,6 +183,8 @@ volumes:
     external: true
   redis-data:
   workspace-data:
+    name: workbench_workspace_data
+    external: true
   repository-data:
     name: workbench_repository_data
     external: true
