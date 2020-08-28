@@ -1,4 +1,4 @@
-import { JobParameters, MaybeJobTarget, JobTargetData } from '../JobParameters';
+import { JobParameters, JobTargetData, MaybeJobTarget } from '../JobParameters';
 
 /* eslint-disable camelcase */
 
@@ -13,7 +13,6 @@ export interface NlpTargetTextFile extends JobTargetData {
 
 export interface NlpOptions {
     lang: string;
-    tag_intervals: boolean;
     read_dct_from_metadata: boolean;
     document_creation_time: string;
 }
@@ -32,7 +31,6 @@ export function formatDCTString(date: Date): string {
 export function initOptions(): NlpOptions {
     return {
         lang: 'en',
-        tag_intervals: false,
         read_dct_from_metadata: false,
         document_creation_time: formatDCTString(new Date()),
     };

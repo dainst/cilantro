@@ -114,9 +114,6 @@ class HeideltimeCommandParamsBuilder(object):
         self.filename = filename
         return self
 
-    def set_interval_tagging(self, boolean_val):
-        self._set_bool_param("-it", self._valid_bool(boolean_val))
-
     def get_params(self):
         return self.params + [self.filename]
 

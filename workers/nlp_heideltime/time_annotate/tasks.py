@@ -34,7 +34,6 @@ class TimeAnnotateTask(FileTask):
         builder = HeideltimeCommandParamsBuilder()
         builder.set_language(self.get_param("lang"))
         builder.set_dct(self.get_param("document_creation_time"))
-        builder.set_interval_tagging(self.get_param("tag_intervals"))
         builder.set_target_filename(input_file)
         return builder.get_params()
 
