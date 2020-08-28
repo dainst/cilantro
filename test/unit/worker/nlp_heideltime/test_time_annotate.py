@@ -108,23 +108,6 @@ class HeideltimeParamsTest(unittest.TestCase):
         self.assertRaises(ValueError, builder.set_dct, "01-01-1970")
         self.assertRaises(ValueError, builder.set_dct, "1999-02-29")
 
-    def test_interval_tagging_param_valid(self):
-        builder = self._init_builder()
-        builder.set_interval_tagging(False)
-        self.assertTrue("-it" not in builder.get_params(), "False shouldn't toggle param.")
-
-        builder.set_interval_tagging(True)
-        self.assertTrue("-it" in builder.get_params(), "True should toggle param.")
-
-        builder.set_interval_tagging(False)
-        self.assertTrue("-it" not in builder.get_params(), "False should disable param.")
-
-    def test_interval_tagging_param_invalid(self):
-        builder = self._init_builder()
-        self.assertRaises(ValueError, builder.set_interval_tagging, None)
-        self.assertRaises(ValueError, builder.set_interval_tagging, "")
-        self.assertRaises(ValueError, builder.set_interval_tagging, "True")
-        self.assertRaises(ValueError, builder.set_interval_tagging, "False")
 
     def test_filename_is_last_param(self):
         filename = "some_file.txt"
@@ -132,7 +115,6 @@ class HeideltimeParamsTest(unittest.TestCase):
         builder.set_target_filename(filename)
         self.assertEqual(filename, builder.get_params()[-1], "Should set filename as last param.")
 
-        builder.set_interval_tagging(True)
         builder.set_language("de")
         builder.set_dct("1968-05-23")
         self.assertEqual(filename, builder.get_params()[-1],

@@ -6,9 +6,6 @@
 
         <section>
           <p class="subtitle strong">Time tagging options</p>
-          <b-field label="Interval tagging">
-            <b-switch v-model="options.tag_intervals">Do interval tagging</b-switch>
-          </b-field>
           <b-field label="Input language">
             <b-select placeholder="Input language" v-model="options.lang">
               <option v-for="lang in langs" :value="lang.short" :key="lang.short">{{ lang.long }}</option>
@@ -51,7 +48,6 @@ export default class NlpOptionsForm extends Vue {
   dct_field: Date = new Date(this.options.document_creation_time);
 
   @Watch("options.lang")
-  @Watch("options.tag_intervals")
   @Watch("options.read_dct_from_metadata")
   opOptionsChanged() {
     this.signalOptionsChanged();

@@ -444,7 +444,6 @@ class NlpJob(BatchJob):
                                    target='xml',
                                    task='nlp_heideltime.time_annotate',
                                    lang=params['options']['lang'],
-                                   tag_intervals=params['options']['tag_intervals'],
                                    document_creation_time=params['options']['document_creation_time'])
 
             chains.append(current_chain)

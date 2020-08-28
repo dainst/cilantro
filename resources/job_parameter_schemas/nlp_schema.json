@@ -31,9 +31,6 @@
                 "lang": {
                     "type": "string"
                 },
-                "tag_intervals": {
-                    "type": "boolean"
-                },
                 "document_creation_time": {
                     "type": "string"
                 }
