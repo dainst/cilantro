@@ -35,15 +35,18 @@
                     sortable
                 >{{ props.row.updated }}</b-table-column>
                 <b-table-column>
-                    <b-button icon-right="arrow-bottom-right" class="is-dark"
-                              @click="goToSingleView(props.row.job_id)">
-                        View
-                    </b-button>
+                    <div class="field is-grouped">
+                        <b-button icon-right="arrow-bottom-right" class="is-dark"
+                                @click="goToSingleView(props.row.job_id)">
+                            View
+                        </b-button>
 
-                    <b-button v-if="!props.row.parent_job_id" icon-right="delete" class="is-danger"
-                              @click="removeJob(props.row.job_id)">
-                        Remove
-                    </b-button>
+                        <b-button v-if="!props.row.parent_job_id"
+                            icon-right="delete"
+                            class="is-danger"
+                            @click="removeJob(props.row.job_id)">
+                        </b-button>
+                    </div>
                 </b-table-column>
             </template>
             <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
@@ -64,7 +67,7 @@ import {
     archiveJob,
     getJobDetails, getJobList, iconAttributesForState, Job
 } from './JobClient';
-import { showError } from '@/util/Notifier.ts';
+import { showError } from '@/util/Notifier';
 
 enum LoadState {
         loaded,
@@ -93,19 +96,23 @@ export default class JobListEntry extends Vue {
     }
 
     get jobsLoaded() {
-        return this.loadingState == LoadState.loaded;
+        return this.loadingState === LoadState.loaded;
     }
 
     get jobsLoading() {
-        return this.loadingState == LoadState.loading;
+        return this.loadingState === LoadState.loading;
     }
 
     get errorLoading() {
-        return this.loadingState == LoadState.error;
+        return this.loadingState === LoadState.error;
     }
 
     get emptyJobList() {
-        return (this.unfilteredJobs !== null && Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0);
+        return (
+            this.unfilteredJobs !== null &&
+            Array.isArray(this.unfilteredJobs) &&
+            this.unfilteredJobs.length === 0
+        );
     }
 
     get filteredJobs() {
@@ -144,10 +151,9 @@ export default class JobListEntry extends Vue {
         this.$buefy.dialog.confirm({
             message: `Delete Job ${id}?`,
             onConfirm: () => {
-                this.unfilteredJobs = this.unfilteredJobs.filter(ele => ele.job_id != id);
+                this.unfilteredJobs = this.unfilteredJobs.filter(ele => ele.job_id !== id);
                 archiveJob(id).catch((response) => {
-                        showError('Failed to archive job!', response.error);
-
+                    showError('Failed to archive job!', response.error);
                 });
             }
         });
