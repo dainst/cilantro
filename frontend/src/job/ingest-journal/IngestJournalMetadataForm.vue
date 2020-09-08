@@ -216,24 +216,24 @@ async function loadZenonData(target: JobTargetData) {
 }
 
 function getReportingYear(record: ZenonRecord): number {
-    const match = record.containerReference.match(/\(.*?\)/g)![0];
+    const match = record.partOrSectionInfo.match(/\(.*?\)/g)![0];
     return parseInt(match.slice(1, -1), 10);
 }
 
 function getIssueNumber(record: ZenonRecord): number {
-    if (!record.containerReference.includes(',')) {
+    if (!record.partOrSectionInfo.includes(',')) {
         return 0;
     }
-    const match = record.containerReference.match(/,[^(]*/g)![0];
+    const match = record.partOrSectionInfo.match(/,[^(]*/g)![0];
     return parseInt(match.slice(1), 10);
 }
 
 function getSerialVolume(record: ZenonRecord): number {
     let match: string = '';
-    if (record.containerReference.includes(',')) {
-        match = record.containerReference.match(/[^,]*/g)![0];
+    if (record.partOrSectionInfo.includes(',')) {
+        match = record.partOrSectionInfo.match(/[^,]*/g)![0];
     } else {
-        match = record.containerReference.match(/[^(]*/g)![0];
+        match = record.partOrSectionInfo.match(/[^(]*/g)![0];
     }
     return parseInt(match, 10);
 }

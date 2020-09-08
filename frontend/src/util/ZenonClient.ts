@@ -39,7 +39,7 @@ export interface ZenonRecord {
     languages: string[];
     series: object[];
     subjects: string[];
-    containerReference: string;
+    partOrSectionInfo: string;
     publicationDates: string[];
     parentId?: string;
     summary: string
