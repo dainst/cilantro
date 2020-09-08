@@ -55,19 +55,7 @@ describe('JobListEntry.vue', () => {
         });
         await wrapper.vm.$nextTick();
         expect(getJobList).toBeCalled();
-        expect(wrapper.text()).toBe('No jobs found');
-    });
-
-    it('job list in wrong state', async () => {
-        (getJobList as jest.Mock).mockImplementationOnce(() => Promise.resolve('The REST-Endpoint went missing!'));
-        const wrapper = shallowMount(JobListEntry, {
-            propsData: {
-                jobIDs: [],
-                activeStates: ['new', 'success', 'failure', 'started']
-            }
-        });
-        await wrapper.vm.$nextTick();
-        expect(wrapper.text()).toBe('There has been an error. JobList in unexpected state');
+        expect(wrapper.text()).toBe('No jobs available');
     });
 
     it('should render a table', async () => {
