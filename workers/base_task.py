@@ -1,6 +1,7 @@
 import logging
 import io
 import os
+import shutil
 from abc import abstractmethod
 import traceback
 
@@ -149,6 +150,8 @@ class BaseTask(Task):
                 self._propagate_failure_to_ancestors(self.parent_job_id, error_object)
                 self._set_following_siblings_aborted(self.job_id, self.parent_job_id)
 
+            self.delete_temp_folders()
+
         self.job_db.close()
 
     def get_work_path(self):
@@ -156,6 +159,10 @@ class BaseTask(Task):
         if not os.path.exists(abs_path):
             os.mkdir(abs_path)
         return abs_path
+
+    def delete_temp_folders(self):
+        work_path = self.get_work_path()
+        shutil.rmtree(work_path)
 
     def run(self, prev_result=None, **params):
         """

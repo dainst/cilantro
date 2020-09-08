@@ -1,4 +1,3 @@
-import shutil
 import os
 import uuid
 import glob
@@ -99,10 +98,6 @@ class CleanupDirectoriesTask(BaseTask):
             'This file marks the parent directory as processed by the iDAI.workbench. Deleting this file will '
             'unmark the directory in the web interface.')
         f.close()
-
-    def delete_temp_folders(self):
-        work_path = self.get_work_path()
-        shutil.rmtree(work_path)
 
 CleanupDirectoriesTask = celery_app.register_task(CleanupDirectoriesTask())
 
