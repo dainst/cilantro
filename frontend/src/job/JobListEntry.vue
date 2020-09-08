@@ -1,7 +1,10 @@
 <template>
     <section>
+
+        <div v-if="isLoading">Loading jobs...</div>
+        <div v-else-if="filteredJobs.length === 0">No jobs available</div>
         <b-table
-            v-if="!emptyJobList"
+            v-else
             :data="filteredJobs"
             detailed
             detail-key="job_id"
@@ -53,9 +56,6 @@
                 <JobListEntry :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
-        <div v-else-if="jobsLoading">Loading jobs...</div>
-        <div v-else-if="errorLoading">There has been an error. JobList in unexpected state</div>
-        <div v-else-if="emptyJobList">No jobs found</div>
     </section>
 </template>
 
@@ -69,19 +69,12 @@ import {
 } from './JobClient';
 import { showError } from '@/util/Notifier';
 
-enum LoadState {
-        loaded,
-        empty,
-        loading,
-        error
-    }
-
 @Component({ name: 'JobListEntry' })
 export default class JobListEntry extends Vue {
     @Prop(Array) jobIDs!: string[];
     @Prop() activeStates!: string[];
     unfilteredJobs: Job[] = [];
-    loadingState: LoadState = LoadState.loading;
+    isLoading: boolean = true;
     updatePendingJobsInterval: number = 0;
     getChildrenIDs = getChildrenIDs;
 
@@ -93,33 +86,10 @@ export default class JobListEntry extends Vue {
 
             this.updatePendingJobsInterval = setInterval(() => {
                 this.loadJobs();
-            }, 5000);
-            if (this.jobsLoaded) {
-                clearInterval(this.updatePendingJobsInterval);
-            }
+            }, 10000);
         }
 
         this.loadJobs();
-    }
-
-    get jobsLoaded() {
-        return this.loadingState === LoadState.loaded;
-    }
-
-    get jobsLoading() {
-        return this.loadingState === LoadState.loading;
-    }
-
-    get errorLoading() {
-        return this.loadingState === LoadState.error;
-    }
-
-    get emptyJobList() {
-        return (
-            this.unfilteredJobs !== null &&
-            Array.isArray(this.unfilteredJobs) &&
-            this.unfilteredJobs.length === 0
-        );
     }
 
     get filteredJobs() {
@@ -130,16 +100,19 @@ export default class JobListEntry extends Vue {
     }
 
     async loadJobs() {
-        this.loadingState = LoadState.loading;
-
         if (this.isTopLevel) {
             this.unfilteredJobs = await getJobList();
         } else {
             const requests = this.jobIDs.map(id => getJobDetails(id));
-            this.unfilteredJobs = await Promise.all(requests);
+            this.unfilteredJobs = await Promise.all(requests)
+                .then(values => values)
+                .catch((reason) => {
+                    showError(reason, reason);
+                    return [];
+                });
         }
 
-        this.setJobListState();
+        this.isLoading = false;
     }
 
     sortByCreated = sortByCreated;
@@ -164,17 +137,6 @@ export default class JobListEntry extends Vue {
                 });
             }
         });
-    }
-
-    setJobListState() {
-        if (Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length !== 0) {
-            this.loadingState = LoadState.loaded;
-        } else if (Array.isArray(this.unfilteredJobs) && this.unfilteredJobs.length === 0) {
-            this.loadingState = LoadState.empty;
-        } else {
-            this.loadingState = LoadState.error;
-            this.unfilteredJobs = [];
-        }
     }
 }
 
