@@ -41,7 +41,7 @@
                             View
                         </b-button>
 
-                        <b-button v-if="!props.row.parent_job_id"
+                        <b-button v-if="isTopLevel"
                             icon-right="delete"
                             class="is-danger"
                             @click="removeJob(props.row.job_id)">
@@ -85,14 +85,21 @@ export default class JobListEntry extends Vue {
     updatePendingJobsInterval: number = 0;
     getChildrenIDs = getChildrenIDs;
 
+    isTopLevel = false;
+
     mounted() {
-        this.loadJobs();
-        this.updatePendingJobsInterval = setInterval(() => {
-            this.loadJobs();
+        if (this.jobIDs.length === 0) {
+            this.isTopLevel = true;
+
+            this.updatePendingJobsInterval = setInterval(() => {
+                this.loadJobs();
+            }, 5000);
             if (this.jobsLoaded) {
                 clearInterval(this.updatePendingJobsInterval);
             }
-        }, 5000);
+        }
+
+        this.loadJobs();
     }
 
     get jobsLoaded() {
@@ -116,7 +123,7 @@ export default class JobListEntry extends Vue {
     }
 
     get filteredJobs() {
-        if (this.unfilteredJobs && this.jobIDs.length === 0) {
+        if (this.isTopLevel) {
             return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
         }
         return this.unfilteredJobs;
@@ -125,7 +132,7 @@ export default class JobListEntry extends Vue {
     async loadJobs() {
         this.loadingState = LoadState.loading;
 
-        if (this.jobIDs.length === 0) {
+        if (this.isTopLevel) {
             this.unfilteredJobs = await getJobList();
         } else {
             const requests = this.jobIDs.map(id => getJobDetails(id));
