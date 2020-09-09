@@ -35,7 +35,7 @@ describe('JobListEntry.vue', () => {
         expect(wrapper.exists()).toBe(true);
     });
 
-    it("jobs loading display 'loading jobs...'", async () => {
+    it("jobs loading display 'loading jobs...'", async() => {
         const wrapper = shallowMount(JobListEntry, {
             propsData: {
                 jobIDs: [],
@@ -45,7 +45,7 @@ describe('JobListEntry.vue', () => {
         expect(wrapper.text()).toBe('Loading jobs...');
     });
 
-    it("zero jobs loaded display 'No jobs found'", async () => {
+    it("zero jobs loaded display 'No jobs found'", async() => {
         (getJobList as jest.Mock).mockImplementationOnce(() => []);
         const wrapper = shallowMount(JobListEntry, {
             propsData: {
@@ -58,7 +58,7 @@ describe('JobListEntry.vue', () => {
         expect(wrapper.text()).toBe('No jobs available');
     });
 
-    it('should render a table', async () => {
+    it('should render a table', async() => {
         (getJobList as jest.Mock).mockImplementationOnce(() => Promise.resolve([{
             children: [{}],
             created: '2020-02-29',
