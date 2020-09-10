@@ -9,6 +9,7 @@
     "options": {
         "lang": "en",
         "read_dct_from_metadata": false,
-        "document_creation_time": "2020-01-16"
+        "document_creation_time": "2020-01-16",
+        "extensions": ["txt", "pdf"]
     }
 }

@@ -55,6 +55,7 @@ def _initialize_object(obj, params, oid):
 
 
 filename_extension_mapping = {
+    'pdf': ['**/*.pdf', '**/*.PDF'],
     'tif': ['**/*.tif', '**/*.tiff', '**/*.TIF', '**/*.TIFF'],
     'txt': ['**/*.txt', '**/*.TXT']
 }

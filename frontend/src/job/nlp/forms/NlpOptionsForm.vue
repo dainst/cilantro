@@ -4,6 +4,20 @@
       <div class="tile is-child box">
         <p class="title">NLP Options</p>
 
+
+        <section>
+          <p class="subtitle strong">Input types</p>
+
+            <b-field>
+                <b-checkbox v-model="input_txt">txt</b-checkbox>
+            </b-field>
+            <b-field>
+                <b-checkbox v-model="input_pdf">pdf</b-checkbox>
+            </b-field>
+        </section>
+
+        <br>
+
         <section>
           <p class="subtitle strong">Time tagging options</p>
           <b-field label="Input language">
@@ -44,6 +58,10 @@ export default class NlpOptionsForm extends Vue {
     { short: "es", long: "Spanish" }
   ];
 
+  // two booleans to track whether pdfs and/or texts are expected
+  input_txt = true
+  input_pdf = false
+
   // initializes the datepicker field with a date string like "1970-01-01"
   dct_field: Date = new Date(this.options.document_creation_time);
 
@@ -52,6 +70,17 @@ export default class NlpOptionsForm extends Vue {
   opOptionsChanged() {
     this.signalOptionsChanged();
   }
+
+  @Watch("input_txt")
+  @Watch("input_pdf")
+  onConvertOptionChanged() {
+    const exts = [];
+    if (this.input_txt) exts.push("txt");
+    if (this.input_pdf) exts.push("pdf");
+    this.options.extensions = exts;
+    this.signalOptionsChanged();
+  }
+
 
   @Watch("dct_field")
   onDctFieldChanged(dct_field: Date) {

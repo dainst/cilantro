@@ -433,20 +433,32 @@ class NlpJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+
         for target in params['targets']:
-            task_params = dict(**target, **{'user': user_name})
+            for extension in params['options']['extensions']:
+                if extension not in ['txt', 'pdf']:
+                    raise Exception('Extension not supported: {}' + str(extension))
 
-            current_chain = _link('create_object', **task_params,
-                                  initial_representation='txt')
+                # "txt" and "pdf" start different chains
+                task_params = dict(**target, **{'user': user_name})
+                chain = _link('create_object', **task_params,
+                                  initial_representation=extension)
 
-            current_chain |= _link('list_files',
+                # only pdfs get an intermediate conversion step
+                if (extension == 'pdf'):
+                    chain |= _link('list_files',
+                                       representation='pdf',
+                                       target='txt',
+                                       task='convert.pdf_to_txt')
+
+                # both pdfs and txts are then time tagged
+                chain |= _link('list_files',
                                    representation='txt',
                                    target='xml',
                                    task='nlp_heideltime.time_annotate',
                                    lang=params['options']['lang'],
                                    document_creation_time=params['options']['document_creation_time'])
-
-            chains.append(current_chain)
+                chains.append(chain)
 
         return chains
 
