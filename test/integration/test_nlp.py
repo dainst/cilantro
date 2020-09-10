@@ -30,8 +30,15 @@ class NlpTest(JobTypeTest):
         self.assert_state(job_id, 'success', self._timeout())
 
         job_from_db = self.get_job_by_id(job_id)
-        first_job_id = job_from_db['children'][0]['job_id']
 
-        # "txt/timex1.txt" was staged above, so we expect "xml/timex1.xml" as output here
-        self.assert_file_in_workdir(first_job_id, f"data/xml/timex1.xml", self._timeout())
+        # The first child is the "txt" job, the second is the "pdf" job.
+        # This is controlled by the "extension" parameter.
+        txt_job_id = job_from_db['children'][0]['job_id']
+        pdf_job_id = job_from_db['children'][1]['job_id']
+
+        # "txt/timex1.txt" and "pdf/timex2.pdf" were staged above, the pdf has two pages
+        self.assert_file_in_workdir(txt_job_id, f"data/xml/timex1.xml", self._timeout())
+        self.assert_file_in_workdir(pdf_job_id, f"data/xml/timex2_0000.xml", self._timeout())
+        self.assert_file_in_workdir(pdf_job_id, f"data/xml/timex2_0001.xml", self._timeout())
+
         self.unstage_resource('some_texts')

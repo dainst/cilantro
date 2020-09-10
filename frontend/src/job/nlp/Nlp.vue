@@ -28,7 +28,7 @@ import JobFilesForm from '../JobFilesForm.vue';
 import { JobParameters } from '../JobParameters';
 
 import {
-    NlpParameters, NlpOptions, initOptions, initNlpTargetTextfile
+    NlpParameters, NlpOptions, initOptions, initNlpTargetFolder
 } from './NlpParameters';
 
 import { showError, showSuccess } from '@/util/Notifier.ts';
@@ -47,7 +47,7 @@ import NlpOptionsForm from './forms/NlpOptionsForm.vue';
 })
 export default class Nlp extends Vue {
     selectedPaths: string[] = [];
-    acceptedFileTypes = "image/*,.txt,.xml"
+    acceptedFileTypes = ".txt,.pdf"
     activeStep: number = 0;
     options: NlpOptions = initOptions();
 
@@ -69,7 +69,7 @@ export default class Nlp extends Vue {
     buildJobParams(): NlpParameters {
         return {
             targets: this.selectedPaths.map(
-              path => initNlpTargetTextfile(path)
+              path => initNlpTargetFolder(path)
             ),
             options: this.options
         };

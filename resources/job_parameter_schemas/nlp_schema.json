@@ -33,6 +33,12 @@
                 },
                 "document_creation_time": {
                     "type": "string"
+                },
+                "extensions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         }

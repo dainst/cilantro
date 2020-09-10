@@ -7,7 +7,7 @@ export interface NlpParameters extends JobParameters {
     options: NlpOptions;
 }
 
-export interface NlpTargetTextFile extends JobTargetData {
+export interface NlpTargetFolder extends JobTargetData {
     metadata: {}
 }
 
@@ -15,6 +15,7 @@ export interface NlpOptions {
     lang: string;
     read_dct_from_metadata: boolean;
     document_creation_time: string;
+    extensions: string[];
 }
 
 // Export a helper funtcion to properly fromat the document creation
@@ -33,10 +34,11 @@ export function initOptions(): NlpOptions {
         lang: 'en',
         read_dct_from_metadata: false,
         document_creation_time: formatDCTString(new Date()),
+        extensions: ['txt']
     };
 }
 
-export function initNlpTargetTextfile(path: string): NlpTargetTextFile  {
+export function initNlpTargetFolder(path: string): NlpTargetFolder  {
     const id = path.split('/').join("-");
     return {
         id,
