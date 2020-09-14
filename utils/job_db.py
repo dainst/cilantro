@@ -60,8 +60,9 @@ class JobDb:
         :param str job_id: job-id to be queried
         :return: job object
         """
-        job = self._expand_child_information(self.db.jobs.find_one(
-            {"job_id": job_id}, {'_id': False}))
+        job = self.db.jobs.find_one({"job_id": job_id}, {'_id': False})
+        if job is not None:
+           self._expand_child_information(job)
         return job
 
     def add_job(self, job_id, user, job_type, parent_job_id, child_job_ids, parameters, label="Not implemented", description="Not implemented",):
