@@ -854,6 +854,12 @@ def job_status(job_id):
     job = job_db.get_job_by_id(job_id)
     job_db.close()
 
+    if job is None:
+        raise ApiError(
+            "job_not_found",
+            f"Job '{job_id}' not found",
+            404)
+
     job['duration'] = str(datetime.timedelta(
         seconds=int((job['updated'] - job['created']).total_seconds())))
     return jsonify(job)

@@ -20,15 +20,16 @@ log = logging.getLogger(__name__)
 
 def _list_dir(dir_path, recursive=False):
     tree = {}
-    for entry in sorted(os.scandir(dir_path), key=lambda e: e.name):
-        if entry.is_file():
-            tree[entry.name] = {"type": "file", "name": entry.name}
-        else:
-            tree[entry.name] = {"type": "directory", "name": entry.name}
-            if recursive:
-                path = os.path.join(dir_path, entry.name)
-                tree[entry.name]["marked"] = os.path.exists(os.path.join(path, ".info"))
-                tree[entry.name]["contents"] = _list_dir(path, recursive)
+    with os.scandir(dir_path) as it:
+        for entry in sorted(it, key=lambda e: e.name):
+            if entry.is_file():
+                tree[entry.name] = {"type": "file", "name": entry.name}
+            else:
+                tree[entry.name] = {"type": "directory", "name": entry.name}
+                if recursive:
+                    path = os.path.join(dir_path, entry.name)
+                    tree[entry.name]["marked"] = os.path.exists(os.path.join(path, ".info"))
+                    tree[entry.name]["contents"] = _list_dir(path, recursive)
     return tree
 
 

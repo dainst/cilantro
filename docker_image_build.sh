@@ -6,6 +6,12 @@ function publishImage {
     version=`cat docker/${1}/VERSION.tmp`
     echo "Bumping version of $1 to $version"
 
+    if [[ $1 = "cilantro-frontend" ]]
+    then
+        echo "Also updating version in frontend's package.json."
+        sed -i 's|"version": ".*"|"version": "'"$version"'"|' frontend/package.json
+    fi
+
     # Build & publish image on dockerhub
     docker-compose -f docker-compose.build.yml build ${1#"cilantro-"} ${nocache}
     docker tag dainst/${1}:latest dainst/${1}:${version}

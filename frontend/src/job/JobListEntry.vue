@@ -92,6 +92,10 @@ export default class JobListEntry extends Vue {
         this.loadJobs();
     }
 
+    beforeDestroy() {
+        clearInterval(this.updatePendingJobsInterval);
+    }
+
     get filteredJobs() {
         if (this.isTopLevel) {
             return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
