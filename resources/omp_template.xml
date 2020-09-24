@@ -10,11 +10,13 @@
     <subtitle>{{metadata['subtitle']}}</subtitle>
     <abstract>{{metadata['abstract']}}</abstract>
 
+    {% if metadata['keywords'] %}
     <keywords locale="de_DE">
         {% for keyword in metadata['keywords'] %}
         <keyword>{{keyword}}</keyword>
         {% endfor %}
     </keywords>
+    {% endif %}
 
     <authors xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
