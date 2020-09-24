@@ -183,6 +183,11 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
             [summary] = zenonRecord.summary;
         }
 
+        let subTitle = '';
+        if (subTitle in zenonRecord) {
+            subTitle = zenonRecord.subTitle.trim();
+        }
+
         const authors = extractAuthors(zenonRecord);
 
         if (errors.length !== 0) {
@@ -193,7 +198,7 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
             press_code: 'dai',
             authors,
             title: zenonRecord.shortTitle.replace(/[\s:]+$/, '').trim(),
-            subtitle: zenonRecord.subTitle.trim(),
+            subtitle: subTitle,
             abstract: summary,
             date_published: datePublished
         } as MonographMetadata;
