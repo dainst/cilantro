@@ -9,7 +9,7 @@ def list_dir(directory, **kwargs):
 
     If ignore_not_found kwarg is passed as True an empty list is returned if the
     directory doesn't exits.
-    If sorted kwarfg is passed as True the result is alphanumerical sorted.
+    If sorted kwarg is passed as True the result is alphanumerically sorted.
 
     :param str directory: The directory to be listed
     :return list: The contents of the directory

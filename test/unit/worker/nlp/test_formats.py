@@ -5,7 +5,7 @@ from io import BytesIO
 
 from lxml import etree
 
-from workers.nlp.formats.xmi import DaiNlpXmiBuilder, DaiNlpFormatError
+from workers.nlp.formats.xmi import DaiNlpXmiReader, DaiNlpXmiBuilder, DaiNlpFormatError
 
 resources_dir = os.environ["RESOURCES_DIR"]
 path_typesystem_dai = os.path.join(resources_dir, "nlp_typesystem_dai.xml")
@@ -47,7 +47,23 @@ class XPathAsserting:
         self.assert_xpath_exactly_n_times(xml=xml, xpath=xpath, n=1, **kwargs)
 
 
-class XMICASBuilderTest(unittest.TestCase, XPathAsserting):
+class DaiNlpXmiReaderTest(unittest.TestCase):
+
+    empty_input = """<?xml version='1.0' encoding='ASCII'?>
+        <xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:cas="http:///uima/cas.ecore" xmlns:LayoutElement="http:///org/dainst/nlp/LayoutElement.ecore" xmi:version="2.0">
+          <cas:NULL xmi:id="0"/>
+          <cas:Sofa xmi:id="1" sofaNum="1" sofaID="_InitialView" mimeType="None" sofaString="Perikles war ein Grieche. Genauso wie Aristoteles aus Athen."/>
+          <cas:View sofa="1" members=""/>
+        </xmi:XMI>
+        """
+
+    def test_get_sofa(self):
+        reader = DaiNlpXmiReader(xmi=self.empty_input)
+        expected_sofa = 'Perikles war ein Grieche. Genauso wie Aristoteles aus Athen.'
+        self.assertEqual(reader.get_sofa(), expected_sofa)
+
+
+class DaiNlpXmiBuilderTest(unittest.TestCase, XPathAsserting):
 
     text = 'Perikles war ein Grieche. Genauso wie Aristoteles aus Stageira.'
 

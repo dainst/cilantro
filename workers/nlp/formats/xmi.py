@@ -3,20 +3,20 @@ import os
 
 import cassis
 
+from typing import IO, Union
+
 
 class DaiNlpFormatError(Exception):
     pass
 
 
-class DaiNlpXmiBuilder:
+class DaiNlpXmiReader:
 
     typesystem_path = os.path.join(os.environ["RESOURCES_DIR"], "nlp_typesystem_dai.xml")
 
-    def __init__(self, default_annotator_id="", xmi=None):
+    def __init__(self, xmi: Union[IO, str, None] = None):
         with open(self.typesystem_path, 'rb') as f:
             self._typesystem = cassis.load_typesystem(f)
-        self.default_annotator_id = default_annotator_id
-
         if xmi is None:
             self._cas = cassis.Cas(self._typesystem)
         else:
@@ -24,6 +24,13 @@ class DaiNlpXmiBuilder:
 
     def get_sofa(self):
         return self._cas.sofa_string
+
+
+class DaiNlpXmiBuilder(DaiNlpXmiReader):
+
+    def __init__(self, default_annotator_id="", xmi: Union[IO, str, None] = None):
+        super().__init__(xmi)
+        self.default_annotator_id = default_annotator_id
 
     def set_sofa(self, sofa: str):
         """

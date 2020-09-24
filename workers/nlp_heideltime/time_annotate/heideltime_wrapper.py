@@ -30,14 +30,20 @@ def run_external_command(params, timeout_after_secs=None):
         return ""
 
 
-def translate_heideltime_xmi_to_our_xmi(xmi_str: str) -> str:
+def _load_cas(xmi_str: str) -> cassis.Cas:
     file = os.path.join(os.environ['RESOURCES_DIR'], 'nlp_typesystem_heideltime.xml')
     with open(file, 'rb') as f:
         typesystem = cassis.load_typesystem(f)
-    cas = cassis.load_cas_from_xmi(xmi_str, typesystem=typesystem)
+    return cassis.load_cas_from_xmi(xmi_str, typesystem=typesystem)
 
-    builder = DaiNlpXmiBuilder("chronoi-heideltime")
-    builder.set_sofa(cas.sofa_string)
+
+def translate_heideltime_xmi_to_our_xmi(xmi_str: str, builder=None) -> str:
+    cas = _load_cas(xmi_str)
+
+    if builder is None:
+        builder = DaiNlpXmiBuilder()
+        builder.set_sofa(cas.sofa_string)
+    builder.default_annotator_id = "chronoi-heideltime"
 
     # translate timexes of type DATE
     for annotation in cas.select("de.unihd.dbs.uima.types.heideltime.Timex3"):

@@ -451,10 +451,17 @@ class NlpJob(BatchJob):
                                        target='txt',
                                        task='convert.pdf_to_txt')
 
+                    chain |= _link('nlp.annotate_pages',
+                                        representation='txt',
+                                        target='xmi.pages')
+
+                    from_to = dict(representation='xmi.pages', target='xmi.pages.time')
+                else:
+                    from_to = dict(representation='txt', target='xmi.time')
+
                 # both pdfs and txts are then time tagged
                 chain |= _link('list_files',
-                                   representation='txt',
-                                   target='xml',
+                                   **from_to,
                                    task='nlp_heideltime.time_annotate',
                                    lang=params['options']['lang'],
                                    document_creation_time=params['options']['document_creation_time'])

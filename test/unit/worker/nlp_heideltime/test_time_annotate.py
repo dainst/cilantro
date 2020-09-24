@@ -4,6 +4,7 @@ import unittest
 from subprocess import TimeoutExpired, CalledProcessError
 
 from test.unit.worker.nlp.test_annotate import AssertsXmiCanBeLoadedWithDaiTypesystem
+from workers.nlp.formats.xmi import DaiNlpXmiBuilder
 from workers.nlp_heideltime.time_annotate.heideltime_wrapper \
     import HeideltimeCommandParamsBuilder, run_external_command, translate_heideltime_xmi_to_our_xmi
 
@@ -16,11 +17,7 @@ class TranslateHeideltimeXmiToDaiXmiTest(unittest.TestCase, AssertsXmiCanBeLoade
         with open(path, 'r', encoding='utf-8') as file:
             return file.read()
 
-    def test_conversion_returns_xmi_with_correct_entities(self):
-        result = translate_heideltime_xmi_to_our_xmi(self._heideltime_sample_xmi())
-        self.assertIsInstance(result, str, 'Should return a string')
-        cas = self.assert_xmi_can_be_loaded_with_dai_typesystem(result)
-
+    def _assert_heideltime_sample_xmi_tags_present(self, cas):
         timexes = list(cas.select('org.dainst.nlp.NamedEntity.TimexDate'))
         self.assertEqual(len(timexes), 1, "Should have converted one timex.")
         timex = timexes[0]
@@ -41,6 +38,27 @@ class TranslateHeideltimeXmiToDaiXmiTest(unittest.TestCase, AssertsXmiCanBeLoade
         self.assertEqual(temponym.latestBegin, '+0750')
         self.assertEqual(temponym.earliestEnd, '+0772')
         self.assertEqual(temponym.latestEnd, '+0772')
+
+    def test_conversion_returns_xmi_with_correct_entities(self):
+        result = translate_heideltime_xmi_to_our_xmi(self._heideltime_sample_xmi())
+        self.assertIsInstance(result, str, 'Should return a string')
+        cas = self.assert_xmi_can_be_loaded_with_dai_typesystem(result)
+        self._assert_heideltime_sample_xmi_tags_present(cas)
+
+    def test_conversion_with_previous_xmi_builder(self):
+        builder = DaiNlpXmiBuilder('test')
+        builder.set_sofa("\nThat happend in 2006.\n\nSomething happened during the Abbasid Caliphate.\n")
+        builder.add_annotation('org.dainst.nlp.LayoutElement.Page', start=0, end=23)
+
+        result = translate_heideltime_xmi_to_our_xmi(self._heideltime_sample_xmi(), builder=builder)
+        self.assertIsInstance(result, str, 'Should return a string')
+        cas = self.assert_xmi_can_be_loaded_with_dai_typesystem(result)
+        self._assert_heideltime_sample_xmi_tags_present(cas)
+
+        pages = list(cas.select('org.dainst.nlp.LayoutElement.Page'))
+        self.assertEqual(len(pages), 1, 'Tha page element should still be present.')
+        self.assertEqual(pages[0].begin, 0)
+        self.assertEqual(pages[0].end, 23)
 
 
 class ExternalCommandTest(unittest.TestCase):
