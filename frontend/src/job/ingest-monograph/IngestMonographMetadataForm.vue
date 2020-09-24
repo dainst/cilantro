@@ -164,6 +164,10 @@ function extractZenonId(path: string): string {
     return result[1];
 }
 
+function filterDuplicateEntry(value, index, self) {
+    return self.indexOf(value) === index;
+}
+
 async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
     try {
         const zenonRecord = await getRecord(target.metadata.zenon_id) as ZenonRecord;
@@ -188,6 +192,9 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
             subTitle = zenonRecord.subTitle.trim();
         }
 
+        const filteredSubjects = zenonRecord.subjects
+            .map(subject => subject[0])
+            .filter(filterDuplicateEntry);
         const authors = extractAuthors(zenonRecord);
 
         if (errors.length !== 0) {
@@ -200,7 +207,8 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
             title: zenonRecord.shortTitle.replace(/[\s:]+$/, '').trim(),
             subtitle: subTitle,
             abstract: summary,
-            date_published: datePublished
+            date_published: datePublished,
+            keywords: filteredSubjects
         } as MonographMetadata;
 
         return new JobTargetData(target.id, target.path, metadata);
