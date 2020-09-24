@@ -19,7 +19,11 @@
              xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
         {% for author in metadata['authors'] %}
         <author primary_contact="true" include_in_browse="true" user_group_ref="Author">
+            {% if author.givenname == '' %}
+            <givenname>#TODO#</givenname>
+            {% else %}
             <givenname>{{author.givenname}}</givenname>
+            {% endif %}
             <familyname>{{author.lastname}}</familyname>
             <email></email>
         </author>
