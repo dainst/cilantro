@@ -164,8 +164,8 @@ function extractZenonId(path: string): string {
     return result[1];
 }
 
-function filterDuplicateEntry(value, index, self) {
-    return self.indexOf(value) === index;
+function filterDuplicateEntry<T>(value: T, index: number, array: T[]) {
+    return array.indexOf(value) === index;
 }
 
 async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
