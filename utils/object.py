@@ -1,10 +1,8 @@
-import os
-from datetime import datetime
-from io import BytesIO
 import json
-from pathlib import Path
-from typing import List, Iterator
+import os
 from distutils.dir_util import copy_tree
+from io import BytesIO
+from typing import List, Iterator
 
 from utils.list_dir import list_dir
 
@@ -131,17 +129,17 @@ class Object:
         """
         Get all files that correspond to a given representation.
 
+        Files are returned sorted by filename in alphanumerical order.
+
         :param str representation:
         :return Iterator[BytesIO]:
         """
-        representations = []
         path = self.get_representation_dir(representation)
 
         for filename in list_dir(path, sorted=True):
             if not os.path.isdir(os.path.join(path, filename)):
                 with open(os.path.join(path, filename), 'rb') as file:
-                    representations.append(BytesIO(file.read()))
-        return iter(representations)
+                    yield BytesIO(file.read())
 
     def copy(self, path):
         """

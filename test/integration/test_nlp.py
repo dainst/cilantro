@@ -36,9 +36,13 @@ class NlpTest(JobTypeTest):
         txt_job_id = job_from_db['children'][0]['job_id']
         pdf_job_id = job_from_db['children'][1]['job_id']
 
-        # "txt/timex1.txt" and "pdf/timex2.pdf" were staged above, the pdf has two pages
-        self.assert_file_in_workdir(txt_job_id, f"data/xml/timex1.xml", self._timeout())
-        self.assert_file_in_workdir(pdf_job_id, f"data/xml/timex2_0000.xml", self._timeout())
-        self.assert_file_in_workdir(pdf_job_id, f"data/xml/timex2_0001.xml", self._timeout())
+        # The staged file "txt/timex1.txt" is directly converted and we expect that file in the workdir
+        self.assert_file_in_workdir(txt_job_id, f"data/xmi.time/timex1.xmi", self._timeout())
+
+        # The staged file "pdf/timex2.pdf" is converted to txt, page annotated and then time annotated
+        self.assert_file_in_workdir(pdf_job_id, f"data/txt/timex2_0000.txt", self._timeout())
+        self.assert_file_in_workdir(pdf_job_id, f"data/txt/timex2_0001.txt", self._timeout())
+        self.assert_file_in_workdir(pdf_job_id, f"data/xmi.pages/timex2.xmi", self._timeout())
+        self.assert_file_in_workdir(pdf_job_id, f"data/xmi.pages.time/timex2.xmi", self._timeout())
 
         self.unstage_resource('some_texts')

@@ -6,8 +6,8 @@
   <vendor/>
   <types>
     <typeDescription>
-      <name>org.dainst.nlp.NamedEntity</name>
-      <description/>
+      <name>ord.dainst.nlp.Annotation</name>
+      <description>Supertype for DAI NLP annotations</description>
       <supertypeName>uima.tcas.Annotation</supertypeName>
       <features>
         <featureDescription>
@@ -15,6 +15,13 @@
           <description/>
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>org.dainst.nlp.NamedEntity</name>
+      <description/>
+      <supertypeName>ord.dainst.nlp.Annotation</supertypeName>
+      <features>
         <featureDescription>
           <name>references</name>
           <description/>
@@ -70,7 +77,7 @@
     </typeDescription>
     <typeDescription>
       <name>org.dainst.nlp.LayoutElement</name>
-      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <supertypeName>ord.dainst.nlp.Annotation</supertypeName>
     </typeDescription>
     <typeDescription>
       <name>org.dainst.nlp.LayoutElement.Page</name>

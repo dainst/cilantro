@@ -6,6 +6,7 @@ import cassis
 
 from test.unit.worker.nlp.text_analyzer_mock import TextAnalyzer as MockAnalyzer, MockDAIEntity
 from workers.nlp.annotate.nlp_components_wrapper import annotate_text, annotate_xmi
+from workers.nlp.annotate.page_annotation import annotate_pages
 
 _example_xmi_with_pages = """<?xml version='1.0' encoding='ASCII'?>
 <xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:cas="http:///uima/cas.ecore" xmlns:LayoutElement="http:///org/dainst/nlp/LayoutElement.ecore" xmi:version="2.0">
@@ -33,6 +34,20 @@ class AssertsXmiCanBeLoadedWithDaiTypesystem:
             return cassis.load_cas_from_xmi(xmi, typesystem)
         except Exception as e:
             raise AssertionError(e, "Loading the annotated xmi with our typesystem failed.")
+
+
+class PageAnnotationTest(unittest.TestCase, AssertsXmiCanBeLoadedWithDaiTypesystem):
+
+    def test_annotate_pages(self):
+        pages = ['A\nB\nC\n', 'Äöß', 'バートアスキー\n', 'Letzte Seite']
+        result = annotate_pages(pages)
+
+        cas = self.assert_xmi_can_be_loaded_with_dai_typesystem(result)
+        self.assertEqual(cas.sofa_string, 'A\nB\nC\nÄößバートアスキー\nLetzte Seite')
+
+        annotations = list(cas.select('org.dainst.nlp.LayoutElement.Page'))
+        texts = [a.get_covered_text() for a in annotations]
+        self.assertEqual(set(pages), set(texts))
 
 
 @patch('workers.nlp.annotate.nlp_components_wrapper._init_text_analyzer')
