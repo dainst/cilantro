@@ -4,15 +4,29 @@
            xmlns:onix="http://ns.editeur.org/onix/3.0/reference" stage="production"
            date_published="{{metadata['date_published']}}" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
     <id type="internal" advice="ignore">1</id>
+    <id type="other::zenon" advice="update">{{metadata['zenon_id']}}</id>
     <title>{{metadata['title']}}</title>
     <prefix>{{metadata['prefix']}}</prefix>
     <subtitle>{{metadata['subtitle']}}</subtitle>
     <abstract>{{metadata['abstract']}}</abstract>
+
+    {% if metadata['keywords'] %}
+    <keywords locale="de_DE">
+        {% for keyword in metadata['keywords'] %}
+        <keyword>{{keyword}}</keyword>
+        {% endfor %}
+    </keywords>
+    {% endif %}
+
     <authors xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
         {% for author in metadata['authors'] %}
         <author primary_contact="true" include_in_browse="true" user_group_ref="Author">
+            {% if author.givenname == '' %}
+            <givenname>#TODO#</givenname>
+            {% else %}
             <givenname>{{author.givenname}}</givenname>
+            {% endif %}
             <familyname>{{author.lastname}}</familyname>
             <email></email>
         </author>

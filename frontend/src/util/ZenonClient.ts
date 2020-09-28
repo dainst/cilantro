@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { sendRequest } from './HTTPClient';
 
 const zenonBaseURL: string = 'https://zenon.dainst.org/';
@@ -47,7 +46,7 @@ export interface ZenonRecord {
     secondaryAuthorsNames: string[],
     corporateAuthorsNames: string[],
     shortTitle: string,
-    subTitle: string
+    subTitle?: string
 }
 
 export interface ZenonAuthors {
