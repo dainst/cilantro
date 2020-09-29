@@ -29,6 +29,8 @@ sphinxcontrib-httpdomain = "*"
 docutils = "==0.15"
 beautifulsoup4 = "*"
 dkpro-cassis = "*"
+# dataclasses are needed for tests of the nlp worker. Can be removed if python_version >= 3.7
+dataclasses = "*"
 
 [dev-packages]
 

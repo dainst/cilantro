@@ -1,10 +1,12 @@
 
+import json
 import os.path
 import unittest
 from io import BytesIO
 
 from lxml import etree
 
+from workers.nlp.formats.book_viewer_json import BookViewerJsonBuilder
 from workers.nlp.formats.xmi import DaiNlpXmiReader, DaiNlpXmiBuilder, DaiNlpFormatError
 
 resources_dir = os.environ["RESOURCES_DIR"]
@@ -133,3 +135,75 @@ class DaiNlpXmiBuilderTest(unittest.TestCase, XPathAsserting):
                 args = {**self.entity_args, 'type_name': name}
                 with self.assertRaises(DaiNlpFormatError):
                     self.builder.add_annotation(**args)
+
+
+class BookViewerJsonTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.builder = BookViewerJsonBuilder()
+        self.builder.add_occurence("location", "Rom", page=2, term="Roma")
+        self.builder.add_occurence("location", "Rom", page=3, term="Roms")
+        self.builder.add_occurence("location", "Rom", page=2, term="Rom")
+        self.builder.add_occurence("location", "Athen", page=4, term="Athen")
+
+    def _result(self):
+        return json.loads(self.builder.to_json())
+
+    def _location_items(self):
+        # return the location items as tuple: (rome, athens)
+        locations = self._result()['locations']['items']
+        if locations[0]['lemma'] != 'Rom':
+            locations = reversed(locations)
+        return tuple(locations)
+
+    def _rome(self):
+        return self._location_items()[0]
+
+    def test_adding_occurences(self):
+        result = self._result()
+        self.assertIsInstance(result, dict)
+        locations = result['locations']['items']
+        self.assertEqual(2, len(locations))
+
+        rome, athens = self._location_items()
+        self.assertListEqual(rome['pages'], [2, 3])
+        self.assertListEqual(athens['pages'], [4])
+        self.assertEqual(rome['count'], 3)
+        self.assertEqual(athens['count'], 1)
+
+        # There should be empty fields for the other keys
+        for key in ['persons', 'keyterms', 'time_expressions']:
+            self.assertIsInstance(result[key], dict)
+            self.assertListEqual(result[key]['items'], [])
+
+    def test_adding_references(self):
+        self.assertListEqual(self._rome()['references'], [])
+
+        inputs = [
+            dict(id='2323295', url='https://gazetteer.dainst.org/place/2323295', type='gazetteer'),
+            dict(id='fU6rkJhWHGsd', url='http://chronontology.dainst.org/period/fU6rkJhWHGsd', type='chronontology')
+        ]
+
+        self.builder.add_reference('location', 'Rom', **inputs[0])
+        self.builder.add_reference('location', 'Rom', **inputs[1])
+
+        rome = self._rome()
+        self.assertEqual(len(rome['references']), 2)
+        self.assertIn(inputs[0], rome['references'])
+        self.assertIn(inputs[1], rome['references'])
+
+    def test_setting_the_score(self):
+        self.assertIsNone(self._rome()['score'])
+        self.builder.set_score('location', 'Rom', 12.345)
+        self.assertEqual(self._rome()['score'], 12.345, 'Should set score field')
+        self.builder.set_score('location', 'Rom', 23.456)
+        self.assertEqual(self._rome()['score'], 23.456, 'Should override score field')
+
+    def test_adding_coordinates(self):
+        self.assertIsNone(self._rome()['coordinates'], 'Should be None initially')
+        self.builder.set_coordinates('location', 'Rom', (1.23456, 12.3456))
+        self.assertListEqual(self._rome()['coordinates'], [1.23456, 12.3456], 'Should set coords as list')
+        self.builder.set_coordinates('location', 'Rom', (2.34567, 23.4567))
+        self.assertListEqual(self._rome()['coordinates'], [2.34567, 23.4567], 'Should override coords')
+
+
