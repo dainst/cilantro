@@ -205,5 +205,3 @@ class BookViewerJsonTest(unittest.TestCase):
         self.assertListEqual(self._rome()['coordinates'], [1.23456, 12.3456], 'Should set coords as list')
         self.builder.set_coordinates('location', 'Rom', (2.34567, 23.4567))
         self.assertListEqual(self._rome()['coordinates'], [2.34567, 23.4567], 'Should override coords')
-
-
