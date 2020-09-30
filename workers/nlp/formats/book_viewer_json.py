@@ -3,6 +3,8 @@ from dataclasses import dataclass
 import uuid
 import json
 from enum import Enum, auto
+from urllib.parse import urlparse, urlsplit
+from os.path import basename
 
 
 @dataclass(eq=True, frozen=True)
@@ -30,6 +32,34 @@ class Kind(Enum):
     keyterm = auto()
     location = auto()
     timex = auto()
+
+
+def parse_reference_from_url(url: str):
+    """
+    Used to convert a URL into the reference format values that the book viewer expects.
+    Examples:
+        'https://gazetteer.dainst.org/place/2128554/'
+            -> ('2128554', 'https://gazetteer.dainst.org/place/2128554/', 'gazetteer')
+        'https://xyz.example.com/some/path?param=123'
+            -> ('', 'https://xyz.example.com/some/path?param=123', 'xyz.example.com')
+    """
+    try:
+        url = url.strip('/')
+        parsed = urlparse(url)
+        if len(parsed.netloc) <= 0:
+            raise Exception()
+    except:
+        return ('', '', '')
+
+    id = ''
+    if parsed.netloc in ['gazetteer.dainst.org', 'chronontology.dainst.org']:
+        name = parsed.netloc.split('.')[0] # 'gazetteer' or 'chronontology'
+        if parsed.path is not None and len(parsed.path) > 0:
+            id = basename(parsed.path)
+    else:
+        name = parsed.netloc
+
+    return (id, url, name)
 
 
 class BookViewerJsonBuilder:

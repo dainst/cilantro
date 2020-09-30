@@ -1,5 +1,4 @@
 
-
 import json
 import os.path
 import unittest
@@ -7,7 +6,7 @@ from io import BytesIO
 
 from lxml import etree
 
-from workers.nlp.formats.book_viewer_json import BookViewerJsonBuilder, Kind
+from workers.nlp.formats.book_viewer_json import BookViewerJsonBuilder, Kind, parse_reference_from_url
 from workers.nlp.formats.xmi import DaiNlpXmiReader, DaiNlpXmiBuilder, DaiNlpFormatError
 
 resources_dir = os.environ["RESOURCES_DIR"]
@@ -206,3 +205,36 @@ class BookViewerJsonTest(unittest.TestCase):
         self.assertListEqual(self._rome()['coordinates'], [1.23456, 12.3456], 'Should set coords as list')
         self.builder.set_coordinates(Kind.location, 'Rom', (2.34567, 23.4567))
         self.assertListEqual(self._rome()['coordinates'], [2.34567, 23.4567], 'Should override coords')
+
+
+class UrlToReferenceParseTest(unittest.TestCase):
+
+    def test_parsing_known_url(self):
+        result = parse_reference_from_url('https://gazetteer.dainst.org/place/2128554')
+        expecting = ('2128554', 'https://gazetteer.dainst.org/place/2128554', 'gazetteer')
+        self.assertEqual(result, expecting)
+
+        result = parse_reference_from_url('http://chronontology.dainst.org/period/NAAfB2FfP3Rj')
+        expecting = ('NAAfB2FfP3Rj', 'http://chronontology.dainst.org/period/NAAfB2FfP3Rj', 'chronontology')
+        self.assertEqual(result, expecting)
+
+    def test_known_urls_non_standard(self):
+        # trailing slash
+        expecting = ('2128554', 'https://gazetteer.dainst.org/place/2128554', 'gazetteer')
+        self.assertEqual(expecting, parse_reference_from_url('https://gazetteer.dainst.org/place/2128554/'))
+
+        # with params
+        expecting = ('2128554', 'https://gazetteer.dainst.org/place/2128554?foo=bar', 'gazetteer')
+        self.assertEqual(expecting, parse_reference_from_url('https://gazetteer.dainst.org/place/2128554?foo=bar'))
+
+    def test_parsing_unknonw_url(self):
+        result = parse_reference_from_url('https://xyz.example.com/some/path?param=123')
+        expecting = ('', 'https://xyz.example.com/some/path?param=123', 'xyz.example.com')
+        self.assertEqual(result, expecting)
+
+    def test_parsing_invalid_url(self):
+        result = parse_reference_from_url('not-a-scheme://///bla-bla')
+        self.assertEqual(result, ('', '', ''))
+
+        result = parse_reference_from_url(None)
+        self.assertEqual(result, ('', '', ''))
