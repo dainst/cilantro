@@ -50,6 +50,9 @@ class PageAnnotationTest(unittest.TestCase, AssertsXmiCanBeLoadedWithDaiTypesyst
         texts = [a.get_covered_text() for a in annotations]
         self.assertEqual(set(pages), set(texts))
 
+        page_numbers = [int(a.number) for a in annotations]
+        self.assertEqual(set(page_numbers), {1, 2, 3, 4})
+
 
 @patch('workers.nlp.annotate.nlp_components_wrapper._init_text_analyzer')
 class NlpComponentsAnnotationTest(unittest.TestCase, AssertsXmiCanBeLoadedWithDaiTypesystem):
