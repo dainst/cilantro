@@ -1,4 +1,5 @@
 
+
 import json
 import os.path
 import unittest
@@ -6,7 +7,7 @@ from io import BytesIO
 
 from lxml import etree
 
-from workers.nlp.formats.book_viewer_json import BookViewerJsonBuilder
+from workers.nlp.formats.book_viewer_json import BookViewerJsonBuilder, Kind
 from workers.nlp.formats.xmi import DaiNlpXmiReader, DaiNlpXmiBuilder, DaiNlpFormatError
 
 resources_dir = os.environ["RESOURCES_DIR"]
@@ -141,10 +142,10 @@ class BookViewerJsonTest(unittest.TestCase):
 
     def setUp(self) -> None:
         self.builder = BookViewerJsonBuilder()
-        self.builder.add_occurence("location", "Rom", page=2, term="Roma")
-        self.builder.add_occurence("location", "Rom", page=3, term="Roms")
-        self.builder.add_occurence("location", "Rom", page=2, term="Rom")
-        self.builder.add_occurence("location", "Athen", page=4, term="Athen")
+        self.builder.add_occurence(Kind.location, "Rom", page=2, term="Roma")
+        self.builder.add_occurence(Kind.location, "Rom", page=3, term="Roms")
+        self.builder.add_occurence(Kind.location, "Rom", page=2, term="Rom")
+        self.builder.add_occurence(Kind.location, "Athen", page=4, term="Athen")
 
     def _result(self):
         return json.loads(self.builder.to_json())
@@ -184,8 +185,8 @@ class BookViewerJsonTest(unittest.TestCase):
             dict(id='fU6rkJhWHGsd', url='http://chronontology.dainst.org/period/fU6rkJhWHGsd', type='chronontology')
         ]
 
-        self.builder.add_reference('location', 'Rom', **inputs[0])
-        self.builder.add_reference('location', 'Rom', **inputs[1])
+        self.builder.add_reference(Kind.location, 'Rom', **inputs[0])
+        self.builder.add_reference(Kind.location, 'Rom', **inputs[1])
 
         rome = self._rome()
         self.assertEqual(len(rome['references']), 2)
@@ -194,14 +195,14 @@ class BookViewerJsonTest(unittest.TestCase):
 
     def test_setting_the_score(self):
         self.assertIsNone(self._rome()['score'])
-        self.builder.set_score('location', 'Rom', 12.345)
+        self.builder.set_score(Kind.location, 'Rom', 12.345)
         self.assertEqual(self._rome()['score'], 12.345, 'Should set score field')
-        self.builder.set_score('location', 'Rom', 23.456)
+        self.builder.set_score(Kind.location, 'Rom', 23.456)
         self.assertEqual(self._rome()['score'], 23.456, 'Should override score field')
 
     def test_adding_coordinates(self):
         self.assertIsNone(self._rome()['coordinates'], 'Should be None initially')
-        self.builder.set_coordinates('location', 'Rom', (1.23456, 12.3456))
+        self.builder.set_coordinates(Kind.location, 'Rom', (1.23456, 12.3456))
         self.assertListEqual(self._rome()['coordinates'], [1.23456, 12.3456], 'Should set coords as list')
-        self.builder.set_coordinates('location', 'Rom', (2.34567, 23.4567))
+        self.builder.set_coordinates(Kind.location, 'Rom', (2.34567, 23.4567))
         self.assertListEqual(self._rome()['coordinates'], [2.34567, 23.4567], 'Should override coords')

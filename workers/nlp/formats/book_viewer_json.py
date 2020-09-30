@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 import uuid
 import json
+from enum import Enum, auto
+
 
 @dataclass(eq=True, frozen=True)
 class _Reference:
@@ -9,10 +11,11 @@ class _Reference:
     url: str
     type: str
 
+
 class _Item:
 
-    def __init__(self, id: str):
-        self.id: str = id
+    def __init__(self, id_str: str):
+        self.id: str = id_str
         self.score = None
         self.terms: {str} = set()
         self.pages: {int} = set()
@@ -21,59 +24,66 @@ class _Item:
         self.coordinates: (float, float) = None
         self.references: {_Reference} = set()
 
-class BookViewerJsonBuilder():
+
+class Kind(Enum):
+    person = auto()
+    keyterm = auto()
+    location = auto()
+    timex = auto()
+
+
+class BookViewerJsonBuilder:
 
     def __init__(self):
-        self._kinds_to_item_dicts: { str: { str: _Item } } = {}
+        self._kinds_to_item_dicts: {str: {str: _Item}} = dict()
 
-    def _item_d(self, kind: str) -> dict:
+    def _item_d(self, kind: Kind) -> dict:
         if kind not in self._kinds_to_item_dicts:
             self._kinds_to_item_dicts[kind] = dict()
         return self._kinds_to_item_dicts[kind]
 
-    def _item(self, kind, lemma) -> _Item:
+    def _item(self, kind: Kind, lemma: str) -> _Item:
         item_d = self._item_d(kind)
         if lemma not in item_d:
-            item_d[lemma] = _Item(id=str(uuid.uuid1()))
+            item_d[lemma] = _Item(str(uuid.uuid1()))
             item_d[lemma].lemma = lemma
         return item_d[lemma]
 
-    def add_occurence(self, kind: str, lemma: str, page: int, term: str):
+    def add_occurence(self, kind: Kind, lemma: str, page: int, term: str):
         item = self._item(kind, lemma)
         item.pages.add(page)
         item.terms.add(term)
         item.count += 1
 
-    def add_reference(self, kind: str, lemma: str, id: str, url: str, type: str):
+    def add_reference(self, kind: Kind, lemma: str, id: str, url: str, type: str):
         reference = _Reference(id, url, type)
         self._item(kind, lemma).references.add(reference)
 
-    def set_score(self, kind, lemma, score: float):
+    def set_score(self, kind: Kind, lemma: str, score: float):
         self._item(kind, lemma).score = score
 
-    def set_coordinates(self, kind, lemma, coordinates: (float, float)):
+    def set_coordinates(self, kind: Kind, lemma: str, coordinates: (float, float)):
         self._item(kind, lemma).coordinates = coordinates
 
     def to_json(self) -> str:
         kinds_to_keys = {
-            'person': 'persons',
-            'location': 'locations',
-            'keyterm': 'keyterms',
-            'time_expression': 'time_expressions'
+            Kind.person: 'persons',
+            Kind.location: 'locations',
+            Kind.keyterm: 'keyterms',
+            Kind.timex: 'time_expressions'
         }
         result = dict()
         for kind, key in kinds_to_keys.items():
             if kind in self._kinds_to_item_dicts.keys():
-                result[key] = { 'items': list(self._kinds_to_item_dicts[kind].values()) }
+                result[key] = {'items': list(self._kinds_to_item_dicts[kind].values())}
             else:
-                result[key] = { 'items': [] }
+                result[key] = {'items': []}
 
         def encode_fn(obj):
-            if (isinstance(obj, set)):
+            if isinstance(obj, set):
                 return list(obj)
-            else:
-                try:
-                    return obj.toJSON()
-                except AttributeError:
-                    return obj.__dict__
+            try:
+                return obj.toJSON()
+            except AttributeError:
+                return obj.__dict__
         return json.dumps(result, default=encode_fn, indent=4)
