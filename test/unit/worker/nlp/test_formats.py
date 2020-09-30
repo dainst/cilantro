@@ -7,7 +7,7 @@ from io import BytesIO
 from lxml import etree
 
 from workers.nlp.formats.book_viewer_json import BookViewerJsonBuilder, Kind, parse_reference_from_url
-from workers.nlp.formats.xmi import DaiNlpXmiReader, DaiNlpXmiBuilder, DaiNlpFormatError
+from workers.nlp.formats.xmi import Annotation, DaiNlpXmiReader, DaiNlpXmiBuilder, DaiNlpFormatError
 
 resources_dir = os.environ["RESOURCES_DIR"]
 path_typesystem_dai = os.path.join(resources_dir, "nlp_typesystem_dai.xml")
@@ -73,7 +73,7 @@ class DaiNlpXmiBuilderTest(unittest.TestCase, XPathAsserting):
 
     ns = {'nlp': 'http:///org/dainst/nlp.ecore'}
 
-    entity_args = dict(type_name='org.dainst.nlp.NamedEntity', start=0, end=7)
+    entity_args = dict(kind=Annotation.named_entity, start=0, end=7)
 
     def setUp(self) -> None:
         self.builder = DaiNlpXmiBuilder(default_annotator_id=self.annotator)

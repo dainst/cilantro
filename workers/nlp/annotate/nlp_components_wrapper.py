@@ -1,5 +1,5 @@
 
-from workers.nlp.formats.xmi import DaiNlpXmiBuilder as XmiBuilder
+from workers.nlp.formats.xmi import Annotation, DaiNlpXmiBuilder as XmiBuilder
 
 
 def annotate_xmi(xmi: str) -> str:
@@ -40,12 +40,12 @@ def annotate_text(text) -> str:
 def _do_annoatate(builder: XmiBuilder, analyzer) -> str:
     nes = analyzer.do_ner()
     types_to_entities = {
-        "org.dainst.nlp.NamedEntity.Person": analyzer.get_persons(nes),
-        "org.dainst.nlp.NamedEntity.Place": analyzer.geoparse(analyzer.get_locations(nes))
+        Annotation.person: analyzer.get_persons(nes),
+        Annotation.place: analyzer.geoparse(analyzer.get_locations(nes))
     }
     for type_name, entities in types_to_entities.items():
         for entity in entities:
-            args = dict(type_name=type_name, start=entity.span_start, end=entity.span_end)
+            args = dict(kind=type_name, start=entity.span_start, end=entity.span_end)
             if entity.references:
                 args['references'] = entity.references
             builder.add_annotation(**args)

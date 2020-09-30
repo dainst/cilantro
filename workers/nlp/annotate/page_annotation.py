@@ -1,5 +1,5 @@
 
-from workers.nlp.formats.xmi import DaiNlpXmiBuilder
+from workers.nlp.formats.xmi import Annotation, DaiNlpXmiBuilder
 
 
 def annotate_pages(pages: [str]) -> str:
@@ -21,7 +21,7 @@ def annotate_pages(pages: [str]) -> str:
     page_start = 0
     for page in pages:
         page_end = page_start + len(page)
-        builder.add_annotation('org.dainst.nlp.LayoutElement.Page', start=page_start, end=page_end)
+        builder.add_annotation(Annotation.page, start=page_start, end=page_end)
         page_start = page_end
 
     return builder.xmi()
