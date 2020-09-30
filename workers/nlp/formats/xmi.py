@@ -36,8 +36,11 @@ class DaiNlpXmiReader:
     def get_sofa(self):
         return self._cas.sofa_string
 
-    def iter_annotations(self, kind: Annotation = Annotation.base):
+    def annotations(self, kind: Annotation = Annotation.base):
         return self._cas.select(kind.value)
+
+    def covered_annotations(self, covering, kind_covered: Annotation = Annotation.base):
+        return self._cas.select_covered(type_name=kind_covered.value, covering_annotation=covering)
 
 
 class DaiNlpXmiBuilder(DaiNlpXmiReader):

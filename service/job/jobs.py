@@ -465,6 +465,14 @@ class NlpJob(BatchJob):
                                    task='nlp_heideltime.time_annotate',
                                    lang=params['options']['lang'],
                                    document_creation_time=params['options']['document_creation_time'])
+
+                # the pdf input also gets a final conversion to book viewer json
+                if extension == 'pdf':
+                    chain |= _link('list_files',
+                                   representation='xmi.pages.time',
+                                   target='json',
+                                   task='nlp.formats.dai_book_viewer_json')
+
                 chains.append(chain)
 
         return chains
