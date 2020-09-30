@@ -1,9 +1,8 @@
 
 import os
+from typing import IO, Union
 
 import cassis
-
-from typing import IO, Union
 
 
 class DaiNlpFormatError(Exception):

@@ -4,7 +4,6 @@ import os
 import re
 
 import io
-from utils.celery_client import celery_app
 from utils.list_dir import list_dir
 from utils.object import Object
 from workers.base_task import ObjectTask
@@ -71,6 +70,3 @@ class AnnotateTask(ObjectTask):
         :return str: The complete text, merged from all txts
         """
         raise Exception("Not implemented yet.")
-
-
-AnnotateTask = celery_app.register_task(AnnotateTask())

@@ -4,7 +4,7 @@ import tempfile
 
 from utils.celery_client import celery_app
 from workers.base_task import FileTask
-from workers.nlp.formats.xmi import DaiNlpXmiReader, DaiNlpXmiBuilder
+from workers.nlp.formats.xmi import DaiNlpXmiBuilder
 from .heideltime_wrapper \
     import HeideltimeCommandParamsBuilder, run_external_command, translate_heideltime_xmi_to_our_xmi
 
@@ -57,6 +57,3 @@ class TimeAnnotateTask(FileTask):
                 self._process_txt_file(input_file.name, target_path, builder=builder)
         else:
             raise Exception('Unknown extension: %s' % extension)
-
-
-TimeAnnotateTask = celery_app.register_task(TimeAnnotateTask())
