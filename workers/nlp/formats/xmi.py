@@ -1,9 +1,20 @@
 
 import os
+from enum import Enum
+from typing import IO, Union
 
 import cassis
 
-from typing import IO, Union
+
+class Annotation(Enum):
+    base =         'ord.dainst.nlp.Annotation'
+    named_entity = 'org.dainst.nlp.NamedEntity'
+    person =       'org.dainst.nlp.NamedEntity.Person'
+    place =        'org.dainst.nlp.NamedEntity.Place'
+    timex =        'org.dainst.nlp.NamedEntity.TimexDate'
+    temponym =     'org.dainst.nlp.NamedEntity.Temponym'
+    layout =       'org.dainst.nlp.LayoutElement'
+    page =         'org.dainst.nlp.LayoutElement.Page'
 
 
 class DaiNlpFormatError(Exception):
@@ -24,6 +35,12 @@ class DaiNlpXmiReader:
 
     def get_sofa(self):
         return self._cas.sofa_string
+
+    def annotations(self, kind: Annotation = Annotation.base):
+        return self._cas.select(kind.value)
+
+    def covered_annotations(self, covering, kind_covered: Annotation = Annotation.base):
+        return self._cas.select_covered(type_name=kind_covered.value, covering_annotation=covering)
 
 
 class DaiNlpXmiBuilder(DaiNlpXmiReader):
@@ -52,13 +69,13 @@ class DaiNlpXmiBuilder(DaiNlpXmiReader):
         else:
             return attr_map.pop('annotatorId')
 
-    def add_annotation(self, type_name: str, start: int, end: int, **kwargs):
+    def add_annotation(self, kind: Annotation, start: int, end: int, **kwargs):
         """
         Add an annotation to the document in accordance to the DAI NLP type system.
         Treats all kwargs as attributes of the entity in the xmi document.
         """
         try:
-            type_class = self._typesystem.get_type(type_name)
+            type_class = self._typesystem.get_type(kind.value)
             annotation = type_class(begin=start, end=end)
         except Exception as e:
             raise DaiNlpFormatError(e)

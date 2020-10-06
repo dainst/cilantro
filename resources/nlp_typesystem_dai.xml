@@ -82,6 +82,12 @@
     <typeDescription>
       <name>org.dainst.nlp.LayoutElement.Page</name>
       <supertypeName>org.dainst.nlp.LayoutElement</supertypeName>
+      <features>
+        <featureDescription>
+          <name>number</name>
+          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
+      </features>
     </typeDescription>
   </types>
 </typeSystemDescription>

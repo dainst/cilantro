@@ -283,6 +283,21 @@ class FileTask(BaseTask):
     actual conversion logic.
     """
 
+    def default_target_name(self, input_file, target_dir, extension = None):
+        """
+        Convenience method to determine a new filename from the input file
+        and the target dir, assuming that only the extension changes and
+        generally the target dir has the same name as the extension.
+        Examples:
+            (input_file="dir/abc.txt", target_dir="json") -> "json/abc.json"
+            (input_file="dir/abc.txt", target_dir="xyz", extension="xml") -> "xyz/abc.xml"
+        """
+        basename, _ = os.path.splitext(os.path.basename(input_file))
+        if extension is None:
+            extension = os.path.basename(target_dir.strip('/'))
+        return os.path.join(target_dir, f"{basename}.{extension}")
+
+
     def execute_task(self):
         file = self.get_param('work_path')
         try:

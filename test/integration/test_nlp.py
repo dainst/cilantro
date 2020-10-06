@@ -39,10 +39,12 @@ class NlpTest(JobTypeTest):
         # The staged file "txt/timex1.txt" is directly converted and we expect that file in the workdir
         self.assert_file_in_workdir(txt_job_id, f"data/xmi.time/timex1.xmi", self._timeout())
 
-        # The staged file "pdf/timex2.pdf" is converted to txt, page annotated and then time annotated
+        # The staged pdf "pdf/timex2.pdf" is converted to txt, page annotated and then time annotated
+        # and finally json for the book viewer is created
         self.assert_file_in_workdir(pdf_job_id, f"data/txt/timex2_0000.txt", self._timeout())
         self.assert_file_in_workdir(pdf_job_id, f"data/txt/timex2_0001.txt", self._timeout())
         self.assert_file_in_workdir(pdf_job_id, f"data/xmi.pages/timex2.xmi", self._timeout())
         self.assert_file_in_workdir(pdf_job_id, f"data/xmi.pages.time/timex2.xmi", self._timeout())
+        self.assert_file_in_workdir(pdf_job_id, f"data/json/timex2.json", self._timeout())
 
         self.unstage_resource('some_texts')
