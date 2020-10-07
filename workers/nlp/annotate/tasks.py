@@ -6,8 +6,9 @@ import re
 import io
 from utils.list_dir import list_dir
 from utils.object import Object
-from workers.base_task import ObjectTask
+from workers.base_task import ObjectTask, FileTask
 from workers.nlp.annotate.page_annotation import annotate_pages
+from workers.nlp.annotate.nlp_components_wrapper import annotate_xmi, annotate_text
 
 log = logging.getLogger(__name__)
 
@@ -16,7 +17,8 @@ class AnnotatePagesTask(ObjectTask):
 
     name = "nlp.annotate_pages"
 
-    def _determine_new_filename(self, from_dir: str):
+    @staticmethod
+    def _determine_new_filename(from_dir: str):
         # Example:  Finds: [abc_001.txt, abc_002.txt], returns: "abc.xmi"
         regex = re.compile('_[0-9]*$')
         basenames = set()
@@ -27,7 +29,6 @@ class AnnotatePagesTask(ObjectTask):
             raise Exception(f'Ambiguous or underspecified basenames: {basenames}')
         else:
             return '%s.xmi' % basenames.pop()
-
 
     def process_object(self, obj: Object):
         """
@@ -48,25 +49,23 @@ class AnnotatePagesTask(ObjectTask):
         obj.add_stream(filename, directory, io.BytesIO(content.encode(encoding="utf8")))
 
 
-class AnnotateTask(ObjectTask):
+class AnnotateNamedEntitiesTask(FileTask):
     """
-    Annotates a given text.
-
-    Annotates the text and stores the annotations in the json.
+    Annotates a given text (either xml or txt) for named entities.
     """
-    name = "nlp.annotate"
+    name = "nlp.named_entities_annotate"
 
-    def process_object(self, obj):
-        raise Exception("Not implemented yet.")
+    def process_file(self, file, target_dir):
+        target_path = self.default_target_name(file, target_dir, "xmi")
+        _, extension = os.path.splitext(file)
 
-    def _get_full_text(self, obj):
-        """
-        Get the full text from the seperated txts.
+        with open(file, mode='rb') as in_f:
+            if extension in ['.txt', '.TXT']:
+                result = annotate_text(in_f.read().decode('utf8'))
+            elif extension in ['.xmi', '.XMI']:
+                result = annotate_xmi(in_f)
+            else:
+                raise Exception('Unknown extension: %s' % extension)
 
-        Make it to one big string with new-page markers (\f)in it. This
-        improves both, quality and runtime of the annotations.
-
-        :param class obj: The object
-        :return str: The complete text, merged from all txts
-        """
-        raise Exception("Not implemented yet.")
+        with open(target_path, mode='w') as out_f:
+            out_f.write(result)

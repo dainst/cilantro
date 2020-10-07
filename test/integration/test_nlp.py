@@ -36,15 +36,17 @@ class NlpTest(JobTypeTest):
         txt_job_id = job_from_db['children'][0]['job_id']
         pdf_job_id = job_from_db['children'][1]['job_id']
 
-        # The staged file "txt/timex1.txt" is directly converted and we expect that file in the workdir
+        # The staged file "txt/timex1.txt" is annotated directly and we expect just the results
         self.assert_file_in_workdir(txt_job_id, f"data/xmi.time/timex1.xmi", self._timeout())
+        self.assert_file_in_workdir(txt_job_id, f"data/xmi.time.entities/timex1.xmi", self._timeout())
 
-        # The staged pdf "pdf/timex2.pdf" is converted to txt, page annotated and then time annotated
+        # The staged pdf "pdf/timex2.pdf" is converted to txt, annotated for pages, times, entities
         # and finally json for the book viewer is created
         self.assert_file_in_workdir(pdf_job_id, f"data/txt/timex2_0000.txt", self._timeout())
         self.assert_file_in_workdir(pdf_job_id, f"data/txt/timex2_0001.txt", self._timeout())
         self.assert_file_in_workdir(pdf_job_id, f"data/xmi.pages/timex2.xmi", self._timeout())
         self.assert_file_in_workdir(pdf_job_id, f"data/xmi.pages.time/timex2.xmi", self._timeout())
+        self.assert_file_in_workdir(pdf_job_id, f"data/xmi.pages.time.entities/timex2.xmi", self._timeout())
         self.assert_file_in_workdir(pdf_job_id, f"data/json/timex2.json", self._timeout())
 
         self.unstage_resource('some_texts')

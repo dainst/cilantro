@@ -2,7 +2,6 @@
 import os.path
 import tempfile
 
-from utils.celery_client import celery_app
 from workers.base_task import FileTask
 from workers.nlp.formats.xmi import DaiNlpXmiBuilder
 from .heideltime_wrapper \

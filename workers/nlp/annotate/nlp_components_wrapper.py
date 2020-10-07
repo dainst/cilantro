@@ -1,8 +1,10 @@
 
+from typing import Union, IO
+
 from workers.nlp.formats.xmi import Annotation, DaiNlpXmiBuilder as XmiBuilder
 
 
-def annotate_xmi(xmi: str) -> str:
+def annotate_xmi(xmi: Union[IO, str]) -> str:
     """
     Annotate the text given by the "subject of analysis" in the
     provided by the xmi str.
@@ -11,9 +13,6 @@ def annotate_xmi(xmi: str) -> str:
 
     Adds annotations to the annotations already present in the xmi and
     does not modify them.
-
-    :param str xmi_str: The xmi to add annotations to.
-    :return str: generated annotations as xmi
     """
     builder = XmiBuilder("", xmi=xmi)
     analyzer = _init_text_analyzer(builder.get_sofa())
@@ -21,7 +20,7 @@ def annotate_xmi(xmi: str) -> str:
     return _do_annoatate(builder=builder, analyzer=analyzer)
 
 
-def annotate_text(text) -> str:
+def annotate_text(text: str) -> str:
     """
     Annotate the given text.
 
