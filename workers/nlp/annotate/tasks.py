@@ -4,7 +4,6 @@ import os
 import re
 
 import io
-from utils.celery_client import celery_app
 from utils.list_dir import list_dir
 from utils.object import Object
 from workers.base_task import ObjectTask, FileTask
@@ -18,7 +17,8 @@ class AnnotatePagesTask(ObjectTask):
 
     name = "nlp.annotate_pages"
 
-    def _determine_new_filename(self, from_dir: str):
+    @staticmethod
+    def _determine_new_filename(from_dir: str):
         # Example:  Finds: [abc_001.txt, abc_002.txt], returns: "abc.xmi"
         regex = re.compile('_[0-9]*$')
         basenames = set()
@@ -29,7 +29,6 @@ class AnnotatePagesTask(ObjectTask):
             raise Exception(f'Ambiguous or underspecified basenames: {basenames}')
         else:
             return '%s.xmi' % basenames.pop()
-
 
     def process_object(self, obj: Object):
         """
@@ -57,7 +56,7 @@ class AnnotateNamedEntitiesTask(FileTask):
     name = "nlp.named_entities_annotate"
 
     def process_file(self, file, target_dir):
-        target_path = self.determine_new_filename(file, target_dir, '.xmi')
+        target_path = self.default_target_name(file, target_dir, "xmi")
         _, extension = os.path.splitext(file)
 
         with open(file, mode='rb') as in_f:

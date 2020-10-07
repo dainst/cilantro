@@ -6,7 +6,7 @@ from subprocess import run, PIPE, SubprocessError
 
 import cassis
 
-from workers.nlp.formats.xmi import DaiNlpXmiBuilder
+from workers.nlp.formats.xmi import Annotation, DaiNlpXmiBuilder
 
 log = logging.getLogger(__name__)
 
@@ -49,7 +49,7 @@ def translate_heideltime_xmi_to_our_xmi(xmi_str: str, builder=None) -> str:
     for annotation in cas.select("de.unihd.dbs.uima.types.heideltime.Timex3"):
         if annotation.timexType == "DATE":
             args = dict(
-                type_name="org.dainst.nlp.NamedEntity.TimexDate",
+                kind=Annotation.timex,
                 start=annotation.begin,
                 end=annotation.end,
                 timexValue=annotation.timexValue,
@@ -61,7 +61,7 @@ def translate_heideltime_xmi_to_our_xmi(xmi_str: str, builder=None) -> str:
     for annotation in cas.select("de.unihd.dbs.uima.types.heideltime.Timex3Interval"):
         if annotation.timexType == "TEMPONYM":
             args = dict(
-                type_name="org.dainst.nlp.NamedEntity.Temponym",
+                kind=Annotation.temponym,
                 start=annotation.begin,
                 end=annotation.end,
                 references=(annotation.ref.split(';') if annotation.ref else []),

@@ -284,15 +284,19 @@ class FileTask(BaseTask):
     """
 
     @staticmethod
-    def determine_new_filename(input_file, target_dir, append_str):
+    def default_target_name(input_file, target_dir, extension = None):
         """
-        Convenience method to determine a new file path using the old files
-        basename and appending it to a new directories' path with a new extension.
-        Example:
-             ("/root/data.txt", "/tmp/new", ".xml") -> "/tmp/new/data.xml"
+        Convenience method to determine a new filename from the input file
+        and the target dir, assuming that only the extension changes and
+        generally the target dir has the same name as the extension.
+        Examples:
+            (input_file="dir/abc.txt", target_dir="json") -> "json/abc.json"
+            (input_file="dir/abc.txt", target_dir="/tmp/xyz", extension="xml") -> "/tmp/xyz/abc.xml"
         """
         basename, _ = os.path.splitext(os.path.basename(input_file))
-        return os.path.join(target_dir, f"{basename}{append_str}")
+        if extension is None:
+            extension = os.path.basename(target_dir.strip('/'))
+        return os.path.join(target_dir, f"{basename}.{extension}")
 
     def execute_task(self):
         file = self.get_param('work_path')

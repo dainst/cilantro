@@ -468,8 +468,15 @@ class NlpJob(BatchJob):
 
                 # and finally tagged for other named entities
                 last = from_to['target']
-                next = last + '.entities'
+                next = last + '.entities'  # this is now e.g. "xmi.pages.time.entities"
                 chain |= _link('list_files', representation=last, target=next, task='nlp.named_entities_annotate')
+
+                # the pdf input also gets a final conversion to book viewer json
+                if extension == 'pdf':
+                    chain |= _link('list_files',
+                                   representation='xmi.pages.time.entities',
+                                   target='json',
+                                   task='nlp.formats.dai_book_viewer_json')
 
                 chains.append(chain)
 
