@@ -439,11 +439,11 @@ class NlpJob(BatchJob):
                 if extension not in ['txt', 'pdf']:
                     raise Exception('Extension not supported: {}' + str(extension))
 
-                # "txt" and "pdf" start different chains
                 task_params = dict(**target, **{'user': user_name})
                 chain = _link('create_object', **task_params,
                                   initial_representation=extension)
 
+                # "txt" and "pdf" start different chains
                 # only pdfs get an intermediate conversion step
                 if (extension == 'pdf'):
                     chain |= _link('list_files',
@@ -459,12 +459,18 @@ class NlpJob(BatchJob):
                 else:
                     from_to = dict(representation='txt', target='xmi.time')
 
-                # both pdfs and txts are then time tagged
+                # both pdfs and txts are time tagged
                 chain |= _link('list_files',
                                    **from_to,
                                    task='nlp_heideltime.time_annotate',
                                    lang=params['options']['lang'],
                                    document_creation_time=params['options']['document_creation_time'])
+
+                # and finally tagged for other named entities
+                last = from_to['target']
+                next = last + '.entities'
+                chain |= _link('list_files', representation=last, target=next, task='nlp.named_entities_annotate')
+
                 chains.append(chain)
 
         return chains

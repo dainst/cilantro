@@ -283,6 +283,17 @@ class FileTask(BaseTask):
     actual conversion logic.
     """
 
+    @staticmethod
+    def determine_new_filename(input_file, target_dir, append_str):
+        """
+        Convenience method to determine a new file path using the old files
+        basename and appending it to a new directories' path with a new extension.
+        Example:
+             ("/root/data.txt", "/tmp/new", ".xml") -> "/tmp/new/data.xml"
+        """
+        basename, _ = os.path.splitext(os.path.basename(input_file))
+        return os.path.join(target_dir, f"{basename}{append_str}")
+
     def execute_task(self):
         file = self.get_param('work_path')
         try:

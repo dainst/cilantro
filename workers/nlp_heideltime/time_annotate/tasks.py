@@ -9,11 +9,6 @@ from .heideltime_wrapper \
     import HeideltimeCommandParamsBuilder, run_external_command, translate_heideltime_xmi_to_our_xmi
 
 
-def _determine_new_filename(input_file, target_dir, append_str):
-    basename, _ = os.path.splitext(os.path.basename(input_file))
-    return os.path.join(target_dir, f"{basename}{append_str}")
-
-
 class TimeAnnotateTask(FileTask):
 
     name = "nlp_heideltime.time_annotate"
@@ -45,7 +40,7 @@ class TimeAnnotateTask(FileTask):
         return file
 
     def process_file(self, file, target_dir):
-        target_path = _determine_new_filename(file, target_dir, '.xmi')
+        target_path = self.determine_new_filename(file, target_dir, '.xmi')
         _, extension = os.path.splitext(file)
         if extension in ['.txt', '.TXT']:
             self._process_txt_file(file, target_path)
