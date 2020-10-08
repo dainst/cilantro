@@ -77,8 +77,8 @@ class JobsTest(unittest.TestCase):
 
         chain_length = len(job.chord.tasks[0].tasks)
 
-        self.assertEqual(chain_length, 11,
-                         'each default journal import chain should consist of 11 subtasks.')
+        self.assertEqual(chain_length, 13,
+                         'each default journal import chain should consist of 13 subtasks.')
 
     def test_import_journal_job_no_ocr(self):
         """Test OCR option for journal batch import."""
@@ -123,8 +123,8 @@ class JobsTest(unittest.TestCase):
 
         chain_length = len(job.chord.tasks[0].tasks)
 
-        self.assertEqual(chain_length, 11,
-                         'each default monograph import chain should consist of 11 subtasks.')
+        self.assertEqual(chain_length, 13,
+                         'each default monograph import chain should consist of 13 subtasks.')
 
     def test_import_monographs_job_no_ocr(self):
         """Test OCR option for monographs batch import."""

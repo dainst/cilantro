@@ -349,9 +349,13 @@ class IngestJournalsJob(BatchJob):
                                        task='convert.tif_to_txt',
                                        ocr_lang=params['options']['ocr_options']['ocr_lang'])
 
+            current_chain |= _link('publish_to_repository')
+
             current_chain |= _link('publish_to_ojs',
                                    ojs_metadata=params['options']['ojs_options'],
                                    ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
+
+            current_chain |= _link('publish_to_archive')
 
             current_chain |= _link('cleanup_directories',
                                    mark_done=params['options']['app_options']['mark_done'],
@@ -412,8 +416,12 @@ class IngestMonographsJob(BatchJob):
                                        task='convert.tif_to_txt',
                                        ocr_lang=params['options']['ocr_options']['ocr_lang'])
 
+            current_chain |= _link('publish_to_repository')
+
             current_chain |= _link('publish_to_omp',
                                    omp_press_code=monograph_target['metadata']['press_code'])
+
+            current_chain |= _link('publish_to_archive')
 
             current_chain |= _link('cleanup_directories',
                                    mark_done=params['options']['app_options']['mark_done'],
