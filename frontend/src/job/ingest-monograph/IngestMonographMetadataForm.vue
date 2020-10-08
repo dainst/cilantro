@@ -188,7 +188,7 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
         }
 
         let subTitle = '';
-        if ('subTitle' in zenonRecord) {
+        if (zenonRecord.subTitle) {
             subTitle = zenonRecord.subTitle.trim();
         }
 
