@@ -72,7 +72,7 @@ export default class StagingBrowserFolderSelection extends Vue {
     async openDirectory(path: string) {
         try {
             this.workingDirectory = path;
-            this.directories = getFilesInWorkDir(this.stagingFiles, this.workingDirectory)
+            this.directories = getFilesInWorkDir(this.stagingFiles)
                 .filter(file => file.type === 'directory')
                 .map(file => file.name);
         } catch (e) {

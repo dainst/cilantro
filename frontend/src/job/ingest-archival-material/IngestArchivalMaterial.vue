@@ -105,7 +105,7 @@ import {
 })
 export default class IngestArchivalMaterial extends Vue {
     selectedPaths: string[] = [];
-    acceptedFileTypes = "image/*";
+    acceptedFileTypes = 'image/*';
     parameters: IngestArchivalMaterialParameters;
     activeStep: number = 0;
     initialCopyright: string;

@@ -112,7 +112,7 @@ export default class MonographMetadataForm extends Vue {
                     errors.push(`Could not extract Zenon ID from ${path}.`);
                 }
 
-                const targetFolder = await getTargetFolder(stagingFiles, path);
+                const targetFolder = await getStagingFiles(path);
                 if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {

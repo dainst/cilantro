@@ -3,7 +3,7 @@ import { sendRequest } from '@/util/HTTPClient';
 import { backendUri, ignoredFolderNames } from '@/config';
 
 export async function getStagingFiles(path: string = ''): Promise<WorkbenchFileTree> {
-    return sendRequest('get', `${backendUri}/staging${path}`, {}, {}, false);
+    return sendRequest('get', `${backendUri}/staging/${path}`, {}, {}, false);
 }
 
 export async function uploadFileToStaging(

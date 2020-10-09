@@ -18,7 +18,18 @@ allowed_extensions = ['pdf', 'tif', 'tiff', 'zip', 'txt']
 log = logging.getLogger(__name__)
 
 
-def _list_dir(dir_path, recursive=False):
+def _get_directory_structure(dir_path, depths=0):
+    """
+    Recursively creates a dictionary of the directory structure (files and subdirectories) for dir_path.
+
+    Arguments:
+    
+    dir_path: string - The root directory that should be evaluated.
+
+    depths: int - The recursion depths, if you provide a negative value, 
+    the complete directory structure for dir_path is retrieved (default 0, 
+    only listing top level contents).
+    """
     tree = {}
     with os.scandir(dir_path) as it:
         for entry in sorted(it, key=lambda e: e.name):
@@ -26,11 +37,67 @@ def _list_dir(dir_path, recursive=False):
                 tree[entry.name] = {"type": "file", "name": entry.name}
             else:
                 tree[entry.name] = {"type": "directory", "name": entry.name}
-                if recursive:
+                if depths != 0:
                     path = os.path.join(dir_path, entry.name)
                     tree[entry.name]["marked"] = os.path.exists(os.path.join(path, ".info"))
-                    tree[entry.name]["contents"] = _list_dir(path, recursive)
+                    tree[entry.name]["contents"] = _get_directory_structure(path, depths-1)
     return tree
+
+
+
+@staging_controller.route('', methods=['GET'], strict_slashes=False, defaults={'path': '.'})
+@staging_controller.route('/<path:path>', methods=['GET'], strict_slashes=False)
+@auth.login_required
+def get_path(path):
+    """
+    Retrieve a file or folder content from the staging folder.
+
+    Returns A JSON array containing all files, if it's a directory or
+    the file's content if it's a file.
+
+    .. :quickref: Staging Controller; Retrieve file/folder from staging folder
+
+    **Example request**:
+
+    .. sourcecode:: http
+
+      GET /staging/<path>?depths=5 HTTP/1.1
+
+    **Example response ERROR**:
+
+    .. sourcecode:: http
+
+        HTTP/1.1 404 NOT FOUND
+
+        {
+            "error": {
+                "code": "file_not_found",
+                "message": "No resource was found under the path test"
+            },
+            "success": false
+        }
+
+    :reqheader Accept: application/json
+    :param str path: path to file
+    :param int depths: the directory stucture depths to reteive at `path` (default: 1, 
+    returns direct subdirectories of path and their direct subdirectories.). If depths < 0 
+    the complete subdirectory structure will be returned.
+
+    :resheader Content-Type: application/json
+    :status 200: array containing all file names, if it's a directory or the
+                 file's content if it's a file
+    :status 404: file was not found
+    """
+    depths = request.args.get('depths', 1, int)
+
+    abs_path = os.path.join(staging_dir, auth.username(), path)
+    if os.path.isdir(abs_path):
+        return jsonify(_get_directory_structure(abs_path, depths=depths))
+    elif os.path.isfile(abs_path):
+        return send_file(abs_path)
+    else:
+        raise ApiError("file_not_found",
+                       f"No resource was found under the path {path}", 404)
 
 
 @staging_controller.route('/<path:path>', methods=['DELETE'],
@@ -87,100 +154,6 @@ def delete_from_staging(path):
 
     return jsonify({"success": True}), 200
 
-
-@staging_controller.route('', methods=['GET'], strict_slashes=False)
-@auth.login_required
-def list_staging():
-    """
-    List files and directories in the staging area.
-
-    Returns a complete recursive folder hierarchy.
-
-    .. :quickref: Staging Controller; List files/dirs in the staging area
-
-    **Example request**:
-
-    .. sourcecode:: http
-
-      GET /staging/ HTTP/1.1
-
-    **Example response**:
-
-    .. sourcecode:: http
-
-        HTTP/1.1 200 OK
-
-        [
-            {
-                "name": "test.pdf",
-                "type": "file"
-            }
-        ]
-
-    :reqheader Accept: application/json
-
-    :resheader Content-Type: application/json
-    :status 200: OK
-
-    :return: JSON array containing objects for files and folders
-    """
-    try:
-        tree = _list_dir(os.path.join(staging_dir, auth.username()), True)
-    except FileNotFoundError:
-        log.warning(f"List staging called on not-existing folder: "
-                    f"{os.path.join(staging_dir, auth.username())}")
-        tree = []
-    return jsonify(tree)
-
-
-@staging_controller.route('/<path:path>', methods=['GET'],
-                          strict_slashes=False)
-@auth.login_required
-def get_path(path):
-    """
-    Retrieve a file or folder content from the staging folder.
-
-    Returns A JSON array containing all files, if it's a directory or
-    the file's content if it's a file.
-
-    .. :quickref: Staging Controller; Retrieve file/folder from staging folder
-
-    **Example request**:
-
-    .. sourcecode:: http
-
-      GET /staging/<path> HTTP/1.1
-
-    **Example response ERROR**:
-
-    .. sourcecode:: http
-
-        HTTP/1.1 404 NOT FOUND
-
-        {
-            "error": {
-                "code": "file_not_found",
-                "message": "No resource was found under the path test"
-            },
-            "success": false
-        }
-
-    :reqheader Accept: application/json
-    :param str path: path to file
-
-    :resheader Content-Type: application/json
-    :status 200: array containing all file names, if it's a directory or the
-                 file's content if it's a file
-    :status 404: file was not found
-    """
-    abs_path = os.path.join(staging_dir, auth.username(), path)
-    if os.path.isdir(abs_path):
-        return jsonify(_list_dir(abs_path))
-    elif os.path.isfile(abs_path):
-        return send_file(abs_path)
-    else:
-        raise ApiError("file_not_found",
-                       f"No resource was found under the path {path}", 404)
 
 
 @staging_controller.route('/folder', methods=['POST'],

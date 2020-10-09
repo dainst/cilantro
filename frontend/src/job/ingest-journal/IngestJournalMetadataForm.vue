@@ -102,8 +102,6 @@ import {
 })
 export default class JournalMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
-
-
     targets: MaybeJobTarget[];
 
     constructor() {
@@ -112,8 +110,6 @@ export default class JournalMetadataForm extends Vue {
     }
 
     async mounted() {
-        const stagingFiles = await getStagingFiles();
-
         this.targets = await asyncMap(
             this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
                 const id = path.split('/').pop() || '';
@@ -123,7 +119,7 @@ export default class JournalMetadataForm extends Vue {
                     errors.push(`Could not extract Zenon ID from ${path}.`);
                 }
 
-                const targetFolder = await getTargetFolder(stagingFiles, path);
+                const targetFolder = await getStagingFiles(path);
                 if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {
