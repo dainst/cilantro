@@ -1,5 +1,5 @@
 import {
-    shallowMount, mount, createLocalVue,
+    shallowMount, mount, createLocalVue
 } from '@vue/test-utils';
 import Buefy from 'buefy';
 import Vuex, { Store } from 'vuex';
@@ -12,8 +12,27 @@ import {
 } from '@/staging/StagingClient';
 
 const mockStagingTree: WorkbenchFileTree = {
-    'RECORD-AID-D-001149881': {
-        name: 'RECORD-AID-D-001149881',
+    '.info': {
+        name: '.info',
+        type: 'conf',
+        marked: false
+    },
+    'test.tif': {
+        name: 'test.tif',
+        type: 'file',
+        marked: false
+    },
+    'test2.tiff': {
+        name: 'test2.tiff',
+        type: 'file',
+        marked: false
+    }
+};
+
+const mockDeepStagingTree: WorkbenchFileTree = {
+    // eslint-disable-next-line quote-props
+    'tif': {
+        name: 'tif',
         type: 'folder',
         marked: false,
         contents: {
@@ -26,33 +45,6 @@ const mockStagingTree: WorkbenchFileTree = {
                 name: 'test2.tiff',
                 type: 'file',
                 marked: false
-            }
-        }
-    }
-};
-
-const mockDeepStagingTree: WorkbenchFileTree = {
-    'RECORD-AID-D-001149881': {
-        name: 'RECORD-AID-D-001149881',
-        type: 'folder',
-        marked: false,
-        contents: {
-            tif: {
-                name: 'tif',
-                type: 'folder',
-                marked: false,
-                contents: {
-                    'test.tif': {
-                        name: 'test.tif',
-                        type: 'file',
-                        marked: false
-                    },
-                    'test2.tiff': {
-                        name: 'test2.tiff',
-                        type: 'file',
-                        marked: false
-                    }
-                }
             }
         }
     }
@@ -95,8 +87,9 @@ describe('IngestArchiveMetadataForm', () => {
     });
 
     it('has no error alert', async() => {
-        (getStagingFiles as jest.Mock).mockImplementation(() => Promise.resolve(mockStagingTree));
-
+        (getStagingFiles as jest.Mock).mockImplementation(
+            () => Promise.resolve(mockStagingTree)
+        );
         wrapper = mount(IngestArchivalMaterialMetadataForm, {
             localVue,
             store,
@@ -118,9 +111,9 @@ describe('IngestArchiveMetadataForm', () => {
     });
 
     it('check clean tif subfolder', async() => {
-        if (mockDeepStagingTree['RECORD-AID-D-001149881'].contents !== undefined &&
-            mockDeepStagingTree['RECORD-AID-D-001149881'].contents.tif.contents !== undefined) {
-            mockDeepStagingTree['RECORD-AID-D-001149881'].contents.tif.contents['test3.pdf'] = aPdf;
+        if (
+            mockDeepStagingTree.tif.contents !== undefined) {
+            mockDeepStagingTree.tif.contents['test3.pdf'] = aPdf;
         }
         (getStagingFiles as jest.Mock).mockImplementation(
             () => Promise.resolve(mockDeepStagingTree)
@@ -147,9 +140,8 @@ describe('IngestArchiveMetadataForm', () => {
     });
 
     it('check clean main folder', async() => {
-        if (mockStagingTree['RECORD-AID-D-001149881'].contents !== undefined) {
-            mockStagingTree['RECORD-AID-D-001149881'].contents['test3.pdf'] = aPdf;
-        }
+        mockStagingTree['test3.pdf'] = aPdf;
+
         (getStagingFiles as jest.Mock).mockImplementation(() => Promise.resolve(mockStagingTree));
 
         wrapper = mount(IngestArchivalMaterialMetadataForm, {

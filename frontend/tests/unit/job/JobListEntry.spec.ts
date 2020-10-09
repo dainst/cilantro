@@ -26,6 +26,7 @@ describe('JobListEntry.vue', () => {
     });
 
     it('loads properly', () => {
+        (getJobList as jest.Mock).mockImplementationOnce(() => []);
         const wrapper = shallowMount(JobListEntry, {
             propsData: {
                 jobIDs: [],
@@ -36,6 +37,7 @@ describe('JobListEntry.vue', () => {
     });
 
     it("jobs loading display 'loading jobs...'", async() => {
+        (getJobList as jest.Mock).mockImplementationOnce(() => []);
         const wrapper = shallowMount(JobListEntry, {
             propsData: {
                 jobIDs: [],
