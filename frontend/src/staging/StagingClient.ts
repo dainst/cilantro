@@ -2,8 +2,8 @@ import { AxiosRequestConfig } from 'axios';
 import { sendRequest } from '@/util/HTTPClient';
 import { backendUri, ignoredFolderNames } from '@/config';
 
-export async function getStagingFiles(path: string = ''): Promise<WorkbenchFileTree> {
-    return sendRequest('get', `${backendUri}/staging/${path}`, {}, {}, false);
+export async function getStagingFiles(path: string = '', depths: number = 1): Promise<WorkbenchFileTree> {
+    return sendRequest('get', `${backendUri}/staging/${path}?depths${depths}`, {}, {}, false);
 }
 
 export async function uploadFileToStaging(
