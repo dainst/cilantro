@@ -78,7 +78,7 @@ import { getRecord, ZenonRecord, ZenonAuthors } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
 import { ojsZenonMapping } from '@/config';
 import {
-    WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles, getTargetFolder, containsNumberOfFiles, containsOnlyFilesWithSuffix
+    WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles, containsNumberOfFiles, containsOnlyFilesWithSuffix
 } from '@/staging/StagingClient';
 
 @Component({

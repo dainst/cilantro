@@ -79,7 +79,6 @@ import {
     getStagingFiles,
     WorkbenchFileTree,
     containsOnlyVisibleFilesWithExtensions,
-    getTargetFolder,
     containsNumberOfFiles,
     containsOnlyFilesWithSuffix
 } from '@/staging/StagingClient';

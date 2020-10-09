@@ -68,37 +68,6 @@ export function containsOnlyVisibleFilesWithExtensions(
     return fileList.every(file => extensions.some(ext => file.name.endsWith(ext)));
 }
 
-function traverseSubdirectories(
-    directoriesToTraverse : string[], currentDirectory: WorkbenchFileTree
-) : WorkbenchFileTree | {} {
-    if (directoriesToTraverse[0] in currentDirectory) {
-        const subdirectory = currentDirectory[directoriesToTraverse[0]].contents;
-        if (!subdirectory) {
-            return {};
-        }
-
-        const remainingDirectories = directoriesToTraverse;
-        remainingDirectories.shift();
-
-        if (directoriesToTraverse.length > 0) {
-            return traverseSubdirectories(remainingDirectories, subdirectory);
-        }
-        return subdirectory;
-    }
-    return {};
-}
-
-/**
- * Readout the Filetree for the requested ID
- * @param stagingFiles
- * @param targetId
- * @returns WorkbenchFileTree | {}
- */
-export async function getTargetFolder(stagingFiles: WorkbenchFileTree, targetPath: string) {
-    const pathSplit = targetPath.split('/').filter(value => value !== '');
-    return traverseSubdirectories(pathSplit, stagingFiles);
-}
-
 /**
  * Checks wether or not the content of a folder contains only files with a specific suffix
  * @param folder
