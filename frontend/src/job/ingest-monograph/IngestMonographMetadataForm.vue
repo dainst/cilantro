@@ -101,7 +101,6 @@ export default class MonographMetadataForm extends Vue {
     }
 
     async mounted() {
-        const stagingFiles = await getStagingFiles();
 
         this.targets = await asyncMap(
             this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
