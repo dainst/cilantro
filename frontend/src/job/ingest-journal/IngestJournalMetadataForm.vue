@@ -83,12 +83,19 @@ import {
 import {
     JobTargetError, isTargetError
 } from '@/job/JobParameters';
-import { MaybeJobTarget, JobTargetData, JournalIssueMetadata } from './IngestJournalParameters';
+import {
+    MaybeJobTarget, JobTargetData, JournalIssueMetadata
+} from './IngestJournalParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
 import { ojsZenonMapping } from '@/config';
 import {
-    WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles, getTargetFolder, containsNumberOfFiles, containsOnlyFilesWithSuffix
+    WorkbenchFileTree,
+    WorkbenchFile,
+    containsOnlyVisibleFilesWithExtensions,
+    getStagingFiles,
+    containsNumberOfFiles,
+    containsOnlyFilesWithSuffix
 } from '@/staging/StagingClient';
 
 @Component({
@@ -165,9 +172,11 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
     if (('tif' in targetFolder)) {
         // if there is a tif folder, make sure it only contains tifs
         if (targetFolder.tif.contents !== undefined &&
-                !containsOnlyFilesWithSuffix(targetFolder.tif.contents, '.tif')) {
-            errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
+                !containsOnlyVisibleFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
+            errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
         }
+    } else {
+        errors.push(`No Subfolder 'tif' found.`);
     }
     return errors;
 }
