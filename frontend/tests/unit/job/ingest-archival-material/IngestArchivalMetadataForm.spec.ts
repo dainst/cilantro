@@ -12,30 +12,16 @@ import {
 } from '@/staging/StagingClient';
 
 const mockStagingTree: WorkbenchFileTree = {
-    '.info': {
-        name: '.info',
-        type: 'conf',
-        marked: false
-    },
-    'test.tif': {
-        name: 'test.tif',
-        type: 'file',
-        marked: false
-    },
-    'test2.tiff': {
-        name: 'test2.tiff',
-        type: 'file',
-        marked: false
-    }
-};
-
-const mockDeepStagingTree: WorkbenchFileTree = {
-    // eslint-disable-next-line quote-props
-    'tif': {
-        name: 'tif',
+    'RECORD-AID-D-001149881': {
+        name: 'RECORD-AID-D-001149881',
         type: 'folder',
         marked: false,
         contents: {
+            '.info': {
+                name: '.info',
+                type: 'conf',
+                marked: false
+            },
             'test.tif': {
                 name: 'test.tif',
                 type: 'file',
@@ -45,6 +31,33 @@ const mockDeepStagingTree: WorkbenchFileTree = {
                 name: 'test2.tiff',
                 type: 'file',
                 marked: false
+            }
+        }
+    }
+};
+
+const mockDeepStagingTree: WorkbenchFileTree = {
+    'RECORD-AID-D-001149881': {
+        name: 'RECORD-AID-D-001149881',
+        type: 'folder',
+        marked: false,
+        contents: {
+            tif: {
+                name: 'tif',
+                type: 'folder',
+                marked: false,
+                contents: {
+                    'test.tif': {
+                        name: 'test.tif',
+                        type: 'file',
+                        marked: false
+                    },
+                    'test2.tiff': {
+                        name: 'test2.tiff',
+                        type: 'file',
+                        marked: false
+                    }
+                }
             }
         }
     }
@@ -111,9 +124,9 @@ describe('IngestArchiveMetadataForm', () => {
     });
 
     it('check clean tif subfolder', async() => {
-        if (
-            mockDeepStagingTree.tif.contents !== undefined) {
-            mockDeepStagingTree.tif.contents['test3.pdf'] = aPdf;
+        if (mockDeepStagingTree['RECORD-AID-D-001149881'].contents !== undefined &&
+            mockDeepStagingTree['RECORD-AID-D-001149881'].contents.tif.contents !== undefined) {
+            mockDeepStagingTree['RECORD-AID-D-001149881'].contents.tif.contents['test3.pdf'] = aPdf;
         }
         (getStagingFiles as jest.Mock).mockImplementation(
             () => Promise.resolve(mockDeepStagingTree)
@@ -140,7 +153,9 @@ describe('IngestArchiveMetadataForm', () => {
     });
 
     it('check clean main folder', async() => {
-        mockStagingTree['test3.pdf'] = aPdf;
+        if (mockStagingTree['RECORD-AID-D-001149881'].contents !== undefined) {
+            mockStagingTree['RECORD-AID-D-001149881'].contents['test3.pdf'] = aPdf;
+        }
 
         (getStagingFiles as jest.Mock).mockImplementation(() => Promise.resolve(mockStagingTree));
 
