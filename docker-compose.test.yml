@@ -47,7 +47,7 @@ services:
       - mongo-data:/data
 
   service:
-    image: dainst/cilantro-service:0.2.16
+    image: dainst/cilantro-service:0.2.17
     volumes:
       - staging-data:/data/staging
       - repository-data:/data/repository
@@ -75,7 +75,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:0.2.12
+    image: dainst/cilantro-default-worker:0.2.13
     working_dir: /app
     volumes:
       - staging-data:/data/staging
@@ -101,7 +101,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:0.2.11
+    image: dainst/cilantro-convert-worker:0.2.12
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -115,7 +115,7 @@ services:
 
   nlp-heideltime-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-heideltime-worker:0.1.11
+    image: dainst/cilantro-nlp-heideltime-worker:0.1.12
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -129,7 +129,7 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:0.1.4
+    image: dainst/cilantro-nlp-worker:0.1.5
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -142,7 +142,7 @@ services:
       CILANTRO_ENV: *cilantro-env
 
   frontend:
-    image: dainst/cilantro-frontend:0.2.19
+    image: dainst/cilantro-frontend:0.2.20
     networks:
       - default
       - web
