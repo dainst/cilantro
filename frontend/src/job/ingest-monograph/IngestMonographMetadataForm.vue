@@ -78,7 +78,7 @@ import { getRecord, ZenonRecord, ZenonAuthors } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
 import { ojsZenonMapping } from '@/config';
 import {
-    WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles, getTargetFolder, containsNumberOfFiles, containsOnlyFilesWithSuffix
+    WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles, containsNumberOfFiles, containsOnlyFilesWithSuffix
 } from '@/staging/StagingClient';
 
 @Component({
@@ -101,7 +101,6 @@ export default class MonographMetadataForm extends Vue {
     }
 
     async mounted() {
-        const stagingFiles = await getStagingFiles();
 
         this.targets = await asyncMap(
             this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
@@ -112,7 +111,7 @@ export default class MonographMetadataForm extends Vue {
                     errors.push(`Could not extract Zenon ID from ${path}.`);
                 }
 
-                const targetFolder = await getTargetFolder(stagingFiles, path);
+                const targetFolder = await getStagingFiles(path);
                 if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {

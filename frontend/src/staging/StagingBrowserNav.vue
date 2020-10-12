@@ -4,14 +4,18 @@
             <div class="level-item">
                 <nav class="breadcrumb">
                     <ul>
+                        <li>
+                            <a @click="openHome()">
+                                <b-icon icon="home"></b-icon>
+                            </a>
+                        </li>
                         <li
                             v-for="(dir, index) in workingDirectoryArray"
                             :key="index + dir"
                             :class="{ 'is-active': index >= workingDirectoryArray.length - 1}"
                         >
                             <a @click="openFolder(index)">
-                                <b-icon icon="home" v-if="index == 0"></b-icon>
-                                <span v-if="index > 0">{{ dir }}</span>
+                                <span> {{ dir }}</span>
                             </a>
                         </li>
                     </ul>
@@ -66,11 +70,16 @@ export default class StagingBrowserNav extends Vue {
     @Prop({ default: false }) isFileSelected!: boolean;
 
     get workingDirectoryArray(): string[] {
+        if (this.workingDirectory === '') return [];
         return this.workingDirectory.split('/');
     }
 
     openFolder(index: number) {
         this.$emit('open-folder', this.workingDirectoryArray.slice(0, index + 1).join('/'));
+    }
+
+    openHome() {
+        this.$emit('open-folder', '');
     }
 }
 

@@ -83,12 +83,19 @@ import {
 import {
     JobTargetError, isTargetError
 } from '@/job/JobParameters';
-import { MaybeJobTarget, JobTargetData, JournalIssueMetadata } from './IngestJournalParameters';
+import {
+    MaybeJobTarget, JobTargetData, JournalIssueMetadata
+} from './IngestJournalParameters';
 import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
 import { ojsZenonMapping } from '@/config';
 import {
-    WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles, getTargetFolder, containsNumberOfFiles, containsOnlyFilesWithSuffix
+    WorkbenchFileTree,
+    WorkbenchFile,
+    containsOnlyVisibleFilesWithExtensions,
+    getStagingFiles,
+    containsNumberOfFiles,
+    containsOnlyFilesWithSuffix
 } from '@/staging/StagingClient';
 
 @Component({
@@ -102,8 +109,6 @@ import {
 })
 export default class JournalMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
-
-
     targets: MaybeJobTarget[];
 
     constructor() {
@@ -112,8 +117,6 @@ export default class JournalMetadataForm extends Vue {
     }
 
     async mounted() {
-        const stagingFiles = await getStagingFiles();
-
         this.targets = await asyncMap(
             this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
                 const id = path.split('/').pop() || '';
@@ -123,7 +126,7 @@ export default class JournalMetadataForm extends Vue {
                     errors.push(`Could not extract Zenon ID from ${path}.`);
                 }
 
-                const targetFolder = await getTargetFolder(stagingFiles, path);
+                const targetFolder = await getStagingFiles(path);
                 if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {
@@ -169,9 +172,11 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
     if (('tif' in targetFolder)) {
         // if there is a tif folder, make sure it only contains tifs
         if (targetFolder.tif.contents !== undefined &&
-                !containsOnlyFilesWithSuffix(targetFolder.tif.contents, '.tif')) {
-            errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
+                !containsOnlyVisibleFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
+            errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
         }
+    } else {
+        errors.push(`No Subfolder 'tif' found.`);
     }
     return errors;
 }

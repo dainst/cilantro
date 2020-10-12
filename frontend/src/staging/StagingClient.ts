@@ -2,8 +2,8 @@ import { AxiosRequestConfig } from 'axios';
 import { sendRequest } from '@/util/HTTPClient';
 import { backendUri, ignoredFolderNames } from '@/config';
 
-export async function getStagingFiles(path: string = ''): Promise<WorkbenchFileTree> {
-    return sendRequest('get', `${backendUri}/staging${path}`, {}, {}, false);
+export async function getStagingFiles(path: string = '', depths: number = 1): Promise<WorkbenchFileTree> {
+    return sendRequest('get', `${backendUri}/staging/${path}?depths${depths}`, {}, {}, false);
 }
 
 export async function uploadFileToStaging(
@@ -66,37 +66,6 @@ export function containsOnlyVisibleFilesWithExtensions(
     // check if every file
     // has one of the given extensions
     return fileList.every(file => extensions.some(ext => file.name.endsWith(ext)));
-}
-
-function traverseSubdirectories(
-    directoriesToTraverse : string[], currentDirectory: WorkbenchFileTree
-) : WorkbenchFileTree | {} {
-    if (directoriesToTraverse[0] in currentDirectory) {
-        const subdirectory = currentDirectory[directoriesToTraverse[0]].contents;
-        if (!subdirectory) {
-            return {};
-        }
-
-        const remainingDirectories = directoriesToTraverse;
-        remainingDirectories.shift();
-
-        if (directoriesToTraverse.length > 0) {
-            return traverseSubdirectories(remainingDirectories, subdirectory);
-        }
-        return subdirectory;
-    }
-    return {};
-}
-
-/**
- * Readout the Filetree for the requested ID
- * @param stagingFiles
- * @param targetId
- * @returns WorkbenchFileTree | {}
- */
-export async function getTargetFolder(stagingFiles: WorkbenchFileTree, targetPath: string) {
-    const pathSplit = targetPath.split('/').filter(value => value !== '');
-    return traverseSubdirectories(pathSplit, stagingFiles);
 }
 
 /**

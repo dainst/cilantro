@@ -79,7 +79,6 @@ import {
     getStagingFiles,
     WorkbenchFileTree,
     containsOnlyVisibleFilesWithExtensions,
-    getTargetFolder,
     containsNumberOfFiles,
     containsOnlyFilesWithSuffix
 } from '@/staging/StagingClient';
@@ -106,8 +105,6 @@ export default class ArchivalMaterialMetadataForm extends Vue {
     }
 
     async mounted() {
-        const stagingFiles = await getStagingFiles();
-
         this.targets = await asyncMap(
             this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
                 const id = path.split('/').pop() || '';
@@ -117,7 +114,7 @@ export default class ArchivalMaterialMetadataForm extends Vue {
                     errors.push(`Could not extract Atom ID from ${path}.`);
                 }
 
-                const targetFolder = await getTargetFolder(stagingFiles, path);
+                const targetFolder = await getStagingFiles(path);
                 if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {
@@ -163,7 +160,7 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
     if (('tif' in targetFolder)) {
         // if there is a tif folder, make sure it only contains tifs
         if (targetFolder.tif.contents !== undefined &&
-            !containsOnlyFilesWithSuffix(targetFolder.tif.contents, '.tif')) {
+            !containsOnlyVisibleFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
             errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
         }
     } else if (!containsOnlyVisibleFilesWithExtensions(targetFolder, ['.tif', '.tiff'])) {

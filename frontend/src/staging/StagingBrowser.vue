@@ -77,7 +77,10 @@
             </b-table>
         </div>
         <div v-else>Folder is empty ...</div>
-        <StagingBrowserUpload :working-directory="workingDirectory" @upload-finished="fetchFiles" :accepted-filetypes="acceptedFiletypes"/>
+        <StagingBrowserUpload
+            :working-directory="workingDirectory"
+            @upload-finished="fetchFiles"
+            :accepted-filetypes="acceptedFiletypes"/>
     </section>
 </template>
 
@@ -108,7 +111,7 @@ import StagingBrowserFolderSelection from './StagingBrowserFolderSelection.vue';
 })
 export default class StagingBrowser extends Vue {
     @Prop({ required: true }) selectedPaths!: string[];
-    @Prop({ required: true }) acceptedFiletypes!: string;
+    @Prop({ default: '*/*' }) acceptedFiletypes!: string;
 
     operationInProgress: boolean = false;
     workingDirectory: string = '';
@@ -149,8 +152,9 @@ export default class StagingBrowser extends Vue {
     async fetchFiles(): Promise<void> {
         try {
             this.operationInProgress = true;
-            this.stagingFiles = await getStagingFiles();
-            this.filesToShow = getFilesInWorkDir(this.stagingFiles, this.workingDirectory);
+            this.stagingFiles = await getStagingFiles(this.workingDirectory);
+            this.filesToShow = getFilesInWorkDir(this.stagingFiles);
+
             this.$emit('files-selected', []);
             this.operationInProgress = false;
         } catch (e) {
@@ -160,13 +164,17 @@ export default class StagingBrowser extends Vue {
 
     fileClicked(file: WorkbenchFile) {
         if (file.type === 'directory') {
-            this.openFolder(`${this.workingDirectory}/${file.name}`);
+            if (this.workingDirectory) {
+                this.openFolder(`${this.workingDirectory}/${file.name}`);
+            } else {
+                this.openFolder(file.name);
+            }
         }
     }
 
     openFolder(path: string) {
         this.workingDirectory = path;
-        this.filesToShow = getFilesInWorkDir(this.stagingFiles, this.workingDirectory);
+        this.fetchFiles();
     }
 
     showDeleteDialogForItem(file: WorkbenchFile) {
@@ -265,20 +273,15 @@ export default class StagingBrowser extends Vue {
 }
 
 export function getFilePath(baseDir: string, filename: string): string {
-    return baseDir !== '' ? `${baseDir.slice(1)}/${filename}` : filename;
+    return baseDir !== '' ? `${baseDir}/${filename}` : filename;
 }
 
 export function getFileName(path: string): string {
     return path.replace(/^.*\//, '');
 }
 
-export function getFilesInWorkDir(files: WorkbenchFileTree, workDir: string): WorkbenchFile[] {
-    const splitPath: string[] = workDir.split('/');
-    let contents = files;
-    splitPath.slice(1).forEach((dir: string) => {
-        contents = contents[dir].contents || {};
-    });
-    return Object.values(getVisibleFolderContents(contents)).sort(compareFileEntries);
+export function getFilesInWorkDir(files: WorkbenchFileTree): WorkbenchFile[] {
+    return Object.values(getVisibleFolderContents(files)).sort(compareFileEntries);
 }
 
 function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
