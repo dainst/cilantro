@@ -194,6 +194,13 @@ async function loadAtomData(target: JobTargetData) {
             notes = split.other;
         }
 
+        let creators = [];
+        if (atomRecord.creators) {
+            creators = atomRecord.creators.map(
+                creator => creator.authotized_form_of_name
+            );
+        }
+
         const metadata = {
             atom_id: target.metadata.atom_id,
             copyright: target.metadata.copyright,
@@ -202,9 +209,7 @@ async function loadAtomData(target: JobTargetData) {
             scope_and_content: atomRecord.scope_and_content,
             repository: atomRecord.repository,
             repository_inherited_from: atomRecord.repository_inherited_from,
-            creators: atomRecord.creators.map(
-                creator => creator.authotized_form_of_name
-            ),
+            creators,
             extent_and_medium: atomRecord.extent_and_medium,
             level_of_description: atomRecord.level_of_description,
             dates: atomRecord.dates,
@@ -222,6 +227,7 @@ async function loadAtomData(target: JobTargetData) {
 
 function splitAuthorsFromNotes(atomNotes: string[]) {
     const authors = atomNotes
+        .filter(note => note != null)
         .filter(note => note.startsWith('Autor'))
         .map((authorNote) => {
             const match = authorNote.match(/Autor:\s*(.*)$/);
@@ -230,7 +236,10 @@ function splitAuthorsFromNotes(atomNotes: string[]) {
             }
             return authorNote;
         });
-    const other = atomNotes.filter(note => !note.startsWith('Autor'));
+
+    const other = atomNotes
+        .filter(note => note != null)
+        .filter(note => !note.startsWith('Autor'));
 
     return { authors, other };
 }
