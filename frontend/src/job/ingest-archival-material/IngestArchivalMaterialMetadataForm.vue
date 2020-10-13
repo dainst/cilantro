@@ -214,6 +214,7 @@ async function loadAtomData(target: JobTargetData) {
 
         return new JobTargetData(target.id, target.path, metadata);
     } catch (error) {
+        console.error(error);
         const msg = `Could not resolve valid Atom dataset for id ${target.metadata.atom_id}.`;
         return new JobTargetError(target.id, target.path, [msg]);
     }
