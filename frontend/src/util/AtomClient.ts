@@ -3,13 +3,26 @@ import Vue from 'vue';
 import { sendRequest } from './HTTPClient';
 import { backendUri } from '@/config';
 
-export async function getAtomRecord(atomID: string): Promise<AtomRecord> {
+function isAtomRecord(obj: any): obj is AtomRecord {
+    return obj.title;
+}
+
+export async function getAtomRecord(atomID: string): Promise<AtomResult> {
     const url: string = `${backendUri}/atom/${atomID}`;
     const result = await sendRequest('get', url, {}, {}, false);
+
     return result;
 }
 
-export interface AtomRecord {
+export interface AtomResult {
+    id: string;
+}
+
+export interface AtomMessage extends AtomResult {
+    message: string;
+}
+
+export interface AtomRecord extends AtomResult{
     id: string;
     reference_code: string;
     title: string;

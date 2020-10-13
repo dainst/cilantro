@@ -83,7 +83,9 @@ import {
     containsNumberOfFiles,
     containsOnlyFilesWithSuffix
 } from '@/staging/StagingClient';
-import { AtomRecord, getAtomRecord } from '@/util/AtomClient';
+import { 
+    AtomResult, AtomMessage, AtomRecord, getAtomRecord 
+} from '@/util/AtomClient';
 import { asyncMap } from '@/util/HelperFunctions';
 
 @Component({
@@ -184,18 +186,28 @@ function extractAtomId(path: string): string | null {
 
 async function loadAtomData(target: JobTargetData) {
     try {
-        const atomRecord = await getAtomRecord(target.metadata.atom_id) as AtomRecord;
+        const atomResult = await getAtomRecord(target.metadata.atom_id) as AtomResult;
 
+        const atomMessage = atomResult as AtomMessage;
+
+        if (atomMessage.message) {
+            console.error(atomMessage);
+            const msg = `Atom responded with "${atomMessage.message}" for id "${target.metadata.atom_id}".`;
+            return new JobTargetError(target.id, target.path, [msg]);
+        }
+
+        // eslint-disable-next-line no-new-object
+        const atomRecord = atomResult as AtomRecord;
         let authors: string[] = [];
         let notes: string[] = [];
-        if ('notes' in atomRecord) {
+        if (atomRecord.notes) {
             const split = splitAuthorsFromNotes(atomRecord.notes);
             // eslint-disable-next-line prefer-destructuring
             authors = split.authors;
             notes = split.other;
         }
 
-        let creators: Array<string> = [];
+        let creators: string[] = [];
         if (atomRecord.creators) {
             creators = atomRecord.creators.map(
                 creator => creator.authotized_form_of_name
