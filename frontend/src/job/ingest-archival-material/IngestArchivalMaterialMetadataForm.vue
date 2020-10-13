@@ -1,5 +1,6 @@
 <template>
     <section>
+        <b-loading :is-full-page="true" :active="targets.length === 0"></b-loading>
         <b-table :data="targets" detailed detail-key="id" > <!-- :row-class="getRowClass" -->
             <template slot-scope="props">
                 <b-table-column>
