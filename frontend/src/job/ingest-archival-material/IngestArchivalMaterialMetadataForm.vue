@@ -194,7 +194,7 @@ async function loadAtomData(target: JobTargetData) {
             notes = split.other;
         }
 
-        let creators = [];
+        let creators: Array<string> = [];
         if (atomRecord.creators) {
             creators = atomRecord.creators.map(
                 creator => creator.authotized_form_of_name
