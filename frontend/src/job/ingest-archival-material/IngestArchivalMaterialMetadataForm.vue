@@ -8,11 +8,11 @@
                     </template>
                     <template v-else>
                         <b-icon
-                            v-if="!props.row.metadata"
+                            v-if="!props.row.metadata || !props.row.metadata.title"
                             icon="loading"
                             custom-class="mdi-spin"
                         />
-                        <b-icon
+                        <b-icon v-if="props.row.metadata && props.row.metadata.title"
                             icon="check"
                             type="is-success"
                         />
