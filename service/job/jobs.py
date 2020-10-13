@@ -234,7 +234,7 @@ class IngestArchivalMaterialsJob(BatchJob):
         if "reference_code" in metadata:
             subject_string += f"Signatur:\n{metadata['reference_code']}\n\n"
 
-        if "creators" in metadata and metadata['creators'] != 0:
+        if "creators" in metadata and len(metadata['creators']) != 0:
             creators_string = "Bestandsbildner:\n"
             for creator in metadata['creators']:
                 creators_string += f"{creator}\n"
