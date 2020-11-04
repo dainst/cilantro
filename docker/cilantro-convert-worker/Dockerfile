@@ -10,7 +10,7 @@ RUN apt-get update && \
     libpoppler-cpp-dev \
     pkg-config \
     python3-dev \
-    libmagickwand-dev \
+    libvips-dev \
     ghostscript \
     tesseract-ocr \
     tesseract-ocr-deu

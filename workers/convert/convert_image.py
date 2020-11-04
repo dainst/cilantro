@@ -9,14 +9,18 @@ log = logging.getLogger(__name__)
 
 
 def convert_tif_to_ptif(source_file, output_dir):
-    """Transform the source TIFF file to PTIF via imagemagick shell command."""
+    """Transform the source TIFF file to PTIF via vips shell command."""
     new_filename = os.path.join(output_dir,
                                 os.path.splitext(os.path.basename(
                                     source_file))[0] + '.ptif')
-    shell_command = subprocess.run(["/usr/bin/convert", source_file,
-                                    "-colorspace", "sRGB", "-define",
-                                    "tiff:tile-geometry=256x256", "-compress",
-                                    "jpeg", "ptif:" + new_filename])
+
+    shell_command = subprocess.run([
+        "vips",
+        "im_vips2tiff",
+        source_file,
+        f"{new_filename}:jpeg,tile:256x256,pyramid"
+    ])
+
     if shell_command.returncode != 0:
         log.error("PTIF conversion failed")
         raise OSError(f"PTIF conversion failed")
