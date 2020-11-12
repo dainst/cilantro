@@ -1,7 +1,7 @@
 
 # This extends the nlp-components image, which is maintained at:
 #   https://github.com/dainst/nlp_components
-FROM dainst/nlp-components:0.7.4
+FROM dainst/nlp-components:0.8.0
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
@@ -9,6 +9,7 @@ ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
+USER root
 RUN set -ex && mkdir /app
 
 WORKDIR /
