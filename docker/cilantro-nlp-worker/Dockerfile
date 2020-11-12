@@ -24,8 +24,10 @@ COPY ./workers /app/workers
 COPY ./resources /app/resources
 WORKDIR /app
 
-# Make possible imports "from nlp_components"
-ENV PYTHONPATH="/usr/src/nlp_components"
+# Make imports "from nlp_components" possible and enable the dependencies isntalled
+# within nlp_components even if this is not run by the "nlp" user. (cilantro assumes
+# that all containers are run by the same user, e.g. for files in the workspace.)
+ENV PYTHONPATH="/usr/src/nlp_components:/home/nlp/.local/lib/python3.7/site-packages"
 
 COPY docker/cilantro-nlp-worker/entrypoint.sh /entrypoint.sh
 COPY docker/cilantro-nlp-worker/VERSION .
