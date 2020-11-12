@@ -1,7 +1,7 @@
 
 # This extends the nlp-components image, which is maintained at:
 #   https://github.com/dainst/nlp_components
-FROM dainst/nlp-components:0.8.0
+FROM dainst/nlp-components:0.8.1
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
@@ -24,10 +24,8 @@ COPY ./workers /app/workers
 COPY ./resources /app/resources
 WORKDIR /app
 
-# Make imports "from nlp_components" possible and enable the dependencies isntalled
-# within nlp_components even if this is not run by the "nlp" user. (cilantro assumes
-# that all containers are run by the same user, e.g. for files in the workspace.)
-ENV PYTHONPATH="/usr/src/nlp_components:/home/nlp/.local/lib/python3.7/site-packages"
+# Make imports "from nlp_components" possible
+ENV PYTHONPATH="/usr/src/nlp_components"
 
 COPY docker/cilantro-nlp-worker/entrypoint.sh /entrypoint.sh
 COPY docker/cilantro-nlp-worker/VERSION .
