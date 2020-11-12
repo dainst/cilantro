@@ -7,17 +7,17 @@ from workers.nlp.formats.xmi import Annotation, DaiNlpXmiBuilder as XmiBuilder
 def annotate_xmi(xmi: Union[IO, str]) -> str:
     """
     Annotate the text given by the "subject of analysis" in the
-    provided by the xmi str.
+    xmi str.
 
     Assumes that the xmi conforms to the DAI NLP type system.
 
-    Adds annotations to the annotations already present in the xmi and
-    does not modify them.
+    Adds annotations to the annotations which are already present in
+    the xmi.
     """
     builder = XmiBuilder("", xmi=xmi)
     analyzer = _init_text_analyzer(builder.get_sofa())
     builder.default_annotator_id = _annotator_id(analyzer)
-    return _do_annoatate(builder=builder, analyzer=analyzer)
+    return _do_annotate(builder=builder, analyzer=analyzer)
 
 
 def annotate_text(text: str) -> str:
@@ -33,10 +33,10 @@ def annotate_text(text: str) -> str:
     analyzer = _init_text_analyzer(text)
     builder = XmiBuilder(_annotator_id(analyzer))
     builder.set_sofa(text)
-    return _do_annoatate(builder=builder, analyzer=analyzer)
+    return _do_annotate(builder=builder, analyzer=analyzer)
 
 
-def _do_annoatate(builder: XmiBuilder, analyzer) -> str:
+def _do_annotate(builder: XmiBuilder, analyzer) -> str:
     nes = analyzer.do_ner()
     types_to_entities = {
         Annotation.person: analyzer.get_persons(nes),
