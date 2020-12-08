@@ -1,4 +1,5 @@
 redis-data
+mongo-data
 /data
 /archaeocloud_test_dir
 .DS_Store

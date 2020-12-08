@@ -44,7 +44,7 @@ services:
   job-db:
     image: mongo
     volumes:
-      - mongo-data:/data
+      - mongo-data:/data/db
 
   service:
     image: dainst/cilantro-service:0.2.18
@@ -179,8 +179,6 @@ secrets:
 
 volumes:
   mongo-data:
-    name: workbench_mongo_data
-    external: true
   redis-data:
   workspace-data:
     name: workbench_workspace_data
