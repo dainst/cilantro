@@ -137,9 +137,9 @@ On an empty portainer, one volume would have to be created inside the Portainer 
 Most of these volumes can use an external volume configured with e.g. these options (example for the staging folder in prod):
 
 ```
-device 	:/volume3/bcloud03/idaiworld-scans/idaiworkbench/staging
-type 	  nfs
-o 	    addr=10.201.0.95,rw,noatime,rsize=8192,wsize=8192,tcp,timeo=14
+device  :/volume3/bcloud03/idaiworld-scans/idaiworkbench/staging
+type    nfs
+o       addr=10.201.0.95,rw,noatime,rsize=8192,wsize=8192,tcp,timeo=14
 ```
 
 However the volume with the mongo database files for the `job-db` service _should not use an NFS volume_ (Keep the default options for a local volume) as that led to performance problems.
