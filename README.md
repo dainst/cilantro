@@ -15,13 +15,13 @@ Its frontend is written in JavaScript and uses
 
 #### For Windows Users:
 
-Since the following process relies on make and uses bash related commands it can't be used in a Windows-Shell. The easiest way to circumvent this problem is to make use of the WSL-System of Windows 10 Pro. If you don't have Windows 10 Pro, go get Windows 10 Pro, also Docker dosn't work flawlessly without it. 
+Since the following process relies on make and uses bash related commands it can't be used in a Windows-Shell. The easiest way to circumvent this problem is to make use of the WSL-System of Windows 10 Pro. If you don't have Windows 10 Pro, go get Windows 10 Pro, also Docker dosn't work flawlessly without it.
 
 Expecting that you have Win10 Pro, you need to activate the Linux Subsystem Feature and Install Ubuntu 18.04 or what ever Version is available by the time you read this. If your Ubuntu-Subsystem is up and running, open it and start installing the requierments. Begin with nodejs and pip3 for python
-    
+
     sudo apt update
     sudo apt install nodejs python3-pip
-    
+
 After that start following this instruction very carefully, since you are going to setup a linux in a virtual environment communication with a docker in another environment running an linux serving an Webserver there are a lot of possibilities of mistakes.
 
 https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly
@@ -101,16 +101,16 @@ When the application is started with `make run` backend tests can be run
 separately with:
 
     make test-backend
-    
+
 Analogous frontend tests can be started with
-    
+
     make test-frontend
 
 Similarly end-to-end tests that test the whole application with protractor can
 be run with:
 
     make test-e2e
-    
+
 Single tests can be run with:
 
     docker exec cilantro_test python -m unittest module.path.to.TestCase
@@ -118,6 +118,32 @@ Single tests can be run with:
 e.g.
 
     docker exec cilantro_test python -m unittest test.unit.worker.convert.test_cut_pdf.CutPdfTest
+
+### Portainer Deployment
+
+The full stack can be deployed on the test/prod-Portainer by pasting the content of e.g. `docker-compose.test.yml` into the Portainers New Stack editor.
+
+* Portainer > Stacks > Add Stack
+
+To redeploy, you can simply remove all service and add them again:
+
+* Portainer > Stacks > workbench > Mark all services > Remove
+* Editor (top of sampe page) > Update the stack
+
+On an empty portainer, one volume would have to be created inside the Portainer for each volume marked as `external: true` in the `docker.compose.<env>.yml`.
+
+* Portainer > Volumes > Add volume
+
+Most of these volumes can use an external volume configured with e.g. these options (example for the staging folder in prod):
+
+```
+device 	:/volume3/bcloud03/idaiworld-scans/idaiworkbench/staging
+type 	  nfs
+o 	    addr=10.201.0.95,rw,noatime,rsize=8192,wsize=8192,tcp,timeo=14
+```
+
+However the volume with the mongo database files for the `job-db` service _should not use an NFS volume_ (Keep the default options for a local volume) as that led to performance problems.
+
 
 ##### Tips
 
@@ -152,15 +178,15 @@ After that re-run the tests and they may succeed.
 * In case of duplicate entries in the database clean your test containers with:
 
     docker-compose down
-    
+
 * If you run into an error using `make run-frontend`on mac, run `softwareupdate --install -a` to update the whole system to the newest state. If the error remains, check if it is this Error-Code: `getaddrinfo ENOTFOUND x86_64-apple-darwin13.4.0`, if so use the command `unset HOST`and retry the make call.
 
-* On Mac's on can encounter an error after running `make run-frontend` of that kind 
+* On Mac's on can encounter an error after running `make run-frontend` of that kind
 
     getaddrinfo ENOTFOUND x86_64-apple-darwin13.4.0
-    
-    to fix this one needs to run the command `unset HOST` in the Terminal and re-run the `make run-frontend` command. 
-   
+
+    to fix this one needs to run the command `unset HOST` in the Terminal and re-run the `make run-frontend` command.
+
 
 ## Code style
 
@@ -190,7 +216,7 @@ Additionally parameters in method docstrings should be given as follows:
       http://es6-features.org/#BlockScopedVariables
     - arrow function whenever function is not local and [this]-scope is not
       needed
-- more    
+- more
     - `===` instead of `==`
     - line endings with `;` even after `}`
     - if without {} only in very simple one liners
