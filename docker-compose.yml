@@ -51,7 +51,7 @@ services:
   job-db:
     image: mongo
     volumes:
-      - ./mongo-data:/data
+      - ./mongo-data:/data/db
 
   service:
     build:
