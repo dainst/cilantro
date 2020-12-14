@@ -18,6 +18,7 @@ from utils.job_db import JobDb
 setup_logging()
 job_db = JobDb()
 job_db.start_db()
+job_db.close()
 
 app = Flask('cilantro')
 CORS(app, supports_credentials=True)
