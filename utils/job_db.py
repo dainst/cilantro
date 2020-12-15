@@ -31,13 +31,11 @@ class JobDb:
         self._create_index()
         self._set_first_object_id()
 
-    def generate_unique_object_identifier(self):
+    def get_next_unique_object_id_suffix(self):
         """
-        Create the unique object identifier suffix.
+        Create the last part of the object identifier (a unique integer).
 
-        This is not the whole object id, just the last part to ensure every object
-        is unique and the last characters are digits.
-        :return:
+        :return: int
         """
         try:
             # The document holding the ids is initially set up via start_db()
