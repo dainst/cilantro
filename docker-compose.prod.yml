@@ -17,7 +17,7 @@ x-env-jobdb: &env-jobdb
   JOB_DB_URL: job-db
   JOB_DB_PORT: 27017
   JOB_DB_NAME: job_database
-  FIRST_OBJECT_ID: 1000
+  FIRST_OBJECT_ID: 2000
 
 x-env-app-config: &env-app-config
   BACKEND_URI: &backend-uri https://workbench.idai.world/api

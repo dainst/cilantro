@@ -32,7 +32,7 @@ class CreateObjectTask(ObjectTask):
 
     def _generate_object_id(self):
         part_a = self.get_param('id')
-        part_b = self.job_db.generate_unique_object_identifier()
+        part_b = self.job_db.get_next_unique_object_id_suffix()
         return f"{part_a}_{part_b}"
 
 
