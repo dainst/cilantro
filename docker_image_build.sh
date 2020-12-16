@@ -22,9 +22,6 @@ function publishImage {
 }
 
 nocache=${2}
-token=$(grep GITHUB_ACCESS_TOKEN .env | xargs)
-token=${token#*=}
-
 if [ -z "${nocache}" ] ; then
     nocache=""
 fi

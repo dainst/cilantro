@@ -119,32 +119,6 @@ e.g.
 
     docker exec cilantro_test python -m unittest test.unit.worker.convert.test_cut_pdf.CutPdfTest
 
-### Portainer Deployment
-
-The full stack can be deployed on the test/prod-Portainer by pasting the content of e.g. `docker-compose.test.yml` into the Portainers New Stack editor.
-
-* Portainer > Stacks > Add Stack
-
-To redeploy, you can simply remove all service and add them again:
-
-* Portainer > Stacks > workbench > Mark all services > Remove
-* Editor (top of sampe page) > Update the stack
-
-On an empty portainer, one volume would have to be created inside the Portainer for each volume marked as `external: true` in the `docker.compose.<env>.yml`.
-
-* Portainer > Volumes > Add volume
-
-Most of these volumes can use an external volume configured with e.g. these options (example for the staging folder in prod):
-
-```
-device  :/volume3/bcloud03/idaiworld-scans/idaiworkbench/staging
-type    nfs
-o       addr=10.201.0.95,rw,noatime,rsize=8192,wsize=8192,tcp,timeo=14
-```
-
-However the volume with the mongo database files for the `job-db` service _should not use an NFS volume_ (Keep the default options for a local volume) as that led to performance problems.
-
-
 ##### Tips
 
 * change promisesDelay-attribute in `frontend/test/e2e/protractor.conf
@@ -162,6 +136,55 @@ OJS monitoring under http://localhost:4444
 #### Local OMP instance
 
 If you have checked out [omp-docker](https://github.com/dainst/omp-docker) and want to develop against its running instance (instead of the default mock server), you can do so by using the provided [docker-compose.local_omp.yml](docker-compose.local_omp.yml) by running `make run-local-omp`.
+
+## Deployment
+
+### Build images
+
+New images for test or production can be build by calling the `docker_image_build.sh` with one of the service names in the `docker-compose.build.yml` (also a dir name below `/docker`).
+
+You need to be logged in to DockerHub with an account that can access the `/dainst` organization, e.g.:
+
+```
+docker login
+./docker_image_build.sh cilantro-convert-worker
+```
+
+or to build without using the cache:
+
+```
+./docker_image_build.sh cilantro-convert-worker no-cache
+```
+
+
+### Portainer
+
+The full stack can be deployed on the test/prod-Portainer by pasting the content of e.g. `docker-compose.test.yml` into the Portainers New Stack editor.
+
+* Portainer > Stacks > Add Stack
+
+To redeploy, you can simply remove all service and add them again:
+
+* Portainer > Stacks > workbench > Mark all services > Remove
+* Editor (top of sampe page) > Update the stack
+
+#### Portainer volumes
+
+On an empty portainer, one volume would have to be created inside the Portainer for each volume marked as `external: true` in the `docker.compose.<env>.yml`.
+
+* Portainer > Volumes > Add volume
+
+Most of these volumes can use an external volume configured with e.g. these options (example for the staging folder in prod):
+
+```
+device  :/volume3/bcloud03/idaiworld-scans/idaiworkbench/staging
+type    nfs
+o       addr=10.201.0.95,rw,noatime,rsize=8192,wsize=8192,tcp,timeo=14
+```
+
+However the volume with the mongo database files for the `job-db` service _should not use an NFS volume_ (Keep the default options for a local volume) as that led to performance problems.
+
+
 
 ## Troubleshooting
 
