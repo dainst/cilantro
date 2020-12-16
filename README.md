@@ -156,12 +156,14 @@ or to build without using the cache:
 ./docker_image_build.sh cilantro-convert-worker no-cache
 ```
 
+This will increment the version number of the published image (the version no. is tagged on DockerHub and kept in the `VERSION` file below the directories in `docker`).
 
 ### Portainer
 
-The full stack can be deployed on the test/prod-Portainer by pasting the content of e.g. `docker-compose.test.yml` into the Portainers New Stack editor.
+To publish to the [test](portainer.test.idai.world)/prod[portainer.idai.world] portainers:
 
-* Portainer > Stacks > Add Stack
+* Adjust version numbers in `docker-compose.test.yml`, `docker-compose.prod.yml`
+* Paste the contents of these files in the Portainers Stack editor (Stacks > workbench > Editor > Paste > Update the Stack) 
 
 To redeploy, you can simply remove all service and add them again:
 
