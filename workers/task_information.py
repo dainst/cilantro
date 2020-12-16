@@ -40,7 +40,7 @@ information = {
     "finish_chord": {"label": "No label set for chord task",
                      "description": "No label set for chord task"},
     "generate_xml": {"label": "Generate XML",
-                     "description": "Creates an OJS import XML file."}
+                     "description": "Renders a XML file based on a given template."}
 }
 
 

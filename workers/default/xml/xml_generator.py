@@ -5,7 +5,7 @@ import glob
 import json
 import base64
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 log = logging.getLogger(__name__)
 
@@ -23,7 +23,10 @@ def generate_xml(obj, template_file, target_filepath, params):
     env = Environment(
         loader=FileSystemLoader('resources'),
         trim_blocks=True,
-        lstrip_blocks=True)
+        lstrip_blocks=True,
+        autoescape=True
+    )
+
     # Some functions which may be needed in the template (logic)
     env.globals['path_join'] = os.path.join
     env.globals['datetime'] = datetime
