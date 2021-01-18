@@ -24,7 +24,7 @@ def generate_xml(obj, template_file, target_filepath, params):
         loader=FileSystemLoader('resources'),
         trim_blocks=True,
         lstrip_blocks=True,
-        autoescape=select_autoescape(['xml'])
+        autoescape=True
     )
 
     # Some functions which may be needed in the template (logic)

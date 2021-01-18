@@ -6,8 +6,6 @@ from flask_httpauth import HTTPBasicAuth
 auth = HTTPBasicAuth()
 
 _users_config = os.path.join(os.environ['CONFIG_DIR'], "users.yml")
-with open(_users_config, 'r', encoding="utf-8") as _users_file:
-    _users = yaml.safe_load(_users_file)
 
 
 @auth.verify_password
@@ -23,6 +21,8 @@ def verify_password(username, password):
     :param str password:
     :return Boolean:
     """
+    with open(_users_config, 'r', encoding="utf-8") as _users_file:
+        _users = yaml.safe_load(_users_file)
     if username in _users:
         hashed_password = _users.get(username)['password'].encode('utf-8')
         return bcrypt.checkpw(password.encode('utf-8'), hashed_password)

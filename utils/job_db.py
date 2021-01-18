@@ -2,6 +2,7 @@ import os
 import datetime
 
 from pymongo import MongoClient, DESCENDING, ReturnDocument
+from pymongo.errors import DuplicateKeyError
 
 
 class JobDb:
@@ -14,30 +15,40 @@ class JobDb:
     def __init__(self):
         self.db = self._get_db_client()
 
+    def __del__(self):
+        self.close()  # pymongo doesn't complain if this was closed already
+
     def close(self):
+        """
+        Cleanup resources, end server sessions and disconnect from the mongo db.
+
+        (Note that the job-db is still usable after this is called, since its
+        client will reconnect automatically.)
+        """
         self.db.client.close()
 
     def start_db(self):
         self._create_index()
         self._set_first_object_id()
 
-    def generate_unique_object_identifier(self):
+    def get_next_unique_object_id_suffix(self):
         """
-        Create the unique object identifier.
+        Create the last part of the object identifier (a unique integer).
 
-        This is NOT the whole object id, just the last part to ensure every object
-        is unique and the last characters are digits.
-        :return:
+        :return: int
         """
         try:
-            return self.db.objects.find_one_and_update(
-                {'next_object_id': {'$exists': True}},
-                {'$inc': {'next_object_id': 1}},
+            # The document holding the ids is initially set up via start_db()
+            return  self.db.objects.find_one_and_update(
+                { '_id': 'object_ids'},
+                {'$inc': {'next': 1}},
+                projection={'_id': False, 'next': True},
                 return_document=ReturnDocument.AFTER
-            )['next_object_id']
+            )['next']
         except (KeyError, TypeError):
-            raise RuntimeError("The database doesn't seem to be initialized"
-                               "properly")
+            raise RuntimeError(
+                "Could not get object id. Is the job-db up and initialized?"
+            )
 
     def get_jobs_for_user(self, user):
         """
@@ -171,14 +182,17 @@ class JobDb:
     def _create_index(self):
         """
         Create index for faster lookup in database.
-
         The 2 fields that are used for lookup/update are indexed.
+        Note that index creation in mongo is idempotent, so this can be called multiple times.
         """
         self.db.jobs.create_index([("job_id", DESCENDING), ("user", DESCENDING)])
 
     def _set_first_object_id(self):
-        if not self.db.objects.find_one({'next_object_id': {'$exists': True}}):
-            self.db.objects.insert_one({'next_object_id': self.first_object_id})
+        try:
+            self.db.objects.insert_one({'_id': 'object_ids', 'next': self.first_object_id})
+        except DuplicateKeyError:
+            pass  # we expect the document to already exist
+
 
     def _get_db_client(self):
         return MongoClient(self.job_db_url, self.job_db_port)[self.job_db_name]

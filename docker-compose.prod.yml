@@ -17,7 +17,7 @@ x-env-jobdb: &env-jobdb
   JOB_DB_URL: job-db
   JOB_DB_PORT: 27017
   JOB_DB_NAME: job_database
-  FIRST_OBJECT_ID: 1000
+  FIRST_OBJECT_ID: 2000
 
 x-env-app-config: &env-app-config
   BACKEND_URI: &backend-uri https://workbench.idai.world/api
@@ -47,7 +47,7 @@ services:
       - mongo-data:/data/db
 
   service:
-    image: dainst/cilantro-service:0.2.18
+    image: dainst/cilantro-service:0.2.20
     volumes:
       - staging-data:/data/staging
       - repository-data:/data/repository
@@ -75,7 +75,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:0.2.13
+    image: dainst/cilantro-default-worker:0.2.15
     working_dir: /app
     volumes:
       - staging-data:/data/staging
@@ -101,7 +101,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:0.2.13
+    image: dainst/cilantro-convert-worker:0.2.15
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -115,7 +115,7 @@ services:
 
   nlp-heideltime-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-heideltime-worker:0.1.12
+    image: dainst/cilantro-nlp-heideltime-worker:0.1.16
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -129,7 +129,7 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:0.1.5
+    image: dainst/cilantro-nlp-worker:0.1.10
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
