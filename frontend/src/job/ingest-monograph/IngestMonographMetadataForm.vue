@@ -78,7 +78,12 @@ import { getRecord, ZenonRecord, ZenonAuthors } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
 import { ojsZenonMapping } from '@/config';
 import {
-    WorkbenchFileTree, WorkbenchFile, getVisibleFolderContents, getStagingFiles, containsNumberOfFiles, containsOnlyFilesWithSuffix
+    WorkbenchFileTree,
+    WorkbenchFile,
+    getVisibleFolderContents,
+    getStagingFiles,
+    containsNumberOfFiles,
+    containsOnlyFilesWithExtensions
 } from '@/staging/StagingClient';
 
 @Component({
@@ -151,7 +156,7 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
     if (!('tif' in targetFolder)) {
         errors.push(`Folder does not have a subfolder 'tif'.`);
     } else if (targetFolder.tif.contents !== undefined &&
-                !containsOnlyFilesWithSuffix(targetFolder.tif.contents, '.tif')) {
+                !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif'])) {
         errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
     }
     return errors;

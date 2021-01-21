@@ -92,10 +92,9 @@ import { ojsZenonMapping } from '@/config';
 import {
     WorkbenchFileTree,
     WorkbenchFile,
-    containsOnlyVisibleFilesWithExtensions,
+    containsOnlyFilesWithExtensions,
     getStagingFiles,
-    containsNumberOfFiles,
-    containsOnlyFilesWithSuffix
+    containsNumberOfFiles
 } from '@/staging/StagingClient';
 
 @Component({
@@ -172,7 +171,7 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
     if (('tif' in targetFolder)) {
         // if there is a tif folder, make sure it only contains tifs
         if (targetFolder.tif.contents !== undefined &&
-                !containsOnlyVisibleFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
+                !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
             errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
         }
     } else {

@@ -59,24 +59,11 @@ export function containsNumberOfFiles(folder: WorkbenchFileTree, number: number)
  * @param folder the folder to lookup
  * @param extensions the extensions to find
  */
-export function containsOnlyVisibleFilesWithExtensions(
+export function containsOnlyFilesWithExtensions(
     folder: WorkbenchFileTree, extensions: string[]
 ) {
     const fileList: WorkbenchFile[] = getVisibleFolderContents(folder);
     // check if every file
     // has one of the given extensions
     return fileList.every(file => extensions.some(ext => file.name.endsWith(ext)));
-}
-
-/**
- * Checks wether or not the content of a folder contains only files with a specific suffix
- * @param folder
- * @param suffix
- * @returns bool
- */
-export function containsOnlyFilesWithSuffix(folder: WorkbenchFileTree,
-    suffix: string) {
-    const differentSuffixFiles = Object.keys(folder).filter(file => !file.endsWith(suffix));
-
-    return differentSuffixFiles.length === 0;
 }

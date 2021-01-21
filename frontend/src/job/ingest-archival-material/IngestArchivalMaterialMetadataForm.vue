@@ -79,9 +79,8 @@ import {
 import {
     getStagingFiles,
     WorkbenchFileTree,
-    containsOnlyVisibleFilesWithExtensions,
-    containsNumberOfFiles,
-    containsOnlyFilesWithSuffix
+    containsOnlyFilesWithExtensions,
+    containsNumberOfFiles
 } from '@/staging/StagingClient';
 import { 
     AtomResult, AtomMessage, AtomRecord, getAtomRecord 
@@ -163,10 +162,10 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
     if (('tif' in targetFolder)) {
         // if there is a tif folder, make sure it only contains tifs
         if (targetFolder.tif.contents !== undefined &&
-            !containsOnlyVisibleFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
+            !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
             errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
         }
-    } else if (!containsOnlyVisibleFilesWithExtensions(targetFolder, ['.tif', '.tiff'])) {
+    } else if (!containsOnlyFilesWithExtensions(targetFolder, ['.tif', '.tiff'])) {
         errors.push(`Selected folder neither contains subfolder 'tif', nor itself exclusively TIF files.`);
     }
     return errors;
@@ -232,7 +231,6 @@ async function loadAtomData(target: JobTargetData) {
 
         return new JobTargetData(target.id, target.path, metadata);
     } catch (error) {
-        console.error(error);
         const msg = `Could not resolve valid Atom dataset for id ${target.metadata.atom_id}.`;
         return new JobTargetError(target.id, target.path, [msg]);
     }
