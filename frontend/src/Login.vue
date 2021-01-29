@@ -77,9 +77,13 @@ export default class Login extends Vue {
         if (status === AuthenticationStatus.Error) {
             showError('Login failed');
         } else if (status === AuthenticationStatus.In) {
-            this.$route.params.back
-                ? this.$router.push({ path: this.$route.params.back, query: this.$route.query })
-                : this.$router.push({ path: '/' });
+            console.log(this.$route);
+
+            if (this.$route.params.back) {
+                this.$router.push({ path: this.$route.params.back, query: this.$route.query });
+            } else if(this.$route.path !== '/') {
+                this.$router.push({ path: '/' });
+            }
         }
     }
 }
