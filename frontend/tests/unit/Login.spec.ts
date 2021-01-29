@@ -90,8 +90,6 @@ describe('Login.vue', () => {
         
         await wrapper.vm.$nextTick();
 
-        console.log(input_user.text())
-
         const button = wrapper.find('button');
         expect(button.attributes('disabled')).toBeFalsy();
         button.trigger('click');
