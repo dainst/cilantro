@@ -54,7 +54,7 @@
                     <ul>
                         <li
                             v-for="(data, name) in props.row.metadata"
-                            :key="data">{{name}}: {{data}}
+                            :key="name">{{name}}: {{data}}
                         </li>
                     </ul>
                     <ul v-if="isTargetError(props.row)">

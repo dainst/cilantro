@@ -10,8 +10,11 @@ import {
     WorkbenchFileTree,
     getStagingFiles
 } from '@/staging/StagingClient';
+import { 
+     getAtomRecord 
+} from '@/util/AtomClient';
 
-const mockStagingTree: WorkbenchFileTree = {
+let mockStagingTree: WorkbenchFileTree = {
     '.info': {
         name: '.info',
         type: 'conf',
@@ -60,6 +63,12 @@ jest.mock('@/staging/StagingClient', () => ({
     getStagingFiles: jest.fn()
 }));
 
+jest.mock('@/util/AtomClient', () => ({
+    ...jest.requireActual('@/util/AtomClient'),
+    getAtomRecord: jest.fn()
+}));
+
+
 const localVue = createLocalVue();
 localVue.use(Buefy);
 localVue.use(Vuex);
@@ -89,6 +98,23 @@ describe('IngestArchiveMetadataForm', () => {
         (getStagingFiles as jest.Mock).mockImplementation(
             () => Promise.resolve(mockStagingTree)
         );
+        (getAtomRecord as jest.Mock).mockImplementation((target) => Promise.resolve({
+            id: "de-001149881",
+            reference_code: "reference",
+            title: "Das Haus vom Nikolaus",
+            dates: [
+                { date: "21.12.2112",
+                start_date: "20.12.2112",
+                end_date: "22.12.2112",
+                type: "dummy"}],
+            level_of_description: "richtig hohes level",
+            extent_and_medium: "maximum",
+            repository: "archive",
+            repository_inherited_from: "archive-rom",
+            scope_and_content: "briefe",
+            notes: ["eine Anmerkung"]
+        }))
+
         wrapper = mount(IngestArchivalMaterialMetadataForm, {
             localVue,
             store,
@@ -97,7 +123,9 @@ describe('IngestArchiveMetadataForm', () => {
                 defaultCopyright: 'DAI'
             }
         });
+        expect(wrapper.exists()).toBeTruthy();
         await flushPromises();
+
         const icon = wrapper.find('.has-text-danger');
         expect(icon.exists()).toBe(false);
 
@@ -107,6 +135,7 @@ describe('IngestArchiveMetadataForm', () => {
         const details = wrapper.find('.metadata_output');
         expect(details.text()).toContain('atom_id: de-001149881');
         expect(details.text()).toContain('copyright: DAI');
+
     });
 
     it('check clean tif subfolder', async() => {
@@ -129,7 +158,7 @@ describe('IngestArchiveMetadataForm', () => {
         // click the expand arrow
         wrapper.find('a').trigger('click');
         // wait for event processing
-        await wrapper.vm.$nextTick();
+        await flushPromises();
         // find the error message
         const details = wrapper.find('.metadata_output');
         expect(details.text()).toBe(
@@ -154,11 +183,17 @@ describe('IngestArchiveMetadataForm', () => {
         // click the expand arrow
         wrapper.find('a').trigger('click');
         // wait for event processing
-        await wrapper.vm.$nextTick();
+        await flushPromises();
+        //await wrapper.vm.$nextTick();
         // find the error message
         const details = wrapper.find('.metadata_output');
         expect(details.text()).toBe(
             "Selected folder neither contains subfolder 'tif', nor itself exclusively TIF files."
         );
     });
+
+    it('should act properly in a promise-returning test', async () => {
+        await new Promise(rs => setTimeout(rs, 1000))
+        expect('a').toEqual('a');
+      });
 });
