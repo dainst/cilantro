@@ -12,6 +12,6 @@ export const ojsZenonMapping = {
 
 export const allowedFileExtensions = ['pdf', 'tif', 'tiff', 'zip', 'txt'];
 
-export const ignoredFolderNames = ['__MACOSX', '@eaDir', 'Thumbs.db'];
+export const ignoredDirectoryContents = ['__MACOSX', '@eaDir', 'Thumbs.db', '.DS_Store', '.Info'];
 
 export const backendUri = process.env.VUE_APP_BACKEND_URI || '/api';

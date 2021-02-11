@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { sendRequest } from '@/util/HTTPClient';
-import { backendUri, ignoredFolderNames } from '@/config';
+import { backendUri, ignoredDirectoryContents } from '@/config';
 
 export async function getStagingFiles(path: string = '', depths: number = 1): Promise<WorkbenchFileTree> {
     return sendRequest('get', `${backendUri}/staging/${path}?depths${depths}`, {}, {}, false);
@@ -29,7 +29,7 @@ export async function moveInStaging(source: string, target: string): Promise<boo
 export function getVisibleFolderContents(tree: WorkbenchFileTree): WorkbenchFile[] {
     return Object.values(tree)
         .filter(file => !file.name.startsWith('.'))
-        .filter(file => !ignoredFolderNames.includes(file.name));
+        .filter(file => !ignoredDirectoryContents.includes(file.name));
 }
 
 export interface WorkbenchFile {
