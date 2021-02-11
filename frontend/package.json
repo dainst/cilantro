@@ -1,6 +1,6 @@
 {
   "name": "cilantro-frontend",
-  "version": "0.2.27",
+  "version": "0.2.28",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",
