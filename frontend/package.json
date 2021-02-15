@@ -49,6 +49,7 @@
     "eslint-plugin-html": "^6.0.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-testcafe": "^0.2.1",
     "eslint-plugin-vue": "^5.0.0",
     "sass": "^1.26.3",
     "sass-loader": "^7.3.1",
