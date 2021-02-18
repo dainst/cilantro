@@ -233,6 +233,7 @@ class TifToPTifTask(FileTask):
 
 ScaleImageTask = celery_app.register_task(ScaleImageTask())
 JpgToPdfTask = celery_app.register_task(JpgToPdfTask())
+TifToPdfTask = celery_app.register_task(TifToPdfTask())
 MergeConvertedPdf = celery_app.register_task(MergeConvertedPdfTask())
 TifToJpgTask = celery_app.register_task(TifToJpgTask())
 PdfToTifTask = celery_app.register_task(PdfToTifTask())
