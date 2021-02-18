@@ -23,6 +23,8 @@ information = {
                         "description": "Adds a 'digital object' for the current PDF in iDAI.archives / AtoM."},
     "publish_to_ojs": {"label": "Publish to OJS",
                        "description": "Publishes the current result in OJS."},
+    "publish_to_omp": {"label": "Publish to OMP",
+                       "description": "Publishes the current result in OMP."},
     "generate_frontmatter": {"label": "Generate frontmatter",
                              "description": "Generates an article frontmatter for OJS."},
     "create_object": {"label": "Create object",
