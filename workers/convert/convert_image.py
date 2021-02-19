@@ -11,10 +11,6 @@ tools = pyocr.get_available_tools()
 if len(tools) == 0:
     log.error("No OCR tool found")
 
-# The tools are returned in the recommended order of usage
-for t in tools:
-    log.error(t.get_name())
-
 ocr_tool = tools[0]
 log.debug("Will use ocr-tool: " + ocr_tool.get_name())
 
