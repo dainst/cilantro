@@ -1,5 +1,5 @@
 <template>
-    <b-navbar>
+    <b-navbar style="z-index:40">
         <template slot="brand">
             <b-navbar-item tag="router-link" to="/">
                 <strong>iDAI.workbench</strong>
