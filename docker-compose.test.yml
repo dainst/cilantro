@@ -22,7 +22,7 @@ x-env-jobdb: &env-jobdb
 x-env-app-config: &env-app-config
   BACKEND_URI: &backend-uri https://workbench.test.idai.world/api
   CILANTRO_ENV: &cilantro-env test
-  OJS_URI: &ojs-uri https://ojs.test.idai.world/plugins/generic/ojs-cilantro-plugin/api
+  OJS_URI: &ojs-uri http://test.publications.dainst.org/journals/plugins/generic/cilantro/api
   OMP_URI: &omp-uri http://test.publications.dainst.org/books/plugins/generic/cilantro/api
   ATOM_URI: &atom-uri http://archivestest.dainst.org/index.php
   REPOSITORY_URI: &repository-uri https://workbench.test.idai.world/api/repository
