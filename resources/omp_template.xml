@@ -41,7 +41,9 @@
                   filesize="{{getsize(pdf_file_path)}}"
                   filetype="application/pdf">
             <name>Cilantro creation</name>
-            <embed encoding="base64">{{params['pdf_base64']}}</embed>
+            <embed encoding="base64">
+                {{params['pdf_base64']}}
+            </embed>
         </revision>
     </submission_file>
     <publication_format xmlns:onix="http://ns.editeur.org/onix/3.0/reference"
