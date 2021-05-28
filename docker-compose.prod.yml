@@ -23,7 +23,7 @@ x-env-app-config: &env-app-config
   BACKEND_URI: &backend-uri https://workbench.idai.world/api
   CILANTRO_ENV: &cilantro-env prod
   OJS_URI: &ojs-uri https://publications.dainst.org/journals/plugins/generic/cilantro/api
-  OMP_URI: &omp-uri http://publications.dainst.org/books/plugins/generic/cilantro/api
+  OMP_URI: &omp-uri https://publications.dainst.org/books/plugins/generic/cilantro/api
   ATOM_URI: &atom-uri https://archives.dainst.org/index.php
   REPOSITORY_URI: &repository-uri https://workbench.idai.world/api/repository
 
