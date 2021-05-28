@@ -418,10 +418,10 @@ class IngestMonographsJob(BatchJob):
 
             current_chain |= _link('publish_to_repository')
 
+            current_chain |= _link('publish_to_archive')
+
             current_chain |= _link('publish_to_omp',
                                    omp_press_code=monograph_target['metadata']['press_code'])
-
-            current_chain |= _link('publish_to_archive')
 
             current_chain |= _link('cleanup_directories',
                                    mark_done=params['options']['app_options']['mark_done'],
