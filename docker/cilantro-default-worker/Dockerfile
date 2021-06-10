@@ -8,8 +8,10 @@ RUN apt-get update && \
     pkg-config \
     python3-dev \
     libmagickwand-dev \
-    ghostscript
-
+    ghostscript \
+    libyaml-dev \
+    python-setuptools \
+    python-watchdog
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
@@ -24,7 +26,7 @@ RUN pip3 install 'pipenv==2018.11.26'
 COPY docker/cilantro-default-worker/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-default-worker/Pipfile Pipfile
 RUN set -ex && pipenv install --deploy --system
-
+#RUN set -ex && pipenv install
 COPY ./service /app/service
 COPY ./utils /app/utils
 COPY ./workers /app/workers
