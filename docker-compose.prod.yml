@@ -160,19 +160,6 @@ services:
         - "traefik.frontend.rule=Host:workbench.idai.world"
         - "traefik.port=80"
 
-  pdf-viewer:
-    image: dainst/cilantro-dai-book-viewer:latest
-    volumes:
-      - repository-data:/usr/share/nginx/html/documents
-    networks:
-      - web
-    deploy:
-      labels:
-        - "traefik.docker.network=web"
-        - "traefik.enable=true"
-        - "traefik.frontend.rule=Host:viewer.idai.world"
-        - "traefik.port=80"
-
 secrets:
   ojs_auth_key:
     external: true
