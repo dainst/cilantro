@@ -381,10 +381,16 @@ class IngestMonographsJob(BatchJob):
 
             current_chain = _link('create_object', **task_params)
 
+            if params['options']['ocr_options']['do_ocr']:
+                lang = params['options']['ocr_options']['ocr_lang']
+            else:
+                lang = None
+
             current_chain |= _link('list_files',
                                    representation='tif',
                                    target='pdf',
-                                   task='convert.tif_to_pdf')
+                                   task='convert.tif_to_pdf',
+                                   ocr_lang=lang)
 
             current_chain |= _link('convert.merge_converted_pdf')
 

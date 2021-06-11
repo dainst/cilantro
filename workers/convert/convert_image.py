@@ -3,6 +3,7 @@ import os
 import subprocess
 
 from PIL import Image as PilImage
+import ocrmypdf
 import pyocr
 
 log = logging.getLogger(__name__)
@@ -61,7 +62,7 @@ def convert_jpg_to_pdf(source_file, target_file, max_size=(900, 1200)):
     image.save(target_file, 'PDF', resolution=100.0)
 
 
-def tif_to_pdf(source_file, target_file, max_size=(900, 1200)):
+def tif_to_pdf(source_file, target_file, ocr_lang=None):
     """
     Make a 1 Paged PDF Document from a tif file.
 
@@ -69,9 +70,13 @@ def tif_to_pdf(source_file, target_file, max_size=(900, 1200)):
     :param str target_file: desired output path
     :param tuple max_size: the maximum size in pixels of the resulting pdf
     """
-    image = PilImage.open(source_file)
-    image.thumbnail(max_size)
-    image.save(target_file, 'PDF', resolution=100.0)
+
+    if ocr_lang == None:
+        image = PilImage.open(source_file)
+        image.thumbnail((900, 1200))
+        image.save(target_file, 'PDF', resolution=100.0)
+    else:
+        ocrmypdf.ocr(source_file, target_file, language=ocr_lang, use_threads=True)
 
 
 def tif_to_txt(source_file, target_file, language='eng'):

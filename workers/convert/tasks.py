@@ -88,7 +88,8 @@ class TifToPdfTask(FileTask):
     name = "convert.tif_to_pdf"
 
     def process_file(self, file, target_dir):
-        tif_to_pdf(file, _get_target_file(file, target_dir, 'pdf'))
+        lang = self.get_param("ocr_lang")
+        tif_to_pdf(file, _get_target_file(file, target_dir, 'pdf'), lang)
 
 
 class TifToJpgTask(FileTask):

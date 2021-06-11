@@ -1,4 +1,4 @@
-FROM python:3.6-stretch
+FROM python:3.6-buster
 
 # needed for Pillow / PIL
 RUN apt-get update && \
@@ -12,7 +12,6 @@ RUN apt-get update && \
     python3-dev \
     libvips-dev \
     ghostscript \
-    tesseract-ocr \
     tesseract-ocr-deu \
     libyaml-dev \
     python-setuptools \
