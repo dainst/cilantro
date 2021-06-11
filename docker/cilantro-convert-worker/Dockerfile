@@ -16,7 +16,8 @@ RUN apt-get update && \
     libyaml-dev \
     python-setuptools \
     python-watchdog \
-    ocrmypdf
+    ocrmypdf \
+    pngquant
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true

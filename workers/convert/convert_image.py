@@ -76,7 +76,7 @@ def tif_to_pdf(source_file, target_file, ocr_lang=None):
         image.thumbnail((900, 1200))
         image.save(target_file, 'PDF', resolution=100.0)
     else:
-        ocrmypdf.ocr(source_file, target_file, language=ocr_lang, use_threads=True)
+        ocrmypdf.ocr(source_file, target_file, language=ocr_lang, use_threads=True, optimize=3)
 
 
 def tif_to_txt(source_file, target_file, language='eng'):
