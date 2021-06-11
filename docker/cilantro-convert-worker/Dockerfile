@@ -1,4 +1,4 @@
-FROM python:3.6-stretch
+FROM python:3.6-buster
 
 # needed for Pillow / PIL
 RUN apt-get update && \
@@ -12,8 +12,12 @@ RUN apt-get update && \
     python3-dev \
     libvips-dev \
     ghostscript \
-    tesseract-ocr \
-    tesseract-ocr-deu
+    tesseract-ocr-deu \
+    libyaml-dev \
+    python-setuptools \
+    python-watchdog \
+    ocrmypdf \
+    pngquant
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
@@ -27,7 +31,7 @@ RUN pip3 install 'pipenv==2018.11.26'
 COPY docker/cilantro-convert-worker/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-convert-worker/Pipfile Pipfile
 RUN set -ex && pipenv install --deploy --system
-
+#RUN set -ex && pipenv install
 COPY ./service /app/service
 COPY ./utils /app/utils
 COPY ./workers /app/workers
