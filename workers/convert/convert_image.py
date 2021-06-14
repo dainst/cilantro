@@ -68,15 +68,23 @@ def tif_to_pdf(source_file, target_file, ocr_lang=None):
 
     :param str source_file: path to the jpg
     :param str target_file: desired output path
-    :param tuple max_size: the maximum size in pixels of the resulting pdf
+    :param ocr_lang: the language used for ocr
     """
+    scale = (900, 1200)
 
     if ocr_lang == None:
         image = PilImage.open(source_file)
-        image.thumbnail((900, 1200))
+        image.thumbnail(scale)
         image.save(target_file, 'PDF', resolution=100.0)
     else:
-        ocrmypdf.ocr(source_file, target_file, language=ocr_lang, use_threads=True, optimize=3)
+        try:
+            ocrmypdf.ocr(source_file, target_file, language=ocr_lang, use_threads=True, optimize=3)
+        except ocrmypdf.exceptions.DpiError:
+            log.error(f'Low dpi image #{source_file}, skipping PDF OCR.')
+
+            image = PilImage.open(source_file)
+            image.thumbnail(scale)
+            image.save(target_file, 'PDF', resolution=100.0)
 
 
 def tif_to_txt(source_file, target_file, language='eng'):
