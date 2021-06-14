@@ -60,10 +60,23 @@ fix-docker-user:
 	$(shell sed -i 's/user_id_placeholder/$(shell id -u)/g' .env)
 	$(shell sed -i 's/user_group_placeholder/$(shell id -g)/g' .env)
 
-# You'd need to install within the containers and then copy lock files 
-# back to the repository. This does not work:
-# lock:
-# 	cd docker/cilantro-convert-worker && pipenv lock
-# 	cd docker/cilantro-default-worker && pipenv lock
-# 	cd docker/cilantro-service && pipenv lock
-# 	cd docker/cilantro-test && pipenv lock
+create-pipenv-locks:
+	make run-detached
+
+	rm -f docker/cilantro-service/Pipfile.lock
+	docker exec -w /app/docker/cilantro-service -u root:root cilantro_service pipenv --clear --rm install
+
+	rm -f docker/cilantro-default-worker/Pipfile.lock
+	docker exec -w /app/docker/cilantro-default-worker -u root:root cilantro_default_worker pipenv --clear --rm install
+
+	rm -f docker/cilantro-convert-worker/Pipfile.lock
+	docker exec -w /app/docker/cilantro-convert-worker -u root:root cilantro_convert_worker pipenv --clear --rm install
+
+	rm -f docker/cilantro-nlp-heideltime-worker/Pipfile.lock
+	docker exec -w /app/docker/cilantro-nlp-heideltime-worker -u root:root cilantro_nlp_heideltime_worker pipenv --clear --rm install
+
+	rm -f docker/cilantro-nlp-worker/Pipfile.lock
+	docker exec -w /app/docker/cilantro-nlp-worker -u root:root cilantro_nlp_worker pipenv --clear --rm install
+
+	rm -f docker/cilantro-test/Pipfile.lock
+	docker exec -w /app/docker/cilantro-test -u root:root cilantro_test pipenv --clear --rm install

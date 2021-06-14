@@ -54,6 +54,7 @@ services:
       - ./mongo-data:/data/db
 
   service:
+    container_name: cilantro_service
     build:
       context: .
       dockerfile: ./docker/cilantro-service/Dockerfile
@@ -76,6 +77,7 @@ services:
       REPOSITORY_URI: *repository-uri
 
   default-worker:
+    container_name: cilantro_default_worker
     user: ${UID}
     build:
       context: .
@@ -101,6 +103,7 @@ services:
       REPOSITORY_URI: *repository-uri
 
   convert-worker:
+    container_name: cilantro_convert_worker
     user: ${UID}
     build:
       context: .
@@ -118,6 +121,7 @@ services:
       CILANTRO_ENV: *cilantro-env
 
   nlp-heideltime-worker:
+    container_name: cilantro_nlp_heideltime_worker
     user: ${UID}
     build:
       context: .
@@ -135,6 +139,7 @@ services:
       CILANTRO_ENV: *cilantro-env
 
   nlp-worker:
+    container_name: cilantro_nlp_worker
     user: ${UID}
     build:
       context: .
