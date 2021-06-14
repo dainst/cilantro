@@ -13,7 +13,7 @@ from utils.repository import generate_repository_path
 from test.unit.service.user.user_utils import get_auth_header, test_user
 
 log = logging.getLogger(__name__)
-retry_time = 100
+retry_time = 5
 
 
 def _assert_timeout(waited: int, timeout: int):
@@ -26,7 +26,7 @@ def _assert_timeout(waited: int, timeout: int):
     if waited > timeout:
         raise TimeoutError()
     else:
-        time.sleep(0.001 * retry_time)
+        time.sleep(retry_time)
         return waited + retry_time
 
 
