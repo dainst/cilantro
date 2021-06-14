@@ -5,7 +5,7 @@
            date_published="{{metadata['date_published']}}" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
     <id type="internal" advice="ignore">1</id>
     <id type="other::zenon" advice="update">{{metadata['zenon_id']}}</id>
-    <title>{{metadata['title']}}</title>
+    <title>#TODO#{{metadata['title']}}</title>
     <prefix>{{metadata['prefix']}}</prefix>
     <subtitle>{{metadata['subtitle']}}</subtitle>
     <abstract>{{metadata['abstract']}}</abstract>
