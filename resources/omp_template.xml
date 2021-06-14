@@ -1,8 +1,7 @@
 {% set metadata = obj.metadata %}
 {% set pdf_file_path = path_join(obj.get_representation_dir('pdf'), obj.id + '.pdf') %}<?xml version="1.0" encoding="UTF-8"?>
 <monograph xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:onix="http://ns.editeur.org/onix/3.0/reference" stage="production"
-           date_published="{{metadata['date_published']}}" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+           xmlns:onix="http://ns.editeur.org/onix/3.0/reference" stage="production" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
     <id type="internal" advice="ignore">1</id>
     <id type="other::zenon" advice="update">{{metadata['zenon_id']}}</id>
     <title>#TODO#{{metadata['title']}}</title>
