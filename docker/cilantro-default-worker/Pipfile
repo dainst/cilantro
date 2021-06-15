@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 celery = "==4.4.2"
 redis = "==3.3.11"
-jinja2 = "==2.10.3"
+jinja2 = "==2.11.3"
 PyPDF2 = "==1.26.0"
 pdftotext = "==2.1.2"
 lxml = "==4.6.2"
