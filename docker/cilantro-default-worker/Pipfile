@@ -12,7 +12,7 @@ pdftotext = "==2.1.2"
 lxml = "==4.6.2"
 Wand ="==0.5.7"
 pymongo = "==3.9.0"
-pyyaml = "==5.3.1"
+pyyaml = "==5.4"
 mysql-connector = "==2.2.9"
 
 requests = "==2.22.0"
