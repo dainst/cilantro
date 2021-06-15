@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 celery = "==4.4.2"
 redis = "==3.4.1"
-pillow = "==8.1.2"
+pillow = "==8.2.0"
 PyPDF2 = "==1.26.0"
 pdftotext = "==2.1.4"
 Wand = "==0.5.9"
