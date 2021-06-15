@@ -1,4 +1,4 @@
-FROM python:3.6-stretch
+FROM python:3.6-buster
 
 # needed for Pillow / PIL
 RUN apt-get update && \
@@ -12,20 +12,23 @@ RUN apt-get update && \
     python3-dev \
     libvips-dev \
     ghostscript \
-    tesseract-ocr \
     tesseract-ocr-deu \
-    python3-sphinx
+    python3-sphinx  \
+    python-watchdog \
+    ocrmypdf
 
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
+RUN sed -i '/disable ghostscript format types/,+6d' /etc/ImageMagick-6/policy.xml
 
 RUN pip3 install 'pipenv==2018.11.26'
 COPY docker/cilantro-test/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-test/Pipfile Pipfile
 RUN set -ex && pipenv install --deploy --system
+#RUN set -ex && pipenv install
 
 COPY ./service /app/service
 COPY ./test /app/test

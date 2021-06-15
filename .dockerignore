@@ -1,6 +1,7 @@
 **/node_modules
 
-# Ignore the local redis and mongo data folders with possibly strange
+# Ignore the local redis, data and mongo data folders with possibly strange
 # permissions (they can still be mounted as volumes)
 mongo-data
 redis-data
+data
