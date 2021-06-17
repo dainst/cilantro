@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 watchdog = "*"
-celery = "*"
+celery = "==4.2.1"
 redis = "*"
 flask = "*"
 flask-cors = "*"
@@ -16,6 +16,8 @@ gevent = "*"
 pymongo = "*"
 jsonschema = "*"
 requests = "*"
+pyyaml = "*"
+argh = "*"
 
 [dev-packages]
 

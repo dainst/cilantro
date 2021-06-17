@@ -1,22 +1,30 @@
 
 # This extends the nlp-components image, which is maintained at:
 #   https://github.com/dainst/nlp_components
-FROM dainst/nlp-components:0.8.1
+FROM dainst/nlp-components:0.8.1 as base
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 USER root
-RUN set -ex && mkdir /app && chown nlp:nlp /app
 
 WORKDIR /
-RUN pip3 install 'pipenv==2018.11.26'
-COPY docker/cilantro-nlp-worker/Pipfile.lock Pipfile.lock
+
+RUN pip3 install 'pipenv==2021.5.29'
 COPY docker/cilantro-nlp-worker/Pipfile Pipfile
+
+ENTRYPOINT [""]
+
+FROM base
+
+# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
+
+COPY docker/cilantro-nlp-worker/Pipfile.lock Pipfile.lock
 RUN set -ex && pipenv install --deploy --system
+
+RUN set -ex && mkdir /app && chown nlp:nlp /app
 
 USER nlp
 COPY ./utils /app/utils

@@ -1,4 +1,4 @@
-FROM python:3.6-buster
+FROM python:3.6-buster as base
 
 # needed for Pillow / PIL
 RUN apt-get update && \
@@ -24,9 +24,12 @@ ENV LANG C.UTF-8
 
 RUN sed -i '/disable ghostscript format types/,+6d' /etc/ImageMagick-6/policy.xml
 
-RUN pip3 install 'pipenv==2018.11.26'
-COPY docker/cilantro-test/Pipfile.lock Pipfile.lock
+RUN pip3 install 'pipenv==2021.5.29'
 COPY docker/cilantro-test/Pipfile Pipfile
+
+FROM base
+
+COPY docker/cilantro-test/Pipfile.lock Pipfile.lock
 RUN set -ex && pipenv install --deploy --system
 #RUN set -ex && pipenv install
 

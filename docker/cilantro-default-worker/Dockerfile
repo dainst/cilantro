@@ -1,4 +1,4 @@
-FROM python:3.6-stretch
+FROM python:3.6-buster AS base
 
 # needed for Pillow / PIL
 RUN apt-get update && \
@@ -19,14 +19,17 @@ ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
 # workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
-RUN set -ex && mkdir /app
 
+RUN pip3 install 'pipenv==2021.5.29'
 
-RUN pip3 install 'pipenv==2018.11.26'
-COPY docker/cilantro-default-worker/Pipfile.lock Pipfile.lock
 COPY docker/cilantro-default-worker/Pipfile Pipfile
+
+FROM base
+
+COPY docker/cilantro-default-worker/Pipfile.lock Pipfile.lock
 RUN set -ex && pipenv install --deploy --system
-#RUN set -ex && pipenv install
+
+RUN set -ex && mkdir /app
 COPY ./service /app/service
 COPY ./utils /app/utils
 COPY ./workers /app/workers

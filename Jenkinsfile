@@ -41,6 +41,7 @@ pipeline {
         always {
             sh 'make down'
             sh 'docker-compose logs > docker.log -t'
+            sh 'docker-compose down -v'
             // clean documentation residues
             sh 'git clean -f'
             sh 'rm -rf doc/_build/doctrees/'
