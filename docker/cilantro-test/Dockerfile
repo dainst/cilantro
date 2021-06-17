@@ -25,11 +25,12 @@ RUN sed -i '/disable ghostscript format types/,+6d' /etc/ImageMagick-6/policy.xm
 
 # Install dependencies letting poetry use the system python
 RUN pip3 install 'poetry==1.0.9'
-WORKDIR /app/
+WORKDIR /poetry
 COPY docker/cilantro-test/pyproject.toml docker/cilantro-test/poetry.lock ./
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction
 
 # Copy the rest of the app
+WORKDIR /app
 COPY ./service ./test ./utils ./workers ./doc ./
 COPY docker/cilantro-test/VERSION ./

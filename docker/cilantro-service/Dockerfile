@@ -14,12 +14,13 @@ RUN apt-get update && \
 
 # Install dependencies letting poetry use the system python
 RUN pip3 install 'poetry==1.0.9'
-WORKDIR /app/
+WORKDIR /poetry
 COPY docker/cilantro-service/pyproject.toml docker/cilantro-service/poetry.lock ./
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction
 
 # Copy the rest of the app
+WORKDIR /app
 COPY ./utils ./service ./resources ./
 COPY ./workers/task_information.py /app/workers/
 

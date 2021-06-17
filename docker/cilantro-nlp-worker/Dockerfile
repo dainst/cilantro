@@ -12,7 +12,7 @@ USER root
 
 # Install dependencies letting poetry use the system python
 RUN pip3 install 'poetry==1.0.9'
-WORKDIR /app/
+WORKDIR /poetry
 COPY docker/cilantro-nlp-worker/pyproject.toml docker/cilantro-nlp-worker/poetry.lock ./
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction
@@ -20,6 +20,7 @@ RUN poetry config virtualenvs.create false \
 USER nlp
 
 # Copy the rest of the app
+WORKDIR /app
 COPY ./utils ./workers ./resources ./
 COPY docker/cilantro-nlp-worker/entrypoint.sh /entrypoint.sh
 COPY docker/cilantro-nlp-worker/VERSION .
