@@ -8,18 +8,23 @@ ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 USER root
-RUN set -ex && mkdir /app && chown nlp:nlp /app
 
 WORKDIR /
+
 RUN pip3 install 'pipenv==2021.5.29'
 COPY docker/cilantro-nlp-worker/Pipfile Pipfile
 
+ENTRYPOINT [""]
+
 FROM base
+
+# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
 
 COPY docker/cilantro-nlp-worker/Pipfile.lock Pipfile.lock
 RUN set -ex && pipenv install --deploy --system
+
+RUN set -ex && mkdir /app && chown nlp:nlp /app
 
 USER nlp
 COPY ./utils /app/utils

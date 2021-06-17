@@ -5,19 +5,19 @@ name = "pypi"
 
 [packages]
 celery = "==4.4.2"
-redis = "==3.3.11"
-jinja2 = "==2.10.3"
-PyPDF2 = "==1.26.0"
-pdftotext = "==2.1.2"
-lxml = "==4.6.2"
-Wand ="==0.5.7"
-pymongo = "==3.9.0"
-pyyaml = "==5.3.1"
-mysql-connector = "==2.2.9"
+redis = "*"
+jinja2 = "*"
+PyPDF2 = "*"
+pdftotext = "*"
+lxml = "*"
+Wand ="*"
+pymongo = "*"
+pyyaml = "*"
+mysql-connector = "*"
 
-requests = "==2.22.0"
+requests = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.6"
+python_version = "3.9"
