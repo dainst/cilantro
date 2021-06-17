@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-celery = "==4.4.2"
+celery = "==4.3.0"
 flask = "*"
 pyyaml = "*"
 redis = "*"
