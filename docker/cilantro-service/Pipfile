@@ -16,6 +16,8 @@ gevent = "*"
 pymongo = "*"
 jsonschema = "*"
 requests = "*"
+pyyaml = "*"
+argh = "*"
 
 [dev-packages]
 
