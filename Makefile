@@ -61,22 +61,21 @@ fix-docker-user:
 	$(shell sed -i 's/user_group_placeholder/$(shell id -g)/g' .env)
 
 create-pipenv-locks:
-	make run-detached
+	docker build --target base -t dainst/cilantro-service-base -f docker/cilantro-service/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-service:/out/ --rm dainst/cilantro-service-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
 
-	rm -f docker/cilantro-service/Pipfile.lock
-	docker exec -w /app/docker/cilantro-service -u root:root cilantro_service pipenv --clear --rm install
+	docker build --target base -t dainst/cilantro-default-worker-base -f docker/cilantro-default-worker/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-default-worker:/out/ --rm dainst/cilantro-default-worker-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
 
-	rm -f docker/cilantro-default-worker/Pipfile.lock
-	docker exec -w /app/docker/cilantro-default-worker -u root:root cilantro_default_worker pipenv --clear --rm install
+	docker build --target base -t dainst/cilantro-convert-worker-base -f docker/cilantro-convert-worker/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-convert-worker:/out/ --rm dainst/cilantro-convert-worker-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
 
-	rm -f docker/cilantro-convert-worker/Pipfile.lock
-	docker exec -w /app/docker/cilantro-convert-worker -u root:root cilantro_convert_worker pipenv --clear --rm install
+	docker build --target base -t dainst/cilantro-nlp-heideltime-worker-base -f docker/cilantro-nlp-heideltime-worker/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-nlp-heideltime-worker:/out/ --rm dainst/cilantro-nlp-heideltime-worker-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
 
-	rm -f docker/cilantro-nlp-heideltime-worker/Pipfile.lock
-	docker exec -w /app/docker/cilantro-nlp-heideltime-worker -u root:root cilantro_nlp_heideltime_worker pipenv --clear --rm install
+	docker build --target base -t dainst/cilantro-nlp-worker-base -f docker/cilantro-nlp-worker/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-nlp-worker:/out/ --rm dainst/cilantro-nlp-worker-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
 
-	rm -f docker/cilantro-nlp-worker/Pipfile.lock
-	docker exec -w /app/docker/cilantro-nlp-worker -u root:root cilantro_nlp_worker pipenv --clear --rm install
+	docker build --target base -t dainst/cilantro-test-base -f docker/cilantro-test/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-test:/out/ --rm dainst/cilantro-test-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
 
-	rm -f docker/cilantro-test/Pipfile.lock
-	docker exec -w /app/docker/cilantro-test -u root:root cilantro_test pipenv --clear --rm install
