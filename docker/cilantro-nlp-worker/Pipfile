@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 watchdog = "*"
-celery = "4.4.7"
+celery = "==4.4.7"
 redis = "*"
 pymongo = "*"
 jinja2 = "*"
