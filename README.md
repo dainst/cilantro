@@ -119,7 +119,23 @@ e.g.
 
     docker exec cilantro_test python -m unittest test.unit.worker.convert.test_cut_pdf.CutPdfTest
 
-##### Tips
+### Poetry, Docker and Dependencies
+
+To add or update a python dependency in one of the images, you can first add or update the `pyproject.toml` file for the service in `docker/<service/`.
+
+Then generate a fitting `poetry.lock` file with a run command:
+
+```bash
+docker-compose run --rm --entrypoint '' -u root -w "/poetry" -v "$(pwd)/docker/cilantro-nlp-worker:/poetry" nlp-worker poetry update
+```
+
+(Change `nlp-worker` in both the volume definition and the container name to the service you need.)
+
+This will use a temporary container to change the `poetry.lock` in the repo. You can now do a `docker-compose build` to update your container.
+
+Change `poetry update` to e.g. `poetry add <dependency>` to change both the `pyproject.toml` as well as the `poetry.lock`.
+
+### Tips
 
 * change promisesDelay-attribute in `frontend/test/e2e/protractor.conf
   to slow tests down if you wanna watch them (eg to 150)
