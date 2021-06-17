@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-celery = "==4.3.0"
+celery = "==4.2.1"
 redis = "*"
 jinja2 = "*"
 PyPDF2 = "*"
@@ -20,4 +20,4 @@ requests = "*"
 [dev-packages]
 
 [requires]
-python_version = "3.9"
+python_version = "3.6"

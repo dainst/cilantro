@@ -1,4 +1,4 @@
-FROM python:3.9-buster AS base
+FROM python:3.6-buster AS base
 
 # needed for Pillow / PIL
 RUN apt-get update && \
