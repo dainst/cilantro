@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "cilantro-convert-worker"
+version = "0.1.0"
+description = ""
+authors = ["DAI Wiss-IT <dav@dainst.de>"]
+
+[tool.poetry.dependencies]
+python = "^3.6.1"
+celery = "^4.2.1"
+redis = "==3.3.11"
+jinja2 = "==2.10.3"
+PyPDF2 = "==1.26.0"
+pdftotext = "==2.1.2"
+lxml = "==4.6.2"
+Wand ="==0.5.7"
+pymongo = "==3.9.0"
+pyyaml = "==5.3.1"
+mysql-connector = "==2.2.9"
+requests = "==2.22.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

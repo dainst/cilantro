@@ -24,21 +24,16 @@ ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
-RUN set -ex && mkdir /app
+# Install dependencies letting poetry use the system python
+RUN pip3 install 'poetry==1.0.9'
+WORKDIR /app/
+COPY docker/cilantro-convert-worker/pyproject.toml docker/cilantro-convert-worker/poetry.lock ./
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction
 
-RUN pip3 install 'pipenv==2018.11.26'
-COPY docker/cilantro-convert-worker/Pipfile.lock Pipfile.lock
-COPY docker/cilantro-convert-worker/Pipfile Pipfile
-RUN set -ex && pipenv install --deploy --system
-#RUN set -ex && pipenv install
-COPY ./service /app/service
-COPY ./utils /app/utils
-COPY ./workers /app/workers
-WORKDIR /app
-
+# Copy the rest of the app
+COPY ./service ./utils ./workers ./
 COPY docker/cilantro-convert-worker/entrypoint.sh /entrypoint.sh
-
 COPY docker/cilantro-convert-worker/VERSION .
 
 ENTRYPOINT bash /entrypoint.sh

@@ -9,21 +9,20 @@ ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
-RUN set -ex && mkdir /app
+RUN pip3 install 'poetry==1.0.9'
+WORKDIR /app/
+COPY docker/cilantro-nlp-heideltime-worker/pyproject.toml docker/cilantro-nlp-heideltime-worker/poetry.lock ./
+# let poetry use the system python
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction
 
-WORKDIR /
-RUN pip3 install 'pipenv==2018.11.26'
-COPY docker/cilantro-nlp-heideltime-worker/Pipfile.lock Pipfile.lock
-COPY docker/cilantro-nlp-heideltime-worker/Pipfile Pipfile
-RUN set -ex && pipenv install --deploy --system
-
-COPY ./utils /app/utils
-COPY ./workers /app/workers
-COPY ./resources /app/resources
-WORKDIR /app
-
+COPY ./utils ./workers ./resources ./
 COPY docker/cilantro-nlp-heideltime-worker/entrypoint.sh /entrypoint.sh
 COPY docker/cilantro-nlp-heideltime-worker/VERSION .
 
 ENTRYPOINT bash /entrypoint.sh
+
+
+
+
+
