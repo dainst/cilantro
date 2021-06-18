@@ -60,10 +60,22 @@ fix-docker-user:
 	$(shell sed -i 's/user_id_placeholder/$(shell id -u)/g' .env)
 	$(shell sed -i 's/user_group_placeholder/$(shell id -g)/g' .env)
 
-# You'd need to install within the containers and then copy lock files 
-# back to the repository. This does not work:
-# lock:
-# 	cd docker/cilantro-convert-worker && pipenv lock
-# 	cd docker/cilantro-default-worker && pipenv lock
-# 	cd docker/cilantro-service && pipenv lock
-# 	cd docker/cilantro-test && pipenv lock
+create-pipenv-locks:
+	docker build --target base -t dainst/cilantro-service-base -f docker/cilantro-service/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-service:/out/ --rm dainst/cilantro-service-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
+
+	docker build --target base -t dainst/cilantro-default-worker-base -f docker/cilantro-default-worker/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-default-worker:/out/ --rm dainst/cilantro-default-worker-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
+
+	docker build --target base -t dainst/cilantro-convert-worker-base -f docker/cilantro-convert-worker/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-convert-worker:/out/ --rm dainst/cilantro-convert-worker-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
+
+	docker build --target base -t dainst/cilantro-nlp-heideltime-worker-base -f docker/cilantro-nlp-heideltime-worker/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-nlp-heideltime-worker:/out/ --rm dainst/cilantro-nlp-heideltime-worker-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
+
+	docker build --target base -t dainst/cilantro-nlp-worker-base -f docker/cilantro-nlp-worker/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-nlp-worker:/out/ --rm dainst/cilantro-nlp-worker-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
+
+	docker build --target base -t dainst/cilantro-test-base -f docker/cilantro-test/Dockerfile .
+	docker run -v $(shell pwd)/docker/cilantro-test:/out/ --rm dainst/cilantro-test-base /bin/sh -c "pipenv install && cp /Pipfile.lock /out/Pipfile.lock"
+
