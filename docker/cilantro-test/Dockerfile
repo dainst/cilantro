@@ -1,4 +1,4 @@
-FROM python:3.6-buster as base
+FROM python:3.6-buster
 
 # needed for Pillow / PIL
 RUN apt-get update && \
@@ -17,28 +17,20 @@ RUN apt-get update && \
     python-watchdog \
     ocrmypdf
 
-
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
 RUN sed -i '/disable ghostscript format types/,+6d' /etc/ImageMagick-6/policy.xml
 
-RUN pip3 install 'pipenv==2021.5.29'
-COPY docker/cilantro-test/Pipfile Pipfile
+# Install dependencies letting poetry use the system python
+RUN pip3 install 'poetry==1.0.9'
+WORKDIR /poetry
+COPY docker/cilantro-test/pyproject.toml docker/cilantro-test/poetry.lock ./
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction
 
-FROM base
-
-COPY docker/cilantro-test/Pipfile.lock Pipfile.lock
-RUN set -ex && pipenv install --deploy --system
-#RUN set -ex && pipenv install
-
-COPY ./service /app/service
-COPY ./test /app/test
-COPY ./utils /app/utils
-COPY ./workers /app/workers
-COPY ./doc /app/doc
+# Copy the rest of the app
 WORKDIR /app
-
-
-COPY docker/cilantro-test/VERSION .
+COPY ./service ./test ./utils ./workers ./doc ./
+COPY docker/cilantro-test/VERSION ./

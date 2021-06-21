@@ -1,36 +1,33 @@
-FROM python:3.6-alpine AS base
+FROM python:3.6-buster
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-RUN apk add --update python3-dev py-pip gcc libffi libffi-dev musl-dev build-base
+RUN apt-get update && \
+    apt-get -y install \
+    python3-dev \
+    gcc \
+    libffi-dev \
+    musl-dev
 
-RUN pip3 install 'pipenv==2021.5.29'
+# Install dependencies letting poetry use the system python
+RUN pip3 install 'poetry==1.0.9'
+WORKDIR /poetry
+COPY docker/cilantro-service/pyproject.toml docker/cilantro-service/poetry.lock ./
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction
 
-COPY docker/cilantro-service/Pipfile Pipfile
-
-FROM base
-
-COPY docker/cilantro-service/Pipfile.lock Pipfile.lock
-COPY docker/cilantro-service/Pipfile Pipfile
-RUN set -ex && pipenv install --deploy --system
-
-COPY ./utils /app/utils
-COPY ./service /app/service
-COPY ./resources /app/resources
-COPY ./workers/task_information.py /app/workers/task_information.py
-
+# Copy the rest of the app
 WORKDIR /app
-
-COPY docker/cilantro-service/entrypoint.sh /entrypoint.sh
-
+COPY ./utils ./service ./resources ./
+COPY ./workers/task_information.py /app/workers/
 
 EXPOSE 5000
-
 ENV FLASK_APP service/run_service.py
 
+COPY docker/cilantro-service/entrypoint.sh /entrypoint.sh
 COPY docker/cilantro-service/VERSION .
 
 ENTRYPOINT sh /entrypoint.sh

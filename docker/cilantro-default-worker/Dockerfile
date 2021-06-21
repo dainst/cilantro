@@ -1,4 +1,4 @@
-FROM python:3.6-buster AS base
+FROM python:3.6-buster
 
 # needed for Pillow / PIL
 RUN apt-get update && \
@@ -18,27 +18,23 @@ ENV PIPENV_VENV_IN_PROJECT=true
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 
-# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
+# Install dependencies letting poetry use the system python
+RUN pip3 install 'poetry==1.0.9'
+WORKDIR /poetry
+COPY docker/cilantro-default-worker/pyproject.toml docker/cilantro-default-worker/poetry.lock ./
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction
 
-RUN pip3 install 'pipenv==2021.5.29'
-
-COPY docker/cilantro-default-worker/Pipfile Pipfile
-
-FROM base
-
-COPY docker/cilantro-default-worker/Pipfile.lock Pipfile.lock
-RUN set -ex && pipenv install --deploy --system
-
-RUN set -ex && mkdir /app
-COPY ./service /app/service
-COPY ./utils /app/utils
-COPY ./workers /app/workers
-COPY ./resources /app/resources
+# Copy the rest of the app
 WORKDIR /app
-
-
+COPY ./service ./utils ./workers ./resources ./
 COPY docker/cilantro-default-worker/entrypoint.sh /entrypoint.sh
-
 COPY docker/cilantro-default-worker/VERSION .
 
 ENTRYPOINT bash /entrypoint.sh
+
+
+
+
+
+

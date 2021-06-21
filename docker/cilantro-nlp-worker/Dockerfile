@@ -1,7 +1,7 @@
 
 # This extends the nlp-components image, which is maintained at:
 #   https://github.com/dainst/nlp_components
-FROM dainst/nlp-components:0.8.1 as base
+FROM dainst/nlp-components:0.8.1
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true
@@ -10,32 +10,22 @@ ENV LANG C.UTF-8
 
 USER root
 
-WORKDIR /
-
-RUN pip3 install 'pipenv==2021.5.29'
-COPY docker/cilantro-nlp-worker/Pipfile Pipfile
-
-ENTRYPOINT [""]
-
-FROM base
-
-# workaround for pipenv bug: https://github.com/pypa/pipenv/issues/1328
-
-COPY docker/cilantro-nlp-worker/Pipfile.lock Pipfile.lock
-RUN set -ex && pipenv install --deploy --system
-
-RUN set -ex && mkdir /app && chown nlp:nlp /app
+# Install dependencies letting poetry use the system python
+RUN pip3 install 'poetry==1.0.9'
+WORKDIR /poetry
+COPY docker/cilantro-nlp-worker/pyproject.toml docker/cilantro-nlp-worker/poetry.lock ./
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction
 
 USER nlp
-COPY ./utils /app/utils
-COPY ./workers /app/workers
-COPY ./resources /app/resources
+
+# Copy the rest of the app
 WORKDIR /app
+COPY ./utils ./workers ./resources ./
+COPY docker/cilantro-nlp-worker/entrypoint.sh /entrypoint.sh
+COPY docker/cilantro-nlp-worker/VERSION .
 
 # Make imports "from nlp_components" possible
 ENV PYTHONPATH="/usr/src/nlp_components"
-
-COPY docker/cilantro-nlp-worker/entrypoint.sh /entrypoint.sh
-COPY docker/cilantro-nlp-worker/VERSION .
 
 ENTRYPOINT bash /entrypoint.sh
