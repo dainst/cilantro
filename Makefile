@@ -30,8 +30,9 @@ create-data-dir:
 install-frontend-deps:
 	npm install --prefix frontend
 
+# example: "make build-image" to build all, or "make build-image IMAGE=cilantro-service" to build single image
 build-image:
-	./docker_image_build.sh ${IMAGE} ${TAG}
+	./docker_image_build.sh ${IMAGE} ${TAG} 
 
 build-doc:
 	docker exec cilantro_test doc/build-doc.sh
