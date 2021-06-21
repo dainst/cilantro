@@ -180,13 +180,6 @@ class IngestArchivalMaterialsJob(BatchJob):
             current_chain |= _link('convert.set_pdf_metadata',
                                    metadata=self._create_pdf_metadata(record_target['metadata']))
 
-            if params['options']['ocr_options']['do_ocr']:
-                current_chain |= _link('list_files',
-                                       representation='tif',
-                                       target='txt',
-                                       task='convert.tif_to_txt',
-                                       ocr_lang=params['options']['ocr_options']['ocr_lang'])
-
             current_chain |= _link('generate_xml',
                                    template_file='mets_template_archive.xml',
                                    target_filename='mets.xml',
@@ -354,13 +347,6 @@ class IngestJournalsJob(BatchJob):
                                    target_filename='mets.xml',
                                    schema_file='mets.xsd')
 
-            if params['options']['ocr_options']['do_ocr']:
-                current_chain |= _link('list_files',
-                                       representation='tif',
-                                       target='txt',
-                                       task='convert.tif_to_txt',
-                                       ocr_lang=params['options']['ocr_options']['ocr_lang'])
-
             current_chain |= _link('publish_to_repository')
 
             current_chain |= _link('publish_to_ojs',
@@ -426,13 +412,6 @@ class IngestMonographsJob(BatchJob):
                                     template_file='mets_template_monography.xml',
                                     target_filename='mets.xml',
                                     schema_file='mets.xsd')
-
-            if params['options']['ocr_options']['do_ocr']:
-                current_chain |= _link('list_files',
-                                       representation='tif',
-                                       target='txt',
-                                       task='convert.tif_to_txt',
-                                       ocr_lang=params['options']['ocr_options']['ocr_lang'])
 
             current_chain |= _link('publish_to_repository')
 
