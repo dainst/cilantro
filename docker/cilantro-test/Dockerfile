@@ -32,5 +32,9 @@ RUN poetry config virtualenvs.create false \
 
 # Copy the rest of the app
 WORKDIR /app
-COPY ./service ./test ./utils ./workers ./doc ./
-COPY docker/cilantro-test/VERSION ./
+COPY service ./service
+COPY test ./test
+COPY utils ./utils
+COPY workers ./workers
+COPY doc ./doc
+COPY docker/cilantro-test/VERSION .

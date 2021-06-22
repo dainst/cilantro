@@ -16,7 +16,9 @@ RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction
 
 WORKDIR /app
-COPY ./utils ./workers ./resources ./
+COPY utils ./utils
+COPY workers ./workers
+COPY resources ./resources
 COPY docker/cilantro-nlp-heideltime-worker/entrypoint.sh /entrypoint.sh
 COPY docker/cilantro-nlp-heideltime-worker/VERSION .
 

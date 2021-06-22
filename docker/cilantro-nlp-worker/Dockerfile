@@ -21,7 +21,9 @@ USER nlp
 
 # Copy the rest of the app
 WORKDIR /app
-COPY ./utils ./workers ./resources ./
+COPY utils ./utils
+COPY workers ./workers
+COPY resources ./resources
 COPY docker/cilantro-nlp-worker/entrypoint.sh /entrypoint.sh
 COPY docker/cilantro-nlp-worker/VERSION .
 

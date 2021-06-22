@@ -31,13 +31,11 @@ COPY docker/cilantro-convert-worker/pyproject.toml docker/cilantro-convert-worke
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction
 
-COPY ./service /app/service
-COPY ./utils /app/utils
-COPY ./workers /app/workers
-
 # Copy the rest of the app
 WORKDIR /app
-
+COPY service ./service
+COPY utils ./utils
+COPY workers ./workers
 COPY docker/cilantro-convert-worker/entrypoint.sh /entrypoint.sh
 COPY docker/cilantro-convert-worker/VERSION .
 

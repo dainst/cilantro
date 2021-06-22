@@ -27,7 +27,10 @@ RUN poetry config virtualenvs.create false \
 
 # Copy the rest of the app
 WORKDIR /app
-COPY ./service ./utils ./workers ./resources ./
+COPY service ./service
+COPY utils ./utils
+COPY workers ./workers
+COPY resources ./resources
 COPY docker/cilantro-default-worker/entrypoint.sh /entrypoint.sh
 COPY docker/cilantro-default-worker/VERSION .
 

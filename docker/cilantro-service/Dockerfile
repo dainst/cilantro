@@ -21,8 +21,10 @@ RUN poetry config virtualenvs.create false \
 
 # Copy the rest of the app
 WORKDIR /app
-COPY ./utils ./service ./resources ./
-COPY ./workers/task_information.py /app/workers/
+COPY utils ./utils
+COPY service ./service
+COPY resources ./resources
+COPY workers/task_information.py ./workers/
 
 EXPOSE 5000
 ENV FLASK_APP service/run_service.py
