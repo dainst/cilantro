@@ -101,7 +101,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:0.2.19
+    image: dainst/cilantro-convert-worker:0.2.22
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
