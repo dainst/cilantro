@@ -1,4 +1,5 @@
 **/node_modules
+**/__pycache__
 
 # Ignore the local redis, data and mongo data folders with possibly strange
 # permissions (they can still be mounted as volumes)
