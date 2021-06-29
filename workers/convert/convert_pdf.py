@@ -1,9 +1,14 @@
 import logging
 import os
+import subprocess
+import sys
+
+from shutil import copyfile
 
 import pdftotext
 import PyPDF2
 from wand.image import Image as WandImage
+
 
 
 log = logging.getLogger(__name__)
@@ -100,10 +105,28 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
                 new_pdf.addPage(pdf.getPage(index))
         input_streams.append(input_stream)
 
-    with open(os.path.join(path, filename), 'wb+') as stream:
+    temp_file_name = os.path.join(path, "tmp_merge.pdf")
+
+    with open(temp_file_name, 'wb+') as stream:
         new_pdf.write(stream)
         for input_stream in input_streams:
             input_stream.close()
+    
+    outfile_name = os.path.join(path, filename)
+
+    if os.path.getsize(temp_file_name) * 0.000001 > 150:
+        subprocess.check_output([
+            "gs",
+            "-dNOPAUSE",
+            "-dBATCH", 
+            "-sDEVICE=pdfwrite",
+            "-dCompatibilityLevel=1.4",
+            "-dPDFSETTINGS=/ebook",
+            '-sOUTPUTFILE=%s' % (outfile_name,), temp_file_name])
+    else:
+        copyfile(temp_file_name, outfile_name)
+
+    os.remove(temp_file_name)
 
     if remove_old:
         for file in files:
