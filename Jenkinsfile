@@ -53,7 +53,7 @@ pipeline {
                     if (currentBuild.previousBuild.result != 'SUCCESS') {
                          rocketSend (
                              color: 'GREEN',
-                             webhookTokenCredentialId: 'rocket-chat-secret-text'
+                             webhookTokenCredentialId: 'rocket-chat-secret-text',
                              message: "Back to Normal: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
                          )
                      }
@@ -66,7 +66,7 @@ pipeline {
                 if (env.BRANCH_NAME == 'master') {
                     rocketSend (
                         color: 'RED',
-                        webhookTokenCredentialId: 'rocket-chat-secret-text'
+                        webhookTokenCredentialId: 'rocket-chat-secret-text',
                         message: "Back to Normal: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
                     )
                 }
