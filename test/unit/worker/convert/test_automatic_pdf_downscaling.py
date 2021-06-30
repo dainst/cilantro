@@ -24,7 +24,7 @@ class AutomaticPDFDownscalingTest(ConvertTest):
         with open(pdf_src, 'rb') as stream:
             obj.add_stream('test.pdf', 'pdf', stream)
 
-        split_merge_pdf(params, obj.get_representation_dir('pdf'))
+        split_merge_pdf(params, obj.get_representation_dir('pdf'), max_size_in_mb=100)
         self.assertTrue(os.path.isfile(file_generated))
         self.assertTrue(os.path.getsize(file_generated) * 0.000001 > max_pdf_size)
 
