@@ -15,7 +15,7 @@ class AutomaticPDFDownscalingTest(ConvertTest):
         pdf_src = f'{self.resource_dir}/files/test.pdf'
         file_generated = f'{self.working_dir}/data/pdf/merged.pdf'
 
-        max_pdf_size = 0.4
+        original_size = os.path.getsize(pdf_src)
 
         obj = Object(self.working_dir)
         params = [{"file": "test.pdf", "range": [1, 20]},
@@ -26,13 +26,17 @@ class AutomaticPDFDownscalingTest(ConvertTest):
 
         split_merge_pdf(params, obj.get_representation_dir('pdf'), max_size_in_mb=100)
         self.assertTrue(os.path.isfile(file_generated))
-        self.assertTrue(os.path.getsize(file_generated) > max_pdf_size * 1000000)
+
+        processed_size = os.path.getsize(file_generated)
+        self.assertTrue(abs((processed_size / original_size) - 1) < 0.02)
 
 
     def test_downscaling_if_above_threshold(self):
         """Apply additional scaling if pdf is above the given size threshold."""
         pdf_src = f'{self.resource_dir}/files/test.pdf'
         file_generated = f'{self.working_dir}/data/pdf/merged.pdf'
+
+        original_size = os.path.getsize(pdf_src)
 
         max_pdf_size = 0.4
 
@@ -45,5 +49,7 @@ class AutomaticPDFDownscalingTest(ConvertTest):
 
         split_merge_pdf(params, obj.get_representation_dir('pdf'), max_size_in_mb=max_pdf_size)
         self.assertTrue(os.path.isfile(file_generated))
-        self.assertTrue(os.path.getsize(file_generated) < max_pdf_size * 1000000)
+
+        processed_size = os.path.getsize(file_generated)
+        self.assertTrue(abs((processed_size / original_size) - 1) > 0.4)
 
