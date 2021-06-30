@@ -10,8 +10,6 @@ log = logging.getLogger(__name__)
 
 class AutomaticPDFDownscalingTest(ConvertTest):
 
-    max_size_in_mb = 0.4
-
     def test_no_downscaling_if_below_threshold(self):
         """Do not apply additional scaling if pdf is below the given size threshold."""
         pdf_src = f'{self.resource_dir}/files/test.pdf'
