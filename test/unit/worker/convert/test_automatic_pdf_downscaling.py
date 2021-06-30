@@ -51,5 +51,5 @@ class AutomaticPDFDownscalingTest(ConvertTest):
         self.assertTrue(os.path.isfile(file_generated))
 
         processed_size = os.path.getsize(file_generated)
-        self.assertTrue(abs((processed_size / original_size) - 1) > 0.4)
+        self.assertTrue(abs((processed_size / original_size) - 1) > 0.1)
 
