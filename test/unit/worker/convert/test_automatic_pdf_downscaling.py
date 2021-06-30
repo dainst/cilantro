@@ -26,7 +26,7 @@ class AutomaticPDFDownscalingTest(ConvertTest):
 
         split_merge_pdf(params, obj.get_representation_dir('pdf'), max_size_in_mb=100)
         self.assertTrue(os.path.isfile(file_generated))
-        self.assertTrue(os.path.getsize(file_generated) * 0.000001 > max_pdf_size)
+        self.assertTrue(os.path.getsize(file_generated) > max_pdf_size * 1000000)
 
 
     def test_downscaling_if_above_threshold(self):
@@ -45,5 +45,5 @@ class AutomaticPDFDownscalingTest(ConvertTest):
 
         split_merge_pdf(params, obj.get_representation_dir('pdf'), max_size_in_mb=max_pdf_size)
         self.assertTrue(os.path.isfile(file_generated))
-        self.assertTrue(os.path.getsize(file_generated) * 0.000001 < max_pdf_size)
+        self.assertTrue(os.path.getsize(file_generated) < max_pdf_size * 1000000)
 

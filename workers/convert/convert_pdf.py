@@ -114,7 +114,7 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, ma
     
     outfile_name = os.path.join(path, filename)
 
-    if os.path.getsize(temp_file_name) * 0.000001 > max_size_in_mb:
+    if os.path.getsize(temp_file_name) > max_size_in_mb * 1000000:
         subprocess.check_output([
             "gs",
             "-dNOPAUSE",
