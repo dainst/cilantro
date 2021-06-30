@@ -115,6 +115,8 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, ma
     outfile_name = os.path.join(path, filename)
 
     if os.path.getsize(temp_file_name) > max_size_in_mb * 1000000:
+        # Use Ghostscript to reduce image quality to 150dpi ("ebook quality"). 
+        # See also: https://www.ghostscript.com/doc/current/VectorDevices.htm 
         subprocess.check_output([
             "gs",
             "-dNOPAUSE",
