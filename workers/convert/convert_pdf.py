@@ -114,19 +114,12 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, ma
     
     outfile_name = os.path.join(path, filename)
 
-    if os.path.getsize(temp_file_name) > max_size_in_mb * 1000000:
-        # Use Ghostscript to reduce image quality to 150dpi ("ebook quality"). 
-        # See also: https://www.ghostscript.com/doc/current/VectorDevices.htm 
-        subprocess.check_output([
-            "gs",
-            "-dNOPAUSE",
-            "-dBATCH", 
-            "-sDEVICE=pdfwrite",
-            "-dCompatibilityLevel=1.4",
-            "-dPDFSETTINGS=/ebook",
-            '-sOUTPUTFILE=%s' % (outfile_name,), temp_file_name])
-    else:
-        copyfile(temp_file_name, outfile_name)
+    optimize_pdf(temp_file_name, outfile_name, "/printer")
+
+    if os.path.getsize(outfile_name) > max_size_in_mb * 1000000:
+        # Use Ghostscript to reduce image quality to 150dpi max ("ebook quality"). 
+        copyfile(outfile_name, temp_file_name)
+        optimize_pdf(temp_file_name, outfile_name, "/ebook")
 
     os.remove(temp_file_name)
 
@@ -135,3 +128,14 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, ma
             file_path = os.path.join(path, os.path.basename(file['file']))
             if os.path.isfile(file_path):
                 os.remove(file_path)
+
+def optimize_pdf(input_path, output_path, pdf_settings):
+        # For pdf settings see: https://www.ghostscript.com/doc/current/VectorDevices.htm 
+        subprocess.check_output([
+            "gs",
+            "-dNOPAUSE",
+            "-dBATCH", 
+            "-sDEVICE=pdfwrite",
+            "-dCompatibilityLevel=1.4",
+            f"-dPDFSETTINGS={pdf_settings}",
+            '-sOUTPUTFILE=%s' % (output_path,), input_path])
