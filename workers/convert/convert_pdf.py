@@ -1,9 +1,14 @@
 import logging
 import os
+import subprocess
+import sys
+
+from shutil import copyfile
 
 import pdftotext
 import PyPDF2
 from wand.image import Image as WandImage
+
 
 
 log = logging.getLogger(__name__)
@@ -65,7 +70,7 @@ def set_pdf_metadata(obj, metadata):
         new_pdf.write(stream)
 
 
-def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
+def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, max_size_in_mb=150):
     """
     Create a PDF file by combining sections of other PDFs.
 
@@ -100,13 +105,37 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
                 new_pdf.addPage(pdf.getPage(index))
         input_streams.append(input_stream)
 
-    with open(os.path.join(path, filename), 'wb+') as stream:
+    temp_file_name = os.path.join(path, "tmp_merge.pdf")
+
+    with open(temp_file_name, 'wb+') as stream:
         new_pdf.write(stream)
         for input_stream in input_streams:
             input_stream.close()
+    
+    outfile_name = os.path.join(path, filename)
+
+    optimize_pdf(temp_file_name, outfile_name, "/printer")
+
+    if os.path.getsize(outfile_name) > max_size_in_mb * 1000000:
+        # Use Ghostscript to reduce image quality to 150dpi max ("ebook quality"). 
+        copyfile(outfile_name, temp_file_name)
+        optimize_pdf(temp_file_name, outfile_name, "/ebook")
+
+    os.remove(temp_file_name)
 
     if remove_old:
         for file in files:
             file_path = os.path.join(path, os.path.basename(file['file']))
             if os.path.isfile(file_path):
                 os.remove(file_path)
+
+def optimize_pdf(input_path, output_path, pdf_settings):
+        # For pdf settings see: https://www.ghostscript.com/doc/current/VectorDevices.htm 
+        subprocess.check_output([
+            "gs",
+            "-dNOPAUSE",
+            "-dBATCH", 
+            "-sDEVICE=pdfwrite",
+            "-dCompatibilityLevel=1.4",
+            f"-dPDFSETTINGS={pdf_settings}",
+            '-sOUTPUTFILE=%s' % (output_path,), input_path])
