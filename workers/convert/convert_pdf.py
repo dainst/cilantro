@@ -114,10 +114,11 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, ma
     
     outfile_name = os.path.join(path, filename)
 
+    log.info("Optimizing combined PDF at 300 dpi.")
     optimize_pdf(temp_file_name, outfile_name, "/printer")
 
     if os.path.getsize(outfile_name) > max_size_in_mb * 1000000:
-        # Use Ghostscript to reduce image quality to 150dpi max ("ebook quality"). 
+        log.info(f"Comobined PDF is larger than {max_size_in_mb}mb, reducing quality to 150 dpi.")
         copyfile(outfile_name, temp_file_name)
         optimize_pdf(temp_file_name, outfile_name, "/ebook")
 
@@ -131,7 +132,7 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, ma
 
 def optimize_pdf(input_path, output_path, pdf_settings):
         # For pdf settings see: https://www.ghostscript.com/doc/current/VectorDevices.htm 
-        subprocess.check_output([
+        output = subprocess.check_output([
             "gs",
             "-dNOPAUSE",
             "-dBATCH", 
@@ -139,3 +140,5 @@ def optimize_pdf(input_path, output_path, pdf_settings):
             "-dCompatibilityLevel=1.4",
             f"-dPDFSETTINGS={pdf_settings}",
             '-sOUTPUTFILE=%s' % (output_path,), input_path])
+
+        log.debug(output.decode('utf-8'))
