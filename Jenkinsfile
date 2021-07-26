@@ -60,8 +60,7 @@ pipeline {
             sh 'docker-compose logs'  // write docker logs to Jenkins' logs
             script {
                 if (env.BRANCH_NAME == 'master') {
-                    rocketSend channel: 'devs', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", color: 'GREEN'
-                    )
+                    rocketSend channel: 'devs', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", color: 'RED'
                 }
             }
         }
