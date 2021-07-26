@@ -51,7 +51,7 @@ pipeline {
             script {  // Send back-to-normal notification
                 if (env.BRANCH_NAME == 'master') {
                     if (currentBuild.previousBuild.result != 'SUCCESS') {
-                        rocketSend channel: 'devs', message: 'Back to Normal: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})', color: 'GREEN'
+                        rocketSend channel: 'devs', message: "Back to Normal: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", color: 'GREEN'
                      }
                 }
             }
