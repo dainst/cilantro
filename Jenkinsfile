@@ -51,10 +51,7 @@ pipeline {
             script {  // Send back-to-normal notification
                 if (env.BRANCH_NAME == 'master') {
                     if (currentBuild.previousBuild.result != 'SUCCESS') {
-                         rocketSend (
-                             "Back to Normal: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
-                             color: 'GREEN'
-                         )
+                        rocketSend channel: 'devs', message: 'Back to Normal: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})', color: 'GREEN'
                      }
                 }
             }
@@ -63,9 +60,7 @@ pipeline {
             sh 'docker-compose logs'  // write docker logs to Jenkins' logs
             script {
                 if (env.BRANCH_NAME == 'master') {
-                    rocketSend (
-                        "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})",
-                        color: 'RED'
+                    rocketSend channel: 'devs', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", color: 'GREEN'
                     )
                 }
             }
