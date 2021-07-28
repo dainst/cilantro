@@ -37,7 +37,7 @@ x-test-timeouts: &test-timeouts
 services:
 
   broker:
-    image: rabbitmq:latest
+    image: rabbitmq:3.8
     environment:
       RABBITMQ_DEFAULT_USER: *broker-user
       RABBITMQ_DEFAULT_PASS: *broker-password
