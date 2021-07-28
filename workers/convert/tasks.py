@@ -5,7 +5,7 @@ from workers.base_task import ObjectTask, FileTask
 from utils.object import Object
 from workers.convert.convert_image import convert_tif_to_jpg, \
     convert_jpg_to_pdf, tif_to_txt, convert_tif_to_ptif, tif_to_pdf
-from workers.convert.convert_pdf import convert_pdf_to_txt, split_merge_pdf, \
+from workers.convert.convert_pdf import convert_pdf_to_txt, merge_pdf, split_merge_pdf, \
     convert_pdf_to_tif, set_pdf_metadata
 from workers.convert.image_scaling import scale_image
 
@@ -46,11 +46,9 @@ class MergeConvertedPdfTask(ObjectTask):
 
     def process_object(self, obj):
         rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, 'pdf')
-        files = [{'file': os.path.basename(f)}
-                 for f in sorted(_list_files(rep_dir, '.pdf'))]
+        files = [os.path.basename(f) for f in sorted(_list_files(rep_dir, '.pdf'))]
 
-        split_merge_pdf(
-            files, rep_dir, f"{obj.id}.pdf")
+        merge_pdf(files, rep_dir, f"{obj.id}.pdf")
 
 
 class SetPdfMetadataTask(ObjectTask):

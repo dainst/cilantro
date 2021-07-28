@@ -69,8 +69,63 @@ def set_pdf_metadata(obj, metadata):
     with open(path, 'wb+') as stream:
         new_pdf.write(stream)
 
+def merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, max_size_in_mb=-1):
+    """
+    Create a PDF file by combining a list of PDF files.
 
-def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, max_size_in_mb=150):
+    File paths are relative to the path given in the parameters.
+
+    :param list files: list the source pdf file paths
+    :param string path: The path to the dir where the created file go
+    :param string filename: name of the generated pdf file
+    :param bool remove_old: if True, remove the files used for the split/merge
+    """
+    os.makedirs(path, exist_ok=True)
+
+    outfile_name = os.path.join(path, filename)
+
+    log.info(f"Combining {len(files)} PDF files at 300 dpi.")
+    try:
+        output = subprocess.check_output([
+            "gs",
+            "-dNOPAUSE",
+            "-sDEVICE=pdfwrite",
+            f"-sOUTPUTFILE={outfile_name}", 
+            "-dPDFSETTINGS=/printer",
+            "-dBATCH",
+            *[os.path.join(path, name) for name in files]
+        ])
+        log.debug(output.decode('utf-8'))
+    except subprocess.CalledProcessError as e:
+        print(e)
+
+        
+    if max_size_in_mb != -1 and os.path.getsize(outfile_name) > max_size_in_mb * 1000000:
+        log.info(f"Combined PDF is larger than {max_size_in_mb}mb, reducing quality to 150 dpi.")
+
+        temp_file_name = os.path.join(path, "tmp_merged.pdf")
+
+        copyfile(outfile_name, temp_file_name)
+        os.remove(outfile_name)
+
+        output = subprocess.check_output([
+            "gs",
+            "-dNOPAUSE",
+            "-sDEVICE=pdfwrite",
+            f"-sOUTPUTFILE={outfile_name}", 
+            "-dPDFSETTINGS=/ebook",
+            "-dBATCH",
+            *[os.path.join(path, name) for name in files]
+        ])
+
+    if remove_old:
+        for file_name in files:
+            file_path = os.path.join(path, os.path.basename(file_name))
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+
+
+def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
     """
     Create a PDF file by combining sections of other PDFs.
 
@@ -82,6 +137,8 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, ma
     :param string filename: name of the generated pdf file
     :param bool remove_old: if True, remove the files used for the split/merge
     """
+
+    # TODO: This function is currently unused (except old tests) and produces suboptimal PDF files
     os.makedirs(path, exist_ok=True)
     new_pdf = PyPDF2.PdfFileWriter()
 
@@ -105,40 +162,15 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, ma
                 new_pdf.addPage(pdf.getPage(index))
         input_streams.append(input_stream)
 
-    temp_file_name = os.path.join(path, "tmp_merge.pdf")
+    outfile_name = os.path.join(path, filename)
 
-    with open(temp_file_name, 'wb+') as stream:
+    with open(outfile_name, 'wb+') as stream:
         new_pdf.write(stream)
         for input_stream in input_streams:
             input_stream.close()
-    
-    outfile_name = os.path.join(path, filename)
-
-    log.info("Optimizing combined PDF at 300 dpi.")
-    optimize_pdf(temp_file_name, outfile_name, "/printer")
-
-    if os.path.getsize(outfile_name) > max_size_in_mb * 1000000:
-        log.info(f"Comobined PDF is larger than {max_size_in_mb}mb, reducing quality to 150 dpi.")
-        copyfile(outfile_name, temp_file_name)
-        optimize_pdf(temp_file_name, outfile_name, "/ebook")
-
-    os.remove(temp_file_name)
 
     if remove_old:
         for file in files:
             file_path = os.path.join(path, os.path.basename(file['file']))
             if os.path.isfile(file_path):
                 os.remove(file_path)
-
-def optimize_pdf(input_path, output_path, pdf_settings):
-        # For pdf settings see: https://www.ghostscript.com/doc/current/VectorDevices.htm 
-        output = subprocess.check_output([
-            "gs",
-            "-dNOPAUSE",
-            "-dBATCH", 
-            "-sDEVICE=pdfwrite",
-            "-dCompatibilityLevel=1.4",
-            f"-dPDFSETTINGS={pdf_settings}",
-            '-sOUTPUTFILE=%s' % (output_path,), input_path])
-
-        log.debug(output.decode('utf-8'))
