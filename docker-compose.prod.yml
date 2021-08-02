@@ -113,13 +113,6 @@ services:
       DB_HOST: "celery-db"
       CILANTRO_ENV: *cilantro-env
 
-      # see: https://man.cx/tesseract(1)#heading9
-      # If the tesseract executable was built with multithreading support, it will normally
-      # use four CPU cores for the OCR process. While this can be faster for a single image,
-      # it gives bad performance if the host computer provides less than four CPU cores or if
-      # OCR is made for many images.
-      OMP_THREAD_LIMIT: 2
-
   nlp-heideltime-worker:
     user: ${UID}
     image: dainst/cilantro-nlp-heideltime-worker:0.1.16
