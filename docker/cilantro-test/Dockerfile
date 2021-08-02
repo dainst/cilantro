@@ -15,7 +15,8 @@ RUN apt-get update && \
     tesseract-ocr-deu \
     python3-sphinx  \
     python-watchdog \
-    ocrmypdf
+    ocrmypdf \
+    mupdf-tools
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV LC_ALL C.UTF-8

@@ -1,6 +1,7 @@
 import logging
 import os
 import subprocess
+import glob
 import sys
 
 from shutil import copyfile
@@ -87,36 +88,24 @@ def merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, max_size
     log.info(f"Combining {len(files)} PDF files at 300 dpi.")
     try:
         output = subprocess.check_output([
-            "gs",
-            "-dNOPAUSE",
-            "-sDEVICE=pdfwrite",
-            f"-sOUTPUTFILE={outfile_name}", 
-            "-dPDFSETTINGS=/printer",
-            "-dBATCH",
+            "mutool",
+            "merge",
+            "-o",
+            outfile_name,
             *[os.path.join(path, name) for name in files]
         ])
-        log.debug(output.decode('utf-8'))
+
+        log.debug(output)
+
+        # TODO: Refactor optimization into separate Task
+        optimize(path, outfile_name, outfile_name, "/printer")
+
     except subprocess.CalledProcessError as e:
         print(e)
-
         
     if max_size_in_mb != -1 and os.path.getsize(outfile_name) > max_size_in_mb * 1000000:
         log.info(f"Combined PDF is larger than {max_size_in_mb}mb, reducing quality to 150 dpi.")
-
-        temp_file_name = os.path.join(path, "tmp_merged.pdf")
-
-        copyfile(outfile_name, temp_file_name)
-        os.remove(outfile_name)
-
-        output = subprocess.check_output([
-            "gs",
-            "-dNOPAUSE",
-            "-sDEVICE=pdfwrite",
-            f"-sOUTPUTFILE={outfile_name}", 
-            "-dPDFSETTINGS=/ebook",
-            "-dBATCH",
-            *[os.path.join(path, name) for name in files]
-        ])
+        optimize(path, outfile_name, outfile_name, "/ebook")
 
     if remove_old:
         for file_name in files:
@@ -174,3 +163,30 @@ def split_merge_pdf(files, path: str, filename='merged.pdf', remove_old=True):
             file_path = os.path.join(path, os.path.basename(file['file']))
             if os.path.isfile(file_path):
                 os.remove(file_path)
+
+
+def optimize(base_path, input_file_path, output_file_path, quality_setting):
+    output = subprocess.check_output([
+            "gs",
+            "-dNOPAUSE",
+            "-sDEVICE=pdfwrite",
+            "-o",
+            os.path.join(base_path, "tmp_%03d.pdf"),
+            f"-dPDFSETTINGS={quality_setting}",
+            "-dBATCH",
+            input_file_path
+        ])
+
+    log.debug(output.decode('utf-8'))
+
+    output = subprocess.check_output([
+        "mutool",
+        "merge",
+        "-o",
+        output_file_path,
+        *glob.glob(os.path.join(base_path, "tmp_*.pdf")),
+    ])
+    log.debug(output.decode('utf-8'))
+
+    for f in glob.glob(os.path.join(base_path, "tmp_*.pdf")):
+        os.remove(f)

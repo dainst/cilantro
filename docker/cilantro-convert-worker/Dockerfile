@@ -17,7 +17,8 @@ RUN apt-get update && \
     python-setuptools \
     python-watchdog \
     ocrmypdf \
-    pngquant
+    pngquant \
+    mupdf-tools
 
 ENV LIBRARY_PATH=/lib:/usr/lib
 ENV PIPENV_VENV_IN_PROJECT=true

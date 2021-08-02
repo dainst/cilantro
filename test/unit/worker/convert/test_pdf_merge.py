@@ -55,7 +55,9 @@ class PDFMergeTest(ConvertTest):
 
         processed_size_unoptimized = os.path.getsize(file_generated)
 
-        obj = Object(self.working_dir)
+        with open(file_generated,'rb') as f:
+            pdf = PyPDF2.PdfFileReader(f)
+            processed_page_count_unoptimized = pdf.getNumPages()
 
         max_pdf_size = 0.4
 
@@ -67,5 +69,10 @@ class PDFMergeTest(ConvertTest):
 
         processed_size_optimized = os.path.getsize(file_generated)
 
+        with open(file_generated,'rb') as f:
+            pdf = PyPDF2.PdfFileReader(f)
+            processed_page_count_optimized = pdf.getNumPages()
+
         self.assertGreater(processed_size_unoptimized, processed_size_optimized)
+        self.assertEqual(processed_page_count_unoptimized, processed_page_count_optimized)
 
