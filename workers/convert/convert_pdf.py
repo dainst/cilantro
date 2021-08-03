@@ -70,7 +70,7 @@ def set_pdf_metadata(obj, metadata):
     with open(path, 'wb+') as stream:
         new_pdf.write(stream)
 
-def merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, max_size_in_mb=-1):
+def merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, downscale_threshold_in_mb=250):
     """
     Create a PDF file by combining a list of PDF files.
 
@@ -80,6 +80,7 @@ def merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, max_size
     :param string path: The path to the dir where the created file go
     :param string filename: name of the generated pdf file
     :param bool remove_old: if True, remove the files used for the split/merge
+    :param int downscale_threshold_in_mb: Threshold in mb. If exceeded, the DPI of the final PDF will be reduced to 150.
     """
     os.makedirs(path, exist_ok=True)
 
@@ -103,8 +104,8 @@ def merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, max_size
     except subprocess.CalledProcessError as e:
         print(e)
         
-    if max_size_in_mb != -1 and os.path.getsize(outfile_name) > max_size_in_mb * 1000000:
-        log.info(f"Combined PDF is larger than {max_size_in_mb}mb, reducing quality to 150 dpi.")
+    if os.path.getsize(outfile_name) > downscale_threshold_in_mb * 1000000:
+        log.info(f"Combined PDF is larger than {downscale_threshold_in_mb}mb, reducing quality to 150 dpi.")
         optimize(path, outfile_name, outfile_name, "/ebook")
 
     if remove_old:

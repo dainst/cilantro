@@ -64,7 +64,7 @@ class PDFMergeTest(ConvertTest):
         with open(pdf_src, 'rb') as stream:
             obj.add_stream('test.pdf', 'pdf', stream)
     
-        merge_pdf(params, obj.get_representation_dir('pdf'), max_size_in_mb=max_pdf_size)
+        merge_pdf(params, obj.get_representation_dir('pdf'), downscale_threshold_in_mb=max_pdf_size)
         self.assertTrue(os.path.isfile(file_generated))
 
         processed_size_optimized = os.path.getsize(file_generated)
