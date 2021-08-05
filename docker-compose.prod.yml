@@ -75,7 +75,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:0.2.15
+    image: dainst/cilantro-default-worker:0.2.16
     working_dir: /app
     volumes:
       - staging-data:/data/staging
