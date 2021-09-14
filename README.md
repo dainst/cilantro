@@ -55,6 +55,10 @@ To stop the application run:
 
     make stop
 
+If you have old container relics and encounter errors run:
+
+    docker-compose build
+
 ### User management
 
 For now users are managed via the file `config/users.yml`. Every user is able to
