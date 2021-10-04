@@ -49,7 +49,8 @@ services:
       - ./redis-data:/data
 
   job-db:
-    image: mongo
+    container_name: job_db
+    image: mongo:4.2.17
     volumes:
       - ./mongo-data:/data/db
 
