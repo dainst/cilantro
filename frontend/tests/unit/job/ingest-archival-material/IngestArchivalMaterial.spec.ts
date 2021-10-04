@@ -33,14 +33,14 @@ describe("IngestArchivalMaterial.vue", () => {
     });
 
     it("has a job files form", () => {
-        expect(wrapper.find(JobFilesForm).exists()).toBe(true);
+        expect(wrapper.findComponent(JobFilesForm).exists()).toBe(true);
     });
 
     it("has a archival metadata form", async () => {
         const button = wrapper.find('.toMetadataButton');
         button.vm.$emit('click')
         await wrapper.vm.$nextTick();
-        expect(wrapper.find(IngestArchivalMaterialMetadataForm).exists()).toBe(true);
+        expect(wrapper.findComponent(IngestArchivalMaterialMetadataForm).exists()).toBe(true);
     })
 
     it("has a journal options form and a app options form", async () => {
@@ -56,8 +56,8 @@ describe("IngestArchivalMaterial.vue", () => {
         await wrapper.vm.$nextTick();
 
         // now check for the correct forms
-        expect(wrapper.find(OCROptionsForm).exists()).toBe(true);
-        expect(wrapper.find(AppOptionsForm).exists()).toBe(true);
+        expect(wrapper.findComponent(OCROptionsForm).exists()).toBe(true);
+        expect(wrapper.findComponent(AppOptionsForm).exists()).toBe(true);
     })
 
 

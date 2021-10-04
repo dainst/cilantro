@@ -88,7 +88,7 @@ describe('JobListEntry.vue', () => {
             store
         });
         await wrapper.vm.$nextTick();
-        expect(wrapper.contains('b-table-stub')).toBe(true);
-        expect(wrapper.contains('div.loading')).toBe(false);
+        expect(wrapper.find('b-table-stub').exists()).toBe(true);
+        expect(wrapper.find('div.loading').exists()).toBe(false);
     });
 });

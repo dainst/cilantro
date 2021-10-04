@@ -47,14 +47,14 @@ describe("IngestJournal.vue", () => {
     });
 
     it("has a job files form", () => {
-        expect(wrapper.find(JobFilesForm).exists()).toBe(true);
+        expect(wrapper.findComponent(JobFilesForm).exists()).toBe(true);
     });
 
     it("has a journal metadata form", async () => {
         const button = wrapper.find('.toMetadataButton');
         button.vm.$emit('click')
         await wrapper.vm.$nextTick();
-        expect(wrapper.find(JournalMetadataForm).exists()).toBe(true);
+        expect(wrapper.findComponent(JournalMetadataForm).exists()).toBe(true);
     })
 
     it("has a journal options form and a app options form", async () => {
@@ -70,8 +70,8 @@ describe("IngestJournal.vue", () => {
         await wrapper.vm.$nextTick();
 
         // now check for the correct forms
-        expect(wrapper.find(JournalOptionsForm).exists()).toBe(true);
-        expect(wrapper.find(AppOptionsForm).exists()).toBe(true);
+        expect(wrapper.findComponent(JournalOptionsForm).exists()).toBe(true);
+        expect(wrapper.findComponent(AppOptionsForm).exists()).toBe(true);
     })
 
 

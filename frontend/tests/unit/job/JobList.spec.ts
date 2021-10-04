@@ -17,6 +17,6 @@ describe("JobList.vue", () => {
     })
 
     it("shows navbar", () => {
-        expect(wrapper.contains('div.navbar')).toBe(true)
+        expect(wrapper.find('div.navbar').exists()).toBe(true)
     })
 })
