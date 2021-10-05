@@ -1,6 +1,6 @@
 
 <script>
 export default {
-  name: "MockComponent"
-}
+    name: 'MockComponent'
+};
 </script>

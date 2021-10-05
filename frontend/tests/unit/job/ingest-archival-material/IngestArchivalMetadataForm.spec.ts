@@ -10,11 +10,11 @@ import {
     WorkbenchFileTree,
     getStagingFiles
 } from '@/staging/StagingClient';
-import { 
-     getAtomRecord 
+import {
+    getAtomRecord
 } from '@/util/AtomClient';
 
-let mockStagingTree: WorkbenchFileTree = {
+const mockStagingTree: WorkbenchFileTree = {
     '.info': {
         name: '.info',
         type: 'conf',
@@ -68,7 +68,6 @@ jest.mock('@/util/AtomClient', () => ({
     getAtomRecord: jest.fn()
 }));
 
-
 const localVue = createLocalVue();
 localVue.use(Buefy);
 localVue.use(Vuex);
@@ -98,22 +97,24 @@ describe('IngestArchiveMetadataForm', () => {
         (getStagingFiles as jest.Mock).mockImplementation(
             () => Promise.resolve(mockStagingTree)
         );
-        (getAtomRecord as jest.Mock).mockImplementation((target) => Promise.resolve({
-            id: "de-001149881",
-            reference_code: "reference",
-            title: "Das Haus vom Nikolaus",
+        (getAtomRecord as jest.Mock).mockImplementation(target => Promise.resolve({
+            id: 'de-001149881',
+            reference_code: 'reference',
+            title: 'Das Haus vom Nikolaus',
             dates: [
-                { date: "21.12.2112",
-                start_date: "20.12.2112",
-                end_date: "22.12.2112",
-                type: "dummy"}],
-            level_of_description: "richtig hohes level",
-            extent_and_medium: "maximum",
-            repository: "archive",
-            repository_inherited_from: "archive-rom",
-            scope_and_content: "briefe",
-            notes: ["eine Anmerkung"]
-        }))
+                {
+                    date: '21.12.2112',
+                    start_date: '20.12.2112',
+                    end_date: '22.12.2112',
+                    type: 'dummy'
+                }],
+            level_of_description: 'richtig hohes level',
+            extent_and_medium: 'maximum',
+            repository: 'archive',
+            repository_inherited_from: 'archive-rom',
+            scope_and_content: 'briefe',
+            notes: ['eine Anmerkung']
+        }));
 
         wrapper = mount(IngestArchivalMaterialMetadataForm, {
             localVue,
@@ -135,7 +136,6 @@ describe('IngestArchiveMetadataForm', () => {
         const details = wrapper.find('.metadata_output');
         expect(details.text()).toContain('atom_id: de-001149881');
         expect(details.text()).toContain('copyright: DAI');
-
     });
 
     it('check clean tif subfolder', async() => {
@@ -184,7 +184,7 @@ describe('IngestArchiveMetadataForm', () => {
         wrapper.find('a').trigger('click');
         // wait for event processing
         await flushPromises();
-        //await wrapper.vm.$nextTick();
+        // await wrapper.vm.$nextTick();
         // find the error message
         const details = wrapper.find('.metadata_output');
         expect(details.text()).toBe(
@@ -192,8 +192,8 @@ describe('IngestArchiveMetadataForm', () => {
         );
     });
 
-    it('should act properly in a promise-returning test', async () => {
-        await new Promise(rs => setTimeout(rs, 1000))
+    it('should act properly in a promise-returning test', async() => {
+        await new Promise(resolve => setTimeout(resolve, 1000));
         expect('a').toEqual('a');
-      });
+    });
 });

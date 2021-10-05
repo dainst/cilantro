@@ -2,10 +2,10 @@ import { mount, createLocalVue } from '@vue/test-utils';
 import Buefy from 'buefy';
 import Vuex, { Store } from 'vuex';
 import Router from 'vue-router';
+import flushPromises from 'flush-promises';
 import AuthenticationStore from '@/authentication/AuthenticationStore';
 import AuthenticationStatus from '@/authentication/AuthenticationStatus';
 import Login from '@/Login.vue';
-import flushPromises from 'flush-promises';
 
 const MockComponent = { template: '<div class="login_success">Login success</div>' };
 
@@ -80,14 +80,14 @@ describe('Login.vue', () => {
     });
 
     it('submits the login form', async() => {
-        const input_user =  wrapper.find('#username')
-        const input_pw =  wrapper.find('#password')
-        input_user.setValue('santa');
+        const inputUser = wrapper.find('#username');
+        const inputPw = wrapper.find('#password');
+        inputUser.setValue('santa');
         await flushPromises();
 
-        input_pw.setValue('klaus');
+        inputPw.setValue('klaus');
         await flushPromises();
-        
+
         await wrapper.vm.$nextTick();
 
         const button = wrapper.find('button');
