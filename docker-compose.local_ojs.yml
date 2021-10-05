@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+  default-worker:
+    environment:
+      OJS_URI: http://ojs_dev:80/plugins/generic/cilantro/api
+    networks:
+      - default
+      - ojs_dev_network
+
+networks:
+  ojs_dev_network:
+    external: true

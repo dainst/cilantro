@@ -10,6 +10,9 @@ run-detached:
 run-local-omp:
 	docker-compose -f docker-compose.yml -f docker-compose.local_omp.yml up
 
+run-local-ojs:
+	docker-compose -f docker-compose.yml -f docker-compose.local_ojs.yml up
+
 stop:
 	docker-compose stop
 
