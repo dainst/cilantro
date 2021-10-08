@@ -74,13 +74,10 @@ import {
 import {
     MaybeJobTarget, JobTargetData, MonographMetadata, Person
 } from './IngestMonographParameters';
-import { getRecord, ZenonRecord, ZenonAuthors } from '@/util/ZenonClient';
+import { getRecord, ZenonRecord, Author } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
-import { ojsZenonMapping } from '@/config';
 import {
     WorkbenchFileTree,
-    WorkbenchFile,
-    getVisibleFolderContents,
     getStagingFiles,
     containsNumberOfFiles,
     containsOnlyFilesWithExtensions
@@ -106,7 +103,6 @@ export default class MonographMetadataForm extends Vue {
     }
 
     async mounted() {
-
         this.targets = await asyncMap(
             this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
                 const id = path.split('/').pop() || '';
@@ -222,17 +218,8 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
 }
 
 function extractAuthors(record: ZenonRecord) : Person[] {
-    let authorsCompleteNames: string[] = [];
-    if (record.primaryAuthorsNames.length !== 0) {
-        authorsCompleteNames = authorsCompleteNames.concat(record.primaryAuthorsNames);
-    } else if (record.secondaryAuthorsNames.length !== 0) {
-        authorsCompleteNames = authorsCompleteNames.concat(record.secondaryAuthorsNames);
-    } else if (record.corporateAuthorsNames.length !== 0) {
-        authorsCompleteNames = authorsCompleteNames.concat(record.corporateAuthorsNames);
-    }
-
-    return authorsCompleteNames.map((authorCompleteName) => {
-        const authorSplit = authorCompleteName.split(',');
+    return record.authors.map((author : Author) => {
+        const authorSplit = author.name.split(',');
         if (authorSplit.length === 2) {
             return {
                 givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
@@ -241,7 +228,7 @@ function extractAuthors(record: ZenonRecord) : Person[] {
         }
         return {
             givenname: '',
-            lastname: authorCompleteName
+            lastname: author.name
         } as Person;
     });
 }

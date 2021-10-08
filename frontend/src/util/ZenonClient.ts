@@ -3,13 +3,77 @@ import { sendRequest } from './HTTPClient';
 const zenonBaseURL: string = 'https://zenon.dainst.org/';
 const zenonAPIURL: string = 'api/v1/';
 
-export async function search(term: string, scope: string): Promise<ZenonResultData> {
-    const url: string = `${zenonBaseURL}${zenonAPIURL}search`;
-    const params: object = {
-        lookfor: term,
-        type: scope
-    };
-    return sendRequest('get', url, {}, params, true);
+export class ZenonRecord {
+    id: string;
+    title: string;
+    authors: Author[];
+    formats: string[];
+    partOrSectionInfo: string;
+    publicationDates: string[];
+    parentId?: string;
+    subjects: string[];
+    summary: string;
+    shortTitle: string;
+    subTitle?: string;
+
+    constructor(zenonData : any) {
+        this.id = zenonData.id;
+        this.title = zenonData.title;
+        this.authors = reformatAuthors(zenonData);
+        this.formats = zenonData.formats;
+        this.partOrSectionInfo = zenonData.partOrSectionInfo;
+        this.publicationDates = zenonData.publicationDates;
+        this.parentId = zenonData.parentId;
+        this.subjects = zenonData.subjects;
+        this.summary = zenonData.summary;
+        this.shortTitle = zenonData.shortTitle;
+        this.subTitle = zenonData.subTitle;
+    }
+}
+
+export interface Author {
+    name: string;
+    type: AuthorTypes;
+    orcId?: string;
+}
+
+enum AuthorTypes {
+    Primary, Secondary, Corporate
+}
+
+function reformatAuthors(record: any) : Author[] {
+    const authors: Author[] = [];
+
+    const primaryAuthors = Object.keys(record.authors.primary);
+    primaryAuthors.forEach(
+        (author) => {
+            authors.push({
+                name: author,
+                type: AuthorTypes.Primary
+            });
+        }
+    );
+
+    const secondaryAuthors = Object.keys(record.authors.secondary);
+    secondaryAuthors.forEach(
+        (author) => {
+            authors.push({
+                name: author,
+                type: AuthorTypes.Secondary
+            });
+        }
+    );
+
+    const corporateAuthors = Object.keys(record.authors.corporate);
+    corporateAuthors.forEach(
+        (author) => {
+            authors.push({
+                name: author,
+                type: AuthorTypes.Corporate
+            });
+        }
+    );
+    return <Author[]>authors;
 }
 
 export async function getRecord(zenonID: string): Promise<ZenonRecord> {
@@ -17,52 +81,7 @@ export async function getRecord(zenonID: string): Promise<ZenonRecord> {
     const params: object = {
         id: zenonID
     };
-    return sendRequest('get', url, {}, params, true).then(response => response.records[0]);
-}
-
-export async function downloadCSLJSONRecord(id: string): Promise<cslJSONRecord> {
-    const url: string = `${zenonBaseURL}Record/${id}/Export?style=CSL-JSON`;
-    return sendRequest('get', url, {}, {}, true);
-}
-
-export interface ZenonResultData {
-    resultCount: number;
-    records: ZenonRecord[];
-}
-
-export interface ZenonRecord {
-    id: string;
-    title: string;
-    authors: ZenonAuthors;
-    formats: string[];
-    languages: string[];
-    series: object[];
-    subjects: string[];
-    partOrSectionInfo: string;
-    publicationDates: string[];
-    parentId?: string;
-    summary: string
-    primaryAuthorsNames: string[],
-    secondaryAuthorsNames: string[],
-    corporateAuthorsNames: string[],
-    shortTitle: string,
-    subTitle?: string
-}
-
-export interface ZenonAuthors {
-    primary: object;
-    secondary: object;
-    corporate: object;
-}
-
-export interface cslJSONRecord {
-    id: string;
-    type: string;
-    title: string;
-    author: object[];
-    issued: cslJSONIssuedObject;
-}
-
-interface cslJSONIssuedObject {
-    raw: string;
+    return sendRequest('get', url, {}, params, true).then(
+        response => new ZenonRecord(response.records[0])
+    );
 }
