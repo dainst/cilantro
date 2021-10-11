@@ -46,8 +46,20 @@ test-frontend:
 	npm run test:unit --prefix frontend
 
 test-backend:
-	docker exec cilantro_test python -m unittest discover test.unit -vf
-	docker exec cilantro_test python -m unittest discover test.integration -vf
+	docker exec --env-file .env-test cilantro_service python -m unittest discover test.service -vf
+	docker exec --env-file .env-test cilantro_service python -m unittest discover test.utils -vf
+	
+	docker exec --env-file .env-test cilantro_default_worker python -m unittest discover test.default_worker -vf
+	docker exec --env-file .env-test cilantro_default_worker python -m unittest discover test.utils -vf
+	
+	docker exec --env-file .env-test cilantro_convert_worker python -m unittest discover test.convert_worker -vf
+	docker exec --env-file .env-test cilantro_convert_worker python -m unittest discover test.utils -vf
+
+	docker exec --env-file .env-test cilantro_nlp_worker python3 -m unittest discover test.nlp_worker -vf
+	docker exec --env-file .env-test cilantro_nlp_worker python3 -m unittest discover test.utils -vf
+
+	docker exec --env-file .env-test cilantro_nlp_heideltime_worker python3 -m unittest discover test.nlp_heideltime_worker -vf
+	docker exec --env-file .env-test cilantro_nlp_heideltime_worker python3 -m unittest discover test.utils -vf
 
 fix-permissions:
 	sudo chown -R $(whoami):$(whoami) data/
