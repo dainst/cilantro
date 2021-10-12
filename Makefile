@@ -46,10 +46,12 @@ test-frontend:
 	npm run test:unit --prefix frontend
 
 test-backend:
-	docker exec --env-file .env-test cilantro_service python -m unittest discover test.service -vf
+	docker exec --env-file .env-test cilantro_service python -m unittest discover test.service.unit -vf
+	docker exec --env-file .env-test cilantro_service python -m unittest discover test.service.integreation -vf
 	docker exec --env-file .env-test cilantro_service python -m unittest discover test.utils -vf
 	
-	docker exec --env-file .env-test cilantro_default_worker python -m unittest discover test.default_worker -vf
+	docker exec --env-file .env-test cilantro_default_worker python -m unittest discover test.default_worker.unit -vf
+	docker exec --env-file .env-test cilantro_default_worker python -m unittest discover test.default_worker.integreation -vf
 	docker exec --env-file .env-test cilantro_default_worker python -m unittest discover test.utils -vf
 	
 	docker exec --env-file .env-test cilantro_convert_worker python -m unittest discover test.convert_worker -vf
