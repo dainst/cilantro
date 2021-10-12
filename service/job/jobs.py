@@ -1,5 +1,6 @@
 import uuid
 import logging
+import os
 
 from abc import abstractmethod
 from celery import chord, signature
@@ -114,7 +115,7 @@ class BatchJob(BaseJob):
 
             self.job_db.add_job(job_id=current_chain_id,
                                 user=user_name,
-                                job_type='chain',
+                                job_type='cilantro_batch_chain',
                                 parent_job_id=self.id,
                                 child_job_ids=current_chain_links,
                                 parameters=self.chain_parameters[idx],
@@ -368,8 +369,17 @@ class IngestJournalsJob(BatchJob):
 
             current_chain |= _link('publish_to_archive')
 
+            result_info = {
+                'label': 'View in OJS',
+                'url': '{}/index.php/{}'.format(
+                    os.getenv('OJS_BASE_URL'),
+                    issue_target['metadata']['ojs_journal_code']
+                )
+            }
+
             current_chain |= _link('cleanup_directories',
                                    mark_done=params['options']['app_options']['mark_done'],
+                                   result_info=result_info,
                                    staging_current_folder=issue_target['path'],
                                    user_name=user_name)
 

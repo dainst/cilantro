@@ -1,6 +1,7 @@
 import os
 import uuid
 import glob
+import json
 
 from celery import chord, signature
 
@@ -81,23 +82,28 @@ class CleanupDirectoriesTask(BaseTask):
     name = "cleanup_directories"
 
     def execute_task(self):
-        mark_done = self.get_param('mark_done')
+        try: 
+            result_information = self.get_param('result_info')
+        except KeyError:
+            self.log.warning("No result information provided, falling back to default:")
+            self.log.warning(self.info_file_default_success_msg)
+
+            result_information = self.info_file_default_success_msg
+
         staging_current_folder = self.get_param('staging_current_folder')
         user = self.get_param('user_name')
-        file_path = os.path.join(self.staging_dir, user, staging_current_folder)
 
-        if mark_done:
-            self.mark_file_as_done(file_path)
+        info_file_path = os.path.join(self.staging_dir, user, staging_current_folder, self.info_file_name)
+
+        with open(info_file_path, 'w') as f:
+            content = {
+                'status': 'success',
+                'msg': result_information
+            }
+
+            json.dump(content, f)
 
         self.delete_temp_folders()
-
-    @staticmethod
-    def mark_file_as_done(folder):
-        f = open(os.path.join(folder, '.info'), 'w')
-        f.write(
-            'This file marks the parent directory as processed by the iDAI.workbench. Deleting this file will '
-            'unmark the directory in the web interface.')
-        f.close()
 
 CleanupDirectoriesTask = celery_app.register_task(CleanupDirectoriesTask())
 

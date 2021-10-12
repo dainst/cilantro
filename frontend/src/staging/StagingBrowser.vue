@@ -14,15 +14,18 @@
                 />
             </template>
             <template slot="end">
-            <b-switch v-model="showMarked">
-                Show completed tasks
+            <b-switch v-model="showFailed">
+                Show failed imports
+            </b-switch>
+            <b-switch v-model="showCompleted">
+                Show completed imports
             </b-switch>
             </template>
         </b-navbar>
         <div v-if="getFilesToShow().length !== 0">
             <b-table
                 :data="getFilesToShow()"
-                :paginated=true
+                :paginated='true'
                 :per-page=100
                 checkable
                 hoverable
@@ -33,11 +36,11 @@
                 <template slot-scope="props" >
                     <b-table-column width="25">
                         <b-icon :icon="getFileIcon(props.row)"
-                                :type="props.row.marked ? 'is-success' : ''"/>
+                                :type="getFileStatusType(props.row)"/>
                     </b-table-column>
 
                     <b-table-column field="name" label="Name">
-                        {{ props.row.name }}
+                        {{ props.row.name }} <div class="content is-small" v-html="getFileStatusMessage(props.row)"></div>
                     </b-table-column>
 
                     <b-table-column field="edit" label="" width="25" @click.native.stop>
@@ -88,7 +91,7 @@
 import {
     Component, Prop, Vue
 } from 'vue-property-decorator';
-import { showSuccess, showWarning, showError } from '@/util/Notifier.ts';
+import { showError } from '@/util/Notifier.ts';
 import {
     getStagingFiles,
     deleteFileFromStaging,
@@ -96,7 +99,9 @@ import {
     WorkbenchFile,
     moveInStaging,
     WorkbenchFileTree,
-    getVisibleFolderContents
+    getVisibleFolderContents,
+    JobInfoError,
+    JobInfoLink
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';
@@ -117,7 +122,8 @@ export default class StagingBrowser extends Vue {
     workingDirectory: string = '';
     stagingFiles: WorkbenchFileTree = {};
     filesToShow: WorkbenchFile[] = [];
-    showMarked: boolean = false;
+    showCompleted: boolean = false;
+    showFailed: boolean = true;
 
     get checkedFiles(): WorkbenchFile[] {
         return this.filesToShow.filter((file) => {
@@ -260,15 +266,41 @@ export default class StagingBrowser extends Vue {
     }
 
     getFilesToShow() {
-        if (this.showMarked) {
-            return this.filesToShow;
-        }
-        return this.filesToShow.filter(file => !file.marked);
+        return this.filesToShow.filter((file) => {
+            if (!file.job_info) return true;
+            if (!this.showCompleted && file.job_info.status === 'success') return false;
+            if (!this.showFailed && file.job_info.status === 'error') return false;
+
+            return true;
+        });
     }
 
     // eslint-disable-next-line class-methods-use-this
     getFileIcon(file: WorkbenchFile) {
         return (file.type === 'directory') ? 'folder' : 'file';
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getFileStatusType(file: WorkbenchFile) {
+        if (!file.job_info) return '';
+        if (file.job_info.status === 'success') return 'is-success';
+        return 'is-danger';
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getFileStatusMessage(file: WorkbenchFile) {
+        if (!file.job_info) return '';
+
+        const infoError = file.job_info.msg as JobInfoError;
+        const infoLink = file.job_info.msg as JobInfoLink;
+
+        if (infoError.job_id) {
+            return `<pre>A <a href='/job?id=${infoError.job_id}' target='_blank'>job</a> failed with an error: ${JSON.stringify(infoError)}</pre>`;
+        }
+        if (infoLink.url) {
+            return `<a href='${infoLink.url}' target='_blank'>${infoLink.label}</a>`;
+        }
+        return file.job_info.msg;
     }
 }
 

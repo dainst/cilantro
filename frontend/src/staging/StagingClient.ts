@@ -32,10 +32,26 @@ export function getVisibleFolderContents(tree: WorkbenchFileTree): WorkbenchFile
         .filter(file => !ignoredDirectoryContents.includes(file.name));
 }
 
+export type JobInfoError = {
+    // eslint-disable-next-line camelcase
+    job_id: string;
+}
+
+export type JobInfoLink = {
+    label: string;
+    url: string;
+}
+
+export interface JobInfo {
+    status: string;
+    msg: JobInfoError | JobInfoLink | string;
+}
+
 export interface WorkbenchFile {
     name: string;
     type: string;
-    marked: boolean;
+    // eslint-disable-next-line camelcase
+    job_info?: JobInfo;
     contents?: WorkbenchFileTree;
 }
 

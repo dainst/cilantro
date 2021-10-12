@@ -4,6 +4,7 @@ import os
 import shutil
 from abc import abstractmethod
 import traceback
+import json
 
 import celery.signals
 from celery.task import Task
@@ -79,6 +80,9 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
+    info_file_name = '.cilantro_info'
+    info_file_default_success_msg = 'No further success information provided'
+
     _label = None
     _description = None
 
@@ -115,13 +119,24 @@ class BaseTask(Task):
         self.job_db.add_job_error(parent_id, error)
 
         parent = self.job_db.get_job_by_id(parent_id)
+
+        if parent['job_type'] == 'cilantro_batch_chain':
+            info_file_path = os.path.join(self.staging_dir, parent['user'], parent['parameters']['id'], self.info_file_name)
+
+            with open(info_file_path, 'w') as f:
+                content = {
+                    'status': 'error',
+                    'msg': error
+                }
+                json.dump(content, f)
+
         if 'parent_job_id' in parent:
             self._propagate_failure_to_ancestors(parent['parent_job_id'], error)
             self._set_following_siblings_aborted(parent_id, parent['parent_job_id'])
 
     def _set_following_siblings_aborted(self, job_id, parent_id):
         parent = self.job_db.get_job_by_id(parent_id)
-        if parent['job_type'] == 'chain':
+        if parent['job_type'] == 'cilantro_batch_chain':
             found_self = False
             for child in parent['children']:
                 if found_self:
