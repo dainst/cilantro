@@ -58,7 +58,9 @@ class BatchJob(BaseJob):
         super().__init__()
         self.id = _generate_id()
 
-        chains = self._create_chains(params, user_name)
+        (chains, chain_parameters) = self._create_chains(params, user_name)
+
+        self.chain_parameters = chain_parameters
 
         # Once all job chains have finished within this chord, we have to
         # trigger a callback worker in order to update the database entry
@@ -115,9 +117,8 @@ class BatchJob(BaseJob):
                                 job_type='chain',
                                 parent_job_id=self.id,
                                 child_job_ids=current_chain_links,
-                                parameters={
-                                    'work_path': current_chain.kwargs['work_path']},
-                                label=f"Batch #{idx+1}",
+                                parameters=self.chain_parameters[idx],
+                                label=self.chain_parameters[idx]['id'],
                                 description="Group containing all the individual steps for a single batch.")
             chain_ids += [current_chain_id]
 
@@ -140,8 +141,15 @@ class IngestArchivalMaterialsJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
+        
 
         for record_target in params['targets']:
+
+            chain_parameters.append(
+                record_target
+            )
+
             task_params = dict(**record_target, **{'user': user_name},
                                initial_representation='tif', job_type=self.job_type)
 
@@ -198,7 +206,7 @@ class IngestArchivalMaterialsJob(BatchJob):
 
             chains.append(current_chain)
 
-        return chains
+        return (chains, chain_parameters)
 
     def _create_pdf_metadata(self, metadata):
         pdf_metadata = {}
@@ -305,10 +313,15 @@ class IngestJournalsJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
 
         for issue_target in params['targets']:
             task_params = dict(**issue_target, **{'user': user_name},
                                initial_representation='tif', job_type=self.job_type)
+
+            chain_parameters.append(
+                issue_target
+            )
 
             current_chain = _link('create_object', **task_params)
 
@@ -363,7 +376,7 @@ class IngestJournalsJob(BatchJob):
             current_chain |= _link('finish_chain')
             chains.append(current_chain)
 
-        return chains
+        return (chains, chain_parameters)
 
 
 class IngestMonographsJob(BatchJob):
@@ -373,9 +386,14 @@ class IngestMonographsJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
         for monograph_target in params['targets']:
             task_params = dict(**monograph_target, **{'user': user_name},
                                initial_representation='tif', job_type=self.job_type)
+
+            chain_parameters.append(
+                monograph_target
+            )
 
             current_chain = _link('create_object', **task_params)
 
@@ -428,7 +446,7 @@ class IngestMonographsJob(BatchJob):
             current_chain |= _link('finish_chain')
             chains.append(current_chain)
 
-        return chains
+        return (chains, chain_parameters)
 
 
 class NlpJob(BatchJob):
@@ -438,11 +456,16 @@ class NlpJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
 
         for target in params['targets']:
             for extension in params['options']['extensions']:
                 if extension not in ['txt', 'pdf']:
                     raise Exception('Extension not supported: {}' + str(extension))
+
+                chain_parameters.append(
+                    target
+                )
 
                 task_params = dict(**target, **{'user': user_name})
                 chain = _link('create_object', **task_params,
@@ -485,7 +508,7 @@ class NlpJob(BatchJob):
 
                 chains.append(chain)
 
-        return chains
+        return (chains, chain_parameters)
 
 
 def _link(name, **params):
