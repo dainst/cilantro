@@ -30,10 +30,6 @@ x-env-app-config: &env-app-config
   ATOM_API_KEY: &atom-api-key ${ATOM_API_KEY}
   REPOSITORY_URI: &repository-uri http://service:5000/repository
 
-x-test-timeouts: &test-timeouts
-  DEFAULT_TEST_TIMEOUT: ${DEFAULT_TEST_TIMEOUT}
-  NLP_TEST_TIMEOUT: ${NLP_TEST_TIMEOUT}
-
 services:
 
   broker:
@@ -156,27 +152,6 @@ services:
       <<: *env-jobdb
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
-
-  test:
-    container_name: cilantro_test
-    user: ${UID}
-    build:
-      context: .
-      dockerfile: ./docker/cilantro-test/Dockerfile
-    working_dir: /app
-    volumes:
-      - .:/app
-      - ./data:/data
-      - ./config:/config
-    tty: true
-    environment:
-      <<: *env-dirs
-      <<: *env-broker
-      <<: *test-timeouts
-      <<: *env-jobdb
-      <<: *env-app-config
-      DB_HOST: db
-      TEST_RESOURCE_DIR: "test/resources"
 
   mock-server:
     image: rodolpheche/wiremock:latest
