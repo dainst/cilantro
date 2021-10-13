@@ -40,7 +40,11 @@
                     </b-table-column>
 
                     <b-table-column field="name" label="Name">
-                        {{ props.row.name }} <div class="content is-small" v-html="getFileStatusMessage(props.row)"></div>
+                        {{ props.row.name }}
+                        <div
+                            class="content is-small"
+                            v-html="getFileStatusMessage(props.row)">
+                        </div>
                     </b-table-column>
 
                     <b-table-column field="edit" label="" width="25" @click.native.stop>
