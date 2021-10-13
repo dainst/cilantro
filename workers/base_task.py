@@ -120,8 +120,9 @@ class BaseTask(Task):
 
         if parent['job_type'] == 'cilantro_batch_chain':
             batch_item_directory = os.path.join(
-                self.staging_dir, parent['user'], 
-                parent['parameters']['id']
+                self.staging_dir, 
+                parent['user'], 
+                parent['parameters']['path']
             )
 
             cilantro_info_file.write_error(
