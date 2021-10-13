@@ -53,6 +53,7 @@ services:
 
   service:
     container_name: cilantro_service
+    user: ${UID}
     build:
       context: .
       dockerfile: ./docker/cilantro-service/Dockerfile
