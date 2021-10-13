@@ -83,30 +83,6 @@ class CleanupDirectoriesTask(BaseTask):
     name = "cleanup_directories"
 
     def execute_task(self):
-
-        staging_directory = os.path.join(
-            self.staging_dir, 
-            self.get_param('user_name'), 
-            self.get_param('staging_current_folder')
-        )
-
-        success_msg = self.params.get("success_msg")
-        success_url = self.params.get("success_url")
-        success_url_label = self.params.get("success_url_label")
-
-        if success_url is None or success_url_label is None:
-            cilantro_info_file.write_success(
-                staging_directory, 
-                success_msg
-            )
-        else:
-            cilantro_info_file.write_success_with_link(
-                staging_directory, 
-                success_msg,
-                success_url,
-                success_url_label
-            )
-
         self.delete_temp_folders()
 
 CleanupDirectoriesTask = celery_app.register_task(CleanupDirectoriesTask())
@@ -118,6 +94,29 @@ class FinishChainTask(BaseTask):
     name = "finish_chain"
 
     def execute_task(self):
+        chain_input_directory = os.path.join(
+            self.staging_dir, 
+            self.get_param('user_name'), 
+            self.get_param('chain_input_directory')
+        )
+
+        success_msg = self.params.get("success_msg")
+        success_url = self.params.get("success_url")
+        success_url_label = self.params.get("success_url_label")
+
+        if success_url is None or success_url_label is None:
+            cilantro_info_file.write_success(
+                chain_input_directory, 
+                success_msg
+            )
+        else:
+            cilantro_info_file.write_success_with_link(
+                chain_input_directory, 
+                success_msg,
+                success_url,
+                success_url_label
+            )
+
         self.job_db.update_job_state(self.parent_job_id, 'success')
 
 
