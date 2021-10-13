@@ -8,7 +8,6 @@ import IngestJournal from '@/job/ingest-journal/IngestJournal.vue';
 import JobFilesForm from '@/job/JobFilesForm.vue';
 import JournalMetadataForm from '@/job/ingest-journal/IngestJournalMetadataForm.vue';
 import JournalOptionsForm from '@/job/ingest-journal/IngestJournalOptionsForm.vue';
-import AppOptionsForm from '@/job/AppOptionsForm.vue';
 import {
     IngestJournalParameters, JournalIssueMetadata, IngestJournalOptions, JobTargetData
 } from '@/job/ingest-journal/IngestJournalParameters';
@@ -71,6 +70,5 @@ describe('IngestJournal.vue', () => {
 
         // now check for the correct forms
         expect(wrapper.findComponent(JournalOptionsForm).exists()).toBe(true);
-        expect(wrapper.findComponent(AppOptionsForm).exists()).toBe(true);
     });
 });
