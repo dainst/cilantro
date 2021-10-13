@@ -199,7 +199,6 @@ class IngestArchivalMaterialsJob(BatchJob):
             current_chain |= _link('publish_to_archive')
 
             current_chain |= _link('cleanup_directories',
-                                   mark_done=params['options']['app_options']['mark_done'],
                                    staging_current_folder=record_target['path'],
                                    user_name=user_name)
 
@@ -378,7 +377,6 @@ class IngestJournalsJob(BatchJob):
             }
 
             current_chain |= _link('cleanup_directories',
-                                   mark_done=params['options']['app_options']['mark_done'],
                                    result_info=result_info,
                                    staging_current_folder=issue_target['path'],
                                    user_name=user_name)
@@ -449,7 +447,6 @@ class IngestMonographsJob(BatchJob):
                                    omp_press_code=monograph_target['metadata']['press_code'])
 
             current_chain |= _link('cleanup_directories',
-                                   mark_done=params['options']['app_options']['mark_done'],
                                    staging_current_folder=monograph_target['path'],
                                    user_name=user_name)
 

@@ -42,12 +42,8 @@
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event"
             />
-            <AppOptionsForm
-                :initialOptions="this.parameters.options.app_options"
-                @options-updated="this.parameters.options.app_options = $event"
-                />
-            <StartJobButton class="startJobButton" 
-            @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
+            <StartJobButton class="startJobButton"
+                @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
 </template>
@@ -59,9 +55,8 @@ import { startJob } from '../JobClient';
 import JobFilesForm from '../JobFilesForm.vue';
 import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JournalOptionsForm from './IngestJournalOptionsForm.vue';
-import AppOptionsForm from '../AppOptionsForm.vue';
 
-import { JobParameters, JobTargetError, OCROptions, AppOptions } from '../JobParameters';
+import { JobTargetError, OCROptions } from '../JobParameters';
 import {
     IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSOptions
 } from './IngestJournalParameters';
@@ -75,7 +70,6 @@ import StartJobButton from '@/util/StartJobButton.vue';
         JobFilesForm,
         JournalMetadataForm,
         JournalOptionsForm,
-        AppOptionsForm,
         ContinueButton,
         StartJobButton
     }
@@ -96,10 +90,7 @@ export default class IngestJournal extends Vue {
             ocr_options: {
                 do_ocr: false,
                 ocr_lang: 'deu'
-            } as OCROptions,
-            app_options: {
-                mark_done: true
-            } as AppOptions
+            } as OCROptions
         } as IngestJournalOptions;
 
         this.parameters = new IngestJournalParameters([], options);

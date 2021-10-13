@@ -72,8 +72,7 @@
             "type": "object",
             "required": [
                 "ojs_options",
-                "ocr_options",
-                "app_options"
+                "ocr_options"
             ],
             "additionalProperties": false,
             "properties": {
@@ -105,18 +104,6 @@
                         },
                         "ocr_lang": {
                             "type": "string"
-                        }
-                    }
-                },
-                "app_options": {
-                    "type": "object",
-                    "required": [
-                        "mark_done"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                        "mark_done": {
-                            "type": "boolean"
                         }
                     }
                 }
