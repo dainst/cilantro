@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import {
-    Component, Vue, Prop,
+    Component, Vue, Prop
 } from 'vue-property-decorator';
 import {
     JobTargetError, isTargetError
@@ -82,8 +82,8 @@ import {
     containsOnlyFilesWithExtensions,
     containsNumberOfFiles
 } from '@/staging/StagingClient';
-import { 
-    AtomResult, AtomMessage, AtomRecord, getAtomRecord 
+import {
+    AtomResult, AtomMessage, AtomRecord, getAtomRecord
 } from '@/util/AtomClient';
 import { asyncMap } from '@/util/HelperFunctions';
 

@@ -13,11 +13,16 @@
             <b-notification
                 type="is-danger"
                 aria-close-label="Close notification"
-                role="alert" 
+                role="alert"
                 v-if="!validJobFiles()">
-                Kein Ordner gewählt, oder Ordner falsch benannt. Ordner müssen JOURNAL-ZID... heißen. (Groß/Kleinschreibung wird ignoriert)
+                Kein Ordner gewählt, oder Ordner falsch benannt.
+                Ordner müssen JOURNAL-ZID... heißen.
+                (Groß/Kleinschreibung wird ignoriert)
             </b-notification>
-            <JobFilesForm :selected-paths.sync="selectedPaths" :accepted-filetypes="acceptedFileTypes" />
+            <JobFilesForm
+                :selected-paths.sync="selectedPaths"
+                :accepted-filetypes="acceptedFileTypes"
+            />
             <ContinueButton class="toMetadataButton"
                 @click="continueToMetadata" :disabled="!validJobFiles()">
             </ContinueButton>
@@ -76,7 +81,7 @@ import StartJobButton from '@/util/StartJobButton.vue';
 })
 export default class IngestJournal extends Vue {
     selectedPaths: string[] = [];
-    acceptedFileTypes = "image/tiff, image/tif";
+    acceptedFileTypes = 'image/tiff, image/tif';
     parameters: IngestJournalParameters;
     activeStep: number = 0;
 
@@ -115,11 +120,11 @@ export default class IngestJournal extends Vue {
     }
 
     validJobFiles() {
-        let path_be_cool = false;
-        path_be_cool = this.selectedPaths
-                            .map(path => /.*JOURNAL-ZID(\d+)/i.test(path))
-                            .reduce((a, b) => a && b, true);
-        return this.selectedPaths.length !== 0 && path_be_cool;
+        let pathIsValid = false;
+        pathIsValid = this.selectedPaths
+            .map(path => /.*JOURNAL-ZID(\d+)/i.test(path))
+            .reduce((a, b) => a && b, true);
+        return this.selectedPaths.length !== 0 && pathIsValid;
     }
 
     async startJob() {

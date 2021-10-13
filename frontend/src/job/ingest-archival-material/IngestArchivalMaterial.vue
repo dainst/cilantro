@@ -12,7 +12,10 @@
                 @click="continueToMetadata"
                 :disabled="this.selectedPaths.length === 0" />
 
-            <JobFilesForm :selected-paths.sync="selectedPaths" :accepted-filetypes="acceptedFileTypes" />
+            <JobFilesForm
+                :selected-paths.sync="selectedPaths"
+                :accepted-filetypes="acceptedFileTypes"
+            />
 
             <ContinueButton
                 class="toMetadataButton"
