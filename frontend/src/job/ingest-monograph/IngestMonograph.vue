@@ -77,7 +77,7 @@ export default class IngestBook extends Vue {
 
         const options = {
             ocr_options: {
-                do_ocr: false,
+                do_ocr: true,
                 ocr_lang: 'deu'
             } as OCROptions
         } as IngestMonographOptions;
