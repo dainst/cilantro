@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 from service.errors import ApiError
 from service.user.user_service import auth
 
-from workers.base_task import BaseTask
+from utils import cilantro_info_file
 
 staging_controller = Blueprint('staging', __name__)
 
@@ -45,9 +45,9 @@ def _get_directory_structure(dir_path, depths=0):
 
                     # handle directories with legacy .info file, existence implies successful import
                     if os.path.exists(os.path.join(path, ".info")):
-                        tree[entry.name]["job_info"] = {"status": "success", "msg": BaseTask.info_file_default_success_msg}
+                        tree[entry.name]["job_info"] = {"status": "success", "msg": cilantro_info_file.DEFAULT_SUCCESS_MESSAGE}
                     else:
-                        tree[entry.name]["job_info"] = _parse_info_file(os.path.join(path, BaseTask.info_file_name))
+                        tree[entry.name]["job_info"] = _parse_info_file(os.path.join(path, cilantro_info_file.FILE_NAME))
                     tree[entry.name]["contents"] = _get_directory_structure(path, depths-1)
     return tree
 

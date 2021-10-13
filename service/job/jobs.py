@@ -198,9 +198,12 @@ class IngestArchivalMaterialsJob(BatchJob):
             current_chain |= _link('publish_to_atom')
             current_chain |= _link('publish_to_archive')
 
-            current_chain |= _link('cleanup_directories',
-                                   staging_current_folder=record_target['path'],
-                                   user_name=user_name)
+            current_chain |= _link(
+                'cleanup_directories',
+                success_msg="Material imported successfully",
+                staging_current_folder=record_target['path'],
+                user_name=user_name
+            )
 
             current_chain |= _link('finish_chain')
 
@@ -368,18 +371,17 @@ class IngestJournalsJob(BatchJob):
 
             current_chain |= _link('publish_to_archive')
 
-            result_info = {
-                'label': 'View in OJS',
-                'url': '{}/index.php/{}'.format(
+            current_chain |= _link(
+                'cleanup_directories',
+                success_msg="Journal imported successfully",
+                success_url='{}/index.php/{}'.format(
                     os.getenv('OJS_BASE_URL'),
                     issue_target['metadata']['ojs_journal_code']
-                )
-            }
-
-            current_chain |= _link('cleanup_directories',
-                                   result_info=result_info,
-                                   staging_current_folder=issue_target['path'],
-                                   user_name=user_name)
+                ),
+                success_url_label='View in OJS',
+                staging_current_folder=issue_target['path'],
+                user_name=user_name
+            )
 
             current_chain |= _link('finish_chain')
             chains.append(current_chain)
@@ -446,9 +448,12 @@ class IngestMonographsJob(BatchJob):
             current_chain |= _link('publish_to_omp',
                                    omp_press_code=monograph_target['metadata']['press_code'])
 
-            current_chain |= _link('cleanup_directories',
-                                   staging_current_folder=monograph_target['path'],
-                                   user_name=user_name)
+            current_chain |= _link(
+                'cleanup_directories',
+                success_msg="Monograph imported successfully",
+                staging_current_folder=monograph_target['path'],
+                user_name=user_name
+            )
 
             current_chain |= _link('finish_chain')
             chains.append(current_chain)

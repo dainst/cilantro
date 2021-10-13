@@ -15,6 +15,7 @@ from utils.object import Object
 from utils.setup_logging import setup_logging
 from utils.celery_client import celery_app
 
+from utils import cilantro_info_file
 
 setup_logging()
 
@@ -80,9 +81,6 @@ class BaseTask(Task):
     work_path = None
     log = logging.getLogger(__name__)
 
-    info_file_name = '.cilantro_info'
-    info_file_default_success_msg = 'No further success information provided'
-
     _label = None
     _description = None
 
@@ -121,14 +119,16 @@ class BaseTask(Task):
         parent = self.job_db.get_job_by_id(parent_id)
 
         if parent['job_type'] == 'cilantro_batch_chain':
-            info_file_path = os.path.join(self.staging_dir, parent['user'], parent['parameters']['id'], self.info_file_name)
+            batch_item_directory = os.path.join(
+                self.staging_dir, parent['user'], 
+                parent['parameters']['id']
+            )
 
-            with open(info_file_path, 'w') as f:
-                content = {
-                    'status': 'error',
-                    'msg': error
-                }
-                json.dump(content, f)
+            cilantro_info_file.write_error(
+                batch_item_directory,
+                parent['job_id'],
+                error
+            )
 
         if 'parent_job_id' in parent:
             self._propagate_failure_to_ancestors(parent['parent_job_id'], error)

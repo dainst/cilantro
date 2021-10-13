@@ -100,8 +100,7 @@ import {
     moveInStaging,
     WorkbenchFileTree,
     getVisibleFolderContents,
-    JobInfoError,
-    JobInfoLink
+    JobInfo
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';
@@ -283,6 +282,7 @@ export default class StagingBrowser extends Vue {
     // eslint-disable-next-line class-methods-use-this
     getFileStatusType(file: WorkbenchFile) {
         if (!file.job_info) return '';
+        if (file.job_info.status === 'started') return 'is-warning';
         if (file.job_info.status === 'success') return 'is-success';
         return 'is-danger';
     }
@@ -291,16 +291,19 @@ export default class StagingBrowser extends Vue {
     getFileStatusMessage(file: WorkbenchFile) {
         if (!file.job_info) return '';
 
-        const infoError = file.job_info.msg as JobInfoError;
-        const infoLink = file.job_info.msg as JobInfoLink;
+        const jobInfo = file.job_info as JobInfo;
 
-        if (infoError.job_id) {
-            return `<pre>A <a href='/job?id=${infoError.job_id}' target='_blank'>job</a> failed with an error: ${JSON.stringify(infoError)}</pre>`;
+        if (jobInfo.status === 'started') return `A <a href='/job?id=${jobInfo.job_id}' target='_blank'>job</a> is still running.`;
+
+        if (jobInfo.status === 'success' && jobInfo.msg) {
+            if (!jobInfo.url || !jobInfo.url_label) return jobInfo.msg;
+            return `<a href='${jobInfo.url}' target='_blank'>${jobInfo.url_label}</a>`;
         }
-        if (infoLink.url) {
-            return `<a href='${infoLink.url}' target='_blank'>${infoLink.label}</a>`;
+
+        if (jobInfo.status === 'error' && jobInfo.msg) {
+            return `A previous <a href='/job?id=${jobInfo.job_id}' target='_blank'>job</a> failed with an error: <pre>${JSON.stringify(jobInfo.msg)}</pre>`;
         }
-        return file.job_info.msg;
+        return file.job_info;
     }
 }
 

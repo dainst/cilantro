@@ -1,12 +1,13 @@
 import os
 import uuid
 import glob
-import json
 
 from celery import chord, signature
 
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask, ObjectTask
+
+from utils import cilantro_info_file
 
 
 class ListFilesTask(ObjectTask):
@@ -82,26 +83,29 @@ class CleanupDirectoriesTask(BaseTask):
     name = "cleanup_directories"
 
     def execute_task(self):
-        try: 
-            result_information = self.get_param('result_info')
-        except KeyError:
-            self.log.warning("No result information provided, falling back to default:")
-            self.log.warning(self.info_file_default_success_msg)
 
-            result_information = self.info_file_default_success_msg
+        staging_directory = os.path.join(
+            self.staging_dir, 
+            self.get_param('user_name'), 
+            self.get_param('staging_current_folder')
+        )
 
-        staging_current_folder = self.get_param('staging_current_folder')
-        user = self.get_param('user_name')
+        success_msg = self.params.get("success_msg")
+        success_url = self.params.get("success_url")
+        success_url_label = self.params.get("success_url_label")
 
-        info_file_path = os.path.join(self.staging_dir, user, staging_current_folder, self.info_file_name)
-
-        with open(info_file_path, 'w') as f:
-            content = {
-                'status': 'success',
-                'msg': result_information
-            }
-
-            json.dump(content, f)
+        if success_url is None or success_url_label is None:
+            cilantro_info_file.write_success(
+                staging_directory, 
+                success_msg
+            )
+        else:
+            cilantro_info_file.write_success_with_link(
+                staging_directory, 
+                success_msg,
+                success_url,
+                success_url_label
+            )
 
         self.delete_temp_folders()
 
