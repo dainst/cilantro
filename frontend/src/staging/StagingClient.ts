@@ -32,7 +32,7 @@ export function getVisibleFolderContents(tree: WorkbenchFileTree): WorkbenchFile
         .filter(file => !ignoredDirectoryContents.includes(file.name));
 }
 
-enum JobInfoStatus {
+export enum JobInfoStatus {
     success = 'success',
     error = 'error',
     started = 'started'
@@ -41,7 +41,7 @@ enum JobInfoStatus {
 export interface JobInfo {
     status: JobInfoStatus;
     // eslint-disable-next-line camelcase
-    job_id: string;
+    job_id?: string;
     msg?: string;
     url?: string;
     // eslint-disable-next-line camelcase

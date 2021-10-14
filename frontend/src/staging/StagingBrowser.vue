@@ -14,10 +14,10 @@
                 />
             </template>
             <template slot="end">
-            <b-switch v-model="showFailed">
+            <b-switch id="toggleFailed" v-model="showFailed">
                 Show failed imports
             </b-switch>
-            <b-switch v-model="showCompleted">
+            <b-switch id="toggleCompleted" v-model="showCompleted">
                 Show completed imports
             </b-switch>
             </template>
