@@ -8,7 +8,6 @@ import flushPromises from 'flush-promises';
 
 import StagingBrowser from '@/staging/StagingBrowser.vue';
 import { WorkbenchFileTree, JobInfo, JobInfoStatus } from '@/staging/StagingClient';
-import { JobParameters } from '@/job/JobParameters';
 
 const mockStagingTree: WorkbenchFileTree = {
     'BOOK-ZID001595386': {
@@ -56,7 +55,7 @@ describe('StagingBrowser.vue', () => {
         expect(wrapper.exists()).toBeTruthy();
     });
 
-    it('directories with a previously failed import attempt are shown by default', async() => {
+    it('directories with a previously failed import attempt are marked and shown by default', async() => {
         await flushPromises();
         expect(wrapper.find('.has-text-danger i.mdi-folder').exists()).toBe(true);
         expect(wrapper.find('a[href="/job?id=job_with_error"]').exists()).toBe(true);
@@ -89,7 +88,7 @@ describe('StagingBrowser.vue', () => {
         expect(wrapper.find('.has-text-success > i.mdi-folder').exists()).toBe(false);
     });
 
-    it('successfully imported directories can be displayed', async() => {
+    it('successfully imported directories can be displayed and are marked', async() => {
         await flushPromises();
         expect(wrapper.find('span.has-text-success i.mdi-folder').exists()).toBe(false);
         await wrapper.find('#toggleCompleted input').trigger('click');
