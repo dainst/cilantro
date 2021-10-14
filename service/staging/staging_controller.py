@@ -53,7 +53,7 @@ def _get_directory_structure(dir_path, depths=0):
 
 def _parse_info_file(path):
     if not os.path.exists(path):
-        {}
+        return None
     else:
         with open(path, 'r') as f:
             return json.load(f)
