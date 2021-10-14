@@ -58,7 +58,6 @@ describe('StagingBrowser.vue', () => {
     it('directories with a previously failed import attempt are marked and shown by default', async() => {
         await flushPromises();
         expect(wrapper.find('.has-text-danger i.mdi-folder').exists()).toBe(true);
-        expect(wrapper.find('a[href="/job?id=job_with_error"]').exists()).toBe(true);
     });
 
     it('directories with a previously failed import show link to failed job', async() => {
