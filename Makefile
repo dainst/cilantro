@@ -45,23 +45,23 @@ test: run-detached test-backend test-frontend stop
 test-frontend:
 	npm run test:unit --prefix frontend
 
-test-backend:
+test-backend: test-backend-unit test-backend-integration
+
+test-backend-unit:
 	docker exec --env-file .env-test cilantro_service python -m unittest discover test.service.unit -vf
-	docker exec --env-file .env-test cilantro_service python -m unittest discover test.service.integration -vf
 	docker exec --env-file .env-test cilantro_service python -m unittest discover test.utils -vf
-	
 	docker exec --env-file .env-test cilantro_default_worker python -m unittest discover test.default_worker.unit -vf
-	docker exec --env-file .env-test cilantro_default_worker python -m unittest discover test.default_worker.integration -vf
 	docker exec --env-file .env-test cilantro_default_worker python -m unittest discover test.utils -vf
-	
 	docker exec --env-file .env-test cilantro_convert_worker python -m unittest discover test.convert_worker -vf
 	docker exec --env-file .env-test cilantro_convert_worker python -m unittest discover test.utils -vf
-
 	docker exec --env-file .env-test cilantro_nlp_worker python3 -m unittest discover test.nlp_worker -vf
 	docker exec --env-file .env-test cilantro_nlp_worker python3 -m unittest discover test.utils -vf
-
 	docker exec --env-file .env-test cilantro_nlp_heideltime_worker python3 -m unittest discover test.nlp_heideltime_worker -vf
 	docker exec --env-file .env-test cilantro_nlp_heideltime_worker python3 -m unittest discover test.utils -vf
+
+test-backend-integration:
+	docker exec --env-file .env-test cilantro_default_worker python -m unittest discover test.default_worker.integration -vf
+	docker exec --env-file .env-test cilantro_service python -m unittest discover test.service.integration -vf
 
 fix-permissions:
 	sudo chown -R $(whoami):$(whoami) data/
