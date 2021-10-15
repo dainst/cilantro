@@ -50,7 +50,7 @@ class JobDb:
                 "Could not get object id. Is the job-db up and initialized?"
             )
 
-    def get_jobs_for_user(self, user):
+    def get_jobs(self, users=[]):
         """
         Find all jobs of the passed user in the job database.
 
@@ -58,7 +58,15 @@ class JobDb:
         :return: list of job objects
         """
         job_list = []
-        for job in self.db.jobs.find({"user": user, "parent_job_id": None, "archived":False}, {'_id': False}):
+
+        query = {
+            "parent_job_id": None, 
+            "archived": False
+        }
+        if users != []:
+            query["user"] =  {"$in": users}
+
+        for job in self.db.jobs.find(query, {'_id': False}):
             job_list.append(
                 self._expand_child_information(job)
             )
