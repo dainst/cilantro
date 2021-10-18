@@ -2,42 +2,42 @@
     <b-table class="" :data="this.targets" detailed detail-key="id">
         <template slot-scope="props">
             <b-table-column style="vertical-align: middle;">
-                <b-icon v-if="isTargetError(props.row)" icon="alert-circle" type="is-danger" />
+                <b-icon
+                    v-if="isTargetError(props.row)"
+                    icon="alert-circle"
+                    type="is-danger"
+                />
                 <template v-else>
                     <b-icon
                         v-if="!props.row.metadata"
                         icon="loading"
-                        custom-class="mdi-spin"/>
-                    <b-icon
-                        v-else
-                        icon="check"
-                        type="is-success"
+                        custom-class="mdi-spin"
                     />
+                    <b-icon v-else icon="check" type="is-success" />
                 </template>
             </b-table-column>
-            <b-table-column
-                field="id"
-                label="Path"
-            >{{ props.row.id }}</b-table-column>
-            <template
-                v-if="!isTargetError(props.row) &&
-                    props.row.metadata">
-                <b-table-column field="metadata.title"
-                                label="Title">
-                    <a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id"
-                       target="_blank">
-                        {{ props.row.metadata.title || '-' | truncate(80) }}
+            <b-table-column field="id" label="Path">{{
+                props.row.id
+            }}</b-table-column>
+            <template v-if="!isTargetError(props.row) && props.row.metadata">
+                <b-table-column field="metadata.title" label="Title">
+                    <a
+                        :href="
+                            'https://zenon.dainst.org/Record/' +
+                                props.row.metadata.zenon_id
+                        "
+                        target="_blank"
+                    >
+                        {{ props.row.metadata.title || "-" | truncate(80) }}
                     </a>
                 </b-table-column>
-                <b-table-column
-                    field="metadata.subtitle"
-                    label="Subtitle"
-                >{{ props.row.metadata.subtitle || '-' }}
+                <b-table-column field="metadata.subtitle" label="Subtitle"
+                    >{{ props.row.metadata.subtitle || "-" }}
                 </b-table-column>
                 <b-table-column
                     field="metadata.date_published"
                     label="Date published"
-                    >{{ props.row.metadata.date_published || '-' }}
+                    >{{ props.row.metadata.date_published || "-" }}
                 </b-table-column>
             </template>
             <template v-else>
@@ -50,8 +50,11 @@
         <template slot="detail" slot-scope="props">
             <div class="content">
                 <ul>
-                    <li v-for="(id, name) in props.row.metadata" v-bind:key="name">
-                        {{name}}: {{id}}
+                    <li
+                        v-for="(id, name) in props.row.metadata"
+                        v-bind:key="name"
+                    >
+                        {{ name }}: {{ id }}
                     </li>
                 </ul>
                 <ul v-if="isTargetError(props.row)">
@@ -68,13 +71,19 @@
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
+import { JobTargetError, isTargetError } from '@/job/JobParameters';
 import {
-    JobTargetError, isTargetError
-} from '@/job/JobParameters';
-import {
-    MaybeJobTarget, JobTargetData, MonographMetadata, Person
+    MaybeJobTarget,
+    JobTargetData,
+    MonographMetadata,
+    Person
 } from './IngestMonographParameters';
-import { getRecord, ZenonRecord, Author } from '@/util/ZenonClient';
+import {
+    getRecord,
+    ZenonRecord,
+    Author,
+    loadMonographZenonData
+} from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
 import {
     WorkbenchFileTree,
@@ -104,7 +113,8 @@ export default class MonographMetadataForm extends Vue {
 
     async mounted() {
         this.targets = await asyncMap(
-            this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
+            this.selectedPaths,
+            async(path): Promise<MaybeJobTarget> => {
                 const id = path.split('/').pop() || '';
                 const zenonId = extractZenonId(path);
                 let errors: string[] = [];
@@ -120,9 +130,9 @@ export default class MonographMetadataForm extends Vue {
                 }
 
                 if (errors.length === 0) {
-                    return new JobTargetData(
-                        id, path, { zenon_id: zenonId } as MonographMetadata
-                    );
+                    return new JobTargetData(id, path, {
+                        zenon_id: zenonId
+                    } as MonographMetadata);
                 }
                 return new JobTargetError(id, path, errors);
             }
@@ -130,7 +140,7 @@ export default class MonographMetadataForm extends Vue {
 
         this.targets = await asyncMap(this.targets, async(target) => {
             if (target instanceof JobTargetData) {
-                return loadZenonData(target);
+                return loadMonographZenonData(target);
             }
             return new JobTargetError(target.id, target.path, target.messages);
         });
@@ -141,7 +151,7 @@ export default class MonographMetadataForm extends Vue {
     isTargetError = isTargetError;
 }
 
-function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
+function evaluateTargetFolder(targetFolder: WorkbenchFileTree) {
     const errors: string[] = [];
     if (!containsNumberOfFiles(targetFolder, 1)) {
         errors.push(
@@ -151,9 +161,13 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
 
     if (!('tif' in targetFolder)) {
         errors.push(`Folder does not have a subfolder 'tif'.`);
-    } else if (targetFolder.tif.contents !== undefined &&
-                !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif'])) {
-        errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
+    } else if (
+        targetFolder.tif.contents !== undefined &&
+        !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif'])
+    ) {
+        errors.push(
+            `Subfolder 'tif' does not only contain files ending in '.tif'.`
+        );
     }
     return errors;
 }
@@ -162,75 +176,6 @@ function extractZenonId(path: string): string {
     const result = path.match(/.*Book-ZID(\d+)/i);
     if (!result || result.length < 1) return '';
     return result[1];
-}
-
-function filterDuplicateEntry<T>(value: T, index: number, array: T[]) {
-    return array.indexOf(value) === index;
-}
-
-async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
-    try {
-        const zenonRecord = await getRecord(target.metadata.zenon_id) as ZenonRecord;
-        const errors : string[] = [];
-
-        let datePublished = '';
-
-        if (zenonRecord.publicationDates.length > 0) {
-            try {
-                [datePublished] = new Date(zenonRecord.publicationDates[0]).toISOString().split('T');
-            } catch (e) {
-                errors.push(`Unable to parse date: ${zenonRecord.publicationDates[0]}`);
-            }
-        }
-        let summary = '';
-        if (zenonRecord.summary.length > 0) {
-            [summary] = zenonRecord.summary;
-        }
-
-        let subTitle = '';
-        if (zenonRecord.subTitle) {
-            subTitle = zenonRecord.subTitle.trim();
-        }
-
-        const filteredSubjects = zenonRecord.subjects
-            .map(subject => subject[0])
-            .filter(filterDuplicateEntry);
-        const authors = extractAuthors(zenonRecord);
-
-        if (errors.length !== 0) {
-            return new JobTargetError(target.id, target.path, errors);
-        }
-        const metadata = {
-            zenon_id: target.metadata.zenon_id,
-            press_code: 'dai',
-            authors,
-            title: zenonRecord.shortTitle.replace(/[\s:]+$/, '').trim(),
-            subtitle: subTitle,
-            abstract: summary,
-            date_published: datePublished,
-            keywords: filteredSubjects
-        } as MonographMetadata;
-
-        return new JobTargetData(target.id, target.path, metadata);
-    } catch (error) {
-        return new JobTargetError(target.id, target.path, [error]);
-    }
-}
-
-function extractAuthors(record: ZenonRecord) : Person[] {
-    return record.authors.map((author : Author) => {
-        const authorSplit = author.name.split(',');
-        if (authorSplit.length === 2) {
-            return {
-                givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
-                lastname: authorSplit[0].trim()
-            } as Person;
-        }
-        return {
-            givenname: '',
-            lastname: author.name
-        } as Person;
-    });
 }
 
 </script>
