@@ -26,6 +26,8 @@ export class ZenonRecord {
     summary: string;
     shortTitle: string;
     subTitle?: string;
+    monographMetadata: MonographMetadata;
+    journalMetadata: JournalIssueMetadata;
 
     constructor(zenonData: any) {
         this.id = zenonData.id;
@@ -39,6 +41,8 @@ export class ZenonRecord {
         this.summary = zenonData.summary;
         this.shortTitle = zenonData.shortTitle;
         this.subTitle = zenonData.subTitle;
+        this.monographMetadata = this.loadMonographZenonData();
+        this.journalMetadata = this.loadJournalZenonData();
     }
 
     loadMonographZenonData = (): MonographMetadata => {
@@ -67,7 +71,9 @@ export class ZenonRecord {
             publishing_year: parseInt(this.publicationDates[0], 10),
             number: getIssueNumber(this),
             description: this.title,
-            ojs_journal_code: this.parentId ? ojsZenonMapping[this.parentId] : '',
+            ojs_journal_code: this.parentId
+                ? ojsZenonMapping[this.parentId]
+                : '',
             reporting_year: getReportingYear(this)
         } as JournalIssueMetadata;
         return metadata;
@@ -133,7 +139,7 @@ function getDatePublished(zenonRecord: ZenonRecord) {
             [datePublished] = new Date(zenonRecord.publicationDates[0])
                 .toISOString()
                 .split('T');
-        // eslint-disable-next-line no-empty
+            // eslint-disable-next-line no-empty
         } catch (e) {}
     }
     return datePublished;
