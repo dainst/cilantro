@@ -81,8 +81,7 @@ import {
 import {
     getRecord,
     ZenonRecord,
-    Author,
-    loadMonographZenonData
+    Author
 } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
 import {
@@ -140,7 +139,7 @@ export default class MonographMetadataForm extends Vue {
 
         this.targets = await asyncMap(this.targets, async(target) => {
             if (target instanceof JobTargetData) {
-                return loadMonographZenonData(target);
+                return target.loadMonographZenonData();
             }
             return new JobTargetError(target.id, target.path, target.messages);
         });

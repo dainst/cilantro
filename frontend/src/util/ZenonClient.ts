@@ -40,6 +40,38 @@ export class ZenonRecord {
         this.shortTitle = zenonData.shortTitle;
         this.subTitle = zenonData.subTitle;
     }
+
+    loadMonographZenonData = (): MonographMetadata => {
+        const filteredSubjects = this.subjects
+            .map(subject => subject[0])
+            .filter(filterDuplicateEntry);
+        const authors = extractAuthors(this);
+
+        const metadata = {
+            zenon_id: this.id,
+            press_code: 'dai',
+            authors,
+            title: this.shortTitle.replace(/[\s:]+$/, '').trim(),
+            subtitle: getSubTitle(this),
+            abstract: getSummary(this),
+            date_published: getDatePublished(this),
+            keywords: filteredSubjects
+        } as MonographMetadata;
+        return metadata;
+    };
+
+    loadJournalZenonData = (): JournalIssueMetadata => {
+        const metadata = {
+            zenon_id: this.id,
+            volume: getSerialVolume(this),
+            publishing_year: parseInt(this.publicationDates[0], 10),
+            number: getIssueNumber(this),
+            description: this.title,
+            ojs_journal_code: this.parentId ? ojsZenonMapping[this.parentId] : '',
+            reporting_year: getReportingYear(this)
+        } as JournalIssueMetadata;
+        return metadata;
+    };
 }
 
 export interface Author {
@@ -93,7 +125,7 @@ export async function getRecord(zenonID: string): Promise<ZenonRecord> {
     );
 }
 
-function getDatePublished(zenonRecord: ZenonRecord, errors: string[]) {
+function getDatePublished(zenonRecord: ZenonRecord) {
     let datePublished = '';
 
     if (zenonRecord.publicationDates.length > 0) {
@@ -101,15 +133,12 @@ function getDatePublished(zenonRecord: ZenonRecord, errors: string[]) {
             [datePublished] = new Date(zenonRecord.publicationDates[0])
                 .toISOString()
                 .split('T');
-        } catch (e) {
-            errors.push(
-                `Unable to parse date: ${zenonRecord.publicationDates[0]}`
-            );
-        }
+        // eslint-disable-next-line no-empty
+        } catch (e) {}
     }
     return datePublished;
 }
-function getSummary(zenonRecord: ZenonRecord, errors: string[]) {
+function getSummary(zenonRecord: ZenonRecord) {
     let summary = '';
     if (zenonRecord.summary.length > 0) {
         [summary] = zenonRecord.summary;
@@ -117,45 +146,12 @@ function getSummary(zenonRecord: ZenonRecord, errors: string[]) {
     return summary;
 }
 
-function getSubTitle(zenonRecord: ZenonRecord, errors: string[]) {
+function getSubTitle(zenonRecord: ZenonRecord) {
     let subTitle = '';
     if (zenonRecord.subTitle) {
         subTitle = zenonRecord.subTitle.trim();
     }
     return subTitle;
-}
-export async function loadMonographZenonData(
-    target: JobTargetData
-): Promise<MaybeJobTarget> {
-    try {
-        const zenonRecord = (await getRecord(
-            target.metadata.zenon_id
-        )) as ZenonRecord;
-        const errors: string[] = [];
-
-        const filteredSubjects = zenonRecord.subjects
-            .map(subject => subject[0])
-            .filter(filterDuplicateEntry);
-        const authors = extractAuthors(zenonRecord);
-
-        if (errors.length !== 0) {
-            return new JobTargetError(target.id, target.path, errors);
-        }
-        const metadata = {
-            zenon_id: target.metadata.zenon_id,
-            press_code: 'dai',
-            authors,
-            title: zenonRecord.shortTitle.replace(/[\s:]+$/, '').trim(),
-            subtitle: getSubTitle(zenonRecord, errors),
-            abstract: getSummary(zenonRecord, errors),
-            date_published: getDatePublished(zenonRecord, errors),
-            keywords: filteredSubjects
-        } as MonographMetadata;
-
-        return new JobTargetData(target.id, target.path, metadata);
-    } catch (error) {
-        return new JobTargetError(target.id, target.path, [error]);
-    }
 }
 function filterDuplicateEntry<T>(value: T, index: number, array: T[]) {
     return array.indexOf(value) === index;
@@ -175,49 +171,6 @@ function extractAuthors(record: ZenonRecord): Person[] {
             lastname: author.name
         } as Person;
     });
-}
-function getParentId(zenonRecord: ZenonRecord, errors: string[]) {
-    let parentId = '';
-    if (!zenonRecord.parentId) {
-        errors.push(
-            `Zenon record has no parent id. Can't determine which Journal this issue belongs to.`
-        );
-    } else if (!(zenonRecord.parentId in ojsZenonMapping)) {
-        errors.push(
-            `Missing OJS Journal code for Journal with Zenon-ID '${zenonRecord.parentId}'.`
-        );
-    } else {
-        // eslint-disable-next-line prefer-destructuring
-        parentId = zenonRecord.parentId;
-    }
-    return parentId;
-}
-export async function loadJournalZenonData(target: JobTargetData) {
-    try {
-        const zenonRecord = (await getRecord(
-            target.metadata.zenon_id
-        )) as ZenonRecord;
-        const errors: string[] = [];
-
-        if (errors.length !== 0) {
-            return new JobTargetError(target.id, target.path, errors);
-        }
-        const parentId = getParentId(zenonRecord, errors);
-
-        const metadata = {
-            zenon_id: target.metadata.zenon_id,
-            volume: getSerialVolume(zenonRecord),
-            publishing_year: parseInt(zenonRecord.publicationDates[0], 10),
-            number: getIssueNumber(zenonRecord),
-            description: zenonRecord.title,
-            ojs_journal_code: ojsZenonMapping[parentId],
-            reporting_year: getReportingYear(zenonRecord)
-        } as JournalIssueMetadata;
-
-        return new JobTargetData(target.id, target.path, metadata);
-    } catch (error) {
-        return new JobTargetError(target.id, target.path, [error]);
-    }
 }
 
 function getReportingYear(record: ZenonRecord): number {
