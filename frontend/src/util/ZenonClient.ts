@@ -189,11 +189,9 @@ function getIssueNumber(record: ZenonRecord): number {
 function getSerialVolume(record: ZenonRecord): number {
     let match: string = '';
     if (record.partOrSectionInfo.includes(',')) {
-        // eslint-disable-next-line prefer-destructuring
-        match = record.partOrSectionInfo.match(/[^,]*/g)![0];
+        [match] = record.partOrSectionInfo.match(/[^,]*/g)!;
     } else {
-        // eslint-disable-next-line prefer-destructuring
-        match = record.partOrSectionInfo.match(/[^(]*/g)![0];
+        [match] = record.partOrSectionInfo.match(/[^(]*/g)!;
     }
     return parseInt(match, 10);
 }
