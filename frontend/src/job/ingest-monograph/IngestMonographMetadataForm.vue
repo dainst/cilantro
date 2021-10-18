@@ -139,7 +139,7 @@ export default class MonographMetadataForm extends Vue {
 
         this.targets = await asyncMap(this.targets, async(target) => {
             if (target instanceof JobTargetData) {
-                return target.loadMonographZenonData();
+                return target.MonographMetadata;
             }
             return new JobTargetError(target.id, target.path, target.messages);
         });
