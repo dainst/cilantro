@@ -45,8 +45,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { sendRequest } from '@/util/HTTPClient';
-import { backendUri } from '@/config';
+import { getUsers } from '@/authentication/AuthenticationClient';
 import JobListEntry from '@/job/JobListEntry.vue';
 
 @Component({
@@ -65,7 +64,7 @@ export default class JobList extends Vue {
 
     async loadUsers() {
         try {
-            const response = await sendRequest('get', `${backendUri}/user/`, {}, {}, false);
+            const response = await getUsers();
             this.users = response.users;
         } catch (e) {
             this.users = [];
