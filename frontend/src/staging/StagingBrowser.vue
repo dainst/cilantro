@@ -111,7 +111,7 @@ import StagingBrowserFolderSelection from './StagingBrowserFolderSelection.vue';
 })
 export default class StagingBrowser extends Vue {
     @Prop({ required: true }) selectedPaths!: string[];
-    @Prop({ default: '*/*' }) acceptedFiletypes!: string;
+    @Prop({ default: '' }) acceptedFiletypes!: string[];
 
     operationInProgress: boolean = false;
     workingDirectory: string = '';
@@ -246,11 +246,12 @@ export default class StagingBrowser extends Vue {
         });
     }
 
-    moveSelected(targetPath: string) {
+    moveSelected(targetDirectory: string) {
         this.operationInProgress = true;
         const moveOperations = this.checkedFiles.map((file) => {
             const sourcePath = getFilePath(this.workingDirectory, file.name);
-            return moveInStaging(sourcePath, getFilePath(targetPath, file.name))
+            const targetPath = getFilePath(targetDirectory, file.name);
+            return moveInStaging(sourcePath, targetPath)
                 .catch(e => showError(`Failed to move ${file.name}!`, e));
         });
         Promise.all(moveOperations).then(() => {
@@ -273,7 +274,10 @@ export default class StagingBrowser extends Vue {
 }
 
 export function getFilePath(baseDir: string, filename: string): string {
-    return baseDir !== '' ? `${baseDir}/${filename}` : filename;
+    let path = (baseDir === '') ? filename : `${baseDir}/${filename}`;
+
+    path = path.replace(/^\//i, '');
+    return path;
 }
 
 export function getFileName(path: string): string {
