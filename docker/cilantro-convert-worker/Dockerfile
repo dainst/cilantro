@@ -32,6 +32,8 @@ COPY docker/cilantro-convert-worker/pyproject.toml docker/cilantro-convert-worke
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction
 
+RUN sed -i '/disable ghostscript format types/,+6d' /etc/ImageMagick-6/policy.xml
+
 # Copy the rest of the app
 WORKDIR /app
 COPY service ./service
