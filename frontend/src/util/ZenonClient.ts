@@ -92,6 +92,38 @@ export async function getRecord(zenonID: string): Promise<ZenonRecord> {
         response => new ZenonRecord(response.records[0])
     );
 }
+
+function getDatePublished(zenonRecord: ZenonRecord, errors: string[]) {
+    let datePublished = '';
+
+    if (zenonRecord.publicationDates.length > 0) {
+        try {
+            [datePublished] = new Date(zenonRecord.publicationDates[0])
+                .toISOString()
+                .split('T');
+        } catch (e) {
+            errors.push(
+                `Unable to parse date: ${zenonRecord.publicationDates[0]}`
+            );
+        }
+    }
+    return datePublished;
+}
+function getSummary(zenonRecord: ZenonRecord, errors: string[]) {
+    let summary = '';
+    if (zenonRecord.summary.length > 0) {
+        [summary] = zenonRecord.summary;
+    }
+    return summary;
+}
+
+function getSubTitle(zenonRecord: ZenonRecord, errors: string[]) {
+    let subTitle = '';
+    if (zenonRecord.subTitle) {
+        subTitle = zenonRecord.subTitle.trim();
+    }
+    return subTitle;
+}
 export async function loadMonographZenonData(
     target: JobTargetData
 ): Promise<MaybeJobTarget> {
@@ -100,29 +132,6 @@ export async function loadMonographZenonData(
             target.metadata.zenon_id
         )) as ZenonRecord;
         const errors: string[] = [];
-
-        let datePublished = '';
-
-        if (zenonRecord.publicationDates.length > 0) {
-            try {
-                [datePublished] = new Date(zenonRecord.publicationDates[0])
-                    .toISOString()
-                    .split('T');
-            } catch (e) {
-                errors.push(
-                    `Unable to parse date: ${zenonRecord.publicationDates[0]}`
-                );
-            }
-        }
-        let summary = '';
-        if (zenonRecord.summary.length > 0) {
-            [summary] = zenonRecord.summary;
-        }
-
-        let subTitle = '';
-        if (zenonRecord.subTitle) {
-            subTitle = zenonRecord.subTitle.trim();
-        }
 
         const filteredSubjects = zenonRecord.subjects
             .map(subject => subject[0])
@@ -137,9 +146,9 @@ export async function loadMonographZenonData(
             press_code: 'dai',
             authors,
             title: zenonRecord.shortTitle.replace(/[\s:]+$/, '').trim(),
-            subtitle: subTitle,
-            abstract: summary,
-            date_published: datePublished,
+            subtitle: getSubTitle(zenonRecord, errors),
+            abstract: getSummary(zenonRecord, errors),
+            date_published: getDatePublished(zenonRecord, errors),
             keywords: filteredSubjects
         } as MonographMetadata;
 
