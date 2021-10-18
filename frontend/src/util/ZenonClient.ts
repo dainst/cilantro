@@ -3,7 +3,11 @@ import {
     JobTargetData,
     JournalIssueMetadata
 } from '@/job/ingest-journal/IngestJournalParameters';
-import { MaybeJobTarget, MonographMetadata, Person } from '@/job/ingest-monograph/IngestMonographParameters';
+import {
+    MaybeJobTarget,
+    MonographMetadata,
+    Person
+} from '@/job/ingest-monograph/IngestMonographParameters';
 import { JobTargetError } from '@/job/JobParameters';
 import { sendRequest } from './HTTPClient';
 
@@ -88,18 +92,26 @@ export async function getRecord(zenonID: string): Promise<ZenonRecord> {
         response => new ZenonRecord(response.records[0])
     );
 }
-export async function loadMonographZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
+export async function loadMonographZenonData(
+    target: JobTargetData
+): Promise<MaybeJobTarget> {
     try {
-        const zenonRecord = await getRecord(target.metadata.zenon_id) as ZenonRecord;
-        const errors : string[] = [];
+        const zenonRecord = (await getRecord(
+            target.metadata.zenon_id
+        )) as ZenonRecord;
+        const errors: string[] = [];
 
         let datePublished = '';
 
         if (zenonRecord.publicationDates.length > 0) {
             try {
-                [datePublished] = new Date(zenonRecord.publicationDates[0]).toISOString().split('T');
+                [datePublished] = new Date(zenonRecord.publicationDates[0])
+                    .toISOString()
+                    .split('T');
             } catch (e) {
-                errors.push(`Unable to parse date: ${zenonRecord.publicationDates[0]}`);
+                errors.push(
+                    `Unable to parse date: ${zenonRecord.publicationDates[0]}`
+                );
             }
         }
         let summary = '';
@@ -155,6 +167,22 @@ function extractAuthors(record: ZenonRecord): Person[] {
         } as Person;
     });
 }
+function getParentId(zenonRecord: ZenonRecord, errors: string[]) {
+    let parentId = '';
+    if (!zenonRecord.parentId) {
+        errors.push(
+            `Zenon record has no parent id. Can't determine which Journal this issue belongs to.`
+        );
+    } else if (!(zenonRecord.parentId in ojsZenonMapping)) {
+        errors.push(
+            `Missing OJS Journal code for Journal with Zenon-ID '${zenonRecord.parentId}'.`
+        );
+    } else {
+        // eslint-disable-next-line prefer-destructuring
+        parentId = zenonRecord.parentId;
+    }
+    return parentId;
+}
 export async function loadJournalZenonData(target: JobTargetData) {
     try {
         const zenonRecord = (await getRecord(
@@ -162,23 +190,10 @@ export async function loadJournalZenonData(target: JobTargetData) {
         )) as ZenonRecord;
         const errors: string[] = [];
 
-        let parentId = '';
-        if (!zenonRecord.parentId) {
-            errors.push(
-                `Zenon record has no parent id. Can't determine which Journal this issue belongs to.`
-            );
-        } else if (!(zenonRecord.parentId in ojsZenonMapping)) {
-            errors.push(
-                `Missing OJS Journal code for Journal with Zenon-ID '${zenonRecord.parentId}'.`
-            );
-        } else {
-            // eslint-disable-next-line prefer-destructuring
-            parentId = zenonRecord.parentId;
-        }
-
         if (errors.length !== 0) {
             return new JobTargetError(target.id, target.path, errors);
         }
+        const parentId = getParentId(zenonRecord, errors);
 
         const metadata = {
             zenon_id: target.metadata.zenon_id,
