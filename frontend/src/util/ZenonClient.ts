@@ -1,14 +1,11 @@
 import { ojsZenonMapping } from '@/config';
 import {
-    JobTargetData,
     JournalIssueMetadata
 } from '@/job/ingest-journal/IngestJournalParameters';
 import {
-    MaybeJobTarget,
     MonographMetadata,
     Person
 } from '@/job/ingest-monograph/IngestMonographParameters';
-import { JobTargetError } from '@/job/JobParameters';
 import { sendRequest } from './HTTPClient';
 
 const zenonBaseURL: string = 'https://zenon.dainst.org/';
@@ -41,31 +38,16 @@ export class ZenonRecord {
         this.summary = zenonData.summary;
         this.shortTitle = zenonData.shortTitle;
         this.subTitle = zenonData.subTitle;
-        this.monographMetadata = this.loadMonographZenonData();
-        this.journalMetadata = this.loadJournalZenonData();
-    }
-
-    loadMonographZenonData = (): MonographMetadata => {
-        const filteredSubjects = this.subjects
-            .map(subject => subject[0])
-            .filter(filterDuplicateEntry);
-        const authors = extractAuthors(this);
-
-        const metadata = {
+        this.monographMetadata = {
             zenon_id: this.id,
             press_code: 'dai',
-            authors,
+            authors: extractAuthors(this),
             title: this.shortTitle.replace(/[\s:]+$/, '').trim(),
             subtitle: getSubTitle(this),
             abstract: getSummary(this),
-            date_published: getDatePublished(this),
-            keywords: filteredSubjects
-        } as MonographMetadata;
-        return metadata;
-    };
-
-    loadJournalZenonData = (): JournalIssueMetadata => {
-        const metadata = {
+            date_published: getDatePublished(this)
+        };
+        this.journalMetadata = {
             zenon_id: this.id,
             volume: getSerialVolume(this),
             publishing_year: parseInt(this.publicationDates[0], 10),
@@ -75,9 +57,8 @@ export class ZenonRecord {
                 ? ojsZenonMapping[this.parentId]
                 : '',
             reporting_year: getReportingYear(this)
-        } as JournalIssueMetadata;
-        return metadata;
-    };
+        };
+    }
 }
 
 export interface Author {
@@ -158,9 +139,6 @@ function getSubTitle(zenonRecord: ZenonRecord) {
         subTitle = zenonRecord.subTitle.trim();
     }
     return subTitle;
-}
-function filterDuplicateEntry<T>(value: T, index: number, array: T[]) {
-    return array.indexOf(value) === index;
 }
 
 function extractAuthors(record: ZenonRecord): Person[] {
