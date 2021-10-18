@@ -111,7 +111,7 @@ import StagingBrowserFolderSelection from './StagingBrowserFolderSelection.vue';
 })
 export default class StagingBrowser extends Vue {
     @Prop({ required: true }) selectedPaths!: string[];
-    @Prop({ default: '' }) acceptedFiletypes!: string[];
+    @Prop({ default: '' }) acceptedFiletypes!: string;
 
     operationInProgress: boolean = false;
     workingDirectory: string = '';
