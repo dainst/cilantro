@@ -15,9 +15,6 @@
         }
     ],
     "options": {
-        "ojs_options": {
-            "default_create_frontpage": true
-        },
         "ocr_options": {
             "do_ocr": true,
             "ocr_lang": "eng"

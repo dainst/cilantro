@@ -2,14 +2,6 @@
     <section class="tile is-ancestor">
         <div class="tile is-parent">
             <div class="tile is-child box">
-                <p class="title">OJS Options</p>
-                <b-field>
-                    <b-switch
-                        v-model="options.ojs_options.default_create_frontpage"
-                    >Always create frontpage</b-switch>
-                </b-field>
-            </div>
-            <div class="tile is-child box">
                 <OCROptionsForm
                     :initialOptions="options.ocr_options"
                     @options-updated="options = $event"
