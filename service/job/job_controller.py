@@ -63,7 +63,7 @@ def archive_job(job_id):
     """
     job_db = JobDb()
     user = auth.username()
-    if job_db.get_job_by_id(job_id)["user"] == user:
+    if job_db.get_job_by_id(job_id)["user"] == user or user == "admin":
         job_db.archive_jobs([job_id])
         job_db.close()
     else:
@@ -158,7 +158,14 @@ def job_list():
     """
     user = auth.username()
     job_db = JobDb()
-    jobs = job_db.get_jobs_for_user(user)
+
+    if user == "admin":
+        if not request.args.getlist("job_owners[]"):
+            jobs = job_db.get_jobs()
+        else:
+            jobs = job_db.get_jobs(users=request.args.getlist("job_owners[]"))
+    else:
+        jobs = job_db.get_jobs([user])
     job_db.close()
 
     return jsonify(jobs)

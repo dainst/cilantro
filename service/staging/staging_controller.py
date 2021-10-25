@@ -103,7 +103,8 @@ def get_path(path):
     """
     depths = request.args.get('depths', 1, int)
 
-    abs_path = os.path.join(staging_dir, auth.username(), path)
+    abs_path = _get_absolute_path(path)
+
     if os.path.isdir(abs_path):
         return jsonify(_get_directory_structure(abs_path, depths=depths))
     elif os.path.isfile(abs_path):
@@ -156,11 +157,12 @@ def delete_from_staging(path):
     :resheader Content-Type: application/json
     :param str path: path to file or directory to be deleted
     """
+    abs_path = _get_absolute_path(path)
     try:
-        os.remove(os.path.join(staging_dir, auth.username(), path))
+        os.remove(abs_path)
     except (FileNotFoundError, IsADirectoryError):
         try:
-            shutil.rmtree(os.path.join(staging_dir, auth.username(), path))
+            shutil.rmtree(abs_path)
         except FileNotFoundError:
             raise ApiError("file_not_found",
                            f"No resource was found under the path {path}", 404)
@@ -215,8 +217,10 @@ def create_folder():
         raise ApiError("param_not found", "Missing folderpath parameter")
     folderpath = params['folderpath']
     try:
-        os.makedirs(os.path.join(staging_dir, auth.username(), folderpath),
-                    exist_ok=True)
+        os.makedirs(
+            _get_absolute_path(folderpath),
+            exist_ok=True
+        )
         return jsonify({"success": True}), 200
     except Exception as e:
         return _generate_error_result(
@@ -292,16 +296,18 @@ def upload_to_staging():
     log.debug(f"Uploading {len(request.files)} files")
     results = {}
 
-    is_target_folder_param_present = 'target_folder' in request.form
-    if is_target_folder_param_present:
+    if 'target_folder' in request.form:
         target_folder = request.form['target_folder']
+    else:
+        target_folder = ""
+
+    abs_path = _get_absolute_path(target_folder)
 
     if request.files:
         for key in request.files:
             for file in request.files.getlist(key):
-                if is_target_folder_param_present:
-                    file.filename = f"{target_folder}/{file.filename}"
-                results[file.filename] = _process_file(file, auth.username())
+                file.path = f"{abs_path}/{secure_filename(file.filename)}"
+                results[file.path] = _process_file(file, auth.username())
         return jsonify({"result": results}), 200
     raise ApiError("no_files_provided",
                    f"The request did not contain any files")
@@ -357,8 +363,15 @@ def move():
         raise ApiError("param_not found", "Missing source parameter")
     if 'target' not in params:
         raise ApiError("param_not found", "Missing target parameter")
-    source = os.path.join(staging_dir, auth.username(), params['source'])
-    target = os.path.join(staging_dir, auth.username(), params['target'])
+
+    print(params['source'])
+    print(params['target'])
+    
+    source = _get_absolute_path(params['source'])
+    target = _get_absolute_path(params['target'])
+
+    print(source)
+    print(target)
     try:
         os.rename(source, target)
         return jsonify({"success": True}), 200
@@ -377,17 +390,16 @@ def _process_file(file, username):
             "extension_not_allowed",
             f"File extension '{_get_file_extension(file.filename)}'"
             f" is not allowed.")
-    elif _file_already_exists(file.filename,
-                              os.path.join(staging_dir, username)):
+    elif _file_already_exists(file.path):
         return _generate_error_result(
             file,
             "file_already_exists",
             f"File already exists in folder.")
     else:
         try:
-            full_path = _upload_file(file, username)
+            _upload_file(file, username)
             if _get_file_extension(file.filename) == "zip":
-                _unzip_file(full_path)
+                _unzip_file(file.path)
             return {"success": True}
         except Exception as e:
             return _generate_error_result(
@@ -410,13 +422,9 @@ def _generate_error_result(file, code, message, e=None):
 
 
 def _upload_file(file, username):
-    path, filename = os.path.split(file.filename)
-    folders = list(map(secure_filename, path.split("/")))
-    full_path = os.path.join(staging_dir, username, *folders)
-    os.makedirs(full_path, exist_ok=True)
-    full_file_path = os.path.join(full_path, secure_filename(filename))
-    file.save(full_file_path)
-    return full_file_path
+    directory_structure, filename = os.path.split(file.path)
+    os.makedirs(directory_structure, exist_ok=True)
+    file.save(file.path)
 
 
 def _unzip_file(path):
@@ -439,3 +447,9 @@ def _get_file_extension(filename):
         return ""
     else:
         return filename.rsplit('.', 1)[1].lower()
+
+def _get_absolute_path(path):
+    if auth.username() == "admin":
+        return os.path.join(staging_dir, path)
+
+    return os.path.join(staging_dir, auth.username(), path)

@@ -1,7 +1,16 @@
 from flask import Blueprint, jsonify
-from service.user.user_service import auth
+from service.user.user_service import auth, get_all_users
 
 user_controller = Blueprint('user', __name__)
+
+
+@user_controller.route('/', methods=['GET'])
+@auth.login_required
+def get_users():
+    if auth.username() == "admin":
+        return jsonify({"success": True, "users": get_all_users()}), 200
+    else:
+        return jsonify({"success": False}), 403
 
 
 @user_controller.route('/<user_name>', methods=['GET'])

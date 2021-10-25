@@ -27,3 +27,13 @@ def verify_password(username, password):
         hashed_password = _users.get(username)['password'].encode('utf-8')
         return bcrypt.checkpw(password.encode('utf-8'), hashed_password)
     return False
+
+
+def get_all_users():
+    """
+    Returns a list of all known user names.
+    """
+    with open(_users_config, 'r', encoding="utf-8") as _users_file:
+        _users = yaml.safe_load(_users_file)
+
+        return list(_users.keys())
