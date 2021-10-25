@@ -17,16 +17,19 @@
                 />
             </template>
             <template slot="end">
-                <b-switch v-model="showMarked">
-                    Show completed tasks
-                </b-switch>
+            <b-switch id="toggleFailed" v-model="showFailed">
+                Show failed imports
+            </b-switch>
+            <b-switch id="toggleCompleted" v-model="showCompleted">
+                Show completed imports
+            </b-switch>
             </template>
         </b-navbar>
         <div v-if="getFilesToShow().length !== 0">
             <b-table
                 :data="getFilesToShow()"
                 :paginated="true"
-                :per-page="25"
+                :per-page="50"
                 checkable
                 hoverable
                 :checked-rows="checkedFiles"
@@ -36,14 +39,16 @@
             >
                 <template slot-scope="props">
                     <b-table-column width="25">
-                        <b-icon
-                            :icon="getFileIcon(props.row)"
-                            :type="props.row.marked ? 'is-success' : ''"
-                        />
+                        <b-icon :icon="getFileIcon(props.row)"
+                                :type="getFileStatusType(props.row)"/>
                     </b-table-column>
 
                     <b-table-column field="name" label="Name">
                         {{ props.row.name }}
+                        <div
+                            class="content is-small"
+                            v-html="getFileStatusMessage(props.row)">
+                        </div>
                     </b-table-column>
 
                     <b-table-column
@@ -141,7 +146,8 @@ export default class StagingBrowser extends Vue {
     workingDirectory: string = '';
     stagingFiles: WorkbenchFileTree = {};
     filesToShow: WorkbenchFile[] = [];
-    showMarked: boolean = false;
+    showCompleted: boolean = false;
+    showFailed: boolean = true;
 
     get checkedFiles(): WorkbenchFile[] {
         return this.filesToShow.filter((file) => {
@@ -290,15 +296,45 @@ export default class StagingBrowser extends Vue {
     }
 
     getFilesToShow() {
-        if (this.showMarked) {
-            return this.filesToShow;
-        }
-        return this.filesToShow.filter(file => !file.marked);
+        return this.filesToShow.filter((file) => {
+            if (!file.job_info) return true;
+            if (!this.showCompleted && file.job_info.status === 'success') return false;
+            if (!this.showFailed && file.job_info.status === 'error') return false;
+
+            return true;
+        });
     }
 
     // eslint-disable-next-line class-methods-use-this
     getFileIcon(file: WorkbenchFile) {
         return file.type === 'directory' ? 'folder' : 'file';
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getFileStatusType(file: WorkbenchFile) {
+        if (!file.job_info) return '';
+        if (file.job_info.status === 'started') return 'is-warning';
+        if (file.job_info.status === 'success') return 'is-success';
+        return 'is-danger';
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getFileStatusMessage(file: WorkbenchFile) {
+        if (!file.job_info) return '';
+
+        const jobInfo = file.job_info as JobInfo;
+
+        if (jobInfo.status === 'started') return `A <a href='/job?id=${jobInfo.job_id}' target='_blank'>job</a> is still running.`;
+
+        if (jobInfo.status === 'success' && jobInfo.msg) {
+            if (!jobInfo.url || !jobInfo.url_label) return jobInfo.msg;
+            return `<a href='${jobInfo.url}' target='_blank'>${jobInfo.url_label}</a>`;
+        }
+
+        if (jobInfo.status === 'error' && jobInfo.msg) {
+            return `A previous <a href='/job?id=${jobInfo.job_id}' target='_blank'>job</a> failed with an error: <pre>${JSON.stringify(jobInfo.msg)}</pre>`;
+        }
+        return file.job_info;
     }
 }
 

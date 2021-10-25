@@ -7,6 +7,8 @@ from celery import chord, signature
 from utils.celery_client import celery_app
 from workers.base_task import BaseTask, ObjectTask
 
+from utils import cilantro_info_file
+
 
 class ListFilesTask(ObjectTask):
     """
@@ -81,23 +83,7 @@ class CleanupDirectoriesTask(BaseTask):
     name = "cleanup_directories"
 
     def execute_task(self):
-        mark_done = self.get_param('mark_done')
-        staging_current_folder = self.get_param('staging_current_folder')
-        user = self.get_param('user_name')
-        file_path = os.path.join(self.staging_dir, user, staging_current_folder)
-
-        if mark_done:
-            self.mark_file_as_done(file_path)
-
         self.delete_temp_folders()
-
-    @staticmethod
-    def mark_file_as_done(folder):
-        f = open(os.path.join(folder, '.info'), 'w')
-        f.write(
-            'This file marks the parent directory as processed by the iDAI.workbench. Deleting this file will '
-            'unmark the directory in the web interface.')
-        f.close()
 
 CleanupDirectoriesTask = celery_app.register_task(CleanupDirectoriesTask())
 
@@ -108,6 +94,29 @@ class FinishChainTask(BaseTask):
     name = "finish_chain"
 
     def execute_task(self):
+        chain_input_directory = os.path.join(
+            self.staging_dir, 
+            self.get_param('user_name'), 
+            self.get_param('chain_input_directory')
+        )
+
+        success_msg = self.params.get("success_msg")
+        success_url = self.params.get("success_url")
+        success_url_label = self.params.get("success_url_label")
+
+        if success_url is None or success_url_label is None:
+            cilantro_info_file.write_success(
+                chain_input_directory, 
+                success_msg
+            )
+        else:
+            cilantro_info_file.write_success_with_link(
+                chain_input_directory, 
+                success_msg,
+                success_url,
+                success_url_label
+            )
+
         self.job_db.update_job_state(self.parent_job_id, 'success')
 
 

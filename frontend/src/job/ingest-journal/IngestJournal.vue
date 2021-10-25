@@ -13,11 +13,16 @@
             <b-notification
                 type="is-danger"
                 aria-close-label="Close notification"
-                role="alert" 
+                role="alert"
                 v-if="!validJobFiles()">
-                Kein Ordner gewählt, oder Ordner falsch benannt. Ordner müssen JOURNAL-ZID... heißen. (Groß/Kleinschreibung wird ignoriert)
+                Kein Ordner gewählt, oder Ordner falsch benannt.
+                Ordner müssen JOURNAL-ZID... heißen.
+                (Groß/Kleinschreibung wird ignoriert)
             </b-notification>
-            <JobFilesForm :selected-paths.sync="selectedPaths" :accepted-filetypes="acceptedFileTypes" />
+            <JobFilesForm
+                :selected-paths.sync="selectedPaths"
+                :accepted-filetypes="acceptedFileTypes"
+            />
             <ContinueButton class="toMetadataButton"
                 @click="continueToMetadata" :disabled="!validJobFiles()">
             </ContinueButton>
@@ -42,12 +47,8 @@
                 :initialOptions="this.parameters.options"
                 @options-updated="this.parameters.options = $event"
             />
-            <AppOptionsForm
-                :initialOptions="this.parameters.options.app_options"
-                @options-updated="this.parameters.options.app_options = $event"
-                />
-            <StartJobButton class="startJobButton" 
-            @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
+            <StartJobButton class="startJobButton"
+                @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
 </template>
@@ -59,9 +60,8 @@ import { startJob } from '../JobClient';
 import JobFilesForm from '../JobFilesForm.vue';
 import JournalMetadataForm from './IngestJournalMetadataForm.vue';
 import JournalOptionsForm from './IngestJournalOptionsForm.vue';
-import AppOptionsForm from '../AppOptionsForm.vue';
 
-import { JobParameters, JobTargetError, OCROptions, AppOptions } from '../JobParameters';
+import { JobTargetError, OCROptions } from '../JobParameters';
 import {
     IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSOptions
 } from './IngestJournalParameters';
@@ -75,14 +75,13 @@ import StartJobButton from '@/util/StartJobButton.vue';
         JobFilesForm,
         JournalMetadataForm,
         JournalOptionsForm,
-        AppOptionsForm,
         ContinueButton,
         StartJobButton
     }
 })
 export default class IngestJournal extends Vue {
     selectedPaths: string[] = [];
-    acceptedFileTypes = "image/tiff, image/tif";
+    acceptedFileTypes = 'image/tiff, image/tif';
     parameters: IngestJournalParameters;
     activeStep: number = 0;
 
@@ -91,12 +90,9 @@ export default class IngestJournal extends Vue {
 
         const options = {
             ocr_options: {
-                do_ocr: false,
+                do_ocr: true,
                 ocr_lang: 'deu'
-            } as OCROptions,
-            app_options: {
-                mark_done: true
-            } as AppOptions
+            } as OCROptions
         } as IngestJournalOptions;
 
         this.parameters = new IngestJournalParameters([], options);
@@ -121,11 +117,11 @@ export default class IngestJournal extends Vue {
     }
 
     validJobFiles() {
-        let path_be_cool = false;
-        path_be_cool = this.selectedPaths
-                            .map(path => /.*JOURNAL-ZID(\d+)/i.test(path))
-                            .reduce((a, b) => a && b, true);
-        return this.selectedPaths.length !== 0 && path_be_cool;
+        let pathIsValid = false;
+        pathIsValid = this.selectedPaths
+            .map(path => /.*JOURNAL-ZID(\d+)/i.test(path))
+            .reduce((a, b) => a && b, true);
+        return this.selectedPaths.length !== 0 && pathIsValid;
     }
 
     async startJob() {

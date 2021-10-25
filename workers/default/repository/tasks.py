@@ -7,6 +7,8 @@ from workers.base_task import BaseTask, ObjectTask
 from utils.repository import generate_repository_path
 from utils.job_db import JobDb
 
+from utils import cilantro_info_file
+
 repository_dir = os.environ['REPOSITORY_DIR']
 archive_dir = os.environ['ARCHIVE_DIR']
 working_dir = os.environ['WORKING_DIR']
@@ -27,6 +29,14 @@ class CreateObjectTask(ObjectTask):
         oid = self._generate_object_id()
 
         self.job_db.set_job_object_id(self.parent_job_id, oid)
+        staging_directory = os.path.join(
+            staging_dir, 
+            self.params['user'], 
+            self.params['path']
+        )
+
+        cilantro_info_file.write_processing_started(staging_directory, self.parent_job_id)
+
         _initialize_object(obj, self.params, oid)
         return {'object_id': oid}
 

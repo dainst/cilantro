@@ -1,6 +1,9 @@
 version: '3.5'
 
 services:
+  service: 
+    environment: 
+      OJS_BASE_URL: http://localhost:4445
   default-worker:
     environment:
       OJS_URI: http://ojs_dev:80/plugins/generic/cilantro/api

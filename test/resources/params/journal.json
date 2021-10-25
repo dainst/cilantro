@@ -18,9 +18,6 @@
         "ocr_options": {
             "do_ocr": true,
             "ocr_lang": "eng"
-        },
-        "app_options": {
-            "mark_done": false
         }
     }
 }

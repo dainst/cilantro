@@ -1,5 +1,6 @@
 import uuid
 import logging
+import os
 
 from abc import abstractmethod
 from celery import chord, signature
@@ -58,7 +59,9 @@ class BatchJob(BaseJob):
         super().__init__()
         self.id = _generate_id()
 
-        chains = self._create_chains(params, user_name)
+        (chains, chain_parameters) = self._create_chains(params, user_name)
+
+        self.chain_parameters = chain_parameters
 
         # Once all job chains have finished within this chord, we have to
         # trigger a callback worker in order to update the database entry
@@ -112,12 +115,11 @@ class BatchJob(BaseJob):
 
             self.job_db.add_job(job_id=current_chain_id,
                                 user=user_name,
-                                job_type='chain',
+                                job_type='cilantro_batch_chain',
                                 parent_job_id=self.id,
                                 child_job_ids=current_chain_links,
-                                parameters={
-                                    'work_path': current_chain.kwargs['work_path']},
-                                label=f"Batch #{idx+1}",
+                                parameters=self.chain_parameters[idx],
+                                label=self.chain_parameters[idx]['id'],
                                 description="Group containing all the individual steps for a single batch.")
             chain_ids += [current_chain_id]
 
@@ -140,8 +142,14 @@ class IngestArchivalMaterialsJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
 
         for record_target in params['targets']:
+
+            chain_parameters.append(
+                record_target
+            )
+
             task_params = dict(**record_target, **{'user': user_name},
                                initial_representation='tif', job_type=self.job_type)
 
@@ -189,16 +197,18 @@ class IngestArchivalMaterialsJob(BatchJob):
             current_chain |= _link('publish_to_atom')
             current_chain |= _link('publish_to_archive')
 
-            current_chain |= _link('cleanup_directories',
-                                   mark_done=params['options']['app_options']['mark_done'],
-                                   staging_current_folder=record_target['path'],
-                                   user_name=user_name)
+            current_chain |= _link('cleanup_directories')
 
-            current_chain |= _link('finish_chain')
+            current_chain |= _link(
+                'finish_chain',
+                success_msg="Material imported successfully",
+                chain_input_directory=record_target['path'],
+                user_name=user_name
+            )
 
             chains.append(current_chain)
 
-        return chains
+        return (chains, chain_parameters)
 
     def _create_pdf_metadata(self, metadata):
         pdf_metadata = {}
@@ -305,10 +315,15 @@ class IngestJournalsJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
 
         for issue_target in params['targets']:
             task_params = dict(**issue_target, **{'user': user_name},
                                initial_representation='tif', job_type=self.job_type)
+
+            chain_parameters.append(
+                issue_target
+            )
 
             current_chain = _link('create_object', **task_params)
 
@@ -353,15 +368,22 @@ class IngestJournalsJob(BatchJob):
 
             current_chain |= _link('publish_to_archive')
 
-            current_chain |= _link('cleanup_directories',
-                                   mark_done=params['options']['app_options']['mark_done'],
-                                   staging_current_folder=issue_target['path'],
-                                   user_name=user_name)
+            current_chain |= _link('cleanup_directories')
 
-            current_chain |= _link('finish_chain')
+            current_chain |= _link(
+                'finish_chain',
+                success_msg="Journal imported successfully",
+                success_url='{}/index.php/{}'.format(
+                    os.getenv('OJS_BASE_URL'),
+                    issue_target['metadata']['ojs_journal_code']
+                ),
+                success_url_label='View in OJS',
+                chain_input_directory=issue_target['path'],
+                user_name=user_name
+            )
             chains.append(current_chain)
 
-        return chains
+        return (chains, chain_parameters)
 
 
 class IngestMonographsJob(BatchJob):
@@ -371,9 +393,14 @@ class IngestMonographsJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
         for monograph_target in params['targets']:
             task_params = dict(**monograph_target, **{'user': user_name},
                                initial_representation='tif', job_type=self.job_type)
+
+            chain_parameters.append(
+                monograph_target
+            )
 
             current_chain = _link('create_object', **task_params)
 
@@ -418,15 +445,17 @@ class IngestMonographsJob(BatchJob):
             current_chain |= _link('publish_to_omp',
                                    omp_press_code=monograph_target['metadata']['press_code'])
 
-            current_chain |= _link('cleanup_directories',
-                                   mark_done=params['options']['app_options']['mark_done'],
-                                   staging_current_folder=monograph_target['path'],
-                                   user_name=user_name)
+            current_chain |= _link('cleanup_directories')
 
-            current_chain |= _link('finish_chain')
+            current_chain |= _link(
+                'finish_chain',
+                success_msg="Monograph imported successfully",
+                chain_input_directory=monograph_target['path'],
+                user_name=user_name
+            )
             chains.append(current_chain)
 
-        return chains
+        return (chains, chain_parameters)
 
 
 class NlpJob(BatchJob):
@@ -436,11 +465,16 @@ class NlpJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
 
         for target in params['targets']:
             for extension in params['options']['extensions']:
                 if extension not in ['txt', 'pdf']:
                     raise Exception('Extension not supported: {}' + str(extension))
+
+                chain_parameters.append(
+                    target
+                )
 
                 task_params = dict(**target, **{'user': user_name})
                 chain = _link('create_object', **task_params,
@@ -483,7 +517,7 @@ class NlpJob(BatchJob):
 
                 chains.append(chain)
 
-        return chains
+        return (chains, chain_parameters)
 
 
 def _link(name, **params):
