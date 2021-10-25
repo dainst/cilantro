@@ -26,7 +26,7 @@
             <b-table
                 :data="getFilesToShow()"
                 :paginated="true"
-                :per-page="4"
+                :per-page="50"
                 checkable
                 hoverable
                 :checked-rows="checkedFiles"
