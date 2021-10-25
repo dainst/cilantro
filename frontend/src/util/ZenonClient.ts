@@ -15,19 +15,31 @@ export class ZenonRecord {
     summary: string;
     shortTitle: string;
     subTitle?: string;
+    serialMetadata?: SerialMetadata;
 
     constructor(zenonData : any) {
         this.id = zenonData.id;
         this.title = zenonData.title;
         this.authors = reformatAuthors(zenonData);
         this.formats = zenonData.formats;
-        this.partOrSectionInfo = zenonData.partOrSectionInfo;
-        this.publicationDates = zenonData.publicationDates;
+        this.publicationDates = zenonData.publicationDates.map(
+            (date: string) => parseInt(date, 10)
+        );
+
         this.parentId = zenonData.parentId;
         this.subjects = zenonData.subjects;
         this.summary = zenonData.summary;
-        this.shortTitle = zenonData.shortTitle;
+        this.shortTitle = zenonData.shortTitle.replace(/[\s:]+$/, '').trim();
         this.subTitle = zenonData.subTitle;
+
+        this.partOrSectionInfo = zenonData.partOrSectionInfo;
+        if ('partOrSectionInfo' in zenonData) {
+            this.serialMetadata = {
+                issue: parseIssueNumber(zenonData.partOrSectionInfo),
+                volume: parseVolumeNumber(zenonData.partOrSectionInfo),
+                year: parseSerialYear(zenonData.partOrSectionInfo)
+            };
+        }
     }
 }
 
@@ -35,6 +47,12 @@ export interface Author {
     name: string;
     type: AuthorTypes;
     orcId?: string;
+}
+
+export interface SerialMetadata {
+    issue?: number;
+    volume?: number;
+    year?: number;
 }
 
 enum AuthorTypes {
@@ -74,6 +92,41 @@ function reformatAuthors(record: any) : Author[] {
         }
     );
     return <Author[]>authors;
+}
+
+function parseIssueNumber(partOrSectionInfo: string): number | undefined {
+    if (!partOrSectionInfo.includes(',')) {
+        return undefined;
+    }
+
+    const match = partOrSectionInfo.match(/,[^(]*/g)!;
+    if (match) {
+        return parseInt(match[0].slice(1), 10);
+    }
+    return undefined;
+}
+
+function parseVolumeNumber(partOrSectionInfo: string): number | undefined {
+    let match = null;
+    if (partOrSectionInfo.includes(',')) {
+        match = partOrSectionInfo.match(/[^,]*/g)!;
+    } else {
+        match = partOrSectionInfo.match(/[^(]*/g)!;
+    }
+
+    if (match) {
+        return parseInt(match[0], 10);
+    }
+    return undefined;
+}
+
+function parseSerialYear(partOrSectionInfo: string): number | undefined {
+    const match = partOrSectionInfo.match(/\(.*?\)/g)!;
+
+    if (match) {
+        return parseInt(match[0].slice(1, -1), 10);
+    }
+    return undefined;
 }
 
 export async function getRecord(zenonID: string): Promise<ZenonRecord> {

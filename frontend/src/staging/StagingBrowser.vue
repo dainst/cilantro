@@ -125,7 +125,8 @@ import {
     WorkbenchFile,
     moveInStaging,
     WorkbenchFileTree,
-    getFilesInWorkDir
+    getFilesInWorkDir,
+    JobInfo
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';

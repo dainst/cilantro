@@ -204,7 +204,7 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
             zenon_id: target.metadata.zenon_id,
             press_code: 'dai',
             authors,
-            title: zenonRecord.shortTitle.replace(/[\s:]+$/, '').trim(),
+            title: zenonRecord.shortTitle,
             subtitle: subTitle,
             abstract: summary,
             date_published: datePublished,

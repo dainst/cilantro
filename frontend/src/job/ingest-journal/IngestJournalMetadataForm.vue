@@ -18,40 +18,19 @@
                 </b-table-column>
                 <b-table-column
                     field="id"
-                    label="Path"
+                    label="Directory name"
                 >{{ props.row.id }}</b-table-column>
                 <template v-if="!isTargetError(props.row) && props.row.metadata">
                     <b-table-column
-                        field="metadata.description"
-                        label="Description"
-                    >{{ props.row.metadata.description || '-' | truncate(80) }}</b-table-column>
-                    <b-table-column
-                        field="metadata.volume"
-                        label="Volume"
-                        >{{ props.row.metadata.volume || '-' }}
-                    </b-table-column>
-                    <b-table-column
-                        field="metadata.publishing_year"
-                        label="Year"
-                        >{{ props.row.metadata.publishing_year || '-' }}
-                    </b-table-column>
-                    <b-table-column
-                        field="metadata.number"
-                        label="Number"
-                        >{{ props.row.metadata.number || '-' }}
-                    </b-table-column>
-                    <b-table-column
-                        field="metadata.zenon_link"
-                        label="Zenon"
-                    ><a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id">
-                        {{props.row.metadata.zenon_id}}</a>
+                        field="metadata.title"
+                        label="Title"
+                    ><a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id" target="_blank">
+                        {{ props.row.metadata.title || '-' | truncate(80) }}
+                    </a>
                     </b-table-column>
                 </template>
                 <template v-else>
-                    <b-table-column label="Description">-</b-table-column>
-                    <b-table-column label="Volume">-</b-table-column>
-                    <b-table-column label="Year">-</b-table-column>
-                    <b-table-column label="Number">-</b-table-column>
+                    <b-table-column label="Title">-</b-table-column>
                 </template>
                 <b-table-column label="">
                     <b-button title="Remove from selection"
@@ -91,7 +70,6 @@ import { asyncMap } from '@/util/HelperFunctions';
 import { ojsZenonMapping } from '@/config';
 import {
     WorkbenchFileTree,
-    WorkbenchFile,
     containsOnlyFilesWithExtensions,
     getStagingFiles,
     containsNumberOfFiles
@@ -203,43 +181,25 @@ async function loadZenonData(target: JobTargetData) {
 
         if (errors.length !== 0) return new JobTargetError(target.id, target.path, errors);
 
+        let publicationDate;
+        if (zenonRecord.publicationDates.length !== 0) {
+            [publicationDate] = zenonRecord.publicationDates;
+        }
+
         const metadata = {
             zenon_id: target.metadata.zenon_id,
-            volume: getSerialVolume(zenonRecord),
-            publishing_year: parseInt(zenonRecord.publicationDates[0], 10),
-            number: getIssueNumber(zenonRecord),
-            description: zenonRecord.title,
+            volume: zenonRecord.serialMetadata?.volume,
+            publishing_year: publicationDate,
+            number: zenonRecord.serialMetadata?.issue,
+            title: zenonRecord.title,
             ojs_journal_code: ojsZenonMapping[parentId],
-            reporting_year: getReportingYear(zenonRecord)
+            reporting_year: zenonRecord.serialMetadata?.year
         } as JournalIssueMetadata;
 
         return new JobTargetData(target.id, target.path, metadata);
     } catch (error) {
         return new JobTargetError(target.id, target.path, [error]);
     }
-}
-
-function getReportingYear(record: ZenonRecord): number {
-    const match = record.partOrSectionInfo.match(/\(.*?\)/g)![0];
-    return parseInt(match.slice(1, -1), 10);
-}
-
-function getIssueNumber(record: ZenonRecord): number {
-    if (!record.partOrSectionInfo.includes(',')) {
-        return 0;
-    }
-    const match = record.partOrSectionInfo.match(/,[^(]*/g)![0];
-    return parseInt(match.slice(1), 10);
-}
-
-function getSerialVolume(record: ZenonRecord): number {
-    let match: string = '';
-    if (record.partOrSectionInfo.includes(',')) {
-        [match] = record.partOrSectionInfo.match(/[^,]*/g)!;
-    } else {
-        [match] = record.partOrSectionInfo.match(/[^(]*/g)!;
-    }
-    return parseInt(match, 10);
 }
 
 </script>
