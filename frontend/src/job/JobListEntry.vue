@@ -1,21 +1,29 @@
 <template>
     <section>
-
         <div v-if="isLoading">Loading jobs...</div>
         <div v-else-if="filteredJobs.length === 0">No jobs available</div>
         <b-table
             v-else
             :data="filteredJobs"
+            :paginated="true"
+            :per-page="50"
+            :pagination-position="'both'"
             detailed
             detail-key="job_id"
             default-sort="created"
             :default-sort-direction="'asc'"
-            :has-detailed-visible="(row) => { return row.children.length >0 }"
+            :has-detailed-visible="
+                row => {
+                    return row.children.length > 0;
+                }
+            "
         >
             <template slot-scope="props">
                 <b-table-column field="state" label="Status" sortable>
                     <div class="is-flex">
-                        <b-icon v-bind="iconAttributesForState(props.row.state)" />
+                        <b-icon
+                            v-bind="iconAttributesForState(props.row.state)"
+                        />
                     </div>
                 </b-table-column>
                 <b-table-column field="label" label="Name" sortable>
@@ -24,35 +32,48 @@
                 <b-table-column field="description" label="Description">
                     {{ props.row.description }}
                 </b-table-column>
-                <b-table-column field="id" label="ID" sortable>{{props.row.job_id}}</b-table-column>
+                <b-table-column field="id" label="ID" sortable>{{
+                    props.row.job_id
+                }}</b-table-column>
                 <b-table-column
                     field="created"
                     label="Created"
                     :custom-sort="sortByCreated"
                     sortable
-                >{{ props.row.created }}</b-table-column>
+                    >{{ props.row.created }}</b-table-column
+                >
                 <b-table-column
                     field="updated"
                     label="Updated"
                     :custom-sort="sortByUpdated"
                     sortable
-                >{{ props.row.updated }}</b-table-column>
+                    >{{ props.row.updated }}</b-table-column
+                >
                 <b-table-column>
                     <div class="field is-grouped">
-                        <b-button icon-right="arrow-bottom-right" class="is-dark"
-                                @click="goToSingleView(props.row.job_id)">
+                        <b-button
+                            icon-right="arrow-bottom-right"
+                            class="is-dark"
+                            @click="goToSingleView(props.row.job_id)"
+                        >
                             View
                         </b-button>
 
-                        <b-button v-if="isTopLevel"
+                        <b-button
+                            v-if="isTopLevel"
                             icon-right="delete"
                             class="is-danger"
-                            @click="removeJob(props.row.job_id)">
+                            @click="removeJob(props.row.job_id)"
+                        >
                         </b-button>
                     </div>
                 </b-table-column>
             </template>
-            <template slot="detail" slot-scope="props" v-if="props.row.children.length > 0">
+            <template
+                slot="detail"
+                slot-scope="props"
+                v-if="props.row.children.length > 0"
+            >
                 <JobListEntry :jobIDs="getChildrenIDs(props.row.children)" />
             </template>
         </b-table>
@@ -65,7 +86,10 @@ import {
 } from 'vue-property-decorator';
 import {
     archiveJob,
-    getJobDetails, getJobList, iconAttributesForState, Job
+    getJobDetails,
+    getJobList,
+    iconAttributesForState,
+    Job
 } from './JobClient';
 import { showError } from '@/util/Notifier';
 
@@ -135,7 +159,9 @@ export default class JobListEntry extends Vue {
         this.$buefy.dialog.confirm({
             message: `Delete Job ${id}?`,
             onConfirm: () => {
-                this.unfilteredJobs = this.unfilteredJobs.filter(ele => ele.job_id !== id);
+                this.unfilteredJobs = this.unfilteredJobs.filter(
+                    ele => ele.job_id !== id
+                );
                 archiveJob(id).catch((response) => {
                     showError('Failed to archive job!', response.error);
                 });
