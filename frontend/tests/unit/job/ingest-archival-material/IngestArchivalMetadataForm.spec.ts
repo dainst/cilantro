@@ -17,18 +17,15 @@ import {
 const mockStagingTree: WorkbenchFileTree = {
     '.info': {
         name: '.info',
-        type: 'conf',
-        marked: false
+        type: 'conf'
     },
     'test.tif': {
         name: 'test.tif',
-        type: 'file',
-        marked: false
+        type: 'file'
     },
     'test2.tiff': {
         name: 'test2.tiff',
-        type: 'file',
-        marked: false
+        type: 'file'
     }
 };
 
@@ -36,17 +33,14 @@ const mockDeepStagingTree: WorkbenchFileTree = {
     tif: {
         name: 'tif',
         type: 'folder',
-        marked: false,
         contents: {
             'test.tif': {
                 name: 'test.tif',
-                type: 'file',
-                marked: false
+                type: 'file'
             },
             'test2.tiff': {
                 name: 'test2.tiff',
-                type: 'file',
-                marked: false
+                type: 'file'
             }
         }
     }
@@ -54,8 +48,7 @@ const mockDeepStagingTree: WorkbenchFileTree = {
 
 const aPdf: WorkbenchFile = {
     name: 'test3.pdf',
-    type: 'file',
-    marked: false
+    type: 'file'
 };
 
 jest.mock('@/staging/StagingClient', () => ({

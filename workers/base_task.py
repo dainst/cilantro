@@ -4,6 +4,7 @@ import os
 import shutil
 from abc import abstractmethod
 import traceback
+import json
 
 import celery.signals
 from celery.task import Task
@@ -14,6 +15,7 @@ from utils.object import Object
 from utils.setup_logging import setup_logging
 from utils.celery_client import celery_app
 
+from utils import cilantro_info_file
 
 setup_logging()
 
@@ -115,13 +117,27 @@ class BaseTask(Task):
         self.job_db.add_job_error(parent_id, error)
 
         parent = self.job_db.get_job_by_id(parent_id)
+
+        if parent['job_type'] == 'cilantro_batch_chain':
+            batch_item_directory = os.path.join(
+                self.staging_dir, 
+                parent['user'], 
+                parent['parameters']['path']
+            )
+
+            cilantro_info_file.write_error(
+                batch_item_directory,
+                parent['job_id'],
+                error
+            )
+
         if 'parent_job_id' in parent:
             self._propagate_failure_to_ancestors(parent['parent_job_id'], error)
             self._set_following_siblings_aborted(parent_id, parent['parent_job_id'])
 
     def _set_following_siblings_aborted(self, job_id, parent_id):
         parent = self.job_db.get_job_by_id(parent_id)
-        if parent['job_type'] == 'chain':
+        if parent['job_type'] == 'cilantro_batch_chain':
             found_self = False
             for child in parent['children']:
                 if found_self:

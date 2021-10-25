@@ -8,7 +8,6 @@ import IngestArchivalMaterial from '@/job/ingest-archival-material/IngestArchiva
 import JobFilesForm from '@/job/JobFilesForm.vue';
 import IngestArchivalMaterialMetadataForm from '@/job/ingest-archival-material/IngestArchivalMaterialMetadataForm.vue';
 import OCROptionsForm from '@/job/OCROptionsForm.vue';
-import AppOptionsForm from '@/job/AppOptionsForm.vue';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);
@@ -58,6 +57,5 @@ describe('IngestArchivalMaterial.vue', () => {
 
         // now check for the correct forms
         expect(wrapper.findComponent(OCROptionsForm).exists()).toBe(true);
-        expect(wrapper.findComponent(AppOptionsForm).exists()).toBe(true);
     });
 });

@@ -23,7 +23,7 @@ def _assert_timeout(waited: int, timeout: int):
     :param int waited: Time already waited
     :param int timeout: Timeout in miliseconds
     """
-    if waited > timeout:
+    if waited > timeout * 0.001:
         raise TimeoutError()
     else:
         time.sleep(retry_time)
@@ -63,13 +63,13 @@ class JobTypeTest(unittest.TestCase):
         file = Path(os.path.join(self.repository_dir, generate_repository_path(
             object_id), file_path))
         while not file.is_file():
-            if waited > timeout:
+            if waited > timeout * 0.001:
                 raise AssertionError(
-                    f"experienced timeout ({timeout / 1000}s) while waiting "
+                    f"experienced timeout ({timeout * 0.001}s) while waiting "
                     f"for file '{file_path}' to appear in repository")
             else:
                 waited += retry_time
-                time.sleep(0.001 * retry_time)
+                time.sleep(retry_time)
 
     def assert_file_in_workdir(self, job_id, path, timeout: int = None):
         """
@@ -85,13 +85,13 @@ class JobTypeTest(unittest.TestCase):
         waited = 0
         file = Path(os.path.join(self.working_dir, job_id, path))
         while not file.is_file():
-            if waited > timeout:
+            if waited > timeout * 0.001:
                 raise AssertionError(
-                    f"experienced timeout ({timeout / 1000}s) while waiting "
+                    f"experienced timeout ({timeout * 0.001}s) while waiting "
                     f"for file '{file}' to appear in working directory")
             else:
                 waited += retry_time
-                time.sleep(0.001 * retry_time)
+                time.sleep(retry_time)
 
     def assert_job_successful(self, task_ids: list, timeout: int = None):
         """

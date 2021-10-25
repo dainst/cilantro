@@ -29,22 +29,18 @@ describe('IngestJournalMetadataForm', () => {
             tif: {
                 name: 'tif',
                 type: 'folder',
-                marked: false,
                 contents: {
                     '.info': {
                         name: '.info',
-                        type: 'conf',
-                        marked: false
+                        type: 'conf'
                     },
                     'test.tif': {
                         name: 'test.tif',
-                        type: 'tif',
-                        marked: false
+                        type: 'tif'
                     },
                     'test2.tiff': {
                         name: 'test2.tiff',
-                        type: 'tif',
-                        marked: false
+                        type: 'tif'
                     }
                 }
             }
@@ -109,18 +105,15 @@ describe('IngestJournalMetadataForm', () => {
         mockStagingTree = {
             '.info': {
                 name: '.info',
-                type: 'conf',
-                marked: false
+                type: 'conf'
             },
             'test.tif': {
                 name: 'test.tif',
-                type: 'tif',
-                marked: false
+                type: 'tif'
             },
             'test2.tiff': {
                 name: 'test2.tiff',
-                type: 'tif',
-                marked: false
+                type: 'tif'
             }
         };
 
@@ -149,8 +142,7 @@ describe('IngestJournalMetadataForm', () => {
         if (mockStagingTree.tif.contents !== undefined) {
             mockStagingTree.tif.contents['wrong.pdf'] = {
                 name: 'wrong.pdf',
-                type: 'pdf',
-                marked: false
+                type: 'pdf'
             };
         }
 

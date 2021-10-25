@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-import { WorkbenchFileTree, getVisibleFolderContents, WorkbenchFile } from '@/staging/StagingClient';
 
 export abstract class JobParameters {
     abstract targets: MaybeJobTarget[];
@@ -24,10 +23,6 @@ export class JobTargetError implements JobTargetData {
 export interface OCROptions {
     do_ocr: boolean;
     ocr_lang: string;
-}
-
-export interface AppOptions {
-    mark_done: boolean;
 }
 
 export function isTargetError(o: any) {

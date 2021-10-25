@@ -1,5 +1,5 @@
 import {
-    JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions, AppOptions
+    JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions
 } from '../JobParameters';
 import { AtomDate } from '@/util/AtomClient';
 
@@ -50,7 +50,6 @@ export class ArchivalMaterialMetadata {
 
 export interface IngestArchivalOptions {
     ocr_options: OCROptions;
-    app_options: AppOptions;
 }
 
 export type MaybeJobTarget = JobTargetData | JobTargetError;

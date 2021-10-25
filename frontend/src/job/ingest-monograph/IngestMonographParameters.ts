@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import {
-    JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions, AppOptions
+    JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions
 } from '../JobParameters';
 
 export class IngestMonographParameters implements JobParameters {
@@ -45,7 +45,6 @@ export interface Person {
 
 export interface IngestMonographOptions {
     ocr_options: OCROptions;
-    app_options: AppOptions;
 }
 
 export type MaybeJobTarget = JobTargetData | JobTargetError;
