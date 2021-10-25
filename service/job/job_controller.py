@@ -130,9 +130,6 @@ def job_list():
                         "ocr_options": {
                             "do_ocr": false,
                             "ocr_lang": "deu"
-                        },
-                        "ojs_options": {
-                            "default_create_frontpage": true
                         }
                     },
                     "targets": [
@@ -222,9 +219,6 @@ def journal_job_create():
                 }
             }],
             "options": {
-                "ojs_options": {
-                    "default_create_frontpage": true
-                },
                 "ocr_options": {
                     "do_ocr": true,
                     "ocr_lang": "deu"
@@ -633,25 +627,9 @@ def get_job_param_schema(job_type):
                                 "ocr_lang"
                             ],
                             "type": "object"
-                        },
-                        "ojs_options": {
-                            "additionalProperties": false,
-                            "properties": {
-                                "auto_publish_issue": {
-                                    "type": "boolean"
-                                },
-                                "default_create_frontpage": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "required": [
-                                "default_create_frontpage"
-                            ],
-                            "type": "object"
                         }
                     },
                     "required": [
-                        "ojs_options",
                         "ocr_options",
                         "app_options"
                     ],
