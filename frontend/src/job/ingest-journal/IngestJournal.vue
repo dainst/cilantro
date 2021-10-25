@@ -90,9 +90,6 @@ export default class IngestJournal extends Vue {
         super();
 
         const options = {
-            ojs_options: {
-                default_create_frontpage: true
-            } as OJSOptions,
             ocr_options: {
                 do_ocr: false,
                 ocr_lang: 'deu'

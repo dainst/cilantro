@@ -1,5 +1,4 @@
 {% set metadata = obj.metadata %}
-{% set ojs_options = params['ojs_options'] %}
 {% set pdf_file_path = path_join(obj.get_representation_dir('pdf'), obj.id + '.pdf') %}
 <?xml version="1.0" encoding="UTF-8"?>
 <issue xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" published="1" current="1" access_status="1"
