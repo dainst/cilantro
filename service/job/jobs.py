@@ -354,8 +354,7 @@ class IngestJournalsJob(BatchJob):
 
             current_chain |= _link('generate_xml',
                                    template_file='ojs3_template_issue.xml',
-                                   target_filename='ojs_import.xml',
-                                   ojs_options=params['options']['ojs_options'])
+                                   target_filename='ojs_import.xml')
 
             current_chain |= _link('generate_xml',
                                    template_file='mets_template_journal.xml',
@@ -365,7 +364,6 @@ class IngestJournalsJob(BatchJob):
             current_chain |= _link('publish_to_repository')
 
             current_chain |= _link('publish_to_ojs',
-                                   ojs_metadata=params['options']['ojs_options'],
                                    ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
 
             current_chain |= _link('publish_to_archive')

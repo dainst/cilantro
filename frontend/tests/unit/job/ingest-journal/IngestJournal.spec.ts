@@ -20,7 +20,6 @@ localVue.use(Vuex);
 const fakePath = './haus/vom/nikolaus/';
 const target = new JobTargetData('007', fakePath, new JournalIssueMetadata('0023456'));
 const options: IngestJournalOptions = {
-    ojs_options: { default_create_frontpage: true },
     ocr_options: {
         do_ocr: true,
         ocr_lang: ''

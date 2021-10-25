@@ -71,26 +71,10 @@
         "options": {
             "type": "object",
             "required": [
-                "ojs_options",
                 "ocr_options"
             ],
             "additionalProperties": false,
             "properties": {
-                "ojs_options": {
-                    "type": "object",
-                    "required": [
-                        "default_create_frontpage"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                        "auto_publish_issue": {
-                            "type": "boolean"
-                        },
-                        "default_create_frontpage": {
-                            "type": "boolean"
-                        }
-                    }
-                },
                 "ocr_options": {
                     "type": "object",
                     "required": [

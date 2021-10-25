@@ -39,7 +39,6 @@ export class JournalIssueMetadata {
 }
 
 export interface IngestJournalOptions {
-    ojs_options: OJSOptions;
     ocr_options: OCROptions;
 }
 

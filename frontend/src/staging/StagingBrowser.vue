@@ -1,6 +1,9 @@
 <template>
     <section>
-        <b-loading :is-full-page="true" :active="operationInProgress"></b-loading>
+        <b-loading
+            :is-full-page="true"
+            :active="operationInProgress"
+        ></b-loading>
 
         <b-navbar>
             <template slot="start">
@@ -25,15 +28,16 @@
         <div v-if="getFilesToShow().length !== 0">
             <b-table
                 :data="getFilesToShow()"
-                :paginated='true'
-                :per-page=100
+                :paginated="true"
+                :per-page="4"
                 checkable
                 hoverable
                 :checked-rows="checkedFiles"
+                :pagination-position="'both'"
                 @check="onCheck"
                 @click="fileClicked"
             >
-                <template slot-scope="props" >
+                <template slot-scope="props">
                     <b-table-column width="25">
                         <b-icon :icon="getFileIcon(props.row)"
                                 :type="getFileStatusType(props.row)"/>
@@ -47,36 +51,53 @@
                         </div>
                     </b-table-column>
 
-                    <b-table-column field="edit" label="" width="25" @click.native.stop>
+                    <b-table-column
+                        field="edit"
+                        label=""
+                        width="25"
+                        @click.native.stop
+                    >
                         <b-dropdown aria-role="list">
-                            <b-button icon-right="dots-vertical" type="is-text" slot="trigger"/>
+                            <b-button
+                                icon-right="dots-vertical"
+                                type="is-text"
+                                slot="trigger"
+                            />
                             <b-dropdown-item
                                 aria-role="listitem"
-                                @click="showRenameModal(props.row)">
+                                @click="showRenameModal(props.row)"
+                            >
                                 <div class="media">
-                                    <b-icon class="media-left" icon="folder-edit"/>
+                                    <b-icon
+                                        class="media-left"
+                                        icon="folder-edit"
+                                    />
                                     <div class="media-content">Rename</div>
                                 </div>
                             </b-dropdown-item>
                             <b-dropdown-item
                                 aria-role="listitem"
-                                @click="showMoveModalForItem(props.row)">
+                                @click="showMoveModalForItem(props.row)"
+                            >
                                 <div class="media">
-                                    <b-icon class="media-left" icon="folder-move"/>
+                                    <b-icon
+                                        class="media-left"
+                                        icon="folder-move"
+                                    />
                                     <div class="media-content">Move</div>
                                 </div>
                             </b-dropdown-item>
                             <b-dropdown-item
                                 aria-role="listitem"
-                                @click="showDeleteDialogForItem(props.row)">
+                                @click="showDeleteDialogForItem(props.row)"
+                            >
                                 <div class="media">
-                                    <b-icon class="media-left" icon="delete"/>
+                                    <b-icon class="media-left" icon="delete" />
                                     <div class="media-content">Delete</div>
                                 </div>
                             </b-dropdown-item>
                         </b-dropdown>
                     </b-table-column>
-
                 </template>
                 <template slot="detail" slot-scope="props">
                     <p>{{ props.row.name }}</p>
@@ -87,7 +108,8 @@
         <StagingBrowserUpload
             :working-directory="workingDirectory"
             @upload-finished="fetchFiles"
-            :accepted-filetypes="acceptedFiletypes"/>
+            :accepted-filetypes="acceptedFiletypes"
+        />
     </section>
 </template>
 
@@ -119,7 +141,7 @@ import StagingBrowserFolderSelection from './StagingBrowserFolderSelection.vue';
 })
 export default class StagingBrowser extends Vue {
     @Prop({ required: true }) selectedPaths!: string[];
-    @Prop({ default: '*/*' }) acceptedFiletypes!: string;
+    @Prop({ default: '' }) acceptedFiletypes!: string;
 
     operationInProgress: boolean = false;
     workingDirectory: string = '';
@@ -151,7 +173,9 @@ export default class StagingBrowser extends Vue {
                 maxlength: 100
             },
             onConfirm: (folderName) => {
-                createFolderInStaging(getFilePath(this.workingDirectory, folderName))
+                createFolderInStaging(
+                    getFilePath(this.workingDirectory, folderName)
+                )
                     .then(() => this.fetchFiles())
                     .catch(e => showError('Failed to create folder!', e));
             }
@@ -202,9 +226,11 @@ export default class StagingBrowser extends Vue {
     deleteSelected() {
         this.operationInProgress = true;
         const deletions = this.checkedFiles.map((file) => {
-            const filePath: string = getFilePath(this.workingDirectory, file.name);
-            return deleteFileFromStaging(filePath)
-                .catch(e => showError(`Failed to delete ${file.name}!`, e));
+            const filePath: string = getFilePath(
+                this.workingDirectory,
+                file.name
+            );
+            return deleteFileFromStaging(filePath).catch(e => showError(`Failed to delete ${file.name}!`, e));
         });
         Promise.all(deletions).then(() => {
             this.$emit('update:selected-paths', []);
@@ -230,8 +256,10 @@ export default class StagingBrowser extends Vue {
         this.operationInProgress = true;
         const moveOperations = this.checkedFiles.map((file) => {
             const sourcePath = getFilePath(this.workingDirectory, file.name);
-            return moveInStaging(sourcePath, getFilePath(this.workingDirectory, value))
-                .catch(e => showError(`Failed to rename ${file.name}!`, e));
+            return moveInStaging(
+                sourcePath,
+                getFilePath(this.workingDirectory, value)
+            ).catch(e => showError(`Failed to rename ${file.name}!`, e));
         });
         Promise.all(moveOperations).then(() => {
             this.$emit('update:selected-paths', []);
@@ -255,12 +283,12 @@ export default class StagingBrowser extends Vue {
         });
     }
 
-    moveSelected(targetPath: string) {
+    moveSelected(targetDirectory: string) {
         this.operationInProgress = true;
         const moveOperations = this.checkedFiles.map((file) => {
             const sourcePath = getFilePath(this.workingDirectory, file.name);
-            return moveInStaging(sourcePath, getFilePath(targetPath, file.name))
-                .catch(e => showError(`Failed to move ${file.name}!`, e));
+            const targetPath = getFilePath(targetDirectory, file.name);
+            return moveInStaging(sourcePath, targetPath).catch(e => showError(`Failed to move ${file.name}!`, e));
         });
         Promise.all(moveOperations).then(() => {
             this.$emit('update:selected-paths', []);
@@ -280,7 +308,7 @@ export default class StagingBrowser extends Vue {
 
     // eslint-disable-next-line class-methods-use-this
     getFileIcon(file: WorkbenchFile) {
-        return (file.type === 'directory') ? 'folder' : 'file';
+        return file.type === 'directory' ? 'folder' : 'file';
     }
 
     // eslint-disable-next-line class-methods-use-this
@@ -312,7 +340,10 @@ export default class StagingBrowser extends Vue {
 }
 
 export function getFilePath(baseDir: string, filename: string): string {
-    return baseDir !== '' ? `${baseDir}/${filename}` : filename;
+    let path = baseDir === '' ? filename : `${baseDir}/${filename}`;
+
+    path = path.replace(/^\//i, '');
+    return path;
 }
 
 export function getFileName(path: string): string {
@@ -320,7 +351,9 @@ export function getFileName(path: string): string {
 }
 
 export function getFilesInWorkDir(files: WorkbenchFileTree): WorkbenchFile[] {
-    return Object.values(getVisibleFolderContents(files)).sort(compareFileEntries);
+    return Object.values(getVisibleFolderContents(files)).sort(
+        compareFileEntries
+    );
 }
 
 function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
@@ -332,5 +365,4 @@ function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
     }
     return 0;
 }
-
 </script>
