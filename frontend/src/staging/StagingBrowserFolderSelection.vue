@@ -47,9 +47,8 @@
 import {
     Component, Prop, Vue
 } from 'vue-property-decorator';
-import { getStagingFiles, WorkbenchFile, WorkbenchFileTree } from './StagingClient';
+import { getStagingFiles, getFilesInWorkDir, WorkbenchFileTree } from './StagingClient';
 import { showError } from '../util/Notifier';
-import { getFilesInWorkDir } from './StagingBrowser.vue';
 
 @Component
 export default class StagingBrowserFolderSelection extends Vue {
@@ -72,6 +71,7 @@ export default class StagingBrowserFolderSelection extends Vue {
     async openDirectory(path: string) {
         try {
             this.workingDirectory = path;
+            this.stagingFiles = await getStagingFiles(path);
             this.directories = getFilesInWorkDir(this.stagingFiles)
                 .filter(file => file.type === 'directory')
                 .map(file => file.name);

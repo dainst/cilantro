@@ -3,7 +3,25 @@ import { sendRequest } from '@/util/HTTPClient';
 import { backendUri, ignoredDirectoryContents } from '@/config';
 
 export async function getStagingFiles(path: string = '', depths: number = 1): Promise<WorkbenchFileTree> {
-    return sendRequest('get', `${backendUri}/staging/${path}?depths${depths}`, {}, {}, false);
+    return sendRequest('get', `${backendUri}/staging/${stripLeadingSlashes(path)}?depths${depths}`, {}, {}, false);
+}
+
+export function getFilesInWorkDir(files: WorkbenchFileTree): WorkbenchFile[] {
+    return Object.values(getVisibleFolderContents(files)).sort(compareFileEntries);
+}
+
+function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
+    if (a.type === 'directory' && b.type !== 'directory') {
+        return -1;
+    }
+    if (a.type !== 'directory' && b.type === 'directory') {
+        return 1;
+    }
+    return 0;
+}
+
+function stripLeadingSlashes(path: string) : string {
+    return path.replace(/^\//i, '');
 }
 
 export async function uploadFileToStaging(
@@ -15,15 +33,15 @@ export async function uploadFileToStaging(
 }
 
 export async function deleteFileFromStaging(filePath: string): Promise<boolean> {
-    return sendRequest('delete', `${backendUri}/staging/${filePath}`, {}, {}, false);
+    return sendRequest('delete', `${backendUri}/staging/${stripLeadingSlashes(filePath)}`, {}, {}, false);
 }
 
 export async function createFolderInStaging(folderPath: string): Promise<boolean> {
-    return sendRequest('post', `${backendUri}/staging/folder`, {}, { folderpath: folderPath }, false);
+    return sendRequest('post', `${backendUri}/staging/folder`, {}, { folderpath: stripLeadingSlashes(folderPath) }, false);
 }
 
 export async function moveInStaging(source: string, target: string): Promise<boolean> {
-    return sendRequest('post', `${backendUri}/staging/move`, {}, { source, target }, false);
+    return sendRequest('post', `${backendUri}/staging/move`, {}, { source: stripLeadingSlashes(source), target: stripLeadingSlashes(target) }, false);
 }
 
 export function getVisibleFolderContents(tree: WorkbenchFileTree): WorkbenchFile[] {
