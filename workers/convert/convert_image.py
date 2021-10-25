@@ -78,7 +78,7 @@ def tif_to_pdf(source_file, target_file, ocr_lang=None):
         image.save(target_file, 'PDF', resolution=100.0)
     else:
         try:
-            ocrmypdf.ocr(source_file, target_file, language=ocr_lang, use_threads=True, optimize=3, jobs=1)
+            ocrmypdf.ocr(source_file, target_file, language=ocr_lang, use_threads=True, optimize=3)
         except ocrmypdf.exceptions.DpiError:
             log.error(f'Low dpi image #{source_file}, skipping PDF OCR.')
 
