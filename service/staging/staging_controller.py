@@ -340,9 +340,9 @@ def move():
     if not request.data:
         raise ApiError("no_payload_found", "No request payload found")
     params = request.get_json(force=True)
-    if not params['source']:
+    if 'source' not in params:
         raise ApiError("param_not found", "Missing source parameter")
-    if not params['target']:
+    if 'target' not in params:
         raise ApiError("param_not found", "Missing target parameter")
     source = os.path.join(staging_dir, auth.username(), params['source'])
     target = os.path.join(staging_dir, auth.username(), params['target'])

@@ -109,8 +109,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { showSuccess, showWarning, showError } from '@/util/Notifier.ts';
+import {
+    Component, Prop, Vue
+} from 'vue-property-decorator';
+import { showError } from '@/util/Notifier.ts';
 import {
     getStagingFiles,
     deleteFileFromStaging,
@@ -118,7 +120,7 @@ import {
     WorkbenchFile,
     moveInStaging,
     WorkbenchFileTree,
-    getVisibleFolderContents
+    getFilesInWorkDir
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';
@@ -311,19 +313,4 @@ export function getFileName(path: string): string {
     return path.replace(/^.*\//, '');
 }
 
-export function getFilesInWorkDir(files: WorkbenchFileTree): WorkbenchFile[] {
-    return Object.values(getVisibleFolderContents(files)).sort(
-        compareFileEntries
-    );
-}
-
-function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
-    if (a.type === 'directory' && b.type !== 'directory') {
-        return -1;
-    }
-    if (a.type !== 'directory' && b.type === 'directory') {
-        return 1;
-    }
-    return 0;
-}
 </script>
