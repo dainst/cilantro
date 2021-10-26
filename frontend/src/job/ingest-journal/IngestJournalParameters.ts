@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import { ZenonRecord } from '@/util/ZenonClient';
 import {
     JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions
 } from '../JobParameters';
@@ -26,16 +27,35 @@ export class JobTargetData implements GenericJobTargetData {
 
 export class JournalIssueMetadata {
     zenon_id: string;
+    ojs_journal_code: string;
     volume?: number;
     publishing_year?: number;
     number?: number;
-    description?: string;
-    ojs_journal_code?: string;
+    title: string;
     reporting_year?: number;
+    articles?: JournalArticleMetadata[];
 
-    constructor(zenonId: string) {
+    constructor(zenonId: string, ojsJournalCode: string, title: string) {
         this.zenon_id = zenonId;
+        this.ojs_journal_code = ojsJournalCode;
+        this.title = title;
     }
+}
+
+export class JournalArticleMetadata {
+    zenon_id: string;
+    title: string;
+    authors?: Person[];
+
+    constructor(zenonId: string, title: string) {
+        this.zenon_id = zenonId;
+        this.title = title;
+    }
+}
+
+export interface Person {
+    givenname: string;
+    lastname: string;
 }
 
 export interface IngestJournalOptions {

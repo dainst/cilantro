@@ -63,7 +63,7 @@ import JournalOptionsForm from './IngestJournalOptionsForm.vue';
 
 import { JobTargetError, OCROptions } from '../JobParameters';
 import {
-    IngestJournalParameters, MaybeJobTarget, IngestJournalOptions, OJSOptions
+    IngestJournalParameters, MaybeJobTarget, IngestJournalOptions
 } from './IngestJournalParameters';
 
 import { showError, showSuccess } from '@/util/Notifier';
