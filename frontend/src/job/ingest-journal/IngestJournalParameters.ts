@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-import { ZenonRecord } from '@/util/ZenonClient';
 import {
     JobParameters, JobTargetError, JobTargetData as GenericJobTargetData, OCROptions
 } from '../JobParameters';
