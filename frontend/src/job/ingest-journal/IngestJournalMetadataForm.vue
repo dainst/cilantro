@@ -54,69 +54,71 @@
                     <li v-for="message in props.row.messages" :key="message">{{ message }}</li>
                 </ul>
 
-                <div class="columns">
-                    <div class="column">
-                        <b-field label="OJS journal code">
-                            {{props.row.metadata.ojs_journal_code}}
-                        </b-field>
-                    </div>
-                    <div class="column">
-                        <b-field label="Publishing year">
-                            <b-input v-model="props.row.metadata.publishing_year"></b-input>
-                        </b-field>
-                    </div>
-                </div>
-                <b-field label="Issue title">
-                    <a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id" target="_blank">
-                        {{ props.row.metadata.title }}
-                    </a>
-                </b-field>
-                <div class="box">
-                    <b-notification :closable="false">
-                        Suggestions based on Zenon data:
-                        "{{ zenonDataMapping[props.row.metadata.zenon_id].partOrSectionInfo || '-' }}"
-                    </b-notification>
-
+                <div v-if="!isTargetError(props.row)">
                     <div class="columns">
                         <div class="column">
-                            <b-field label="Issue number">
-                                <b-input v-model="props.row.metadata.issue"></b-input>
+                            <b-field label="OJS journal code">
+                                {{props.row.metadata.ojs_journal_code}}
                             </b-field>
                         </div>
                         <div class="column">
-                            <b-field label="Volume number">
-                                <b-input v-model="props.row.metadata.volume"></b-input>
-                            </b-field>
-                        </div>
-                        <div class="column">
-                            <b-field label="Reporting year">
-                                <b-input v-model="props.row.metadata.reporting_year"></b-input>
+                            <b-field label="Publishing year">
+                                <b-input v-model="props.row.metadata.publishing_year"></b-input>
                             </b-field>
                         </div>
                     </div>
-                </div>
-
-                <b-field label="Articles" v-if="props.row.metadata.articles.length !== 0">
+                    <b-field label="Issue title">
+                        <a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id" target="_blank">
+                            {{ props.row.metadata.title }}
+                        </a>
+                    </b-field>
                     <div class="box">
-                        <div class="box" v-for="(article, index) in props.row.metadata.articles" :key="index">
-                            <b-field label="Title">
-                                <a :href="'https://zenon.dainst.org/Record/' + article.zenon_id" target="_blank">
-                                    {{ article.title }}
-                                </a>
-                            </b-field>
-                            <b-field  v-if="article.authors.length !== 0" label="Authors">
-                            <table>
-                                <tbody>
-                                    <tr v-for="(author, index) in article.authors" :key="index">
-                                        <td><b-input placeholder="given name" v-model="author.givenname"></b-input></td>
-                                        <td><b-input placeholder="last name" v-model="author.lastname"></b-input></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            </b-field>
+                        <b-notification :closable="false">
+                            Suggestions based on Zenon data:
+                            "{{ zenonDataMapping[props.row.metadata.zenon_id].partOrSectionInfo || '-' }}"
+                        </b-notification>
+
+                        <div class="columns">
+                            <div class="column">
+                                <b-field label="Issue number">
+                                    <b-input v-model="props.row.metadata.issue"></b-input>
+                                </b-field>
+                            </div>
+                            <div class="column">
+                                <b-field label="Volume number">
+                                    <b-input v-model="props.row.metadata.volume"></b-input>
+                                </b-field>
+                            </div>
+                            <div class="column">
+                                <b-field label="Reporting year">
+                                    <b-input v-model="props.row.metadata.reporting_year"></b-input>
+                                </b-field>
+                            </div>
                         </div>
                     </div>
-                </b-field>
+
+                    <b-field label="Articles" v-if="props.row.metadata.articles.length !== 0">
+                        <div class="box">
+                            <div class="box" v-for="(article, index) in props.row.metadata.articles" :key="index">
+                                <b-field label="Title">
+                                    <a :href="'https://zenon.dainst.org/Record/' + article.zenon_id" target="_blank">
+                                        {{ article.title }}
+                                    </a>
+                                </b-field>
+                                <b-field  v-if="article.authors.length !== 0" label="Authors">
+                                <table>
+                                    <tbody>
+                                        <tr v-for="(author, index) in article.authors" :key="index">
+                                            <td><b-input placeholder="given name" v-model="author.givenname"></b-input></td>
+                                            <td><b-input placeholder="last name" v-model="author.lastname"></b-input></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </b-field>
+                            </div>
+                        </div>
+                    </b-field>
+                </div>
             </template>
         </b-table>
     </section>
@@ -172,7 +174,8 @@ export default class JournalMetadataForm extends Vue {
                     errors.push(`Could not extract Zenon ID from ${path}.`);
                 }
 
-                const targetFolder = await getStagingFiles(path);
+                const targetFolder = await getStagingFiles(path, 2);
+
                 if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {
@@ -182,6 +185,13 @@ export default class JournalMetadataForm extends Vue {
                 const articleZenonIds = Object.keys(targetFolder)
                     .map(name => extractZenonId(name))
                     .filter(zenonId => zenonId !== '');
+
+                articleZenonIds.forEach((articleId) => {
+                    const { contents } = targetFolder[`JOURNAL-ZID${articleId}`];
+                    if (contents) {
+                        errors = errors.concat(evaluateTargetFolder(contents));
+                    }
+                });
 
                 if (errors.length !== 0) {
                     return new JobTargetError(id, path, errors);
@@ -257,7 +267,7 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
 
     if (('tif' in targetFolder)) {
         // if there is a tif folder, make sure it only contains tifs
-        if (targetFolder.tif.contents !== undefined &&
+        if (targetFolder.tif.contents &&
                 !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
             errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
         }
