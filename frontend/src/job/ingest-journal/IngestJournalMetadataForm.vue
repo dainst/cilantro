@@ -17,9 +17,9 @@
                     </template>
                 </b-table-column>
                 <b-table-column
-                    field="id"
-                    label="Directory name"
-                >{{ props.row.id }}</b-table-column>
+                    field="path"
+                    label="Directory"
+                >{{ props.row.path }}</b-table-column>
                 <template v-if="!isTargetError(props.row) && props.row.metadata">
                     <b-table-column
                         field="metadata.title"
