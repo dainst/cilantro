@@ -27,6 +27,14 @@
                     ><a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id" target="_blank">
                         {{ props.row.metadata.title || '-' | truncate(80) }}
                     </a>
+                    <b-tag
+                        v-if="props.row.metadata.articles.length === 0"
+                        type="is-warning"
+                        size="is-medium"
+                    >
+                        No articles found!
+                    </b-tag>
+
                     </b-table-column>
                 </template>
                 <template v-else>
@@ -88,7 +96,7 @@
                     </div>
                 </div>
 
-                <b-field label="Articles">
+                <b-field label="Articles" v-if="props.row.metadata.articles.length !== 0">
                     <div class="box">
                         <div class="box" v-for="(article, index) in props.row.metadata.articles" :key="index">
                             <b-field label="Title">
