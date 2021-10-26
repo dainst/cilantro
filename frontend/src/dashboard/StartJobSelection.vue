@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="tile is-ancestor">
+        <!-- <div class="tile is-ancestor">
             <div class="tile is-parent">
                 <div class="tile is-child box">
                     <p class="title">NLP Processing</p>
@@ -51,7 +51,7 @@
                     <router-link to="nlp" tag="b-button" id="start_nlp">Start</router-link>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
