@@ -281,12 +281,12 @@ def journal_job_create():
         raise ApiError("invalid_job_params", "No request payload found")
     params = request.get_json(force=True)
     user_name = auth.username()
-    try:
-        json_validation.validate_params(params, 'ingest_journals')
-    except FileNotFoundError as e:
-        raise ApiError("unknown_job_type", str(e), 404)
-    except jsonschema.exceptions.ValidationError as e:
-        raise ApiError("invalid_job_params", str(e), 400)
+    # try:
+    #     json_validation.validate_params(params, 'ingest_journals')
+    # except FileNotFoundError as e:
+    #     raise ApiError("unknown_job_type", str(e), 404)
+    # except jsonschema.exceptions.ValidationError as e:
+    #     raise ApiError("invalid_job_params", str(e), 400)
 
     job = IngestJournalsJob(params, user_name)
     job.run()

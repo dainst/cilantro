@@ -247,7 +247,7 @@ export default class JournalMetadataForm extends Vue {
                 title: zenonRecord.title,
                 ojs_journal_code: ojsZenonMapping[parentId],
                 reporting_year: zenonRecord.serialMetadata?.year,
-                articles: createArticleMetadata(articleRecords)
+                articles: articleRecords.map(record => createArticleMetadata(targetPath, record))
             } as JournalIssueMetadata;
 
             return new JobTargetData(targetId, targetPath, metadata);
@@ -283,12 +283,13 @@ function extractZenonId(path: string): string {
     return result[1];
 }
 
-function createArticleMetadata(articleRecords : ZenonRecord[]) : JournalArticleMetadata[] {
-    return articleRecords.map((record : ZenonRecord) => ({
+function createArticleMetadata(record : ZenonRecord) : JournalArticleMetadata {
+    return ({
+        path: `JOURNAL-ZID${record.id}`,
         zenon_id: record.id,
         title: record.title,
         authors: extractAuthors(record)
-    }) as JournalArticleMetadata);
+    }) as JournalArticleMetadata;
 }
 
 function extractAuthors(record: ZenonRecord) : Person[] {

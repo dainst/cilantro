@@ -17,7 +17,11 @@ export class JobTargetData implements GenericJobTargetData {
     id: string;
     path: string;
     metadata: JournalIssueMetadata;
-    constructor(id: string, path: string, metadata: JournalIssueMetadata) {
+    constructor(
+        id: string,
+        path: string,
+        metadata: JournalIssueMetadata
+    ) {
         this.id = id;
         this.path = path;
         this.metadata = metadata;
@@ -42,11 +46,13 @@ export class JournalIssueMetadata {
 }
 
 export class JournalArticleMetadata {
+    path: string;
     zenon_id: string;
     title: string;
     authors?: Person[];
 
-    constructor(zenonId: string, title: string) {
+    constructor(path: string, zenonId: string, title: string) {
+        this.path = path;
         this.zenon_id = zenonId;
         this.title = title;
     }

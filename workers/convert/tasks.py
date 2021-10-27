@@ -45,7 +45,13 @@ class MergeConvertedPdfTask(ObjectTask):
     name = "convert.merge_converted_pdf"
 
     def process_object(self, obj):
-        rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, 'pdf')
+        
+        try: 
+            input_directory = self.params["input_directory"]
+        except KeyError:
+            input_directory = 'pdf'
+
+        rep_dir = os.path.join(self.get_work_path(), Object.DATA_DIR, input_directory)
         files = [os.path.basename(f) for f in sorted(_list_files(rep_dir, '.pdf'))]
 
         merge_pdf(files, rep_dir, f"{obj.id}.pdf")
