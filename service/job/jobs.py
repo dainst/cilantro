@@ -326,8 +326,8 @@ class IngestJournalsJob(BatchJob):
             article_copy_instructions = {}
             for count, article in enumerate(issue_target["metadata"]["articles"]):
                 prefix = f"article-{count}_"
-                article_workdir_prefixes.push(prefix)
-                article_copy_instructions[f"{article['path']}/tif"] = (f"{prefix}_tif", "*.tif")
+                article_workdir_prefixes.append(prefix)
+                article_copy_instructions[f"{article['path']}/tif"] = (f"{prefix}tif", "*.tif")
 
             task_params = dict(
                 **issue_target, 
@@ -357,16 +357,19 @@ class IngestJournalsJob(BatchJob):
             
             current_chain |= _link(
                 'generate_xml',
+                input_file_directories={
+                    "pdfs": ["issue_pdf"] + [f"{prefix}pdf" for prefix in article_workdir_prefixes]
+                },
                 template_file='ojs3_template_issue.xml',
-                target_filename='ojs_import.xml'
+                target_filename='ojs_import.xml',
             )
 
-            current_chain |= _link(
-                'generate_xml',
-                template_file='mets_template_journal.xml',
-                target_filename='mets.xml',
-                schema_file='mets.xsd'
-            )
+            # current_chain |= _link(
+            #     'generate_xml',
+            #     template_file='mets_template_journal.xml',
+            #     target_filename='mets.xml',
+            #     schema_file='mets.xsd'
+            # )
 
             current_chain |= _link(
                 'publish_to_ojs',
