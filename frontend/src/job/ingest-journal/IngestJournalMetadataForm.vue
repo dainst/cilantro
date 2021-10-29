@@ -106,6 +106,9 @@
                                         {{ article.title }}
                                     </a>
                                 </b-field>
+                                <b-field label="Pages">
+                                    {{ article.pages || 'No Zenon data provided.' }}
+                                </b-field>
                                 <b-field  v-if="article.authors.length !== 0" label="Authors">
                                 <table>
                                     <tbody>
@@ -290,7 +293,9 @@ function createArticleMetadata(record : ZenonRecord) : JournalArticleMetadata {
         path: `JOURNAL-ZID${record.id}`,
         zenon_id: record.id,
         title: record.title,
-        authors: extractAuthors(record)
+        authors: extractAuthors(record),
+        abstracts: record.summary,
+        pages: record.pages
     }) as JournalArticleMetadata;
 }
 

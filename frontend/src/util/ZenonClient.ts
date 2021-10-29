@@ -12,9 +12,10 @@ export class ZenonRecord {
     publicationDates: string[];
     parentId?: string;
     subjects: string[];
-    summary: string;
+    summary: string[];
     shortTitle: string;
     subTitle?: string;
+    pages?: string;
     serialMetadata?: SerialMetadata;
 
     constructor(zenonData : any) {
@@ -31,6 +32,7 @@ export class ZenonRecord {
         this.summary = zenonData.summary;
         this.shortTitle = zenonData.shortTitle.replace(/[\s:]+$/, '').trim();
         this.subTitle = zenonData.subTitle;
+        this.pages = zenonData.containerPageRange;
 
         this.partOrSectionInfo = zenonData.partOrSectionInfo;
         if ('partOrSectionInfo' in zenonData) {

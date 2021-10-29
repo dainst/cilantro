@@ -51,12 +51,25 @@ export class JournalArticleMetadata {
     path: string;
     zenon_id: string;
     title: string;
-    authors?: Person[];
+    authors: Person[];
+    abstracts: string[];
+    pages?: string;
+    keywords: string[];
 
-    constructor(path: string, zenonId: string, title: string) {
+    constructor(
+        path: string,
+        zenonId: string,
+        title: string,
+        authors: Person[],
+        abstracts: string[],
+        keywords: string[]
+    ) {
         this.path = path;
         this.zenon_id = zenonId;
         this.title = title;
+        this.authors = authors;
+        this.abstracts = abstracts;
+        this.keywords = keywords;
     }
 }
 
