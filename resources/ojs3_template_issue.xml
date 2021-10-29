@@ -37,10 +37,18 @@
     </issue_galleys>
     <articles>
         {% for article in metadata['articles'] %}
-        <article stage="production" locale="de_DE" access_status="2" seq="1" section_ref="ART" date_submitted="{{datetime.date.today().isoformat()}}">
+        <article stage="production" 
+            locale="de_DE" 
+            access_status="2" 
+            seq="1" 
+            section_ref="ART" 
+            date_submitted="{{datetime.date.today().isoformat()}}"
+            date_published="{{datetime.date.today().isoformat()}}">
             <id type="other::zenon">{{article['zenon_id']}}</id>
             <title locale="de_DE">{{article['title']}}</title>
-            <abstract locale="de_DE">{{article['abstract']}}</abstract>
+            {% for abstract in article['abstracts'] %}
+            <abstract>{{abstract}}</abstract>
+            {% endfor %}
             <copyrightHolder locale="de_DE">Digitale Ausgaben von Monographien, Reihen- und Sammelwerken des DAI</copyrightHolder>
             <copyrightHolder locale="en_US">Digital editions of monographs and series of the DAI</copyrightHolder>
             <authors>
@@ -65,7 +73,7 @@
             {% endif %}
 
             {% set filesize = getsize(params['files']['pdf']['article-{0}_pdf'.format(loop.index - 1)][0]) %}
-            
+
             <submission_file id="{{loop.index}}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" stage="production_ready" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
                 <revision number="1" genre="Artikeltext" filename="article-{{loop.index - 1}}.pdf" viewable="false" filesize="{{filesize}}" filetype="application/pdf">
                 <name locale="de_DE">article-{{loop.index - 1}}.pdf</name>
@@ -79,6 +87,11 @@
                 <seq>{{loop.index}}</seq>
                 <submission_file_ref id="{{loop.index}}" revision="1"/>
             </article_galley>
+
+            {% if article['pages'] %}
+            <pages>{{ article['pages'] }}</pages>
+            {% endif %}
+
         </article>
         {% endfor %}
     </articles>
