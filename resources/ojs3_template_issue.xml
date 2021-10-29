@@ -1,5 +1,5 @@
 {% set metadata = obj.metadata %}<?xml version="1.0" encoding="UTF-8"?>
-<issue xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" published="0" current="1" access_status="1">
+<issue xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" published="0" current="0" access_status="2">
     <issue_identification>
         {% if metadata['volume'] %}
         <volume>{{metadata['volume']}}</volume>
@@ -51,7 +51,9 @@
             {% endfor %}
             <copyrightHolder locale="de_DE">Digitale Ausgaben von Monographien, Reihen- und Sammelwerken des DAI</copyrightHolder>
             <copyrightHolder locale="en_US">Digital editions of monographs and series of the DAI</copyrightHolder>
+
             <authors>
+            {% if article['authors'] %}
                 {% for author in article['authors'] %}
                 <author primary_contact="true" include_in_browse="true" user_group_ref="Author">
                     {% if author.givenname == '' %}
@@ -63,7 +65,15 @@
                     <email></email>
                 </author>
                 {% endfor %}
+            {% else %}
+                <author primary_contact="true" include_in_browse="false" user_group_ref="Author">
+                    <givenname>None provided</givenname>
+                    <familyname>None provided</familyname>
+                    <email></email>
+                </author>
+            {% endif %}
             </authors>
+
             {% if metadata['keywords'] %}
             <keywords locale="de_DE">
                 {% for keyword in metadata['keywords'] %}
