@@ -67,8 +67,8 @@
                 {% endfor %}
             {% else %}
                 <author primary_contact="true" include_in_browse="false" user_group_ref="Author">
-                    <givenname>None provided</givenname>
-                    <familyname>None provided</familyname>
+                    <givenname>-</givenname>
+                    <familyname></familyname>
                     <email></email>
                 </author>
             {% endif %}
