@@ -30,6 +30,7 @@ export class JobTargetData implements GenericJobTargetData {
 
 export class JournalIssueMetadata {
     zenon_id: string;
+    journal_name: string;
     ojs_journal_code: string;
     volume?: number;
     publishing_year?: number;
@@ -38,8 +39,9 @@ export class JournalIssueMetadata {
     reporting_year?: number;
     articles?: JournalArticleMetadata[];
 
-    constructor(zenonId: string, ojsJournalCode: string, title: string) {
+    constructor(zenonId: string, journal_name: string, ojsJournalCode: string, title: string) {
         this.zenon_id = zenonId;
+        this.journal_name = journal_name;
         this.ojs_journal_code = ojsJournalCode;
         this.title = title;
     }

@@ -25,7 +25,7 @@
                         field="metadata.title"
                         label="Title"
                     ><a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id" target="_blank">
-                        {{ props.row.metadata.title || '-' | truncate(80) }}
+                        {{ (props.row.metadata.title + " / " + props.row.metadata.journal_name ) || '-' | truncate(80) }}
                     </a>
                     <b-tag
                         v-if="props.row.metadata.articles.length === 0"
@@ -58,7 +58,10 @@
                     <div class="columns">
                         <div class="column">
                             <b-field label="OJS journal code">
-                                {{props.row.metadata.ojs_journal_code}}
+                                {{props.row.metadata.ojs_journal_code}} /
+                                <a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id" target="_blank">
+                                    View in Zenon
+                                </a>
                             </b-field>
                         </div>
                         <div class="column">
@@ -68,9 +71,7 @@
                         </div>
                     </div>
                     <b-field label="Issue title">
-                        <a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id" target="_blank">
-                            {{ props.row.metadata.title }}
-                        </a>
+                        <b-input v-model="props.row.metadata.title"></b-input>
                     </b-field>
                     <div class="box">
                         <b-notification :closable="false">
@@ -241,10 +242,11 @@ export default class JournalMetadataForm extends Vue {
 
             const metadata = {
                 zenon_id: issueZenonId,
+                journal_name: zenonRecord.title,
                 volume: zenonRecord.serialMetadata?.volume,
                 publishing_year: publicationDate,
                 number: zenonRecord.serialMetadata?.issue,
-                title: zenonRecord.title,
+                title: (zenonRecord.partOrSectionInfo) ? zenonRecord.partOrSectionInfo : zenonRecord.title,
                 ojs_journal_code: ojsZenonMapping[parentId],
                 reporting_year: zenonRecord.serialMetadata?.year,
                 articles: articleRecords.map(record => createArticleMetadata(targetPath, record))
