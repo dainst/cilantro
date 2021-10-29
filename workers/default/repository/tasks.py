@@ -15,6 +15,12 @@ working_dir = os.environ['WORKING_DIR']
 staging_dir = os.environ['STAGING_DIR']
 
 
+filename_extension_mapping = {
+    'pdf': ['**/*.pdf', '**/*.PDF'],
+    'tif': ['**/*.tif', '**/*.tiff', '**/*.TIF', '**/*.TIFF'],
+    'txt': ['**/*.txt', '**/*.TXT']
+}
+
 class CreateObjectTask(ObjectTask):
     """
     Create a Cilantro-Object, the metadatas and the data files in it.
@@ -52,13 +58,6 @@ class CreateObjectTask(ObjectTask):
         self._initialize_files(obj, params['path'], params['user'],
                         params['initial_representation'])
         obj.write()
-
-
-    filename_extension_mapping = {
-        'pdf': ['**/*.pdf', '**/*.PDF'],
-        'tif': ['**/*.tif', '**/*.tiff', '**/*.TIF', '**/*.TIFF'],
-        'txt': ['**/*.txt', '**/*.TXT']
-    }
 
     def _initialize_files(self, obj, path, user, init_rep):
 
