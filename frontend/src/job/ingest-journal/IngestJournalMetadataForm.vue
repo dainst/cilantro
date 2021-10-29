@@ -252,7 +252,7 @@ export default class JournalMetadataForm extends Vue {
                 title: (zenonRecord.partOrSectionInfo) ? zenonRecord.partOrSectionInfo : zenonRecord.title,
                 ojs_journal_code: ojsZenonMapping[parentId],
                 reporting_year: zenonRecord.serialMetadata?.year,
-                articles: articleRecords.map(record => createArticleMetadata(targetPath, record))
+                articles: articleRecords.map(record => createArticleMetadata(record))
             } as JournalIssueMetadata;
 
             return new JobTargetData(targetId, targetPath, metadata);
