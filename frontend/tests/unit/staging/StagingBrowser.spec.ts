@@ -7,7 +7,7 @@ import Vuex, { Store } from 'vuex';
 import flushPromises from 'flush-promises';
 
 import StagingBrowser from '@/staging/StagingBrowser.vue';
-import { WorkbenchFileTree, JobInfo, JobInfoStatus } from '@/staging/StagingClient';
+import { WorkbenchFileTree, JobInfoStatus } from '@/staging/StagingClient';
 
 const mockStagingTree: WorkbenchFileTree = {
     'BOOK-ZID001595386': {
@@ -65,16 +65,9 @@ describe('StagingBrowser.vue', () => {
         expect(wrapper.find('a[href="/job?id=job_with_error"]').exists()).toBe(true);
     });
 
-    it('directories with a previously failed import attempt can be hidden', async() => {
-        await flushPromises();
-        expect(wrapper.find('span.has-text-danger i.mdi-folder').exists()).toBe(true);
-        await wrapper.find('#toggleFailed input').trigger('click');
-        expect(wrapper.find('span.has-text-danger i.mdi-folder').exists()).toBe(false);
-    });
-
     it('directories still being processed are marked', async() => {
         await flushPromises();
-        expect(wrapper.find('.has-text-warning > i.mdi-folder').exists()).toBe(true);
+        expect(wrapper.find('.has-text-warning i.mdi-folder').exists()).toBe(true);
     });
 
     it('directories still being processed show link to running job', async() => {
@@ -87,10 +80,26 @@ describe('StagingBrowser.vue', () => {
         expect(wrapper.find('.has-text-success > i.mdi-folder').exists()).toBe(false);
     });
 
+    it('directories with a previously failed import attempt can be hidden', async() => {
+        await flushPromises();
+        expect(wrapper.vm.showFailed).toBe(true);
+        expect(wrapper.find('span.has-text-danger > i.mdi-folder').exists()).toBe(true);
+        await wrapper.find('#toggleFailed input').trigger('click');
+        expect(wrapper.vm.showFailed).toBe(false);
+        expect(wrapper.find('span.has-text-danger').exists()).toBe(false);
+        // TODO: More specific selector evaluates to true for some reason:
+        // expect(wrapper.find('span.has-text-danger > i.mdi-folder').exists()).toBe(false);
+    });
+
     it('successfully imported directories can be displayed and are marked', async() => {
         await flushPromises();
-        expect(wrapper.find('span.has-text-success i.mdi-folder').exists()).toBe(false);
+        expect(wrapper.vm.showCompleted).toBe(false);
+        expect(wrapper.find('span.has-text-success > i.mdi-folder').exists()).toBe(false);
         await wrapper.find('#toggleCompleted input').trigger('click');
-        expect(wrapper.find('span.has-text-success i.mdi-folder').exists()).toBe(true);
+        expect(wrapper.vm.showCompleted).toBe(true);
+        expect(wrapper.find('span.has-text-success > i.mdi-folder').exists()).toBe(true);
+        await wrapper.find('#toggleCompleted input').trigger('click');
+        expect(wrapper.vm.showCompleted).toBe(false);
+        expect(wrapper.find('span.has-text-success > i.mdi-folder').exists()).toBe(false);
     });
 });
