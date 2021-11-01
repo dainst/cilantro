@@ -25,7 +25,7 @@
                         field="metadata.title"
                         label="Title"
                     ><a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id" target="_blank">
-                        {{ (props.row.metadata.title + " / " + props.row.metadata.journal_name ) || '-' | truncate(80) }}
+                        {{ (getIssueHeading(props.row.metadata) || '-') | truncate(80) }}
                     </a>
                     <b-tag
                         v-if="props.row.metadata.articles.length === 0"
@@ -76,7 +76,7 @@
                     <div class="box">
                         <b-notification :closable="false">
                             Suggestions based on Zenon data:
-                            "{{ zenonDataMapping[props.row.metadata.zenon_id].partOrSectionInfo || '-' }}"
+                            "{{getPartOrSectionInfo(props.row.metadata.zenon_id)}}"
                         </b-notification>
 
                         <div class="columns">
@@ -100,7 +100,10 @@
 
                     <b-field label="Articles" v-if="props.row.metadata.articles.length !== 0">
                         <div class="box">
-                            <div class="box" v-for="(article, index) in props.row.metadata.articles" :key="index">
+                            <div
+                                class="box"
+                                v-for="article in getArticleMetadata(props.row.metadata.articles)"
+                                :key="article.zenon_id">
                                 <b-field label="Title">
                                     <a :href="'https://zenon.dainst.org/Record/' + article.zenon_id" target="_blank">
                                         {{ article.title }}
@@ -113,8 +116,14 @@
                                 <table>
                                     <tbody>
                                         <tr v-for="(author, index) in article.authors" :key="index">
-                                            <td><b-input placeholder="given name" v-model="author.givenname"></b-input></td>
-                                            <td><b-input placeholder="last name" v-model="author.lastname"></b-input></td>
+                                            <td><b-input
+                                                placeholder="given name"
+                                                v-model="author.givenname">
+                                            </b-input></td>
+                                            <td><b-input
+                                                placeholder="last name"
+                                                v-model="author.lastname">
+                                            </b-input></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -200,7 +209,6 @@ export default class JournalMetadataForm extends Vue {
                 if (errors.length !== 0) {
                     return new JobTargetError(id, path, errors);
                 }
-
                 return this.loadZenonData(id, path, issueZenonId, articleZenonIds);
             }
         );
@@ -249,7 +257,8 @@ export default class JournalMetadataForm extends Vue {
                 volume: zenonRecord.serialMetadata?.volume,
                 publishing_year: publicationDate,
                 number: zenonRecord.serialMetadata?.issue,
-                title: (zenonRecord.partOrSectionInfo) ? zenonRecord.partOrSectionInfo : zenonRecord.title,
+                title: (zenonRecord.partOrSectionInfo)
+                    ? zenonRecord.partOrSectionInfo : zenonRecord.title,
                 ojs_journal_code: ojsZenonMapping[parentId],
                 reporting_year: zenonRecord.serialMetadata?.year,
                 articles: articleRecords.map(record => createArticleMetadata(record))
@@ -259,6 +268,20 @@ export default class JournalMetadataForm extends Vue {
         } catch (error) {
             return new JobTargetError(targetId, targetPath, [error]);
         }
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getIssueHeading(issueData: JournalIssueMetadata) : string {
+        return `${issueData.title} / ${issueData.journal_name}`;
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getArticleMetadata(issueData: JournalIssueMetadata) : JournalArticleMetadata[] {
+        return issueData.articles ? issueData.articles : [];
+    }
+
+    getPartOrSectionInfo(zenonId: string) : string {
+        return this.zenonDataMapping[zenonId].partOrSectionInfo ? this.zenonDataMapping[zenonId].partOrSectionInfo : '-';
     }
 }
 
