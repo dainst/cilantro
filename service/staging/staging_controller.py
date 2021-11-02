@@ -306,8 +306,8 @@ def upload_to_staging():
     if request.files:
         for key in request.files:
             for file in request.files.getlist(key):
-                file.path = f"{abs_path}/{secure_filename(file.filename)}"
-                results[file.path] = _process_file(file, auth.username())
+                file.path = f"{abs_path}/{file.filename}"
+                results[file.filename] = _process_file(file)
         return jsonify({"result": results}), 200
     raise ApiError("no_files_provided",
                    f"The request did not contain any files")
@@ -363,15 +363,10 @@ def move():
         raise ApiError("param_not found", "Missing source parameter")
     if 'target' not in params:
         raise ApiError("param_not found", "Missing target parameter")
-
-    print(params['source'])
-    print(params['target'])
     
     source = _get_absolute_path(params['source'])
     target = _get_absolute_path(params['target'])
 
-    print(source)
-    print(target)
     try:
         os.rename(source, target)
         return jsonify({"success": True}), 200
@@ -383,21 +378,21 @@ def move():
             e)
 
 
-def _process_file(file, username):
+def _process_file(file):
     if not _is_allowed_file_extension(file.filename):
         return _generate_error_result(
             file,
             "extension_not_allowed",
             f"File extension '{_get_file_extension(file.filename)}'"
             f" is not allowed.")
-    elif _file_already_exists(file.path):
+    elif os.path.exists(file.path):
         return _generate_error_result(
             file,
             "file_already_exists",
             f"File already exists in folder.")
     else:
         try:
-            _upload_file(file, username)
+            _upload_file(file)
             if _get_file_extension(file.filename) == "zip":
                 _unzip_file(file.path)
             return {"success": True}
@@ -421,7 +416,7 @@ def _generate_error_result(file, code, message, e=None):
         }
 
 
-def _upload_file(file, username):
+def _upload_file(file):
     directory_structure, filename = os.path.split(file.path)
     os.makedirs(directory_structure, exist_ok=True)
     file.save(file.path)
@@ -432,10 +427,6 @@ def _unzip_file(path):
     with zipfile.ZipFile(path, 'r') as zip_ref:
         zip_ref.extractall(target_path)
         os.remove(path)
-
-
-def _file_already_exists(filename, target_dir):
-    return os.path.exists(os.path.join(target_dir, secure_filename(filename)))
 
 
 def _is_allowed_file_extension(filename):
