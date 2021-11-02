@@ -55,7 +55,7 @@
                     </li>
                 </ul>
                 <ul v-if="isTargetError(props.row)">
-                    <li v-for="message in props.row.messages" :key="message.id">
+                    <li v-for="(message, index) in props.row.messages" :key="index">
                         {{ message }}
                     </li>
                 </ul>
