@@ -47,7 +47,7 @@ services:
 
   job-db:
     container_name: job_db
-    image: mongo:4.2.17
+    image: mongo:5.0.1
     volumes:
       - ./mongo-data:/data/db
 
