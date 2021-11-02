@@ -383,7 +383,7 @@ class IngestJournalsJob(BatchJob):
             current_chain |= _link(
                 'finish_chain',
                 success_msg="Journal imported successfully",
-                success_url='{}/{}/submissions'.format(
+                success_url='{}/{}/submissions#unassigned'.format(
                     os.getenv('OJS_BASE_URL'),
                     issue_target['metadata']['ojs_journal_code']
                 ),
