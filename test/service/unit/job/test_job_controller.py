@@ -94,7 +94,7 @@ class JobControllerTest(unittest.TestCase):
     def test_create_job_missing_param(self):
         """Test job creation to fail when there are params missing."""
         job_params = self._read_test_params()
-        del job_params['targets'][0]['metadata']['volume']
+        del job_params['targets'][0]['metadata']
         self._make_request('/job/ingest_journals', json.dumps(job_params), 400,
                            'invalid_job_params', 'is a required property')
 
