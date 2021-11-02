@@ -37,7 +37,7 @@ export interface Author {
     orcId?: string;
 }
 
-enum AuthorTypes {
+export enum AuthorTypes {
     Primary, Secondary, Corporate
 }
 

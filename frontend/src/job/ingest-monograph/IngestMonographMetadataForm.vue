@@ -74,7 +74,9 @@ import {
 import {
     MaybeJobTarget, JobTargetData, MonographMetadata, Person
 } from './IngestMonographParameters';
-import { getRecord, ZenonRecord, Author } from '@/util/ZenonClient';
+import {
+    getRecord, ZenonRecord, Author, AuthorTypes
+} from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
 import {
     WorkbenchFileTree,
@@ -218,19 +220,21 @@ async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
 }
 
 function extractAuthors(record: ZenonRecord) : Person[] {
-    return record.authors.map((author : Author) => {
-        const authorSplit = author.name.split(',');
-        if (authorSplit.length === 2) {
+    return record.authors
+        .filter((author : Author) => author.type !== AuthorTypes.Corporate)
+        .map((author : Author) => {
+            const authorSplit = author.name.split(',');
+            if (authorSplit.length === 2) {
+                return {
+                    givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
+                    lastname: authorSplit[0].trim()
+                } as Person;
+            }
             return {
-                givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
-                lastname: authorSplit[0].trim()
+                givenname: '',
+                lastname: author.name
             } as Person;
-        }
-        return {
-            givenname: '',
-            lastname: author.name
-        } as Person;
-    });
+        });
 }
 
 </script>
