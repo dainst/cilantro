@@ -22,6 +22,7 @@ x-env-jobdb: &env-jobdb
 x-env-app-config: &env-app-config
   BACKEND_URI: &backend-uri https://workbench.test.idai.world/api
   CILANTRO_ENV: &cilantro-env test
+  OJS_BASE_URL: &ojs-base-url http://test.publications.dainst.org/journals
   OJS_URI: &ojs-uri http://test.publications.dainst.org/journals/plugins/generic/cilantro/api
   OMP_URI: &omp-uri http://test.publications.dainst.org/books/plugins/generic/cilantro/api
   ATOM_URI: &atom-uri http://archivestest.dainst.org/index.php
@@ -47,7 +48,7 @@ services:
       - mongo-data:/data/db
 
   service:
-    image: dainst/cilantro-service:0.2.24
+    image: dainst/cilantro-service:0.2.25
     volumes:
       - staging-data:/data/staging
       - repository-data:/data/repository
@@ -61,6 +62,7 @@ services:
       CILANTRO_ENV: *cilantro-env
       BACKEND_URI: *backend-uri
       ATOM_URI: *atom-uri
+      OJS_BASE_URL: *ojs-base-url
     networks:
       - web
       - default
@@ -75,7 +77,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:0.2.16
+    image: dainst/cilantro-default-worker:0.2.17
     working_dir: /app
     volumes:
       - staging-data:/data/staging
@@ -101,7 +103,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:0.2.29
+    image: dainst/cilantro-convert-worker:0.2.31
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -122,7 +124,7 @@ services:
 
   nlp-heideltime-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-heideltime-worker:0.1.17
+    image: dainst/cilantro-nlp-heideltime-worker:0.1.18
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -136,7 +138,7 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:0.1.11
+    image: dainst/cilantro-nlp-worker:0.1.12
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -149,7 +151,7 @@ services:
       CILANTRO_ENV: *cilantro-env
 
   frontend:
-    image: dainst/cilantro-frontend:0.2.29
+    image: dainst/cilantro-frontend:0.2.30
     networks:
       - default
       - web
