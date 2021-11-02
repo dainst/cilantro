@@ -57,7 +57,7 @@ export interface SerialMetadata {
     year?: number;
 }
 
-enum AuthorTypes {
+export enum AuthorTypes {
     Primary, Secondary, Corporate
 }
 

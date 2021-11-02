@@ -22,17 +22,25 @@
 
     <authors xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
-        {% for author in metadata['authors'] %}
-        <author primary_contact="true" include_in_browse="true" user_group_ref="Author">
-            {% if author.givenname == '' %}
-            <givenname>#TODO#</givenname>
-            {% else %}
-            <givenname>{{author.givenname}}</givenname>
-            {% endif %}
-            <familyname>{{author.lastname}}</familyname>
-            <email></email>
-        </author>
-        {% endfor %}
+        {% if metadata['authors'] %}
+            {% for author in metadata['authors'] %}
+            <author primary_contact="true" include_in_browse="true" user_group_ref="Author">
+                {% if author.givenname == '' %}
+                <givenname>#TODO#</givenname>
+                {% else %}
+                <givenname>{{author.givenname}}</givenname>
+                {% endif %}
+                <familyname>{{author.lastname}}</familyname>
+                <email></email>
+            </author>
+            {% endfor %}
+        {% else %}
+            <author primary_contact="true" include_in_browse="false" user_group_ref="Author">
+                <givenname>-</givenname>
+                <familyname></familyname>
+                <email></email>
+            </author>
+        {% endif %}
     </authors>
     <submission_file xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                      stage="production_ready" id="1" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">

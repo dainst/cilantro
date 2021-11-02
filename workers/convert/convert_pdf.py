@@ -96,9 +96,6 @@ def merge_pdf(files, path: str, filename='merged.pdf', remove_old=True, downscal
             *[os.path.join(path, name) for name in files]
         ])
 
-        log.debug(output)
-
-        # TODO: Refactor optimization into separate Task
         optimize(path, outfile_name, outfile_name, "/printer")
 
     except subprocess.CalledProcessError as e:
@@ -178,16 +175,13 @@ def optimize(base_path, input_file_path, output_file_path, quality_setting):
             input_file_path
         ])
 
-    log.debug(output.decode('utf-8'))
-
     output = subprocess.check_output([
         "mutool",
         "merge",
         "-o",
         output_file_path,
-        *glob.glob(os.path.join(base_path, "tmp_*.pdf")),
+        *sorted(glob.glob(os.path.join(base_path, "tmp_*.pdf"))),
     ])
-    log.debug(output.decode('utf-8'))
 
     for f in glob.glob(os.path.join(base_path, "tmp_*.pdf")):
         os.remove(f)
