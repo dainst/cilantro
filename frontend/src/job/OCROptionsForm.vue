@@ -8,8 +8,14 @@
         </b-field>
         <b-field label="OCR language">
             <b-select v-model="options.ocr_lang">
-                <option value="eng">eng</option>
-                <option value="deu">deu</option>
+                <option value="eng">English</option>
+                <option value="deu">German</option>
+                <option value="ita">Italian</option>
+                <option value="fra">French</option>
+                <option value="spa">Spanish; Castilian</option>
+                <option value="ell">Greek, Modern, 1453+</option>
+                <option value="rus">Russian</option>
+                <option value="ara">Arabic</option>
             </b-select>
         </b-field>
     </div>
