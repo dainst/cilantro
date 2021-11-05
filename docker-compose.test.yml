@@ -32,9 +32,9 @@ services:
 
   broker:
     image: rabbitmq:3.8
-    environment:
-      RABBITMQ_DEFAULT_USER: *broker-user
-      RABBITMQ_DEFAULT_PASS: *broker-password
+    configs:
+      - source: rabbitmq_config
+        target: /etc/rabbitmq/rabbitmq.conf
 
   celery-db:
     image: redis:latest
@@ -192,6 +192,12 @@ volumes:
     external: true
   config:
     name: workbench_config
+    external: true
+    
+
+configs:
+  rabbitmq_config:
+    name: workbench-rabbit_mq_config
     external: true
 
 networks:
