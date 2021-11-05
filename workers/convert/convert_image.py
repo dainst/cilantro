@@ -70,21 +70,37 @@ def tif_to_pdf(source_file, target_file, ocr_lang=None):
     :param str target_file: desired output path
     :param ocr_lang: the language used for ocr
     """
-    scale = (900, 1200)
 
     if ocr_lang == None:
-        image = PilImage.open(source_file)
-        image.thumbnail(scale)
-        image.save(target_file, 'PDF', resolution=100.0)
+        _to_pdf_without_ocr(source_file, target_file)
     else:
+        ocr_params = {
+            "language": ocr_lang,
+            "use_threads": True,
+            "optimize": 3
+        }
+
         try:
-            ocrmypdf.ocr(source_file, target_file, language=ocr_lang, use_threads=True, optimize=3)
-        except ocrmypdf.exceptions.DpiError:
-            log.error(f'Low dpi image #{source_file}, skipping PDF OCR.')
+            ocrmypdf.ocr(source_file, target_file, **ocr_params)
+        except ocrmypdf.exceptions.UnsupportedImageFormatError:
+            log.info("UnsupportedImageFormatError, trying to convert to RGB.")
+            tmp_path = f'{os.path.dirname(target_file)}/tmp.tif'
 
             image = PilImage.open(source_file)
-            image.thumbnail(scale)
-            image.save(target_file, 'PDF', resolution=100.0)
+            rgb_image = image.convert('RGB')
+            rgb_image.save(tmp_path, dpi=image.info['dpi'])
+
+            ocrmypdf.ocr(tmp_path, target_file, **ocr_params)
+
+            os.remove(tmp_path)
+        except ocrmypdf.exceptions.DpiError:
+            log.error(f'Low dpi image #{source_file}, skipping PDF OCR.')
+            _to_pdf_without_ocr(source_file, target_file)
+
+def _to_pdf_without_ocr(source_file, target_file, scale=(900, 1200)):
+    image = PilImage.open(source_file)
+    image.thumbnail(scale)
+    image.save(target_file, 'PDF', resolution=100.0)
 
 
 def tif_to_txt(source_file, target_file, language='eng'):
