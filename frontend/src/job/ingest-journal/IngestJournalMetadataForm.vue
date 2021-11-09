@@ -102,7 +102,7 @@
                         <div class="box">
                             <div
                                 class="box"
-                                v-for="article in getArticleMetadata(props.row.metadata.articles)"
+                                v-for="article in getArticleMetadata(props.row.metadata)"
                                 :key="article.zenon_id">
                                 <b-field label="Title">
                                     <a :href="'https://zenon.dainst.org/Record/' + article.zenon_id" target="_blank">
@@ -277,6 +277,7 @@ export default class JournalMetadataForm extends Vue {
 
     // eslint-disable-next-line class-methods-use-this
     getArticleMetadata(issueData: JournalIssueMetadata) : JournalArticleMetadata[] {
+        console.log(issueData.articles);
         return issueData.articles ? issueData.articles : [];
     }
 
