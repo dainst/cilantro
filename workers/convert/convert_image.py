@@ -82,7 +82,7 @@ def tif_to_pdf(source_file, target_file, ocr_lang=None):
 
         try:
             ocrmypdf.ocr(source_file, target_file, **ocr_params)
-        except ocrmypdf.exceptions.UnsupportedImageFormatError:
+        except (ocrmypdf.exceptions.UnsupportedImageFormatError, ValueError):
             log.info("UnsupportedImageFormatError, trying to convert to RGB.")
             tmp_path = f'{os.path.splitext(target_file)[0]}_tmp.tif'
 
@@ -98,10 +98,15 @@ def tif_to_pdf(source_file, target_file, ocr_lang=None):
             _to_pdf_without_ocr(source_file, target_file)
 
 def _to_pdf_without_ocr(source_file, target_file, scale=(900, 1200)):
-    image = PilImage.open(source_file)
-    image.thumbnail(scale)
-    image.save(target_file, 'PDF', resolution=100.0)
-
+    try:
+        image = PilImage.open(source_file)
+        image.thumbnail(scale)
+        image.save(target_file, 'PDF', resolution=100.0)
+    except ValueError:
+        log.info("Value, trying to convert to RGB.")
+        image = PilImage.open(source_file)
+        rgb_image = image.convert('RGB')
+        rgb_image.save(target_file, 'PDF', resolution=100.0)
 
 def tif_to_txt(source_file, target_file, language='eng'):
     """
