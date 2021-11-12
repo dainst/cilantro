@@ -48,7 +48,7 @@ services:
       - mongo-data:/data/db
 
   service:
-    image: dainst/cilantro-service:0.2.25
+    image: dainst/cilantro-service:0.2.27
     volumes:
       - staging-data:/data/staging
       - repository-data:/data/repository
@@ -77,7 +77,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:0.2.17
+    image: dainst/cilantro-default-worker:0.2.19
     working_dir: /app
     volumes:
       - staging-data:/data/staging
@@ -103,7 +103,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:0.2.31
+    image: dainst/cilantro-convert-worker:0.2.33
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -124,7 +124,7 @@ services:
 
   nlp-heideltime-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-heideltime-worker:0.1.18
+    image: dainst/cilantro-nlp-heideltime-worker:0.1.20
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -138,7 +138,7 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:0.1.12
+    image: dainst/cilantro-nlp-worker:0.1.14
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -151,7 +151,7 @@ services:
       CILANTRO_ENV: *cilantro-env
 
   frontend:
-    image: dainst/cilantro-frontend:0.2.30
+    image: dainst/cilantro-frontend:0.2.35
     networks:
       - default
       - web
@@ -165,7 +165,7 @@ services:
 secrets:
   ojs_auth_key:
     external: true
-    name: workbench_ojs_auth_key
+    name: workbench_ojs_auth_key_2
   omp_auth_key:
     external: true
     name: workbench_omp_auth_key_2
@@ -193,7 +193,6 @@ volumes:
   config:
     name: workbench_config
     external: true
-    
 
 configs:
   rabbitmq_config:
