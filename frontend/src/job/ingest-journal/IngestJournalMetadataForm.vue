@@ -167,6 +167,7 @@ import {
     }
 })
 export default class JournalMetadataForm extends Vue {
+    /* eslint-disable class-methods-use-this */
     @Prop({ required: true }) private selectedPaths!: string[];
     targets: MaybeJobTarget[];
     zenonDataMapping: {[index: string]: ZenonRecord}
@@ -181,7 +182,7 @@ export default class JournalMetadataForm extends Vue {
         this.targets = await asyncMap(
             this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
                 const id = path.split('/').pop() || '';
-                const issueZenonId = extractZenonId(path);
+                const issueZenonId = this.extractZenonId(path);
                 let errors: string[] = [];
                 if (issueZenonId === '') {
                     errors.push(`Could not extract Zenon ID from ${path}.`);
@@ -192,17 +193,17 @@ export default class JournalMetadataForm extends Vue {
                 if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {
-                    errors = errors.concat(evaluateTargetFolder(targetFolder));
+                    errors = errors.concat(this.evaluateTargetFolder(targetFolder));
                 }
 
                 const articleZenonIds = Object.keys(targetFolder)
-                    .map(name => extractZenonId(name))
+                    .map(name => this.extractZenonId(name))
                     .filter(zenonId => zenonId !== '');
 
                 articleZenonIds.forEach((articleId) => {
                     const { contents } = targetFolder[`JOURNAL-ZID${articleId}`];
                     if (contents) {
-                        errors = errors.concat(evaluateTargetFolder(contents));
+                        errors = errors.concat(this.evaluateTargetFolder(contents));
                     }
                 });
 
@@ -236,7 +237,7 @@ export default class JournalMetadataForm extends Vue {
             } else if (!(zenonRecord.parentId in ojsZenonMapping)) {
                 errors.push(`Missing OJS Journal code for Journal with Zenon-ID '${zenonRecord.parentId}'.`);
             } else {
-            // eslint-disable-next-line prefer-destructuring
+                // eslint-disable-next-line prefer-destructuring
                 parentId = zenonRecord.parentId;
             }
 
@@ -261,7 +262,7 @@ export default class JournalMetadataForm extends Vue {
                     ? zenonRecord.partOrSectionInfo : zenonRecord.title,
                 ojs_journal_code: ojsZenonMapping[parentId],
                 reporting_year: zenonRecord.serialMetadata?.year,
-                articles: articleRecords.map(record => createArticleMetadata(record))
+                articles: articleRecords.map(record => this.createArticleMetadata(record))
             } as JournalIssueMetadata;
 
             return new JobTargetData(targetId, targetPath, metadata);
@@ -270,12 +271,10 @@ export default class JournalMetadataForm extends Vue {
         }
     }
 
-    // eslint-disable-next-line class-methods-use-this
     getIssueHeading(issueData: JournalIssueMetadata) : string {
         return `${issueData.title} / ${issueData.journal_name}`;
     }
 
-    // eslint-disable-next-line class-methods-use-this
     getArticleMetadata(issueData: JournalIssueMetadata) : JournalArticleMetadata[] {
         console.log(issueData.articles);
         return issueData.articles ? issueData.articles : [];
@@ -284,59 +283,59 @@ export default class JournalMetadataForm extends Vue {
     getPartOrSectionInfo(zenonId: string) : string {
         return this.zenonDataMapping[zenonId].partOrSectionInfo ? this.zenonDataMapping[zenonId].partOrSectionInfo : '-';
     }
-}
 
-function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
-    const errors: string[] = [];
-    if (containsNumberOfFiles(targetFolder, 0)) {
-        errors.push(
-            `Folder appears to be empty. Please provide input data.`
-        );
-    }
+    evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
+        const errors: string[] = [];
+        if (containsNumberOfFiles(targetFolder, 0)) {
+            errors.push(
+                `Folder appears to be empty. Please provide input data.`
+            );
+        }
 
-    if (('tif' in targetFolder)) {
+        if (('tif' in targetFolder)) {
         // if there is a tif folder, make sure it only contains tifs
-        if (targetFolder.tif.contents &&
+            if (targetFolder.tif.contents &&
                 !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
-            errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
+                errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
+            }
+        } else {
+            errors.push(`No Subfolder 'tif' found.`);
         }
-    } else {
-        errors.push(`No Subfolder 'tif' found.`);
+        return errors;
     }
-    return errors;
-}
 
-function extractZenonId(path: string): string {
-    const result = path.match(/.*JOURNAL-ZID(\d+)/i);
-    if (!result || result.length < 1) return '';
-    return result[1];
-}
+    extractZenonId(path: string): string {
+        const result = path.match(/.*JOURNAL-ZID(\d+)/i);
+        if (!result || result.length < 1) return '';
+        return result[1];
+    }
 
-function createArticleMetadata(record : ZenonRecord) : JournalArticleMetadata {
-    return ({
-        path: `JOURNAL-ZID${record.id}`,
-        zenon_id: record.id,
-        title: record.title,
-        authors: extractAuthors(record),
-        abstracts: record.summary,
-        pages: record.pages
-    }) as JournalArticleMetadata;
-}
+    createArticleMetadata(record : ZenonRecord) : JournalArticleMetadata {
+        return ({
+            path: `JOURNAL-ZID${record.id}`,
+            zenon_id: record.id,
+            title: record.title,
+            authors: this.extractAuthors(record),
+            abstracts: record.summary,
+            pages: record.pages
+        }) as JournalArticleMetadata;
+    }
 
-function extractAuthors(record: ZenonRecord) : Person[] {
-    return record.authors.map((author : Author) => {
-        const authorSplit = author.name.split(',');
-        if (authorSplit.length === 2 || authorSplit.length === 3) {
+    extractAuthors(record: ZenonRecord) : Person[] {
+        return record.authors.map((author : Author) => {
+            const authorSplit = author.name.split(',');
+            if (authorSplit.length === 2 || authorSplit.length === 3) {
+                return {
+                    givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
+                    lastname: authorSplit[0].trim()
+                } as Person;
+            }
             return {
-                givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
-                lastname: authorSplit[0].trim()
+                givenname: '',
+                lastname: author.name
             } as Person;
-        }
-        return {
-            givenname: '',
-            lastname: author.name
-        } as Person;
-    });
+        });
+    }
 }
 
 </script>
