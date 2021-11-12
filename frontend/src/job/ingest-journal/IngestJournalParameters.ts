@@ -37,13 +37,20 @@ export class JournalIssueMetadata {
     number?: number;
     title: string;
     reporting_year?: number;
-    articles?: JournalArticleMetadata[];
+    articles: JournalArticleMetadata[];
 
-    constructor(zenonId: string, journal_name: string, ojsJournalCode: string, title: string) {
+    constructor(
+        zenonId: string,
+        journal_name: string,
+        ojsJournalCode: string,
+        title: string,
+        articles: JournalArticleMetadata[] = []
+    ) {
         this.zenon_id = zenonId;
         this.journal_name = journal_name;
         this.ojs_journal_code = ojsJournalCode;
         this.title = title;
+        this.articles = articles;
     }
 }
 
