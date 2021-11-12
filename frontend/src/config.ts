@@ -8,6 +8,8 @@ export const ojsZenonMapping = {
     '000054792': 'ger',
     '000055658': 'mm',
     '000057152': 'BaM',
+    '000146522': 'mdaik',
+    '000036080': 'mdaik',
     '000814258': 'test'
 } as { [index: string]: string };
 

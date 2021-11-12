@@ -3,7 +3,7 @@ import { sendRequest } from '@/util/HTTPClient';
 import { backendUri, ignoredDirectoryContents } from '@/config';
 
 export async function getStagingFiles(path: string = '', depths: number = 1): Promise<WorkbenchFileTree> {
-    return sendRequest('get', `${backendUri}/staging/${stripLeadingSlashes(path)}?depths${depths}`, {}, {}, false);
+    return sendRequest('get', `${backendUri}/staging/${stripLeadingSlashes(path)}?depths=${depths}`, {}, {}, false);
 }
 
 export function getFilesInWorkDir(files: WorkbenchFileTree): WorkbenchFile[] {

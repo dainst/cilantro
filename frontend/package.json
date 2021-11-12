@@ -1,14 +1,15 @@
 {
   "name": "cilantro-frontend",
-  "version": "0.2.29",
+  "version": "0.2.35",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint --no-fix",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "testcafe 'chromium:/usr/bin/chromium-browser:headless' tests/e2e/*.test.js",
+    "test": "vue-cli-service test:unit",
+    "test:unit": "vue-cli-service test:unit tests/unit",
+    "test:integration": "vue-cli-service test:unit tests/integration",
     "test:debug": "node --inspect-brk node_modules/.bin/vue-cli-service test:unit --no-cache --watch --runInBand"
   },
   "jest": {
@@ -27,6 +28,7 @@
     "vuex-module-decorators": "^0.9.11"
   },
   "devDependencies": {
+    "ajv": "^6.12.6",
     "flush-promises": "^1.0.2",
     "@types/jest": "^27.0.2",
     "@vue/babel-preset-app": "^4.5.13",

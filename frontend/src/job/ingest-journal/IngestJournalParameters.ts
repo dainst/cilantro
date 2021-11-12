@@ -17,7 +17,11 @@ export class JobTargetData implements GenericJobTargetData {
     id: string;
     path: string;
     metadata: JournalIssueMetadata;
-    constructor(id: string, path: string, metadata: JournalIssueMetadata) {
+    constructor(
+        id: string,
+        path: string,
+        metadata: JournalIssueMetadata
+    ) {
         this.id = id;
         this.path = path;
         this.metadata = metadata;
@@ -26,16 +30,52 @@ export class JobTargetData implements GenericJobTargetData {
 
 export class JournalIssueMetadata {
     zenon_id: string;
+    journal_name: string;
+    ojs_journal_code: string;
     volume?: number;
     publishing_year?: number;
     number?: number;
-    description?: string;
-    ojs_journal_code?: string;
+    title: string;
     reporting_year?: number;
+    articles?: JournalArticleMetadata[];
 
-    constructor(zenonId: string) {
+    constructor(zenonId: string, journal_name: string, ojsJournalCode: string, title: string) {
         this.zenon_id = zenonId;
+        this.journal_name = journal_name;
+        this.ojs_journal_code = ojsJournalCode;
+        this.title = title;
     }
+}
+
+export class JournalArticleMetadata {
+    path: string;
+    zenon_id: string;
+    title: string;
+    authors: Person[];
+    abstracts: string[];
+    pages?: string;
+    keywords: string[];
+
+    constructor(
+        path: string,
+        zenonId: string,
+        title: string,
+        authors: Person[],
+        abstracts: string[],
+        keywords: string[]
+    ) {
+        this.path = path;
+        this.zenon_id = zenonId;
+        this.title = title;
+        this.authors = authors;
+        this.abstracts = abstracts;
+        this.keywords = keywords;
+    }
+}
+
+export interface Person {
+    givenname: string;
+    lastname: string;
 }
 
 export interface IngestJournalOptions {

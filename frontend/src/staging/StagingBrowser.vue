@@ -325,15 +325,16 @@ export default class StagingBrowser extends Vue {
 
         const jobInfo = file.job_info as JobInfo;
 
-        if (jobInfo.status === 'started') return `A <a href='/job?id=${jobInfo.job_id}' target='_blank'>job</a> is still running.`;
+        // TODO: Avoid strings containing with html code
+        if (jobInfo.status === 'started') return `A <a onclick="event.stopPropagation();" href='/job?id=${jobInfo.job_id}' target='_blank'>job</a> is still running.`;
 
         if (jobInfo.status === 'success' && jobInfo.msg) {
             if (!jobInfo.url || !jobInfo.url_label) return jobInfo.msg;
-            return `<a href='${jobInfo.url}' target='_blank'>${jobInfo.url_label}</a>`;
+            return `<a  onclick="event.stopPropagation();" href='${jobInfo.url}' target='_blank'>${jobInfo.url_label}</a>`;
         }
 
         if (jobInfo.status === 'error' && jobInfo.msg) {
-            return `A previous <a href='/job?id=${jobInfo.job_id}' target='_blank'>job</a> failed with an error: <pre>${JSON.stringify(jobInfo.msg)}</pre>`;
+            return `A previous <a onclick="event.stopPropagation();" href='/job?id=${jobInfo.job_id}' target='_blank'>job</a> failed with an error: <pre>${JSON.stringify(jobInfo.msg)}</pre>`;
         }
         return file.job_info;
     }

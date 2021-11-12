@@ -17,41 +17,28 @@
                     </template>
                 </b-table-column>
                 <b-table-column
-                    field="id"
-                    label="Path"
-                >{{ props.row.id }}</b-table-column>
+                    field="path"
+                    label="Directory"
+                >{{ props.row.path }}</b-table-column>
                 <template v-if="!isTargetError(props.row) && props.row.metadata">
                     <b-table-column
-                        field="metadata.description"
-                        label="Description"
-                    >{{ props.row.metadata.description || '-' | truncate(80) }}</b-table-column>
-                    <b-table-column
-                        field="metadata.volume"
-                        label="Volume"
-                        >{{ props.row.metadata.volume || '-' }}
-                    </b-table-column>
-                    <b-table-column
-                        field="metadata.publishing_year"
-                        label="Year"
-                        >{{ props.row.metadata.publishing_year || '-' }}
-                    </b-table-column>
-                    <b-table-column
-                        field="metadata.number"
-                        label="Number"
-                        >{{ props.row.metadata.number || '-' }}
-                    </b-table-column>
-                    <b-table-column
-                        field="metadata.zenon_link"
-                        label="Zenon"
-                    ><a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id">
-                        {{props.row.metadata.zenon_id}}</a>
+                        field="metadata.title"
+                        label="Title"
+                    ><a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id" target="_blank">
+                        {{ (getIssueHeading(props.row.metadata) || '-') | truncate(80) }}
+                    </a>
+                    <b-tag
+                        v-if="props.row.metadata.articles.length === 0"
+                        type="is-warning"
+                        size="is-medium"
+                    >
+                        No articles found!
+                    </b-tag>
+
                     </b-table-column>
                 </template>
                 <template v-else>
-                    <b-table-column label="Description">-</b-table-column>
-                    <b-table-column label="Volume">-</b-table-column>
-                    <b-table-column label="Year">-</b-table-column>
-                    <b-table-column label="Number">-</b-table-column>
+                    <b-table-column label="Title">-</b-table-column>
                 </template>
                 <b-table-column label="">
                     <b-button title="Remove from selection"
@@ -63,13 +50,87 @@
             </template>
 
             <template slot="detail" slot-scope="props">
-                <div class="content metadata_output">
-                    <ul>
-                        <li v-for="(id, name) in props.row.metadata" :key="id">{{name}}: {{id}}</li>
-                    </ul>
-                    <ul v-if="isTargetError(props.row)">
-                        <li v-for="message in props.row.messages" :key="message">{{ message }}</li>
-                    </ul>
+                <ul v-if="isTargetError(props.row)">
+                    <li v-for="message in props.row.messages" :key="message">{{ message }}</li>
+                </ul>
+
+                <div v-if="!isTargetError(props.row)">
+                    <div class="columns">
+                        <div class="column">
+                            <b-field label="OJS journal code">
+                                {{props.row.metadata.ojs_journal_code}} /
+                                <a :href="'https://zenon.dainst.org/Record/' + props.row.metadata.zenon_id" target="_blank">
+                                    View in Zenon
+                                </a>
+                            </b-field>
+                        </div>
+                        <div class="column">
+                            <b-field label="Publishing year">
+                                <b-input v-model="props.row.metadata.publishing_year"></b-input>
+                            </b-field>
+                        </div>
+                    </div>
+                    <b-field label="Issue title">
+                        <b-input v-model="props.row.metadata.title"></b-input>
+                    </b-field>
+                    <div class="box">
+                        <b-notification :closable="false">
+                            Suggestions based on Zenon data:
+                            "{{getPartOrSectionInfo(props.row.metadata.zenon_id)}}"
+                        </b-notification>
+
+                        <div class="columns">
+                            <div class="column">
+                                <b-field label="Issue number">
+                                    <b-input v-model.number="props.row.metadata.number"></b-input>
+                                </b-field>
+                            </div>
+                            <div class="column">
+                                <b-field label="Volume number">
+                                    <b-input v-model.number="props.row.metadata.volume"></b-input>
+                                </b-field>
+                            </div>
+                            <div class="column">
+                                <b-field label="Reporting year">
+                                    <b-input v-model.number="props.row.metadata.reporting_year"></b-input>
+                                </b-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <b-field label="Articles" v-if="props.row.metadata.articles.length !== 0">
+                        <div class="box">
+                            <div
+                                class="box"
+                                v-for="article in getArticleMetadata(props.row.metadata)"
+                                :key="article.zenon_id">
+                                <b-field label="Title">
+                                    <a :href="'https://zenon.dainst.org/Record/' + article.zenon_id" target="_blank">
+                                        {{ article.title }}
+                                    </a>
+                                </b-field>
+                                <b-field label="Pages">
+                                    {{ article.pages || 'No Zenon data provided.' }}
+                                </b-field>
+                                <b-field  v-if="article.authors.length !== 0" label="Authors">
+                                <table>
+                                    <tbody>
+                                        <tr v-for="(author, index) in article.authors" :key="index">
+                                            <td><b-input
+                                                placeholder="given name"
+                                                v-model="author.givenname">
+                                            </b-input></td>
+                                            <td><b-input
+                                                placeholder="last name"
+                                                v-model="author.lastname">
+                                            </b-input></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </b-field>
+                            </div>
+                        </div>
+                    </b-field>
                 </div>
             </template>
         </b-table>
@@ -84,14 +145,13 @@ import {
     JobTargetError, isTargetError
 } from '@/job/JobParameters';
 import {
-    MaybeJobTarget, JobTargetData, JournalIssueMetadata
+    MaybeJobTarget, JobTargetData, JournalIssueMetadata, JournalArticleMetadata, Person
 } from './IngestJournalParameters';
-import { getRecord, ZenonRecord } from '@/util/ZenonClient';
+import { getRecord, ZenonRecord, Author } from '@/util/ZenonClient';
 import { asyncMap } from '@/util/HelperFunctions';
 import { ojsZenonMapping } from '@/config';
 import {
     WorkbenchFileTree,
-    WorkbenchFile,
     containsOnlyFilesWithExtensions,
     getStagingFiles,
     containsNumberOfFiles
@@ -109,45 +169,49 @@ import {
 export default class JournalMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
     targets: MaybeJobTarget[];
+    zenonDataMapping: {[index: string]: ZenonRecord}
 
     constructor() {
         super();
         this.targets = [];
+        this.zenonDataMapping = {};
     }
 
     async mounted() {
         this.targets = await asyncMap(
             this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
                 const id = path.split('/').pop() || '';
-                const zenonId = extractZenonId(path);
+                const issueZenonId = extractZenonId(path);
                 let errors: string[] = [];
-                if (zenonId === '') {
+                if (issueZenonId === '') {
                     errors.push(`Could not extract Zenon ID from ${path}.`);
                 }
 
-                const targetFolder = await getStagingFiles(path);
+                const targetFolder = await getStagingFiles(path, 2);
+
                 if (Object.keys(targetFolder).length === 0) {
                     errors.push(`Could not find file at ${path}.`);
                 } else {
                     errors = errors.concat(evaluateTargetFolder(targetFolder));
                 }
 
-                if (errors.length === 0) {
-                    return new JobTargetData(
-                        id, path, { zenon_id: zenonId } as JournalIssueMetadata
-                    );
+                const articleZenonIds = Object.keys(targetFolder)
+                    .map(name => extractZenonId(name))
+                    .filter(zenonId => zenonId !== '');
+
+                articleZenonIds.forEach((articleId) => {
+                    const { contents } = targetFolder[`JOURNAL-ZID${articleId}`];
+                    if (contents) {
+                        errors = errors.concat(evaluateTargetFolder(contents));
+                    }
+                });
+
+                if (errors.length !== 0) {
+                    return new JobTargetError(id, path, errors);
                 }
-                return new JobTargetError(id, path, errors);
+                return this.loadZenonData(id, path, issueZenonId, articleZenonIds);
             }
         );
-
-        this.targets = await asyncMap(this.targets, async(target) => {
-            if (target instanceof JobTargetData) {
-                const updated : MaybeJobTarget = await loadZenonData(target);
-                return updated;
-            }
-            return new JobTargetError(target.id, target.path, target.messages);
-        });
 
         this.$emit('update:targetsUpdated', this.targets);
     }
@@ -157,6 +221,68 @@ export default class JournalMetadataForm extends Vue {
     removeTarget(removedTarget: MaybeJobTarget) {
         this.targets = this.targets.filter(target => removedTarget.id !== target.id);
         this.$emit('update:targetsUpdated', this.targets);
+    }
+
+    async loadZenonData(
+        targetId: string, targetPath: string, issueZenonId: string, articleZenonIds: string[]
+    ) {
+        try {
+            const zenonRecord = await getRecord(issueZenonId) as ZenonRecord;
+            const errors : string[] = [];
+
+            let parentId = '';
+            if (!zenonRecord.parentId) {
+                errors.push(`Zenon record has no parent id. Can't determine which Journal this issue belongs to.`);
+            } else if (!(zenonRecord.parentId in ojsZenonMapping)) {
+                errors.push(`Missing OJS Journal code for Journal with Zenon-ID '${zenonRecord.parentId}'.`);
+            } else {
+            // eslint-disable-next-line prefer-destructuring
+                parentId = zenonRecord.parentId;
+            }
+
+            this.zenonDataMapping[issueZenonId] = zenonRecord;
+
+            if (errors.length !== 0) return new JobTargetError(targetId, targetPath, errors);
+
+            const articleRecords = await asyncMap(articleZenonIds, getRecord);
+
+            let publicationDate;
+            if (zenonRecord.publicationDates.length !== 0) {
+                [publicationDate] = zenonRecord.publicationDates;
+            }
+
+            const metadata = {
+                zenon_id: issueZenonId,
+                journal_name: zenonRecord.title,
+                volume: zenonRecord.serialMetadata?.volume,
+                publishing_year: publicationDate,
+                number: zenonRecord.serialMetadata?.issue,
+                title: (zenonRecord.partOrSectionInfo)
+                    ? zenonRecord.partOrSectionInfo : zenonRecord.title,
+                ojs_journal_code: ojsZenonMapping[parentId],
+                reporting_year: zenonRecord.serialMetadata?.year,
+                articles: articleRecords.map(record => createArticleMetadata(record))
+            } as JournalIssueMetadata;
+
+            return new JobTargetData(targetId, targetPath, metadata);
+        } catch (error) {
+            return new JobTargetError(targetId, targetPath, [error]);
+        }
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getIssueHeading(issueData: JournalIssueMetadata) : string {
+        return `${issueData.title} / ${issueData.journal_name}`;
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getArticleMetadata(issueData: JournalIssueMetadata) : JournalArticleMetadata[] {
+        console.log(issueData.articles);
+        return issueData.articles ? issueData.articles : [];
+    }
+
+    getPartOrSectionInfo(zenonId: string) : string {
+        return this.zenonDataMapping[zenonId].partOrSectionInfo ? this.zenonDataMapping[zenonId].partOrSectionInfo : '-';
     }
 }
 
@@ -170,7 +296,7 @@ function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
 
     if (('tif' in targetFolder)) {
         // if there is a tif folder, make sure it only contains tifs
-        if (targetFolder.tif.contents !== undefined &&
+        if (targetFolder.tif.contents &&
                 !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
             errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
         }
@@ -186,60 +312,31 @@ function extractZenonId(path: string): string {
     return result[1];
 }
 
-async function loadZenonData(target: JobTargetData) {
-    try {
-        const zenonRecord = await getRecord(target.metadata.zenon_id) as ZenonRecord;
-        const errors : string[] = [];
+function createArticleMetadata(record : ZenonRecord) : JournalArticleMetadata {
+    return ({
+        path: `JOURNAL-ZID${record.id}`,
+        zenon_id: record.id,
+        title: record.title,
+        authors: extractAuthors(record),
+        abstracts: record.summary,
+        pages: record.pages
+    }) as JournalArticleMetadata;
+}
 
-        let parentId = '';
-        if (!zenonRecord.parentId) {
-            errors.push(`Zenon record has no parent id. Can't determine which Journal this issue belongs to.`);
-        } else if (!(zenonRecord.parentId in ojsZenonMapping)) {
-            errors.push(`Missing OJS Journal code for Journal with Zenon-ID '${zenonRecord.parentId}'.`);
-        } else {
-            // eslint-disable-next-line prefer-destructuring
-            parentId = zenonRecord.parentId;
+function extractAuthors(record: ZenonRecord) : Person[] {
+    return record.authors.map((author : Author) => {
+        const authorSplit = author.name.split(',');
+        if (authorSplit.length === 2 || authorSplit.length === 3) {
+            return {
+                givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
+                lastname: authorSplit[0].trim()
+            } as Person;
         }
-
-        if (errors.length !== 0) return new JobTargetError(target.id, target.path, errors);
-
-        const metadata = {
-            zenon_id: target.metadata.zenon_id,
-            volume: getSerialVolume(zenonRecord),
-            publishing_year: parseInt(zenonRecord.publicationDates[0], 10),
-            number: getIssueNumber(zenonRecord),
-            description: zenonRecord.title,
-            ojs_journal_code: ojsZenonMapping[parentId],
-            reporting_year: getReportingYear(zenonRecord)
-        } as JournalIssueMetadata;
-
-        return new JobTargetData(target.id, target.path, metadata);
-    } catch (error) {
-        return new JobTargetError(target.id, target.path, [error]);
-    }
-}
-
-function getReportingYear(record: ZenonRecord): number {
-    const match = record.partOrSectionInfo.match(/\(.*?\)/g)![0];
-    return parseInt(match.slice(1, -1), 10);
-}
-
-function getIssueNumber(record: ZenonRecord): number {
-    if (!record.partOrSectionInfo.includes(',')) {
-        return 0;
-    }
-    const match = record.partOrSectionInfo.match(/,[^(]*/g)![0];
-    return parseInt(match.slice(1), 10);
-}
-
-function getSerialVolume(record: ZenonRecord): number {
-    let match: string = '';
-    if (record.partOrSectionInfo.includes(',')) {
-        [match] = record.partOrSectionInfo.match(/[^,]*/g)!;
-    } else {
-        [match] = record.partOrSectionInfo.match(/[^(]*/g)!;
-    }
-    return parseInt(match, 10);
+        return {
+            givenname: '',
+            lastname: author.name
+        } as Person;
+    });
 }
 
 </script>

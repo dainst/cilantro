@@ -52,7 +52,7 @@ def write_processing_started(directory, job_id):
   with open(path, 'w') as f:
       content = {
           'status': 'started',
-          'msg': job_id
+          'job_id': job_id
       }
 
       json.dump(content, f)

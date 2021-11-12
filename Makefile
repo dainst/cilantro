@@ -44,6 +44,7 @@ test: run-detached test-backend test-frontend stop
 
 test-frontend:
 	npm run test:unit --prefix frontend
+	npm run test:integration --prefix frontend
 
 test-backend: test-backend-unit test-backend-integration
 

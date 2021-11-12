@@ -67,14 +67,21 @@ describe('IngestJournalMetadataForm', () => {
             }
         });
         await flushPromises();
+
+        // TODO: Find a way to wait for 'update:targetsUpdated' instead of just waiting 2000ms.
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        expect(wrapper.emitted()).toHaveProperty('update:targetsUpdated');
         const icon = wrapper.find('.has-text-danger');
         expect(icon.exists()).toBe(false);
         // no error lets check the output
-        wrapper.find('a').trigger('click');
-        await wrapper.vm.$nextTick();
-        const details = wrapper.find('.metadata_output');
+        wrapper.find('td.chevron-cell > a').trigger('click');
 
-        expect(details.text()).toBe('zenon_id: 001149881');
+        await wrapper.vm.$nextTick();
+        const details = wrapper.find('div.field > a');
+
+        expect(details.text()).toBe('View in Zenon');
+        expect(details.attributes().href).toBe('https://zenon.dainst.org/Record/001149881');
     });
 
     it('detect empty target folder', async() => {
@@ -95,7 +102,7 @@ describe('IngestJournalMetadataForm', () => {
         // wait for event processing
         await wrapper.vm.$nextTick();
         // find the error message
-        const details = wrapper.find('.metadata_output');
+        const details = wrapper.find('.detail-container');
         expect(details.text()).toBe(
             'Could not find file at /Journal-ZID001149881.'
         );
@@ -132,7 +139,7 @@ describe('IngestJournalMetadataForm', () => {
         // wait for event processing
         await wrapper.vm.$nextTick();
         // find the error message
-        const details = wrapper.find('.metadata_output');
+        const details = wrapper.find('.detail-container');
         expect(details.text()).toBe(
             "No Subfolder 'tif' found."
         );
@@ -161,7 +168,7 @@ describe('IngestJournalMetadataForm', () => {
         // wait for event processing
         await wrapper.vm.$nextTick();
         // find the error message
-        const details = wrapper.find('.metadata_output');
+        const details = wrapper.find('.detail-container');
         expect(details.text()).toBe(
             "Subfolder 'tif' does not exclusively contain TIF files."
         );

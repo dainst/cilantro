@@ -29,6 +29,7 @@ information = {
                              "description": "Generates an article frontmatter for OJS."},
     "create_object": {"label": "Create object",
                       "description": "Sets up metadata for further processing."},
+    "create_complex_object": {"label": "Create complex object", "description": "Copies files from staging to working directories and sets up metadata for further processing."},
     "publish_to_repository": {"label": "Publish to repository",
                               "description": "Copies the current results into the data repository."},
     "publish_to_archive": {"label": "Publish to archive",
