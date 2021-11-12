@@ -282,7 +282,6 @@ export default class JournalMetadataForm extends Vue {
     }
 
     getArticleMetadata(issueData: JournalIssueMetadata) : JournalArticleMetadata[] {
-        console.log(issueData.articles);
         return issueData.articles ? issueData.articles : [];
     }
 
