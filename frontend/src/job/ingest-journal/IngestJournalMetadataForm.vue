@@ -82,17 +82,23 @@
                         <div class="columns">
                             <div class="column">
                                 <b-field label="Issue number">
-                                    <b-input v-model.number="props.row.metadata.number"></b-input>
+                                    <b-input v-model.number="
+                                        props.row.metadata.number
+                                    "></b-input>
                                 </b-field>
                             </div>
                             <div class="column">
                                 <b-field label="Volume number">
-                                    <b-input v-model.number="props.row.metadata.volume"></b-input>
+                                    <b-input v-model.number="
+                                        props.row.metadata.volume
+                                    "></b-input>
                                 </b-field>
                             </div>
                             <div class="column">
                                 <b-field label="Reporting year">
-                                    <b-input v-model.number="props.row.metadata.reporting_year"></b-input>
+                                    <b-input v-model.number="
+                                        props.row.metadata.reporting_year
+                                    "></b-input>
                                 </b-field>
                             </div>
                         </div>
