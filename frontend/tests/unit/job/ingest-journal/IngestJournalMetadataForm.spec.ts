@@ -4,6 +4,7 @@ import {
 import Buefy from 'buefy';
 import Vuex, { Store } from 'vuex';
 import IngestJournalMetadataForm from '@/job/ingest-journal/IngestJournalMetadataForm.vue';
+import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 
 import stagingTreeMock from '@/../tests/resources/ingest-journal/staging-tree-mock.json';
 import { JobTargetError } from '@/job/JobParameters';
@@ -98,5 +99,17 @@ describe('IngestJournalMetadataForm', () => {
 
         expect(wrapper.findAll('tbody tr td[data-label="Directory"]').at(1).text()).toContain('target_path_2');
         expect(wrapper.findAll('tbody tr td[data-label="Title"]').at(1).text()).toContain('journal_name_2');
+    });
+
+    it('warning is displayed if no article data present', async() => {
+        const targets = [
+            new JobTargetData(
+                'target_id_1', 'target_path_1', new JournalIssueMetadata('000000000', 'journal_name_1', 'ojs_journal_code_1', 'issue_title_1')
+            )
+        ];
+
+        await wrapper.setData({ targets });
+
+        expect(wrapper.find('span.tag.is-warning.is-medium span').text()).toEqual('No articles found!');
     });
 });
