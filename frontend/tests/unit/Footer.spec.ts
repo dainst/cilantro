@@ -16,6 +16,6 @@ describe('App.vue', () => {
     });
     it('renders input element', () => {
         const el = wrapper.find('footer');
-        expect(el.is('footer')).toBe(true);
+        expect(el.exists()).toBeTruthy();
     });
 });
