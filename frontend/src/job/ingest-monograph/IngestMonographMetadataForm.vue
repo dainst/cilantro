@@ -65,6 +65,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable class-methods-use-this */
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
@@ -77,7 +78,6 @@ import {
 import {
     getRecord, ZenonRecord, Author, AuthorTypes
 } from '@/util/ZenonClient';
-import { asyncMap } from '@/util/HelperFunctions';
 import {
     WorkbenchFileTree,
     getStagingFiles,
@@ -104,40 +104,47 @@ export default class MonographMetadataForm extends Vue {
         this.targets = [];
     }
 
+    // Required to alert parent vue component of changes
+    @Watch('targets')
+    onPropertyChanged(value: MaybeJobTarget[], _oldValue: MaybeJobTarget[]) {
+        this.$emit('update:targetsUpdated', value);
+    }
+
     async mounted() {
-        this.targets = await asyncMap(
-            this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
-                const id = path.split('/').pop() || '';
-                const zenonId = extractZenonId(path);
-                let errors: string[] = [];
-                if (zenonId === '') {
-                    errors.push(`Could not extract Zenon ID from ${path}.`);
-                }
-
-                const targetFolder = await getStagingFiles(path);
-                if (Object.keys(targetFolder).length === 0) {
-                    errors.push(`Could not find file at ${path}.`);
-                } else {
-                    errors = errors.concat(evaluateTargetFolder(targetFolder));
-                }
-
-                if (errors.length === 0) {
-                    return new JobTargetData(
-                        id, path, { zenon_id: zenonId } as MonographMetadata
-                    );
-                }
-                return new JobTargetError(id, path, errors);
-            }
+        this.targets = await Promise.all(
+            this.selectedPaths
+                .map(this.processSelectedPath)
+                .map(async(promise) => {
+                    const target = await promise;
+                    if (target instanceof JobTargetData) {
+                        return loadZenonData(target);
+                    }
+                    return new JobTargetError(target.id, target.path, target.messages);
+                })
         );
+    }
 
-        this.targets = await asyncMap(this.targets, async(target) => {
-            if (target instanceof JobTargetData) {
-                return loadZenonData(target);
-            }
-            return new JobTargetError(target.id, target.path, target.messages);
-        });
+    async processSelectedPath(path: string) : Promise<MaybeJobTarget> {
+        const id = path.split('/').pop() || '';
+        const zenonId = extractZenonId(path);
+        let errors: string[] = [];
+        if (zenonId === '') {
+            errors.push(`Could not extract Zenon ID from ${path}.`);
+        }
 
-        this.$emit('update:targetsUpdated', this.targets);
+        const targetFolder = await getStagingFiles(path);
+        if (Object.keys(targetFolder).length === 0) {
+            errors.push(`Could not find file at ${path}.`);
+        } else {
+            errors = errors.concat(evaluateTargetFolder(targetFolder));
+        }
+
+        if (errors.length === 0) {
+            return new JobTargetData(
+                id, path, { zenon_id: zenonId } as MonographMetadata
+            );
+        }
+        return new JobTargetError(id, path, errors);
     }
 
     isTargetError = isTargetError;
