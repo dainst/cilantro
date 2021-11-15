@@ -6,7 +6,7 @@
             <b-step-item label="Start Import"></b-step-item>
         </b-steps>
 
-        <div v-if="activeStep === 0">
+        <div class="container" v-if="activeStep === 0">
             <ContinueButton
                 @click="continueToMetadata" :disabled="!validJobFiles()">
             </ContinueButton>
@@ -27,7 +27,7 @@
                 @click="continueToMetadata" :disabled="!validJobFiles()">
             </ContinueButton>
         </div>
-        <div v-if="activeStep === 1">
+        <div class="container" v-if="activeStep === 1">
             <ContinueButton class="toOptionsButton"
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
@@ -39,7 +39,7 @@
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
         </div>
-        <div v-if="activeStep === 2">
+        <div class="container" v-if="activeStep === 2">
             <StartJobButton class="startJobButton"
                 @click="startJob" :disabled="hasInvalidTargets()">
             </StartJobButton>

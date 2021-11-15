@@ -6,7 +6,7 @@
             <b-step-item label="Start Import"></b-step-item>
         </b-steps>
 
-        <div v-if="activeStep === 0">
+        <div class="container" v-if="activeStep === 0">
             <ContinueButton
                 @click="continueToMetadata" :disabled="this.selectedPaths.length === 0">
             </ContinueButton>
@@ -17,7 +17,7 @@
                 @click="continueToMetadata" :disabled="this.selectedPaths.length === 0">
             </ContinueButton>
         </div>
-        <div v-if="activeStep === 1">
+        <div  class="container" v-if="activeStep === 1">
             <ContinueButton
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
@@ -29,7 +29,7 @@
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
         </div>
-        <div v-if="activeStep === 2">
+        <div class="container" v-if="activeStep === 2">
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
             <OCROptionsForm
                 :initialOptions="this.parameters.options.ocr_options"

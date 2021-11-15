@@ -1,5 +1,9 @@
 <template>
-    <b-table class="" :data="this.targets" detailed detail-key="id">
+    <section>
+    <b-loading :is-full-page="false"
+        :active="this.targets.length === 0"
+    ></b-loading>
+    <b-table v-if="this.targets.length !== 0" :data="this.targets" detailed detail-key="id">
         <template slot-scope="props">
             <b-table-column style="vertical-align: middle;">
                 <b-icon v-if="isTargetError(props.row)" icon="alert-circle" type="is-danger" />
@@ -62,6 +66,8 @@
             </div>
         </template>
     </b-table>
+
+    </section>
 </template>
 
 <script lang="ts">

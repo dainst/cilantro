@@ -1,6 +1,9 @@
 <template>
     <section>
-        <b-table :data="this.targets" detailed detail-key="id">
+        <b-loading :is-full-page="false"
+            :active="this.targets.length === 0"
+        ></b-loading>
+        <b-table v-if="this.targets.length !== 0" :data="this.targets" detailed detail-key="id">
             <template slot-scope="props">
                 <b-table-column width="25">
                     <b-icon v-if="isTargetError(props.row)" icon="alert-circle" type="is-danger" />
@@ -176,11 +179,13 @@ export default class JournalMetadataForm extends Vue {
     @Prop({ required: true }) private selectedPaths!: string[];
     targets: MaybeJobTarget[];
     zenonDataMapping: {[index: string]: ZenonRecord}
+    isLoading: boolean;
 
     constructor() {
         super();
         this.targets = [];
         this.zenonDataMapping = {};
+        this.isLoading = true;
     }
 
     // Required to alert parent vue component of changes
@@ -191,6 +196,7 @@ export default class JournalMetadataForm extends Vue {
 
     async mounted() {
         this.targets = await Promise.all(this.selectedPaths.map(this.processSelectedPath));
+        this.isLoading = false;
     }
 
     isTargetError = isTargetError;
