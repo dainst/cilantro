@@ -49,6 +49,13 @@
                 <b-table-column label="Subtitle">-</b-table-column>
                 <b-table-column label="Date published">-</b-table-column>
             </template>
+            <b-table-column label="">
+                <b-button title="Remove from selection"
+                            type="is-text"
+                            @click="removeTarget(props.row)">
+                    <b-icon icon="close"/>
+                </b-button>
+            </b-table-column>
         </template>
 
         <template slot="detail" slot-scope="props">
@@ -130,6 +137,10 @@ export default class MonographMetadataForm extends Vue {
                     return new JobTargetError(target.id, target.path, target.messages);
                 })
         );
+    }
+
+    removeTarget(removedTarget: MaybeJobTarget) {
+        this.targets = this.targets.filter(target => removedTarget.id !== target.id);
     }
 
     async processSelectedPath(path: string) : Promise<MaybeJobTarget> {
