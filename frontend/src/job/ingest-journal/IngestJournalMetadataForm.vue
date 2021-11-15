@@ -154,7 +154,6 @@ import {
     MaybeJobTarget, JobTargetData, JournalIssueMetadata, JournalArticleMetadata, Person
 } from './IngestJournalParameters';
 import { getRecord, ZenonRecord, Author } from '@/util/ZenonClient';
-import { asyncMap } from '@/util/HelperFunctions';
 import { ojsZenonMapping } from '@/config';
 import {
     WorkbenchFileTree,
@@ -184,55 +183,58 @@ export default class JournalMetadataForm extends Vue {
         this.zenonDataMapping = {};
     }
 
+    // Required to alert parent vue component of changes
+    @Watch('targets')
+    onPropertyChanged(value: MaybeJobTarget[], _oldValue: MaybeJobTarget[]) {
+        this.$emit('update:targetsUpdated', value);
+    }
+
     async mounted() {
-        this.targets = await asyncMap(
-            this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
-                const id = path.split('/').pop() || '';
-                const issueZenonId = this.extractZenonId(path);
-                let errors: string[] = [];
-                if (issueZenonId === '') {
-                    errors.push(`Could not extract Zenon ID from ${path}.`);
-                }
-
-                const targetFolder = await getStagingFiles(path, 2);
-
-                if (Object.keys(targetFolder).length === 0) {
-                    errors.push(`Could not find file at ${path}.`);
-                } else {
-                    errors = errors.concat(this.evaluateTargetFolder(targetFolder));
-                }
-
-                const articleZenonIds = Object.keys(targetFolder)
-                    .map(name => this.extractZenonId(name))
-                    .filter(zenonId => zenonId !== '');
-
-                articleZenonIds.forEach((articleId) => {
-                    const { contents } = targetFolder[`JOURNAL-ZID${articleId}`];
-                    if (contents) {
-                        errors = errors.concat(this.evaluateTargetFolder(contents));
-                    }
-                });
-
-                if (errors.length !== 0) {
-                    return new JobTargetError(id, path, errors);
-                }
-                return this.loadZenonData(id, path, issueZenonId, articleZenonIds);
-            }
-        );
-
-        this.$emit('update:targetsUpdated', this.targets);
+        this.targets = await Promise.all(this.selectedPaths.map(this.processSelectedPath));
     }
 
     isTargetError = isTargetError;
 
     removeTarget(removedTarget: MaybeJobTarget) {
         this.targets = this.targets.filter(target => removedTarget.id !== target.id);
-        this.$emit('update:targetsUpdated', this.targets);
+    }
+
+    async processSelectedPath(path: string) {
+        const id = path.split('/').pop() || '';
+        const issueZenonId = this.extractZenonId(path);
+        let errors: string[] = [];
+        if (issueZenonId === '') {
+            errors.push(`Could not extract Zenon ID from ${path}.`);
+        }
+
+        const targetFolder = await getStagingFiles(path, 2);
+
+        if (Object.keys(targetFolder).length === 0) {
+            errors.push(`Could not find file at ${path}.`);
+        } else {
+            errors = errors.concat(this.evaluateTargetFolder(targetFolder));
+        }
+
+        const articleZenonIds = Object.keys(targetFolder)
+            .map(name => this.extractZenonId(name))
+            .filter(zenonId => zenonId !== '');
+
+        articleZenonIds.forEach((articleId) => {
+            const { contents } = targetFolder[`JOURNAL-ZID${articleId}`];
+            if (contents) {
+                errors = errors.concat(this.evaluateTargetFolder(contents));
+            }
+        });
+
+        if (errors.length !== 0) {
+            return new JobTargetError(id, path, errors);
+        }
+        return this.loadZenonData(id, path, issueZenonId, articleZenonIds);
     }
 
     async loadZenonData(
         targetId: string, targetPath: string, issueZenonId: string, articleZenonIds: string[]
-    ) {
+    ) : Promise<JobTargetData | JobTargetError> {
         try {
             const zenonRecord = await getRecord(issueZenonId) as ZenonRecord;
             const errors : string[] = [];
@@ -251,7 +253,7 @@ export default class JournalMetadataForm extends Vue {
 
             if (errors.length !== 0) return new JobTargetError(targetId, targetPath, errors);
 
-            const articleRecords = await asyncMap(articleZenonIds, getRecord);
+            const articleRecords = await Promise.all(articleZenonIds.map(getRecord));
 
             let publicationDate;
             if (zenonRecord.publicationDates.length !== 0) {
