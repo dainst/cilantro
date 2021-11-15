@@ -1,7 +1,7 @@
 <template>
     <section>
         <b-loading
-            :is-full-page="true"
+            :is-full-page="false"
             :active="operationInProgress"
         ></b-loading>
 
