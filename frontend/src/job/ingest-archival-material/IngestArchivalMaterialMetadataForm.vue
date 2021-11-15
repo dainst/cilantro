@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import {
-    Component, Vue, Prop
+    Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
 import {
     JobTargetError, isTargetError
@@ -85,7 +85,6 @@ import {
 import {
     AtomResult, AtomMessage, AtomRecord, getAtomRecord
 } from '@/util/AtomClient';
-import { asyncMap } from '@/util/HelperFunctions';
 
 @Component({
     filters: {
@@ -106,49 +105,51 @@ export default class ArchivalMaterialMetadataForm extends Vue {
         this.targets = [];
     }
 
+    // Required to alert parent vue component of changes
+    @Watch('targets')
+    onPropertyChanged(value: MaybeJobTarget[], _oldValue: MaybeJobTarget[]) {
+        this.$emit('update:targetsUpdated', value);
+    }
+
     async mounted() {
-        this.targets = await asyncMap(
-            this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
-                const id = path.split('/').pop() || '';
-                const atomId = extractAtomId(path);
-                let errors: string[] = [];
-                if (atomId === null) {
-                    errors.push(`Could not extract Atom ID from ${path}.`);
-                }
-
-                const targetFolder = await getStagingFiles(path);
-                if (Object.keys(targetFolder).length === 0) {
-                    errors.push(`Could not find file at ${path}.`);
-                } else {
-                    errors = errors.concat(evaluateTargetFolder(targetFolder));
-                }
-                if (errors.length === 0) {
-                    return new JobTargetData(
-                        id, path, {
-                            atom_id: atomId, copyright: this.defaultCopyright
-                        } as ArchivalMaterialMetadata
-                    );
-                }
-                return new JobTargetError(id, path, errors);
-            }
-        );
-
-        this.targets = await asyncMap(this.targets, async(target) => {
+        this.targets = await Promise.all(this.selectedPaths.map(this.processSelectedPath));
+        this.targets = await Promise.all(this.targets.map(async(target) => {
             if (target instanceof JobTargetData) {
                 const updated : MaybeJobTarget = await loadAtomData(target);
                 return updated;
             }
             return new JobTargetError(target.id, target.path, target.messages);
-        });
-
-        this.$emit('update:targetsUpdated', this.targets);
+        }));
     }
 
     isTargetError = isTargetError;
 
+    async processSelectedPath(path: string) {
+        const id = path.split('/').pop() || '';
+        const atomId = extractAtomId(path);
+        let errors: string[] = [];
+        if (atomId === null) {
+            errors.push(`Could not extract Atom ID from ${path}.`);
+        }
+
+        const targetFolder = await getStagingFiles(path);
+        if (Object.keys(targetFolder).length === 0) {
+            errors.push(`Could not find file at ${path}.`);
+        } else {
+            errors = errors.concat(evaluateTargetFolder(targetFolder));
+        }
+        if (errors.length === 0) {
+            return new JobTargetData(
+                id, path, {
+                    atom_id: atomId, copyright: this.defaultCopyright
+                } as ArchivalMaterialMetadata
+            );
+        }
+        return new JobTargetError(id, path, errors);
+    }
+
     removeTarget(removedTarget: MaybeJobTarget) {
         this.targets = this.targets.filter(target => removedTarget.id !== target.id);
-        this.$emit('update:targetsUpdated', this.targets);
     }
 }
 
