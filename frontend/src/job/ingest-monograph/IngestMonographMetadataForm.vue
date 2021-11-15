@@ -110,6 +110,8 @@ export default class MonographMetadataForm extends Vue {
         this.$emit('update:targetsUpdated', value);
     }
 
+    isTargetError = isTargetError;
+
     async mounted() {
         this.targets = await Promise.all(
             this.selectedPaths
@@ -117,7 +119,7 @@ export default class MonographMetadataForm extends Vue {
                 .map(async(promise) => {
                     const target = await promise;
                     if (target instanceof JobTargetData) {
-                        return loadZenonData(target);
+                        return this.loadZenonData(target);
                     }
                     return new JobTargetError(target.id, target.path, target.messages);
                 })
@@ -126,7 +128,7 @@ export default class MonographMetadataForm extends Vue {
 
     async processSelectedPath(path: string) : Promise<MaybeJobTarget> {
         const id = path.split('/').pop() || '';
-        const zenonId = extractZenonId(path);
+        const zenonId = this.extractZenonId(path);
         let errors: string[] = [];
         if (zenonId === '') {
             errors.push(`Could not extract Zenon ID from ${path}.`);
@@ -136,7 +138,7 @@ export default class MonographMetadataForm extends Vue {
         if (Object.keys(targetFolder).length === 0) {
             errors.push(`Could not find file at ${path}.`);
         } else {
-            errors = errors.concat(evaluateTargetFolder(targetFolder));
+            errors = errors.concat(this.evaluateTargetFolder(targetFolder));
         }
 
         if (errors.length === 0) {
@@ -147,101 +149,99 @@ export default class MonographMetadataForm extends Vue {
         return new JobTargetError(id, path, errors);
     }
 
-    isTargetError = isTargetError;
-}
+    evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
+        const errors: string[] = [];
+        if (!containsNumberOfFiles(targetFolder, 1)) {
+            errors.push(
+                `Folder has more than one entry. Only one subfolder 'tif' is allowed.`
+            );
+        }
 
-function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
-    const errors: string[] = [];
-    if (!containsNumberOfFiles(targetFolder, 1)) {
-        errors.push(
-            `Folder has more than one entry. Only one subfolder 'tif' is allowed.`
-        );
-    }
-
-    if (!('tif' in targetFolder)) {
-        errors.push(`Folder does not have a subfolder 'tif'.`);
-    } else if (targetFolder.tif.contents !== undefined &&
+        if (!('tif' in targetFolder)) {
+            errors.push(`Folder does not have a subfolder 'tif'.`);
+        } else if (targetFolder.tif.contents !== undefined &&
                 !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif'])) {
-        errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
+            errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
+        }
+        return errors;
     }
-    return errors;
-}
 
-function extractZenonId(path: string): string {
-    const result = path.match(/.*Book-ZID(\d+)/i);
-    if (!result || result.length < 1) return '';
-    return result[1];
-}
+    extractZenonId(path: string): string {
+        const result = path.match(/.*Book-ZID(\d+)/i);
+        if (!result || result.length < 1) return '';
+        return result[1];
+    }
 
-function filterDuplicateEntry<T>(value: T, index: number, array: T[]) {
-    return array.indexOf(value) === index;
-}
+    filterDuplicateEntry<T>(value: T, index: number, array: T[]) {
+        return array.indexOf(value) === index;
+    }
 
-async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
-    try {
-        const zenonRecord = await getRecord(target.metadata.zenon_id) as ZenonRecord;
-        const errors : string[] = [];
+    async loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
+        try {
+            const zenonRecord = await getRecord(target.metadata.zenon_id) as ZenonRecord;
+            const errors : string[] = [];
 
-        let datePublished = '';
+            let datePublished = '';
 
-        if (zenonRecord.publicationDates.length > 0) {
-            try {
-                [datePublished] = new Date(zenonRecord.publicationDates[0]).toISOString().split('T');
-            } catch (e) {
-                errors.push(`Unable to parse date: ${zenonRecord.publicationDates[0]}`);
+            if (zenonRecord.publicationDates.length > 0) {
+                try {
+                    [datePublished] = new Date(zenonRecord.publicationDates[0]).toISOString().split('T');
+                } catch (e) {
+                    errors.push(`Unable to parse date: ${zenonRecord.publicationDates[0]}`);
+                }
             }
-        }
-        let summary = '';
-        if (zenonRecord.summary.length > 0) {
-            [summary] = zenonRecord.summary;
-        }
+            let summary = '';
+            if (zenonRecord.summary.length > 0) {
+                [summary] = zenonRecord.summary;
+            }
 
-        let subTitle = '';
-        if (zenonRecord.subTitle) {
-            subTitle = zenonRecord.subTitle.trim();
+            let subTitle = '';
+            if (zenonRecord.subTitle) {
+                subTitle = zenonRecord.subTitle.trim();
+            }
+
+            const filteredSubjects = zenonRecord.subjects
+                .map(subject => subject[0])
+                .filter(this.filterDuplicateEntry);
+            const authors = this.extractAuthors(zenonRecord);
+
+            if (errors.length !== 0) {
+                return new JobTargetError(target.id, target.path, errors);
+            }
+            const metadata = {
+                zenon_id: target.metadata.zenon_id,
+                press_code: 'dai',
+                authors,
+                title: zenonRecord.shortTitle,
+                subtitle: subTitle,
+                abstract: summary,
+                date_published: datePublished,
+                keywords: filteredSubjects
+            } as MonographMetadata;
+
+            return new JobTargetData(target.id, target.path, metadata);
+        } catch (error) {
+            return new JobTargetError(target.id, target.path, [error]);
         }
-
-        const filteredSubjects = zenonRecord.subjects
-            .map(subject => subject[0])
-            .filter(filterDuplicateEntry);
-        const authors = extractAuthors(zenonRecord);
-
-        if (errors.length !== 0) {
-            return new JobTargetError(target.id, target.path, errors);
-        }
-        const metadata = {
-            zenon_id: target.metadata.zenon_id,
-            press_code: 'dai',
-            authors,
-            title: zenonRecord.shortTitle,
-            subtitle: subTitle,
-            abstract: summary,
-            date_published: datePublished,
-            keywords: filteredSubjects
-        } as MonographMetadata;
-
-        return new JobTargetData(target.id, target.path, metadata);
-    } catch (error) {
-        return new JobTargetError(target.id, target.path, [error]);
     }
-}
 
-function extractAuthors(record: ZenonRecord) : Person[] {
-    return record.authors
-        .filter((author : Author) => author.type !== AuthorTypes.Corporate)
-        .map((author : Author) => {
-            const authorSplit = author.name.split(',');
-            if (authorSplit.length === 2) {
+    extractAuthors(record: ZenonRecord) : Person[] {
+        return record.authors
+            .filter((author : Author) => author.type !== AuthorTypes.Corporate)
+            .map((author : Author) => {
+                const authorSplit = author.name.split(',');
+                if (authorSplit.length === 2) {
+                    return {
+                        givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
+                        lastname: authorSplit[0].trim()
+                    } as Person;
+                }
                 return {
-                    givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
-                    lastname: authorSplit[0].trim()
+                    givenname: '',
+                    lastname: author.name
                 } as Person;
-            }
-            return {
-                givenname: '',
-                lastname: author.name
-            } as Person;
-        });
+            });
+    }
 }
 
 </script>
