@@ -352,15 +352,6 @@ export default class JournalMetadataForm extends Vue {
             } as Person;
         });
     }
-
-    isValidTarget?(target : JobTargetData) : boolean {
-        if (target.metadata.number && typeof target.metadata.number !== 'number') return false;
-        if (target.metadata.volume && typeof target.metadata.volume !== 'number') return false;
-        if (target.metadata.reporting_year && typeof target.metadata.reporting_year !== 'number') return false;
-        if (target.metadata.publishing_year && typeof target.metadata.publishing_year !== 'number') return false;
-
-        return true;
-    }
 }
 
 </script>
