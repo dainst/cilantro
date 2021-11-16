@@ -64,7 +64,7 @@ describe('IngestArchivalMaterial.vue', () => {
         startJobSpy = jest.spyOn(wrapper.vm, 'startJob');
     });
 
-    it('combined ingest-monograph steps starts job with valid parameters', async() => {
+    it('combined ingest-archival-description steps starts job with valid parameters', async() => {
         expect(wrapper.findComponent(JobFilesForm).exists()).toBe(true);
 
         // Select all mocked directories
