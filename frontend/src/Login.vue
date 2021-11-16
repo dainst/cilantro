@@ -38,12 +38,13 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable class-methods-use-this */
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { getModule } from 'vuex-module-decorators';
 import { mapGetters } from 'vuex';
 import AuthenticationStatus from './authentication/AuthenticationStatus';
 import AuthenticationStore from './authentication/AuthenticationStore';
-import { showSuccess, showError, showWarning } from '@/util/Notifier.ts';
+import { showError } from '@/util/Notifier.ts';
 
 @Component({
     computed: mapGetters(['authStatus'])
@@ -52,7 +53,7 @@ export default class Login extends Vue {
     name: string = '';
     password: string = '';
 
-    authenticationStore = this.createAuthStore();
+    authenticationStore = getModule(AuthenticationStore);
 
     get missingInput() {
         return this.name.length === 0 || this.password.length === 0;
@@ -64,14 +65,6 @@ export default class Login extends Vue {
         this.authenticationStore.login({ name, password });
     }
 
-    createAuthStore() {
-        /**
-         * For Testing only this way one can mock the getModule out of it
-         */
-
-        return getModule(AuthenticationStore);
-    }
-
     @Watch('authStatus')
     onAuthStatusChanged(status: AuthenticationStatus) {
         if (status === AuthenticationStatus.Error) {
@@ -79,7 +72,7 @@ export default class Login extends Vue {
         } else if (status === AuthenticationStatus.In) {
             if (this.$route.params.back) {
                 this.$router.push({ path: this.$route.params.back, query: this.$route.query });
-            } else if(this.$route.path !== '/') {
+            } else if (this.$route.path !== '/') {
                 this.$router.push({ path: '/' });
             }
         }

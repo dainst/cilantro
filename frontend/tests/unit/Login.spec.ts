@@ -36,6 +36,11 @@ jest.mock('@/util/Notifier.ts', () => ({
     }
 }));
 
+const authStore = new AuthenticationStore({});
+jest.mock('vuex-module-decorators', () => ({
+    getModule: jest.fn().mockImplementation(() => authStore)
+}));
+
 const localVue = createLocalVue();
 localVue.use(Buefy);
 localVue.use(Vuex);
@@ -43,7 +48,6 @@ localVue.use(Router);
 
 describe('Login.vue', () => {
     let wrapper: any;
-    const authStore = new AuthenticationStore({});
     let store: any;
     let router: any;
     beforeEach(() => {
@@ -67,11 +71,7 @@ describe('Login.vue', () => {
         wrapper = mount(Login, {
             localVue,
             store,
-            router,
-            methods: {
-                createAuthStore() { return authStore; }
-            }
-
+            router
         });
     });
 
