@@ -6,15 +6,15 @@ import Vuex, { Store } from 'vuex';
 import flushPromises from 'flush-promises';
 import IngestArchivalMaterialMetadataForm from '@/job/ingest-archival-material/IngestArchivalMaterialMetadataForm.vue';
 import {
-    WorkbenchFile,
-    WorkbenchFileTree,
+    StagingNode,
+    StagingDirectoryContents,
     getStagingFiles
 } from '@/staging/StagingClient';
 import {
     getAtomRecord
 } from '@/util/AtomClient';
 
-const mockStagingTree: WorkbenchFileTree = {
+const mockStagingTree: StagingDirectoryContents = {
     '.info': {
         name: '.info',
         type: 'conf'
@@ -29,7 +29,7 @@ const mockStagingTree: WorkbenchFileTree = {
     }
 };
 
-const mockDeepStagingTree: WorkbenchFileTree = {
+const mockDeepStagingTree: StagingDirectoryContents = {
     tif: {
         name: 'tif',
         type: 'folder',
@@ -46,7 +46,7 @@ const mockDeepStagingTree: WorkbenchFileTree = {
     }
 };
 
-const aPdf: WorkbenchFile = {
+const aPdf: StagingNode = {
     name: 'test3.pdf',
     type: 'file'
 };

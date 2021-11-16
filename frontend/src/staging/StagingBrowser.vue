@@ -122,10 +122,10 @@ import {
     getStagingFiles,
     deleteFileFromStaging,
     createFolderInStaging,
-    WorkbenchFile,
+    StagingNode,
     moveInStaging,
-    WorkbenchFileTree,
-    getFilesInWorkDir,
+    StagingDirectoryContents,
+    getVisibleAndSortedContents,
     JobInfo
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
@@ -145,12 +145,12 @@ export default class StagingBrowser extends Vue {
 
     operationInProgress: boolean = false;
     workingDirectory: string = '';
-    stagingFiles: WorkbenchFileTree = {};
-    filesToShow: WorkbenchFile[] = [];
+    stagingFiles: StagingDirectoryContents = {};
+    filesToShow: StagingNode[] = [];
     showCompleted: boolean = false;
     showFailed: boolean = true;
 
-    get checkedFiles(): WorkbenchFile[] {
+    get checkedFiles(): StagingNode[] {
         return this.filesToShow.filter((file) => {
             const path = getFilePath(this.workingDirectory, file.name);
             return this.selectedPaths.includes(path);
@@ -161,7 +161,7 @@ export default class StagingBrowser extends Vue {
         this.fetchFiles();
     }
 
-    async onCheck(checkedFiles: WorkbenchFile[]): Promise<void> {
+    async onCheck(checkedFiles: StagingNode[]): Promise<void> {
         const paths = checkedFiles.map(file => getFilePath(this.workingDirectory, file.name));
         this.$emit('update:selected-paths', paths);
     }
@@ -186,7 +186,7 @@ export default class StagingBrowser extends Vue {
         try {
             this.operationInProgress = true;
             this.stagingFiles = await getStagingFiles(this.workingDirectory);
-            this.filesToShow = getFilesInWorkDir(this.stagingFiles);
+            this.filesToShow = getVisibleAndSortedContents(this.stagingFiles);
 
             this.$emit('files-selected', []);
             this.operationInProgress = false;
@@ -195,7 +195,7 @@ export default class StagingBrowser extends Vue {
         }
     }
 
-    fileClicked(file: WorkbenchFile) {
+    fileClicked(file: StagingNode) {
         if (file.type === 'directory') {
             if (this.workingDirectory) {
                 this.openFolder(`${this.workingDirectory}/${file.name}`);
@@ -210,7 +210,7 @@ export default class StagingBrowser extends Vue {
         this.fetchFiles();
     }
 
-    showDeleteDialogForItem(file: WorkbenchFile) {
+    showDeleteDialogForItem(file: StagingNode) {
         this.onCheck([file]).then(() => {
             this.showDeleteDialog();
         });
@@ -238,7 +238,7 @@ export default class StagingBrowser extends Vue {
         });
     }
 
-    showRenameModal(file: WorkbenchFile) {
+    showRenameModal(file: StagingNode) {
         this.onCheck([file]).then(() => {
             this.$buefy.dialog.prompt({
                 message: `Choose a new name`,
@@ -267,7 +267,7 @@ export default class StagingBrowser extends Vue {
         });
     }
 
-    showMoveModalForItem(file: WorkbenchFile) {
+    showMoveModalForItem(file: StagingNode) {
         this.onCheck([file]).then(() => {
             this.showMoveModal();
         });
@@ -307,12 +307,12 @@ export default class StagingBrowser extends Vue {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    getFileIcon(file: WorkbenchFile) {
+    getFileIcon(file: StagingNode) {
         return file.type === 'directory' ? 'folder' : 'file';
     }
 
     // eslint-disable-next-line class-methods-use-this
-    getFileStatusType(file: WorkbenchFile) {
+    getFileStatusType(file: StagingNode) {
         if (!file.job_info) return '';
         if (file.job_info.status === 'started') return 'is-warning';
         if (file.job_info.status === 'success') return 'is-success';
@@ -320,7 +320,7 @@ export default class StagingBrowser extends Vue {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    getFileStatusMessage(file: WorkbenchFile) {
+    getFileStatusMessage(file: StagingNode) {
         if (!file.job_info) return '';
 
         const jobInfo = file.job_info as JobInfo;

@@ -162,7 +162,7 @@ import {
 import { getRecord, ZenonRecord, Author } from '@/util/ZenonClient';
 import { ojsZenonMapping } from '@/config';
 import {
-    WorkbenchFileTree,
+    StagingDirectoryContents,
     containsOnlyFilesWithExtensions,
     getStagingFiles,
     containsNumberOfFiles
@@ -300,7 +300,7 @@ export default class JournalMetadataForm extends Vue {
         return this.zenonDataMapping[zenonId].partOrSectionInfo ? this.zenonDataMapping[zenonId].partOrSectionInfo : '-';
     }
 
-    evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
+    evaluateTargetFolder(targetFolder : StagingDirectoryContents) {
         const errors: string[] = [];
         if (containsNumberOfFiles(targetFolder, 0)) {
             errors.push(

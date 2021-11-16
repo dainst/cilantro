@@ -92,7 +92,7 @@ import {
     getRecord, ZenonRecord, Author, AuthorTypes
 } from '@/util/ZenonClient';
 import {
-    WorkbenchFileTree,
+    StagingDirectoryContents,
     getStagingFiles,
     containsNumberOfFiles,
     containsOnlyFilesWithExtensions
@@ -166,7 +166,7 @@ export default class MonographMetadataForm extends Vue {
         return new JobTargetError(id, path, errors);
     }
 
-    evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
+    evaluateTargetFolder(targetFolder : StagingDirectoryContents) {
         const errors: string[] = [];
         if (!containsNumberOfFiles(targetFolder, 1)) {
             errors.push(

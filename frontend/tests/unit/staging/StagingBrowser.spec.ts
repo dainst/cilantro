@@ -7,9 +7,9 @@ import Vuex, { Store } from 'vuex';
 import flushPromises from 'flush-promises';
 
 import StagingBrowser from '@/staging/StagingBrowser.vue';
-import { WorkbenchFileTree, JobInfoStatus } from '@/staging/StagingClient';
+import { StagingDirectoryContents, JobInfoStatus } from '@/staging/StagingClient';
 
-const mockStagingTree: WorkbenchFileTree = {
+const mockStagingTree: StagingDirectoryContents = {
     'BOOK-ZID001595386': {
         contents: { tif: { name: 'tif', type: 'directory' } }, name: 'BOOK-ZID001595386', type: 'directory'
     },

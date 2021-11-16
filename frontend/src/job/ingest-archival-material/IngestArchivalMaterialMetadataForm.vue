@@ -79,7 +79,7 @@ import {
 } from './IngestArchivalMaterialParameters';
 import {
     getStagingFiles,
-    WorkbenchFileTree,
+    StagingDirectoryContents,
     containsOnlyFilesWithExtensions,
     containsNumberOfFiles
 } from '@/staging/StagingClient';
@@ -153,7 +153,7 @@ export default class ArchivalMaterialMetadataForm extends Vue {
         this.targets = this.targets.filter(target => removedTarget.id !== target.id);
     }
 
-    evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
+    evaluateTargetFolder(targetFolder : StagingDirectoryContents) {
         const errors: string[] = [];
         if (containsNumberOfFiles(targetFolder, 0)) {
             errors.push(
