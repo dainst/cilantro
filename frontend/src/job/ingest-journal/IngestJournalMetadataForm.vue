@@ -69,7 +69,10 @@
                         </div>
                         <div class="column">
                             <b-field label="Publishing year">
-                                <b-input v-model="props.row.metadata.publishing_year"></b-input>
+                                <b-input
+                                    type="number"
+                                    v-model.number="props.row.metadata.publishing_year">
+                                </b-input>
                             </b-field>
                         </div>
                     </div>
@@ -87,21 +90,21 @@
                                 <b-field label="Issue number">
                                     <b-input v-model.number="
                                         props.row.metadata.number
-                                    "></b-input>
+                                    " type="number" ></b-input>
                                 </b-field>
                             </div>
                             <div class="column">
                                 <b-field label="Volume number">
                                     <b-input v-model.number="
                                         props.row.metadata.volume
-                                    "></b-input>
+                                    " type="number" ></b-input>
                                 </b-field>
                             </div>
                             <div class="column">
                                 <b-field label="Reporting year">
                                     <b-input v-model.number="
                                         props.row.metadata.reporting_year
-                                    "></b-input>
+                                    " type="number"></b-input>
                                 </b-field>
                             </div>
                         </div>
@@ -348,6 +351,15 @@ export default class JournalMetadataForm extends Vue {
                 lastname: author.name
             } as Person;
         });
+    }
+
+    isValidTarget?(target : JobTargetData) : boolean {
+        if (target.metadata.number && typeof target.metadata.number !== 'number') return false;
+        if (target.metadata.volume && typeof target.metadata.volume !== 'number') return false;
+        if (target.metadata.reporting_year && typeof target.metadata.reporting_year !== 'number') return false;
+        if (target.metadata.publishing_year && typeof target.metadata.publishing_year !== 'number') return false;
+
+        return true;
     }
 }
 
