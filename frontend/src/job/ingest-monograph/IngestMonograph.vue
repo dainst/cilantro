@@ -6,7 +6,7 @@
             <b-step-item label="Start Import"></b-step-item>
         </b-steps>
 
-        <div v-if="activeStep === 0">
+        <div class="container" v-if="activeStep === 0">
             <ContinueButton
                 @click="continueToMetadata" :disabled="this.selectedPaths.length === 0">
             </ContinueButton>
@@ -17,7 +17,7 @@
                 @click="continueToMetadata" :disabled="this.selectedPaths.length === 0">
             </ContinueButton>
         </div>
-        <div v-if="activeStep === 1">
+        <div  class="container" v-if="activeStep === 1">
             <ContinueButton
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
@@ -29,17 +29,12 @@
                 @click="continueToOptions" :disabled="hasInvalidTargets()">
             </ContinueButton>
         </div>
-        <div v-if="activeStep === 2">
+        <div class="container" v-if="activeStep === 2">
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
             <OCROptionsForm
                 :initialOptions="this.parameters.options.ocr_options"
                 @options-updated="this.parameters.options.ocr_options = $event"
             />
-            <hr>
-            <AppOptionsForm
-                :initialOptions="this.parameters.options.app_options"
-                @options-updated="this.parameters.options.app_options = $event"
-                />
             <StartJobButton @click="startJob" :disabled="hasInvalidTargets()"></StartJobButton>
         </div>
     </div>
@@ -51,9 +46,8 @@ import { startJob } from '../JobClient';
 
 import JobFilesForm from '../JobFilesForm.vue';
 import MonographMetadataForm from './IngestMonographMetadataForm.vue';
-import AppOptionsForm from '../AppOptionsForm.vue';
 
-import { JobTargetError, OCROptions, AppOptions } from '../JobParameters';
+import { JobTargetError, OCROptions } from '../JobParameters';
 import {
     IngestMonographParameters, MaybeJobTarget, IngestMonographOptions
 } from './IngestMonographParameters';
@@ -68,7 +62,6 @@ import OCROptionsForm from '@/job/OCROptionsForm.vue';
         JobFilesForm,
         MonographMetadataForm,
         OCROptionsForm,
-        AppOptionsForm,
         ContinueButton,
         StartJobButton
     }
@@ -84,12 +77,9 @@ export default class IngestBook extends Vue {
 
         const options = {
             ocr_options: {
-                do_ocr: false,
+                do_ocr: true,
                 ocr_lang: 'deu'
-            } as OCROptions,
-            app_options: {
-                mark_done: true
-            } as AppOptions
+            } as OCROptions
         } as IngestMonographOptions;
 
         this.parameters = new IngestMonographParameters([], options);

@@ -1,0 +1,314 @@
+{
+  "JOURNAL-ZID000587054": {
+    "contents": {
+      "tif": {
+        "contents": {
+          "JOURNAL-ZID000587054-0001.tif": {
+            "name": "JOURNAL-ZID000587054-0001.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID000587054-0002.tif": {
+            "name": "JOURNAL-ZID000587054-0002.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID000587054-0003.tif": {
+            "name": "JOURNAL-ZID000587054-0003.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID000587054-0004.tif": {
+            "name": "JOURNAL-ZID000587054-0004.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID000587054-0005.tif": {
+            "name": "JOURNAL-ZID000587054-0005.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID000587054-0006.tif": {
+            "name": "JOURNAL-ZID000587054-0006.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID000587054-0007.tif": {
+            "name": "JOURNAL-ZID000587054-0007.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID000587054-0008.tif": {
+            "name": "JOURNAL-ZID000587054-0008.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID000587054-0009.tif": {
+            "name": "JOURNAL-ZID000587054-0009.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID000587054-0010.tif": {
+            "name": "JOURNAL-ZID000587054-0010.tif",
+            "type": "file"
+          }
+        },
+        "name": "tif",
+        "type": "directory"
+      }
+    },
+    "name": "JOURNAL-ZID000587054",
+    "type": "directory"
+  },
+  "JOURNAL-ZID001108201": {
+    "contents": {
+      "JOURNAL-ZID001364448": {
+        "contents": {
+          "tif": {
+            "contents": {
+              "JOURNAL-ZID001364448-0001.tif": {
+                "name": "JOURNAL-ZID001364448-0001.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID001364448-0002.tif": {
+                "name": "JOURNAL-ZID001364448-0002.tif",
+                "type": "file"
+              }
+            },
+            "name": "tif",
+            "type": "directory"
+          }
+        },
+        "name": "JOURNAL-ZID001364448",
+        "type": "directory"
+      },
+      "JOURNAL-ZID001364451": {
+        "contents": {
+          "tif": {
+            "contents": {
+              "JOURNAL-ZID001364451-0001.tif": {
+                "name": "JOURNAL-ZID001364451-0001.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID001364451-0002.tif": {
+                "name": "JOURNAL-ZID001364451-0002.tif",
+                "type": "file"
+              }
+            },
+            "name": "tif",
+            "type": "directory"
+          }
+        },
+        "name": "JOURNAL-ZID001364451",
+        "type": "directory"
+      },
+      "JOURNAL-ZID001364460": {
+        "contents": {
+          "tif": {
+            "contents": {
+              "JOURNAL-ZID001364460-0001.tif": {
+                "name": "JOURNAL-ZID001364460-0001.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID001364460-0002.tif": {
+                "name": "JOURNAL-ZID001364460-0002.tif",
+                "type": "file"
+              }
+            },
+            "name": "tif",
+            "type": "directory"
+          }
+        },
+        "name": "JOURNAL-ZID001364460",
+        "type": "directory"
+      },
+      "JOURNAL-ZID001364492": {
+        "contents": {
+          "tif": {
+            "contents": {
+              "JOURNAL-ZID001364492-0001.tif": {
+                "name": "JOURNAL-ZID001364492-0001.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID001364492-0002.tif": {
+                "name": "JOURNAL-ZID001364492-0002.tif",
+                "type": "file"
+              }
+            },
+            "name": "tif",
+            "type": "directory"
+          }
+        },
+        "name": "JOURNAL-ZID001364492",
+        "type": "directory"
+      },
+      "JOURNAL-ZID001364493": {
+        "contents": {
+          "tif": {
+            "contents": {
+              "JOURNAL-ZID001364493-0001.tif": {
+                "name": "JOURNAL-ZID001364493-0001.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID001364493-0002.tif": {
+                "name": "JOURNAL-ZID001364493-0002.tif",
+                "type": "file"
+              }
+            },
+            "name": "tif",
+            "type": "directory"
+          }
+        },
+        "name": "JOURNAL-ZID001364493",
+        "type": "directory"
+      },
+      "JOURNAL-ZID001364498": {
+        "contents": {
+          "tif": {
+            "contents": {
+              "JOURNAL-ZID001364498-0001.tif": {
+                "name": "JOURNAL-ZID001364498-0001.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID001364498-0002.tif": {
+                "name": "JOURNAL-ZID001364498-0002.tif",
+                "type": "file"
+              }
+            },
+            "name": "tif",
+            "type": "directory"
+          }
+        },
+        "name": "JOURNAL-ZID001364498",
+        "type": "directory"
+      },
+      "JOURNAL-ZID001364507": {
+        "contents": {
+          "tif": {
+            "contents": {
+              "JOURNAL-ZID001364507-0001.tif": {
+                "name": "JOURNAL-ZID001364507-0001.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID001364507-0002.tif": {
+                "name": "JOURNAL-ZID001364507-0002.tif",
+                "type": "file"
+              }
+            },
+            "name": "tif",
+            "type": "directory"
+          }
+        },
+        "name": "JOURNAL-ZID001364507",
+        "type": "directory"
+      },
+      "JOURNAL-ZID001364510": {
+        "contents": {
+          "tif": {
+            "contents": {
+              "JOURNAL-ZID001364510-0001.tif": {
+                "name": "JOURNAL-ZID001364510-0001.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID001364510-0002.tif": {
+                "name": "JOURNAL-ZID001364510-0002.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID001364510-0003.tif": {
+                "name": "JOURNAL-ZID001364510-0003.tif",
+                "type": "file"
+              }
+            },
+            "name": "tif",
+            "type": "directory"
+          }
+        },
+        "name": "JOURNAL-ZID001364510",
+        "type": "directory"
+      },
+      "JOURNAL-ZID001364525": {
+        "contents": {
+          "tif": {
+            "contents": {
+              "JOURNAL-ZID001364525-0001.tif": {
+                "name": "JOURNAL-ZID001364525-0001.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID001364525-0002.tif": {
+                "name": "JOURNAL-ZID001364525-0002.tif",
+                "type": "file"
+              }
+            },
+            "name": "tif",
+            "type": "directory"
+          }
+        },
+        "name": "JOURNAL-ZID001364525",
+        "type": "directory"
+      },
+      "JOURNAL-ZID002005826": {
+        "contents": {
+          "tif": {
+            "contents": {
+              "JOURNAL-ZID002005826-0001.tif": {
+                "name": "JOURNAL-ZID002005826-0001.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID002005826-0002.tif": {
+                "name": "JOURNAL-ZID002005826-0002.tif",
+                "type": "file"
+              },
+              "JOURNAL-ZID002005826-0003.tif": {
+                "name": "JOURNAL-ZID002005826-0003.tif",
+                "type": "file"
+              }
+            },
+            "name": "tif",
+            "type": "directory"
+          }
+        },
+        "name": "JOURNAL-ZID002005826",
+        "type": "directory"
+      },
+      "tif": {
+        "contents": {
+          "JOURNAL-ZID001364448-0001.tif": {
+            "name": "JOURNAL-ZID001364448-0001.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID001364448-0002.tif": {
+            "name": "JOURNAL-ZID001364448-0002.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID001364451-0003.tif": {
+            "name": "JOURNAL-ZID001364451-0003.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID001364451-0004.tif": {
+            "name": "JOURNAL-ZID001364451-0004.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID001364460-0005.tif": {
+            "name": "JOURNAL-ZID001364460-0005.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID001364460-0006.tif": {
+            "name": "JOURNAL-ZID001364460-0006.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID001364492-0007.tif": {
+            "name": "JOURNAL-ZID001364492-0007.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID001364492-0008.tif": {
+            "name": "JOURNAL-ZID001364492-0008.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID001364493-0009.tif": {
+            "name": "JOURNAL-ZID001364493-0009.tif",
+            "type": "file"
+          },
+          "JOURNAL-ZID001364493-0010.tif": {
+            "name": "JOURNAL-ZID001364493-0010.tif",
+            "type": "file"
+          }
+        },
+        "name": "tif",
+        "type": "directory"
+      }
+    },
+    "name": "JOURNAL-ZID001108201",
+    "type": "directory"
+  }
+}

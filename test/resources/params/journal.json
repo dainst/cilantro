@@ -1,26 +1,189 @@
 {
     "targets": [
         {
-            "id": "some_tiffs_1234",
-            "path": "some_tiffs",
+            "id": "JOURNAL-ZID001108201",
+            "path": "ingest-journals/JOURNAL-ZID001108201",
             "metadata": {
-                "description": "Archäologischer Anzeiger",
-                "number": 1,
-                "ojs_journal_code": "test",
-                "volume": 1,
-                "publishing_year": 2015,
-                "reporting_year": 2011,
-                "zenon_id": "1449024"
+                "zenon_id": "001108201",
+                "journal_name": "Mitteilungen des Deutschen Instituts für Ägyptische Altertumskunde in Kairo",
+                "volume": 2,
+                "publishing_year": 1931,
+                "title": "2.1931/32",
+                "ojs_journal_code": "mdaik",
+                "articles": [
+                    {
+                        "path": "JOURNAL-ZID001364448",
+                        "zenon_id": "001364448",
+                        "title": "Joannes Grammatikos (Philioponos) von Alexandrien und die arabische Medizin ",
+                        "authors": [
+                            {
+                                "givenname": "Max",
+                                "lastname": "Meyerhof"
+                            }
+                        ],
+                        "abstracts": [],
+                        "pages": "1-21"
+                    },
+                    {
+                        "path": "JOURNAL-ZID001364451",
+                        "zenon_id": "001364451",
+                        "title": "Koptische Grabstelen : Ihre zeitliche und örtliche Einordnung ",
+                        "authors": [
+                            {
+                                "givenname": "Dora",
+                                "lastname": "Zuntz"
+                            }
+                        ],
+                        "abstracts": [],
+                        "pages": "22-38"
+                    },
+                    {
+                        "path": "JOURNAL-ZID001364460",
+                        "zenon_id": "001364460",
+                        "title": "Bericht über die zweite vom Deutschen Institut für Ägyptische Altertumskunde nach dem Ostdelta-Rand und in das Wâdi Ṭumilât unternommene Erkundungsfahrt ",
+                        "authors": [
+                            {
+                                "givenname": "E",
+                                "lastname": "Neuffer"
+                            },
+                            {
+                                "givenname": "Siegfried",
+                                "lastname": "Schott"
+                            },
+                            {
+                                "givenname": "Kurt",
+                                "lastname": "Bittel"
+                            }
+                        ],
+                        "abstracts": [],
+                        "pages": "39-73"
+                    },
+                    {
+                        "path": "JOURNAL-ZID001364492",
+                        "zenon_id": "001364492",
+                        "title": "Vorläufiger Bericht über die Deutsche Hermopolis-Expedition 1929-1930 ",
+                        "authors": [
+                            {
+                                "givenname": "Günther",
+                                "lastname": "Roeder"
+                            }
+                        ],
+                        "abstracts": [],
+                        "pages": "75-126"
+                    },
+                    {
+                        "path": "JOURNAL-ZID001364493",
+                        "zenon_id": "001364493",
+                        "title": "Ein Brief Goethes über Ägypten ",
+                        "authors": [
+                            {
+                                "givenname": "Max",
+                                "lastname": "Pieper"
+                            }
+                        ],
+                        "abstracts": [],
+                        "pages": "127-134"
+                    },
+                    {
+                        "path": "JOURNAL-ZID001364498",
+                        "zenon_id": "001364498",
+                        "title": "Eine merkwürdige Darstellung der die Sonne preisenden Paviane ",
+                        "authors": [
+                            {
+                                "givenname": "Ludwig",
+                                "lastname": "Keimer"
+                            }
+                        ],
+                        "abstracts": [],
+                        "pages": "135-136"
+                    },
+                    {
+                        "path": "JOURNAL-ZID001364507",
+                        "zenon_id": "001364507",
+                        "title": "Zu Appelts Aufsatz \"Lotosfrucht als Ornament\" ",
+                        "authors": [
+                            {
+                                "givenname": "Ludwig",
+                                "lastname": "Keimer"
+                            }
+                        ],
+                        "abstracts": [],
+                        "pages": "137-138"
+                    },
+                    {
+                        "path": "JOURNAL-ZID001364510",
+                        "zenon_id": "001364510",
+                        "title": "Ein Stelen-Fragment aus Tūna ",
+                        "authors": [
+                            {
+                                "givenname": "Ludwig",
+                                "lastname": "Keimer"
+                            }
+                        ],
+                        "abstracts": [],
+                        "pages": "139-140"
+                    },
+                    {
+                        "path": "JOURNAL-ZID001364525",
+                        "zenon_id": "001364525",
+                        "title": "Wissenschaftliche Unternehmungen in Ägypten und Nubien 1930/31.",
+                        "authors": [
+                            {
+                                "givenname": "Hermann",
+                                "lastname": "Junker"
+                            },
+                            {
+                                "givenname": "Oswald",
+                                "lastname": "Menghin"
+                            }
+                        ],
+                        "abstracts": [],
+                        "pages": "141-149"
+                    },
+                    {
+                        "path": "JOURNAL-ZID002005826",
+                        "zenon_id": "002005826",
+                        "title": "Tafelverzeichnis.",
+                        "authors": [],
+                        "abstracts": []
+                    }
+                ]
+            }
+        },
+        {
+            "id": "JOURNAL-ZID001149881",
+            "path": "ingest-journals/JOURNAL-ZID001149881",
+            "metadata": {
+                "zenon_id": "001149881",
+                "journal_name": "Archäologischer Anzeiger",
+                "volume": 1850,
+                "publishing_year": 1850,
+                "number": 13,
+                "title": "1850,13-24 (1850)",
+                "ojs_journal_code": "aa",
+                "reporting_year": 1850,
+                "articles": []
+            }
+        },
+        {
+            "id": "JOURNAL-ZID000587054",
+            "path": "ingest-journals/JOURNAL-ZID000587054",
+            "metadata": {
+                "zenon_id": "000587054",
+                "journal_name": "Baghdader Mitteilungen.",
+                "volume": 24,
+                "publishing_year": 1993,
+                "title": "24 (1993)",
+                "ojs_journal_code": "BaM",
+                "reporting_year": 1993,
+                "articles": []
             }
         }
     ],
     "options": {
         "ocr_options": {
             "do_ocr": true,
-            "ocr_lang": "eng"
-        },
-        "app_options": {
-            "mark_done": false
+            "ocr_lang": "deu"
         }
     }
 }

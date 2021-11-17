@@ -47,12 +47,12 @@
 import {
     Component, Prop, Vue
 } from 'vue-property-decorator';
-import { getStagingFiles, getFilesInWorkDir, WorkbenchFileTree } from './StagingClient';
+import { getStagingFiles, getVisibleAndSortedContents, StagingDirectoryContents } from './StagingClient';
 import { showError } from '../util/Notifier';
 
 @Component
 export default class StagingBrowserFolderSelection extends Vue {
-    private stagingFiles: WorkbenchFileTree = {};
+    private stagingFiles: StagingDirectoryContents = {};
     private directories: string[] = [];
     private workingDirectory: string = '';
 
@@ -72,7 +72,7 @@ export default class StagingBrowserFolderSelection extends Vue {
         try {
             this.workingDirectory = path;
             this.stagingFiles = await getStagingFiles(path);
-            this.directories = getFilesInWorkDir(this.stagingFiles)
+            this.directories = getVisibleAndSortedContents(this.stagingFiles)
                 .filter(file => file.type === 'directory')
                 .map(file => file.name);
         } catch (e) {

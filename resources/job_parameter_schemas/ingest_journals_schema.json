@@ -30,15 +30,21 @@
                         "type": "object",
                         "additionalProperties": false,
                         "required": [
-                            "volume",
-                            "publishing_year",
-                            "reporting_year",
-                            "number",
-                            "description",
+                            "zenon_id",
+                            "title",
                             "ojs_journal_code",
-                            "zenon_id"
+                            "articles"
                         ],
                         "properties": {
+                            "zenon_id": {
+                                "type": "string"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "ojs_journal_code": {
+                                "type": "string"
+                            },
                             "volume": {
                                 "type": "number"
                             },
@@ -51,17 +57,61 @@
                             "number": {
                                 "type": "number"
                             },
-                            "description": {
+                            "journal_name": {
                                 "type": "string"
                             },
-                            "identification": {
-                                "type": "string"
-                            },
-                            "zenon_id": {
-                                "type": "string"
-                            },
-                            "ojs_journal_code": {
-                                "type": "string"
+                            "articles": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "path",
+                                        "zenon_id",
+                                        "title",
+                                        "authors",
+                                        "abstracts"
+                                    ],
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "path": {
+                                            "type": "string"
+                                        },
+                                        "zenon_id": {
+                                            "type": "string"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "pages": {
+                                            "type": "string"
+                                        },
+                                        "authors": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "required": [
+                                                    "givenname",
+                                                    "lastname"
+                                                ],
+                                                "additionalProperties": false,
+                                                "properties": {
+                                                    "givenname": {
+                                                        "type": "string"
+                                                    },
+                                                    "lastname": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "abstracts": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -71,8 +121,7 @@
         "options": {
             "type": "object",
             "required": [
-                "ocr_options",
-                "app_options"
+                "ocr_options"
             ],
             "additionalProperties": false,
             "properties": {
@@ -89,18 +138,6 @@
                         },
                         "ocr_lang": {
                             "type": "string"
-                        }
-                    }
-                },
-                "app_options": {
-                    "type": "object",
-                    "required": [
-                        "mark_done"
-                    ],
-                    "additionalProperties": false,
-                    "properties": {
-                        "mark_done": {
-                            "type": "boolean"
                         }
                     }
                 }

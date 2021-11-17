@@ -1,6 +1,7 @@
 import unittest
 import os
 import json
+import logging
 
 from service.job.jobs import IngestJournalsJob, IngestArchivalMaterialsJob, IngestMonographsJob
 
@@ -51,13 +52,30 @@ class JobsTest(unittest.TestCase):
         for chain_id in job.chain_ids:
             self.assertTrue(type(chain_id) == str,
                             'ids for chains should be generated')
-        self.assertEqual(len(
-            job.chain_ids), 2, 'two chains should be generated, one for each "targets" item')
 
-        chain_length = len(job.chord.tasks[0].tasks)
+        self.assertEqual(
+            len(job.chain_ids),
+            4, 
+            '4 chains should be generated, one for each target item and one for the the overarching finish_chord callback'
+        )
 
-        self.assertEqual(chain_length, 12,
-                         'each default journal import chain should consist of 13 subtasks.')
+        self.assertEqual(
+            len(job.chord.tasks[0].tasks),
+            50,
+            'first target import chain should consist of 50 subtasks, because it includes 10 articles.'
+        )
+
+        self.assertEqual(
+            len(job.chord.tasks[1].tasks),
+            10,
+            'second target import chain should consist of 10 subtasks, because it does not include articles.'
+        )
+
+        self.assertEqual(
+            len(job.chord.tasks[1].tasks),
+            10,
+            'third target import chain should consist of 10 subtasks, because it does not include articles.'
+        )
 
     def test_import_monographs_job(self):
         """Test initialization for monographs batch import."""
@@ -77,7 +95,7 @@ class JobsTest(unittest.TestCase):
             self.assertTrue(type(chain_id) == str,
                             'ids for chains should be generated')
         self.assertEqual(len(
-            job.chain_ids), 2, 'two chains should be generated, one for each "targets" item')
+            job.chain_ids), 2, 'two chains should be generated, one for each target item and one for the the overarching finish_chord callback')
 
         chain_length = len(job.chord.tasks[0].tasks)
 

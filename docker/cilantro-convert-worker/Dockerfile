@@ -13,6 +13,12 @@ RUN apt-get update && \
     libvips-dev \
     ghostscript \
     tesseract-ocr-deu \
+    tesseract-ocr-ita \
+    tesseract-ocr-fra \
+    tesseract-ocr-spa \
+    tesseract-ocr-ell \
+    tesseract-ocr-rus \
+    tesseract-ocr-ara \
     libyaml-dev \
     python-setuptools \
     python-watchdog \

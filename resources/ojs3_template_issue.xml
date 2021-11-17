@@ -1,30 +1,108 @@
-{% set metadata = obj.metadata %}
-{% set pdf_file_path = path_join(obj.get_representation_dir('pdf'), obj.id + '.pdf') %}
-<?xml version="1.0" encoding="UTF-8"?>
-<issue xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" published="1" current="1" access_status="1"
-       xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
-    <id type="internal" advice="ignore">1</id>
+{% set metadata = obj.metadata %}<?xml version="1.0" encoding="UTF-8"?>
+<issue xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" published="0" current="0" access_status="2">
     <issue_identification>
+        {% if metadata['volume'] %}
         <volume>{{metadata['volume']}}</volume>
+        {% endif %}
+        {% if metadata['number'] %}
         <number>{{metadata['number']}}</number>
+        {% endif %}
+        {% if metadata['reporting_year'] %}
         <year>{{metadata['reporting_year']}}</year>
+        {% endif %}
+        <title>{{metadata['title']}}</title>
     </issue_identification>
-    <date_published>{{metadata['publishing_year']}}-01-01</date_published>
-    <last_modified>{{datetime.date.today().isoformat()}}</last_modified>
-    <issue_galleys xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+    <sections>
+        <section ref="ART" seq="0" editor_restricted="0" meta_indexed="1" meta_reviewed="1" abstracts_not_required="0" hide_title="0" hide_author="0" abstract_word_count="0">
+            <abbrev locale="de_DE">ART</abbrev>
+            <title locale="de_DE">Artikel</title>
+        </section>
+    </sections>
+    <issue_galleys>
         <issue_galley>
-            <label>`PDF`</label>
+            <label>Issue PDF</label>
             <issue_file>
-                <file_name>merged.pdf</file_name>
+                <file_name>issue.pdf</file_name>
                 <file_type>PDF</file_type>
-                <file_size>{{getsize(pdf_file_path)}}</file_size>
+                <file_size>{{getsize(params['files']['pdf']['issue_pdf'][0])}}</file_size>
                 <content_type>1</content_type>
-                <original_file_name>merged.pdf</original_file_name>
+                <original_file_name>issue.pdf</original_file_name>
                 <date_uploaded>{{datetime.date.today().isoformat()}}</date_uploaded>
                 <date_modified>{{datetime.date.today().isoformat()}}</date_modified>
-                <embed encoding="base64">{{params['pdf_base64']}}</embed>
+                <embed encoding="base64">
+                    {{params['files']['pdf_base64']['issue_pdf'][0]}}
+                </embed>
             </issue_file>
         </issue_galley>
     </issue_galleys>
-    <articles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pkp.sfu.ca native.xsd"></articles>
+    <articles>
+        {% for article in metadata['articles'] %}
+        <article stage="production" 
+            locale="de_DE" 
+            access_status="2" 
+            seq="1" 
+            section_ref="ART" 
+            date_submitted="{{datetime.date.today().isoformat()}}"
+            date_published="{{datetime.date.today().isoformat()}}">
+            <id type="other::zenon">{{article['zenon_id']}}</id>
+            <title locale="de_DE">{{article['title']}}</title>
+            {% for abstract in article['abstracts'] %}
+            <abstract>{{abstract}}</abstract>
+            {% endfor %}
+            <copyrightHolder locale="de_DE">Digitale Ausgaben von Monographien, Reihen- und Sammelwerken des DAI</copyrightHolder>
+            <copyrightHolder locale="en_US">Digital editions of monographs and series of the DAI</copyrightHolder>
+
+            <authors>
+            {% if article['authors'] %}
+                {% for author in article['authors'] %}
+                <author primary_contact="true" include_in_browse="true" user_group_ref="Author">
+                    {% if author.givenname == '' %}
+                    <givenname>#TODO#</givenname>
+                    {% else %}
+                    <givenname>{{author.givenname}}</givenname>
+                    {% endif %}
+                    <familyname>{{author.lastname}}</familyname>
+                    <email></email>
+                </author>
+                {% endfor %}
+            {% else %}
+                <author primary_contact="true" include_in_browse="false" user_group_ref="Author">
+                    <givenname>-</givenname>
+                    <familyname></familyname>
+                    <email></email>
+                </author>
+            {% endif %}
+            </authors>
+
+            {% if metadata['keywords'] %}
+            <keywords locale="de_DE">
+                {% for keyword in metadata['keywords'] %}
+                <keyword>{{keyword}}</keyword>
+                {% endfor %}
+            </keywords>
+            {% endif %}
+
+            {% set filesize = getsize(params['files']['pdf']['article-{0}_pdf'.format(loop.index - 1)][0]) %}
+
+            <submission_file id="{{loop.index}}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" stage="production_ready" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+                <revision number="1" genre="Artikeltext" filename="article-{{loop.index - 1}}.pdf" viewable="false" filesize="{{filesize}}" filetype="application/pdf">
+                <name locale="de_DE">article-{{loop.index - 1}}.pdf</name>
+                <embed encoding="base64">
+                    {{params['files']['pdf_base64']['article-{0}_pdf'.format(loop.index - 1)][0]}}
+                </embed>
+                </revision>
+            </submission_file>
+            <article_galley xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" approved="false" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+                <name locale="de_DE">PDF</name>
+                <seq>{{loop.index}}</seq>
+                <submission_file_ref id="{{loop.index}}" revision="1"/>
+            </article_galley>
+
+            {% if article['pages'] %}
+            <pages>{{ article['pages'] }}</pages>
+            {% endif %}
+
+        </article>
+        {% endfor %}
+    </articles>
 </issue>

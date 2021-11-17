@@ -1,5 +1,9 @@
 <template>
-    <b-table class="" :data="this.targets" detailed detail-key="id">
+    <section>
+    <b-loading :is-full-page="false"
+        :active="this.targets.length === 0"
+    ></b-loading>
+    <b-table v-if="this.targets.length !== 0" :data="this.targets" detailed detail-key="id">
         <template slot-scope="props">
             <b-table-column style="vertical-align: middle;">
                 <b-icon v-if="isTargetError(props.row)" icon="alert-circle" type="is-danger" />
@@ -45,6 +49,13 @@
                 <b-table-column label="Subtitle">-</b-table-column>
                 <b-table-column label="Date published">-</b-table-column>
             </template>
+            <b-table-column label="">
+                <b-button title="Remove from selection"
+                            type="is-text"
+                            @click="removeTarget(props.row)">
+                    <b-icon icon="close"/>
+                </b-button>
+            </b-table-column>
         </template>
 
         <template slot="detail" slot-scope="props">
@@ -55,16 +66,19 @@
                     </li>
                 </ul>
                 <ul v-if="isTargetError(props.row)">
-                    <li v-for="message in props.row.messages" :key="message.id">
+                    <li v-for="(message, index) in props.row.messages" :key="index">
                         {{ message }}
                     </li>
                 </ul>
             </div>
         </template>
     </b-table>
+
+    </section>
 </template>
 
 <script lang="ts">
+/* eslint-disable class-methods-use-this */
 import {
     Component, Vue, Prop, Watch
 } from 'vue-property-decorator';
@@ -74,10 +88,11 @@ import {
 import {
     MaybeJobTarget, JobTargetData, MonographMetadata, Person
 } from './IngestMonographParameters';
-import { getRecord, ZenonRecord, Author } from '@/util/ZenonClient';
-import { asyncMap } from '@/util/HelperFunctions';
 import {
-    WorkbenchFileTree,
+    getRecord, ZenonRecord, Author, AuthorTypes
+} from '@/util/ZenonClient';
+import {
+    StagingDirectoryContents,
     getStagingFiles,
     containsNumberOfFiles,
     containsOnlyFilesWithExtensions
@@ -102,135 +117,148 @@ export default class MonographMetadataForm extends Vue {
         this.targets = [];
     }
 
-    async mounted() {
-        this.targets = await asyncMap(
-            this.selectedPaths, async(path) : Promise<MaybeJobTarget> => {
-                const id = path.split('/').pop() || '';
-                const zenonId = extractZenonId(path);
-                let errors: string[] = [];
-                if (zenonId === '') {
-                    errors.push(`Could not extract Zenon ID from ${path}.`);
-                }
-
-                const targetFolder = await getStagingFiles(path);
-                if (Object.keys(targetFolder).length === 0) {
-                    errors.push(`Could not find file at ${path}.`);
-                } else {
-                    errors = errors.concat(evaluateTargetFolder(targetFolder));
-                }
-
-                if (errors.length === 0) {
-                    return new JobTargetData(
-                        id, path, { zenon_id: zenonId } as MonographMetadata
-                    );
-                }
-                return new JobTargetError(id, path, errors);
-            }
-        );
-
-        this.targets = await asyncMap(this.targets, async(target) => {
-            if (target instanceof JobTargetData) {
-                return loadZenonData(target);
-            }
-            return new JobTargetError(target.id, target.path, target.messages);
-        });
-
-        this.$emit('update:targetsUpdated', this.targets);
+    // Required to alert parent vue component of changes
+    @Watch('targets')
+    onPropertyChanged(value: MaybeJobTarget[], _oldValue: MaybeJobTarget[]) {
+        this.$emit('update:targetsUpdated', value);
     }
 
     isTargetError = isTargetError;
-}
 
-function evaluateTargetFolder(targetFolder : WorkbenchFileTree) {
-    const errors: string[] = [];
-    if (!containsNumberOfFiles(targetFolder, 1)) {
-        errors.push(
-            `Folder has more than one entry. Only one subfolder 'tif' is allowed.`
+    async mounted() {
+        this.targets = await Promise.all(
+            this.selectedPaths
+                .map(this.processSelectedPath)
+                .map(async(promise) => {
+                    const target = await promise;
+                    if (target instanceof JobTargetData) {
+                        return this.loadZenonData(target);
+                    }
+                    return new JobTargetError(target.id, target.path, target.messages);
+                })
         );
     }
 
-    if (!('tif' in targetFolder)) {
-        errors.push(`Folder does not have a subfolder 'tif'.`);
-    } else if (targetFolder.tif.contents !== undefined &&
+    removeTarget(removedTarget: MaybeJobTarget) {
+        this.targets = this.targets.filter(target => removedTarget.id !== target.id);
+    }
+
+    async processSelectedPath(path: string) : Promise<MaybeJobTarget> {
+        const id = path.split('/').pop() || '';
+        const zenonId = this.extractZenonId(path);
+        let errors: string[] = [];
+        if (zenonId === '') {
+            errors.push(`Could not extract Zenon ID from ${path}.`);
+        }
+
+        const targetFolder = await getStagingFiles(path);
+        if (Object.keys(targetFolder).length === 0) {
+            errors.push(`Could not find file at ${path}.`);
+        } else {
+            errors = errors.concat(this.evaluateTargetFolder(targetFolder));
+        }
+
+        if (errors.length === 0) {
+            return new JobTargetData(
+                id, path, { zenon_id: zenonId } as MonographMetadata
+            );
+        }
+        return new JobTargetError(id, path, errors);
+    }
+
+    evaluateTargetFolder(targetFolder : StagingDirectoryContents) {
+        const errors: string[] = [];
+        if (!containsNumberOfFiles(targetFolder, 1)) {
+            errors.push(
+                `Folder has more than one entry. Only one subfolder 'tif' is allowed.`
+            );
+        }
+
+        if (!('tif' in targetFolder)) {
+            errors.push(`Folder does not have a subfolder 'tif'.`);
+        } else if (targetFolder.tif.contents !== undefined &&
                 !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif'])) {
-        errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
+            errors.push(`Subfolder 'tif' does not only contain files ending in '.tif'.`);
+        }
+        return errors;
     }
-    return errors;
-}
 
-function extractZenonId(path: string): string {
-    const result = path.match(/.*Book-ZID(\d+)/i);
-    if (!result || result.length < 1) return '';
-    return result[1];
-}
+    extractZenonId(path: string): string {
+        const result = path.match(/.*Book-ZID(\d+)/i);
+        if (!result || result.length < 1) return '';
+        return result[1];
+    }
 
-function filterDuplicateEntry<T>(value: T, index: number, array: T[]) {
-    return array.indexOf(value) === index;
-}
+    filterDuplicateEntry<T>(value: T, index: number, array: T[]) {
+        return array.indexOf(value) === index;
+    }
 
-async function loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
-    try {
-        const zenonRecord = await getRecord(target.metadata.zenon_id) as ZenonRecord;
-        const errors : string[] = [];
+    async loadZenonData(target: JobTargetData) : Promise<MaybeJobTarget> {
+        try {
+            const zenonRecord = await getRecord(target.metadata.zenon_id) as ZenonRecord;
+            const errors : string[] = [];
 
-        let datePublished = '';
+            let datePublished = '';
 
-        if (zenonRecord.publicationDates.length > 0) {
-            try {
-                [datePublished] = new Date(zenonRecord.publicationDates[0]).toISOString().split('T');
-            } catch (e) {
-                errors.push(`Unable to parse date: ${zenonRecord.publicationDates[0]}`);
+            if (zenonRecord.publicationDates.length > 0) {
+                try {
+                    [datePublished] = new Date(zenonRecord.publicationDates[0]).toISOString().split('T');
+                } catch (e) {
+                    errors.push(`Unable to parse date: ${zenonRecord.publicationDates[0]}`);
+                }
             }
-        }
-        let summary = '';
-        if (zenonRecord.summary.length > 0) {
-            [summary] = zenonRecord.summary;
-        }
+            let summary = '';
+            if (zenonRecord.summary.length > 0) {
+                [summary] = zenonRecord.summary;
+            }
 
-        let subTitle = '';
-        if (zenonRecord.subTitle) {
-            subTitle = zenonRecord.subTitle.trim();
+            let subTitle = '';
+            if (zenonRecord.subTitle) {
+                subTitle = zenonRecord.subTitle.trim();
+            }
+
+            const filteredSubjects = zenonRecord.subjects
+                .map(subject => subject[0])
+                .filter(this.filterDuplicateEntry);
+            const authors = this.extractAuthors(zenonRecord);
+
+            if (errors.length !== 0) {
+                return new JobTargetError(target.id, target.path, errors);
+            }
+            const metadata = {
+                zenon_id: target.metadata.zenon_id,
+                press_code: 'dai',
+                authors,
+                title: zenonRecord.shortTitle,
+                subtitle: subTitle,
+                abstract: summary,
+                date_published: datePublished,
+                keywords: filteredSubjects
+            } as MonographMetadata;
+
+            return new JobTargetData(target.id, target.path, metadata);
+        } catch (error) {
+            return new JobTargetError(target.id, target.path, [error]);
         }
-
-        const filteredSubjects = zenonRecord.subjects
-            .map(subject => subject[0])
-            .filter(filterDuplicateEntry);
-        const authors = extractAuthors(zenonRecord);
-
-        if (errors.length !== 0) {
-            return new JobTargetError(target.id, target.path, errors);
-        }
-        const metadata = {
-            zenon_id: target.metadata.zenon_id,
-            press_code: 'dai',
-            authors,
-            title: zenonRecord.shortTitle.replace(/[\s:]+$/, '').trim(),
-            subtitle: subTitle,
-            abstract: summary,
-            date_published: datePublished,
-            keywords: filteredSubjects
-        } as MonographMetadata;
-
-        return new JobTargetData(target.id, target.path, metadata);
-    } catch (error) {
-        return new JobTargetError(target.id, target.path, [error]);
     }
-}
 
-function extractAuthors(record: ZenonRecord) : Person[] {
-    return record.authors.map((author : Author) => {
-        const authorSplit = author.name.split(',');
-        if (authorSplit.length === 2) {
-            return {
-                givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
-                lastname: authorSplit[0].trim()
-            } as Person;
-        }
-        return {
-            givenname: '',
-            lastname: author.name
-        } as Person;
-    });
+    extractAuthors(record: ZenonRecord) : Person[] {
+        return record.authors
+            .filter((author : Author) => author.type !== AuthorTypes.Corporate)
+            .map((author : Author) => {
+                const authorSplit = author.name.split(',');
+                if (authorSplit.length === 2) {
+                    return {
+                        givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
+                        lastname: authorSplit[0].trim()
+                    } as Person;
+                }
+                return {
+                    givenname: '',
+                    lastname: author.name
+                } as Person;
+            });
+    }
 }
 
 </script>

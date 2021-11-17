@@ -1,5 +1,6 @@
 import uuid
 import logging
+import os
 
 from abc import abstractmethod
 from celery import chord, signature
@@ -58,7 +59,9 @@ class BatchJob(BaseJob):
         super().__init__()
         self.id = _generate_id()
 
-        chains = self._create_chains(params, user_name)
+        (chains, chain_parameters) = self._create_chains(params, user_name)
+
+        self.chain_parameters = chain_parameters
 
         # Once all job chains have finished within this chord, we have to
         # trigger a callback worker in order to update the database entry
@@ -112,12 +115,11 @@ class BatchJob(BaseJob):
 
             self.job_db.add_job(job_id=current_chain_id,
                                 user=user_name,
-                                job_type='chain',
+                                job_type='cilantro_batch_chain',
                                 parent_job_id=self.id,
                                 child_job_ids=current_chain_links,
-                                parameters={
-                                    'work_path': current_chain.kwargs['work_path']},
-                                label=f"Batch #{idx+1}",
+                                parameters=self.chain_parameters[idx],
+                                label=self.chain_parameters[idx]['id'],
                                 description="Group containing all the individual steps for a single batch.")
             chain_ids += [current_chain_id]
 
@@ -140,8 +142,14 @@ class IngestArchivalMaterialsJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
 
         for record_target in params['targets']:
+
+            chain_parameters.append(
+                record_target
+            )
+
             task_params = dict(**record_target, **{'user': user_name},
                                initial_representation='tif', job_type=self.job_type)
 
@@ -189,16 +197,18 @@ class IngestArchivalMaterialsJob(BatchJob):
             current_chain |= _link('publish_to_atom')
             current_chain |= _link('publish_to_archive')
 
-            current_chain |= _link('cleanup_directories',
-                                   mark_done=params['options']['app_options']['mark_done'],
-                                   staging_current_folder=record_target['path'],
-                                   user_name=user_name)
+            current_chain |= _link('cleanup_directories')
 
-            current_chain |= _link('finish_chain')
+            current_chain |= _link(
+                'finish_chain',
+                success_msg="Material imported successfully",
+                chain_input_directory=record_target['path'],
+                user_name=user_name
+            )
 
             chains.append(current_chain)
 
-        return chains
+        return (chains, chain_parameters)
 
     def _create_pdf_metadata(self, metadata):
         pdf_metadata = {}
@@ -305,63 +315,117 @@ class IngestJournalsJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
 
         for issue_target in params['targets']:
-            task_params = dict(**issue_target, **{'user': user_name},
-                               initial_representation='tif', job_type=self.job_type)
+            chain_parameters.append(
+                issue_target
+            )
 
-            current_chain = _link('create_object', **task_params)
+            article_workdir_prefixes = []
+            article_copy_instructions = {}
+            for count, article in enumerate(issue_target["metadata"]["articles"]):
+                prefix = f"article-{count}_"
+                article_workdir_prefixes.append(prefix)
+                article_copy_instructions[f"{article['path']}/tif"] = (f"{prefix}tif", "*.tif")
+
+            task_params = dict(
+                **issue_target, 
+                **{
+                    'user': user_name,
+                    'copy_instructions':
+                    {
+                        **{"tif": ("issue_tif", "*.tif")},
+                        **article_copy_instructions
+                    }
+                }
+            )
+
+            current_chain = _link('create_complex_object', **task_params)
 
             if params['options']['ocr_options']['do_ocr']:
                 lang = params['options']['ocr_options']['ocr_lang']
             else:
                 lang = None
 
-            current_chain |= _link('list_files',
-                                   representation='tif',
-                                   target='pdf',
-                                   task='convert.tif_to_pdf',
-                                   ocr_lang=lang)
+            current_chain = self._add_image_processing_links(current_chain, "issue_", lang)
+            
+            counter = 0
+            for prefix in article_workdir_prefixes:
+                current_chain = self._add_image_processing_links(current_chain, prefix, lang)
+                counter += 1
+            
+            current_chain |= _link(
+                'generate_xml',
+                input_file_directories={
+                    "pdfs": ["issue_pdf"] + [f"{prefix}pdf" for prefix in article_workdir_prefixes]
+                },
+                template_file='ojs3_template_issue.xml',
+                target_filename='ojs_import.xml',
+            )
 
-            current_chain |= _link('convert.merge_converted_pdf')
+            # current_chain |= _link(
+            #     'generate_xml',
+            #     template_file='mets_template_journal.xml',
+            #     target_filename='mets.xml',
+            #     schema_file='mets.xsd'
+            # )
 
-            current_chain |= _link('list_files',
-                                   representation='tif',
-                                   target='jpg',
-                                   task='convert.tif_to_jpg')
-
-            current_chain |= _link('list_files',
-                                   representation='tif',
-                                   target='jpg_thumbnails',
-                                   task='convert.scale_image',
-                                   max_width=50,
-                                   max_height=50)
-
-            current_chain |= _link('generate_xml',
-                                   template_file='ojs3_template_issue.xml',
-                                   target_filename='ojs_import.xml')
-
-            current_chain |= _link('generate_xml',
-                                   template_file='mets_template_journal.xml',
-                                   target_filename='mets.xml',
-                                   schema_file='mets.xsd')
-
-            current_chain |= _link('publish_to_repository')
-
-            current_chain |= _link('publish_to_ojs',
-                                   ojs_journal_code=issue_target['metadata']['ojs_journal_code'])
+            current_chain |= _link(
+                'publish_to_ojs',
+                ojs_journal_code=issue_target['metadata']['ojs_journal_code']
+            )
 
             current_chain |= _link('publish_to_archive')
 
-            current_chain |= _link('cleanup_directories',
-                                   mark_done=params['options']['app_options']['mark_done'],
-                                   staging_current_folder=issue_target['path'],
-                                   user_name=user_name)
+            current_chain |= _link('cleanup_directories')
 
-            current_chain |= _link('finish_chain')
+            current_chain |= _link(
+                'finish_chain',
+                success_msg="Journal imported successfully",
+                success_url='{}/{}/manageIssues#futureIssues'.format(
+                    os.getenv('OJS_BASE_URL'),
+                    issue_target['metadata']['ojs_journal_code']
+                ),
+                success_url_label='View in OJS',
+                chain_input_directory=issue_target['path'],
+                user_name=user_name
+            )
             chains.append(current_chain)
 
-        return chains
+        return (chains, chain_parameters)
+
+    def _add_image_processing_links(self, chain, directory_prefix, ocr_lang):
+        chain |= _link(
+                'list_files',
+                representation=f'{directory_prefix}tif',
+                target=f'{directory_prefix}pdf',
+                task='convert.tif_to_pdf',
+                ocr_lang=ocr_lang
+            )
+
+        chain |= _link(
+            'convert.merge_converted_pdf',
+            input_directory=f'{directory_prefix}pdf'
+        )
+
+        chain |= _link(
+            'list_files',
+            representation=f'{directory_prefix}tif',
+            target=f'{directory_prefix}jpg',
+            task='convert.tif_to_jpg'
+        )
+
+        chain |= _link(
+            'list_files',
+            representation=f'{directory_prefix}tif',
+            target=f'{directory_prefix}jpg_thumbnails',
+            task='convert.scale_image',
+            max_width=50,
+            max_height=50
+        )
+
+        return chain
 
 
 class IngestMonographsJob(BatchJob):
@@ -371,9 +435,14 @@ class IngestMonographsJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
         for monograph_target in params['targets']:
             task_params = dict(**monograph_target, **{'user': user_name},
                                initial_representation='tif', job_type=self.job_type)
+
+            chain_parameters.append(
+                monograph_target
+            )
 
             current_chain = _link('create_object', **task_params)
 
@@ -418,15 +487,17 @@ class IngestMonographsJob(BatchJob):
             current_chain |= _link('publish_to_omp',
                                    omp_press_code=monograph_target['metadata']['press_code'])
 
-            current_chain |= _link('cleanup_directories',
-                                   mark_done=params['options']['app_options']['mark_done'],
-                                   staging_current_folder=monograph_target['path'],
-                                   user_name=user_name)
+            current_chain |= _link('cleanup_directories')
 
-            current_chain |= _link('finish_chain')
+            current_chain |= _link(
+                'finish_chain',
+                success_msg="Monograph imported successfully",
+                chain_input_directory=monograph_target['path'],
+                user_name=user_name
+            )
             chains.append(current_chain)
 
-        return chains
+        return (chains, chain_parameters)
 
 
 class NlpJob(BatchJob):
@@ -436,11 +507,16 @@ class NlpJob(BatchJob):
 
     def _create_chains(self, params, user_name):
         chains = []
+        chain_parameters = []
 
         for target in params['targets']:
             for extension in params['options']['extensions']:
                 if extension not in ['txt', 'pdf']:
                     raise Exception('Extension not supported: {}' + str(extension))
+
+                chain_parameters.append(
+                    target
+                )
 
                 task_params = dict(**target, **{'user': user_name})
                 chain = _link('create_object', **task_params,
@@ -483,7 +559,7 @@ class NlpJob(BatchJob):
 
                 chains.append(chain)
 
-        return chains
+        return (chains, chain_parameters)
 
 
 def _link(name, **params):

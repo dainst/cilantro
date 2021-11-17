@@ -1,0 +1,50 @@
+{
+  "BOOK-ZID000146815": {
+    "contents": {
+      "tif": {
+        "contents": {
+          "BOOK-ZID000146815-0310.tif": {
+            "name": "BOOK-ZID000146815-0310.tif",
+            "type": "file"
+          },
+          "BOOK-ZID000146815-0311.tif": {
+            "name": "BOOK-ZID000146815-0311.tif",
+            "type": "file"
+          }
+        },
+        "name": "tif",
+        "type": "directory"
+      }
+    },
+    "name": "BOOK-ZID000146815",
+    "type": "directory"
+  },
+  "BOOK-ZID000166554": {
+    "contents": {
+      "tif": {
+        "contents": {
+          "test.tif": {
+            "name": "test.tif",
+            "type": "file"
+          },
+          "test2.tif": {
+            "name": "test2.tif",
+            "type": "file"
+          },
+          "test3.tif": {
+            "name": "test3.tif",
+            "type": "file"
+          },
+          "test4.tif": {
+            "name": "test4.tif",
+            "type": "file"
+          }
+        },
+        "name": "tif",
+        "type": "directory"
+      }
+    },
+    "name": "BOOK-ZID000166554",
+    "type": "directory"
+  }
+}

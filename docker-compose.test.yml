@@ -22,6 +22,7 @@ x-env-jobdb: &env-jobdb
 x-env-app-config: &env-app-config
   BACKEND_URI: &backend-uri https://workbench.test.idai.world/api
   CILANTRO_ENV: &cilantro-env test
+  OJS_BASE_URL: &ojs-base-url http://test.publications.dainst.org/journals
   OJS_URI: &ojs-uri http://test.publications.dainst.org/journals/plugins/generic/cilantro/api
   OMP_URI: &omp-uri http://test.publications.dainst.org/books/plugins/generic/cilantro/api
   ATOM_URI: &atom-uri http://archivestest.dainst.org/index.php
@@ -31,9 +32,9 @@ services:
 
   broker:
     image: rabbitmq:3.8
-    environment:
-      RABBITMQ_DEFAULT_USER: *broker-user
-      RABBITMQ_DEFAULT_PASS: *broker-password
+    configs:
+      - source: rabbitmq_config
+        target: /etc/rabbitmq/rabbitmq.conf
 
   celery-db:
     image: redis:latest
@@ -42,12 +43,12 @@ services:
       - redis-data:/data
 
   job-db:
-    image: mongo:4.2.17
+    image: mongo:5.0.1
     volumes:
       - mongo-data:/data/db
 
   service:
-    image: dainst/cilantro-service:0.2.24
+    image: dainst/cilantro-service:0.2.27
     volumes:
       - staging-data:/data/staging
       - repository-data:/data/repository
@@ -61,6 +62,7 @@ services:
       CILANTRO_ENV: *cilantro-env
       BACKEND_URI: *backend-uri
       ATOM_URI: *atom-uri
+      OJS_BASE_URL: *ojs-base-url
     networks:
       - web
       - default
@@ -75,7 +77,7 @@ services:
 
   default-worker:
     user: ${UID}
-    image: dainst/cilantro-default-worker:0.2.16
+    image: dainst/cilantro-default-worker:0.2.19
     working_dir: /app
     volumes:
       - staging-data:/data/staging
@@ -101,7 +103,7 @@ services:
 
   convert-worker:
     user: ${UID}
-    image: dainst/cilantro-convert-worker:0.2.29
+    image: dainst/cilantro-convert-worker:0.2.33
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -122,7 +124,7 @@ services:
 
   nlp-heideltime-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-heideltime-worker:0.1.17
+    image: dainst/cilantro-nlp-heideltime-worker:0.1.20
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -136,7 +138,7 @@ services:
 
   nlp-worker:
     user: ${UID}
-    image: dainst/cilantro-nlp-worker:0.1.11
+    image: dainst/cilantro-nlp-worker:0.1.14
     working_dir: /app
     volumes:
       - workspace-data:/data/workspace
@@ -149,7 +151,7 @@ services:
       CILANTRO_ENV: *cilantro-env
 
   frontend:
-    image: dainst/cilantro-frontend:0.2.29
+    image: dainst/cilantro-frontend:0.2.35
     networks:
       - default
       - web
@@ -163,7 +165,7 @@ services:
 secrets:
   ojs_auth_key:
     external: true
-    name: workbench_ojs_auth_key
+    name: workbench_ojs_auth_key_2
   omp_auth_key:
     external: true
     name: workbench_omp_auth_key_2
@@ -190,6 +192,11 @@ volumes:
     external: true
   config:
     name: workbench_config
+    external: true
+
+configs:
+  rabbitmq_config:
+    name: workbench-rabbit_mq_config
     external: true
 
 networks:

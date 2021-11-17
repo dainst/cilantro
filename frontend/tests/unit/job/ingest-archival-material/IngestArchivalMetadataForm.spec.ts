@@ -6,56 +6,49 @@ import Vuex, { Store } from 'vuex';
 import flushPromises from 'flush-promises';
 import IngestArchivalMaterialMetadataForm from '@/job/ingest-archival-material/IngestArchivalMaterialMetadataForm.vue';
 import {
-    WorkbenchFile,
-    WorkbenchFileTree,
+    StagingNode,
+    StagingDirectoryContents,
     getStagingFiles
 } from '@/staging/StagingClient';
 import {
     getAtomRecord
 } from '@/util/AtomClient';
 
-const mockStagingTree: WorkbenchFileTree = {
+const mockStagingTree: StagingDirectoryContents = {
     '.info': {
         name: '.info',
-        type: 'conf',
-        marked: false
+        type: 'conf'
     },
     'test.tif': {
         name: 'test.tif',
-        type: 'file',
-        marked: false
+        type: 'file'
     },
     'test2.tiff': {
         name: 'test2.tiff',
-        type: 'file',
-        marked: false
+        type: 'file'
     }
 };
 
-const mockDeepStagingTree: WorkbenchFileTree = {
+const mockDeepStagingTree: StagingDirectoryContents = {
     tif: {
         name: 'tif',
         type: 'folder',
-        marked: false,
         contents: {
             'test.tif': {
                 name: 'test.tif',
-                type: 'file',
-                marked: false
+                type: 'file'
             },
             'test2.tiff': {
                 name: 'test2.tiff',
-                type: 'file',
-                marked: false
+                type: 'file'
             }
         }
     }
 };
 
-const aPdf: WorkbenchFile = {
+const aPdf: StagingNode = {
     name: 'test3.pdf',
-    type: 'file',
-    marked: false
+    type: 'file'
 };
 
 jest.mock('@/staging/StagingClient', () => ({

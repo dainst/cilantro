@@ -47,8 +47,11 @@
                     label="Updated"
                     :custom-sort="sortByUpdated"
                     sortable
-                    >{{ props.row.updated }}</b-table-column
-                >
+                >{{ props.row.updated }}</b-table-column>
+                <b-table-column
+                    field="user"
+                    label="User"
+                >{{ props.row.user }}</b-table-column>
                 <b-table-column>
                     <div class="field is-grouped">
                         <b-button
@@ -96,8 +99,9 @@ import { showError } from '@/util/Notifier';
 @Component({ name: 'JobListEntry' })
 export default class JobListEntry extends Vue {
     @Prop(Array) jobIDs!: string[];
-    @Prop() activeStates!: string[];
-    unfilteredJobs: Job[] = [];
+    @Prop(Array) activeStates!: string[];
+    @Prop(Array) selectedUsers!: string[];
+    jobs: Job[] = [];
     isLoading: boolean = true;
     updatePendingJobsInterval: number = 0;
     getChildrenIDs = getChildrenIDs;
@@ -120,19 +124,24 @@ export default class JobListEntry extends Vue {
         clearInterval(this.updatePendingJobsInterval);
     }
 
+    @Watch('selectedUsers')
+    reloadJobs() {
+        this.loadJobs();
+    }
+
     get filteredJobs() {
         if (this.isTopLevel) {
-            return this.unfilteredJobs.filter(job => this.activeStates.includes(job.state));
+            return this.jobs.filter(job => this.activeStates.includes(job.state));
         }
-        return this.unfilteredJobs;
+        return this.jobs;
     }
 
     async loadJobs() {
         if (this.isTopLevel) {
-            this.unfilteredJobs = await getJobList();
+            this.jobs = await getJobList(this.selectedUsers);
         } else {
             const requests = this.jobIDs.map(id => getJobDetails(id));
-            this.unfilteredJobs = await Promise.all(requests)
+            this.jobs = await Promise.all(requests)
                 .then(values => values)
                 .catch((reason) => {
                     showError(reason, reason);
@@ -159,9 +168,7 @@ export default class JobListEntry extends Vue {
         this.$buefy.dialog.confirm({
             message: `Delete Job ${id}?`,
             onConfirm: () => {
-                this.unfilteredJobs = this.unfilteredJobs.filter(
-                    ele => ele.job_id !== id
-                );
+                this.jobs = this.jobs.filter(ele => ele.job_id !== id);
                 archiveJob(id).catch((response) => {
                     showError('Failed to archive job!', response.error);
                 });

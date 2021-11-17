@@ -8,7 +8,6 @@ import IngestJournal from '@/job/ingest-journal/IngestJournal.vue';
 import JobFilesForm from '@/job/JobFilesForm.vue';
 import JournalMetadataForm from '@/job/ingest-journal/IngestJournalMetadataForm.vue';
 import JournalOptionsForm from '@/job/ingest-journal/IngestJournalOptionsForm.vue';
-import AppOptionsForm from '@/job/AppOptionsForm.vue';
 import {
     IngestJournalParameters, JournalIssueMetadata, IngestJournalOptions, JobTargetData
 } from '@/job/ingest-journal/IngestJournalParameters';
@@ -19,13 +18,12 @@ localVue.use(Vuex);
 
 // create test data
 const fakePath = './haus/vom/nikolaus/';
-const target = new JobTargetData('007', fakePath, new JournalIssueMetadata('0023456'));
+const target = new JobTargetData('007', fakePath, new JournalIssueMetadata('0023456', 'Journal Name', 'aa', 'Volume 1'));
 const options: IngestJournalOptions = {
     ocr_options: {
         do_ocr: true,
         ocr_lang: ''
-    },
-    app_options: { mark_done: true }
+    }
 };
 const param = new IngestJournalParameters([target], options);
 
@@ -71,6 +69,5 @@ describe('IngestJournal.vue', () => {
 
         // now check for the correct forms
         expect(wrapper.findComponent(JournalOptionsForm).exists()).toBe(true);
-        expect(wrapper.findComponent(AppOptionsForm).exists()).toBe(true);
     });
 });

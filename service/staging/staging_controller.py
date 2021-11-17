@@ -2,12 +2,15 @@ import os
 import logging
 import shutil
 import zipfile
+import json
 
 from flask import Blueprint, jsonify, request, send_file
 from werkzeug.utils import secure_filename
 
 from service.errors import ApiError
 from service.user.user_service import auth
+
+from utils import cilantro_info_file
 
 staging_controller = Blueprint('staging', __name__)
 
@@ -39,11 +42,21 @@ def _get_directory_structure(dir_path, depths=0):
                 tree[entry.name] = {"type": "directory", "name": entry.name}
                 if depths != 0:
                     path = os.path.join(dir_path, entry.name)
-                    tree[entry.name]["marked"] = os.path.exists(os.path.join(path, ".info"))
+
+                    # handle directories with legacy .info file, existence implies successful import
+                    if os.path.exists(os.path.join(path, ".info")):
+                        tree[entry.name]["job_info"] = {"status": "success", "msg": cilantro_info_file.DEFAULT_SUCCESS_MESSAGE}
+                    else:
+                        tree[entry.name]["job_info"] = _parse_info_file(os.path.join(path, cilantro_info_file.FILE_NAME))
                     tree[entry.name]["contents"] = _get_directory_structure(path, depths-1)
     return tree
 
-
+def _parse_info_file(path):
+    if not os.path.exists(path):
+        return None
+    else:
+        with open(path, 'r') as f:
+            return json.load(f)
 
 @staging_controller.route('', methods=['GET'], strict_slashes=False, defaults={'path': '.'})
 @staging_controller.route('/<path:path>', methods=['GET'], strict_slashes=False)
@@ -90,7 +103,8 @@ def get_path(path):
     """
     depths = request.args.get('depths', 1, int)
 
-    abs_path = os.path.join(staging_dir, auth.username(), path)
+    abs_path = _get_absolute_path(path)
+
     if os.path.isdir(abs_path):
         return jsonify(_get_directory_structure(abs_path, depths=depths))
     elif os.path.isfile(abs_path):
@@ -143,11 +157,12 @@ def delete_from_staging(path):
     :resheader Content-Type: application/json
     :param str path: path to file or directory to be deleted
     """
+    abs_path = _get_absolute_path(path)
     try:
-        os.remove(os.path.join(staging_dir, auth.username(), path))
+        os.remove(abs_path)
     except (FileNotFoundError, IsADirectoryError):
         try:
-            shutil.rmtree(os.path.join(staging_dir, auth.username(), path))
+            shutil.rmtree(abs_path)
         except FileNotFoundError:
             raise ApiError("file_not_found",
                            f"No resource was found under the path {path}", 404)
@@ -202,8 +217,10 @@ def create_folder():
         raise ApiError("param_not found", "Missing folderpath parameter")
     folderpath = params['folderpath']
     try:
-        os.makedirs(os.path.join(staging_dir, auth.username(), folderpath),
-                    exist_ok=True)
+        os.makedirs(
+            _get_absolute_path(folderpath),
+            exist_ok=True
+        )
         return jsonify({"success": True}), 200
     except Exception as e:
         return _generate_error_result(
@@ -279,16 +296,18 @@ def upload_to_staging():
     log.debug(f"Uploading {len(request.files)} files")
     results = {}
 
-    is_target_folder_param_present = 'target_folder' in request.form
-    if is_target_folder_param_present:
+    if 'target_folder' in request.form:
         target_folder = request.form['target_folder']
+    else:
+        target_folder = ""
+
+    abs_path = _get_absolute_path(target_folder)
 
     if request.files:
         for key in request.files:
             for file in request.files.getlist(key):
-                if is_target_folder_param_present:
-                    file.filename = f"{target_folder}/{file.filename}"
-                results[file.filename] = _process_file(file, auth.username())
+                file.path = f"{abs_path}/{file.filename}"
+                results[file.filename] = _process_file(file)
         return jsonify({"result": results}), 200
     raise ApiError("no_files_provided",
                    f"The request did not contain any files")
@@ -344,8 +363,10 @@ def move():
         raise ApiError("param_not found", "Missing source parameter")
     if 'target' not in params:
         raise ApiError("param_not found", "Missing target parameter")
-    source = os.path.join(staging_dir, auth.username(), params['source'])
-    target = os.path.join(staging_dir, auth.username(), params['target'])
+    
+    source = _get_absolute_path(params['source'])
+    target = _get_absolute_path(params['target'])
+
     try:
         os.rename(source, target)
         return jsonify({"success": True}), 200
@@ -357,24 +378,23 @@ def move():
             e)
 
 
-def _process_file(file, username):
+def _process_file(file):
     if not _is_allowed_file_extension(file.filename):
         return _generate_error_result(
             file,
             "extension_not_allowed",
             f"File extension '{_get_file_extension(file.filename)}'"
             f" is not allowed.")
-    elif _file_already_exists(file.filename,
-                              os.path.join(staging_dir, username)):
+    elif os.path.exists(file.path):
         return _generate_error_result(
             file,
             "file_already_exists",
             f"File already exists in folder.")
     else:
         try:
-            full_path = _upload_file(file, username)
+            _upload_file(file)
             if _get_file_extension(file.filename) == "zip":
-                _unzip_file(full_path)
+                _unzip_file(file.path)
             return {"success": True}
         except Exception as e:
             return _generate_error_result(
@@ -396,14 +416,10 @@ def _generate_error_result(file, code, message, e=None):
         }
 
 
-def _upload_file(file, username):
-    path, filename = os.path.split(file.filename)
-    folders = list(map(secure_filename, path.split("/")))
-    full_path = os.path.join(staging_dir, username, *folders)
-    os.makedirs(full_path, exist_ok=True)
-    full_file_path = os.path.join(full_path, secure_filename(filename))
-    file.save(full_file_path)
-    return full_file_path
+def _upload_file(file):
+    directory_structure, filename = os.path.split(file.path)
+    os.makedirs(directory_structure, exist_ok=True)
+    file.save(file.path)
 
 
 def _unzip_file(path):
@@ -411,10 +427,6 @@ def _unzip_file(path):
     with zipfile.ZipFile(path, 'r') as zip_ref:
         zip_ref.extractall(target_path)
         os.remove(path)
-
-
-def _file_already_exists(filename, target_dir):
-    return os.path.exists(os.path.join(target_dir, secure_filename(filename)))
 
 
 def _is_allowed_file_extension(filename):
@@ -426,3 +438,9 @@ def _get_file_extension(filename):
         return ""
     else:
         return filename.rsplit('.', 1)[1].lower()
+
+def _get_absolute_path(path):
+    if auth.username() == "admin":
+        return os.path.join(staging_dir, path)
+
+    return os.path.join(staging_dir, auth.username(), path)

@@ -8,11 +8,13 @@ export const ojsZenonMapping = {
     '000054792': 'ger',
     '000055658': 'mm',
     '000057152': 'BaM',
+    '000146522': 'mdaik',
+    '000036080': 'mdaik',
     '000814258': 'test'
 } as { [index: string]: string };
 
 export const allowedFileExtensions = ['pdf', 'tif', 'tiff', 'zip', 'txt'];
 
-export const ignoredDirectoryContents = ['__MACOSX', '@eaDir', 'Thumbs.db', '.DS_Store', '.Info'];
+export const ignoredDirectoryContents = ['__MACOSX', '@eaDir', 'Thumbs.db', '.DS_Store', '.Info', '.cilantro_info'];
 
 export const backendUri = process.env.VUE_APP_BACKEND_URI || '/api';

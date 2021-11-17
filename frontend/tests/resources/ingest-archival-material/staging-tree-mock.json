@@ -1,0 +1,58 @@
+{
+  "RECORD-AID-D-de-dai-z-adz-nl-otto-benndorf_3": {
+    "contents": {
+      "tif": {
+        "contents": {
+          "test.tif": {
+            "name": "test.tif",
+            "type": "file"
+          },
+          "test2.tif": {
+            "name": "test2.tif",
+            "type": "file"
+          },
+          "test3.tif": {
+            "name": "test3.tif",
+            "type": "file"
+          },
+          "test4.tif": {
+            "name": "test4.tif",
+            "type": "file"
+          }
+        },
+        "name": "tif",
+        "type": "directory"
+      }
+    },
+    "name": "RECORD-AID-D-de-dai-z-adz-nl-otto-benndorf_3",
+    "type": "directory"
+  },
+  "RECORD-AID-D-de-dai-z-adz-nl-otto-benndorf_4": {
+    "contents": {
+      "tif": {
+        "contents": {
+          "test.tif": {
+            "name": "test.tif",
+            "type": "file"
+          },
+          "test2.tif": {
+            "name": "test2.tif",
+            "type": "file"
+          },
+          "test3.tif": {
+            "name": "test3.tif",
+            "type": "file"
+          },
+          "test4.tif": {
+            "name": "test4.tif",
+            "type": "file"
+          }
+        },
+        "name": "tif",
+        "type": "directory"
+      }
+    },
+    "name": "RECORD-AID-D-de-dai-z-adz-nl-otto-benndorf_4",
+    "type": "directory"
+  }
+}

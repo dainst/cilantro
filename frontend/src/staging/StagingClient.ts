@@ -2,15 +2,15 @@ import { AxiosRequestConfig } from 'axios';
 import { sendRequest } from '@/util/HTTPClient';
 import { backendUri, ignoredDirectoryContents } from '@/config';
 
-export async function getStagingFiles(path: string = '', depths: number = 1): Promise<WorkbenchFileTree> {
-    return sendRequest('get', `${backendUri}/staging/${stripLeadingSlashes(path)}?depths${depths}`, {}, {}, false);
+export async function getStagingFiles(path: string = '', depths: number = 1): Promise<StagingDirectoryContents> {
+    return sendRequest('get', `${backendUri}/staging/${stripLeadingSlashes(path)}?depths=${depths}`, {}, {}, false);
 }
 
-export function getFilesInWorkDir(files: WorkbenchFileTree): WorkbenchFile[] {
-    return Object.values(getVisibleFolderContents(files)).sort(compareFileEntries);
+export function getVisibleAndSortedContents(contents: StagingDirectoryContents): StagingNode[] {
+    return Object.values(getVisibleDirectoryContents(contents)).sort(compareStagingNodes);
 }
 
-function compareFileEntries(a: WorkbenchFile, b: WorkbenchFile): number {
+function compareStagingNodes(a: StagingNode, b: StagingNode): number {
     if (a.type === 'directory' && b.type !== 'directory') {
         return -1;
     }
@@ -44,20 +44,37 @@ export async function moveInStaging(source: string, target: string): Promise<boo
     return sendRequest('post', `${backendUri}/staging/move`, {}, { source: stripLeadingSlashes(source), target: stripLeadingSlashes(target) }, false);
 }
 
-export function getVisibleFolderContents(tree: WorkbenchFileTree): WorkbenchFile[] {
-    return Object.values(tree)
+export function getVisibleDirectoryContents(contents: StagingDirectoryContents): StagingNode[] {
+    return Object.values(contents)
         .filter(file => !file.name.startsWith('.'))
         .filter(file => !ignoredDirectoryContents.includes(file.name));
 }
 
-export interface WorkbenchFile {
-    name: string;
-    type: string;
-    marked: boolean;
-    contents?: WorkbenchFileTree;
+export enum JobInfoStatus {
+    success = 'success',
+    error = 'error',
+    started = 'started'
+  }
+
+export interface JobInfo {
+    status: JobInfoStatus;
+    // eslint-disable-next-line camelcase
+    job_id?: string;
+    msg?: string;
+    url?: string;
+    // eslint-disable-next-line camelcase
+    url_label?: string;
 }
 
-export type WorkbenchFileTree = { [index: string]: WorkbenchFile };
+export interface StagingNode {
+    name: string;
+    type: string;
+    // eslint-disable-next-line camelcase
+    job_info?: JobInfo;
+    contents?: StagingDirectoryContents;
+}
+
+export type StagingDirectoryContents = { [index: string]: StagingNode };
 
 function onUploadProgress(onProgressCallback: (n: number) => void) {
     return (progressEvent: { loaded: number, total: number }) => {
@@ -66,21 +83,22 @@ function onUploadProgress(onProgressCallback: (n: number) => void) {
     };
 }
 
-export function containsNumberOfFiles(folder: WorkbenchFileTree, number: number) {
-    return getVisibleFolderContents(folder).length === number;
+export function containsNumberOfFiles(contents: StagingDirectoryContents, number: number) {
+    return getVisibleDirectoryContents(contents).length === number;
 }
 
 /**
- * runs through a WorkbenchFileTree and checks if it only contains files with the given extensions.
- * files with a leading . are considered 'invisible' and are therefor excluded from this search
+ * runs through a StagingDirectoryContents and checks if it only contains files with the
+ * given extensions. files with a leading . are considered 'invisible' and are therefor
+ * excluded from this search
  *
- * @param folder the folder to lookup
+ * @param contents the directory contents to evaluate
  * @param extensions the extensions to find
  */
 export function containsOnlyFilesWithExtensions(
-    folder: WorkbenchFileTree, extensions: string[]
+    contents: StagingDirectoryContents, extensions: string[]
 ) {
-    const fileList: WorkbenchFile[] = getVisibleFolderContents(folder);
+    const fileList: StagingNode[] = getVisibleDirectoryContents(contents);
     // check if every file
     // has one of the given extensions
     return fileList.every(file => extensions.some(ext => file.name.endsWith(ext)));

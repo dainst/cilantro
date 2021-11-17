@@ -1,7 +1,7 @@
 <template>
     <section>
         <b-loading
-            :is-full-page="true"
+            :is-full-page="false"
             :active="operationInProgress"
         ></b-loading>
 
@@ -17,9 +17,12 @@
                 />
             </template>
             <template slot="end">
-                <b-switch v-model="showMarked">
-                    Show completed tasks
-                </b-switch>
+            <b-switch id="toggleFailed" v-model="showFailed">
+                Show failed imports
+            </b-switch>
+            <b-switch id="toggleCompleted" v-model="showCompleted">
+                Show completed imports
+            </b-switch>
             </template>
         </b-navbar>
         <div v-if="getFilesToShow().length !== 0">
@@ -36,14 +39,16 @@
             >
                 <template slot-scope="props">
                     <b-table-column width="25">
-                        <b-icon
-                            :icon="getFileIcon(props.row)"
-                            :type="props.row.marked ? 'is-success' : ''"
-                        />
+                        <b-icon :icon="getFileIcon(props.row)"
+                                :type="getFileStatusType(props.row)"/>
                     </b-table-column>
 
                     <b-table-column field="name" label="Name">
                         {{ props.row.name }}
+                        <div
+                            class="content is-small"
+                            v-html="getFileStatusMessage(props.row)">
+                        </div>
                     </b-table-column>
 
                     <b-table-column
@@ -117,10 +122,11 @@ import {
     getStagingFiles,
     deleteFileFromStaging,
     createFolderInStaging,
-    WorkbenchFile,
+    StagingNode,
     moveInStaging,
-    WorkbenchFileTree,
-    getFilesInWorkDir
+    StagingDirectoryContents,
+    getVisibleAndSortedContents,
+    JobInfo
 } from './StagingClient';
 import StagingBrowserNav from './StagingBrowserNav.vue';
 import StagingBrowserUpload from './StagingBrowserUpload.vue';
@@ -139,11 +145,12 @@ export default class StagingBrowser extends Vue {
 
     operationInProgress: boolean = false;
     workingDirectory: string = '';
-    stagingFiles: WorkbenchFileTree = {};
-    filesToShow: WorkbenchFile[] = [];
-    showMarked: boolean = false;
+    stagingFiles: StagingDirectoryContents = {};
+    filesToShow: StagingNode[] = [];
+    showCompleted: boolean = false;
+    showFailed: boolean = true;
 
-    get checkedFiles(): WorkbenchFile[] {
+    get checkedFiles(): StagingNode[] {
         return this.filesToShow.filter((file) => {
             const path = getFilePath(this.workingDirectory, file.name);
             return this.selectedPaths.includes(path);
@@ -154,7 +161,7 @@ export default class StagingBrowser extends Vue {
         this.fetchFiles();
     }
 
-    async onCheck(checkedFiles: WorkbenchFile[]): Promise<void> {
+    async onCheck(checkedFiles: StagingNode[]): Promise<void> {
         const paths = checkedFiles.map(file => getFilePath(this.workingDirectory, file.name));
         this.$emit('update:selected-paths', paths);
     }
@@ -179,7 +186,7 @@ export default class StagingBrowser extends Vue {
         try {
             this.operationInProgress = true;
             this.stagingFiles = await getStagingFiles(this.workingDirectory);
-            this.filesToShow = getFilesInWorkDir(this.stagingFiles);
+            this.filesToShow = getVisibleAndSortedContents(this.stagingFiles);
 
             this.$emit('files-selected', []);
             this.operationInProgress = false;
@@ -188,7 +195,7 @@ export default class StagingBrowser extends Vue {
         }
     }
 
-    fileClicked(file: WorkbenchFile) {
+    fileClicked(file: StagingNode) {
         if (file.type === 'directory') {
             if (this.workingDirectory) {
                 this.openFolder(`${this.workingDirectory}/${file.name}`);
@@ -203,7 +210,7 @@ export default class StagingBrowser extends Vue {
         this.fetchFiles();
     }
 
-    showDeleteDialogForItem(file: WorkbenchFile) {
+    showDeleteDialogForItem(file: StagingNode) {
         this.onCheck([file]).then(() => {
             this.showDeleteDialog();
         });
@@ -231,7 +238,7 @@ export default class StagingBrowser extends Vue {
         });
     }
 
-    showRenameModal(file: WorkbenchFile) {
+    showRenameModal(file: StagingNode) {
         this.onCheck([file]).then(() => {
             this.$buefy.dialog.prompt({
                 message: `Choose a new name`,
@@ -260,7 +267,7 @@ export default class StagingBrowser extends Vue {
         });
     }
 
-    showMoveModalForItem(file: WorkbenchFile) {
+    showMoveModalForItem(file: StagingNode) {
         this.onCheck([file]).then(() => {
             this.showMoveModal();
         });
@@ -290,15 +297,46 @@ export default class StagingBrowser extends Vue {
     }
 
     getFilesToShow() {
-        if (this.showMarked) {
-            return this.filesToShow;
-        }
-        return this.filesToShow.filter(file => !file.marked);
+        return this.filesToShow.filter((file) => {
+            if (!file.job_info) return true;
+            if (!this.showCompleted && file.job_info.status === 'success') return false;
+            if (!this.showFailed && file.job_info.status === 'error') return false;
+
+            return true;
+        });
     }
 
     // eslint-disable-next-line class-methods-use-this
-    getFileIcon(file: WorkbenchFile) {
+    getFileIcon(file: StagingNode) {
         return file.type === 'directory' ? 'folder' : 'file';
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getFileStatusType(file: StagingNode) {
+        if (!file.job_info) return '';
+        if (file.job_info.status === 'started') return 'is-warning';
+        if (file.job_info.status === 'success') return 'is-success';
+        return 'is-danger';
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    getFileStatusMessage(file: StagingNode) {
+        if (!file.job_info) return '';
+
+        const jobInfo = file.job_info as JobInfo;
+
+        // TODO: Avoid strings containing with html code
+        if (jobInfo.status === 'started') return `A <a onclick="event.stopPropagation();" href='/job?id=${jobInfo.job_id}' target='_blank'>job</a> is still running.`;
+
+        if (jobInfo.status === 'success' && jobInfo.msg) {
+            if (!jobInfo.url || !jobInfo.url_label) return jobInfo.msg;
+            return `<a  onclick="event.stopPropagation();" href='${jobInfo.url}' target='_blank'>${jobInfo.url_label}</a>`;
+        }
+
+        if (jobInfo.status === 'error' && jobInfo.msg) {
+            return `A previous <a onclick="event.stopPropagation();" href='/job?id=${jobInfo.job_id}' target='_blank'>job</a> failed with an error: <pre>${JSON.stringify(jobInfo.msg)}</pre>`;
+        }
+        return file.job_info;
     }
 }
 

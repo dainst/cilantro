@@ -70,22 +70,43 @@ def tif_to_pdf(source_file, target_file, ocr_lang=None):
     :param str target_file: desired output path
     :param ocr_lang: the language used for ocr
     """
-    scale = (900, 1200)
 
     if ocr_lang == None:
+        _to_pdf_without_ocr(source_file, target_file)
+    else:
+        ocr_params = {
+            "language": ocr_lang,
+            "use_threads": True,
+            "optimize": 3
+        }
+
+        try:
+            ocrmypdf.ocr(source_file, target_file, **ocr_params)
+        except (ocrmypdf.exceptions.UnsupportedImageFormatError, ValueError):
+            log.info("UnsupportedImageFormatError, trying to convert to RGB.")
+            tmp_path = f'{os.path.splitext(target_file)[0]}_tmp.tif'
+
+            image = PilImage.open(source_file)
+            rgb_image = image.convert('RGB')
+            rgb_image.save(tmp_path, dpi=image.info['dpi'])
+
+            ocrmypdf.ocr(tmp_path, target_file, **ocr_params)
+
+            os.remove(tmp_path)
+        except ocrmypdf.exceptions.DpiError:
+            log.error(f'Low dpi image #{source_file}, skipping PDF OCR.')
+            _to_pdf_without_ocr(source_file, target_file)
+
+def _to_pdf_without_ocr(source_file, target_file, scale=(900, 1200)):
+    try:
         image = PilImage.open(source_file)
         image.thumbnail(scale)
         image.save(target_file, 'PDF', resolution=100.0)
-    else:
-        try:
-            ocrmypdf.ocr(source_file, target_file, language=ocr_lang, use_threads=True, optimize=3, jobs=1)
-        except ocrmypdf.exceptions.DpiError:
-            log.error(f'Low dpi image #{source_file}, skipping PDF OCR.')
-
-            image = PilImage.open(source_file)
-            image.thumbnail(scale)
-            image.save(target_file, 'PDF', resolution=100.0)
-
+    except ValueError:
+        log.info("Value, trying to convert to RGB.")
+        image = PilImage.open(source_file)
+        rgb_image = image.convert('RGB')
+        rgb_image.save(target_file, 'PDF', resolution=100.0)
 
 def tif_to_txt(source_file, target_file, language='eng'):
     """

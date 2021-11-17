@@ -1,18 +1,18 @@
 import {
-    shallowMount, mount, createLocalVue
+    mount, createLocalVue
 } from '@vue/test-utils';
 import Buefy from 'buefy';
 import Vuex, { Store } from 'vuex';
-import flushPromises from 'flush-promises';
 import IngestJournalMetadataForm from '@/job/ingest-journal/IngestJournalMetadataForm.vue';
-import { WorkbenchFileTree } from '@/staging/StagingClient';
+import { getRecord, ZenonRecord } from '@/util/ZenonClient';
 
-let mockStagingTree: WorkbenchFileTree = {
-};
+import stagingTreeMock from '@/../tests/resources/ingest-journal/staging-tree-mock.json';
+import { JobTargetError } from '@/job/JobParameters';
+import { JobTargetData, JournalIssueMetadata } from '@/job/ingest-journal/IngestJournalParameters';
 
 jest.mock('@/staging/StagingClient', () => ({
     ...jest.requireActual('@/staging/StagingClient'),
-    getStagingFiles: () => Promise.resolve(mockStagingTree)
+    getStagingFiles: () => Promise.resolve(stagingTreeMock)
 }));
 
 const localVue = createLocalVue();
@@ -25,153 +25,91 @@ describe('IngestJournalMetadataForm', () => {
 
     beforeEach(() => {
         store = new Store({});
-        mockStagingTree = {
-            tif: {
-                name: 'tif',
-                type: 'folder',
-                marked: false,
-                contents: {
-                    '.info': {
-                        name: '.info',
-                        type: 'conf',
-                        marked: false
-                    },
-                    'test.tif': {
-                        name: 'test.tif',
-                        type: 'tif',
-                        marked: false
-                    },
-                    'test2.tiff': {
-                        name: 'test2.tiff',
-                        type: 'tif',
-                        marked: false
-                    }
-                }
+        wrapper = mount(IngestJournalMetadataForm, {
+            localVue,
+            store,
+            propsData: {
+                selectedPaths: []
             }
-        };
+        });
     });
 
     it('renders', () => {
-        wrapper = shallowMount(IngestJournalMetadataForm, {
-            localVue,
-            store,
-            propsData: {
-                selectedPaths: ['/']
-            }
-        });
         expect(wrapper.exists()).toBeTruthy();
     });
 
-    it('has no error alert', async() => {
-        wrapper = mount(IngestJournalMetadataForm, {
-            localVue,
-            store,
-            propsData: {
-                selectedPaths: ['/Journal-ZID001149881']
-            }
-        });
-        await flushPromises();
-        const icon = wrapper.find('.has-text-danger');
-        expect(icon.exists()).toBe(false);
-        // no error lets check the output
-        wrapper.find('a').trigger('click');
-        await wrapper.vm.$nextTick();
-        const details = wrapper.find('.metadata_output');
-
-        expect(details.text()).toBe('zenon_id: 001149881');
+    it('valid directories produce no errors', () => {
+        const result = wrapper.vm.evaluateTargetFolder(stagingTreeMock['JOURNAL-ZID001108201'].contents);
+        expect(result).toHaveLength(0);
     });
 
-    it('detect empty target folder', async() => {
-        delete mockStagingTree.tif;
+    it('empty target directory produces errors', () => {
+        const result = wrapper.vm.evaluateTargetFolder({});
 
-        wrapper = mount(IngestJournalMetadataForm, {
-            localVue,
-            store,
-            propsData: {
-                selectedPaths: ['/Journal-ZID001149881']
-            }
-        });
-        await flushPromises();
-        const icon = wrapper.find('.has-text-danger');
-        expect(icon.exists()).toBe(true);
-        // no error lets check the output
-        wrapper.find('a').trigger('click');
-        // wait for event processing
-        await wrapper.vm.$nextTick();
-        // find the error message
-        const details = wrapper.find('.metadata_output');
-        expect(details.text()).toBe(
-            'Could not find file at /Journal-ZID001149881.'
-        );
+        expect(result).toContain('Folder appears to be empty. Please provide input data.');
     });
 
-    it('detect missing tif folder', async() => {
-        mockStagingTree = {
-            '.info': {
-                name: '.info',
-                type: 'conf',
-                marked: false
-            },
-            'test.tif': {
-                name: 'test.tif',
-                type: 'tif',
-                marked: false
-            },
-            'test2.tiff': {
-                name: 'test2.tiff',
-                type: 'tif',
-                marked: false
-            }
+    it('missing tif directory in target directory produces error', () => {
+        const copy = (JSON.parse(JSON.stringify(stagingTreeMock['JOURNAL-ZID001108201'].contents)));
+
+        delete copy.tif;
+        const result = wrapper.vm.evaluateTargetFolder(copy);
+
+        expect(result).toContain("No Subfolder 'tif' found.");
+    });
+
+    it('different file type in tif directory produces error', () => {
+        const copy = (JSON.parse(JSON.stringify(stagingTreeMock['JOURNAL-ZID001108201'].contents)));
+
+        copy.tif.contents['JOURNAL-ZID001364448-0002.jpg'] = {
+            name: 'JOURNAL-ZID001364448-0002.jpg',
+            type: 'file'
         };
 
-        wrapper = mount(IngestJournalMetadataForm, {
-            localVue,
-            store,
-            propsData: {
-                selectedPaths: ['/Journal-ZID001149881']
-            }
-        });
-        await flushPromises();
-        const icon = wrapper.find('.has-text-danger');
-        expect(icon.exists()).toBe(true);
-        // no error lets check the output
-        wrapper.find('a').trigger('click');
-        // wait for event processing
-        await wrapper.vm.$nextTick();
-        // find the error message
-        const details = wrapper.find('.metadata_output');
-        expect(details.text()).toBe(
-            "No Subfolder 'tif' found."
-        );
+        const result = wrapper.vm.evaluateTargetFolder(copy);
+        expect(result).toContain("Subfolder 'tif' does not exclusively contain TIF files.");
     });
 
-    it('detect invalid file in tif folder', async() => {
-        if (mockStagingTree.tif.contents !== undefined) {
-            mockStagingTree.tif.contents['wrong.pdf'] = {
-                name: 'wrong.pdf',
-                type: 'pdf',
-                marked: false
-            };
-        }
+    it('invalid target causes rendered errors', async() => {
+        const error = new JobTargetError('target_id', 'target_path', ['example error']);
 
-        wrapper = mount(IngestJournalMetadataForm, {
-            localVue,
-            store,
-            propsData: {
-                selectedPaths: ['/Journal-ZID001149881']
-            }
-        });
-        await flushPromises();
-        const icon = wrapper.find('.has-text-danger');
-        expect(icon.exists()).toBe(true);
-        // no error lets check the output
-        wrapper.find('a').trigger('click');
-        // wait for event processing
-        await wrapper.vm.$nextTick();
-        // find the error message
-        const details = wrapper.find('.metadata_output');
-        expect(details.text()).toBe(
-            "Subfolder 'tif' does not exclusively contain TIF files."
-        );
+        await wrapper.setData({ targets: [error] });
+        // Toggle detail view
+        await wrapper.find('tbody > tr > td.chevron-cell > a').trigger('click');
+
+        expect(wrapper.find('.detail-container li').text()).toEqual('example error');
+    });
+
+    it('valid targets are rendered', async() => {
+        const targets = [
+            new JobTargetData(
+                'target_id_1', 'target_path_1', new JournalIssueMetadata('000000000', 'journal_name_1', 'ojs_journal_code_1', 'issue_title_1')
+            ),
+            new JobTargetData(
+                'target_id_2', 'target_path_2', new JournalIssueMetadata('000000001', 'journal_name_2', 'ojs_journal_code_2', 'issue_title_2')
+            )
+        ];
+
+        await wrapper.setData({ targets });
+
+        expect(wrapper.findAll('tbody tr')).toHaveLength(2);
+
+        expect(wrapper.findAll('tbody tr td[data-label="Directory"]').at(0).text()).toContain('target_path_1');
+        expect(wrapper.findAll('tbody tr td[data-label="Title"]').at(0).text()).toContain('journal_name_1');
+
+        expect(wrapper.findAll('tbody tr td[data-label="Directory"]').at(1).text()).toContain('target_path_2');
+        expect(wrapper.findAll('tbody tr td[data-label="Title"]').at(1).text()).toContain('journal_name_2');
+    });
+
+    it('warning is displayed if no article data present', async() => {
+        const targets = [
+            new JobTargetData(
+                'target_id_1', 'target_path_1', new JournalIssueMetadata('000000000', 'journal_name_1', 'ojs_journal_code_1', 'issue_title_1')
+            )
+        ];
+
+        await wrapper.setData({ targets });
+
+        expect(wrapper.find('span.tag.is-warning.is-medium span').text()).toEqual('No articles found!');
     });
 });

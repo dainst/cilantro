@@ -37,27 +37,48 @@ def generate_xml(obj, template_file, target_filepath, params):
 
     log.info("Generating XML with template: " + template_file)
 
-    pdf_doc = os.path.join(obj.get_representation_dir('pdf'),
-                           f"{obj.id}.pdf")
-    with open(pdf_doc, "rb") as pdf_file:
-        encoded_string = base64.b64encode(pdf_file.read())
-    params['pdf_base64'] = encoded_string.decode('utf-8')
 
-    jpegs = glob.glob(obj.get_representation_dir('jpg') + '/*.jpg')
-    thumbnails = glob.glob(obj.get_representation_dir('jpg_thumbnails') + '/*.jpg')
-    pdfs = glob.glob(obj.get_representation_dir('pdf') + '/*.pdf')
-    
     params['files'] = {}
+    try: 
+        input_file_directories = params["input_file_directories"]
 
-    if jpegs:
-        params['files']['jpegs'] = jpegs
+        if 'pdfs' in input_file_directories:
+            pdf_file_paths = {}
+            encoded_pdf_file_paths = {}
 
-    if thumbnails:
-        params['files']['thumbnails'] = thumbnails
+            for pdf_dir in input_file_directories['pdfs']:
 
-    if pdfs:
-        params['files']['pdfs'] = pdfs 
-    
+                pdf_files = glob.glob(obj.get_representation_dir(pdf_dir) + '/*.pdf')
+
+                pdf_file_paths[pdf_dir] = pdf_files
+                encoded_pdf_file_paths[pdf_dir] = []
+
+                for file_path in pdf_files:
+                    with open(file_path, "rb") as pdf_file:
+                        encoded_pdf_file_paths[pdf_dir].append(base64.b64encode(pdf_file.read()).decode('utf-8'))
+
+            params['files']['pdf'] = pdf_file_paths
+            params['files']['pdf_base64'] = encoded_pdf_file_paths
+
+    except KeyError:
+        pdf_doc = os.path.join(obj.get_representation_dir('pdf'),
+                            f"{obj.id}.pdf")
+        with open(pdf_doc, "rb") as pdf_file:
+            encoded_string = base64.b64encode(pdf_file.read())
+        params['pdf_base64'] = encoded_string.decode('utf-8')
+
+        jpegs = glob.glob(obj.get_representation_dir('jpg') + '/*.jpg')
+        thumbnails = glob.glob(obj.get_representation_dir('jpg_thumbnails') + '/*.jpg')
+        pdfs = glob.glob(obj.get_representation_dir('pdf') + '/*.pdf')
+
+        if jpegs:
+            params['files']['jpegs'] = jpegs
+
+        if thumbnails:
+            params['files']['thumbnails'] = thumbnails
+
+        if pdfs:
+            params['files']['pdfs'] = pdfs
 
     template = env.get_template(template_file)
     filled_template = template.render(obj=obj, params=params)
