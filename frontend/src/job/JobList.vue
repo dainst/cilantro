@@ -6,21 +6,6 @@
                     Show all
                 </b-button>
             </div>
-            <div  v-if="users.length !== 0" class="navbar-item">
-                <b-dropdown :triggers="['hover']"
-                    aria-role="list" multiple
-                    v-model="selectedUsers">
-                    <template #trigger>
-                        <b-button
-                            label="Select users"
-                            icon-right="menu-down" />
-                    </template>
-                    <b-dropdown-item v-for="user in users"
-                        :key="user" aria-role="listitem"
-                        :value="user">{{user}}
-                    </b-dropdown-item>
-                </b-dropdown>
-            </div>
             <div class="navbar-item">
                 <b-switch v-model="showSuccess">
                     Show successful
@@ -31,6 +16,21 @@
                 <b-switch v-model="showInProgress">
                     Show in progress
                 </b-switch>
+            </div>
+            <div  v-if="users.length !== 0" class="navbar-item">
+                <b-dropdown :triggers="['hover']"
+                    aria-role="list" multiple
+                    v-model="selectedUsers">
+                    <template #trigger>
+                        <b-button
+                            label="Filter by users"
+                            icon-right="menu-down" />
+                    </template>
+                    <b-dropdown-item v-for="user in users"
+                        :key="user" aria-role="listitem"
+                        :value="user">{{user}}
+                    </b-dropdown-item>
+                </b-dropdown>
             </div>
         </div>
         <div>
