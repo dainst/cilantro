@@ -36,3 +36,4 @@ def scale_image(source, target_path, max_width, max_height, keep_ratio=True):
     file_name = os.path.splitext(os.path.basename(source))[0]
     file_extension = os.path.splitext(os.path.basename(source))[1]
     image.save(os.path.join(target_path, file_name + file_extension))
+    image.close()

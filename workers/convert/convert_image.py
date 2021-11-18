@@ -46,7 +46,10 @@ def convert_tif_to_jpg(source_file, target_file):
     if source_file != target_file:
         logging.getLogger(__name__).debug(f"Converting {source_file} "
                                           f"to {target_file}")
-        PilImage.open(source_file).convert('RGB').save(target_file)
+        image = PilImage.open(source_file)
+        image.convert('RGB')
+        image.save(target_file)
+        image.close()
 
 
 def convert_jpg_to_pdf(source_file, target_file, max_size=(900, 1200)):
@@ -60,6 +63,7 @@ def convert_jpg_to_pdf(source_file, target_file, max_size=(900, 1200)):
     image = PilImage.open(source_file)
     image.thumbnail(max_size)
     image.save(target_file, 'PDF', resolution=100.0)
+    image.close()
 
 
 def tif_to_pdf(source_file, target_file, ocr_lang=None):
@@ -102,11 +106,14 @@ def _to_pdf_without_ocr(source_file, target_file, scale=(900, 1200)):
         image = PilImage.open(source_file)
         image.thumbnail(scale)
         image.save(target_file, 'PDF', resolution=100.0)
+        image.close()
+
     except ValueError:
         log.info("Value, trying to convert to RGB.")
         image = PilImage.open(source_file)
         rgb_image = image.convert('RGB')
         rgb_image.save(target_file, 'PDF', resolution=100.0)
+        image.close()
 
 def tif_to_txt(source_file, target_file, language='eng'):
     """
@@ -126,10 +133,12 @@ def tif_to_txt(source_file, target_file, language='eng'):
         lang = language
     log.debug("Will use lang '%s'" % lang)
 
+    image = PilImage.open(source_file)
     txt = ocr_tool.image_to_string(
-        PilImage.open(source_file),
+        image,
         lang=lang,
         builder=pyocr.builders.TextBuilder())
+    image.close()
 
     with open(target_file, 'w') as outfile:
         outfile.write(txt)
