@@ -44,7 +44,7 @@
             section_ref="ART" 
             date_submitted="{{datetime.date.today().isoformat()}}"
             date_published="{{datetime.date.today().isoformat()}}">
-            <id type="other::zenon">{{article['zenon_id']}}</id>
+            <id type="other::zenon" advice="update">{{article['zenon_id']}}</id>
             <title locale="de_DE">{{article['title']}}</title>
             {% for abstract in article['abstracts'] %}
             <abstract>{{abstract}}</abstract>
