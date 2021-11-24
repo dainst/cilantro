@@ -112,42 +112,41 @@ class BaseTask(Task):
     def __init__(self):
         self.job_db = JobDb()
 
-    def _propagate_failure_to_ancestors(self, parent_id, error):
-        self.job_db.update_job_state(parent_id, 'failure')
-        self.job_db.add_job_error(parent_id, error)
+    def _set_error_for_job(self, job_id, error):
+        self.job_db.update_job_state(job_id, 'failure')
+        self.job_db.add_job_error(job_id, error)
 
-        parent = self.job_db.get_job_by_id(parent_id)
+        job = self.job_db.get_job_by_id(job_id)
 
-        if parent['job_type'] == 'cilantro_batch_chain':
+        if job['job_type'] == 'cilantro_batch_chain':
             batch_item_directory = os.path.join(
                 self.staging_dir, 
-                parent['user'], 
-                parent['parameters']['path']
+                job['user'], 
+                job['parameters']['path']
             )
 
             cilantro_info_file.write_error(
                 batch_item_directory,
-                parent['job_id'],
+                job['job_id'],
                 error
             )
 
-        if 'parent_job_id' in parent:
-            self._propagate_failure_to_ancestors(parent['parent_job_id'], error)
-            self._set_following_siblings_aborted(parent_id, parent['parent_job_id'])
+        if 'parent_job_id' in job:
+            self._set_error_for_job(job['parent_job_id'], error)
+            self._set_following_siblings_aborted(job_id, job['parent_job_id'])
 
     def _set_following_siblings_aborted(self, job_id, parent_id):
         parent = self.job_db.get_job_by_id(parent_id)
-        if parent['job_type'] == 'cilantro_batch_chain':
-            found_self = False
-            for child in parent['children']:
-                if found_self:
-                    self.job_db.update_job_state(child['job_id'], 'aborted')
-                    self.job_db.set_job_label_and_description(child['job_id'],
-                        'Aborted',
-                        'This task was never initialized and has been aborted due to a previous error.')
+        found_self = False
+        for child in parent['children']:
+            if found_self:
+                self.job_db.update_job_state(child['job_id'], 'aborted')
+                self.job_db.set_job_label_and_description(child['job_id'],
+                    'Aborted',
+                    'This task was never initialized and has been aborted due to a previous error.')
 
-                if child['job_id'] == job_id:
-                    found_self = True
+            if child['job_id'] == job_id:
+                found_self = True
 
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
@@ -163,7 +162,7 @@ class BaseTask(Task):
             self.job_db.add_job_error( self.job_id, error_object )
 
             if self.parent_job_id is not None:
-                self._propagate_failure_to_ancestors(self.parent_job_id, error_object)
+                self._set_error_for_job(self.parent_job_id, error_object)
                 self._set_following_siblings_aborted(self.job_id, self.parent_job_id)
 
             self.delete_temp_folders()
