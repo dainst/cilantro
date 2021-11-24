@@ -47,8 +47,10 @@ def convert_tif_to_jpg(source_file, target_file):
         logging.getLogger(__name__).debug(f"Converting {source_file} "
                                           f"to {target_file}")
         image = PilImage.open(source_file)
-        image.convert('RGB')
-        image.save(target_file)
+
+        rgb_im = image.convert('RGB')
+        rgb_im.save(target_file)
+        rgb_im.close()
         image.close()
 
 
