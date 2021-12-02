@@ -7,11 +7,14 @@ RUN apk add --no-cache git
 COPY ./.git /src/.git
 COPY ./frontend/package.json /src/frontend/package.json
 COPY ./frontend/package-lock.json /src/frontend/package-lock.json
+
 WORKDIR /src/frontend
 
 RUN npm install
 
 COPY ./frontend /src/frontend
+COPY ./resources/job_parameter_schemas /src/resources/job_parameter_schemas
+COPY ./test/wiremock_config /src/test/wiremock_config
 
 RUN npm run build
 
