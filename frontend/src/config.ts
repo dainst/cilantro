@@ -10,6 +10,7 @@ export const ojsZenonMapping = {
     '000057152': 'BaM',
     '000146522': 'mdaik',
     '000036080': 'mdaik',
+    '000036059': 'AMIran',
     '000814258': 'test'
 } as { [index: string]: string };
 
