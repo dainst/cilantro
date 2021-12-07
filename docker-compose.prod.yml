@@ -158,10 +158,10 @@ services:
 secrets:
   ojs_auth_key:
     external: true
-    name: workbench_ojs_auth_key
+    name: workbench_ojs_auth_key_2
   omp_auth_key:
     external: true
-    name: workbench_omp_auth_key
+    name: workbench_omp_auth_key_2
   atom_api_key:
     external: true
     name: workbench_atom_api_key
