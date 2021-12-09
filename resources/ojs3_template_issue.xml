@@ -74,9 +74,9 @@
             {% endif %}
             </authors>
 
-            {% if metadata['keywords'] %}
+            {% if article['keywords'] %}
             <keywords locale="de_DE">
-                {% for keyword in metadata['keywords'] %}
+                {% for keyword in article['keywords'] %}
                 <keyword>{{keyword}}</keyword>
                 {% endfor %}
             </keywords>

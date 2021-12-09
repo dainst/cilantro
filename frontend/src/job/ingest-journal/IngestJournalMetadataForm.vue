@@ -333,6 +333,7 @@ export default class JournalMetadataForm extends Vue {
             title: record.title,
             authors: this.extractAuthors(record),
             abstracts: record.summary,
+            keywords: record.subjects,
             pages: record.pages
         }) as JournalArticleMetadata;
     }
