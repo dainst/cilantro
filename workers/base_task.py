@@ -119,34 +119,37 @@ class BaseTask(Task):
         job = self.job_db.get_job_by_id(job_id)
 
         if job['job_type'] == 'cilantro_batch_chain':
-            batch_item_directory = os.path.join(
+            batch_directory = os.path.join(
                 self.staging_dir, 
                 job['user'], 
                 job['parameters']['path']
             )
 
             cilantro_info_file.write_error(
-                batch_item_directory,
+                batch_directory,
                 job['job_id'],
                 error
             )
 
         if 'parent_job_id' in job:
             self._set_error_for_job(job['parent_job_id'], error)
-            self._set_following_siblings_aborted(job_id, job['parent_job_id'])
+            if job['job_type'] != 'cilantro_batch_chain': # we do not want to set other batches as failed
+                self._set_following_siblings_aborted(job['parent_job_id'], job_id)
 
-    def _set_following_siblings_aborted(self, job_id, parent_id):
+    def _set_following_siblings_aborted(self, parent_id, failed_child_id):
         parent = self.job_db.get_job_by_id(parent_id)
-        found_self = False
+        found_failed = False
         for child in parent['children']:
-            if found_self:
+            if found_failed:
                 self.job_db.update_job_state(child['job_id'], 'aborted')
-                self.job_db.set_job_label_and_description(child['job_id'],
+                self.job_db.set_job_label_and_description(
+                    child['job_id'],
                     'Aborted',
-                    'This task was never initialized and has been aborted due to a previous error.')
+                    'This task was never initialized and has been aborted due to a previous error.'
+                )
 
-            if child['job_id'] == job_id:
-                found_self = True
+            if child['job_id'] == failed_child_id:
+                found_failed = True
 
 
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
