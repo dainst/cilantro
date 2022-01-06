@@ -198,15 +198,6 @@ export default class MonographMetadataForm extends Vue {
             const zenonRecord = await getRecord(target.metadata.zenon_id) as ZenonRecord;
             const errors : string[] = [];
 
-            let datePublished = '';
-
-            if (zenonRecord.publicationDates.length > 0) {
-                try {
-                    [datePublished] = new Date(zenonRecord.publicationDates[0]).toISOString().split('T');
-                } catch (e) {
-                    errors.push(`Unable to parse date: ${zenonRecord.publicationDates[0]}`);
-                }
-            }
             let summary = '';
             if (zenonRecord.summary.length > 0) {
                 [summary] = zenonRecord.summary;
@@ -232,7 +223,7 @@ export default class MonographMetadataForm extends Vue {
                 title: zenonRecord.shortTitle,
                 subtitle: subTitle,
                 abstract: summary,
-                date_published: datePublished,
+                date_published: zenonRecord.publicationDates[0],
                 keywords: filteredSubjects
             } as MonographMetadata;
 

@@ -23,9 +23,7 @@ export class ZenonRecord {
         this.title = zenonData.title;
         this.authors = reformatAuthors(zenonData);
         this.formats = zenonData.formats;
-        this.publicationDates = zenonData.publicationDates.map(
-            (date: string) => parseInt(date, 10)
-        );
+        this.publicationDates = zenonData.publicationDates;
 
         this.parentId = zenonData.parentId;
         this.subjects = zenonData.subjects.map((subject: string|string[]) => {
