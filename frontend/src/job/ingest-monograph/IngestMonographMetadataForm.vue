@@ -218,8 +218,8 @@ export default class MonographMetadataForm extends Vue {
             }
 
             const filteredSubjects = zenonRecord.subjects
-                .map(subject => subject[0])
                 .filter(this.filterDuplicateEntry);
+
             const authors = this.extractAuthors(zenonRecord);
 
             if (errors.length !== 0) {

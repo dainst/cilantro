@@ -28,7 +28,10 @@ export class ZenonRecord {
         );
 
         this.parentId = zenonData.parentId;
-        this.subjects = zenonData.subjects.map((subject: string[]): string => subject.join(', '));
+        this.subjects = zenonData.subjects.map((subject: string|string[]) => {
+            if (Array.isArray(subject)) return subject.join(', ');
+            return subject;
+        });
         this.summary = zenonData.summary;
         this.shortTitle = zenonData.shortTitle.replace(/[\s:]+$/, '').trim();
         this.subTitle = zenonData.subTitle;
