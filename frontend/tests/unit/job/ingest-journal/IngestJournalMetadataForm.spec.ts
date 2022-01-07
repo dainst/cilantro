@@ -44,30 +44,33 @@ describe('IngestJournalMetadataForm', () => {
     });
 
     it('empty target directory produces errors', () => {
-        const result = wrapper.vm.evaluateTargetFolder({});
+        const folderPath = 'JOURNAL-ZID001108201';
+        const result = wrapper.vm.evaluateTargetFolder({}, folderPath);
 
-        expect(result).toContain('Folder appears to be empty. Please provide input data.');
+        expect(result).toContain(`Folder appears to be empty. Please provide input data in '${folderPath}'.`);
     });
 
     it('missing tif directory in target directory produces error', () => {
-        const copy = (JSON.parse(JSON.stringify(stagingTreeMock['JOURNAL-ZID001108201'].contents)));
+        const folderPath = 'JOURNAL-ZID001108201';
+        const copy = (JSON.parse(JSON.stringify(stagingTreeMock[folderPath].contents)));
 
         delete copy.tif;
-        const result = wrapper.vm.evaluateTargetFolder(copy);
+        const result = wrapper.vm.evaluateTargetFolder(copy, folderPath);
 
-        expect(result).toContain("No Subfolder 'tif' found.");
+        expect(result).toContain(`No Subfolder 'tif' found in '${folderPath}'.`);
     });
 
     it('different file type in tif directory produces error', () => {
-        const copy = (JSON.parse(JSON.stringify(stagingTreeMock['JOURNAL-ZID001108201'].contents)));
+        const folderPath = 'JOURNAL-ZID001108201';
+        const copy = (JSON.parse(JSON.stringify(stagingTreeMock[folderPath].contents)));
 
         copy.tif.contents['JOURNAL-ZID001364448-0002.jpg'] = {
             name: 'JOURNAL-ZID001364448-0002.jpg',
             type: 'file'
         };
 
-        const result = wrapper.vm.evaluateTargetFolder(copy);
-        expect(result).toContain("Subfolder 'tif' does not exclusively contain TIF files.");
+        const result = wrapper.vm.evaluateTargetFolder(copy, folderPath);
+        expect(result).toContain(`Subfolder 'tif' does not exclusively contain TIF files in '${folderPath}'.`);
     });
 
     it('invalid target causes rendered errors', async() => {

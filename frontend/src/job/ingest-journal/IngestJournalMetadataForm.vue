@@ -221,7 +221,7 @@ export default class JournalMetadataForm extends Vue {
         if (Object.keys(targetFolder).length === 0) {
             errors.push(`Could not find file at ${path}.`);
         } else {
-            errors = errors.concat(this.evaluateTargetFolder(targetFolder));
+            errors = errors.concat(this.evaluateTargetFolder(targetFolder, path));
         }
 
         const articleZenonIds = Object.keys(targetFolder)
@@ -229,9 +229,10 @@ export default class JournalMetadataForm extends Vue {
             .filter(zenonId => zenonId !== '');
 
         articleZenonIds.forEach((articleId) => {
-            const { contents } = targetFolder[`JOURNAL-ZID${articleId}`];
+            const potentialSubdirectoryName = `JOURNAL-ZID${articleId}`;
+            const { contents } = targetFolder[potentialSubdirectoryName];
             if (contents) {
-                errors = errors.concat(this.evaluateTargetFolder(contents));
+                errors = errors.concat(this.evaluateTargetFolder(contents, `${path}/${potentialSubdirectoryName}`));
             }
         });
 
@@ -303,11 +304,11 @@ export default class JournalMetadataForm extends Vue {
         return this.zenonDataMapping[zenonId].partOrSectionInfo ? this.zenonDataMapping[zenonId].partOrSectionInfo : '-';
     }
 
-    evaluateTargetFolder(targetFolder : StagingDirectoryContents) {
+    evaluateTargetFolder(targetFolder : StagingDirectoryContents, pathInfo: string) {
         const errors: string[] = [];
         if (containsNumberOfFiles(targetFolder, 0)) {
             errors.push(
-                `Folder appears to be empty. Please provide input data.`
+                `Folder appears to be empty. Please provide input data in '${pathInfo}'.`
             );
         }
 
@@ -315,10 +316,10 @@ export default class JournalMetadataForm extends Vue {
         // if there is a tif folder, make sure it only contains tifs
             if (targetFolder.tif.contents &&
                 !containsOnlyFilesWithExtensions(targetFolder.tif.contents, ['.tif', '.tiff'])) {
-                errors.push(`Subfolder 'tif' does not exclusively contain TIF files.`);
+                errors.push(`Subfolder 'tif' does not exclusively contain TIF files in '${pathInfo}'.`);
             }
         } else {
-            errors.push(`No Subfolder 'tif' found.`);
+            errors.push(`No Subfolder 'tif' found in '${pathInfo}'.`);
         }
         return errors;
     }
