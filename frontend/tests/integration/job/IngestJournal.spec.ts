@@ -68,6 +68,7 @@ describe('IngestJournal.vue', () => {
 
         await wrapper.findComponent(StartJobButton).vm.onClick();
         expect(startJobSpy).toHaveBeenCalled();
+        console.log(wrapper.vm.parameter);
         expect(validate(wrapper.vm.parameters)).toBe(true);
     });
 });

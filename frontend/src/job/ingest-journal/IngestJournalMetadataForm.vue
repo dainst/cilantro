@@ -264,16 +264,19 @@ export default class JournalMetadataForm extends Vue {
 
             const articleRecords = await Promise.all(articleZenonIds.map(getRecord));
 
-            let publicationDate;
+            let publicationYear;
             if (zenonRecord.publicationDates.length !== 0) {
-                [publicationDate] = zenonRecord.publicationDates;
+                const match = zenonRecord.publicationDates[0].match(/(\d{4})/);
+                if (match) {
+                    publicationYear = parseInt(match[1], 10);
+                }
             }
 
             const metadata = {
                 zenon_id: issueZenonId,
                 journal_name: zenonRecord.title,
                 volume: zenonRecord.serialMetadata?.volume,
-                publishing_year: publicationDate,
+                publishing_year: publicationYear,
                 number: zenonRecord.serialMetadata?.issue,
                 title: (zenonRecord.partOrSectionInfo)
                     ? zenonRecord.partOrSectionInfo : zenonRecord.title,
