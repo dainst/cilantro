@@ -52,6 +52,14 @@
             <copyrightHolder locale="de_DE">Digitale Ausgaben von Monographien, Reihen- und Sammelwerken des DAI</copyrightHolder>
             <copyrightHolder locale="en_US">Digital editions of monographs and series of the DAI</copyrightHolder>
 
+            {% if article['keywords'] %}
+            <keywords locale="de_DE">
+                {% for keyword in article['keywords'] %}
+                <keyword>{{keyword}}</keyword>
+                {% endfor %}
+            </keywords>
+            {% endif %}
+
             <authors>
             {% if article['authors'] %}
                 {% for author in article['authors'] %}
@@ -73,14 +81,6 @@
                 </author>
             {% endif %}
             </authors>
-
-            {% if article['keywords'] %}
-            <keywords locale="de_DE">
-                {% for keyword in article['keywords'] %}
-                <keyword>{{keyword}}</keyword>
-                {% endfor %}
-            </keywords>
-            {% endif %}
 
             {% set filesize = getsize(params['files']['pdf']['article-{0}_pdf'.format(loop.index - 1)][0]) %}
 
