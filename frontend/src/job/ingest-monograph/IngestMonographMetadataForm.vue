@@ -235,8 +235,14 @@ export default class MonographMetadataForm extends Vue {
 
     extractAuthors(record: ZenonRecord) : Person[] {
         return record.authors
-            .filter((author : Author) => author.type !== AuthorTypes.Corporate)
             .map((author : Author) => {
+                if (author.type === AuthorTypes.Corporate) {
+                    return {
+                        givenname: author.name,
+                        lastname: ''
+                    } as Person;
+                }
+
                 const authorSplit = author.name.split(',');
                 if (authorSplit.length === 2) {
                     return {

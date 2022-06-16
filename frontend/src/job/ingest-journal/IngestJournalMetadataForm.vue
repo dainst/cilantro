@@ -159,7 +159,12 @@ import {
 import {
     MaybeJobTarget, JobTargetData, JournalIssueMetadata, JournalArticleMetadata, Person
 } from './IngestJournalParameters';
-import { getRecord, ZenonRecord, Author } from '@/util/ZenonClient';
+import {
+    getRecord,
+    ZenonRecord,
+    Author,
+    AuthorTypes
+} from '@/util/ZenonClient';
 import { ojsZenonMapping } from '@/config';
 import {
     StagingDirectoryContents,
@@ -343,19 +348,27 @@ export default class JournalMetadataForm extends Vue {
     }
 
     extractAuthors(record: ZenonRecord) : Person[] {
-        return record.authors.map((author : Author) => {
-            const authorSplit = author.name.split(',');
-            if (authorSplit.length === 2 || authorSplit.length === 3) {
+        return record.authors
+            .map((author : Author) => {
+                if (author.type === AuthorTypes.Corporate) {
+                    return {
+                        givenname: author.name,
+                        lastname: ''
+                    } as Person;
+                }
+
+                const authorSplit = author.name.split(',');
+                if (authorSplit.length === 2) {
+                    return {
+                        givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
+                        lastname: authorSplit[0].trim()
+                    } as Person;
+                }
                 return {
-                    givenname: authorSplit[1].replace(/[\\.]+$/, '').trim(),
-                    lastname: authorSplit[0].trim()
+                    givenname: '',
+                    lastname: author.name
                 } as Person;
-            }
-            return {
-                givenname: '',
-                lastname: author.name
-            } as Person;
-        });
+            });
     }
 }
 
