@@ -165,7 +165,7 @@ services:
 secrets:
   ojs_auth_key:
     external: true
-    name: workbench_ojs_auth_key_2
+    name: workbench_ojs_auth_key
   omp_auth_key:
     external: true
     name: workbench_omp_auth_key_2
