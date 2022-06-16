@@ -59,7 +59,7 @@
     <publication_format xmlns:onix="http://ns.editeur.org/onix/3.0/reference"
                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" approved="true" available="true"
                         physical_format="false" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
-        <name>PDF</name>
+        <name locale="en_US">PDF</name>
         <seq>1</seq>
         <submission_file_ref id="1" revision="1"/>
     </publication_format>
