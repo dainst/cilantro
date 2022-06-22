@@ -1,30 +1,35 @@
 {% set metadata = obj.metadata %}
 {% set pdf_file_path = path_join(obj.get_representation_dir('pdf'), obj.id + '.pdf') %}<?xml version="1.0" encoding="UTF-8"?>
-<monograph xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xmlns:onix="http://ns.editeur.org/onix/3.0/reference" stage="production" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+<monograph xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:onix="http://ns.editeur.org/onix/3.0/reference" stage="production" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
     <id type="internal" advice="ignore">1</id>
-    <id type="other::zenon" advice="update">{{metadata['zenon_id']}}</id>
-    <title>#TODO#{{metadata['title']}}</title>
-    <prefix>{{metadata['prefix']}}</prefix>
-    <subtitle>{{metadata['subtitle']}}</subtitle>
-    <abstract>{{metadata['abstract']}}</abstract>
+    <submission_file xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" stage="production_ready" id="1" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+        <name locale="en_US">workbench-creation</name>
+        <file filesize="{{getsize(pdf_file_path)}}" extension=".pdf">
+            <embed encoding="base64">
+                {{params['pdf_base64']}}
+            </embed>
+        </file>
+    </submission_file>
+    <publication>
+        <id type="other::zenon" advice="update">{{metadata['zenon_id']}}</id>
+        <title>#TODO#{{metadata['title']}}</title>
+        <prefix>{{metadata['prefix']}}</prefix>
+        <subtitle>{{metadata['subtitle']}}</subtitle>
+        <abstract>{{metadata['abstract']}}</abstract>
 
-    <copyrightHolder locale="de_DE">Digitale Ausgaben von Monographien, Reihen- und Sammelwerken des DAI</copyrightHolder>
-    <copyrightHolder locale="en_US">Digital editions of monographs and series of the DAI</copyrightHolder>
-
-    {% if metadata['keywords'] %}
-    <keywords locale="de_DE">
-        {% for keyword in metadata['keywords'] %}
-        <keyword>{{keyword}}</keyword>
-        {% endfor %}
-    </keywords>
-    {% endif %}
-
-    <authors xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
-        {% if metadata['authors'] %}
+        <copyrightHolder locale="de_DE">Digitale Ausgaben von Monographien, Reihen- und Sammelwerken des DAI</copyrightHolder>
+        <copyrightHolder locale="en_US">Digital editions of monographs and series of the DAI</copyrightHolder>
+        {% if metadata['keywords'] %}
+        <keywords locale="de_DE">
+            {% for keyword in metadata['keywords'] %}
+            <keyword>{{keyword}}</keyword>
+            {% endfor %}
+        </keywords>
+        {% endif %}
+        <authors xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+            {% if metadata['authors'] %}
             {% for author in metadata['authors'] %}
-            <author primary_contact="true" include_in_browse="true" user_group_ref="Author">
+            <author primary_contact="true" include_in_browse="true" user_group_ref="Author" seq="0" id="{{loop.index}}">
                 {% if author.givenname == '' %}
                 <givenname>#TODO#</givenname>
                 {% else %}
@@ -35,32 +40,12 @@
             </author>
             {% endfor %}
         {% else %}
-            <author primary_contact="true" include_in_browse="false" user_group_ref="Author">
-                <givenname>-</givenname>
-                <familyname></familyname>
-                <email></email>
-            </author>
+        <author primary_contact="true" include_in_browse="false" user_group_ref="Author">
+            <givenname>-</givenname>
+            <familyname></familyname>
+            <email></email>
+        </author>
         {% endif %}
-    </authors>
-    <submission_file xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                     stage="production_ready" id="1" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
-        <revision number="1" genre="Book Manuscript" filename="merged.pdf"
-                  viewable="true"
-                  date_uploaded="{{datetime.date.today().strftime('%Y-%m-%d')}}"
-                  date_modified="{{datetime.date.today().strftime('%Y-%m-%d')}}"
-                  filesize="{{getsize(pdf_file_path)}}"
-                  filetype="application/pdf">
-            <name>workbench-creation</name>
-            <embed encoding="base64">
-                {{params['pdf_base64']}}
-            </embed>
-        </revision>
-    </submission_file>
-    <publication_format xmlns:onix="http://ns.editeur.org/onix/3.0/reference"
-                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" approved="true" available="true"
-                        physical_format="false" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
-        <name locale="en_US">PDF</name>
-        <seq>1</seq>
-        <submission_file_ref id="1" revision="1"/>
-    </publication_format>
+        </authors>
+    </publication>
 </monograph>
