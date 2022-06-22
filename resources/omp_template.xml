@@ -31,18 +31,18 @@
             {% for author in metadata['authors'] %}
             <author primary_contact="true" include_in_browse="true" user_group_ref="Author" seq="0" id="{{loop.index}}">
                 {% if author.givenname == '' %}
-                <givenname>#TODO#</givenname>
+                <givenname locale="en_US">#TODO#</givenname>
                 {% else %}
-                <givenname>{{author.givenname}}</givenname>
+                <givenname locale="en_US">{{author.givenname}}</givenname>
                 {% endif %}
-                <familyname>{{author.lastname}}</familyname>
+                <familyname locale="en_US">{{author.lastname}}</familyname>
                 <email></email>
             </author>
             {% endfor %}
         {% else %}
         <author primary_contact="true" include_in_browse="false" user_group_ref="Author">
-            <givenname>-</givenname>
-            <familyname></familyname>
+            <givenname locale="en_US">-</givenname>
+            <familyname locale="en_US"></familyname>
             <email></email>
         </author>
         {% endif %}
