@@ -5,7 +5,7 @@ import zipfile
 import json
 
 from flask import Blueprint, jsonify, request, send_file
-from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename, safe_join
 
 from service.errors import ApiError
 from service.user.user_service import auth
@@ -26,7 +26,7 @@ def _get_directory_structure(dir_path, depths=0):
     Recursively creates a dictionary of the directory structure (files and subdirectories) for dir_path.
 
     Arguments:
-    
+
     dir_path: string - The root directory that should be evaluated.
 
     depths: int - The recursion depths, if you provide a negative value, 
@@ -45,11 +45,15 @@ def _get_directory_structure(dir_path, depths=0):
 
                     # handle directories with legacy .info file, existence implies successful import
                     if os.path.exists(os.path.join(path, ".info")):
-                        tree[entry.name]["job_info"] = {"status": "success", "msg": cilantro_info_file.DEFAULT_SUCCESS_MESSAGE}
+                        tree[entry.name]["job_info"] = {
+                            "status": "success", "msg": cilantro_info_file.DEFAULT_SUCCESS_MESSAGE}
                     else:
-                        tree[entry.name]["job_info"] = _parse_info_file(os.path.join(path, cilantro_info_file.FILE_NAME))
-                    tree[entry.name]["contents"] = _get_directory_structure(path, depths-1)
+                        tree[entry.name]["job_info"] = _parse_info_file(
+                            os.path.join(path, cilantro_info_file.FILE_NAME))
+                    tree[entry.name]["contents"] = _get_directory_structure(
+                        path, depths-1)
     return tree
+
 
 def _parse_info_file(path):
     if not os.path.exists(path):
@@ -57,6 +61,7 @@ def _parse_info_file(path):
     else:
         with open(path, 'r') as f:
             return json.load(f)
+
 
 @staging_controller.route('', methods=['GET'], strict_slashes=False, defaults={'path': '.'})
 @staging_controller.route('/<path:path>', methods=['GET'], strict_slashes=False)
@@ -168,7 +173,6 @@ def delete_from_staging(path):
                            f"No resource was found under the path {path}", 404)
 
     return jsonify({"success": True}), 200
-
 
 
 @staging_controller.route('/folder', methods=['POST'],
@@ -363,7 +367,7 @@ def move():
         raise ApiError("param_not found", "Missing source parameter")
     if 'target' not in params:
         raise ApiError("param_not found", "Missing target parameter")
-    
+
     source = _get_absolute_path(params['source'])
     target = _get_absolute_path(params['target'])
 
@@ -413,7 +417,7 @@ def _generate_error_result(file, code, message, e=None):
         "error": {
             "code": code,
             "message": message}
-        }
+    }
 
 
 def _upload_file(file):
@@ -439,8 +443,9 @@ def _get_file_extension(filename):
     else:
         return filename.rsplit('.', 1)[1].lower()
 
+
 def _get_absolute_path(path):
     if auth.username() == "admin":
-        return os.path.join(staging_dir, path)
+        return safe_join(staging_dir, path)
 
-    return os.path.join(staging_dir, auth.username(), path)
+    return safe_join(staging_dir, auth.username(), path)
