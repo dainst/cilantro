@@ -1,5 +1,10 @@
 {% set metadata = obj.metadata %}<?xml version="1.0" encoding="UTF-8"?>
-<issue xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" published="0" current="0" access_status="2">
+<!-- 
+    See
+    - https://github.com/pkp/pkp-lib/blob/61165b60fbe9d16ee689baecaef939e5216ab57f/plugins/importexport/native/pkp-native.xsd 
+    - https://github.com/dainst/ojs/blob/b77408d7c128276d68f83f48044628a3678a0cd6/plugins/importexport/native/native.xsd
+ -->
+<issue xmlns="http://pkp.sfu.ca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" published="0" current="1" access_status="2">
     <issue_identification>
         {% if metadata['volume'] %}
         <volume>{{metadata['volume']}}</volume>
@@ -37,70 +42,64 @@
     </issue_galleys>
     <articles>
         {% for article in metadata['articles'] %}
-        <article stage="production" 
-            locale="de_DE" 
-            access_status="2" 
-            seq="1" 
-            section_ref="ART" 
-            date_submitted="{{datetime.date.today().isoformat()}}"
-            date_published="{{datetime.date.today().isoformat()}}">
-            <id type="other::zenon" advice="update">{{article['zenon_id']}}</id>
-            <title locale="de_DE">{{article['title']}}</title>
-            {% for abstract in article['abstracts'] %}
-            <abstract>{{abstract}}</abstract>
-            {% endfor %}
-            <copyrightHolder locale="de_DE">Digitale Ausgaben von Monographien, Reihen- und Sammelwerken des DAI</copyrightHolder>
-            <copyrightHolder locale="en_US">Digital editions of monographs and series of the DAI</copyrightHolder>
-
-            {% if article['keywords'] %}
-            <keywords locale="de_DE">
-                {% for keyword in article['keywords'] %}
-                <keyword>{{keyword}}</keyword>
-                {% endfor %}
-            </keywords>
-            {% endif %}
-
-            <authors>
-            {% if article['authors'] %}
-                {% for author in article['authors'] %}
-                <author primary_contact="true" include_in_browse="true" user_group_ref="Author">
-                    {% if author.givenname == '' %}
-                    <givenname>#TODO#</givenname>
-                    {% else %}
-                    <givenname>{{author.givenname}}</givenname>
-                    {% endif %}
-                    <familyname>{{author.lastname}}</familyname>
-                    <email></email>
-                </author>
-                {% endfor %}
-            {% else %}
-                <author primary_contact="true" include_in_browse="false" user_group_ref="Author">
-                    <givenname>-</givenname>
-                    <familyname></familyname>
-                    <email></email>
-                </author>
-            {% endif %}
-            </authors>
-
+        <article stage="production" date_submitted="{{datetime.date.today().isoformat()}}">
             {% set filesize = getsize(params['files']['pdf']['article-{0}_pdf'.format(loop.index - 1)][0]) %}
-
-            <submission_file id="{{loop.index}}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" stage="production_ready" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
-                <revision number="1" genre="Artikeltext" filename="article-{{loop.index - 1}}.pdf" viewable="false" filesize="{{filesize}}" filetype="application/pdf">
-                <name locale="de_DE">article-{{loop.index - 1}}.pdf</name>
-                <embed encoding="base64">
-                    {{params['files']['pdf_base64']['article-{0}_pdf'.format(loop.index - 1)][0]}}
-                </embed>
-                </revision>
+            <submission_file genre="Artikeltext" viewable="false" id="{{loop.index}}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" stage="production_ready" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+                <name locale="de_DE">workbench-article-{{loop.index - 1}}.pdf</name>
+                <file filesize="{{filesize}}" extension=".pdf">
+                    <embed encoding="base64">
+                        {{params['files']['pdf_base64']['article-{0}_pdf'.format(loop.index - 1)][0]}}
+                    </embed>
+                </file>
             </submission_file>
-            <article_galley xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" approved="false" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
-                <name locale="de_DE">PDF</name>
-                <seq>{{loop.index}}</seq>
-                <submission_file_ref id="{{loop.index}}" revision="1"/>
-            </article_galley>
 
-            {% if article['pages'] %}
-            <pages>{{ article['pages'] }}</pages>
-            {% endif %}
+            <publication section_ref="ART" version="1" status="3" >
+                <id type="other::zenon" advice="update">{{article['zenon_id']}}</id>
+                <title locale="de_DE">{{article['title']}}</title>
+                {% for abstract in article['abstracts'] %}
+                <abstract>{{abstract}}</abstract>
+                {% endfor %}
+                <copyrightHolder locale="de_DE">Digitale Ausgaben von Monographien, Reihen- und Sammelwerken des DAI</copyrightHolder>
+                <copyrightHolder locale="en_US">Digital editions of monographs and series of the DAI</copyrightHolder>
+                {% if article['keywords'] %}
+                <keywords locale="de_DE">
+                    {% for keyword in article['keywords'] %}
+                    <keyword>{{keyword}}</keyword>
+                    {% endfor %}
+                </keywords>
+                {% endif %}
+                <authors>
+                    {% if article['authors'] %}
+                    {% set outer_loop = loop %}
+                    {% for author in article['authors'] %}
+                    <author primary_contact="true" include_in_browse="true" user_group_ref="Author" seq="0" id="{{loop.index}}">
+                        {% if author.givenname == '' %}
+                        <givenname>#TODO#</givenname>
+                        {% else %}
+                        <givenname>{{author.givenname}}</givenname>
+                        {% endif %}
+                        <familyname>{{author.lastname}}</familyname>
+                        <email></email>
+                    </author>
+                    {% endfor %}
+                    {% else %}
+                    <author primary_contact="true" include_in_browse="false" user_group_ref="Author" seq="0" id="{{loop.index}}">
+                        <givenname>-</givenname>
+                        <familyname></familyname>
+                        <email></email>
+                    </author>
+                    {% endif %}
+                </authors>
+
+                <article_galley xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" approved="false" xsi:schemaLocation="http://pkp.sfu.ca native.xsd">
+                    <name locale="de_DE">PDF</name>
+                    <seq>{{loop.index}}</seq>
+                    <submission_file_ref id="{{loop.index}}"/>
+                </article_galley>
+                {% if article['pages'] %}
+                <pages>{{ article['pages'] }}</pages>
+                {% endif %}
+            </publication>
 
         </article>
         {% endfor %}
