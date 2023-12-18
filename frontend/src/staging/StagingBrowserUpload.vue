@@ -90,7 +90,7 @@ export default class StagingBrowserUpload extends Vue {
 
         const formData = new FormData();
         formData.append('file', file);
-        if (this.workingDirectory !== '') {
+        if (this.workingDirectory !== '' && this.workingDirectory.startsWith('/') ) {
             formData.append('target_folder', this.workingDirectory.slice(1));
         }
         const filePath = getFilePath(this.workingDirectory, file.name);
