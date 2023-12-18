@@ -181,7 +181,7 @@ export default class ArchivalMaterialMetadataForm extends Vue {
     extractAtomId(path: string): string | null {
         const result = path.match(/.*RECORD-AID-D-(.+)/);
         if (!result || result.length < 1) return null;
-        return `de-${result[1].toLowerCase()}`;
+        return result[1].toLowerCase();
     }
 
     async loadAtomData(target: JobTargetData) {
