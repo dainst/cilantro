@@ -101,5 +101,5 @@ export function containsOnlyFilesWithExtensions(
     const fileList: StagingNode[] = getVisibleDirectoryContents(contents);
     // check if every file
     // has one of the given extensions
-    return fileList.every(file => extensions.some(ext => file.name.endsWith(ext)));
+    return fileList.every(file => extensions.some(ext => file.name.toLowerCase().endsWith(ext)));
 }
