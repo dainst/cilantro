@@ -65,9 +65,7 @@ services:
       - ./data:/data
       - ./config:/config
     environment:
-      <<: *env-dirs
-      <<: *env-broker
-      <<: *env-jobdb
+      <<: [*env-dirs, *env-broker, *env-jobdb]
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
       BACKEND_URI: *backend-uri
@@ -88,9 +86,7 @@ services:
       - ./data:/data
       - ./config:/config
     environment:
-      <<: *env-dirs
-      <<: *env-broker
-      <<: *env-jobdb
+      <<: [*env-dirs, *env-broker, *env-jobdb]
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
       BACKEND_URI: *backend-uri
@@ -114,9 +110,7 @@ services:
       - ./data:/data
       - ./config:/config
     environment:
-      <<: *env-dirs
-      <<: *env-broker
-      <<: *env-jobdb
+      <<: [*env-dirs, *env-broker, *env-jobdb]
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
 
@@ -132,9 +126,7 @@ services:
       - ./data:/data
       - ./config:/config
     environment:
-      <<: *env-dirs
-      <<: *env-broker
-      <<: *env-jobdb
+      <<: [*env-dirs, *env-broker, *env-jobdb]
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
 
@@ -150,9 +142,7 @@ services:
       - ./data:/data
       - ./config:/config
     environment:
-      <<: *env-dirs
-      <<: *env-broker
-      <<: *env-jobdb
+      <<: [*env-dirs, *env-broker, *env-jobdb]
       DB_HOST: db
       CILANTRO_ENV: *cilantro-env
 
