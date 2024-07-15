@@ -47,10 +47,15 @@ def convert_tif_to_jpg(source_file, target_file):
         logging.getLogger(__name__).debug(f"Converting {source_file} "
                                           f"to {target_file}")
         image = PilImage.open(source_file)
-
-        rgb_im = image.convert('RGB')
-        rgb_im.save(target_file)
-        rgb_im.close()
+        if image.mode == "I;16":
+            image.mode = "I"
+            image = image.point(lambda i:i*(1./256))
+            image = image.convert('L')
+            image.save(target_file)
+        else:
+            rgb_image = image.convert('RGB')
+            rgb_image.save(target_file)
+            rgb_image.close()
         image.close()
 
 
@@ -93,12 +98,17 @@ def tif_to_pdf(source_file, target_file, ocr_lang=None):
             tmp_path = f'{os.path.splitext(target_file)[0]}_tmp.tif'
 
             image = PilImage.open(source_file)
-            rgb_image = image.convert('RGB')
-            rgb_image.save(tmp_path, dpi=image.info['dpi'])
+            if image.mode == "I;16":
+                _to_pdf_without_ocr(source_file, target_file)
+            else:
+                rgb_image = image.convert('RGB')
+                rgb_image.save(tmp_path, dpi=image.info['dpi'])
+                rgb_image.close()
 
-            ocrmypdf.ocr(tmp_path, target_file, **ocr_params)
+                ocrmypdf.ocr(tmp_path, target_file, **ocr_params)
 
-            os.remove(tmp_path)
+                os.remove(tmp_path)
+            
         except ocrmypdf.exceptions.DpiError:
             log.error(f'Low dpi image #{source_file}, skipping PDF OCR.')
             _to_pdf_without_ocr(source_file, target_file)
@@ -110,11 +120,19 @@ def _to_pdf_without_ocr(source_file, target_file, scale=(900, 1200)):
         image.save(target_file, 'PDF', resolution=100.0)
         image.close()
 
-    except ValueError:
-        log.info("Value, trying to convert to RGB.")
+    except ValueError as e:
+        log.info("ValueError, trying to convert to RGB.")
         image = PilImage.open(source_file)
-        rgb_image = image.convert('RGB')
-        rgb_image.save(target_file, 'PDF', resolution=100.0)
+
+        if image.mode == "I;16":
+            image.mode = 'I'
+            image = image.point(lambda i:i*(1./256))
+            image = image.convert('RGB')
+            image.save(target_file, 'PDF', resolution=100.0)
+        else:
+            rgb_image = image.convert('RGB')
+            rgb_image.save(target_file, 'PDF', resolution=100.0)
+
         image.close()
 
 def tif_to_txt(source_file, target_file, language='eng'):
