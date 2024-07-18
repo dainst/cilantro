@@ -3,6 +3,10 @@ import os
 import subprocess
 
 from PIL import Image as PilImage
+import PIL
+PIL.Image.MAX_IMAGE_PIXELS = 1000000000
+PilImage.MAX_IMAGE_PIXELS = 1000000000
+
 import ocrmypdf
 import pyocr
 
@@ -108,12 +112,18 @@ def tif_to_pdf(source_file, target_file, ocr_lang=None):
                 ocrmypdf.ocr(tmp_path, target_file, **ocr_params)
 
                 os.remove(tmp_path)
+
+        except PilImage.DecompressionBombError:
+            _to_pdf_without_ocr(source_file, target_file)
             
         except ocrmypdf.exceptions.DpiError:
             log.error(f'Low dpi image #{source_file}, skipping PDF OCR.')
             _to_pdf_without_ocr(source_file, target_file)
 
 def _to_pdf_without_ocr(source_file, target_file, scale=(900, 1200)):
+    PIL.Image.MAX_IMAGE_PIXELS = 1000000000
+    PilImage.MAX_IMAGE_PIXELS = 1000000000
+
     try:
         image = PilImage.open(source_file)
         image.thumbnail(scale)
