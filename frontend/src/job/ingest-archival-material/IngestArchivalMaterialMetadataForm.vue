@@ -210,7 +210,7 @@ export default class ArchivalMaterialMetadataForm extends Vue {
             let creators: string[] = [];
             if (atomRecord.creators) {
                 creators = atomRecord.creators.map(
-                    creator => creator.authotized_form_of_name
+                    creator => creator.authorized_form_of_name
                 );
             }
 

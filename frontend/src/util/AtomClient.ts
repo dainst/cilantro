@@ -44,5 +44,5 @@ export interface AtomDate {
 }
 
 export interface AtomAuthors {
-    authotized_form_of_name: string;
+    authorized_form_of_name: string;
 }
