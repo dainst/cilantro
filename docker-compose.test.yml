@@ -43,7 +43,7 @@ services:
       - redis-data:/data
 
   job-db:
-    image: mongo:5.0.1
+    image: mongo:5.0.32
     volumes:
       - mongo-data:/data/db
 

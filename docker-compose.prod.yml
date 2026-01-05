@@ -43,7 +43,7 @@ services:
       - redis-data:/data
 
   job-db:
-    image: mongo:5.0.1
+    image: mongo:5.0.32
     volumes:
       - mongo-data:/data/db
 
@@ -173,16 +173,36 @@ volumes:
   redis-data:
   workspace-data:
     name: workbench_workspace_data
-    external: true
+    driver: local
+    driver_opts:
+      type: volume
+      o: bind
+      device: /mnt/daicloud09/idaiworld-scans/idaiworkbench/workspace
+    # external: true
   repository-data:
     name: workbench_repository_data
-    external: true
+    driver: local
+    driver_opts:
+      type: volume
+      o: bind
+      device: /mnt/daicloud09/idaiworld-scans/idaiworkbench/repository
+    # external: true
   archive-data:
     name: workbench_archive_data
-    external: true
+    driver: local
+    driver_opts:
+      type: volume
+      o: bind
+      device: /mnt/daicloud09/idaiworld-scans/idaiworkbench/archive
+    # external: true
   staging-data:
     name: workbench_staging_data
-    external: true
+    driver: local
+    driver_opts:
+      type: volume
+      o: bind
+      device: /mnt/daicloud09/idaiworld-scans/idaiworkbench/staging
+    # external: true
   config:
     name: workbench_config
     external: true
