@@ -127,7 +127,7 @@ def _to_pdf_without_ocr(source_file, target_file, scale=(900, 1200)):
     try:
         image = PilImage.open(source_file)
         image.thumbnail(scale)
-        image.save(target_file, 'PDF', resolution=100.0)
+        image.save(target_file, "PDF", dpi=image.info["dpi"])
         image.close()
 
     except ValueError as e:
@@ -135,13 +135,15 @@ def _to_pdf_without_ocr(source_file, target_file, scale=(900, 1200)):
         image = PilImage.open(source_file)
 
         if image.mode == "I;16":
-            image.mode = 'I'
-            image = image.point(lambda i:i*(1./256))
-            image = image.convert('RGB')
-            image.save(target_file, 'PDF', resolution=100.0)
+            dpi = image.info["dpi"]
+            image.mode = "I"
+            transform = lambda i: i * (1.0 / 256)
+            image = image.point(transform)
+            image = image.convert("RGB")
+            image.save(target_file, "PDF", dpi=dpi)
         else:
-            rgb_image = image.convert('RGB')
-            rgb_image.save(target_file, 'PDF', resolution=100.0)
+            rgb_image = image.convert("RGB")
+            rgb_image.save(target_file, "PDF", dpi=image.info["dpi"])
 
         image.close()
 
