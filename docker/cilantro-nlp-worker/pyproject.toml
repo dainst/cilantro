@@ -7,7 +7,7 @@ authors = ["DAI Wiss-IT <dav@dainst.de>"]
 [tool.poetry.dependencies]
 python = "^3.7.1"
 watchdog = "^0.10.3"
-celery = "^4.2.1"
+celery = "^5.2.2"
 redis = "^3.5.3"
 pymongo = "^3.10.1"
 jinja2 = "^2.11.2"
